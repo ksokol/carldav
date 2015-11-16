@@ -114,18 +114,12 @@
 		<developerConnection>scm:git:ssh://git@github.com/aaaa</developerConnection>
 	</scm>
 	<modules>
-		<module>cosmo-api</module>
 		<module>cosmo-core</module>
 		<module>cosmo-webapp</module>
 	</modules>
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>org.unitedinternet.cosmo</groupId>
-				<artifactId>cosmo-api</artifactId>
-				<version>${project.version}</version>
-			</dependency>
 			<dependency>
 				<groupId>org.unitedinternet.cosmo</groupId>
 				<artifactId>cosmo-core</artifactId>

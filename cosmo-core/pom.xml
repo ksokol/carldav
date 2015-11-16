@@ -39,10 +39,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.unitedinternet.cosmo</groupId>
-			<artifactId>cosmo-api</artifactId>
-		</dependency>
 
 		<!-- Apache commons -->
 		<dependency>

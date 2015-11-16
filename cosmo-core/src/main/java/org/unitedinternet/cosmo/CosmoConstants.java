@@ -32,7 +32,7 @@ public final class CosmoConstants {
     /**
      * The "friendly" name of the product used for casual identification.
      */
-    public static final String PRODUCT_NAME;
+    public static final String PRODUCT_NAME = "test";
 
     /**
      * The Cosmo release version number.
@@ -86,7 +86,7 @@ public final class CosmoConstants {
     static {
         Properties props = loadCosmoProperties();
 
-        PRODUCT_NAME = props.getProperty(PRODUCT_NAME_KEY);
+        //PRODUCT_NAME = "test"; //props.getProperty(PRODUCT_NAME_KEY);
         PRODUCT_VERSION = props.getProperty(PRODUCT_VERSION_KEY);
 
         // form the product Id using current build version

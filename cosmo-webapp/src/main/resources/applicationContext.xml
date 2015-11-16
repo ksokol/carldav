@@ -39,6 +39,4 @@
         <constructor-arg value="MySQL5"/>
     </bean>
 
-    <bean class="org.unitedinternet.cosmo.service.interceptors.LoggingEventAddHandler"/>
-        
 </beans>

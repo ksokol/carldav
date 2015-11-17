@@ -18,6 +18,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cosmo-core</artifactId>
 
+    <packaging>war</packaging>
+
 	<properties>
 		<maven-compiler-plugin.version>2.3.2</maven-compiler-plugin.version>
 		<maven-resources-plugin.version>2.5</maven-resources-plugin.version>
@@ -340,6 +342,11 @@
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
         </dependency>
 	</dependencies>
 

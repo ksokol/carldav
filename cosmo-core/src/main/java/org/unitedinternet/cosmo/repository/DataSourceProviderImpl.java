@@ -5,7 +5,7 @@
  * 
  * $Id$
  */
-package com.unitedinternet.calendar.repository;
+package org.unitedinternet.cosmo.repository;
 
 import javax.sql.DataSource;
 

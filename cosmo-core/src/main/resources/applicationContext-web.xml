@@ -19,7 +19,7 @@
     <!--
     <bean id="authenticationProvider" class="com.unitedinternet.calendar.security.DummyAuthenticationProvider"/>
     -->
-    <bean id="userCreationAuthenticationListener" class="com.unitedinternet.calendar.security.UserCreationAuthenticationListener"/>
+    <bean id="userCreationAuthenticationListener" class="org.unitedinternet.cosmo.calendar.security.UserCreationAuthenticationListener"/>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
@@ -34,7 +34,7 @@
     </bean>
 
 
-    <bean id="dataSourceProviderImpl" class="com.unitedinternet.calendar.repository.DataSourceProviderImpl">
+    <bean id="dataSourceProviderImpl" class="org.unitedinternet.cosmo.repository.DataSourceProviderImpl">
         <constructor-arg ref="dataSource"/>
         <constructor-arg value="MySQL5"/>
     </bean>

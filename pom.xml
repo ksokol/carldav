@@ -115,7 +115,6 @@
 	</scm>
 	<modules>
 		<module>cosmo-core</module>
-		<module>cosmo-webapp</module>
 	</modules>
 
 	<dependencyManagement>

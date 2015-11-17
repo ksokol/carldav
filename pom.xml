@@ -467,6 +467,7 @@
 				</configuration>
 			</plugin>
 
+            <!--
 			<plugin>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<executions>
@@ -523,6 +524,7 @@
 					<skipEmptyReport>false</skipEmptyReport>
 				</configuration>
 			</plugin>
+            -->
 
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

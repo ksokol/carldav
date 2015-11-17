@@ -146,7 +146,7 @@ public class HibernateSessionFactoryBeanDelegate implements FactoryBean<SessionF
     		Collection<? extends DataSourceProvider> dsps = instanceProvider.getImplInstancesAnnotatedWith(CalendarRepository.class, DataSourceProvider.class);
     		if(dsps != null && !dsps.isEmpty()){
     			DataSourceProvider dsp = dsps.iterator().next();
-    			if(dsp.getDataSourceType() != null){
+    			if(dsp != null && dsp.getDataSourceType() != null){
     				delegate.getHibernateProperties().put("hibernate.dialect", getDialectForDataSourceType(dsp.getDataSourceType()));
     			}
     		}

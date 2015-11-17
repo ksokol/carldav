@@ -351,7 +351,6 @@
 	</dependencies>
 
 	<build>
-		<testSourceDirectory>src/test/unit/java</testSourceDirectory>
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -360,7 +359,7 @@
 		</resources>
 		<testResources>
 			<testResource>
-				<directory>src/test/unit/resources</directory>
+				<directory>src/test/resources</directory>
 				<includes>
 					<include>logback.xml</include>
 					<include>etc/cosmo.properties</include>
@@ -368,19 +367,19 @@
 				</includes>
 			</testResource>
 			<testResource>
-				<directory>src/test/unit/resources/dav/caldav</directory>
+				<directory>src/test/resources/dav/caldav</directory>
 				<includes>
 					<include>*.ics</include>
 				</includes>
 			</testResource>
 			<testResource>
-				<directory>src/test/unit/resources/icalendar</directory>
+				<directory>src/test/resources/icalendar</directory>
 				<includes>
 					<include>*.ics</include>
 				</includes>
 			</testResource>
 			<testResource>
-				<directory>src/test/unit/resources/testdata</directory>
+				<directory>src/test/resources/testdata</directory>
 			</testResource>
 		</testResources>
 		<pluginManagement>

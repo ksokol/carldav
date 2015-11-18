@@ -44,7 +44,7 @@
             </props>
         </property>
         <property name="entityInterceptor" ref="cosmoHibernateInterceptor" />
-        <property name="dataSource" ref="jdbcDataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
     <alias alias="hibernatePackagesToScan" name="${cosmo.hibernate.hibernatePackagesToScan}"/>
@@ -76,7 +76,7 @@
     <bean id="transactionManager"
         class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="dataSource" ref="jdbcDataSource" />
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
     <!--  AOP Configuration -->
@@ -118,14 +118,13 @@
 	<bean id="dbInitializer" class="org.unitedinternet.cosmo.db.DbInitializerFactoryBean">
 		<constructor-arg ref="serverPropertyService" />
 		<constructor-arg ref="&amp;sessionFactory"/>
-		<constructor-arg ref="jdbcDataSource" />
+		<constructor-arg ref="dataSource" />
 		<constructor-arg value="true" />
 		<constructor-arg ref="cosmoStartupDataInitializer"/>
 		<constructor-arg ref="externalComponentInstanceProvider"/>
 	</bean>
 
-    <alias name="jdbcDataSource" alias="dataSource" />
-    <bean id="jdbcDataSource" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
         <property name="url" value="jdbc:mysql://localhost/cosmo"/>
         <property name="username" value="root"/>

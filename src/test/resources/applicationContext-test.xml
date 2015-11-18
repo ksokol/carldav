@@ -71,11 +71,11 @@
             </props>
         </property>
         <property name="dataSource">
-            <ref bean="jdbcDataSource"/>
+            <ref bean="dataSource"/>
         </property>
     </bean>
 
-    <bean id="jdbcDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName">
             <value>org.hsqldb.jdbc.JDBCDriver</value>
         </property>
@@ -103,7 +103,7 @@
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
-        <property name="dataSource" ref="jdbcDataSource"/>
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
     <!-- transactional advice -->

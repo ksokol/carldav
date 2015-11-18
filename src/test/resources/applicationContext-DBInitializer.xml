@@ -34,7 +34,7 @@
     <bean id="dbInitializer" class="org.unitedinternet.cosmo.db.DbInitializerFactoryBean">
 		<constructor-arg ref="serverPropertyService" />
 		<constructor-arg ref="&amp;sessionFactory"/>
-		<constructor-arg ref="jdbcDataSource" />
+		<constructor-arg ref="dataSource" />
 		<constructor-arg value="true" />
 		<constructor-arg ref="cosmoStartupDataInitializer"/>
 		<constructor-arg ref="externalComponentInstanceProvider"/>

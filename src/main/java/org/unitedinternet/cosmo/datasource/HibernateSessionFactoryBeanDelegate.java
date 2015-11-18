@@ -19,7 +19,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.unitedinternet.cosmo.db.DataSourceType;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -30,8 +29,7 @@ import javax.sql.DataSource;
 public class HibernateSessionFactoryBeanDelegate implements FactoryBean<SessionFactory>, InitializingBean{
 
     private LocalSessionFactoryBean delegate;
-    private static final String COSMO_MYSQL_DIALECT = "org.unitedinternet.cosmo.hibernate.CosmoMySQL5InnoDBDialect";
-    
+
     public HibernateSessionFactoryBeanDelegate(){
         delegate = new LocalSessionFactoryBean();
     }
@@ -139,14 +137,7 @@ public class HibernateSessionFactoryBeanDelegate implements FactoryBean<SessionF
     public void afterPropertiesSet() throws IOException {
         delegate.afterPropertiesSet();
     }
-    
-    private static String getDialectForDataSourceType(DataSourceType dataSourceType){
-    	if(dataSourceType == DataSourceType.MySQL5InnoDB){
-    		return COSMO_MYSQL_DIALECT;
-    	}
-    	
-    	return "org.hibernate.dialect." + dataSourceType.name() + "Dialect";
-    }
+
     public final Configuration getConfiguration() {
         return delegate.getConfiguration();
     }

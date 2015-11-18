@@ -76,10 +76,6 @@
         <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.db.DbInitializer" />
-        <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>

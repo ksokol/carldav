@@ -7,12 +7,6 @@
  */
 package org.unitedinternet.cosmo.datasource;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import org.hibernate.Interceptor;
 import org.hibernate.SessionFactory;
 import org.hibernate.cache.spi.RegionFactory;
@@ -25,19 +19,20 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.unitedinternet.cosmo.api.ExternalComponentInstanceProvider;
-import org.unitedinternet.cosmo.db.DataSourceProvider;
 import org.unitedinternet.cosmo.db.DataSourceType;
-import org.unitedinternet.cosmo.metadata.CalendarRepository;
+
+import java.io.IOException;
+import java.util.Properties;
+
+import javax.sql.DataSource;
 
 @SuppressWarnings("deprecation")
 public class HibernateSessionFactoryBeanDelegate implements FactoryBean<SessionFactory>, InitializingBean{
-    private ExternalComponentInstanceProvider instanceProvider;
+
     private LocalSessionFactoryBean delegate;
     private static final String COSMO_MYSQL_DIALECT = "org.unitedinternet.cosmo.hibernate.CosmoMySQL5InnoDBDialect";
     
-    public HibernateSessionFactoryBeanDelegate(ExternalComponentInstanceProvider instanceProvider){
-        this.instanceProvider = instanceProvider;
+    public HibernateSessionFactoryBeanDelegate(){
         delegate = new LocalSessionFactoryBean();
     }
 
@@ -142,16 +137,6 @@ public class HibernateSessionFactoryBeanDelegate implements FactoryBean<SessionF
     }
 
     public void afterPropertiesSet() throws IOException {
-        if(instanceProvider != null){
-    		Collection<? extends DataSourceProvider> dsps = instanceProvider.getImplInstancesAnnotatedWith(CalendarRepository.class, DataSourceProvider.class);
-    		if(dsps != null && !dsps.isEmpty()){
-    			DataSourceProvider dsp = dsps.iterator().next();
-    			if(dsp != null && dsp.getDataSourceType() != null){
-    				delegate.getHibernateProperties().put("hibernate.dialect", getDialectForDataSourceType(dsp.getDataSourceType()));
-    			}
-    		}
-        }
-        
         delegate.afterPropertiesSet();
     }
     

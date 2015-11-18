@@ -22,9 +22,7 @@
         http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- Sesssion factory -->
-    <bean id="sessionFactory"
-        class="org.unitedinternet.cosmo.datasource.HibernateSessionFactoryBeanDelegate">
-        <constructor-arg ref="externalComponentInstanceProvider"/>
+    <bean id="sessionFactory" class="org.unitedinternet.cosmo.datasource.HibernateSessionFactoryBeanDelegate">
        <property name="packagesToScan" value="org.unitedinternet.cosmo.model.hibernate"/>
         <property name="hibernateProperties">
             <props>
@@ -102,15 +100,6 @@
         <property name="userService" ref="userService" />
         <property name="serverPropertyService" ref="serverPropertyService" />
     </bean>
-
-	<bean id="dbInitializer" class="org.unitedinternet.cosmo.db.DbInitializerFactoryBean">
-		<constructor-arg ref="serverPropertyService" />
-		<constructor-arg ref="&amp;sessionFactory"/>
-		<constructor-arg ref="dataSource" />
-		<constructor-arg value="true" />
-		<constructor-arg ref="cosmoStartupDataInitializer"/>
-		<constructor-arg ref="externalComponentInstanceProvider"/>
-	</bean>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>

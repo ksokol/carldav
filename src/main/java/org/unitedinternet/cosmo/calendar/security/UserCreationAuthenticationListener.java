@@ -4,26 +4,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.security.core.Authentication;
-import org.unitedinternet.cosmo.metadata.CalendarSecurity;
-import org.unitedinternet.cosmo.metadata.Provided;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.security.SuccessfulAuthenticationListener;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 
-@CalendarSecurity
-public class UserCreationAuthenticationListener implements SuccessfulAuthenticationListener{
+public class UserCreationAuthenticationListener {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserCreationAuthenticationListener.class);
 
 	private UserService userService;
 	private EntityFactory entityFactory;
 	private ContentService contentService;
-	
-	@Override
+
 	public void onSuccessfulAuthentication(Authentication authentication) {
 		LOGGER.info("=== Succesful authentication occured ===");
 		createUserIfNotPresent(authentication);

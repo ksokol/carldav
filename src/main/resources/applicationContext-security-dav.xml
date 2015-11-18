@@ -147,15 +147,6 @@
 		<property name="contentDao" ref="contentDao" />
 	</bean>
 
-    <bean id="authenticationProviderProxyFactory" class="org.unitedinternet.cosmo.acegisecurity.AuthenticationProviderProxyFactory">
-        <constructor-arg index="0" name="userService" ref="userService"/>
-        <constructor-arg index="1" name="contentDao" ref="contentDao"/>    
-    </bean>
-	<bean id="authenticationProviderDelegator" class="org.unitedinternet.cosmo.acegisecurity.AuthenticationProviderDelegatorFactoryBean">
-	   <constructor-arg index="0" name="authenticationProviderProxyFactory" ref="authenticationProviderProxyFactory"/>
-	   <constructor-arg index="1" name="externalComponentInstanceProvider" ref="externalComponentInstanceProvider"/>
-	</bean>
-	
 	<bean id="authenticationManager"
 		class="org.springframework.security.authentication.ProviderManager">
 		<constructor-arg index="0" ref="authenticationProviders"/>
@@ -165,7 +156,6 @@
 		<ref bean="daoAuthenticationProvider" />
 		<ref bean="anonymousAuthenticationProvider" />
 		<ref bean="ticketAuthenticationProvider" />
-		<ref bean="authenticationProviderDelegator" />
 	</util:list>
 	<!-- security facade resources -->
 
@@ -178,11 +168,5 @@
 			<ref bean="userService" />
 		</property>
 	</bean>
-
-    <bean id="userCreationAuthenticationListener" class="org.unitedinternet.cosmo.calendar.security.UserCreationAuthenticationListener">
-        <property name="contentService" ref="contentService" />
-        <property name="entityFactory" ref="cosmoEntityFactory" />
-        <property name="userService" ref="userService" />
-    </bean>
 
 </beans>

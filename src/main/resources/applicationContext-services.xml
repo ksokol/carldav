@@ -41,21 +41,6 @@
 		</property>
 	</bean>
 
-
-
-	<!-- extension advice used by external advice providers -->
-
-	<bean id="contextServiceExtensionsAdvice"
-		class="org.unitedinternet.cosmo.event.aop.ContextServiceExtensionsAdvice">
-	</bean>
-
-	<bean id="contextServiceExtensionsAdviceDecorator"
-		class="org.unitedinternet.cosmo.event.aop.ContextServiceExtensionAdviceDecorator">
-		<constructor-arg ref="externalComponentInstanceProvider" />
-		<constructor-arg ref="contextServiceExtensionsAdvice" />
-	</bean>
-	
-
 	<!-- Intercepts service calls and logs events -->
 	<bean id="eventLogAspect" init-method="init"
 		class="org.unitedinternet.cosmo.event.aop.EventLogAdvice">
@@ -199,30 +184,5 @@
                 </value>
             </list>
         </property>
-    </bean>
-
-	<!-- API implementation -->
-	
-    <bean id="typesFinder" class="org.unitedinternet.cosmo.api.TypesFinder"/>
-    
-    <bean id="springExternalComponentFactory" class="org.unitedinternet.cosmo.api.SpringExternalComponentFactory"/>
-    
-    <bean id="externalComponentFactoryChain" class="org.unitedinternet.cosmo.api.ExternalComponentFactoryChain">
-       <constructor-arg>
-          <array>
-              <ref bean="springExternalComponentFactory"/>  
-              <bean class="org.unitedinternet.cosmo.api.DefaultExternalComponentFactory"/>
-          </array>
-       </constructor-arg>
-    </bean>
-                            
-    <bean id="externalComponentInstanceProvider" class="org.unitedinternet.cosmo.api.ExternalComponentInstanceProvider">
-       <constructor-arg ref="typesFinder"/>
-       <constructor-arg ref="externalComponentFactoryChain"/>
-    </bean>
-    
-    <bean id="externalComponentDecorator" class="org.unitedinternet.cosmo.api.ExternalComponentDecorator">
-       <constructor-arg ref="externalComponentInstanceProvider"/>
-       <constructor-arg ref="typesFinder"/>
     </bean>
 </beans>

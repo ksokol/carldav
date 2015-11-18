@@ -52,7 +52,7 @@
 
     <bean id="sessionFactory" class="org.unitedinternet.cosmo.datasource.HibernateSessionFactoryBeanDelegate">
     	<constructor-arg ref="externalComponentInstanceProvider"/>
-        <property name="packagesToScan" ref="hibernatePackagesToScan"/>
+        <property name="packagesToScan" value="org.unitedinternet.cosmo.model.hibernate"/>
         <property name="entityInterceptor">
             <ref bean="cosmoHibernateInterceptor"/>
         </property>
@@ -89,12 +89,6 @@
             <value></value>
         </property>
     </bean>
-
-    <alias alias="hibernatePackagesToScan" name="${cosmo.hibernate.hibernatePackagesToScan}"/>
-
-    <util:list id="hibernatePackagesToScanDefault">
-        <value>org.unitedinternet.cosmo.model.hibernate</value>
-    </util:list>
 
     <!--
     Transaction manager for a single Hibernate SessionFactory (alternative

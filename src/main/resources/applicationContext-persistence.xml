@@ -25,33 +25,21 @@
     <bean id="sessionFactory"
         class="org.unitedinternet.cosmo.datasource.HibernateSessionFactoryBeanDelegate">
         <constructor-arg ref="externalComponentInstanceProvider"/>
-       <property name="packagesToScan" ref="hibernatePackagesToScan"/>
+       <property name="packagesToScan" value="org.unitedinternet.cosmo.model.hibernate"/>
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.cache.use_query_cache">false</prop>
                 <prop key="hibernate.cache.use_second_level_cache">false</prop>
-          <!--       <prop key="hibernate.cache.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop> -->
                 <prop key="current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
                 <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
                 <prop key="hibernate.jdbc.batch_size">25</prop>
-                <!--<prop key="hibernate.tenant_identifier_resolver">org.unitedinternet.cosmo.hibernate.MultiTenantIdentifierResolver</prop>
-                <prop key="hibernate.multi_tenant_connection_provider">org.hibernate.service.jdbc.connections.spi.DataSourceBasedMultiTenantConnectionProviderImpl</prop> -->
-
-                <!-- configure in cosmo.propeties -->
                 <prop key="hibernate.connection.release_mode">after_transaction</prop>
-                <!--  hibernate debugging config switches -->
                 <prop key="hibernate.generate_statistics">true</prop>
             </props>
         </property>
         <property name="entityInterceptor" ref="cosmoHibernateInterceptor" />
         <property name="dataSource" ref="dataSource" />
     </bean>
-
-    <alias alias="hibernatePackagesToScan" name="${cosmo.hibernate.hibernatePackagesToScan}"/>
-    
-    <util:list id="hibernatePackagesToScanDefault">
-        <value>org.unitedinternet.cosmo.model.hibernate</value>
-    </util:list>
 
     <bean id="auditableObjectInterceptor"
         class="org.unitedinternet.cosmo.model.hibernate.AuditableObjectInterceptor" />

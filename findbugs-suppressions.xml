@@ -1,9 +1,5 @@
 <FindBugsFilter>
     <Match>
-	    <Class name="org.unitedinternet.cosmo.acegisecurity.providers.save.CosmoLoadAuthenticationProvider" />
-	    <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.acegisecurity.providers.save.ExternalAuthenticationProvider" />
         <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
     </Match>

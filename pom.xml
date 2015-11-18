@@ -394,7 +394,7 @@
                     <check>
                         <branchRate>85</branchRate>
                         <lineRate>85</lineRate>
-                        <haltOnFailure>true</haltOnFailure>
+                        <haltOnFailure>false</haltOnFailure>
                         <totalBranchRate>85</totalBranchRate>
                         <totalLineRate>75</totalLineRate>
                         <packageLineRate>85</packageLineRate>

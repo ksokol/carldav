@@ -14,9 +14,9 @@
 	<!-- Appender to file named cosmo.log -->
 	<appender name="cosmoFileAppender"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<file>${catalina.base}/logs/cosmo.log</file>
+		<file>logs/carldav.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<fileNamePattern>${catalina.base}/logs/cosmo.log.%d{yyyy-MM-dd}
+			<fileNamePattern>logs/carldav.log.%d{yyyy-MM-dd}
 			</fileNamePattern>
 		</rollingPolicy>
 		<encoder>

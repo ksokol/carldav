@@ -43,6 +43,7 @@ import net.fortuna.ical4j.model.property.RRule;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.springframework.util.ResourceUtils;
 
@@ -131,7 +132,7 @@ public class EventValidator implements ConstraintValidator<Event, Calendar> {
         
         private static final String ATTENDEES_MAX_LENGTH_KEY = "cosmo.event.validation.attendees.max.length";
         
-        private static final String PROPERTIES_FILE = "/etc/cosmo.properties";
+        private static final String PROPERTIES_FILE = "application.properties";
         
         private Set<String> allowedRecurrenceFrequencies = new HashSet<>(5);
         
@@ -153,7 +154,7 @@ public class EventValidator implements ConstraintValidator<Event, Calendar> {
             
             Properties properties = new Properties();
             try {
-                is = EventValidator.class.getResourceAsStream(PROPERTIES_FILE);
+                is = new ClassPathResource(PROPERTIES_FILE).getInputStream();
                 
                 properties.load(is);
                 

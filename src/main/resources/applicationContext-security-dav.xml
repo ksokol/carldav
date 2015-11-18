@@ -178,4 +178,11 @@
 			<ref bean="userService" />
 		</property>
 	</bean>
+
+    <bean id="userCreationAuthenticationListener" class="org.unitedinternet.cosmo.calendar.security.UserCreationAuthenticationListener">
+        <property name="contentService" ref="contentService" />
+        <property name="entityFactory" ref="cosmoEntityFactory" />
+        <property name="userService" ref="userService" />
+    </bean>
+
 </beans>

@@ -81,4 +81,7 @@ public class UserCreationAuthenticationListener implements SuccessfulAuthenticat
         this.contentService = contentService;
     }
 
+    public void setUserService(final UserService userService) {
+        this.userService = userService;
+    }
 }

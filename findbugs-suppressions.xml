@@ -80,10 +80,6 @@
         <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.filters.ClientBugAccommodationFilter$ReplaceTextWrapper" />
-        <Bug pattern="DM_DEFAULT_ENCODING" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>

@@ -139,8 +139,19 @@
 	<bean id="davResourceLocatorFactory"
 		class="org.unitedinternet.cosmo.dav.StandardResourceLocatorFactory" />
 
+    <bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="mappings">
+            <value>
+                /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_DAV}/**=dav
+            </value>
+        </property>
+    </bean>
+
 	<bean id="dav"
 		class="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler">
+        <property name="supportedMethods">
+            <null />
+        </property>
 		<property name="resourceLocatorFactory" ref="davResourceLocatorFactory" />
 		<property name="resourceFactory" ref="davResourceFactory" />
 		<property name="entityFactory" ref="cosmoEntityFactory" />

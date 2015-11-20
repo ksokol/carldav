@@ -15,17 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav.servlet;
 
-import java.io.IOException;
-import java.util.Enumeration;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ValidationException;
-
 import org.apache.abdera.util.EntityTag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.web.HttpRequestHandler;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -65,8 +61,13 @@ import org.unitedinternet.cosmo.security.CosmoSecurityException;
 import org.unitedinternet.cosmo.security.ItemSecurityException;
 import org.unitedinternet.cosmo.security.Permission;
 import org.unitedinternet.cosmo.server.ServerConstants;
-import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.web.HttpRequestHandler;
+
+import java.io.IOException;
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
 
 /**
  * <p>
@@ -77,16 +78,14 @@ import org.springframework.web.HttpRequestHandler;
  * method based on the request method.
  * </p>
  */
-public class StandardRequestHandler
-    implements HttpRequestHandler, ServerConstants {
-    private static final Log LOG =
-        LogFactory.getLog(StandardRequestHandler.class);
+public class StandardRequestHandler extends AbstractController implements ServerConstants {
+    private static final Log LOG = LogFactory.getLog(StandardRequestHandler.class);
 
     private DavResourceLocatorFactory locatorFactory;
     private DavResourceFactory resourceFactory;
     private EntityFactory entityFactory;
     // RequestHandler methods
-               
+
     /**
      * <p>
      * Processes the request and returns a response. Calls
@@ -101,9 +100,8 @@ public class StandardRequestHandler
      * an entity describing the error.
      * </p>
      */
-    public void handleRequest(HttpServletRequest request,
-                              HttpServletResponse response)
-        throws ServletException, IOException {
+    @Override
+    protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         dumpRequest(request);
         DavRequest wreq = null;
         DavResponse wres = null;
@@ -135,6 +133,7 @@ public class StandardRequestHandler
                 wres.sendDavError(de);
             }
         }
+        return null;
     }
 
     // our methods
@@ -380,10 +379,6 @@ public class StandardRequestHandler
             throw new CosmoException("resourceFactory must not be null",
                     new CosmoException());
         }
-    }
-
-    public DavResourceLocatorFactory getResourceLocatorFactory() {
-        return locatorFactory;
     }
 
     public void setResourceLocatorFactory(DavResourceLocatorFactory factory) {

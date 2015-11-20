@@ -3,20 +3,22 @@ package org.unitedinternet.cosmo;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
-import org.springframework.web.context.support.HttpRequestHandlerServlet;
 import org.springframework.web.filter.RequestContextFilter;
 import org.unitedinternet.cosmo.filters.HttpLoggingFilter;
+import org.unitedinternet.cosmo.servlet.SimpleDavDispatcherServlet;
+
+import javax.servlet.Servlet;
 
 /**
  * @author Kamill Sokol
  */
 @ImportResource("applicationContext-cosmo.xml")
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class, WebMvcAutoConfiguration.class})
 public class CarldavApplication {
 
     public static void main(String[] args) {
@@ -55,11 +57,8 @@ public class CarldavApplication {
     }
 
     @Bean
-    public ServletRegistrationBean davServletRegistration() {
-        HttpRequestHandlerServlet dispatcherServlet = new HttpRequestHandlerServlet();
-        ServletRegistrationBean servletRegistrationBean = new ServletRegistrationBean(dispatcherServlet, "/dav/*") ;
-        servletRegistrationBean.setName("dav");
-        servletRegistrationBean.setLoadOnStartup(1);
-        return servletRegistrationBean;
+    public Servlet dispatcherServlet() {
+        return new SimpleDavDispatcherServlet();
     }
+
 }

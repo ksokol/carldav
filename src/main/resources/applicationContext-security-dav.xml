@@ -90,7 +90,7 @@
 	</bean>
 
 
-	<!-- filter chain that kicks off request-time processing -->
+	<!-- filter chain that kicks off request-time processing
 
 	<bean id="davFilterChainProxy" class="org.springframework.security.web.FilterChainProxy">
 		<security:filter-chain-map request-matcher="ant">
@@ -102,7 +102,7 @@
          				davFilterInvocationInterceptor" />
 		</security:filter-chain-map>
 	</bean>
-
+    -->
 
 
 	<!-- Intercepts service calls and verifies current principal has sufficient 

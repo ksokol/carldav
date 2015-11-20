@@ -22,6 +22,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.mock.MockCalendarDao;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
@@ -52,10 +54,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * This test doesn't check secured flag. See SecurityAdviceConcurrencyTest for that test.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:applicationContext-SecurityAdviceConcurrencyTest.xml"})
+@ContextConfiguration(classes = SecurityAdviceTest.AdviceConfiguration.class)
 public class SecurityAdviceTest {
 
+    @Configuration
+    static class AdviceConfiguration {
+        @Bean
+        public SecurityAdvice securityAdvice() {
+            return new SecurityAdvice();
+        }
+    }
     
     private StandardContentService service;
     private MockCalendarDao calendarDao;

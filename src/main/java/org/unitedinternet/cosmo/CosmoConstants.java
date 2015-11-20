@@ -79,7 +79,7 @@ public final class CosmoConstants {
     
     private static final String LOCALE_KEY = "application.locale";
     
-    private static final String PROPERTIES_FILE = "/etc/cosmo.properties"; 
+    private static final String PROPERTIES_FILE = "/application.properties";
     
     private static final Locale FALLBACK_LOCALE = Locale.GERMAN;
     

@@ -352,7 +352,7 @@
                 <directory>src/test/resources</directory>
                 <includes>
                     <include>logback.xml</include>
-                    <include>etc/cosmo.properties</include>
+                    <include>application.properties</include>
                     <include>applicationContext-*.xml</include>
                 </includes>
             </testResource>

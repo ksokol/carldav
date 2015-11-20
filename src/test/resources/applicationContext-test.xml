@@ -49,13 +49,10 @@
 
     <bean id="beanValidationEventListener" class="org.hibernate.cfg.beanvalidation.BeanValidationEventListener"/>
 
-
-    <bean id="sessionFactory" class="org.unitedinternet.cosmo.datasource.HibernateSessionFactoryBeanDelegate">
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="packagesToScan" value="org.unitedinternet.cosmo.model.hibernate"/>
-        <property name="entityInterceptor">
-            <ref bean="cosmoHibernateInterceptor"/>
-        </property>
-
+        <property name="entityInterceptor" ref="cosmoHibernateInterceptor" />
+        <property name="dataSource" ref="dataSource" />
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.cache.use_query_cache">false</prop>
@@ -68,9 +65,6 @@
                 <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
             </props>
-        </property>
-        <property name="dataSource">
-            <ref bean="dataSource"/>
         </property>
     </bean>
 

@@ -147,11 +147,7 @@
         </property>
     </bean>
 
-	<bean id="dav"
-		class="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler">
-        <property name="supportedMethods">
-            <null />
-        </property>
+	<bean id="dav" class="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler">
 		<property name="resourceLocatorFactory" ref="davResourceLocatorFactory" />
 		<property name="resourceFactory" ref="davResourceFactory" />
 		<property name="entityFactory" ref="cosmoEntityFactory" />

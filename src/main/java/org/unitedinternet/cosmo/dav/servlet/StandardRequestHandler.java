@@ -86,6 +86,9 @@ public class StandardRequestHandler extends AbstractController implements Server
     private EntityFactory entityFactory;
     // RequestHandler methods
 
+    public StandardRequestHandler() {
+        super.setSupportedMethods(null);
+    }
     /**
      * <p>
      * Processes the request and returns a response. Calls

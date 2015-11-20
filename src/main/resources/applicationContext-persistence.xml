@@ -94,12 +94,6 @@
     <!--
         a helper for setting up the database schema and loading seed data
     -->
-     <bean id = "cosmoStartupDataInitializer" class="org.unitedinternet.cosmo.service.impl.CosmoStartupDataInitializer">
-        <property name="rootLoginUrl" value="/account/view" />
-        <property name="entityFactory" ref="cosmoEntityFactory" />
-        <property name="userService" ref="userService" />
-        <property name="serverPropertyService" ref="serverPropertyService" />
-    </bean>
 
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
         <property name="driverClassName" value="com.mysql.jdbc.Driver"/>

@@ -2,7 +2,6 @@ package org.unitedinternet.cosmo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
@@ -17,7 +16,7 @@ import org.unitedinternet.cosmo.filters.HttpLoggingFilter;
  * @author Kamill Sokol
  */
 @ImportResource("applicationContext-cosmo.xml")
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class, DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class CarldavApplication {
 
     public static void main(String[] args) {

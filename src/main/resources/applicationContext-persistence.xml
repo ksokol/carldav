@@ -90,21 +90,4 @@
         <aop:pointcut id="serviceOperation" expression="execution(* org.unitedinternet.cosmo.service.*Service.*(..))" />
         <aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice" />
     </aop:config>
-
-    <!--
-        a helper for setting up the database schema and loading seed data
-    -->
-
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" lazy-init="true" destroy-method="close">
-        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-        <property name="url" value="jdbc:mysql://localhost/cosmo"/>
-        <property name="username" value="root"/>
-        <property name="password" value="" />
-        <property name="maxActive" value="100"/>
-        <property name="maxIdle" value="20" />
-        <property name="maxWait" value="10000"/>
-        <property name="poolPreparedStatements" value="true" />
-        <property name="defaultAutoCommit" value="false" />
-    </bean>
-
 </beans>

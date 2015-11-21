@@ -13,8 +13,9 @@ import org.unitedinternet.cosmo.IntegrationTestSupport;
 public class GeneralSecurityTests extends IntegrationTestSupport {
 
     @Test
-    public void testInternalServerError() throws Exception {
-        mockMvc.perform(get("/dav/users"))
-                .andExpect(status().isInternalServerError());
+    public void testUnauthorized() throws Exception {
+        mockMvc.perform(get("/dav/users")
+                .header("Authorization", "Basic dGVzdDp0ZXN0"))
+                .andExpect(status().isUnauthorized());
     }
 }

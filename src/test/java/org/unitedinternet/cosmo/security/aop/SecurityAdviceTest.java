@@ -48,23 +48,16 @@ import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import util.SecurityAdviceTestConfiguration;
 
 /**
  * Test Case for <code>SecurityAdvice/code>
  * This test doesn't check secured flag. See SecurityAdviceConcurrencyTest for that test.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = SecurityAdviceTest.AdviceConfiguration.class)
+@ContextConfiguration(classes = SecurityAdviceTestConfiguration.class)
 public class SecurityAdviceTest {
 
-    @Configuration
-    static class AdviceConfiguration {
-        @Bean
-        public SecurityAdvice securityAdvice() {
-            return new SecurityAdvice();
-        }
-    }
-    
     private StandardContentService service;
     private MockCalendarDao calendarDao;
     private MockContentDao contentDao;

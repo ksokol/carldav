@@ -354,6 +354,7 @@
                     <include>logback.xml</include>
                     <include>application.properties</include>
                     <include>applicationContext-*.xml</include>
+                    <include>test-data.sql</include>
                 </includes>
             </testResource>
             <testResource>

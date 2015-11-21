@@ -1,0 +1,2 @@
+INSERT INTO users(id,createdate,etag,modifydate,admin,locked,email,password,uid,username) VALUES (1,1447688116670,'c3hz93Topi4igzn82UA+JAOHyVU=',1447688116670,1,0,'root@localhost','098f6bcd4621d373cade4e832627b4f6','6d755da8-0954-4902-8063-3a53c9fc46a6','root');
+INSERT INTO users(id,createdate,etag,modifydate,admin,locked,email,password,uid,username) VALUES (2,1447688116670,'q0leu+2ctlWs3jLUakICskqYGms=',1447688116670,0,0,'test01@localhost.de','098f6bcd4621d373cade4e832627b4f6','39b8a610-3a5c-4554-8da9-b98c5113548f','test01@localhost');

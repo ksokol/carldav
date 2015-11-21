@@ -11,12 +11,13 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
+import util.TestData;
 
 /**
  * @author Kamill Sokol
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = CarldavApplication.class )
+@SpringApplicationConfiguration(classes = {CarldavApplication.class, TestData.class})
 @WebIntegrationTest("server.port:0")
 public class IntegrationTestSupport {
 

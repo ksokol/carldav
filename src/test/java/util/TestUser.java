@@ -5,7 +5,7 @@ package util;
  */
 public enum TestUser {
 
-    UNKNOWN("unknown", "unknown"), TEST01("test01@localhost", "test");
+    UNKNOWN("unknown", "unknown"), TEST01("test01@localhost.de", "test");
 
     private final String uid;
     private final String password;

@@ -10,8 +10,15 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.TestDispatcherServlet;
 import org.springframework.web.context.WebApplicationContext;
 import util.TestData;
+
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Kamill Sokol
@@ -31,6 +38,16 @@ public class IntegrationTestSupport {
 
     @Before
     public void beforeAnyOther() throws Exception {
-        this.mockMvc = webAppContextSetup(this.wac).addFilters(springSecurityFilterChain).build();
+        this.mockMvc = webAppContextSetup(this.wac)
+				.dispatcherServlet(new CustomTestDispatcherServlet())
+				.addFilters(springSecurityFilterChain).build();
     }
+
+    private static class CustomTestDispatcherServlet extends TestDispatcherServlet {
+        @Override
+        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            processRequest(request, response);
+        }
+    }
+
 }

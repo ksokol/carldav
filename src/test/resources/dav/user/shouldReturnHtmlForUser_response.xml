@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><D:multistatus xmlns:D="DAV:"><D:response><D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href><D:propstat><D:prop><D:getetag>"Wu/AWL3u0JtJgm0ZWEVIZ598JW4="</D:getetag><C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><D:multistatus xmlns:D="DAV:"><D:response><D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href><D:propstat><D:prop><D:getetag>${etag}</D:getetag><C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
 VERSION:2.0&#13;
 X-WR-CALNAME:Work&#13;
 PRODID:-//Apple Computer\, Inc//iCal 2.0//EN&#13;

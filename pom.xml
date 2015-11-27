@@ -85,6 +85,8 @@
         <jacoco.check.lineRatio>0.43</jacoco.check.lineRatio>
         <jacoco.check.instructionRatio>0.42</jacoco.check.instructionRatio>
         <jacoco.check.classRatio>0.66</jacoco.check.classRatio>
+
+        <xmlunit.version>2.0.0-alpha-02</xmlunit.version>
     </properties>
 
     <dependencies>
@@ -356,6 +358,18 @@
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-core</artifactId>
+            <version>${xmlunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-matchers</artifactId>
+            <version>${xmlunit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

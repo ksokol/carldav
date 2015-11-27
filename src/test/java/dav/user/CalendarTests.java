@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import util.TestUser;
-
 /**
  * @author Kamill Sokol
  */
@@ -28,7 +27,7 @@ public class CalendarTests extends IntegrationTestSupport {
         final TestUser testUser = TEST01;
         final String uuid = "59BC120D-E909-4A56-A70D-8E97914E51A3";
 
-        final MvcResult mvcResult = mockMvc.perform(put("/dav/" + testUser.getUid() + "/calendar/" + uuid + ".ics")
+        final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/calendar; charset=utf-8")
                 .content(fromFile("event1.ics")))
@@ -38,10 +37,10 @@ public class CalendarTests extends IntegrationTestSupport {
 
         final String eTag = mvcResult.getResponse().getHeader(ETAG);
 
-        mockMvc.perform(request("REPORT", "/dav/{uid}/calendar/", testUser.getUid())
+        mockMvc.perform(request("REPORT", "/dav/{email}/calendar/", testUser.getUid())
                 .content(fromFile("test.xml"))
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/xml; charset=utf-8"))
-                .andExpect(reportWithEtag(fromFile("shouldReturnHtmlForUser_response.xml"), eTag));
+              .andExpect(reportWithEtag(fromFile("shouldReturnHtmlForUser_response.xml"), eTag));
     }
 }

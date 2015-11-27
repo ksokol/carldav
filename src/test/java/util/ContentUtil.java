@@ -1,7 +1,14 @@
 package util;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
+
 import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.ElementSelectors;
+
+import javax.xml.transform.Source;
 
 /**
  * @author Kamill Sokol
@@ -9,8 +16,13 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class ContentUtil {
 
     public static ResultMatcher reportWithEtag(String content, String etag) {
-        //TODO shouldn't happen
-        final String s = content.replaceFirst("<D:getetag>(.*)<\\/D:getetag>", "<D:getetag>"+ etag + "</D:getetag>");
-        return MockMvcResultMatchers.content().string(s);
+        final String contentWithEtag = content.replace("${etag}", etag);
+        final Source build = Input.fromString(contentWithEtag).build();
+
+        return content().source(isSimilarTo(build).withNodeMatcher(ignoreNodeOrder()));
+    }
+
+    private static DefaultNodeMatcher ignoreNodeOrder() {
+        return new DefaultNodeMatcher(ElementSelectors.byName);
     }
 }

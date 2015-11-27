@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
 
@@ -159,9 +161,22 @@ public abstract class DavResourceBase
         return properties.get(name);
     }
 
+    @Deprecated
     public DavPropertySet getProperties() {
         loadProperties();
         return properties;
+    }
+
+    public Map<String, WebDavProperty> getWebDavProperties() {
+        final DavPropertySet properties = getProperties();
+        final DavPropertyName[] propertyNames = properties.getPropertyNames();
+        final Map<String, WebDavProperty> sorted = new TreeMap<>();
+
+        for (final DavPropertyName propertyName : propertyNames) {
+            sorted.put(propertyName.getName(), (WebDavProperty) properties.get(propertyName));
+        }
+
+        return sorted;
     }
 
     public void setProperty(org.apache.jackrabbit.webdav.property.DavProperty<?> property)

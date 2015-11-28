@@ -11,6 +11,7 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.TestDispatcherServlet;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import util.TestData;
 
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {CarldavApplication.class, TestData.class})
 @WebIntegrationTest("server.port:0")
+@Transactional
 public class IntegrationTestSupport {
 
     protected MockMvc mockMvc;

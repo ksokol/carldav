@@ -138,8 +138,11 @@ public class HibUser extends HibAuditableObject implements User {
     @OneToMany(targetEntity=HibCollectionSubscription.class, mappedBy = "owner", 
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<CollectionSubscription> subscriptions = 
+    private Set<CollectionSubscription> subscriptions =
         new HashSet<CollectionSubscription>(0);
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private Set<HibItem> items;
 
     /**
      */

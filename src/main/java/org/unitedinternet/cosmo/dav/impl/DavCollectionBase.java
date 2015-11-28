@@ -15,19 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +24,6 @@ import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
@@ -65,6 +51,20 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Extends <code>DavResourceBase</code> to adapt the Cosmo
@@ -447,8 +447,9 @@ public class DavCollectionBase extends DavItemResourceBase implements
     
             writer.write("<h2>Properties</h2>\n");
             writer.write("<dl>\n");
-            for (DavPropertyIterator i = getProperties().iterator(); i.hasNext();) {
-                WebDavProperty prop = (WebDavProperty) i.nextProperty();
+
+            for (final Map.Entry<String, WebDavProperty> i : getWebDavProperties().entrySet()) {
+                WebDavProperty prop = i.getValue();
                 Object value = prop.getValue();
                 String text = null;
                 if (value instanceof Element) {

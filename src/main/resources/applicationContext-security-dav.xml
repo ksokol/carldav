@@ -89,21 +89,26 @@
 		</property>
 	</bean>
 
-
 	<!-- filter chain that kicks off request-time processing -->
 
-	<bean id="davFilterChainProxy" class="org.springframework.security.web.FilterChainProxy">
+	<bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
 		<security:filter-chain-map request-matcher="ant">
 			<security:filter-chain pattern="/**"
-				filters="protocolBasicProcessingFilter,
+				filters="requestContextFilter,
+				        openSessionInViewFilter,
+				        httpLoggingFilter,
+				        protocolBasicProcessingFilter,
          				protocolTicketProcessingFilter,
          				clientICalendarFilterManagerFilter,
          				davExceptionTranslationFilter,
-         				davFilterInvocationInterceptor" />
+         				davFilterInvocationInterceptor,
+         				retryFilter" />
 		</security:filter-chain-map>
 	</bean>
 
-
+    <bean id="openSessionInViewFilter" class="org.springframework.orm.hibernate4.support.OpenSessionInViewFilter" />
+    <bean id="requestContextFilter" class="org.springframework.web.filter.RequestContextFilter" />
+    <bean id="httpLoggingFilter" class="org.unitedinternet.cosmo.filters.HttpLoggingFilter" />
 
 	<!-- Intercepts service calls and verifies current principal has sufficient 
 		privileges to execute api. Aspect bean is annotated with aspecj annotations. -->

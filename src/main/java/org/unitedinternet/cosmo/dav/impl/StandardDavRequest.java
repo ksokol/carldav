@@ -66,6 +66,7 @@ import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.ticket.TicketConstants;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Ticket;
+import org.unitedinternet.cosmo.server.ServerConstants;
 import org.unitedinternet.cosmo.util.BufferedServletInputStream;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Document;
@@ -291,7 +292,8 @@ public class StandardDavRequest extends WebdavRequestImpl implements
         if (locator == null) {
             URL context = null;
             try {
-                String basePath = getContextPath() + getServletPath();
+
+                String basePath = getContextPath() + "/" + ServerConstants.SVC_DAV;
                 context = new URL(getScheme(), getServerName(),
                         getServerPort(), basePath);
 

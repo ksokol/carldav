@@ -95,7 +95,7 @@ public class CalendarResourceProvider extends FileProvider {
         // it's possible that what will be served for subsequent GETs is
         // slightly different than what was provided in the PUT, so send a
         // weak etag
-        response.setHeader("ETag", "W/" + ((DavItemResourceBase) content).getETag());
+        response.setHeader("ETag", content.getETag());
     }
 
     protected WebDavResource resolveDestination(DavResourceLocator locator,

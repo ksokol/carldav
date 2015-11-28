@@ -85,6 +85,8 @@
         <jacoco.check.lineRatio>0.43</jacoco.check.lineRatio>
         <jacoco.check.instructionRatio>0.42</jacoco.check.instructionRatio>
         <jacoco.check.classRatio>0.66</jacoco.check.classRatio>
+
+        <xmlunit.version>2.0.0-alpha-02</xmlunit.version>
     </properties>
 
     <dependencies>
@@ -103,6 +105,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-test</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>4.2.3.BUILD.SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/spring-test-4.2.3.BUILD-SNAPSHOT-custom.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -344,6 +359,18 @@
             <artifactId>commons-dbcp</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-core</artifactId>
+            <version>${xmlunit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-matchers</artifactId>
+            <version>${xmlunit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -354,6 +381,7 @@
                     <include>logback.xml</include>
                     <include>application.properties</include>
                     <include>applicationContext-*.xml</include>
+                    <include>test-data.sql</include>
                 </includes>
             </testResource>
             <testResource>
@@ -370,6 +398,12 @@
             </testResource>
             <testResource>
                 <directory>src/test/resources/testdata</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources/html</directory>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources/dav/user</directory>
             </testResource>
         </testResources>
         <plugins>

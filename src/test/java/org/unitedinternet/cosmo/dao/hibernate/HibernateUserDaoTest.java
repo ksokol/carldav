@@ -22,6 +22,7 @@ import java.util.Set;
 
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
@@ -34,25 +35,19 @@ import org.unitedinternet.cosmo.model.hibernate.HibPreference;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 import org.springframework.beans.factory.annotation.Autowired;
 
-/**
- * Test HibernateUserDao class.
- *
- */
 public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
     
     @Autowired
     private UserDaoImpl userDao;
-    
-    /**
-     * Constructor.
-     */
-    public HibernateUserDaoTest() {
-        super();
+
+    @Before
+    public void cleanup() {
+        final Set<User> usersToDelete = userDao.getUsers();
+        for (final User user : usersToDelete) {
+            userDao.removeUser(user);
+        }
     }
-    
-    /**
-     * Tests create user.
-     */
+
     @Test
     public void testCreateUser() {
         User user1 = new HibUser();

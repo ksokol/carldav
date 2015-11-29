@@ -25,15 +25,15 @@ public class ContentUtil {
     }
 
     private static DefaultNodeMatcher nodeMatcher() {
-        return new DefaultNodeMatcher(unorderedSupportedReportNodes(), unorderedCurrentUserPrivilegeSet(), byName);
+        return new DefaultNodeMatcher(unorderedSupportedReportNodes(), unorderedPrivilegeNodes(), byName);
     }
 
     private static ElementSelector unorderedSupportedReportNodes() {
         return unorderedNodes("supported-report");
     }
 
-    private static ElementSelector unorderedCurrentUserPrivilegeSet() {
-        return unorderedNodes("current-user-privilege-set");
+    private static ElementSelector unorderedPrivilegeNodes() {
+        return unorderedNodes("privilege");
     }
 
     private static ElementSelector unorderedNodes(final String localName) {

@@ -8,6 +8,7 @@ import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.xmlunit.builder.Input;
 import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.ElementSelector;
 import util.xmlunit.FirstChildElementNameSelector;
 
 import javax.xml.transform.Source;
@@ -24,6 +25,18 @@ public class ContentUtil {
     }
 
     private static DefaultNodeMatcher nodeMatcher() {
-        return new DefaultNodeMatcher(selectorForElementNamed("supported-report", new FirstChildElementNameSelector()), byName);
+        return new DefaultNodeMatcher(unorderedSupportedReportNodes(), unorderedCurrentUserPrivilegeSet(), byName);
+    }
+
+    private static ElementSelector unorderedSupportedReportNodes() {
+        return unorderedNodes("supported-report");
+    }
+
+    private static ElementSelector unorderedCurrentUserPrivilegeSet() {
+        return unorderedNodes("current-user-privilege-set");
+    }
+
+    private static ElementSelector unorderedNodes(final String localName) {
+        return selectorForElementNamed(localName, new FirstChildElementNameSelector());
     }
 }

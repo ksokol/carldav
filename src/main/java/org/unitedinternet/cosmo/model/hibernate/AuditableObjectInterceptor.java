@@ -20,6 +20,8 @@ import java.util.Date;
 
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
+import org.springframework.util.Assert;
+import carldav.service.time.TimeService;
 
 /**
  * Hibernate Interceptor that updates creationDate, modifiedDate,
@@ -28,6 +30,13 @@ import org.hibernate.type.Type;
 public class AuditableObjectInterceptor extends EmptyInterceptor {
 
     private static final long serialVersionUID = 2206186604411196082L;
+
+    private final TimeService timeService;
+
+    public AuditableObjectInterceptor(final TimeService timeService) {
+        Assert.notNull(timeService, "timeService is null");
+        this.timeService = timeService;
+    }
 
     @Override
     public boolean onFlushDirty(Object object, Serializable id, Object[] currentState,
@@ -39,7 +48,7 @@ public class AuditableObjectInterceptor extends EmptyInterceptor {
         // Set new modifyDate so that calculateEntityTag()
         // has access to it
         HibAuditableObject ao = (HibAuditableObject) object;
-        Date curDate = new Date(System.currentTimeMillis());
+        Date curDate = timeService.getCurrentTime();
         ao.setModifiedDate(curDate);
         
         // update modifiedDate and entityTag
@@ -63,7 +72,7 @@ public class AuditableObjectInterceptor extends EmptyInterceptor {
         // Set new modifyDate so that calculateEntityTag()
         // has access to it
         HibAuditableObject ao = (HibAuditableObject) object;
-        Date curDate = new Date(System.currentTimeMillis());
+        Date curDate = timeService.getCurrentTime();
         ao.setModifiedDate(curDate);
         
         // initialize modifiedDate, creationDate and entityTag

@@ -15,18 +15,17 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.apache.commons.codec.binary.Base64;
+import org.hibernate.annotations.Type;
+import org.unitedinternet.cosmo.CosmoNoSuchAlgorithmException;
+import org.unitedinternet.cosmo.model.AuditableObject;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
-
-import org.apache.commons.codec.binary.Base64;
-import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.CosmoNoSuchAlgorithmException;
-import org.unitedinternet.cosmo.model.AuditableObject;
-import org.unitedinternet.cosmo.model.EntityFactory;
 
 /**
  * Hibernate persistent AuditableObject.
@@ -47,9 +46,7 @@ public abstract class HibAuditableObject extends BaseModelObject implements Audi
             }
         }
     };
-    
-    private static final EntityFactory FACTORY = new HibEntityFactory();
-    
+
     @Column(name = "createdate")
     @Type(type="long_timestamp")
     private Date creationDate;
@@ -118,9 +115,5 @@ public abstract class HibAuditableObject extends BaseModelObject implements Audi
         // thread has its own instance.
         MessageDigest md = ETAG_DIGEST_LOCAL.get();        
         return Base64.encodeBase64String(md.digest(bytes));
-    }
-    
-    public EntityFactory getFactory() {
-        return FACTORY;
     }
 }

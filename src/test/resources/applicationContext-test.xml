@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xmlns:aop="http://www.springframework.org/schema/aop"
-       xsi:schemaLocation="
-    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
-        >
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--
         Copyright 2006 Open Source Applications Foundation
@@ -27,14 +25,19 @@
         limitations under the License.
     -->
 
+    <context:component-scan base-package="carldav, org.unitedinternet.cosmo.util" />
+
     <bean id="propertyPlaceholderConfigurer"
           class="org.unitedinternet.cosmo.servletcontext.CosmoPropertyPlaceholderConfigurer">
         <property name="locations" value="classpath:application.properties"/>
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>
 
+    <bean id="timeService" class="carldav.service.time.TimeServiceImpl" />
 
-    <bean id="auditableObjectInterceptor" class="org.unitedinternet.cosmo.model.hibernate.AuditableObjectInterceptor"/>
+    <bean id="auditableObjectInterceptor" class="org.unitedinternet.cosmo.model.hibernate.AuditableObjectInterceptor">
+        <constructor-arg index="0" ref="timeService" />
+    </bean>
 
     <bean id="eventStampInterceptor" class="org.unitedinternet.cosmo.model.hibernate.EventStampInterceptor"/>
 

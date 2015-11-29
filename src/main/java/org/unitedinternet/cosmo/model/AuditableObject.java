@@ -45,10 +45,4 @@ public interface AuditableObject {
      * </p>
      */
     public String getEntityTag();
-
-    /**
-     * @return EntityFactory that was used to create object.
-     */
-    public EntityFactory getFactory();
-
 }

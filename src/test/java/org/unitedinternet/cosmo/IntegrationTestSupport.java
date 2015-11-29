@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.TestDispatcherServlet;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
+import util.MockBeans;
 import util.TestData;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Kamill Sokol
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {CarldavApplication.class, TestData.class})
+@SpringApplicationConfiguration(classes = {CarldavApplication.class, TestData.class, MockBeans.class})
 @WebIntegrationTest("server.port:0")
 @Transactional
 public class IntegrationTestSupport {

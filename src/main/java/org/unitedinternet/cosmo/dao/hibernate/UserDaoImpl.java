@@ -15,16 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Criteria;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
@@ -32,6 +22,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
@@ -42,8 +33,15 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.PageCriteria;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
+import carldav.service.generator.IdGenerator;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolationException;
 
 
 /**
@@ -51,10 +49,7 @@ import org.springframework.orm.hibernate4.SessionFactoryUtils;
  */
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(UserDaoImpl.class);
-
-    private VersionFourGenerator idGenerator;
+    private IdGenerator idGenerator;
 
     private static final QueryCriteriaBuilder<User.SortType> QUERY_CRITERIA_BUILDER =
             new UserQueryCriteriaBuilder<User.SortType>();
@@ -295,11 +290,11 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public VersionFourGenerator getIdGenerator() {
+    public IdGenerator getIdGenerator() {
         return idGenerator;
     }
 
-    public void setIdGenerator(VersionFourGenerator idGenerator) {
+    public void setIdGenerator(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
     }
 

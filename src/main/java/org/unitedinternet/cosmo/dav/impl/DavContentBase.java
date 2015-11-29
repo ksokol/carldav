@@ -41,6 +41,7 @@ import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
 
 /**
  * Extends <code>DavItemResourceBase</code> to adapt the Cosmo
@@ -126,8 +127,7 @@ public abstract class DavContentBase extends DavItemResourceBase
         content.setLastModifiedBy(user != null ? user.getEmail() : "");
 
         if (content.getUid() == null) {
-            content.setTriageStatus(TriageStatusUtil.initialize(content
-                    .getFactory().createTriageStatus()));
+            content.setTriageStatus(TriageStatusUtil.initialize(new HibTriageStatus()));
             content.setLastModification(ContentItem.Action.CREATED);
             content.setSent(Boolean.FALSE);
             content.setNeedsReply(Boolean.FALSE);

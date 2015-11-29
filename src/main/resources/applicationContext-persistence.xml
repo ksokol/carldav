@@ -12,14 +12,12 @@
     -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:tx="http://www.springframework.org/schema/tx"
-    xmlns:util="http://www.springframework.org/schema/util"
-    xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
-        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <!-- Sesssion factory -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -40,8 +38,9 @@
         </property>
     </bean>
 
-    <bean id="auditableObjectInterceptor"
-        class="org.unitedinternet.cosmo.model.hibernate.AuditableObjectInterceptor" />
+    <bean id="auditableObjectInterceptor" class="org.unitedinternet.cosmo.model.hibernate.AuditableObjectInterceptor">
+        <constructor-arg index="0" ref="timeService" />
+    </bean>
 
     <bean id="eventStampInterceptor" class="org.unitedinternet.cosmo.model.hibernate.EventStampInterceptor" />
     <bean id="cosmoHibernateInterceptor" class="org.unitedinternet.cosmo.hibernate.CompoundInterceptor">

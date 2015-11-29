@@ -15,14 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
@@ -59,7 +51,15 @@ import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItemTombstone;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
+import carldav.service.generator.IdGenerator;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolationException;
 
 
 /**
@@ -70,7 +70,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(ItemDaoImpl.class);
 
-    private VersionFourGenerator idGenerator = null;
+    private IdGenerator idGenerator = null;
     private TokenService ticketKeyGenerator = null;
     private ItemPathTranslator itemPathTranslator = null;
     private ItemFilterProcessor itemFilterProcessor = null;
@@ -591,11 +591,11 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      *
      * @param idGenerator
      */
-    public void setIdGenerator(VersionFourGenerator idGenerator) {
+    public void setIdGenerator(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
     }
 
-    public VersionFourGenerator getIdGenerator() {
+    public IdGenerator getIdGenerator() {
         return idGenerator;
     }
 

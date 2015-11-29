@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.BinaryAttribute;
 import org.unitedinternet.cosmo.model.CalendarAttribute;
@@ -47,7 +48,7 @@ import org.unitedinternet.cosmo.model.TicketType;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
+import carldav.service.generator.IdGenerator;
 import org.w3c.dom.Element;
 
 /**
@@ -56,8 +57,13 @@ import org.w3c.dom.Element;
  */
 public class HibEntityFactory implements EntityFactory {
 
-    private VersionFourGenerator idGenerator = new VersionFourGenerator();
-    
+    private final IdGenerator idGenerator;
+
+    public HibEntityFactory(final IdGenerator idGenerator) {
+        Assert.notNull(idGenerator, "idGenerator is null");
+        this.idGenerator = idGenerator;
+    }
+
     public CollectionItem createCollection() {
         return new HibCollectionItem();
     }

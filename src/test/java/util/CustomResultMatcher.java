@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public final class CustomResultMatcher {
 
     public static ResultMatcher contentFromFile(final String fileName) throws Exception {
-        final String file = FileUtil.fromFile(fileName);
+        final String file = FileUtil.file(fileName);
         return MockMvcResultMatchers.content().string(file);
     }
 }

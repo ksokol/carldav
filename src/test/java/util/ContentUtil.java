@@ -18,10 +18,35 @@ import javax.xml.transform.Source;
  */
 public class ContentUtil {
 
-    public static ResultMatcher reportWithEtag(String content, String etag) {
-        final String contentWithEtag = content.replace("${etag}", etag);
-        final Source build = Input.fromString(contentWithEtag).build();
+    public static ResultMatcher xml(String content) {
+        final Source build = Input.fromString(content).build();
         return content().source(isSimilarTo(build).withNodeMatcher(nodeMatcher()));
+    }
+
+    public static WithStep with() {
+        return new WithStep();
+    }
+
+    public static class WithStep {
+
+        public InStep etag(String etag) {
+            return new InStep("${etag}", etag);
+        }
+
+        public static class InStep {
+
+            private final String template;
+            private final String value;
+
+            public InStep(final String template, final String value) {
+                this.template = template;
+                this.value = value;
+            }
+
+            public String in(String content) {
+                return content.replace(template, value);
+            }
+        }
     }
 
     private static DefaultNodeMatcher nodeMatcher() {

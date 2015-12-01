@@ -10,7 +10,7 @@ import java.io.IOException;
  */
 public class FileUtil {
 
-    public static String fromFile(String fileName) {
+    public static String file(String fileName) {
         try {
             return IOUtils.toString(new ClassPathResource(fileName).getInputStream());
         } catch (IOException exception) {

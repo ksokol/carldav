@@ -112,7 +112,7 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertEquals("test description2", ccs.getDescription());
 
         // test add event
-        ContentItem event = generateEvent("test.ics", "cal1.ics",
+        ContentItem event = generateEvent("test.ics", "testdata/cal1.ics",
                 "testuser");
         
         calendar = (CollectionItem) contentDao.findItemByUid(calendar.getUid());
@@ -129,7 +129,7 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
 
         // test update event
         queryEvent.setName("test2.ics");
-        evs.setEventCalendar(CalendarUtils.parseCalendar(helper.getBytes("cal2.ics")));
+        evs.setEventCalendar(CalendarUtils.parseCalendar(helper.getBytes("testdata/cal2.ics")));
         
         queryEvent = contentDao.updateContent(queryEvent);
 
@@ -172,7 +172,7 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         
         contentDao.createCollection(root, calendar);
 
-        ContentItem event = generateEvent("big.ics", "big.ics",
+        ContentItem event = generateEvent("testdata/big.ics", "testdata/big.ics",
                 "testuser");
 
         event = contentDao.createContent(calendar, event);
@@ -194,7 +194,7 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         
         contentDao.createCollection(root, calendar);
 
-        NoteItem event = generateEvent("test.ics", "cal1.ics",
+        NoteItem event = generateEvent("testdata/test.ics", "testdata/cal1.ics",
                 "testuser");
 
         event = (NoteItem) contentDao.createContent(calendar, event);
@@ -222,7 +222,7 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         contentDao.createCollection(root, calendar);
 
         for (int i = 1; i <= 5; i++) {
-            ContentItem event = generateEvent("test" + i + ".ics", "cal"
+            ContentItem event = generateEvent("test" + i + ".ics", "testdata/cal"
                     + i + ".ics", "testuser");
             contentDao.createContent(calendar, event);
         }
@@ -350,17 +350,17 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
 
         // create 3 events, 2 of them recurring, one of those infinite
       //  clearSession();
-        NoteItem event = generateEvent("test1.ics", "eventwithtimezone1.ics", "testuser");
+        NoteItem event = generateEvent("test1.ics", "testdata/eventwithtimezone1.ics", "testuser");
         NoteItem newEvent = (NoteItem) contentDao.createContent(calendar, event);
-        event = generateEvent("test2.ics", "eventwithtimezone2.ics", "testuser");
+        event = generateEvent("test2.ics", "testdata/eventwithtimezone2.ics", "testuser");
         newEvent = (NoteItem) contentDao.createContent(calendar, event);
-        event = generateEvent("test3.ics", "eventwithtimezone3.ics", "testuser");
+        event = generateEvent("test3.ics", "testdata/eventwithtimezone3.ics", "testuser");
         event.setUid("test3uid");
         newEvent = (NoteItem) contentDao.createContent(calendar, event);
         
 
         // modification to infinite daily recurring eventwithtimezone3.ics
-        event = generateEventException("mod.ics", "eventmodwithtimezone.ics", "testuser");
+        event = generateEventException("mod.ics", "testdata/eventmodwithtimezone.ics", "testuser");
         event.setModifies(newEvent);
         newEvent = (NoteItem) contentDao.createContent(calendar, event);
         

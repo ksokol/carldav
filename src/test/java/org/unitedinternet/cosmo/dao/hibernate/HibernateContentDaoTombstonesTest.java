@@ -277,7 +277,7 @@ public class HibernateContentDaoTombstonesTest extends AbstractHibernateDaoTestC
         FileItem content = new HibFileItem();
         content.setName(name);
         content.setDisplayName(name);
-        content.setContent(helper.getBytes("testdata1.txt"));
+        content.setContent(helper.getBytes("testdata/testdata1.txt"));
         content.setContentLanguage("en");
         content.setContentEncoding("UTF8");
         content.setContentType("text/text");

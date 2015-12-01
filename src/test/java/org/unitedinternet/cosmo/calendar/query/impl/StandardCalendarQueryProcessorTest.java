@@ -99,13 +99,13 @@ public class StandardCalendarQueryProcessorTest {
         contentDao.createCollection(root, calendar);
         
         for (int i = 1; i <= 3; i++) {
-            ContentItem event = generateEvent("test" + i + ".ics", "eventwithtimezone"
+            ContentItem event = generateEvent("test" + i + ".ics", "testdata/eventwithtimezone"
                     + i + ".ics", user);
             event.setUid(CALENDAR_UID + i);
             contentDao.createContent(calendar, event);
         }
         
-        FreeBusyItem fb = generateFreeBusy("test4.ics", "vfreebusy.ics", user);
+        FreeBusyItem fb = generateFreeBusy("test4.ics", "testdata/vfreebusy.ics", user);
         fb.setUid(CALENDAR_UID + "4");
         contentDao.createContent(calendar, fb);
     }
@@ -126,7 +126,7 @@ public class StandardCalendarQueryProcessorTest {
         
         Period fbRange = new Period(start, end);
         
-        Calendar calendar = CalendarUtils.parseCalendar(testHelper.getBytes("allday_weekly_recurring.ics"));
+        Calendar calendar = CalendarUtils.parseCalendar(testHelper.getBytes("testdata/allday_weekly_recurring.ics"));
         
         // test several timezones
         TimeZone tz = TIMEZONE_REGISTRY.getTimeZone("America/Chicago");

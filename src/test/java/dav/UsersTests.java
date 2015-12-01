@@ -22,6 +22,6 @@ public class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/users/" + testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isOk())
-                .andExpect(contentFromFile("test01.html"));
+                .andExpect(contentFromFile("html/test01.html"));
     }
 }

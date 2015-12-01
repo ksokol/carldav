@@ -99,7 +99,7 @@ public class HibernateTriageStatusQueryProcessorTest extends AbstractHibernateDa
         noteMod = (NoteItem) contentDao.createContent(calendar, noteMod);
         
         for (int i = 1; i <= 3; i++) {
-            ContentItem event = generateEvent("test" + i + ".ics", "eventwithtimezone"
+            ContentItem event = generateEvent("test" + i + ".ics", "testdata/eventwithtimezone"
                     + i + ".ics", "testuser");
             event.setUid("calendar2_" + i);
             contentDao.createContent(calendar, event);

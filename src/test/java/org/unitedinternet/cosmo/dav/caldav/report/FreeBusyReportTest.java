@@ -57,7 +57,7 @@ public class FreeBusyReportTest extends BaseReportTestCase {
         testHelper.getHomeCollection().setExcludeFreeBusyRollup(false);
         DavHomeCollection home = testHelper.initializeHomeResource();
 
-        FreeBusyReport report = makeReport("freebusy1.xml", DEPTH_1, home);
+        FreeBusyReport report = makeReport("testdata/freebusy1.xml", DEPTH_1, home);
 
         report.runQuery();
     }
@@ -71,7 +71,7 @@ public class FreeBusyReportTest extends BaseReportTestCase {
         testHelper.getHomeCollection().setExcludeFreeBusyRollup(true);
         DavHomeCollection home = testHelper.initializeHomeResource();
 
-        FreeBusyReport report = makeReport("freebusy1.xml", DEPTH_1, home);
+        FreeBusyReport report = makeReport("testdata/freebusy1.xml", DEPTH_1, home);
 
         try {
             report.runQuery();
@@ -96,7 +96,7 @@ public class FreeBusyReportTest extends BaseReportTestCase {
         DavCollection dc =
             (DavCollection) testHelper.findMember(home, coll.getName());
 
-        FreeBusyReport report = makeReport("freebusy1.xml", DEPTH_1, dc);
+        FreeBusyReport report = makeReport("testdata/freebusy1.xml", DEPTH_1, dc);
 
         try {
             report.runQuery();

@@ -50,7 +50,7 @@ public class CalendarTests extends IntegrationTestSupport {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/calendar; charset=utf-8")
-                .content(fromFile("event1.ics")))
+                .content(fromFile("dav/caldav/event1.ics")))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(ETAG, notNullValue()))
                 .andReturn();
@@ -58,10 +58,10 @@ public class CalendarTests extends IntegrationTestSupport {
         final String eTag = mvcResult.getResponse().getHeader(ETAG);
 
         mockMvc.perform(request("REPORT", "/dav/{email}/calendar/", testUser.getUid())
-                .content(fromFile("shouldReturnHtmlForUser_request.xml"))
+                .content(fromFile("dav/user/shouldReturnHtmlForUser_request.xml"))
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/xml; charset=utf-8"))
-                .andExpect(reportWithEtag(fromFile("shouldReturnHtmlForUser_response.xml"), eTag));
+                .andExpect(reportWithEtag(fromFile("dav/user/shouldReturnHtmlForUser_response.xml"), eTag));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class CalendarTests extends IntegrationTestSupport {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/calendar; charset=utf-8")
-                .content(fromFile("event1.ics")))
+                .content(fromFile("dav/caldav/event1.ics")))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(ETAG, notNullValue()))
                 .andReturn();
@@ -77,10 +77,10 @@ public class CalendarTests extends IntegrationTestSupport {
         final String eTag = mvcResult.getResponse().getHeader(ETAG);
 
         mockMvc.perform(request("REPORT", "/dav/{email}/calendar/", testUser.getUid())
-                .content(fromFile("shouldReturnHtmlForUserAllProp_request.xml"))
+                .content(fromFile("dav/user/shouldReturnHtmlForUserAllProp_request.xml"))
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/xml; charset=utf-8"))
-                .andExpect(reportWithEtag(fromFile("shouldReturnHtmlForUserAllProp_response.xml"), eTag));
+                .andExpect(reportWithEtag(fromFile("dav/user/shouldReturnHtmlForUserAllProp_response.xml"), eTag));
     }
 
     @Test
@@ -88,7 +88,7 @@ public class CalendarTests extends IntegrationTestSupport {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/calendar; charset=utf-8")
-                .content(fromFile("event1.ics")))
+                .content(fromFile("dav/caldav/event1.ics")))
                 .andExpect(status().isCreated())
                 .andExpect(header().string(ETAG, notNullValue()))
                 .andReturn();
@@ -96,9 +96,9 @@ public class CalendarTests extends IntegrationTestSupport {
         final String eTag = mvcResult.getResponse().getHeader(ETAG);
 
         mockMvc.perform(request("REPORT", "/dav/{email}/calendar/", testUser.getUid())
-                .content(fromFile("shouldReturnHtmlForUserPropName_request.xml"))
+                .content(fromFile("dav/user/shouldReturnHtmlForUserPropName_request.xml"))
                 .header(AUTHORIZATION, user(testUser))
                 .header(CONTENT_TYPE, "text/xml; charset=utf-8"))
-                .andExpect(reportWithEtag(fromFile("shouldReturnHtmlForUserPropName_response.xml"), eTag));
+                .andExpect(reportWithEtag(fromFile("dav/user/shouldReturnHtmlForUserPropName_response.xml"), eTag));
     }
 }

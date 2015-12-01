@@ -374,38 +374,6 @@
     </dependencies>
 
     <build>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-                <includes>
-                    <include>logback.xml</include>
-                    <include>application.properties</include>
-                    <include>applicationContext-*.xml</include>
-                    <include>test-data.sql</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources/dav/caldav</directory>
-                <includes>
-                    <include>*.ics</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources/icalendar</directory>
-                <includes>
-                    <include>*.ics</include>
-                </includes>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources/testdata</directory>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources/html</directory>
-            </testResource>
-            <testResource>
-                <directory>src/test/resources/dav/user</directory>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

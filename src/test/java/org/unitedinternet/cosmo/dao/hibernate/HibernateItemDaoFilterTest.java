@@ -93,7 +93,7 @@ public class HibernateItemDaoFilterTest extends AbstractHibernateDaoTestCase {
         contentDao.createCollection(root, calendar2);
 
         for (int i = 1; i <= 6; i++) {
-            NoteItem event = generateEvent("test" + i + ".ics", "cal"
+            NoteItem event = generateEvent("test" + i + ".ics", "testdata/cal"
                     + i + ".ics", "testuser");
             event.setUid("calendar1_" + i);
             event.setIcalUid("icaluid" + i);
@@ -117,7 +117,7 @@ public class HibernateItemDaoFilterTest extends AbstractHibernateDaoTestCase {
         noteMod = (NoteItem) contentDao.createContent(calendar1, noteMod);
         
         for (int i = 1; i <= 3; i++) {
-            ContentItem event = generateEvent("test" + i + ".ics", "eventwithtimezone"
+            ContentItem event = generateEvent("test" + i + ".ics", "testdata/eventwithtimezone"
                     + i + ".ics", "testuser");
             event.setUid("calendar2_" + i);
             contentDao.createContent(calendar2, event);

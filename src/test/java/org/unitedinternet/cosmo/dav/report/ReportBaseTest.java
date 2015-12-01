@@ -55,7 +55,7 @@ public class ReportBaseTest extends BaseDavTestCase
             makeAndStoreDummyCollection(testHelper.getHomeCollection());
         
         MockReport report = new MockReport();
-        report.init(home, makeReportInfo("freebusy1.xml", DEPTH_INFINITY));
+        report.init(home, makeReportInfo("testdata/freebusy1.xml", DEPTH_INFINITY));
 
         report.runQuery();
 

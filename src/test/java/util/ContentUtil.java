@@ -23,6 +23,10 @@ public class ContentUtil {
         return content().source(isSimilarTo(build).withNodeMatcher(nodeMatcher()));
     }
 
+    public static ResultMatcher html(String content) {
+        return content().string(content);
+    }
+
     public static WithStep with() {
         return new WithStep();
     }

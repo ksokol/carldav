@@ -3,17 +3,21 @@ package dav.user;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.MediaType.TEXT_XML;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static util.ContentUtil.html;
 import static util.ContentUtil.with;
 import static util.ContentUtil.xml;
 import static util.FileUtil.file;
 import static util.HeaderUtil.user;
 import static util.TestUser.TEST01;
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR;
+import static util.mockmvc.CustomRequestBuilders.mkcalendar;
+import static util.mockmvc.CustomRequestBuilders.report;
+import static util.mockmvc.CustomResultMatchers.etag;
 
 import carldav.service.generator.IdGenerator;
 import carldav.service.time.TimeService;
@@ -23,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import util.TestUser;
+import util.mockmvc.CustomRequestBuilders;
 
 import java.util.Date;
 
@@ -49,65 +54,83 @@ public class CalendarTests extends IntegrationTestSupport {
     @Test
     public void shouldReturnHtmlForUser() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
+                .contentType(TEXT_CALENDAR)
                 .header(AUTHORIZATION, user(testUser))
-                .header(CONTENT_TYPE, "text/calendar; charset=utf-8")
                 .content(file("dav/caldav/event1.ics")))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(ETAG, notNullValue()))
+                .andExpect(etag(notNullValue()))
                 .andReturn();
 
         final String eTag = mvcResult.getResponse().getHeader(ETAG);
 
-        mockMvc.perform(request("REPORT", "/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(report("/dav/{email}/calendar/", testUser.getUid())
                 .content(file("dav/user/shouldReturnHtmlForUser_request.xml"))
-                .header(AUTHORIZATION, user(testUser))
-                .header(CONTENT_TYPE, "text/xml; charset=utf-8"))
+                .contentType(TEXT_XML)
+                .header(AUTHORIZATION, user(testUser)))
                 .andExpect(xml(with().etag(eTag).in(file("dav/user/shouldReturnHtmlForUser_response.xml"))));
     }
 
     @Test
     public void shouldReturnHtmlForUserAllProp() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
+                .contentType(TEXT_CALENDAR)
                 .header(AUTHORIZATION, user(testUser))
-                .header(CONTENT_TYPE, "text/calendar; charset=utf-8")
                 .content(file("dav/caldav/event1.ics")))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(ETAG, notNullValue()))
+                .andExpect(etag(notNullValue()))
                 .andReturn();
 
         final String eTag = mvcResult.getResponse().getHeader(ETAG);
 
-        mockMvc.perform(request("REPORT", "/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(report("/dav/{email}/calendar/", testUser.getUid())
                 .content(file("dav/user/shouldReturnHtmlForUserAllProp_request.xml"))
-                .header(AUTHORIZATION, user(testUser))
-                .header(CONTENT_TYPE, "text/xml; charset=utf-8"))
+                .contentType(TEXT_XML)
+                .header(AUTHORIZATION, user(testUser)))
                 .andExpect(xml(with().etag(eTag).in(file("dav/user/shouldReturnHtmlForUserAllProp_response.xml"))));
     }
 
     @Test
     public void shouldReturnHtmlForUserPropName() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
+                .contentType(TEXT_CALENDAR)
                 .header(AUTHORIZATION, user(testUser))
-                .header(CONTENT_TYPE, "text/calendar; charset=utf-8")
                 .content(file("dav/caldav/event1.ics")))
                 .andExpect(status().isCreated())
-                .andExpect(header().string(ETAG, notNullValue()))
+                .andExpect(etag(notNullValue()))
                 .andReturn();
 
         final String eTag = mvcResult.getResponse().getHeader(ETAG);
 
-        mockMvc.perform(request("REPORT", "/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(report("/dav/{email}/calendar/", testUser.getUid())
                 .content(file("dav/user/shouldReturnHtmlForUserPropName_request.xml"))
-                .header(AUTHORIZATION, user(testUser))
-                .header(CONTENT_TYPE, "text/xml; charset=utf-8"))
+                .contentType(TEXT_XML)
+                .header(AUTHORIZATION, user(testUser)))
                 .andExpect(xml(with().etag(eTag).in(file("dav/user/shouldReturnHtmlForUserPropName_response.xml"))));
     }
 
     @Test
     public void shouldForbidSameCalendar() throws Exception {
-        mockMvc.perform(request("MKCALENDAR", "/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(CustomRequestBuilders.mkcalendar("/dav/{email}/calendar/", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(xml(file("dav/user/shouldForbidSameCalendar_request.xml")));
+    }
+
+    @Test
+    public void shouldCreateCalendar() throws Exception {
+        mockMvc.perform(get("/dav/{email}/newcalendar/", testUser.getUid())
+                .contentType(TEXT_XML)
+                .header(AUTHORIZATION, user(testUser)))
+                .andExpect(status().isNotFound());
+
+        mockMvc.perform(mkcalendar("/dav/{email}/newcalendar/", testUser.getUid())
+                .contentType(TEXT_XML)
+                .header(AUTHORIZATION, user(testUser)))
+                .andExpect(status().isCreated());
+
+        mockMvc.perform(get("/dav/{email}/newcalendar/", testUser.getUid())
+                .contentType(TEXT_XML)
+                .header(AUTHORIZATION, user(testUser)))
+                .andExpect(html(file("dav/user/shouldCreateCalendar_response.html")));
     }
 }

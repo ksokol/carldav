@@ -2,11 +2,14 @@ package dav.user;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpHeaders.ALLOW;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.MediaType.TEXT_XML;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static util.ContentUtil.html;
 import static util.ContentUtil.with;
@@ -132,5 +135,14 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(html(file("dav/user/shouldCreateCalendar_response.html")));
+    }
+
+    @Test
+    public void calendarOptions() throws Exception {
+        mockMvc.perform(options("/dav/{email}/calendar/", testUser.getUid())
+                .header(AUTHORIZATION, user(testUser)))
+                .andExpect(status().isOk())
+                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, ticket"))
+                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, MKTICKET, DELTICKET, REPORT"));
     }
 }

@@ -109,9 +109,11 @@ public class DavPrivilegeSet extends HashSet<DavPrivilege>
         if (contains(DavPrivilege.WRITE)) {
             ticket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
         }
-        if (contains(DavPrivilege.READ_FREE_BUSY)) {
-            ticket.getPrivileges().add(Ticket.PRIVILEGE_FREEBUSY);
-        }
+
+        // TODO not mentioned in https://tools.ietf.org/html/draft-ito-dav-ticket-00
+//        if (contains(DavPrivilege.READ_FREE_BUSY)) {
+//            ticket.getPrivileges().add(Ticket.PRIVILEGE_FREEBUSY);
+//        }
     }
 
     public String toString() {

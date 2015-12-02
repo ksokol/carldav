@@ -1,7 +1,7 @@
 package util;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.xmlunit.diff.ElementSelectors.byName;
+import static org.xmlunit.diff.ElementSelectors.byNameAndAllAttributes;
 import static org.xmlunit.diff.ElementSelectors.selectorForElementNamed;
 import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
 
@@ -37,6 +37,10 @@ public class ContentUtil {
             return new InStep("${etag}", etag);
         }
 
+        public InStep ticket(String ticket) {
+            return new InStep("${ticket}", ticket);
+        }
+
         public static class InStep {
 
             private final String template;
@@ -54,7 +58,7 @@ public class ContentUtil {
     }
 
     private static DefaultNodeMatcher nodeMatcher() {
-        return new DefaultNodeMatcher(unorderedSupportedReportNodes(), unorderedPrivilegeNodes(), byName);
+        return new DefaultNodeMatcher(unorderedSupportedReportNodes(), unorderedPrivilegeNodes(), unorderedSupportedCalendarComponentSet(), byNameAndAllAttributes);
     }
 
     private static ElementSelector unorderedSupportedReportNodes() {
@@ -63,6 +67,10 @@ public class ContentUtil {
 
     private static ElementSelector unorderedPrivilegeNodes() {
         return unorderedNodes("privilege");
+    }
+
+    private static ElementSelector unorderedSupportedCalendarComponentSet() {
+        return unorderedNodes("supported-calendar-component-set");
     }
 
     private static ElementSelector unorderedNodes(final String localName) {

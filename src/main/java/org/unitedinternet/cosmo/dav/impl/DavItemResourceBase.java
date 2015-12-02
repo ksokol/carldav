@@ -315,9 +315,10 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
         if (log.isDebugEnabled())
             log.debug("adding ticket for " + item.getName());
 
+        // TODO not mentioned in https://tools.ietf.org/html/draft-ito-dav-ticket-00
         // automatically add freebusy privilege along with read
-        if (ticket.getPrivileges().contains(Ticket.PRIVILEGE_READ))
-            ticket.getPrivileges().add(Ticket.PRIVILEGE_FREEBUSY);
+//        if (ticket.getPrivileges().contains(Ticket.PRIVILEGE_READ))
+//            ticket.getPrivileges().add(Ticket.PRIVILEGE_FREEBUSY);
 
         getContentService().createTicket(item, ticket);
     }

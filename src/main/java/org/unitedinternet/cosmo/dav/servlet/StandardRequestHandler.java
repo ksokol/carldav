@@ -63,7 +63,6 @@ import org.unitedinternet.cosmo.security.Permission;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -105,7 +104,6 @@ public class StandardRequestHandler extends AbstractController implements Server
      */
     @Override
     protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        dumpRequest(request);
         DavRequest wreq = null;
         DavResponse wres = null;
         
@@ -167,60 +165,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         ifUnmodifiedSince(request, resource);
     }
 
-
-    private void dumpRequest(HttpServletRequest req) {
-        if (!LOG.isTraceEnabled()) {
-            return;
-        }
-
-        StringBuffer sb = new StringBuffer("\n------------------------ Dump of request -------------------\n");
-        try {
-            Enumeration<String> names = req.getHeaderNames();
-
-            sb.append("Request headers:\n");
-            while (names.hasMoreElements()) {
-                String key = names.nextElement();
-                String val = req.getHeader(key);
-                sb.append("  ").append(key).append(" = \"").append(val).append("\"\n");
-            }
-
-            names = req.getParameterNames();
-            String title = "Request parameters";
-
-            sb.append(title).append(" - global info and uris:").append("\n");
-            sb.append("getMethod = ").append(req.getMethod()).append("\n");
-            sb.append("getRemoteAddr = ").append(req.getRemoteAddr()).append("\n");
-            sb.append("getRequestURI = ").append(req.getRequestURI()).append("\n");
-            sb.append("getRemoteUser = ").append(req.getRemoteUser()).append("\n");
-            sb.append("getRequestedSessionId = ").append(req.getRequestedSessionId()).append("\n");
-            sb.append("HttpUtils.getRequestURL(req) = ").append(req.getRequestURL()).append("\n");
-            sb.append("contextPath=").append(req.getContextPath()).append("\n");
-            sb.append("query=").append(req.getQueryString()).append("\n");
-            sb.append("contentlen=").append(req.getContentLength()).append("\n");
-            sb.append("request=").append(req).append("\n");
-            sb.append(title).append(":\n");
-
-            while (names.hasMoreElements()) {
-                String key = (String) names.nextElement();
-                String val = req.getParameter(key);
-                sb.append("  ").append(key).append(" = \"").append(val).append("\"").append("\n");
-            }
-            sb.append("Request attributes:\n");
-            for (Enumeration<String> e = req.getAttributeNames(); e.hasMoreElements();) {
-                String key = (String) e.nextElement();
-                Object val = req.getAttribute(key);
-                sb.append("  ").append(key).append(" = \"").append(val).append("\"").append("\n");
-            }
-        } catch (Exception e) {
-            LOG.error("Error on dumpRequest class StandardRequestHandler "+ e);
-        }
-        sb.append("------------------------ End dump of request -------------------");
-        //Fix Log Forging - java fortify
-        //Writing unvalidated user input to log files can allow an attacker to forge log entries or
-        //inject malicious content into the logs.
-
-        LOG.trace(sb.toString());
-    }
     /**
      * <p>
      * Hands the request off to a provider method for handling. The provider

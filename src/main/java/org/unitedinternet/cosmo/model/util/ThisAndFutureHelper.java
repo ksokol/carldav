@@ -15,26 +15,24 @@
  */
 package org.unitedinternet.cosmo.model.util;
 
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Recur;
+import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
+import org.unitedinternet.cosmo.calendar.util.Dates;
+import org.unitedinternet.cosmo.model.EventExceptionStamp;
+import org.unitedinternet.cosmo.model.EventStamp;
+import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.StampUtils;
+import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
-
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Recur;
-
-import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
-import org.unitedinternet.cosmo.calendar.util.Dates;
-import org.unitedinternet.cosmo.model.EventExceptionStamp;
-import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.NoteOccurrence;
-import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 
 /**
  * Helper class to handle breaking a recurring series to
@@ -47,37 +45,7 @@ import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
  * break has to be removed and added to the new series.
  */
 public class ThisAndFutureHelper {
-    
-    /**
-     * Given an existing recurring series and new series, break the
-     * existing series at the given occurrence and move all modifications
-     * from the existing series that apply to the new series to the 
-     * new series.
-     * @param oldSeries note representing recurring series to break
-     * @param newSeries note representing new series
-     * @param occurrence occurrence of old series 
-     *        (NoteOccurrence or NoteItem modification) to break old 
-     *        series at.
-     * @return Set of modifications that need to be removed and added.  
-     *         Removals are indicated with isActive==false.
-     *         All other active NoteItems are considered additions.
-     */
-    public Set<NoteItem> breakRecurringEvent(NoteItem oldSeries, NoteItem newSeries, NoteItem occurrence) {
-        Date lastRid = null;
-        if(occurrence instanceof NoteOccurrence) {
-            lastRid = ((NoteOccurrence) occurrence).getOccurrenceDate();
-        }
-        else {
-            EventExceptionStamp ees = StampUtils.getEventExceptionStamp(occurrence);
-            if(ees==null) {
-                throw new IllegalArgumentException("occurence must have an event stamp");
-            }
-            lastRid = ees.getRecurrenceId();
-        }
-        
-        return breakRecurringEvent(oldSeries, newSeries, lastRid);
-    }
-    
+
     /**
      * Given an existing recurring series and new series, break the
      * existing series at the given date and move all modifications
@@ -92,10 +60,10 @@ public class ThisAndFutureHelper {
      */
     public Set<NoteItem> breakRecurringEvent(NoteItem oldSeries, NoteItem newSeries, Date lastRecurrenceId) {
         
-        LinkedHashSet<NoteItem> results = new LinkedHashSet<NoteItem>();
+        LinkedHashSet<NoteItem> results = new LinkedHashSet<>();
         
-        HashSet<NoteItem> toRemove = new HashSet<NoteItem>();
-        HashSet<NoteItem> toAdd = new HashSet<NoteItem>();
+        HashSet<NoteItem> toRemove = new HashSet<>();
+        HashSet<NoteItem> toAdd = new HashSet<>();
         
         // first break old series by setting UNTIL on RECURs
         modifyOldSeries(oldSeries, lastRecurrenceId);
@@ -162,7 +130,7 @@ public class ThisAndFutureHelper {
     }
     
     private List<NoteItem> getModificationsToMove(NoteItem oldSeries, NoteItem newSeries, Date lastRecurrenceId) {
-        ArrayList<NoteItem> mods = new ArrayList<NoteItem>();
+        ArrayList<NoteItem> mods = new ArrayList<>();
         RecurrenceExpander expander = new RecurrenceExpander();
         EventStamp newEvent = StampUtils.getEventStamp(newSeries);
         Calendar newEventCal = newEvent.getEventCalendar();
@@ -224,8 +192,4 @@ public class ThisAndFutureHelper {
         
         return  mods;
     }
-    
-    
-    
-    
 }

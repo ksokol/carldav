@@ -124,7 +124,7 @@ public class PrincipalMatchReport extends MultiStatusReport
                 }
             } else {
                 throw new UnprocessableEntityException("Expected either " + QN_ACL_SELF + " or " + 
-                        QN_ACL_PRINCIPAL_PROPERTY + " child of " + REPORT_TYPE_PRINCIPAL_MATCH);
+                        QN_ACL_PRINCIPAL_PROPERTY + " child of " + REPORT_TYPE_PRINCIPAL_MATCH.getReportName());
             }
         }
 

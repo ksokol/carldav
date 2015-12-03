@@ -435,33 +435,7 @@ public class StandardDavRequest extends WebdavRequestImpl implements
                 : "Unknown error parsing request document";
         throw new BadRequestException(msg);
     }
-    
-    /**
-     * 
-     * @param root Element
-     */
-    private void dumpPropFindRequest(Element root) {
-        if (!LOG.isTraceEnabled()){
-            return;
-        }
 
-        StringBuffer sb = new StringBuffer(
-                "\n------------------------ Dump of propFind request -------------------\n");
-        try {
-            if (root == null){
-                sb.append("ALL props requested\n");
-            } else {
-                sb.append(DomWriter.write(root)).append("\n");
-            }
-        } catch (IOException e) {
-            LOG.warn("", e);
-        } catch (XMLStreamException e) {
-            LOG.warn("", e);
-        }
-        sb.append("------------------------ End dump of propFind request -------------------");
-        LOG.trace(sb);
-    }
-    
     /**
      * 
      * @throws CosmoDavException 
@@ -472,12 +446,10 @@ public class StandardDavRequest extends WebdavRequestImpl implements
             // treat as allprop
             propfindType = PROPFIND_ALL_PROP;
             propfindProps = new DavPropertyNameSet();
-            dumpPropFindRequest(null);
             return;
         }
 
         Element root = requestDocument.getDocumentElement();
-        dumpPropFindRequest(root);
         if (!DomUtil.matches(root, XML_PROPFIND, NAMESPACE)) {
             throw new BadRequestException("Expected " + QN_PROPFIND
                     + " root element");

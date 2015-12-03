@@ -44,14 +44,6 @@ public class SupportedCollationSet extends StandardDavProperty
 
     /**
      * Constructor.
-     * @param collations The CalDAV supported-collation-set.
-     */
-    public SupportedCollationSet(Set<String> collations) {
-        this((String[]) collations.toArray(new String[collations.size()]));
-    }
-
-    /**
-     * Constructor.
      * @param collations The CalDAV supported collations.
      */
     public SupportedCollationSet(String[] collations) {

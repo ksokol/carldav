@@ -48,14 +48,6 @@ public class SupportedCalendarComponentSet extends StandardDavProperty
 
     /**
      * Constructor.
-     * @param componentTypes The component type.
-     */
-    public SupportedCalendarComponentSet(Set<String> componentTypes) {
-        this((String[]) componentTypes.toArray(new String[componentTypes.size()]));
-    }
-
-    /**
-     * Constructor.
      * @param componentTypes The componene type.
      */
     public SupportedCalendarComponentSet(String[] componentTypes) {

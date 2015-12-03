@@ -38,7 +38,7 @@ public class StringPropertyUtils {
      * @return child keys
      */
     public static String[] getChildKeys(String parent, String[] keys) {
-        HashSet<String> children = new HashSet<String>();
+        HashSet<String> children = new HashSet<>();
         if(!parent.endsWith(".")) {
             parent = parent + ".";
         }
@@ -63,7 +63,7 @@ public class StringPropertyUtils {
      * @return map of child properties
      */
     public static Map<String, String> getChildProperties(String parent, Map<String, String> props) {
-        HashMap<String, String> childProps = new HashMap<String, String>();
+        HashMap<String, String> childProps = new HashMap<>();
         if(!parent.endsWith(".")) {
             parent = parent + ".";
         }
@@ -79,32 +79,4 @@ public class StringPropertyUtils {
         
         return childProps;
     }
-    
-    /**
-     * Return a map of sub properties.  For example for the
-     * map of [a.b.c->foo1, a.b.d->foo2, a.b.e.f->foo3] the map
-     * of sub properties for parent a.b is [c->foo1, d->foo2, e.f->foo3]
-     * @param parent parent key
-     * @param props properties to search
-     * @return map of child properties
-     */
-    public static Map<String, String> getSubProperties(String parent, Map<String, String> props) {
-        HashMap<String, String> childProps = new HashMap<String, String>();
-        if(!parent.endsWith(".")) {
-            parent = parent + ".";
-        }
-        for(Entry<String, String> entry: props.entrySet()) {
-            if(entry.getKey().startsWith(parent)) {
-                String end = StringUtils.substringAfter(entry.getKey(), parent);
-                if(end!=null && !"".equals(end)) {
-                    childProps.put(end, entry.getValue());
-                }
-                    
-            }
-        }
-        
-        return childProps;
-    }
-    
-    
 }

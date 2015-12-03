@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.http.HttpHeaders.ALLOW;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.MediaType.TEXT_XML;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.head;
@@ -18,7 +19,10 @@ import static util.CustomResultMatcher.contentFromFile;
 import static util.FileUtil.file;
 import static util.HeaderUtil.user;
 import static util.TestUser.TEST01;
+import static util.mockmvc.CustomRequestBuilders.acl;
 import static util.mockmvc.CustomRequestBuilders.copy;
+import static util.mockmvc.CustomRequestBuilders.delticket;
+import static util.mockmvc.CustomRequestBuilders.mkticket;
 import static util.mockmvc.CustomRequestBuilders.move;
 import static util.mockmvc.CustomRequestBuilders.propfind;
 import static util.mockmvc.CustomRequestBuilders.proppatch;
@@ -98,7 +102,7 @@ public class UsersTests extends IntegrationTestSupport {
     public void userPropPatchSet() throws Exception {
         mockMvc.perform(proppatch("/dav/users/{uid}", testUser.getUid())
                 .content(file("dav/users/userPropPatchSet_request.xml"))
-                .contentType(MediaType.TEXT_XML)
+                .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
@@ -109,7 +113,7 @@ public class UsersTests extends IntegrationTestSupport {
     public void userPropPatchRemoveDeadProperty() throws Exception {
         mockMvc.perform(proppatch("/dav/users/{uid}", testUser.getUid())
                 .content(file("dav/users/userPropPatchRemoveDeadProperty_request.xml"))
-                .contentType(MediaType.TEXT_XML)
+                .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
@@ -120,7 +124,7 @@ public class UsersTests extends IntegrationTestSupport {
     public void userPropPatchRemove() throws Exception {
         mockMvc.perform(proppatch("/dav/users/{uid}", testUser.getUid())
                 .content(file("dav/users/userPropPatchRemove_request.xml"))
-                .contentType(MediaType.TEXT_XML)
+                .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
@@ -157,7 +161,7 @@ public class UsersTests extends IntegrationTestSupport {
     @Test
     public void userReportUnprocessable() throws Exception {
         mockMvc.perform(report("/dav/users/{uid}", testUser.getUid())
-                .contentType(MediaType.TEXT_XML)
+                .contentType(TEXT_XML)
                 .content(file("dav/users/userReportUnprocessable_request.xml"))
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isUnprocessableEntity())
@@ -168,11 +172,38 @@ public class UsersTests extends IntegrationTestSupport {
     @Test
     public void userReport() throws Exception {
         mockMvc.perform(report("/dav/users/{uid}", testUser.getUid())
-                .contentType(MediaType.TEXT_XML)
+                .contentType(TEXT_XML)
                 .content(file("dav/users/userReport_request.xml"))
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
                 .andExpect(xml(file("dav/users/userReport_response.xml")));
+    }
+
+    @Test
+    public void userMkticket() throws Exception {
+        mockMvc.perform(mkticket("/dav/users/{uid}", testUser.getUid())
+                .header(AUTHORIZATION, user(testUser)))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(xml(file("dav/users/userMkticket_response.xml")));
+    }
+
+    @Test
+    public void userDelticket() throws Exception {
+        mockMvc.perform(delticket("/dav/users/{uid}", testUser.getUid())
+                .header(AUTHORIZATION, user(testUser)))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(xml(file("dav/users/userDelticket_response.xml")));
+    }
+
+    @Test
+    public void userAcl() throws Exception {
+        mockMvc.perform(acl("/dav/users/{uid}", testUser.getUid())
+                .header(AUTHORIZATION, user(testUser)))
+                .andExpect(status().isForbidden())
+                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(xml(file("dav/users/userAcl_response.xml")));
     }
 }

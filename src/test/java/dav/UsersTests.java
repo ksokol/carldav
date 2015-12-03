@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static util.ContentUtil.html;
 import static util.ContentUtil.xml;
-import static util.CustomResultMatcher.contentFromFile;
 import static util.FileUtil.file;
 import static util.HeaderUtil.user;
 import static util.TestUser.TEST01;
@@ -32,7 +32,6 @@ import static util.mockmvc.CustomResultMatchers.etag;
 import static util.mockmvc.CustomResultMatchers.lastModified;
 
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import util.TestUser;
 
@@ -49,7 +48,7 @@ public class UsersTests extends IntegrationTestSupport {
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isOk())
                 .andExpect(contentType(is("text/html; charset=UTF-8")))
-                .andExpect(contentFromFile("dav/users/userGet_response.html"));
+                .andExpect(html(file("dav/users/userGet_response.html")));
     }
 
     @Test

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<D:propertyupdate xmlns:D="DAV:" xmlns:Z="http://www.w3.com/standards/z39.50/">
+    <D:remove>
+        <D:prop><Z:Copyright-Owner/></D:prop>
+    </D:remove>
+</D:propertyupdate>

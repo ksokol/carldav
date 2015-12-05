@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
+import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
 import static org.springframework.http.MediaType.TEXT_XML_VALUE;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
@@ -33,5 +34,9 @@ public class CustomResultMatchers {
 
     public static ResultMatcher textXmlContentType() {
         return contentType(is(TEXT_XML_VALUE + "; charset=UTF-8"));
+    }
+
+    public static ResultMatcher textHtmlContentType() {
+        return contentType(is(TEXT_HTML_VALUE + "; charset=UTF-8"));
     }
 }

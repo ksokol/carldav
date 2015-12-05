@@ -1,1 +1,0 @@
-<?xml version="1.0" ?><D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:"><cosmo:bad-request>Depth must be 0 for non-collection resources</cosmo:bad-request></D:error>

@@ -10,7 +10,7 @@ import org.xmlunit.diff.ElementSelector;
  * @author Stefan Bodewig
  * @author Kamill Sokol
  */
-public class FirstChildElementNameSelector implements ElementSelector {
+class FirstChildElementNameSelector implements ElementSelector {
 
     @Override
     public boolean canBeCompared(Element controlElement, Element testElement) {

@@ -8,8 +8,8 @@ import static carldav.util.builder.GeneralResponse.NOT_FOUND
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static util.ContentUtil.html
-import static util.ContentUtil.xml
+import static util.mockmvc.CustomResultMatchers.html
+import static util.mockmvc.CustomResultMatchers.xml
 import static util.HeaderUtil.user
 import static util.TestUser.TEST01
 import static util.mockmvc.CustomResultMatchers.textHtmlContentType

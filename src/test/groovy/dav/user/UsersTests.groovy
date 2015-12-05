@@ -17,8 +17,8 @@ import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static util.ContentUtil.html
-import static util.ContentUtil.xml
+import static util.mockmvc.CustomResultMatchers.html
+import static util.mockmvc.CustomResultMatchers.xml
 import static util.HeaderUtil.user
 import static util.TestUser.TEST01
 import static util.mockmvc.CustomRequestBuilders.*

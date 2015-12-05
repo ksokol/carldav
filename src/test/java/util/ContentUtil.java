@@ -20,7 +20,7 @@ public class ContentUtil {
 
     public static ResultMatcher xml(String content) {
         final Source build = Input.fromString(content).build();
-        return content().source(isSimilarTo(build).withNodeMatcher(nodeMatcher()));
+        return content().source(isSimilarTo(build).ignoreWhitespace().normalizeWhitespace().withNodeMatcher(nodeMatcher()));
     }
 
     public static ResultMatcher html(String content) {

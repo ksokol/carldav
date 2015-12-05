@@ -13,7 +13,6 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.http.HttpMethod.*
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static util.ContentUtil.html
@@ -71,7 +70,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(put("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(PUT).onUserPrincipal()));
     }
 
@@ -98,8 +97,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(post("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
-                .andDo(print())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(POST).onCollection()));
     }
 
@@ -113,7 +111,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(propfind("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isBadRequest())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
@@ -147,7 +145,7 @@ class UsersTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(respone));
     }
 
@@ -179,7 +177,7 @@ class UsersTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
@@ -211,7 +209,7 @@ class UsersTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
@@ -220,7 +218,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(delete("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(DELETE).onUserPrincipal()));
     }
 
@@ -229,7 +227,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(copy("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(COPY).onUserPrincipal()));
     }
 
@@ -238,7 +236,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(move("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(MOVE).onUserPrincipal()));
     }
 
@@ -261,7 +259,7 @@ class UsersTests extends IntegrationTestSupport {
                 .content(request)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
@@ -281,7 +279,7 @@ class UsersTests extends IntegrationTestSupport {
                 .content(request)
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMultiStatus())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
@@ -290,7 +288,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(mkticket("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(MKTICKET).onUserPrincipal()));
     }
 
@@ -299,7 +297,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(delticket("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(DELTICKET).onUserPrincipal()));
     }
 
@@ -313,7 +311,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(acl("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isForbidden())
-                .andExpect(contentType(is("text/xml; charset=UTF-8")))
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 }

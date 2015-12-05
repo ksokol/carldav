@@ -1,10 +1,12 @@
 package dav.user
 
+import carldav.util.builder.GeneralResponse
 import org.junit.Test
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import util.TestUser
 
 import static carldav.CaldavHttpMethod.*
+import static carldav.util.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
 import static carldav.util.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
@@ -303,15 +305,10 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userAcl() throws Exception {
-        def response = '''\
-                       <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <D:not-supported-privilege>No unprotected ACEs are supported on this resource</D:not-supported-privilege>
-                       </D:error>'''
-
         mockMvc.perform(acl("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isForbidden())
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+                .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
 }

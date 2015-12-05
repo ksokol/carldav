@@ -4,6 +4,7 @@ import org.junit.Test
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import util.TestUser
 
+import static carldav.util.builder.GeneralResponse.NOT_FOUND
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -23,14 +24,11 @@ public class CollectionTests extends IntegrationTestSupport {
 
     @Test
     public void collectionGetNotFound() throws Exception {
-        def response = """\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:"><cosmo:not-found></cosmo:not-found></D:error>"""
-
         mockMvc.perform(get("/dav/collection/{uid}", "1")
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isNotFound())
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+                .andExpect(xml(NOT_FOUND));
     }
 
     @Test

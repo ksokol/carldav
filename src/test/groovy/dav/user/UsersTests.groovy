@@ -61,7 +61,7 @@ class UsersTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isOk())
-                .andExpect(contentType(is("text/html; charset=UTF-8")))
+                .andExpect(textHtmlContentType())
                 .andExpect(html(response));
     }
 

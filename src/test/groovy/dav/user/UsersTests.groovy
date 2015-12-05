@@ -4,10 +4,13 @@ import org.junit.Test
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import util.TestUser
 
+import static carldav.CaldavHttpMethod.*
+import static carldav.util.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
+import static org.springframework.http.HttpMethod.*
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
@@ -65,16 +68,11 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userPut() throws Exception {
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                          <cosmo:method-not-allowed>PUT not allowed for user principal</cosmo:method-not-allowed>
-                        </D:error>'''
-
         mockMvc.perform(put("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
-                .andExpect(xml(response));
+                .andExpect(xml(notAllowed(PUT).onUserPrincipal()));
     }
 
     @Test
@@ -97,17 +95,12 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userPost() throws Exception {
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                          <cosmo:method-not-allowed>POST not allowed for a collection</cosmo:method-not-allowed>
-                        </D:error>'''
-
         mockMvc.perform(post("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andDo(print())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
-                .andExpect(xml(response));
+                .andExpect(xml(notAllowed(POST).onCollection()));
     }
 
     @Test
@@ -224,44 +217,29 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userDelete() throws Exception {
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:method-not-allowed>DELETE not allowed for user principal</cosmo:method-not-allowed>
-                        </D:error>'''
-
         mockMvc.perform(delete("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
-                .andExpect(xml(response));
+                .andExpect(xml(notAllowed(DELETE).onUserPrincipal()));
     }
 
     @Test
     public void userCopy() throws Exception {
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:method-not-allowed>COPY not allowed for user principal</cosmo:method-not-allowed>
-                        </D:error>'''
-
         mockMvc.perform(copy("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
-                .andExpect(xml(response));
+                .andExpect(xml(notAllowed(COPY).onUserPrincipal()));
     }
 
     @Test
     public void userMove() throws Exception {
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:method-not-allowed>MOVE not allowed for user principal</cosmo:method-not-allowed>
-                        </D:error>'''
-
         mockMvc.perform(move("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
-                .andExpect(xml(response));
+                .andExpect(xml(notAllowed(MOVE).onUserPrincipal()));
     }
 
     @Test
@@ -309,30 +287,20 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userMkticket() throws Exception {
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:method-not-allowed>MKTICKET not allowed for user principal</cosmo:method-not-allowed>
-                        </D:error>'''
-
         mockMvc.perform(mkticket("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
-                .andExpect(xml(response));
+                .andExpect(xml(notAllowed(MKTICKET).onUserPrincipal()));
     }
 
     @Test
     public void userDelticket() throws Exception {
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:method-not-allowed>DELTICKET not allowed for user principal</cosmo:method-not-allowed>
-                        </D:error>'''
-
         mockMvc.perform(delticket("/dav/users/{uid}", testUser.getUid())
                 .header(AUTHORIZATION, user(testUser)))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(contentType(is("text/xml; charset=UTF-8")))
-                .andExpect(xml(response));
+                .andExpect(xml(notAllowed(DELTICKET).onUserPrincipal()));
     }
 
     @Test

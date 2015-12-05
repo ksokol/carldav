@@ -1,4 +1,4 @@
-package org.unitedinternet.cosmo.security;
+package dav;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

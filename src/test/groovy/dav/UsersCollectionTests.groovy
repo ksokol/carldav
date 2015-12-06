@@ -1,12 +1,12 @@
 package dav
 
-import carldav.util.builder.MethodNotAllowedBuilder
+import testutil.builder.MethodNotAllowedBuilder
 import org.junit.Test
 import org.springframework.http.HttpMethod
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static carldav.util.builder.GeneralResponse.INTERNAL_SERVER_ERROR
+import static testutil.builder.GeneralResponse.INTERNAL_SERVER_ERROR
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*

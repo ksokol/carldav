@@ -1,4 +1,4 @@
-package carldav.util.builder;
+package testutil.builder;
 
 /**
  * @author Kamill Sokol

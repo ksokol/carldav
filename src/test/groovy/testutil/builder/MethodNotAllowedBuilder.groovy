@@ -1,6 +1,6 @@
 package testutil.builder
 
-import carldav.CaldavHttpMethod
+import testutil.mockmvc.CaldavHttpMethod
 import org.springframework.http.HttpMethod
 
 /**

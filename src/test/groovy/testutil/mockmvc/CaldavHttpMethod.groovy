@@ -1,4 +1,4 @@
-package carldav;
+package testutil.mockmvc;
 
 /**
  * @author Kamill Sokol

@@ -1,17 +1,9 @@
-package testutil.mockmvc;
+package testutil.mockmvc
 
-import static carldav.CaldavHttpMethod.ACL;
-import static carldav.CaldavHttpMethod.COPY;
-import static carldav.CaldavHttpMethod.DELTICKET;
-import static carldav.CaldavHttpMethod.MKCALENDAR;
-import static carldav.CaldavHttpMethod.MKTICKET;
-import static carldav.CaldavHttpMethod.MOVE;
-import static carldav.CaldavHttpMethod.PROPFIND;
-import static carldav.CaldavHttpMethod.PROPPATCH;
-import static carldav.CaldavHttpMethod.REPORT;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request
+import static testutil.mockmvc.CaldavHttpMethod.*
 
 /**
  * @author Kamill Sokol

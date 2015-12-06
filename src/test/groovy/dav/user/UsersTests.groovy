@@ -4,7 +4,7 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static carldav.CaldavHttpMethod.*
+import static testutil.mockmvc.CaldavHttpMethod.*
 import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.Matchers.is

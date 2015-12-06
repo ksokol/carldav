@@ -1,4 +1,4 @@
-package util.mockmvc;
+package testutil.mockmvc;
 
 import org.springframework.http.MediaType;
 

@@ -13,9 +13,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static util.mockmvc.CustomRequestBuilders.propfind
-import static util.mockmvc.CustomResultMatchers.textXmlContentType
-import static util.mockmvc.CustomResultMatchers.xml
+import static testutil.mockmvc.CustomRequestBuilders.propfind
+import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
+import static testutil.mockmvc.CustomResultMatchers.xml
 
 /**
  * @author Kamill Sokol

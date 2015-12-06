@@ -1,18 +1,15 @@
-package util.mockmvc;
+package testutil.mockmvc
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
-import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
-import static org.springframework.http.MediaType.TEXT_XML_VALUE;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import org.hamcrest.Matcher
+import org.springframework.test.web.servlet.ResultMatcher
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import testutil.xmlunit.XmlMatcher
 
-import org.hamcrest.Matcher;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultMatcher;
-import util.xmlunit.XmlMatcher;
+import static org.hamcrest.CoreMatchers.is
+import static org.springframework.http.HttpHeaders.*
+import static org.springframework.http.MediaType.TEXT_HTML_VALUE
+import static org.springframework.http.MediaType.TEXT_XML_VALUE
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 
 /**
  * @author Kamill Sokol
@@ -23,11 +20,11 @@ public class CustomResultMatchers {
     }
 
     public static ResultMatcher xml(String content) {
-        return content().source(XmlMatcher.equalXml(content));
+        return MockMvcResultMatchers.content().source(XmlMatcher.equalXml(content));
     }
 
     public static ResultMatcher html(String content) {
-        return content().string(content);
+        return MockMvcResultMatchers.content().string(content);
     }
 
     public static ResultMatcher etag(Matcher<? super String> m) {

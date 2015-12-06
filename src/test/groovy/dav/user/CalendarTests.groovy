@@ -22,10 +22,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static util.mockmvc.CustomRequestBuilders.*
-import static util.mockmvc.CustomResultMatchers.*
-import static util.xmlunit.XmlMatcher.equalXml
+import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static testutil.mockmvc.CustomRequestBuilders.*
+import static testutil.mockmvc.CustomResultMatchers.*
+import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol

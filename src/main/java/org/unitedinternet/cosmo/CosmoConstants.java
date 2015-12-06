@@ -32,7 +32,7 @@ public final class CosmoConstants {
     /**
      * The "friendly" name of the product used for casual identification.
      */
-    public static final String PRODUCT_NAME = "test";
+    public static final String PRODUCT_NAME = "carldav";
 
     /**
      * The Cosmo release version number.

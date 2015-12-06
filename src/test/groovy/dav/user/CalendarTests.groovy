@@ -9,8 +9,8 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static carldav.util.builder.GeneralResponse.*
-import static carldav.util.builder.MethodNotAllowedBuilder.notAllowed
+import static testutil.builder.GeneralResponse.*
+import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.Mockito.when

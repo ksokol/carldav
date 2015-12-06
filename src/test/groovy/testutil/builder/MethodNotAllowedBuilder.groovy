@@ -1,4 +1,4 @@
-package carldav.util.builder
+package testutil.builder
 
 import carldav.CaldavHttpMethod
 import org.springframework.http.HttpMethod

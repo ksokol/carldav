@@ -5,8 +5,8 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static carldav.CaldavHttpMethod.*
-import static carldav.util.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
-import static carldav.util.builder.MethodNotAllowedBuilder.notAllowed
+import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
+import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ALLOW

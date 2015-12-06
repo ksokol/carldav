@@ -4,7 +4,7 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static carldav.util.builder.GeneralResponse.NOT_FOUND
+import static testutil.builder.GeneralResponse.NOT_FOUND
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01

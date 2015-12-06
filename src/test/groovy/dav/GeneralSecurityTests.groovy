@@ -5,8 +5,11 @@ import org.junit.Test
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import util.TestUser
 
+import static org.hamcrest.Matchers.is
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
+import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static util.TestUser.TEST01
 import static util.TestUser.UNKNOWN
@@ -20,7 +23,8 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
     public void testUnauthorized() throws Exception {
         mockMvc.perform(get("/dav/users")
                 .header(AUTHORIZATION, user(UNKNOWN)))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')));
     }
 
     @Test

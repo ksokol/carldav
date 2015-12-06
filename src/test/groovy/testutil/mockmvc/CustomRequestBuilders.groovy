@@ -1,4 +1,4 @@
-package util.mockmvc;
+package testutil.mockmvc;
 
 import static carldav.CaldavHttpMethod.ACL;
 import static carldav.CaldavHttpMethod.COPY;

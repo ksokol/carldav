@@ -1,4 +1,4 @@
-package util.xmlunit;
+package testutil.xmlunit;
 
 import static org.xmlunit.diff.ElementSelectors.byName;
 

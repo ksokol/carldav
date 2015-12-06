@@ -3,33 +3,29 @@ package dav
 import carldav.util.builder.MethodNotAllowedBuilder
 import org.junit.Test
 import org.springframework.http.HttpMethod
+import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import util.TestUser
 
 import static carldav.util.builder.GeneralResponse.INTERNAL_SERVER_ERROR
 import static org.springframework.http.HttpHeaders.ALLOW
-import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static util.mockmvc.CustomResultMatchers.xml
-import static util.HeaderUtil.user
-import static util.TestUser.TEST01
+import static testutil.TestUser.USER01
 import static util.mockmvc.CustomRequestBuilders.propfind
 import static util.mockmvc.CustomResultMatchers.textXmlContentType
+import static util.mockmvc.CustomResultMatchers.xml
 
 /**
  * @author Kamill Sokol
  */
+@WithUserDetails(USER01)
 public class UsersCollectionTests extends IntegrationTestSupport {
-
-    private final TestUser testUser = TEST01;
 
     @Test
     public void usersOptions() throws Exception {
-        mockMvc.perform(options("/dav/users")
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(options("/dav/users"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, ticket"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT"));
@@ -37,8 +33,7 @@ public class UsersCollectionTests extends IntegrationTestSupport {
 
     @Test
     public void usersHead() throws Exception {
-        mockMvc.perform(head("/dav/users")
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(head("/dav/users"))
                 .andExpect(status().isInternalServerError())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(INTERNAL_SERVER_ERROR));
@@ -46,8 +41,7 @@ public class UsersCollectionTests extends IntegrationTestSupport {
 
     @Test
     public void usersPost() throws Exception {
-        mockMvc.perform(post("/dav/users")
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(post("/dav/users"))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(MethodNotAllowedBuilder.notAllowed(HttpMethod.POST).onCollection()));
@@ -64,8 +58,7 @@ public class UsersCollectionTests extends IntegrationTestSupport {
 
         mockMvc.perform(propfind("/dav/users")
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isInternalServerError())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(INTERNAL_SERVER_ERROR));
@@ -80,8 +73,7 @@ public class UsersCollectionTests extends IntegrationTestSupport {
 
         mockMvc.perform(propfind("/dav/users")
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isInternalServerError())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(INTERNAL_SERVER_ERROR));
@@ -96,8 +88,7 @@ public class UsersCollectionTests extends IntegrationTestSupport {
 
         mockMvc.perform(propfind("/dav/users")
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isInternalServerError())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(INTERNAL_SERVER_ERROR));

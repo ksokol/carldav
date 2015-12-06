@@ -1,31 +1,24 @@
 package dav.user
 
 import org.junit.Test
+import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import util.TestUser
 
 import static carldav.util.builder.GeneralResponse.NOT_FOUND
-import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static util.mockmvc.CustomResultMatchers.html
-import static util.mockmvc.CustomResultMatchers.xml
-import static util.HeaderUtil.user
-import static util.TestUser.TEST01
-import static util.mockmvc.CustomResultMatchers.textHtmlContentType
-import static util.mockmvc.CustomResultMatchers.textXmlContentType
+import static testutil.TestUser.USER01
+import static util.mockmvc.CustomResultMatchers.*
 
 /**
  * @author Kamill Sokol
  */
+@WithUserDetails(USER01)
 public class CollectionTests extends IntegrationTestSupport {
-
-    private final TestUser testUser = TEST01;
 
     @Test
     public void collectionGetNotFound() throws Exception {
-        mockMvc.perform(get("/dav/collection/{uid}", "1")
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/collection/{uid}", "1"))
                 .andExpect(status().isNotFound())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_FOUND));
@@ -64,8 +57,7 @@ public class CollectionTests extends IntegrationTestSupport {
                         </body></html>
                         """.stripIndent()
 
-        mockMvc.perform(get("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
                 .andExpect(status().isOk())
                 .andExpect(textHtmlContentType())
                 .andExpect(html(response));

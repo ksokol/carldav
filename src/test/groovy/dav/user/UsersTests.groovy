@@ -1,9 +1,8 @@
 package dav.user
 
-import carldav.util.builder.GeneralResponse
 import org.junit.Test
+import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import util.TestUser
 
 import static carldav.CaldavHttpMethod.*
 import static carldav.util.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
@@ -11,25 +10,20 @@ import static carldav.util.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ALLOW
-import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.http.HttpMethod.*
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static util.mockmvc.CustomResultMatchers.html
-import static util.mockmvc.CustomResultMatchers.xml
-import static util.HeaderUtil.user
-import static util.TestUser.TEST01
+import static testutil.TestUser.USER01
 import static util.mockmvc.CustomRequestBuilders.*
 import static util.mockmvc.CustomResultMatchers.*
 
 /**
  * @author Kamill Sokol
  */
+@WithUserDetails(USER01)
 class UsersTests extends IntegrationTestSupport {
-
-    private final TestUser testUser = TEST01;
 
     @Test
     public void userGet() throws Exception {
@@ -60,8 +54,7 @@ class UsersTests extends IntegrationTestSupport {
                         </body></html>
                         '''.stripIndent()
 
-        mockMvc.perform(get("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/users/{uid}", USER01))
                 .andExpect(status().isOk())
                 .andExpect(textHtmlContentType())
                 .andExpect(html(response));
@@ -69,8 +62,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userPut() throws Exception {
-        mockMvc.perform(put("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(put("/dav/users/{uid}", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(PUT).onUserPrincipal()));
@@ -78,8 +70,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userOptions() throws Exception {
-        mockMvc.perform(options("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(options("/dav/users/{uid}", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, ticket"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT"));
@@ -87,8 +78,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userHead() throws Exception {
-        mockMvc.perform(head("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(head("/dav/users/{uid}", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(notNullValue()))
                 .andExpect(lastModified(is("Mon, 16 Nov 2015 15:35:16 GMT")));
@@ -96,8 +86,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userPost() throws Exception {
-        mockMvc.perform(post("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(post("/dav/users/{uid}", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(POST).onCollection()));
@@ -110,8 +99,7 @@ class UsersTests extends IntegrationTestSupport {
                           <cosmo:bad-request>Depth must be 0 for non-collection resources</cosmo:bad-request>
                         </D:error>'''
 
-        mockMvc.perform(propfind("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(propfind("/dav/users/{uid}", USER01))
                 .andExpect(status().isBadRequest())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
@@ -142,10 +130,9 @@ class UsersTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>'''
 
-        mockMvc.perform(proppatch("/dav/users/{uid}", testUser.getUid())
+        mockMvc.perform(proppatch("/dav/users/{uid}", USER01)
                 .content(request)
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+                .contentType(TEXT_XML))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(respone));
@@ -174,10 +161,9 @@ class UsersTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>'''
 
-        mockMvc.perform(proppatch("/dav/users/{uid}", testUser.getUid())
+        mockMvc.perform(proppatch("/dav/users/{uid}", USER01)
                 .content(request)
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+                .contentType(TEXT_XML))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
@@ -206,10 +192,9 @@ class UsersTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>'''
 
-        mockMvc.perform(proppatch("/dav/users/{uid}", testUser.getUid())
+        mockMvc.perform(proppatch("/dav/users/{uid}", USER01)
                 .content(request)
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+                .contentType(TEXT_XML))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
@@ -217,8 +202,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userDelete() throws Exception {
-        mockMvc.perform(delete("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(delete("/dav/users/{uid}", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(DELETE).onUserPrincipal()));
@@ -226,8 +210,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userCopy() throws Exception {
-        mockMvc.perform(copy("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(copy("/dav/users/{uid}", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(COPY).onUserPrincipal()));
@@ -235,8 +218,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userMove() throws Exception {
-        mockMvc.perform(move("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(move("/dav/users/{uid}", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(MOVE).onUserPrincipal()));
@@ -256,10 +238,9 @@ class UsersTests extends IntegrationTestSupport {
                             <cosmo:unprocessable-entity>Expected either {DAV:}self or {DAV:}principal-property child of {DAV:}principal-match</cosmo:unprocessable-entity>
                         </D:error>'''
 
-        mockMvc.perform(report("/dav/users/{uid}", testUser.getUid())
+        mockMvc.perform(report("/dav/users/{uid}", USER01)
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
@@ -276,10 +257,9 @@ class UsersTests extends IntegrationTestSupport {
 
         def response = '<D:multistatus xmlns:D="DAV:"/>'
 
-        mockMvc.perform(report("/dav/users/{uid}", testUser.getUid())
+        mockMvc.perform(report("/dav/users/{uid}", USER01)
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
@@ -287,8 +267,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userMkticket() throws Exception {
-        mockMvc.perform(mkticket("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(mkticket("/dav/users/{uid}", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(MKTICKET).onUserPrincipal()));
@@ -296,8 +275,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userDelticket() throws Exception {
-        mockMvc.perform(delticket("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(delticket("/dav/users/{uid}", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(DELTICKET).onUserPrincipal()));
@@ -305,8 +283,7 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userAcl() throws Exception {
-        mockMvc.perform(acl("/dav/users/{uid}", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(acl("/dav/users/{uid}", USER01))
                 .andExpect(status().isForbidden())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));

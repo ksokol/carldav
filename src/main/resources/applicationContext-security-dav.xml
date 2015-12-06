@@ -84,7 +84,7 @@
 		<property name="securityMetadataSource">
 			<security:filter-security-metadata-source>
 				<security:intercept-url pattern="/**"
-					access="ROLE_WE_DONT_HAVE" />
+					 access="ROLE_WE_DONT_HAVE"/>
 			</security:filter-security-metadata-source>
 		</property>
 	</bean>
@@ -96,6 +96,7 @@
 			<security:filter-chain pattern="/**"
 				filters="requestContextFilter,
 				        openSessionInViewFilter,
+                        securityContextPersistenceFilter,
 				        httpLoggingFilter,
 				        protocolBasicProcessingFilter,
          				protocolTicketProcessingFilter,
@@ -109,6 +110,8 @@
     <bean id="openSessionInViewFilter" class="org.springframework.orm.hibernate4.support.OpenSessionInViewFilter" />
     <bean id="requestContextFilter" class="org.springframework.web.filter.RequestContextFilter" />
     <bean id="httpLoggingFilter" class="org.unitedinternet.cosmo.filters.HttpLoggingFilter" />
+
+    <bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
 
 	<!-- Intercepts service calls and verifies current principal has sufficient 
 		privileges to execute api. Aspect bean is annotated with aspecj annotations. -->

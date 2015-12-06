@@ -1,5 +1,6 @@
 package org.unitedinternet.cosmo;
 
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 import org.junit.Before;
@@ -7,7 +8,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.TestDispatcherServlet;
@@ -36,14 +36,11 @@ public class IntegrationTestSupport {
     @Autowired
     private WebApplicationContext wac;
 
-    @Autowired
-    private FilterChainProxy springSecurityFilterChain;
-
     @Before
     public void beforeAnyOther() throws Exception {
         this.mockMvc = webAppContextSetup(this.wac)
 				.dispatcherServlet(new CustomTestDispatcherServlet())
-				.addFilters(springSecurityFilterChain).build();
+                .apply(springSecurity()).build();
     }
 
     private static class CustomTestDispatcherServlet extends TestDispatcherServlet {

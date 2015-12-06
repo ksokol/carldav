@@ -5,25 +5,23 @@ import carldav.service.time.TimeService
 import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import util.TestUser
 
 import static carldav.util.builder.GeneralResponse.*
 import static carldav.util.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.Mockito.when
-import static org.springframework.http.HttpHeaders.*
+import static org.springframework.http.HttpHeaders.ALLOW
+import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.HttpMethod.POST
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static util.mockmvc.CustomResultMatchers.html
-import static util.mockmvc.CustomResultMatchers.xml
-import static util.HeaderUtil.user
-import static util.TestUser.TEST01
+import static testutil.TestUser.USER01
 import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static util.mockmvc.CustomRequestBuilders.*
 import static util.mockmvc.CustomResultMatchers.*
@@ -32,9 +30,9 @@ import static util.xmlunit.XmlMatcher.equalXml
 /**
  * @author Kamill Sokol
  */
+@WithUserDetails(USER01)
 public class CalendarTests extends IntegrationTestSupport {
 
-    private final TestUser testUser = TEST01;
     private final String uuid = "59BC120D-E909-4A56-A70D-8E97914E51A3";
 
     private final String CALDAV_EVENT = """\
@@ -99,9 +97,8 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Test
     public void shouldReturnHtmlForUser() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
+        final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
-                .header(AUTHORIZATION, user(testUser))
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
@@ -178,19 +175,17 @@ public class CalendarTests extends IntegrationTestSupport {
                         </D:multistatus>
                         """
 
-        mockMvc.perform(report("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .content(getRequest)
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+                .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
     @Test
     public void shouldReturnHtmlForUserAllProp() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
+        final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
-                .header(AUTHORIZATION, user(testUser))
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
@@ -369,19 +364,17 @@ public class CalendarTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .content(request)
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+                .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
     @Test
     public void shouldReturnHtmlForUserPropName() throws Exception {
-        mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", testUser.getUid(), uuid)
+        mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
-                .header(AUTHORIZATION, user(testUser))
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()));
@@ -423,18 +416,16 @@ public class CalendarTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .content(request)
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+                .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }
 
     @Test
     public void shouldForbidSameCalendar() throws Exception {
-        mockMvc.perform(mkcalendar("/dav/{email}/calendar/", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(mkcalendar("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(RESOURCE_MUST_BE_NULL));
@@ -442,16 +433,14 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Test
     public void shouldCreateCalendar() throws Exception {
-        mockMvc.perform(get("/dav/{email}/newcalendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(status().isNotFound())
                 .andExpect(xml(NOT_FOUND));
 
-        mockMvc.perform(mkcalendar("/dav/{email}/newcalendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(mkcalendar("/dav/{email}/newcalendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isCreated());
 
         def response = """\
@@ -493,17 +482,15 @@ public class CalendarTests extends IntegrationTestSupport {
                         </body></html>
                         """.stripIndent()
 
-        mockMvc.perform(get("/dav/{email}/newcalendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(textHtmlContentType())
                 .andExpect(html(response));
     }
 
     @Test
     public void calendarOptions() throws Exception {
-        mockMvc.perform(options("/dav/{email}/calendar/", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, ticket"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, MKTICKET, DELTICKET, REPORT"));
@@ -511,16 +498,14 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Test
     public void calendarHead() throws Exception {
-        mockMvc.perform(head("/dav/{email}/calendar/", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(head("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(notNullValue()));
     }
 
     @Test
     public void calendarAcl() throws Exception {
-        mockMvc.perform(acl("/dav/{email}/calendar/", testUser.getUid())
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(acl("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isForbidden())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
@@ -673,9 +658,8 @@ public class CalendarTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
@@ -683,9 +667,8 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Test
     public void calendarPost() throws Exception {
-        mockMvc.perform(post("/dav/{email}/calendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(post("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(POST).onCollection()));
@@ -722,10 +705,9 @@ public class CalendarTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(proppatch("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(proppatch("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
@@ -733,14 +715,12 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Test
     public void calendarDelete() throws Exception {
-        mockMvc.perform(delete("/dav/{email}/calendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(delete("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/dav/{email}/calendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isNotFound())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_FOUND))
@@ -748,34 +728,29 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Test
     public void calendarCopy() throws Exception {
-        mockMvc.perform(copy("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(copy("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser))
-                .header("Destination", "/dav/" + testUser.getUid() + "/newcalendar/"))
+                .header("Destination", "/dav/" + USER01 + "/newcalendar/"))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/dav/{email}/newcalendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void calendarMove() throws Exception {
-        mockMvc.perform(move("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(move("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser))
-                .header("Destination", "/dav/" + testUser.getUid() + "/newcalendar/"))
+                .header("Destination", "/dav/" + USER01 + "/newcalendar/"))
                 .andExpect(status().isCreated());
 
-        mockMvc.perform(get("/dav/{email}/newcalendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/dav/{email}/calendar/", testUser.getUid())
-                .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser)))
+        mockMvc.perform(get("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML))
                 .andExpect(status().isNotFound())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_FOUND));
@@ -790,10 +765,9 @@ public class CalendarTests extends IntegrationTestSupport {
                             <C:visits>1</C:visits>
                         </C:ticketinfo>"""
 
-        final MvcResult result = mockMvc.perform(mkticket("/dav/{email}/calendar/", testUser.getUid())
+        final MvcResult result = mockMvc.perform(mkticket("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isOk())
                 .andExpect(textXmlContentType())
                 .andReturn();
@@ -832,10 +806,9 @@ public class CalendarTests extends IntegrationTestSupport {
                             <C:visits>1</C:visits>
                         </C:ticketinfo>"""
 
-        final MvcResult result = mockMvc.perform(mkticket("/dav/{email}/calendar/", testUser.getUid())
+        final MvcResult result = mockMvc.perform(mkticket("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request)
-                .header(AUTHORIZATION, user(testUser)))
+                .content(request))
                 .andExpect(status().isOk())
                 .andReturn();
 
@@ -864,9 +837,8 @@ public class CalendarTests extends IntegrationTestSupport {
 
         assertThat(result.getResponse().getContentAsString(), equalXml(delResponse1));
 
-        mockMvc.perform(delticket("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(delticket("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser))
                 .header("ticket", ticket))
                 .andExpect(status().isNoContent())
 
@@ -878,9 +850,8 @@ public class CalendarTests extends IntegrationTestSupport {
                             </cosmo:precondition-failed>
                         </D:error>"""
 
-        mockMvc.perform(delticket("/dav/{email}/calendar/", testUser.getUid())
+        mockMvc.perform(delticket("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .header(AUTHORIZATION, user(testUser))
                 .header("ticket", ticket))
                 .andExpect(status().isPreconditionFailed())
                 .andExpect(textXmlContentType())

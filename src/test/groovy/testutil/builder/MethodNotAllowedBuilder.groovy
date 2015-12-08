@@ -31,6 +31,10 @@ public class MethodNotAllowedBuilder {
             return build("user principal")
         }
 
+        public String onUserPrincipalCollection() {
+            return build("user principal collection")
+        }
+
         public String onCollection() {
             return build("a collection")
         }

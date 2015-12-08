@@ -4,9 +4,6 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static testutil.mockmvc.CaldavHttpMethod.*
-import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
-import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ALLOW
@@ -16,6 +13,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.builder.GeneralRequest.UNPROCESSABLE_ENTITY_REQUEST
+import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
+import static testutil.builder.GeneralResponse.UNPROCESSABLE_ENTITY
+import static testutil.builder.MethodNotAllowedBuilder.notAllowed
+import static testutil.mockmvc.CaldavHttpMethod.*
 import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.*
 
@@ -226,24 +228,12 @@ class UsersTests extends IntegrationTestSupport {
 
     @Test
     public void userReportUnprocessable() throws Exception {
-        def request = '''\
-                        <D:principal-match xmlns:D="DAV:" xmlns:Z="http://www.w3.com/standards/z39.50/">
-                            <D:remove>
-                                <D:prop><D:displayname/></D:prop>
-                            </D:remove>
-                        </D:principal-match>'''
-
-        def response = '''\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:unprocessable-entity>Expected either {DAV:}self or {DAV:}principal-property child of {DAV:}principal-match</cosmo:unprocessable-entity>
-                        </D:error>'''
-
         mockMvc.perform(report("/dav/users/{uid}", USER01)
                 .contentType(TEXT_XML)
-                .content(request))
+                .content(UNPROCESSABLE_ENTITY_REQUEST))
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+                .andExpect(xml(UNPROCESSABLE_ENTITY));
     }
 
     @Test

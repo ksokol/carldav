@@ -1,8 +1,9 @@
-package dav.user
+package dav
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
+import testutil.TestUser
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
@@ -13,7 +14,6 @@ import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static testutil.TestUser.USER01
 import static testutil.builder.GeneralRequest.PROPFIND_DISPLAYNAME_REQUEST
 import static testutil.builder.GeneralResponse.NOT_FOUND
 import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
@@ -27,7 +27,7 @@ import static testutil.xmlunit.XmlMatcher.equalXml
 /**
  * @author Kamill Sokol
  */
-@WithUserDetails(USER01)
+@WithUserDetails(TestUser.USER01)
 public class CollectionTests extends IntegrationTestSupport {
 
     @Test

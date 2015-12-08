@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.builder.GeneralRequest.PROPFIND_DISPLAYNAME_REQUEST
 import static testutil.builder.GeneralRequest.UNPROCESSABLE_ENTITY_REQUEST
 import static testutil.builder.GeneralResponse.*
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
@@ -59,16 +60,9 @@ public class UsersCollectionTests extends IntegrationTestSupport {
 
     @Test
     public void usersPropFindProp() throws Exception {
-        def request = """\
-                        <D:propfind xmlns:D="DAV:">
-                            <D:prop>
-                                <D:displayname />
-                            </D:prop>
-                        </D:propfind>"""
-
         mockMvc.perform(propfind("/dav/users")
                 .contentType(TEXT_XML)
-                .content(request))
+                .content(PROPFIND_DISPLAYNAME_REQUEST))
                 .andExpect(status().isInternalServerError())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(INTERNAL_SERVER_ERROR));

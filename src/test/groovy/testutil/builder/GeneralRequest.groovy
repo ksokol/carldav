@@ -11,4 +11,11 @@ class GeneralRequest {
                                                                         <D:prop><D:displayname/></D:prop>
                                                                     </D:remove>
                                                                 </D:principal-match>'''
+
+    public static final String PROPFIND_DISPLAYNAME_REQUEST = """\
+                                                                <D:propfind xmlns:D="DAV:">
+                                                                    <D:prop>
+                                                                        <D:displayname />
+                                                                    </D:prop>
+                                                                </D:propfind>"""
 }

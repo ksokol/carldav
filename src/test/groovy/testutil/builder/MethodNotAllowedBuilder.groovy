@@ -39,6 +39,10 @@ public class MethodNotAllowedBuilder {
             return build("a collection")
         }
 
+        public String onHomeCollection() {
+            return build("home collection")
+        }
+
         private String build(String resource) {
             return """\
                     <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">

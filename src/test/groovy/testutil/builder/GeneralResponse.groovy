@@ -27,4 +27,9 @@ public class GeneralResponse {
                                                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
                                                             <D:not-supported-privilege>No unprotected ACEs are supported on this resource</D:not-supported-privilege>
                                                        </D:error>"""
+
+    public static String UNPROCESSABLE_ENTITY = '''\
+                                                <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                                    <cosmo:unprocessable-entity>Expected either {DAV:}self or {DAV:}principal-property child of {DAV:}principal-match</cosmo:unprocessable-entity>
+                                                </D:error>'''
 }

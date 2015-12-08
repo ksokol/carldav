@@ -5,18 +5,23 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.TestUser
 
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ALLOW
+import static org.springframework.http.HttpMethod.DELETE
 import static org.springframework.http.HttpMethod.POST
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.builder.GeneralRequest.PROPFIND_DISPLAYNAME_REQUEST
+import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
-import static testutil.mockmvc.CustomRequestBuilders.propfind
-import static testutil.mockmvc.CustomRequestBuilders.proppatch
+import static testutil.mockmvc.CaldavHttpMethod.COPY
+import static testutil.mockmvc.CaldavHttpMethod.MOVE
+import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.*
+import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol
@@ -146,5 +151,162 @@ public class ItemTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
+    }
+
+    @Test
+    public void itemDelete() throws Exception {
+        mockMvc.perform(delete("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(notAllowed(DELETE).onHomeCollection()))
+    }
+
+    @Test
+    public void itemCopy() throws Exception {
+        mockMvc.perform(copy("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(notAllowed(COPY).onHomeCollection()))
+    }
+
+    @Test
+    public void itemMove() throws Exception {
+        mockMvc.perform(move("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(notAllowed(MOVE).onHomeCollection()))
+    }
+
+    @Test
+    public void itemReport() throws Exception {
+        def request = '''\
+                        <D:principal-match xmlns:D="DAV:" xmlns:Z="http://www.w3.com/standards/z39.50/">
+                            <D:principal-property>
+                                <D:displayname/>
+                            </D:principal-property>
+                        </D:principal-match>'''
+
+        def response = """\
+                        <D:multistatus xmlns:D="DAV:"/>"""
+
+        mockMvc.perform(report("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
+                .contentType(TEXT_XML)
+                .content(request))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response));
+    }
+
+    @Test
+    public void itemMkticket() throws Exception {
+        def request = """\
+                        <C:ticketinfo xmlns:C="http://www.xythos.com/namespaces/StorageServer">
+                            <D:privilege xmlns:D="DAV:"><D:read/></D:privilege>
+                            <C:timeout>Second-3600</C:timeout>
+                            <C:visits>1</C:visits>
+                        </C:ticketinfo>"""
+
+
+        def result = mockMvc.perform(mkticket("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
+                .contentType(TEXT_XML)
+                .content(request))
+                .andExpect(status().isOk())
+                .andExpect(textXmlContentType())
+                .andReturn()
+
+        final String ticket = result.getResponse().getHeader("Ticket")
+        final String content = result.getResponse().getContentAsString()
+
+        def response = """\
+                        <D:prop xmlns:D="DAV:">
+                            <ticket:ticketdiscovery xmlns:ticket="http://www.xythos.com/namespaces/StorageServer">
+                                <ticket:ticketinfo>
+                                    <ticket:id>${ticket}</ticket:id>
+                                    <D:owner>
+                                        <D:href>/dav/users/test01@localhost.de</D:href>
+                                    </D:owner>
+                                    <ticket:timeout>Second-3600</ticket:timeout>
+                                    <ticket:visits>infinity</ticket:visits>
+                                    <D:privilege>
+                                        <D:privilege>
+                                            <D:read/>
+                                        </D:privilege>
+                                    </D:privilege>
+                                </ticket:ticketinfo>
+                            </ticket:ticketdiscovery>
+                        </D:prop>"""
+
+        assertThat(content, equalXml(response))
+    }
+
+    @Test
+    public void itemDelticket() throws Exception {
+        def request = """\
+                        <C:ticketinfo xmlns:C="http://www.xythos.com/namespaces/StorageServer">
+                            <D:privilege xmlns:D="DAV:"><D:read/></D:privilege>
+                            <C:timeout>Second-3600</C:timeout>
+                            <C:visits>1</C:visits>
+                        </C:ticketinfo>"""
+
+
+        def result = mockMvc.perform(mkticket("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
+                .contentType(TEXT_XML)
+                .content(request))
+                .andExpect(status().isOk())
+                .andExpect(textXmlContentType())
+                .andReturn()
+
+        final String ticket = result.getResponse().getHeader("Ticket")
+
+        def delResponse1 = """\
+                        <D:prop xmlns:D="DAV:">
+                            <ticket:ticketdiscovery xmlns:ticket="http://www.xythos.com/namespaces/StorageServer">
+                                <ticket:ticketinfo>
+                                    <ticket:id>
+                                        ${ticket}
+                                    </ticket:id>
+                                    <D:owner>
+                                        <D:href>/dav/users/test01@localhost.de</D:href>
+                                    </D:owner>
+                                    <ticket:timeout>Second-3600</ticket:timeout>
+                                    <ticket:visits>infinity</ticket:visits>
+                                    <D:privilege>
+                                        <D:privilege>
+                                            <D:read/>
+                                        </D:privilege>
+                                    </D:privilege>
+                                </ticket:ticketinfo>
+                            </ticket:ticketdiscovery>
+                        </D:prop>"""
+
+        assertThat(result.getResponse().getContentAsString(), equalXml(delResponse1))
+
+        mockMvc.perform(delticket("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
+                .contentType(TEXT_XML)
+                .header("ticket", ticket))
+                .andExpect(status().isNoContent())
+
+        def delResponse2 = """\
+                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                            <cosmo:precondition-failed>Ticket
+                                ${ticket}
+                                does not exist
+                            </cosmo:precondition-failed>
+                        </D:error>"""
+
+        mockMvc.perform(delticket("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
+                .contentType(TEXT_XML)
+                .header("ticket", ticket))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(delResponse2))
+    }
+
+    @Test
+    public void itemAcl() throws Exception {
+        mockMvc.perform(acl("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
+                .andExpect(status().isForbidden())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
 }

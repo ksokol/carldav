@@ -19,10 +19,10 @@ import org.apache.abdera.util.EntityTag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.util.Assert;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -80,13 +80,18 @@ import javax.validation.ValidationException;
 public class StandardRequestHandler extends AbstractController implements ServerConstants {
     private static final Log LOG = LogFactory.getLog(StandardRequestHandler.class);
 
-    private DavResourceLocatorFactory locatorFactory;
-    private DavResourceFactory resourceFactory;
-    private EntityFactory entityFactory;
-    // RequestHandler methods
+    private final DavResourceLocatorFactory locatorFactory;
+    private final DavResourceFactory resourceFactory;
+    private final EntityFactory entityFactory;
 
-    public StandardRequestHandler() {
+    public StandardRequestHandler(final DavResourceLocatorFactory locatorFactory, final DavResourceFactory resourceFactory, final EntityFactory entityFactory) {
         super.setSupportedMethods(null);
+        Assert.notNull(locatorFactory, "locatorFactory is null");
+        Assert.notNull(resourceFactory, "resourceFactory is null");
+        Assert.notNull(entityFactory, "entityFactory is null");
+        this.locatorFactory = locatorFactory;
+        this.resourceFactory = resourceFactory;
+        this.entityFactory = entityFactory;
     }
     /**
      * <p>
@@ -104,7 +109,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      */
     @Override
     protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        DavRequest wreq = null;
+        DavRequest wreq;
         DavResponse wres = null;
         
         try {
@@ -315,37 +320,6 @@ public class StandardRequestHandler extends AbstractController implements Server
     protected WebDavResource resolveTarget(DavRequest request)
         throws CosmoDavException {
         return resourceFactory.resolve(request.getResourceLocator(), request);
-    }
-
-    public void init() {
-        if (locatorFactory == null) {
-            throw new CosmoException("locatorFactory must not be null",
-                    new CosmoException());
-        }
-        if (resourceFactory == null) {
-            throw new CosmoException("resourceFactory must not be null",
-                    new CosmoException());
-        }
-    }
-
-    public void setResourceLocatorFactory(DavResourceLocatorFactory factory) {
-        locatorFactory = factory;
-    }
-
-    public DavResourceFactory getResourceFactory() {
-        return resourceFactory;
-    }
-
-    public void setResourceFactory(DavResourceFactory factory) {
-        resourceFactory = factory;
-    }
-    
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
-    }
-
-    public void setEntityFactory(EntityFactory entityFactory) {
-        this.entityFactory = entityFactory;
     }
 
     private void ifMatch(DavRequest request,

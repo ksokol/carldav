@@ -148,9 +148,9 @@
     </bean>
 
 	<bean id="dav" class="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler">
-		<property name="resourceLocatorFactory" ref="davResourceLocatorFactory" />
-		<property name="resourceFactory" ref="davResourceFactory" />
-		<property name="entityFactory" ref="cosmoEntityFactory" />
+        <constructor-arg index="0" ref="davResourceLocatorFactory" />
+        <constructor-arg index="1" ref="davResourceFactory" />
+        <constructor-arg index="2" ref="cosmoEntityFactory" />
 	</bean>
 
 	<!-- authentication resources -->

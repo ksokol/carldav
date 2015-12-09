@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.servlet;
 
+import static org.mockito.Mockito.mock;
+
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +33,8 @@ import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.BaseDavTestCase;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
+import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.DavTestContext;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
@@ -40,6 +44,7 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavExceptionExtMkCalendarForbidden;
+import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.security.ItemSecurityException;
 import org.unitedinternet.cosmo.security.Permission;
@@ -50,8 +55,10 @@ import org.unitedinternet.cosmo.server.ServerConstants;
  * Test class for {@link StandardRequestHandler}.
  */
 public class StandardRequestHandlerTest extends BaseDavTestCase {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(StandardRequestHandlerTest.class);
+
+    private DavResourceLocatorFactory locatorFactory = mock(DavResourceLocatorFactory.class);
+    private DavResourceFactory resourceFactory = mock(DavResourceFactory.class);
+    private EntityFactory entityFactory = mock(EntityFactory.class);
 
     /**
      * Tests if match all.
@@ -65,7 +72,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-Match", "*");
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
         } catch (PreconditionFailedException e) {
             Assert.fail("If-Match all failed");
         }
@@ -83,7 +90,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-Match", home.getETag());
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
         } catch (PreconditionFailedException e) {
             Assert.fail("If-Match specific etag failed");
         }
@@ -102,7 +109,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-Match", requestEtag);
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
             Assert.fail("If-Match bogus etag succeeded");
         } catch (PreconditionFailedException e) {}
 
@@ -124,7 +131,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-None-Match", "*");
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
             Assert.fail("If-None-Match all succeeded");
         } catch (NotModifiedException e) {
             // expected
@@ -150,7 +157,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-None-Match", requestEtag);
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
         } catch (PreconditionFailedException e) {
             Assert.fail("If-None-Match bogus etag failed");
         }
@@ -169,7 +176,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-None-Match", home.getETag());
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
             Assert.fail("If-None-Match specific etag succeeded");
         } catch (NotModifiedException e) {
             // expected
@@ -195,7 +202,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-Modified-Since", requestDate);
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
             Assert.fail("If-Modified-Since succeeded for unmodified resource");
         } catch (NotModifiedException e) {
             // expected
@@ -217,7 +224,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-Modified-Since", requestDate);
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
         } catch (PreconditionFailedException e) {
             Assert.fail("If-Modified-Since failed for mmodified resource");
         }
@@ -236,7 +243,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-Unmodified-Since", requestDate);
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
         } catch (PreconditionFailedException e) {    
             Assert.fail("If-Unmodified-Since failed for unmodified resource");
         }
@@ -256,7 +263,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         ctx.getHttpRequest().addHeader("If-Unmodified-Since", requestDate);
 
         try {
-            new StandardRequestHandler().preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
+            new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory).preconditions(ctx.getDavRequest(), ctx.getDavResponse(), home);
             Assert.fail("If-Unmodified-Since succeeded for modified resource");
         } catch (PreconditionFailedException e) {}
     }
@@ -313,7 +320,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
     public void shouldUseCosmoDavExceptionForUnspecificExceptionsAndSetItAsReqAtt() throws Exception{
         NullPointerException npe = new NullPointerException();
         
-        StandardRequestHandler classUnderTest = new StandardRequestHandler();
+        StandardRequestHandler classUnderTest = new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory);
         
         StandardRequestHandler classUnderTestSpied = Mockito.spy(classUnderTest);
         
@@ -321,11 +328,11 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         HttpServletRequest req = ctx.getDavRequest();
         HttpServletResponse res = ctx.getDavResponse();
         
-        DavRequest mockDavRequest = Mockito.mock(DavRequest.class);
+        DavRequest mockDavRequest = mock(DavRequest.class);
         Mockito.when(mockDavRequest.getRequestURI()).thenReturn("test/Request/Uri");
         Mockito.when(classUnderTestSpied.createDavRequest(req)).thenReturn(mockDavRequest);
         
-        DavResponse mockDavResponse = Mockito.mock(DavResponse.class);
+        DavResponse mockDavResponse = mock(DavResponse.class);
         Mockito.when(classUnderTestSpied.createDavResponse(res)).thenReturn(mockDavResponse);                                                
 
         Mockito.doThrow(npe).when(classUnderTestSpied).resolveTarget(Mockito.any(DavRequest.class));
@@ -343,7 +350,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
     }
     
     private CosmoDavException captureExceptionForErrorResponseCausedBy(Throwable t) throws Exception{
-        StandardRequestHandler classUnderTest = new StandardRequestHandler();
+        StandardRequestHandler classUnderTest = new StandardRequestHandler(locatorFactory, resourceFactory, entityFactory);
         
         StandardRequestHandler classUnderTestSpied = Mockito.spy(classUnderTest);
         
@@ -356,7 +363,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
         
         Mockito.when(classUnderTestSpied.createDavRequest(req)).thenReturn(ctx.getDavRequest());
         
-        DavResponse mockDavResponse = Mockito.mock(DavResponse.class);
+        DavResponse mockDavResponse = mock(DavResponse.class);
         Mockito.when(classUnderTestSpied.createDavResponse(res)).thenReturn(mockDavResponse);                                                
         
         //throw the exception here

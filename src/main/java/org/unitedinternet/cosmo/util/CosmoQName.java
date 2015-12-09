@@ -23,15 +23,6 @@ package org.unitedinternet.cosmo.util;
 public class CosmoQName extends javax.xml.namespace.QName
     implements Comparable<javax.xml.namespace.QName> {
 
-    public CosmoQName(String localPart) {
-        super(localPart);
-    }
-
-    public CosmoQName(String namespaceURI,
-                 String localPart) {
-        super(namespaceURI, localPart);
-    }
-
     public CosmoQName(String namespaceURI,
                  String localPart,
                  String prefix) {

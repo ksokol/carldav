@@ -278,4 +278,12 @@ class UsersTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
+
+    @Test
+    public void userMkcol() throws Exception {
+        mockMvc.perform(mkcol("/dav/users/{uid}", USER01))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(notAllowed(MKCOL).onNonCollection()));
+    }
 }

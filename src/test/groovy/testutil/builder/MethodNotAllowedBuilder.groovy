@@ -39,6 +39,10 @@ public class MethodNotAllowedBuilder {
             return build("a collection")
         }
 
+        public String onNonCollection() {
+            return build("a non-collection resource")
+        }
+
         public String onHomeCollection() {
             return build("home collection")
         }

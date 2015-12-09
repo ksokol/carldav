@@ -21,12 +21,4 @@ public class CosmoValidationException extends CosmoException {
     public CosmoValidationException(Throwable cause) {
         super(cause);
     }
-    /**
-     * 
-     * @param message The message exception.
-     * @param cause - If somethig is wrong this exception is thrown.
-     */
-    public CosmoValidationException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

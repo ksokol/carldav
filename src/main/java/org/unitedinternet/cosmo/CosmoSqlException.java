@@ -21,12 +21,4 @@ public class CosmoSqlException extends CosmoException {
     public CosmoSqlException(Throwable cause) {
         super(cause);
     }
-    /**
-     * 
-     * @param message The message exception.
-     * @param cause - If somethig is wrong this exception is thrown.
-     */
-    public CosmoSqlException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

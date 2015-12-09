@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dav.servlet;
 import org.apache.abdera.util.EntityTag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.util.Assert;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,16 +29,12 @@ import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.DavResponse;
-import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.dav.NotModifiedException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
-import org.unitedinternet.cosmo.dav.caldav.CaldavExceptionForbidden;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
@@ -57,16 +52,12 @@ import org.unitedinternet.cosmo.dav.provider.OutboxCollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.UserPrincipalCollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.UserPrincipalProvider;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.security.CosmoSecurityException;
-import org.unitedinternet.cosmo.security.ItemSecurityException;
-import org.unitedinternet.cosmo.security.Permission;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ValidationException;
 
 /**
  * <p>
@@ -126,15 +117,8 @@ public class StandardRequestHandler extends AbstractController implements Server
             // logs don't get too polluted with errors.  For example, OptimisticLockingFailureException
             // is expected and should be handled by the retry logic that is one layer above.
             // Although not ideal, for now simply check for this type and log at a different level.
-            if(e instanceof OptimisticLockingFailureException) {
-                LOG.error("OptimisticLockingFailureException - Internal dav error", e);
-            }
-            else if (de.getErrorCode() >= 500) {
-                LOG.error("Internal dav error", e);
-            }
-            else if (de.getErrorCode() >= 400 && de.getMessage() != null) {
-                LOG.error("Client error (" + de.getErrorCode() + "): " + de.getMessage(), de);
-            }
+            LOG.error("error (" + de.getErrorCode() + "): " + de.getMessage(), de);
+
             if (wres != null) {
                 wres.sendDavError(de);
             }
@@ -447,64 +431,5 @@ public class StandardRequestHandler extends AbstractController implements Server
         response.setStatus(200);
         response.addHeader("Allow", resource.getSupportedMethods());
         response.addHeader("DAV", resource.getComplianceClass());
-    }
-
-    private static enum ExceptionMapper {
-        SECURITY_EXCEPTION_MAPPER (CosmoSecurityException.class) {
-            @Override
-            protected CosmoDavException doMap(Throwable t, HttpServletRequest request) {
-                // handle security errors
-                NeedsPrivilegesException npe = null;
-                // Determine required privilege if we can and include
-                // in response
-                if(t instanceof ItemSecurityException) {
-                    ItemSecurityException ise = (ItemSecurityException) t;
-                    DavPrivilege priv = ise.getPermission()==Permission.READ ? DavPrivilege.READ : DavPrivilege.WRITE;
-                    npe = new NeedsPrivilegesException(request.getRequestURI(), priv);
-                } else {
-                    // otherwise send generic response
-                    npe = new NeedsPrivilegesException(t.getMessage());
-                }
-
-                return npe;
-            }
-        },        
-        FORBIDDEN_EXCEPTION_MAPPER(CaldavExceptionForbidden.class),        
-        DAV_EXCEPTION_MAPPER (CosmoDavException.class){
-            @Override
-            protected CosmoDavException doMap(Throwable t, HttpServletRequest request) {
-                CosmoDavException de = (CosmoDavException)t;
-                return de;
-            }
-        },
-        VALIDATION_EXCEPTION_MAPPER (ValidationException.class);
-        
-        private Class<? extends Throwable> exceptionRoot;
-        
-        private <T extends Throwable> ExceptionMapper (Class<T> exceptionRoot){
-            this.exceptionRoot = exceptionRoot;
-        }
-        
-        boolean supports(Throwable t){
-            return exceptionRoot.isInstance(t);
-        }
-        
-        
-        //Default behavior. See http://tools.ietf.org/search/rfc4791#section-1.3
-        CosmoDavException doMap(Throwable t, HttpServletRequest request){
-            return new ForbiddenException(t.getMessage());
-        }
-        
-        public static CosmoDavException map(Throwable t, HttpServletRequest request){
-            
-            for(ExceptionMapper mapper : values()){
-                if(mapper.supports(t)){
-                    return mapper.doMap(t, request);
-                }
-            }
-            
-            request.setAttribute(ATTR_SERVICE_EXCEPTION, t);
-            return new CosmoDavException(t);
-        }
     }
 }

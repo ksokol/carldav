@@ -8,15 +8,13 @@ import testutil.TestUser
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ALLOW
-import static org.springframework.http.HttpMethod.DELETE
-import static org.springframework.http.HttpMethod.POST
+import static org.springframework.http.HttpMethod.*
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.builder.GeneralRequest.PROPFIND_DISPLAYNAME_REQUEST
-import static testutil.builder.GeneralResponse.NOT_FOUND
-import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
+import static testutil.builder.GeneralResponse.*
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CaldavHttpMethod.COPY
 import static testutil.mockmvc.CaldavHttpMethod.MOVE
@@ -328,15 +326,39 @@ public class CollectionTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void shouldForbidSameCalendar() throws Exception {
-        def response = """\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:conflict>One or more intermediate collections must be created</cosmo:conflict>
-                        </D:error>"""
-
+    public void collectionMkcol() throws Exception {
         mockMvc.perform(mkcol("/dav/collection/{uid}", "1"))
                 .andExpect(status().isConflict())
                 .andExpect(textXmlContentType())
+                .andExpect(xml(CONFLICT_RESPONSE));
+    }
+
+    @Test
+    public void collectionMkcalendar() throws Exception {
+        def response = """\
+                        <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                            <C:calendar-collection-location-ok>One or more intermediate collections must be created</C:calendar-collection-location-ok>
+                        </D:error>"""
+
+        mockMvc.perform(mkcalendar("/dav/collection/{uid}", "1"))
+                .andExpect(status().isConflict())
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response));
+    }
+
+    @Test
+    public void collectionPut() throws Exception {
+        mockMvc.perform(put("/dav/collection/{uid}", "1"))
+                .andExpect(status().isConflict())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(CONFLICT_RESPONSE));
+    }
+
+    @Test
+    public void collectionPatch() throws Exception {
+        mockMvc.perform(patch("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
+                .andExpect(status().isMethodNotAllowed())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(notAllowed(PATCH).onCollection()));
     }
 }

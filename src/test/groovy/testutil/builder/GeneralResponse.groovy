@@ -32,4 +32,9 @@ public class GeneralResponse {
                                                 <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
                                                     <cosmo:unprocessable-entity>Expected either {DAV:}self or {DAV:}principal-property child of {DAV:}principal-match</cosmo:unprocessable-entity>
                                                 </D:error>'''
+
+    public static String CONFLICT_RESPONSE = """\
+                                                <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                                    <cosmo:conflict>One or more intermediate collections must be created</cosmo:conflict>
+                                                </D:error>"""
 }

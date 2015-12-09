@@ -105,12 +105,6 @@
 
 	<!-- general protocol/interface resources -->
 
-	<bean id="serviceLocatorFactory" class="org.unitedinternet.cosmo.server.ServiceLocatorFactory">
-		<property name="cmpPrefix" value="/cmp" />
-		<property name="davPrefix" value="/dav" />
-		<property name="securityManager" ref="securityManager" />
-	</bean>
-
 	<!-- dav protocol resources -->
 
 	<bean id="davResourceFactory" class="org.unitedinternet.cosmo.dav.StandardResourceFactory">

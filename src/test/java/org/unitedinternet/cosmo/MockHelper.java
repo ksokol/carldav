@@ -40,7 +40,6 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.security.mock.MockSecurityManager;
 import org.unitedinternet.cosmo.security.mock.MockTicketPrincipal;
 import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
-import org.unitedinternet.cosmo.server.ServiceLocatorFactory;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 import org.unitedinternet.cosmo.service.impl.StandardContentService;
@@ -54,7 +53,6 @@ import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 public class MockHelper extends TestHelper {
     private MockEntityFactory entityFactory;
     private MockSecurityManager securityManager;
-    private ServiceLocatorFactory serviceLocatorFactory;
     private StandardContentService contentService;
     private StandardUserService userService;
     private ICalendarClientFilterManager clientFilterManager;
@@ -69,12 +67,6 @@ public class MockHelper extends TestHelper {
         super();
 
         securityManager = new MockSecurityManager();
-
-        serviceLocatorFactory = new ServiceLocatorFactory();
-        serviceLocatorFactory.setCmpPrefix("/cmp");
-        serviceLocatorFactory.setDavPrefix("/dav");
-        serviceLocatorFactory.setSecurityManager(securityManager);
-        serviceLocatorFactory.init();
 
         MockDaoStorage storage = new MockDaoStorage();
         MockCalendarDao calendarDao = new MockCalendarDao(storage);
@@ -157,14 +149,6 @@ public class MockHelper extends TestHelper {
      */
     public CosmoSecurityManager getSecurityManager() {
         return securityManager;
-    }
-
-    /**
-     * Gets service locator factory.
-     * @return The service locator factory.
-     */
-    public ServiceLocatorFactory getServiceLocatorFactory() {
-        return serviceLocatorFactory;
     }
 
     /**

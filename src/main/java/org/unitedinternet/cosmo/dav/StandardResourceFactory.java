@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.dav;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
@@ -27,9 +28,9 @@ import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavFreeBusy;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
-import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.impl.DavInboxCollection;
 import org.unitedinternet.cosmo.dav.impl.DavOutboxCollection;
+import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
@@ -158,7 +159,7 @@ public class StandardResourceFactory
             LOG.debug("resolving URI " + uri);
         }
 
-        UriTemplate.Match match = null;
+        UriTemplate.Match match;
 
         match = TEMPLATE_COLLECTION.match(uri);
         if (match != null) {
@@ -201,12 +202,9 @@ public class StandardResourceFactory
      * <code>Item</code> located by the given <code>DavResourceLocator</code>.
      * </p>
      */
-    public WebDavResource createResource(DavResourceLocator locator,
-                                      Item item)
-        throws CosmoDavException {
-        if (item == null) {
-            throw new IllegalArgumentException("item cannot be null");
-        }
+    public WebDavResource createResource(DavResourceLocator locator, Item item)  throws CosmoDavException {
+        Assert.notNull(item, "item cannot be null");
+
         if (item instanceof HomeCollectionItem) {
             return new DavHomeCollection((HomeCollectionItem) item, locator,
                                          this, entityFactory);

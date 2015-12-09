@@ -27,8 +27,7 @@
 
     <context:component-scan base-package="carldav, org.unitedinternet.cosmo.util" />
 
-    <bean id="propertyPlaceholderConfigurer"
-          class="org.unitedinternet.cosmo.servletcontext.CosmoPropertyPlaceholderConfigurer">
+    <bean id="propertyPlaceholderConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations" value="classpath:application.properties"/>
         <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>
     </bean>

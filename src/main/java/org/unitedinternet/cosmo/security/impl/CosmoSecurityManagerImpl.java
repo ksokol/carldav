@@ -80,32 +80,7 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
 
         return createSecurityContext(authen);
     }
-    
 
-    /**
-     * Authenticate the given Cosmo credentials and register a
-     * <code>CosmoSecurityContext</code> for them. This method is used
-     * when Cosmo components need to programatically log in a user
-     * rather than relying on a security context already being in
-     * place.
-     */
-    public CosmoSecurityContext initiateSecurityContext(String username,
-                                                        String password)
-        throws CosmoSecurityException {
-        try {
-            UsernamePasswordAuthenticationToken credentials =
-                new UsernamePasswordAuthenticationToken(username, password);
-            Authentication authentication =
-                authenticationManager.authenticate(credentials);
-            SecurityContext sc = SecurityContextHolder.getContext();
-            sc.setAuthentication(authentication);
-            return createSecurityContext(authentication);
-        } catch (AuthenticationException e) {
-            throw new CosmoSecurityException("can't establish security context",
-                                             e);
-        }
-    }
-    
     /**
      * Initiate the current security context with the current user.
      * This method is used when the server needs to run code as a
@@ -125,77 +100,12 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
         return createSecurityContext(credentials);
     }
 
-    /**
-     * Validates that the current security context has the requested
-     * permission for the given item.
-     *
-     * @throws PermissionDeniedException if the security context does
-     * not have the required permission
-     */
-    public void checkPermission(Item item,
-                                int permission)
-        throws PermissionDeniedException, CosmoSecurityException {
-        CosmoSecurityContext ctx = getSecurityContext();
-
-        if (ctx.isAnonymous()) {
-            LOG.warn("Anonymous access attempted to item " + item.getUid());
-            throw new PermissionDeniedException("Anonymous principals have no permissions");
-        }
-
-        // administrators can do anything to any item
-        if (ctx.isAdmin()) {
-            return;
-        }
-
-        User user = ctx.getUser();
-        if (user != null) {
-            // an item's owner can do anything to an item he owns
-            if (user.equals(item.getOwner())) {
-                return;
-            }
-            LOG.warn("User " + user.getUsername() + " attempted access to item " +
-                    item.getUid() + " owned by " + item.getOwner().getUsername());
-            throw new PermissionDeniedException("User does not have appropriate permissions on item " + item.getUid());
-        }
-
-        Ticket ticket = ctx.getTicket();
-        if (ticket != null) {
-            if (! ticket.isGranted(item)) {
-                LOG.warn("Non-granted ticket " + ticket.getKey() + " attempted access to item " + item.getUid());
-                throw new PermissionDeniedException("Ticket " + ticket.getKey() + " is not granted on item " + item.getUid());
-            }
-            // assume that when the security context was initiated the
-            // ticket's expiration date was checked
-            if (permission == Permission.READ &&
-                ticket.getPrivileges().contains(Ticket.PRIVILEGE_READ)) {
-                return;
-            }
-            if (permission == Permission.WRITE &&
-                ticket.getPrivileges().contains(Ticket.PRIVILEGE_WRITE)) {
-                return;
-            }
-            if (permission == Permission.FREEBUSY &&
-                ticket.getPrivileges().contains(Ticket.PRIVILEGE_FREEBUSY)) {
-                return;
-            }
-            LOG.warn("Granted ticket " + ticket.getKey() + " attempted access to item " + item.getUid());
-            throw new PermissionDeniedException("Ticket " + ticket.getKey() + 
-                    " does not have appropriate permissions on item " + item.getUid());
-        }
-    }
-
     /* ----- our methods ----- */
 
     /**
      */
     protected CosmoSecurityContext createSecurityContext(Authentication authen) {
         return new CosmoSecurityContextImpl(authen, tickets.get());
-    }
-
-    /**
-     */
-    public AuthenticationManager getAuthenticationManager() {
-        return authenticationManager;
     }
 
     /**
@@ -211,15 +121,6 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-
-    /**
-     * 
-     * @return UserService
-     */
-    public UserService getUserService() {
-        return userService;
-    }
-    
     
     public void registerTickets(Set<Ticket> tickets) {
         Set<Ticket> currentTickets = this.tickets.get();

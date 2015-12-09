@@ -39,36 +39,6 @@ public interface CosmoSecurityManager {
         throws CosmoSecurityException;
 
     /**
-     * Authenticates the given Cosmo credentials and registers a
-     * <code>CosmoSecurityContext</code> for them. This method is used
-     * when Cosmo components need to programatically log in a user
-     * rather than relying on a security context already being in
-     * place.
-     */
-    public CosmoSecurityContext initiateSecurityContext(String username,
-                                                        String password)
-        throws CosmoSecurityException;
-    
-    /**
-     * Initiate the current security context with the current user.
-     * This method is used when the server needs to run code as a
-     * specific user.
-     */
-    public CosmoSecurityContext initiateSecurityContext(User user)
-        throws CosmoSecurityException;
-
-    /**
-     * Validates that the current security context has the requested
-     * permission for the given item.
-     *
-     * @throws PermissionDeniedException if the security context does
-     * not have the required permission
-     */
-    public void checkPermission(Item item,
-                                int permission)
-        throws PermissionDeniedException;
-    
-    /**
      * Associate additional tickets with the current security context.
      * Additional tickets allow a principal to have additional access
      * to resources.

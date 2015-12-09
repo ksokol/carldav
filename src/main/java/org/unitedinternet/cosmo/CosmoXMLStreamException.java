@@ -21,12 +21,4 @@ public class CosmoXMLStreamException extends CosmoException {
     public CosmoXMLStreamException(Throwable cause) {
         super(cause);
     }
-    /**
-     * 
-     * @param message The message exception.
-     * @param cause - If somethig is wrong this exception is thrown.
-     */
-    public CosmoXMLStreamException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

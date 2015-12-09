@@ -21,12 +21,4 @@ public class CosmoNoSuchAlgorithmException extends CosmoException {
     public CosmoNoSuchAlgorithmException(Throwable cause) {
         super(cause);
     }
-    /**
-     * 
-     * @param message The message exception.
-     * @param cause - If somethig is wrong this exception is thrown.
-     */
-    public CosmoNoSuchAlgorithmException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

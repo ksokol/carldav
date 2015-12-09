@@ -326,4 +326,17 @@ public class CollectionTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
+
+    @Test
+    public void shouldForbidSameCalendar() throws Exception {
+        def response = """\
+                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                            <cosmo:conflict>One or more intermediate collections must be created</cosmo:conflict>
+                        </D:error>"""
+
+        mockMvc.perform(mkcol("/dav/collection/{uid}", "1"))
+                .andExpect(status().isConflict())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response));
+    }
 }

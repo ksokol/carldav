@@ -15,15 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.model.TriageStatus;
+
+import java.math.BigDecimal;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
 /**
  * Hibernate persistent TriageStatus.
@@ -40,13 +40,7 @@ public class HibTriageStatus implements TriageStatus {
     
     @Column(name = "isautotriage")
     private Boolean autoTriage = null;
-    
-    /**
-     * Constructor.
-     */
-    public HibTriageStatus() {
-    }
-   
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.TriageStatus#getCode()
      */
@@ -123,18 +117,6 @@ public class HibTriageStatus implements TriageStatus {
             append(autoTriage, ts.autoTriage).
             isEquals();
     }
-    
-    
-
-    public static TriageStatus createInitialized() {
-        TriageStatus ts = new HibTriageStatus();
-        ts.setCode(Integer.valueOf(CODE_NOW));
-        // XXX there's gotta be a better way!
-        String time = (System.currentTimeMillis() / 1000) + ".00";
-        ts.setRank(new BigDecimal(time).negate());
-        ts.setAutoTriage(Boolean.TRUE);
-        return ts;
-    }
 
     @Override
     public int hashCode() {
@@ -144,20 +126,6 @@ public class HibTriageStatus implements TriageStatus {
         result = prime * result + ((code == null) ? 0 : code.hashCode());
         result = prime * result + ((rank == null) ? 0 : rank.hashCode());
         return result;
-    }
-
-   
-    public static String label(Integer code) {
-        if (code.equals(CODE_NOW)) {
-            return LABEL_NOW;
-        }
-        if (code.equals(CODE_LATER)) {
-            return LABEL_LATER;
-        }
-        if (code.equals(CODE_DONE)) {
-            return LABEL_DONE;
-        }
-        throw new IllegalStateException("Unknown code " + code);
     }
 
     public static Integer code(String label) {

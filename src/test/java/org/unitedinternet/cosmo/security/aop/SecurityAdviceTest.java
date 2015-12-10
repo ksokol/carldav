@@ -15,17 +15,15 @@
  */
 package org.unitedinternet.cosmo.security.aop;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.mock.MockCalendarDao;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.dao.mock.MockUserDao;
@@ -44,11 +42,10 @@ import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.impl.StandardContentService;
 import org.unitedinternet.cosmo.service.impl.StandardTriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
-import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import util.SecurityAdviceTestConfiguration;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Test Case for <code>SecurityAdvice/code>
@@ -58,15 +55,11 @@ import util.SecurityAdviceTestConfiguration;
 @ContextConfiguration(classes = SecurityAdviceTestConfiguration.class)
 public class SecurityAdviceTest {
 
-    private StandardContentService service;
-    private MockCalendarDao calendarDao;
     private MockContentDao contentDao;
-    private MockUserDao userDao;
-    private MockDaoStorage storage;
-    private SingleVMLockManager lockManager;
     private TestHelper testHelper;
     private ContentService proxyService;
     private MockSecurityManager securityManager;
+
     @Autowired
     private SecurityAdvice sa;
 
@@ -78,14 +71,11 @@ public class SecurityAdviceTest {
     public void setUp() throws Exception {
         testHelper = new TestHelper();
         securityManager = new MockSecurityManager();
-        storage = new MockDaoStorage();
-        calendarDao = new MockCalendarDao(storage);
-        contentDao = new MockContentDao(storage);
-        userDao = new MockUserDao(storage);
-        service = new StandardContentService();
-        lockManager = new SingleVMLockManager();
+        contentDao = new MockContentDao(new MockDaoStorage());
+
+        final StandardContentService service = new StandardContentService();
         service.setContentDao(contentDao);
-        service.setLockManager(lockManager);
+        service.setLockManager(new SingleVMLockManager());
         service.setTriageStatusQueryProcessor(new StandardTriageStatusQueryProcessor());
         service.init();
         
@@ -95,7 +85,7 @@ public class SecurityAdviceTest {
         sa.setEnabled(true);
         sa.setSecurityManager(securityManager);
         sa.setContentDao(contentDao);
-        sa.setUserDao(userDao);
+        sa.setUserDao(new MockUserDao(new MockDaoStorage()));
         //this bean has request scope
         //sa.setSecuredMethod(Proxy) should be called by Spring
         sa.init();

@@ -59,13 +59,6 @@ public class HibernateTriageStatusQueryProcessorTest extends AbstractHibernateDa
     protected static final String NOTE_UID = "note";
 
     /**
-     * Constructor.
-     */
-    public HibernateTriageStatusQueryProcessorTest() {
-        super();
-    }
-    
-    /**
      * On set up in transaction
      * @throws Exception - if something is wrong this exception is thrown.
      */

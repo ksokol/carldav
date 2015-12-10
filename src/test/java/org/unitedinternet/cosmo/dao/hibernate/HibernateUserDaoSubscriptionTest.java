@@ -40,14 +40,7 @@ public class HibernateUserDaoSubscriptionTest extends AbstractHibernateDaoTestCa
     protected ContentDaoImpl contentDao;
     @Autowired
     protected UserDaoImpl userDao;
-    
-     /**
-     * Constructor.
-     */
-    public HibernateUserDaoSubscriptionTest() {
-        super();
-    }
-    
+
     /**
      * Test subscribe.
      * @throws Exception - if something is wrong this exception is thrown.

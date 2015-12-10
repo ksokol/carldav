@@ -64,14 +64,7 @@ public class RecurrenceExpander {
         
         maxExpandDate = new Date(c.getTime());
     }
-    
-    /**
-     * Constructor.
-     */
-    public RecurrenceExpander() {
-        super();
-    }
-    
+
     /**
      * Return start and end Date that represent the start of the first 
      * occurrence of a recurring component and the end of the last
@@ -108,20 +101,6 @@ public class RecurrenceExpander {
         }
     }
 
-    /**
-     * Return a start and end Date that represents the start of the first
-     * occurence of a recurring component and the end of the last occurence.  If
-     * the recurring component has no end(infinite recurring event),
-     * then no end date will be returned.
-     * 
-     * @param comp Component to analyze
-     * @return array containing start (located at index 0) and end (index 1) of
-     *         recurring component.
-     */
-    public Date[] calculateRecurrenceRange(Component comp) {
-        return calculateRecurrenceRange(comp, new ArrayList<Component>(0));
-        
-    }    
     /**
      * Return a start and end Date that represents the start of the first
      * occurence of a recurring component and the end of the last occurence.  If
@@ -318,21 +297,7 @@ public class RecurrenceExpander {
         
         return getOcurrences(masterComp, exceptions, rangeStart, rangeEnd, timezone);
     }
-    
-    /**
-     * Expand recurring compnent for given time-range.
-     * @param component recurring component to expand
-     * @param rangeStart expand start date
-     * @param rangeEnd expand end date
-     * @param timezone Optional timezone to use for floating dates.  If null, the
-     *        system default is used.
-     * @return InstanceList containing all occurences of recurring event during
-     *         time range
-     */
-    public InstanceList getOcurrences(Component component, Date rangeStart, Date rangeEnd, TimeZone timezone) {
-        return getOcurrences(component, new ArrayList<Component>(0), rangeStart, rangeEnd, timezone);
-    }
-    
+
     /**
      * Expand recurring compnent for given time-range.
      * @param component recurring component to expand

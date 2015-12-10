@@ -15,6 +15,13 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.unitedinternet.cosmo.CosmoIOException;
+import org.unitedinternet.cosmo.model.DataSizeException;
+import org.unitedinternet.cosmo.model.FileItem;
+import org.unitedinternet.cosmo.model.Item;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,13 +35,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.unitedinternet.cosmo.CosmoIOException;
-import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.Item;
-
 /**
  * Hibernate persistent FileItem.
  */
@@ -42,10 +42,6 @@ import org.unitedinternet.cosmo.model.Item;
 @DiscriminatorValue("file")
 public class HibFileItem extends HibContentItem implements FileItem {
 
-    
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3829504638044059875L;
 
     @Column(name = "contentType", length=64)
@@ -63,11 +59,7 @@ public class HibFileItem extends HibContentItem implements FileItem {
     @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name="contentdataid")
     private HibContentData contentData = null;
-    
-    public HibFileItem() {
-    }
 
-   
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.FileItem#getContent()
      */

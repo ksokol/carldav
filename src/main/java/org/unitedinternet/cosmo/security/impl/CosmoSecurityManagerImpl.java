@@ -15,29 +15,19 @@
  */
 package org.unitedinternet.cosmo.security.impl;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
-import org.unitedinternet.cosmo.model.Item;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 import org.unitedinternet.cosmo.security.CosmoSecurityException;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
-import org.unitedinternet.cosmo.security.Permission;
-import org.unitedinternet.cosmo.security.PermissionDeniedException;
 import org.unitedinternet.cosmo.service.UserService;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * The default implementation of the {@link CosmoSecurityManager}
@@ -45,14 +35,9 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedA
  * security information contained in JAAS or Acegi Security.
  */
 public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
-    private static final Log LOG =
-        LogFactory.getLog(CosmoSecurityManagerImpl.class);
 
-    private AuthenticationManager authenticationManager;
-    
     private UserService userService;
-    
-    
+
     // store additional tickets for authenticated principal
     private ThreadLocal<Set<Ticket>> tickets = new ThreadLocal<Set<Ticket>>();
 
@@ -81,37 +66,12 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
         return createSecurityContext(authen);
     }
 
-    /**
-     * Initiate the current security context with the current user.
-     * This method is used when the server needs to run code as a
-     * specific user.
-     */
-    public CosmoSecurityContext initiateSecurityContext(User user)
-            throws CosmoSecurityException {
-
-        UserDetails details = new CosmoUserDetails(user);
-
-        UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                details, "", details.getAuthorities());
-
-        credentials.setDetails(details);
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(credentials);
-        return createSecurityContext(credentials);
-    }
-
     /* ----- our methods ----- */
 
     /**
      */
     protected CosmoSecurityContext createSecurityContext(Authentication authen) {
         return new CosmoSecurityContextImpl(authen, tickets.get());
-    }
-
-    /**
-     */
-    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
     }
 
     /**

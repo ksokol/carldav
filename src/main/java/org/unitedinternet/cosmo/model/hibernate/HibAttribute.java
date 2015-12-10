@@ -72,11 +72,6 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
     @JoinColumn(name = "itemid", nullable = false)
     private Item item;
 
-    // Constructors
-    /** default constructor */
-    public HibAttribute() {
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Attribute#getQName()
      */

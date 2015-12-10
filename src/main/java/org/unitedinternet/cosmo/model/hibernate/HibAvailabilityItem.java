@@ -15,14 +15,13 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import net.fortuna.ical4j.model.Calendar;
-
 import org.unitedinternet.cosmo.hibernate.validator.Availability;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.Item;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
  * Hibernate persistent AvailabilityItem.
@@ -32,10 +31,6 @@ import org.unitedinternet.cosmo.model.Item;
 public class HibAvailabilityItem extends HibICalendarItem implements AvailabilityItem {
 
     private static final long serialVersionUID = 5907156118116983463L;
-
-
-    public HibAvailabilityItem() {
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#copy()

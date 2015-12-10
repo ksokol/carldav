@@ -15,18 +15,14 @@
  */
 package org.unitedinternet.cosmo.security.util;
 
-import java.util.HashSet;
-import java.util.Set;
+import static org.mockito.Mockito.mock;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.mock.MockContentDao;
-import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
-import org.unitedinternet.cosmo.dao.mock.MockUserDao;
+import org.unitedinternet.cosmo.dao.ContentDao;
+import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
@@ -37,21 +33,19 @@ import org.unitedinternet.cosmo.security.mock.MockSecurityContext;
 import org.unitedinternet.cosmo.security.mock.MockTicketPrincipal;
 import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Test Case for <code>SecurityHelper/code> which uses mock
  * model objects.
  */
 public class SecurityHelperTest {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(SecurityHelperTest.class);
-    
+
     private TestHelper testHelper;
  
     private SecurityHelper securityHelper;
-    private MockContentDao contentDao;
-    private MockDaoStorage storage;
-    private MockUserDao userDao;
-    
+
     /**
      * Sets up.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -59,10 +53,7 @@ public class SecurityHelperTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        storage = new MockDaoStorage();
-        contentDao = new MockContentDao(storage);
-        userDao = new MockUserDao(storage);
-        securityHelper = new SecurityHelper(contentDao, userDao);
+        securityHelper = new SecurityHelper(mock(ContentDao.class), mock(UserDao.class));
     }
 
     /**

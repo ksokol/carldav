@@ -45,20 +45,12 @@ public class StandardTriageStatusQueryProcessorTest {
 
     private MockContentDao contentDao;
     private MockEntityFactory factory;
-    private MockDaoStorage storage;
     private TestHelper testHelper;
     protected StandardTriageStatusQueryProcessor queryProcessor = null;
     
     protected static final String CALENDAR_UID = "calendaruid";
     protected static final String NOTE_UID = "note";
 
-    /**
-     * Constructor.
-     */
-    public StandardTriageStatusQueryProcessorTest() {
-        super();
-    }
-    
     /**
      * Setup.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -67,8 +59,7 @@ public class StandardTriageStatusQueryProcessorTest {
     public void setUp() throws Exception {
         testHelper = new TestHelper();
         factory = new MockEntityFactory();
-        storage = new MockDaoStorage();
-        contentDao = new MockContentDao(storage);
+        contentDao = new MockContentDao(new MockDaoStorage());
   
         queryProcessor = new StandardTriageStatusQueryProcessor();
         queryProcessor.setContentDao(contentDao);

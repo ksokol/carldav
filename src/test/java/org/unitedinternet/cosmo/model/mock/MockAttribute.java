@@ -38,11 +38,6 @@ public abstract class MockAttribute extends MockAuditableObject implements java.
     
     private Item item;
 
-    // Constructors
-    /** default constructor */
-    public MockAttribute() {
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceAttribute#getQName()
      */

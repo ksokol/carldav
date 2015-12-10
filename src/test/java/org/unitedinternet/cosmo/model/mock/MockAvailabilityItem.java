@@ -27,12 +27,6 @@ import org.unitedinternet.cosmo.model.Item;
 public class MockAvailabilityItem extends MockICalendarItem implements AvailabilityItem {
 
     /**
-     * Constructor.
-     */
-    public MockAvailabilityItem() {
-    }
-
-    /**
      * Copy.
      * {@inheritDoc}
      * @return item.

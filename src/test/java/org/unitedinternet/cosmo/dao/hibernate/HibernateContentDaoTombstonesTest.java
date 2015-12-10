@@ -51,13 +51,6 @@ public class HibernateContentDaoTombstonesTest extends AbstractHibernateDaoTestC
     private ContentDaoImpl contentDao;
 
     /**
-     * Constructor.
-     */
-    public HibernateContentDaoTombstonesTest() {
-        super();
-    }
-
-    /**
      * Test content dao attribute tombstones.
      * @throws Exception - if something is wrong this exception is thrown.
      */

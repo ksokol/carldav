@@ -32,13 +32,7 @@ public abstract class MockICalendarItem extends MockContentItem implements ICale
     
     
     private String icalUid = null;
-    
-    /**
-     * Contructor.
-     */
-    public MockICalendarItem() {
-    }
-    
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceICalenarItem#getIcalUid()
      */

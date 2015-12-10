@@ -167,11 +167,7 @@
 	</util:list>
 	<!-- security facade resources -->
 
-	<bean id="securityManager"
-		class="org.unitedinternet.cosmo.security.impl.CosmoSecurityManagerImpl">
-		<property name="authenticationManager">
-			<ref bean="authenticationManager" />
-		</property>
+	<bean id="securityManager" class="org.unitedinternet.cosmo.security.impl.CosmoSecurityManagerImpl">
 		<property name="userService">
 			<ref bean="userService" />
 		</property>

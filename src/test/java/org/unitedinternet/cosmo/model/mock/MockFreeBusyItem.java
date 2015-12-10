@@ -27,12 +27,6 @@ import org.unitedinternet.cosmo.model.Item;
 public class MockFreeBusyItem extends MockICalendarItem implements FreeBusyItem {
 
     /**
-     * Constructor.
-     */
-    public MockFreeBusyItem() {
-    }
-
-    /**
      * Copy.
      * {@inheritDoc}
      * @return The item.

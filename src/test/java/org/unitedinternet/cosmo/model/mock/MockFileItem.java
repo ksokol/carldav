@@ -45,12 +45,6 @@ public class MockFileItem extends MockContentItem implements FileItem {
     private Long contentLength = null;
     
     private MockContentData contentData = null;
-    
-    /**
-     * Contructor.
-     */
-    public MockFileItem() {
-    }
 
    
     /* (non-Javadoc)

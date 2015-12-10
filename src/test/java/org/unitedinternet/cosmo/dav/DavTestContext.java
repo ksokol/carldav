@@ -36,7 +36,6 @@ public class DavTestContext {
     private MockHttpServletResponse httpResponse;
     private StandardDavRequest davRequest;
     private StandardDavResponse davResponse;
-    private EntityFactory entityFactory; 
 
     /**
      * Constructor.
@@ -45,8 +44,7 @@ public class DavTestContext {
     public DavTestContext(DavResourceLocatorFactory locatorFactory) {
         httpRequest = new MockHttpServletRequest();
         httpResponse = new MockHttpServletResponse();
-        entityFactory = new HibEntityFactory(mock(IdGenerator.class));
-        davRequest = new StandardDavRequest(httpRequest, locatorFactory, entityFactory);
+        davRequest = new StandardDavRequest(httpRequest, locatorFactory, new HibEntityFactory(mock(IdGenerator.class)));
         davResponse = new StandardDavResponse(httpResponse);
     }
 

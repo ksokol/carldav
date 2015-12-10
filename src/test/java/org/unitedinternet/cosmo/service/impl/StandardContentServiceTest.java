@@ -15,14 +15,6 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import java.io.FileInputStream;
-import java.text.ParseException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.junit.Assert;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -30,13 +22,10 @@ import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.mock.MockCalendarDao;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -55,6 +44,13 @@ import org.unitedinternet.cosmo.model.mock.MockEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
 
+import java.io.FileInputStream;
+import java.text.ParseException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 /**
  * Test Case for <code>StandardContentService</code> which uses mock
  * data access objects.
@@ -63,14 +59,9 @@ import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
  * @see MockContentDao
  */
 public class StandardContentServiceTest {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(StandardContentServiceTest.class);
 
     private StandardContentService service;
-    private MockCalendarDao calendarDao;
     private MockContentDao contentDao;
-    private MockDaoStorage storage;
-    private SingleVMLockManager lockManager;
     private TestHelper testHelper;
     
     protected String baseDir = "src/test/resources/testdata/";
@@ -82,13 +73,10 @@ public class StandardContentServiceTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        storage = new MockDaoStorage();
-        calendarDao = new MockCalendarDao(storage);
-        contentDao = new MockContentDao(storage);
+        contentDao = new MockContentDao(new MockDaoStorage());
         service = new StandardContentService();
-        lockManager = new SingleVMLockManager();
         service.setContentDao(contentDao);
-        service.setLockManager(lockManager);
+        service.setLockManager(new SingleVMLockManager());
         service.setTriageStatusQueryProcessor(new StandardTriageStatusQueryProcessor());
         service.init();
     }

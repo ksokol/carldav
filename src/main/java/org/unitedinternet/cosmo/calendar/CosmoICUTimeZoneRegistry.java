@@ -16,19 +16,18 @@
 package org.unitedinternet.cosmo.calendar;
 
 
+import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.component.VTimeZone;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.unitedinternet.cosmo.calendar.util.TimeZoneUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.component.VTimeZone;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.calendar.util.TimeZoneUtils;
 
 /**
  * Implementation of a <code>TimeZoneRegistry</code>. This implementation will 
@@ -62,13 +61,6 @@ public class CosmoICUTimeZoneRegistry implements TimeZoneRegistry {
 
     private Map<String, TimeZone> timezones = new HashMap<String, TimeZone>();
 
-    /**
-     * Default constructor.
-     */
-    public CosmoICUTimeZoneRegistry() {
-    }
-
-    
     /*
      * (non-Javadoc)
      * @see net.fortuna.ical4j.model.TimeZoneRegistry#register(net.fortuna.ical4j.model.TimeZone)
@@ -135,7 +127,6 @@ public class CosmoICUTimeZoneRegistry implements TimeZoneRegistry {
      * @param timezone The timezone.
      * @param update The boolean for update.
      */
-    // @Override
     public void register(TimeZone timezone, boolean update) {
         timezones.put(timezone.getID(), timezone);
 

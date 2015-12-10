@@ -64,13 +64,6 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
     protected UserDaoImpl userDao;
 
     /**
-     * Constructor.
-     */
-    public HibernateCalendarDaoTest() {
-        super();
-    }
-    
-    /**
      * Tests calendar dao basic.
      * @throws Exception - if something is wrong this exception is thrown.
      */

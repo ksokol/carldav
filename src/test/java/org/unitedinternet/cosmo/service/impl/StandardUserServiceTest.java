@@ -15,14 +15,11 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import java.security.SecureRandom;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
@@ -30,18 +27,16 @@ import org.unitedinternet.cosmo.dao.mock.MockUserDao;
 import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibPasswordRecovery;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
+
+import java.security.SecureRandom;
+import java.util.Set;
 
 /**
  * Test Case for {@link StandardUserService}.
  */
 public class StandardUserServiceTest {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(StandardUserServiceTest.class);
 
     private StandardUserService service;
-    private MockDaoStorage storage;
     private MockContentDao contentDao;
     private MockUserDao userDao;
     private TestHelper testHelper;
@@ -53,9 +48,8 @@ public class StandardUserServiceTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        storage = new MockDaoStorage();
-        contentDao = new MockContentDao(storage);
-        userDao = new MockUserDao(storage);
+        contentDao = new MockContentDao(new MockDaoStorage());
+        userDao = new MockUserDao(new MockDaoStorage());
         service = new StandardUserService();
         service.setContentDao(contentDao);
         service.setUserDao(userDao);

@@ -46,12 +46,6 @@ public class CalendarFilterConverter {
     private static final String PROP_SUMMARY = "SUMMARY";
 
     /**
-     * Constructor.
-     */
-    public CalendarFilterConverter() {
-    }
-
-    /**
      * Tranlsate CalendarFilter to an equivalent ItemFilter.
      * For now, only the basic CalendarFilter is supported, which is
      * essentially a timerange filter.  The majority of CalendarFilters

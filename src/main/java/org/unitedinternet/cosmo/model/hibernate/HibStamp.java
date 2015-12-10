@@ -60,11 +60,6 @@ public abstract class HibStamp extends HibAuditableObject implements Stamp {
     @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "itemid", nullable = false)
     private Item item;
-    
-    // Constructors
-    /** default constructor */
-    public HibStamp() {
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Stamp#getItem()

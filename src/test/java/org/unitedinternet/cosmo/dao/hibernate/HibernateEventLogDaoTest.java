@@ -44,13 +44,6 @@ public class HibernateEventLogDaoTest extends AbstractHibernateDaoTestCase {
     @Autowired
     private EventLogDaoImpl eventLogDao;
 
-    /**
-     * Constructor.
-     */
-    public HibernateEventLogDaoTest() {
-        super();
-    }
-
     HibUser user;
     HibCollectionItem col1;
     HibCollectionItem col2;

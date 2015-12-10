@@ -52,12 +52,6 @@ public class StandardItemFilterProcessorTest extends AbstractHibernateDaoTestCas
     StandardItemFilterProcessor queryBuilder = new StandardItemFilterProcessor();
     TimeZoneRegistry registry =
         TimeZoneRegistryFactory.getInstance().createRegistry();
-    /**
-     * Constructor.
-     */
-    public StandardItemFilterProcessorTest() {
-        super();
-    }
 
     /**
      * Tests uid query.

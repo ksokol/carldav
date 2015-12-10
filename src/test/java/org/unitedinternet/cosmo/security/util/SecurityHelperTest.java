@@ -15,7 +15,12 @@
  */
 package org.unitedinternet.cosmo.security.util;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -248,7 +253,37 @@ public class SecurityHelperTest {
         tickets.add(rwItemTicket);
         Assert.assertTrue(securityHelper.hasWriteAccess(context, note));
     }
-    
+
+    @Test
+    public void testHasUserAccessIsNull() {
+        final CosmoSecurityContext cosmoSecurityContext = mock(CosmoSecurityContext.class);
+
+        when(cosmoSecurityContext.getUser()).thenReturn(null);
+        final boolean result = securityHelper.hasUserAccess(cosmoSecurityContext, null);
+
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void testHasUserAccessIsAdmin() {
+        final CosmoSecurityContext cosmoSecurityContext = mock(CosmoSecurityContext.class, RETURNS_DEEP_STUBS);
+
+        when(cosmoSecurityContext.getUser().getAdmin()).thenReturn(true);
+        final boolean result = securityHelper.hasUserAccess(cosmoSecurityContext, null);
+
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void testHasUserAccessIsNoAdmin() {
+        final CosmoSecurityContext cosmoSecurityContext = mock(CosmoSecurityContext.class, RETURNS_DEEP_STUBS);
+
+        when(cosmoSecurityContext.getUser().getAdmin()).thenReturn(false);
+        final boolean result = securityHelper.hasUserAccess(cosmoSecurityContext, null);
+
+        assertThat(result, is(false));
+    }
+
     /**
      * Gets security context.
      * @param user The user.

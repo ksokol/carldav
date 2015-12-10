@@ -56,7 +56,7 @@ public class SecurityHelper {
             return false;
         }
         
-        if(context.getUser().getAdmin().booleanValue()) {
+        if(context.getUser().getAdmin()) {
             return true;
         }
         

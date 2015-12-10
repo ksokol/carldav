@@ -37,4 +37,9 @@ public class GeneralResponse {
                                                 <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
                                                     <cosmo:conflict>One or more intermediate collections must be created</cosmo:conflict>
                                                 </D:error>"""
+
+    public static String PRECONDITION_FAILED_RESPONSE = """\
+                                                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                                                <cosmo:precondition-failed>If-None-Match disallows conditional request</cosmo:precondition-failed>
+                                                            </D:error>"""
 }

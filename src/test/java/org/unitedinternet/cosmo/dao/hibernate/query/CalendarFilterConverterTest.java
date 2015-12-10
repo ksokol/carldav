@@ -45,13 +45,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 public class CalendarFilterConverterTest {
 
     CalendarFilterConverter converter = new CalendarFilterConverter();
-    
-    /**
-     * Constructor.
-     */
-    public CalendarFilterConverterTest() {
-        super();
-    }
 
     /**
      * Tests translate item to filter.

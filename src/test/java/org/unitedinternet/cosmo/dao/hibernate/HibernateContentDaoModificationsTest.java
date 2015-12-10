@@ -36,13 +36,6 @@ public class HibernateContentDaoModificationsTest extends AbstractHibernateDaoTe
     private ContentDaoImpl contentDao;
 
     /**
-     * Constructor.
-     */
-    public HibernateContentDaoModificationsTest() {
-        super();
-    }
-
-    /**
      * Test modification create.
      * @throws Exception - if something is wrong this exception is thrown.
      */

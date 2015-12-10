@@ -62,13 +62,6 @@ public class InstanceList extends TreeMap {
     private TimeZone timezone = null;
 
     /**
-     * Constructor.
-     */
-    public InstanceList() {
-        super();
-    }
-
-    /**
      * Add a component (either master or override instance) if it falls within
      * the specified time range.
      *

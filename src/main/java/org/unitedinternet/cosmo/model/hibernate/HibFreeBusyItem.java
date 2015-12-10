@@ -33,9 +33,6 @@ public class HibFreeBusyItem extends HibICalendarItem implements FreeBusyItem {
 
     private static final long serialVersionUID = -8464653125685599042L;
 
-    public HibFreeBusyItem() {
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#copy()
      */

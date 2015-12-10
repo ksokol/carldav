@@ -35,12 +35,6 @@ public class MockCollectionSubscription extends MockAuditableObject implements C
     private String ticketKey;
     
     private String collectionUid;
-    
-    /**
-     * Constructor.
-     */
-    public MockCollectionSubscription() {
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionSubscription#getCollectionUid()

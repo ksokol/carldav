@@ -18,9 +18,7 @@ package org.unitedinternet.cosmo.dav.acl;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
-
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -59,9 +57,6 @@ public abstract class DavAce
     private DavPrivilegeSet privileges = new DavPrivilegeSet();
     private boolean isProtected = false;
     private String inherited;
-
-    public DavAce() {
-    }
 
     // XmlSerializable methods
 
@@ -106,20 +101,6 @@ public abstract class DavAce
         return root;
     }
 
-    // our methods
-
-    public boolean isInverted() {
-        return inverted;
-    }
-
-    public void setInverted(boolean inverted) {
-        this.inverted = inverted;
-    }
-
-    public boolean isDenied() {
-        return denied;
-    }
-
     public void setDenied(boolean denied) {
         this.denied = denied;
     }
@@ -150,33 +131,9 @@ public abstract class DavAce
 
     protected abstract Element principalXml(Document document);
 
-    public static class HrefAce extends DavAce {
-        private String href = null;
-
-        public HrefAce(String href) {
-            this.href = href;
-        }
-
-        public String getHref() {
-            return href;
-        }
-
-        protected Element principalXml(Document document) {
-            Element root = DomUtil.createElement(document, "href", NAMESPACE);
-            DomUtil.setText(root, href);
-            return root;
-        }
-    }
-
     public static class AllAce extends DavAce {
         protected Element principalXml(Document document) {
             return DomUtil.createElement(document, "all", NAMESPACE);
-        }
-    }
-
-    public static class AuthenticatedAce extends DavAce {
-        protected Element principalXml(Document document) {
-            return DomUtil.createElement(document, "authenticated", NAMESPACE);
         }
     }
 

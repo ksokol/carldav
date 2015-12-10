@@ -43,10 +43,7 @@ public class ItemFilter {
     ArrayList<StampFilter> stampFilters = new ArrayList<StampFilter>();
     HashMap<String, String> filterProperties = new HashMap<String, String>(); 
     ArrayList<FilterOrder> order = new ArrayList<FilterOrder>();
-    
-    public ItemFilter() {
-    }
-    
+
     /**
      * List of AttributeFilters.  If there are multiple attribute filters,
      * each filter must match for an item to match the ItemFilter.
@@ -56,21 +53,6 @@ public class ItemFilter {
         return attributeFilters;
     }
 
-    
-    /**
-     * Return an AttributeFilter that matches a specific QName
-     * @param qname qualified name 
-     * @return attribute filter that matches the qualified name
-     */
-    public AttributeFilter getAttributeFilter(QName qname) {
-        for(AttributeFilter af: attributeFilters) {
-            if(af.getQname().equals(qname)) {
-                return af;
-            }
-        }
-        return null;
-    }
-    
     /**
      * Return a specific StampFilter instance
      * @param clazz StampFilter class

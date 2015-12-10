@@ -15,6 +15,13 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.CollectionSubscription;
+import org.unitedinternet.cosmo.model.Ticket;
+import org.unitedinternet.cosmo.model.User;
+
 import java.nio.charset.Charset;
 
 import javax.persistence.Column;
@@ -25,13 +32,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
 
 /**
  * Hibernate persistent CollectionSubscription.
@@ -45,9 +45,6 @@ import org.unitedinternet.cosmo.model.User;
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class HibCollectionSubscription extends HibAuditableObject implements CollectionSubscription {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 1376628118792909419L;
     
     @ManyToOne(targetEntity=HibUser.class, fetch = FetchType.LAZY)
@@ -66,11 +63,6 @@ public class HibCollectionSubscription extends HibAuditableObject implements Col
     @Column(name = "collectionuid", nullable = false, length = 255)
     @NotNull
     private String collectionUid;
-    
-    /**
-     */
-    public HibCollectionSubscription() {
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.CollectionSubscription#getCollectionUid()

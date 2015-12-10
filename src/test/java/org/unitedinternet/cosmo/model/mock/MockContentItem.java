@@ -36,13 +36,7 @@ public abstract class MockContentItem extends MockItem implements ContentItem {
     
    
     private Boolean needsReply = null;
-    
-    /**
-     * Constructor.
-     */
-    public MockContentItem() {
-    }
-    
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceContentItem#getLastModifiedBy()
      */

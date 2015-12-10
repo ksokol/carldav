@@ -84,7 +84,6 @@ public class HibUser extends HibAuditableObject implements User {
     private String uid;
     
     @Column(name = "username", nullable=false)
-//    @Index(name="idx_username")
     @NotNull
     @NaturalId
     @Length(min=USERNAME_LEN_MIN, max=USERNAME_LEN_MAX)

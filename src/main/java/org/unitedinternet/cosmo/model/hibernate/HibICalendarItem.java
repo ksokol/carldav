@@ -36,12 +36,8 @@ public abstract class HibICalendarItem extends HibContentItem implements ICalend
             ICalendarItem.class, "icalendar");
     
     @Column(name="icaluid", length=255)
-    //@Index(name="idx_icaluid")
     private String icalUid = null;
-    
-    public HibICalendarItem() {
-    }
-    
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.ICalendarItem#getIcalUid()
      */

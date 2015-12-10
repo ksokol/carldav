@@ -15,15 +15,14 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.TaskStamp;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 
 /**
@@ -35,13 +34,6 @@ import org.unitedinternet.cosmo.model.TaskStamp;
 public class HibTaskStamp extends HibStamp implements TaskStamp {
 
     private static final long serialVersionUID = -6197756070431706553L;
-
-    public static final QName ATTR_ICALENDAR = new HibQName(
-            TaskStamp.class, "icalendar");
-    
-    /** default constructor */
-    public HibTaskStamp() {
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Stamp#getType()

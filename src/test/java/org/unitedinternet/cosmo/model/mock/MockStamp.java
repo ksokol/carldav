@@ -32,11 +32,6 @@ public abstract class MockStamp extends MockAuditableObject implements
     // Fields
     
     private Item item;
-    
-    // Constructors
-    /** default constructor */
-    public MockStamp() {
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceStamp#getItem()

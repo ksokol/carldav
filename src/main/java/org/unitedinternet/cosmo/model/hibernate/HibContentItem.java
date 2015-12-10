@@ -32,9 +32,6 @@ import org.unitedinternet.cosmo.model.TriageStatus;
 @DiscriminatorValue("content")
 public abstract class HibContentItem extends HibItem implements ContentItem {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 4904755977871771389L;
     
     @Column(name = "lastmodifiedby", length=255)
@@ -52,10 +49,7 @@ public abstract class HibContentItem extends HibItem implements ContentItem {
     
     @Column(name = "needsreply")
     private Boolean needsReply = null;
-    
-    public HibContentItem() {
-    }
-    
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.ContentItem#getLastModifiedBy()
      */

@@ -55,10 +55,8 @@ import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
  */
 public class StandardCalendarQueryProcessorTest {
 
-    private MockCalendarDao calendarDao;
     private MockContentDao contentDao;
     private MockEntityFactory factory;
-    private MockDaoStorage storage;
     private TestHelper testHelper;
     private StandardCalendarQueryProcessor queryProcessor;
 
@@ -69,13 +67,6 @@ public class StandardCalendarQueryProcessorTest {
     protected static final String CALENDAR_UID = "calendaruid";
 
     /**
-     * Constructor.
-     */
-    public StandardCalendarQueryProcessorTest() {
-        super();
-    }
-    
-    /**
      * SetUp
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -83,11 +74,9 @@ public class StandardCalendarQueryProcessorTest {
     public void setUp() throws Exception {
         testHelper = new TestHelper();
         factory = new MockEntityFactory();
-        storage = new MockDaoStorage();
-        contentDao = new MockContentDao(storage);
+        contentDao = new MockContentDao(new MockDaoStorage());
         queryProcessor = new StandardCalendarQueryProcessor();
-        calendarDao = new MockCalendarDao(storage);
-        queryProcessor.setCalendarDao(calendarDao);
+        queryProcessor.setCalendarDao(new MockCalendarDao(new MockDaoStorage()));
      
         User user = testHelper.makeDummyUser();
         CollectionItem root = contentDao.createRootItem(user);

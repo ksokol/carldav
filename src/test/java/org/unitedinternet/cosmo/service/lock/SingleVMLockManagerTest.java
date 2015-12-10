@@ -138,12 +138,6 @@ public class SingleVMLockManagerTest {
         boolean hasLock = false;
 
         /**
-         * Constructor.
-         */
-        public LockTestThread() {
-        }
-        
-        /**
          * Run.
          */
         public void run() {

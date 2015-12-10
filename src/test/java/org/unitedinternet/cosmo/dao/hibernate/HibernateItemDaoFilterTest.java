@@ -70,13 +70,6 @@ public class HibernateItemDaoFilterTest extends AbstractHibernateDaoTestCase {
     protected static final String NOTE_UID = "note";
 
     /**
-     * Constructor.
-     */
-    public HibernateItemDaoFilterTest() {
-        super();
-    }
-    
-    /**
      * OnSetUpInTransaction
      * @throws Exception - if something is wrong this exception is thrown.
      */

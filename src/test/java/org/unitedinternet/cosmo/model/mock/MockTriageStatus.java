@@ -32,13 +32,7 @@ public class MockTriageStatus implements TriageStatus {
     private BigDecimal rank = null;
     
     private Boolean autoTriage = null;
-    
-    /**
-     * Constructor.
-     */
-    public MockTriageStatus() {
-    }
-   
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceTriageStatus#getCode()
      */
@@ -176,24 +170,6 @@ public class MockTriageStatus implements TriageStatus {
         ts.setRank(new BigDecimal(time).negate());
         ts.setAutoTriage(Boolean.TRUE);
         return ts;
-    }
-
-    /**
-     * The label.
-     * @param code The label.
-     * @return The label.
-     */
-    public static String label(Integer code) {
-        if (code.equals(CODE_NOW)) {
-            return LABEL_NOW;
-        }
-        if (code.equals(CODE_LATER)) {
-            return LABEL_LATER;
-        }
-        if (code.equals(CODE_DONE)) {
-            return LABEL_DONE;
-        }
-        throw new IllegalStateException("Unknown code " + code);
     }
 
     /**

@@ -28,9 +28,7 @@ public class ItemChangeRecord {
     private String modifiedBy;
     private String itemUuid;
     private String itemDisplayName;
-    
-    public ItemChangeRecord() {}
-    
+
     public Action getAction() {
         return action;
     }

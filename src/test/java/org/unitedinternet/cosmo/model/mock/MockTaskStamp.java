@@ -24,20 +24,9 @@ import org.unitedinternet.cosmo.model.TaskStamp;
 /**
  * Represents a Task Stamp.
  */
-public class MockTaskStamp extends MockStamp implements
-        java.io.Serializable, TaskStamp {
+public class MockTaskStamp extends MockStamp implements java.io.Serializable, TaskStamp {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6197756070431706553L;
-
-    public static final QName ATTR_ICALENDAR = new MockQName(
-            TaskStamp.class, "icalendar");
-    
-    /** default constructor */
-    public MockTaskStamp() {
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceTaskStamp#getType()

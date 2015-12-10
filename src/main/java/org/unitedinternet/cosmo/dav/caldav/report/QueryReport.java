@@ -15,12 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import java.text.ParseException;
-
 import net.fortuna.ical4j.model.component.VTimeZone;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -29,13 +24,15 @@ import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCollationException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.w3c.dom.Element;
+
+import java.text.ParseException;
 
 /**
  * <p>
@@ -45,8 +42,6 @@ import org.w3c.dom.Element;
  * </p>
  */
 public class QueryReport extends CaldavMultiStatusReport {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(QueryReport.class);
 
     public static final ReportType REPORT_TYPE_CALDAV_QUERY =
         ReportType.register(ELEMENT_CALDAV_CALENDAR_QUERY,
@@ -142,12 +137,6 @@ public class QueryReport extends CaldavMultiStatusReport {
         }
         // if it's a regular collection, there won't be any calendar resources
         // within it to match the query
-    }
-
-    // our methods
-
-    public CalendarFilter getQueryFilter() {
-        return queryFilter;
     }
 
     private static VTimeZone findTimeZone(ReportInfo info) throws CosmoDavException {

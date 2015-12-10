@@ -25,10 +25,6 @@ import java.util.Properties;
  */
 public final class CosmoConstants {
 
-    // cannot be instantiated
-    private CosmoConstants() {
-    }
-
     /**
      * The "friendly" name of the product used for casual identification.
      */
@@ -52,26 +48,7 @@ public final class CosmoConstants {
      * example : -//1&1 Mail & Media GmbH/WEB.DE Kalender Server//NONSGML//DE
      */
 
-    private static final String PRODUCT_NAME_KEY = "calendar.server.productName";
     private static final String PRODUCT_VERSION_KEY = "calendar.server.Version";
-
-    /**
-     * The URL of the Cosmo product web site.
-     */
-    public static final String PRODUCT_URL = "http://cosmo.osafoundation.org/";
-
-
-    /**
-     * The Cosmo secham version.  This may or may not change when the
-     * PRODUCT_VERSION changes.
-     */
-    public static final String SCHEMA_VERSION = "160";
-
-    /**
-     * The servlet context attribute which contains the Cosmo server
-     * administrator's email address.
-     */
-    public static final String SC_ATTR_SERVER_ADMIN = "cosmo.server.admin";
 
     // read the product version from VERSION_FILE
 

@@ -66,12 +66,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
     private static final Log LOG = LogFactory.getLog(StandardItemFilterProcessor.class);
 
-    /**
-     * Constructor.
-     */
-    public StandardItemFilterProcessor() {
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.query.ItemFilterProcessor#processFilter
      * (org.hibernate.Session, org.unitedinternet.cosmo.model.filter.ItemFilter)

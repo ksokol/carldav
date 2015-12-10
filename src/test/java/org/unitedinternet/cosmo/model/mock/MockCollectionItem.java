@@ -41,12 +41,6 @@ public class MockCollectionItem extends MockItem implements CollectionItem {
         new MockQName(CollectionItem.class, "hue");
 
     private Set<CollectionItemDetails> childDetails = new HashSet<CollectionItemDetails>(0);
-    
-    /**
-     * Constructor.
-     */
-    public MockCollectionItem() {
-    };
 
     /**
      * Adds child.

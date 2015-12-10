@@ -15,25 +15,20 @@
  */
 package org.unitedinternet.cosmo.event.aop;
 
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.mock.MockCalendarDao;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.dao.mock.MockEventLogDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.ItemChangeRecord;
+import org.unitedinternet.cosmo.model.ItemChangeRecord.Action;
 import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.ItemChangeRecord.Action;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.security.mock.MockSecurityContext;
 import org.unitedinternet.cosmo.security.mock.MockSecurityManager;
@@ -43,21 +38,17 @@ import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.impl.StandardContentService;
 import org.unitedinternet.cosmo.service.impl.StandardTriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
-import org.springframework.aop.aspectj.annotation.AspectJProxyFactory;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Test Case for <code>EventLogAdvice/code>
  */
 public class EventLogAdviceTest {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(EventLogAdviceTest.class);
-    
-    private StandardContentService service;
-    private MockCalendarDao calendarDao;
+
     private MockContentDao contentDao;
     private MockEventLogDao eventLogDao;
-    private MockDaoStorage storage;
-    private SingleVMLockManager lockManager;
     private TestHelper testHelper;
     private ContentService proxyService;
     private MockSecurityManager securityManager;
@@ -71,14 +62,11 @@ public class EventLogAdviceTest {
     public void setUp() throws Exception {
         testHelper = new TestHelper();
         securityManager = new MockSecurityManager();
-        storage = new MockDaoStorage();
-        calendarDao = new MockCalendarDao(storage);
-        contentDao = new MockContentDao(storage);
+        contentDao = new MockContentDao(new MockDaoStorage());
         eventLogDao = new MockEventLogDao();
-        service = new StandardContentService();
-        lockManager = new SingleVMLockManager();
+        final StandardContentService service = new StandardContentService();
         service.setContentDao(contentDao);
-        service.setLockManager(lockManager);
+        service.setLockManager(new SingleVMLockManager());
         service.setTriageStatusQueryProcessor(new StandardTriageStatusQueryProcessor());
         service.init();
         

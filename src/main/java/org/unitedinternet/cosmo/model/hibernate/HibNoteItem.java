@@ -61,7 +61,6 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
 
     @OneToMany(targetEntity=HibNoteItem.class, mappedBy = "modifies", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE} )
-    //@BatchSize(size=50)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<NoteItem> modifications = new HashSet<NoteItem>(0);
     
@@ -71,12 +70,6 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
     
     @Column(name= "hasmodifications")
     private boolean hasModifications = false;
-    
-    /**
-     * Constructor.
-     */
-    public HibNoteItem() {
-    }
 
     // Property accessors
     

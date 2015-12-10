@@ -26,12 +26,8 @@ public class ContentItemFilter extends ItemFilter {
    
     public static final FilterOrder ORDER_BY_TRIAGE_STATUS_RANK_ASC = new FilterOrder(
             "triageStatus.rank", Order.ASC);
-    public static final FilterOrder ORDER_BY_TRIAGE_STATUS_RANK_DESC = new FilterOrder(
-            "triageStatus.rank", Order.DESC);
-    
+
     private FilterCriteria triageStatusCode = null;
-    
-    public ContentItemFilter() {}
 
     public FilterCriteria getTriageStatusCode() {
         return triageStatusCode;

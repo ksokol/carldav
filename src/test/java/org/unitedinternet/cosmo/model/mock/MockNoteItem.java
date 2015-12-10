@@ -50,12 +50,6 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
     private NoteItem modifies = null;
     
     private boolean hasModifications = false;
-    
-    /**
-     * Constructor.
-     */
-    public MockNoteItem() {
-    }
 
     // Property accessors
     /* (non-Javadoc)

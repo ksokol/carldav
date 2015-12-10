@@ -31,9 +31,7 @@ public class NoteItemFilter extends ContentItemFilter {
     private Boolean isModification = null;
     
     private NoteItem masterNoteItem = null;
-    
-    public NoteItemFilter() {}
-    
+
     /**
      * Match notes with a body that matches a given String.
      * @param body body string to match

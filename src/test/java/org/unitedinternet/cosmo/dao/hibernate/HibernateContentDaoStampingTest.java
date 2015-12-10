@@ -60,13 +60,6 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
     private static final Log LOG = LogFactory.getLog(HibernateContentDaoStampingTest.class);
 
     /**
-     * Constructor.
-     */
-    public HibernateContentDaoStampingTest() {
-        super();
-    }
-
-    /**
      * Test stamps create.
      * @throws Exception - if something is wrong this exception is thrown.
      */

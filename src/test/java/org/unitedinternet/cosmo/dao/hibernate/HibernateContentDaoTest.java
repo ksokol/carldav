@@ -103,13 +103,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
     private ContentDaoImpl contentDao;
 
     /**
-     * Constructor.
-     */
-    public HibernateContentDaoTest() {
-        super();
-    }
-
-    /**
      * Test for content dao create content.
      * @throws Exception - if something is wrong this exception is thrown.
      */

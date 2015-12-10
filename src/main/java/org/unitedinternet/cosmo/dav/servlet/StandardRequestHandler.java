@@ -69,6 +69,7 @@ import javax.servlet.http.HttpServletResponse;
  * </p>
  */
 public class StandardRequestHandler extends AbstractController implements ServerConstants {
+
     private static final Log LOG = LogFactory.getLog(StandardRequestHandler.class);
 
     private final DavResourceLocatorFactory locatorFactory;
@@ -100,14 +101,11 @@ public class StandardRequestHandler extends AbstractController implements Server
      */
     @Override
     protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        DavRequest wreq;
-        DavResponse wres = null;
+        final DavRequest wreq = createDavRequest(request);
+        final DavResponse wres = createDavResponse(response);
         
         try {
-            wreq = createDavRequest(request);
-            wres = createDavResponse(response);
-
-            WebDavResource resource = resolveTarget(wreq);
+            final WebDavResource resource = resolveTarget(wreq);
             preconditions(wreq, wres, resource);
             process(wreq, wres, resource);
         } catch (Exception e) {
@@ -119,9 +117,7 @@ public class StandardRequestHandler extends AbstractController implements Server
             // Although not ideal, for now simply check for this type and log at a different level.
             LOG.error("error (" + de.getErrorCode() + "): " + de.getMessage(), de);
 
-            if (wres != null) {
-                wres.sendDavError(de);
-            }
+            wres.sendDavError(de);
         }
         return null;
     }
@@ -144,10 +140,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * <li>The <code>If-Unmodified-Since</code> request header</li>
      * </ul>
      */
-    protected void preconditions(DavRequest request,
-                                 DavResponse response,
-                                 WebDavResource resource)
-        throws CosmoDavException, IOException {
+    protected void preconditions(DavRequest request, DavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         ifMatch(request, response, resource);
         ifNoneMatch(request, response, resource);
         ifModifiedSince(request, resource);
@@ -161,10 +154,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * specific provider method is chosen by examining the request method.
      * </p>
      */
-    protected void process(DavRequest request,
-                           DavResponse response,
-                           WebDavResource resource)
-        throws IOException, CosmoDavException {
+    protected void process(DavRequest request, DavResponse response, WebDavResource resource) throws IOException, CosmoDavException {
         DavProvider provider = createProvider(resource);
 
         if (request.getMethod().equals("OPTIONS")) {
@@ -301,15 +291,11 @@ public class StandardRequestHandler extends AbstractController implements Server
      * resource targeted by the request.
      * </p>
      */
-    protected WebDavResource resolveTarget(DavRequest request)
-        throws CosmoDavException {
+    protected WebDavResource resolveTarget(DavRequest request) throws CosmoDavException {
         return resourceFactory.resolve(request.getResourceLocator(), request);
     }
 
-    private void ifMatch(DavRequest request,
-                         DavResponse response,
-                         WebDavResource resource)
-        throws CosmoDavException, IOException {
+    private void ifMatch(DavRequest request, DavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         EntityTag[] requestEtags = request.getIfMatch();
         if (requestEtags.length == 0) {
             return;
@@ -329,10 +315,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         throw new PreconditionFailedException("If-Match disallows conditional request");
     }
 
-    private void ifNoneMatch(DavRequest request,
-                             DavResponse response,
-                             WebDavResource resource)
-        throws CosmoDavException, IOException {
+    private void ifNoneMatch(DavRequest request, DavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         EntityTag[] requestEtags = request.getIfNoneMatch();
         if (requestEtags.length == 0) {
             return;
@@ -352,18 +335,11 @@ public class StandardRequestHandler extends AbstractController implements Server
         if (deservesNotModified(request)) {
             throw new NotModifiedException();
         }
-        else {
-            throw new PreconditionFailedException("If-None-Match disallows conditional request");
-        }
+
+        throw new PreconditionFailedException("If-None-Match disallows conditional request");
     }
 
-    private void ifModifiedSince(DavRequest request,
-                                 WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (resource == null) {
-            return;
-        }
-
+    private void ifModifiedSince(DavRequest request, WebDavResource resource) throws CosmoDavException, IOException {
         long mod = resource.getModificationTime();
         if (mod == -1) {
             return;
@@ -382,12 +358,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         throw new NotModifiedException();
     }
 
-    private void ifUnmodifiedSince(DavRequest request,
-                                   WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (resource == null) {
-            return;
-        }
+    private void ifUnmodifiedSince(DavRequest request, WebDavResource resource) throws CosmoDavException, IOException {
 
         long mod = resource.getModificationTime();
         if (mod == -1) {
@@ -408,26 +379,34 @@ public class StandardRequestHandler extends AbstractController implements Server
     }
 
     private EntityTag etag(WebDavResource resource) {
-        if (resource == null) {
-            return null;
-        }
         String etag = resource.getETag();
         if (etag == null) {
             return null;
         }
-        // resource etags have doublequotes wrapped around them
-        if (etag.startsWith("\"")) {
-            etag = etag.substring(1, etag.length()-1);
-        }
+        //TODO resource etags have doublequotes wrapped around them
+        //if (etag.startsWith("\"")) {
+        etag = etag.substring(1, etag.length()-1);
+        //}
         return new EntityTag(etag);
     }
 
     private boolean deservesNotModified(DavRequest request) {
+        final boolean equals1 = "GET".equals(request.getMethod());
+
+        if(equals1) {
+            //return true;
+        }
+
+        final boolean equals2 = "HEAD".equals(request.getMethod());
+
+        if(equals2) {
+          //  return true;
+        }
+        //return false;
         return "GET".equals(request.getMethod()) || "HEAD".equals(request.getMethod());
     }
 
-    private void options(DavResponse response,
-                         WebDavResource resource) {
+    private void options(DavResponse response, WebDavResource resource) {
         response.setStatus(200);
         response.addHeader("Allow", resource.getSupportedMethods());
         response.addHeader("DAV", resource.getComplianceClass());

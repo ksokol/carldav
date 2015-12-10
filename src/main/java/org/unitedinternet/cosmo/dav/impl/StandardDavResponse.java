@@ -15,6 +15,19 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jackrabbit.webdav.DavConstants;
+import org.apache.jackrabbit.webdav.WebdavResponseImpl;
+import org.apache.jackrabbit.webdav.xml.DomUtil;
+import org.apache.jackrabbit.webdav.xml.XmlSerializable;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavResponse;
+import org.unitedinternet.cosmo.dav.ticket.TicketConstants;
+import org.unitedinternet.cosmo.dav.ticket.property.TicketDiscovery;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,20 +40,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.webdav.DavConstants;
-import org.apache.jackrabbit.webdav.WebdavResponseImpl;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavResponse;
-import org.unitedinternet.cosmo.dav.ticket.TicketConstants;
-import org.unitedinternet.cosmo.dav.ticket.property.TicketDiscovery;
-import org.unitedinternet.cosmo.dav.util.XmlSerializer;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Extends {@link org.apache.jackrabbit.webdav.WebdavResponseImpl} and
@@ -61,8 +60,8 @@ public class StandardDavResponse extends WebdavResponseImpl
         super(response);
         originalHttpServletResponse = response;
     }
-    
-    
+
+
     public void addCookie(Cookie cookie) {
         originalHttpServletResponse.addCookie(cookie);
     }
@@ -154,8 +153,8 @@ public class StandardDavResponse extends WebdavResponseImpl
 
 
     public void setHeader(String name, String value) {
-        //Including unvalidated data in an HTTP response header can enable 
-        //cache-poisoning, cross-site scripting, cross-user defacement, page hijacking, 
+        //Including unvalidated data in an HTTP response header can enable
+        //cache-poisoning, cross-site scripting, cross-user defacement, page hijacking,
         //cookie manipulation or open redirect.
         value = value.replaceAll("\r", " ").replace("\n", " ");
         originalHttpServletResponse.setHeader(name, value);
@@ -224,19 +223,6 @@ public class StandardDavResponse extends WebdavResponseImpl
 
     public Locale getLocale() {
         return originalHttpServletResponse.getLocale();
-    }
-
-
-    @Override
-    public void sendXmlResponse(XmlSerializable serializable, int status) throws IOException {
-        super.sendXmlResponse(serializable, status);
-        if (serializable != null && LOG.isTraceEnabled()) {
-            StringBuffer sb = new StringBuffer("\n------------------------ Dump of response -------------------\n");
-            sb.append("Status: ").append(status).append("\n");
-            sb.append(XmlSerializer.serialize(serializable));
-            sb.append("\n------------------------ End dump of response -------------------");
-            LOG.trace(sb);
-        }
     }
 
     @Override
@@ -336,8 +322,8 @@ public class StandardDavResponse extends WebdavResponseImpl
 
     @Override
     public void setContentLengthLong(long len) {
-        
+
     }
-    
-    
+
+
 }

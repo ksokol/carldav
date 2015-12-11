@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dav.impl;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -37,8 +36,6 @@ import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
  * the DAV resource model.
  *
  * This class does not define any live properties.
- *
- * @see DavFile
  */
 public class DavEvent extends DavCalendarResource {
 

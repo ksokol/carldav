@@ -15,18 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -34,14 +27,14 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarLocationException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
@@ -73,6 +66,12 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 /**
  * Extends <code>DavCollection</code> to adapt the Cosmo
@@ -183,15 +182,6 @@ public class DavCalendarCollection extends DavCollectionBase
         return members;
     }
 
-    /**
-     * Returns the member collection resources in this calendar collection.
-     * 
-     */
-    public Set<CollectionItem> findCollectionMembers(DavCollectionBase collectionBase) throws CosmoDavException {
-        CollectionItem collection = (CollectionItem) collectionBase.getItem();
-        return getContentService().findCollectionItems(collection);
-    }
-    
     /**
      * Returns a VFREEBUSY component containing
      * the freebusy periods for the calendar collection for the

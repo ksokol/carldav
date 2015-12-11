@@ -18,10 +18,7 @@ package org.unitedinternet.cosmo.dav.impl;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -39,9 +36,7 @@ import org.unitedinternet.cosmo.model.EntityFactory;
  * @see DavCalendarResource
  */
 public class DavAvailability extends DavCalendarResource {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(DavAvailability.class);
-    
+
     /** */
     public DavAvailability(DavResourceLocator locator,
                       DavResourceFactory factory,

@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -27,9 +23,10 @@ import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
-import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavItemResourceBase;
 import org.unitedinternet.cosmo.model.EntityFactory;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -38,11 +35,8 @@ import org.unitedinternet.cosmo.model.EntityFactory;
  * </p>
  *
  * @see DavProvider
- * @see DavFile
  */
 public class FileProvider extends BaseProvider {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(FileProvider.class);
 
     public FileProvider(DavResourceFactory resourceFactory,
             EntityFactory entityFactory) {

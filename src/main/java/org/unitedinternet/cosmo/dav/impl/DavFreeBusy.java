@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dav.impl;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VFreeBusy;
-
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -32,8 +31,6 @@ import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
  * <code>FreeBusyItem</code> to the DAV resource model.
  *
  * This class does not define any live properties.
- *
- * @see DavFile
  */
 public class DavFreeBusy extends DavCalendarResource {
 

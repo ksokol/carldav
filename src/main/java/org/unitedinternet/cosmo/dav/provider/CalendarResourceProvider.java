@@ -15,33 +15,28 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResponse;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavAvailability;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavFreeBusy;
-import org.unitedinternet.cosmo.dav.impl.DavItemResourceBase;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.server.ServerConstants;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -50,12 +45,8 @@ import org.unitedinternet.cosmo.server.ServerConstants;
  * </p>
  *
  * @see DavProvider
- * @see DavFile
  */
 public class CalendarResourceProvider extends FileProvider {
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-        LogFactory.getLog(CalendarResourceProvider.class);
 
     public CalendarResourceProvider(DavResourceFactory resourceFactory,
             EntityFactory entityFactory) {

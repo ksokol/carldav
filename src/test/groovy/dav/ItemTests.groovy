@@ -33,7 +33,7 @@ public class ItemTests extends IntegrationTestSupport {
     public void itemOptions() throws Exception {
         mockMvc.perform(options("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, ticket"))
+                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule, ticket"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, MKTICKET, DELTICKET"));
     }
 

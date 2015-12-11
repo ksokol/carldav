@@ -256,10 +256,15 @@ public class UriTemplate {
             String token = candidate.nextToken();
 
             if (segment.isAll()) {
-                StringBuilder saved = new StringBuilder(match.get("*"));
-                if (match.get("*") == null) {
+                StringBuilder saved;
+                final String matched = match.get("*");
+
+                if(matched != null) {
+                    saved = new StringBuilder(match.get("*"));
+                } else {
                     saved = new StringBuilder();
                 }
+
                 saved.append("/");
                 saved.append (escaped ? unescapeSegment(token) : token);
                 match.put("*", saved.toString());

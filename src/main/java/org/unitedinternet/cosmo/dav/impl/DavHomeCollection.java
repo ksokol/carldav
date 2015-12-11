@@ -69,7 +69,7 @@ public class DavHomeCollection extends DavCollectionBase {
 
     @Override
     public DavResourceIterator getMembers() {
-        List<org.apache.jackrabbit.webdav.DavResource> members = new ArrayList<org.apache.jackrabbit.webdav.DavResource>();
+        List<org.apache.jackrabbit.webdav.DavResource> members = new ArrayList<>();
         try {
             for (Item memberItem : ((CollectionItem) getItem()).getChildren()) {
                 WebDavResource resource = memberToResource(memberItem);
@@ -80,8 +80,15 @@ public class DavHomeCollection extends DavCollectionBase {
 
             // for now scheduling is an option
             if (isSchedulingEnabled()) {
-                members.add(memberToResource(TEMPLATE_USER_INBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath())));
-                members.add(memberToResource(TEMPLATE_USER_OUTBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath())));
+                final WebDavResource inboxResource = memberToResource(TEMPLATE_USER_INBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath()));
+                if(inboxResource != null) {
+                    members.add(inboxResource);
+                }
+
+                final WebDavResource outboxResource = memberToResource(TEMPLATE_USER_OUTBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath()));
+                if(outboxResource != null) {
+                    members.add(outboxResource);
+                }
             }
 
             if (LOG.isTraceEnabled()) {

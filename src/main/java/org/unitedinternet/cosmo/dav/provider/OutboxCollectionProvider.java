@@ -90,6 +90,10 @@ public class OutboxCollectionProvider extends CollectionProvider {
     }
 
     private void processPostRequest(Calendar calendar, ScheduleMultiResponse ms) {
+        if(calendar == null) {
+            return;
+        }
+
         if (!Method.REQUEST.equals(calendar.getMethod())) {
             return;
         }

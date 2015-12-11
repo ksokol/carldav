@@ -391,18 +391,6 @@ public class StandardRequestHandler extends AbstractController implements Server
     }
 
     private boolean deservesNotModified(DavRequest request) {
-        final boolean equals1 = "GET".equals(request.getMethod());
-
-        if(equals1) {
-            //return true;
-        }
-
-        final boolean equals2 = "HEAD".equals(request.getMethod());
-
-        if(equals2) {
-          //  return true;
-        }
-        //return false;
         return "GET".equals(request.getMethod()) || "HEAD".equals(request.getMethod());
     }
 

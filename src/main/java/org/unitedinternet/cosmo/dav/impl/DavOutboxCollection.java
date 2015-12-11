@@ -299,12 +299,7 @@ public class DavOutboxCollection extends DavResourceBase
         throw new ForbiddenException("Dead properties are not supported on this collection");
     }
 
-    private void writeHtmlDirectoryIndex(OutputContext context)
-        throws CosmoDavException, IOException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("writing html directory index for  " +
-                      getDisplayName());
-        }
+    private void writeHtmlDirectoryIndex(OutputContext context) throws CosmoDavException, IOException {
         context.setContentType(IOUtil.buildContentType("text/html", "UTF-8"));
         // no modification time or etag
 
@@ -350,28 +345,28 @@ public class DavOutboxCollection extends DavResourceBase
             writer.write("</dl>\n");
     
             User user = getSecurityManager().getSecurityContext().getUser();
-            if (user != null) {
-                writer.write("<p>\n");
-                DavResourceLocator homeLocator =
-                    getResourceLocator().getFactory().
-                    createHomeLocator(getResourceLocator().getContext(), user);
-                writer.write("<a href=\"");
-                writer.write(homeLocator.getHref(true));
-                writer.write("\">");
-                writer.write("Home collection");
-                writer.write("</a><br>\n");
-    
-                DavResourceLocator principalLocator = 
-                    getResourceLocator().getFactory().
-                    createPrincipalLocator(getResourceLocator().getContext(),
-                                           user);
-                writer.write("<a href=\"");
-                writer.write(principalLocator.getHref(false));
-                writer.write("\">");
-                writer.write("Principal resource");
-                writer.write("</a><br>\n");
-            }
-    
+
+            writer.write("<p>\n");
+            DavResourceLocator homeLocator =
+                getResourceLocator().getFactory().
+                createHomeLocator(getResourceLocator().getContext(), user);
+            writer.write("<a href=\"");
+            writer.write(homeLocator.getHref(true));
+            writer.write("\">");
+            writer.write("Home collection");
+            writer.write("</a><br>\n");
+
+            DavResourceLocator principalLocator =
+                getResourceLocator().getFactory().
+                createPrincipalLocator(getResourceLocator().getContext(),
+                                       user);
+            writer.write("<a href=\"");
+            writer.write(principalLocator.getHref(false));
+            writer.write("\">");
+            writer.write("Principal resource");
+            writer.write("</a><br>\n");
+
+
             writer.write("</body>");
             writer.write("</html>\n");
         }finally{

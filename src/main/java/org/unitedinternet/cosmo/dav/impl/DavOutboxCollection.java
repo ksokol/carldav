@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -325,8 +326,9 @@ public class DavOutboxCollection extends DavResourceBase
     
             writer.write("<h2>Properties</h2>\n");
             writer.write("<dl>\n");
-            for (DavPropertyIterator i=getProperties().iterator(); i.hasNext();) {
-                WebDavProperty prop = (WebDavProperty) i.nextProperty();
+
+            for (final Map.Entry<String, WebDavProperty> i : getWebDavProperties().entrySet()) {
+                WebDavProperty prop = i.getValue();
                 Object value = prop.getValue();
                 String text = null;
                 if (value instanceof Element) {

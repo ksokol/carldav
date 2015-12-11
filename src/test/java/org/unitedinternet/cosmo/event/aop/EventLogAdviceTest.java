@@ -74,11 +74,8 @@ public class EventLogAdviceTest {
         AspectJProxyFactory factory = new AspectJProxyFactory(service); 
 
         // add aspect
-        EventLogAdvice eva = new EventLogAdvice();
+        EventLogAdvice eva = new EventLogAdvice(securityManager, eventLogDao);
         eva.setEnabled(true);
-        eva.setSecurityManager(securityManager);
-        eva.setEventLogDao(eventLogDao);
-        eva.init();
         factory.addAspect(eva);
 
         // now get the proxy object...

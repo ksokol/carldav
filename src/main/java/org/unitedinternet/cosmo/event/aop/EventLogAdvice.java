@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.aop.OrderedAdvice;
 import org.unitedinternet.cosmo.dao.EventLogDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -46,18 +47,18 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 public class EventLogAdvice extends OrderedAdvice {
 
     private boolean enabled = true;
-    private CosmoSecurityManager securityManager = null;
-    private EventLogDao eventLogDao = null;
+    private final CosmoSecurityManager securityManager;
+    private final EventLogDao eventLogDao;
   
-    private static final Log LOG =
-        LogFactory.getLog(EventLogAdvice.class);
-    
-    public void init() {
-        if(eventLogDao==null) {
-            throw new IllegalStateException("eventLogDao must not be null");
-        }
+    private static final Log LOG = LogFactory.getLog(EventLogAdvice.class);
+
+    public EventLogAdvice(final CosmoSecurityManager securityManager, final EventLogDao eventLogDao) {
+        Assert.notNull(securityManager, "securityManager is null");
+        Assert.notNull(eventLogDao, "eventLogDao is null");
+        this.securityManager = securityManager;
+        this.eventLogDao = eventLogDao;
     }
-    
+
     @Around("execution(* org.unitedinternet.cosmo.service.ContentService.addItemToCollection(..)) &&"
             + "args(item, collection)")
     public Object addItemToCollection(ProceedingJoinPoint pjp,
@@ -361,10 +362,6 @@ public class EventLogAdvice extends OrderedAdvice {
         setBaseEntryProps(entry);
         return entry;
     }
-    
-    public void setEventLogDao(EventLogDao eventLogDao) {
-        this.eventLogDao = eventLogDao;
-    }
 
     protected void setBaseEntryProps(ItemEntry entry) {
         CosmoSecurityContext context = securityManager.getSecurityContext();
@@ -374,18 +371,6 @@ public class EventLogAdvice extends OrderedAdvice {
         else {
             entry.setTicket(context.getTicket());
         }
-    }
-   
-    public CosmoSecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-    public void setSecurityManager(CosmoSecurityManager securityManager) {
-        this.securityManager = securityManager;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
     }
 
     public void setEnabled(boolean enabled) {

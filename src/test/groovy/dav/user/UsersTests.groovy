@@ -39,6 +39,7 @@ class UsersTests extends IntegrationTestSupport {
                         <dt>{DAV:}acl</dt><dd>not implemented yet</dd>
                         <dt>{DAV:}alternate-URI-set</dt><dd></dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}calendar-home-set</dt><dd>/dav/test01@localhost.de</dd>
+                        <dt>{urn:ietf:params:xml:ns:caldav}calendar-user-address-set</dt><dd>mailto:test01@localhost.de</dd>
                         <dt>{DAV:}creationdate</dt><dd>2015-11-16T15:35:16Z</dd>
                         <dt>{DAV:}current-user-privilege-set</dt><dd>{DAV:}read</dd>
                         <dt>{DAV:}displayname</dt><dd>test01@localhost.de</dd>
@@ -48,6 +49,8 @@ class UsersTests extends IntegrationTestSupport {
                         <dt>{DAV:}iscollection</dt><dd>0</dd>
                         <dt>{DAV:}principal-URL</dt><dd>/dav/users/test01@localhost.de</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}principal</dd>
+                        <dt>{urn:ietf:params:xml:ns:caldav}schedule-inbox-URL</dt><dd>/dav/test01@localhost.de/Inbox</dd>
+                        <dt>{urn:ietf:params:xml:ns:caldav}schedule-outbox-URL</dt><dd>/dav/test01@localhost.de/Outbox</dd>
                         <dt>{DAV:}supported-report-set</dt><dd>{DAV:}principal-match</dd>
                         </dl>
                         <a href="/dav/users/">User Principals</a></li>
@@ -74,7 +77,7 @@ class UsersTests extends IntegrationTestSupport {
     public void userOptions() throws Exception {
         mockMvc.perform(options("/dav/users/{uid}", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, ticket"))
+                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule, ticket"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT"));
     }
 

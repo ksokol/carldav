@@ -20,8 +20,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.ContentDao;
@@ -42,7 +40,6 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
-import org.unitedinternet.cosmo.service.triage.TriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 
 import java.util.ArrayList;
@@ -59,8 +56,6 @@ import java.util.Set;
  */
 public class StandardContentService implements ContentService {
 
-    private static final Log LOG = LogFactory.getLog(StandardContentService.class);
-
     private final ContentDao contentDao;
     private final LockManager lockManager;
   
@@ -73,35 +68,11 @@ public class StandardContentService implements ContentService {
         this.lockManager = lockManager;
     }
 
-    // ContentService methods
-
-    /**
-     * Get the root item for a user
-     *
-     * @param user
-     */
     public HomeCollectionItem getRootItem(User user, boolean forceReload) {
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker to forge log entries
-            //or inject malicious content into the logs.
-            LOG.debug("getting root item for " + user.getUsername());
-        }
         return contentDao.getRootItem(user, forceReload);
     }
 
-    /**
-     * Get the root item for a user
-     *
-     * @param user
-     */
     public HomeCollectionItem getRootItem(User user) {
-        if (LOG.isDebugEnabled()) {
-        	//Fix Log Forging - fortify
-        	//Writing unvalidated user input to log files can allow an attacker to forge log entries
-        	//or inject malicious content into the logs.
-            LOG.debug("getting root item for " + user.getUsername());
-        }
         return contentDao.getRootItem(user);
     }
 
@@ -115,9 +86,6 @@ public class StandardContentService implements ContentService {
      * @return item represented by uid
      */
     public Item findItemByUid(String uid) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("finding item with uid " + uid);
-        }
         Item item = contentDao.findItemByUid(uid);
         
         // return item if found
@@ -155,9 +123,6 @@ public class StandardContentService implements ContentService {
      * /username/parent1/parent2/itemname.
      */
     public Item findItemByPath(String path) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("finding item at path " + path);
-        }
         return contentDao.findItemByPath(path);
     }
     
@@ -165,22 +130,15 @@ public class StandardContentService implements ContentService {
      * Find content item by path relative to the identified parent
      * item.
      *
-     * @throws NoSuchItemException if a item does not exist at
-     * the specified path
      */
     public Item findItemByPath(String path,
                                String parentUid) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("finding item at path " + path + " below parent " +
-                      parentUid);
-        }
         return contentDao.findItemByPath(path, parentUid);
     }
 
     /**
      * Copy an item to the given path
      * @param item item to copy
-     * @param existingParent existing source collection
      * @param targetParent existing destination collection
      * @param path path to copy item to
      * @param deepCopy true for deep copy, else shallow copy will
@@ -291,10 +249,6 @@ public class StandardContentService implements ContentService {
      *         is locked
      */
     public void removeItem(Item item) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing item " + item.getUid());
-        }
-        
         // Let service handle ContentItems (for sync purposes)
         if(item instanceof ContentItem) {
             removeContent((ContentItem) item);
@@ -314,11 +268,6 @@ public class StandardContentService implements ContentService {
      * @param collection item to remove item from
      */
     public void removeItemFromCollection(Item item, CollectionItem collection) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing item " + item.getUid() + " from collection "
-                    + collection.getUid());
-        }
-        
         contentDao.removeItemFromCollection(item, collection);
         contentDao.updateCollectionTimestamp(collection);
     }
@@ -334,11 +283,6 @@ public class StandardContentService implements ContentService {
      */
     public CollectionItem createCollection(CollectionItem parent,
                                            CollectionItem collection) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating collection " + collection.getName() +
-                      " in " + parent.getName());
-        }
-        
         return contentDao.createCollection(parent, collection);
     }
 
@@ -355,11 +299,6 @@ public class StandardContentService implements ContentService {
      */
     public CollectionItem createCollection(CollectionItem parent,
             CollectionItem collection, Set<Item> children) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating collection " + collection.getName() + " in "
-                    + parent.getName());
-        }
-
         // Obtain locks to all collections involved.  A collection is involved
         // if it is the parent of one of the children.  If all children are new
         // items, then no locks are obtained.
@@ -458,18 +397,12 @@ public class StandardContentService implements ContentService {
      *
      * @param collection
      *             collection to update
-     * @param children
-     *             children to update
      * @return updated collection
      * @throws CollectionLockedException if the collection is
      *         currently locked for an update.
      */
     public CollectionItem updateCollection(CollectionItem collection,
                                            Set<Item> updates) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("updating collection " + collection.getUid());
-        }
-
         // Obtain locks to all collections involved.  A collection is involved
         // if it is the parent of one of updated items.
         Set<CollectionItem> locks = acquireLocks(collection, updates);
@@ -533,10 +466,6 @@ public class StandardContentService implements ContentService {
      *            collection item to remove
      */
     public void removeCollection(CollectionItem collection) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing collection " + collection.getUid());
-        }
-
         // prevent HomeCollection from being removed (should only be removed
         // when user is removed)
         if(collection instanceof HomeCollectionItem) {
@@ -560,10 +489,6 @@ public class StandardContentService implements ContentService {
      */
     public ContentItem createContent(CollectionItem parent,
                                      ContentItem content) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating content item " + content.getName() +
-                      " in " + parent.getName());
-        }
         checkDatesForEvent(content);
         // Obtain locks to all collections involved.
         Set<CollectionItem> locks = acquireLocks(parent, content);
@@ -640,10 +565,6 @@ public class StandardContentService implements ContentService {
      */
     public void createContentItems(CollectionItem parent,
                                      Set<ContentItem> contentItems) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating content items in " + parent.getName());
-        }
-        
         checkDatesForEvents(contentItems);
         if (! lockManager.lockCollection(parent, lockTimeout)) {
             throw new CollectionLockedException("unable to obtain collection lock");
@@ -673,10 +594,6 @@ public class StandardContentService implements ContentService {
      *         if parent CollectionItem is locked
      */
     public void updateContentItems(Set<CollectionItem> parents, Set<ContentItem> contentItems) {
-        
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("updating content items");
-        }
         checkDatesForEvents(contentItems);
         // Obtain locks to all collections involved.  A collection is involved
         // if it is the parent of one of updated items.
@@ -716,9 +633,6 @@ public class StandardContentService implements ContentService {
      *         if parent CollectionItem is locked
      */
     public ContentItem updateContent(ContentItem content) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("updating content item " + content.getUid());
-        }
         checkDatesForEvent(content);
         Set<CollectionItem> locks = acquireLocks(content);
         
@@ -745,10 +659,6 @@ public class StandardContentService implements ContentService {
      *         if parent CollectionItem is locked           
      */
     public void removeContent(ContentItem content) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing content item " + content.getUid());
-        }
-        
         Set<CollectionItem> locks = acquireLocks(content);
         
         try {

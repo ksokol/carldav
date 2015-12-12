@@ -20,7 +20,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
@@ -61,10 +60,6 @@ public class HibEntityFactory implements EntityFactory {
 
     public CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col) {
         return new HibCalendarCollectionStamp(col);
-    }
-
-    public CollectionSubscription createCollectionSubscription() {
-        return new HibCollectionSubscription();
     }
 
     public EventExceptionStamp createEventExceptionStamp(NoteItem note) {

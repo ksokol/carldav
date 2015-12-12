@@ -49,14 +49,7 @@ public interface EntityFactory {
      * @return new User
      */
     User createUser();
-    
-    
-    /**
-     * Create new CollectionSubscription
-     * @return new CollectionSubscription
-     */
-    CollectionSubscription createCollectionSubscription();
-    
+
     
     /**
      * Create new AvailabilityItem

@@ -15,16 +15,9 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VTimeZone;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -33,6 +26,11 @@ import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.w3c.dom.Element;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Represents a component filter as defined in the CalDAV spec:
@@ -388,21 +386,6 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
         this.propFilters = propFilters;
     }
 
-    /**
-     * ToString.
-     * {@inheritDoc}
-     * The string.
-     */
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("name", name).
-            append("isNotDefinedFilter", isNotDefinedFilter).
-            append("timeRangeFilter", timeRangeFilter).
-            append("componentFilters", componentFilters).
-            append("propFilters", propFilters).
-            toString();
-    }
-    
     /**
      * Validates this filter.
      */

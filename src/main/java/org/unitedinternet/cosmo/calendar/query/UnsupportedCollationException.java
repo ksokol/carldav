@@ -24,12 +24,4 @@ public class UnsupportedCollationException extends RuntimeException {
      * Constructor.
      */
     public UnsupportedCollationException() {}
-    
-    /**
-     * Constructor.
-     * @param message The message.
-     */
-    public UnsupportedCollationException(String message) {
-        super(message);
-    }
 }

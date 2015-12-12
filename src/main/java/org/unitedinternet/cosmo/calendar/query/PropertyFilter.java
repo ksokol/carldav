@@ -15,19 +15,17 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.fortuna.ical4j.model.component.VTimeZone;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Represents the CALDAV:prop-filter element. From sec 9.6.2:
@@ -86,16 +84,7 @@ public class PropertyFilter implements DavConstants, CaldavConstants {
      */
     public PropertyFilter() {
     }
-    
-    /**
-     * Constructor.
-     * @param element The element.
-     * @throws ParseException - if something is wrong this exception is thrown.
-     */
-    public PropertyFilter(Element element) throws ParseException {
-        this(element, null);
-    }
-    
+
     /**
      * Construct a PropertyFilter object from a DOM Element
      * @param element The element.
@@ -198,14 +187,6 @@ public class PropertyFilter implements DavConstants, CaldavConstants {
     }
 
     /**
-     * Sets param filters.
-     * @param paramFilters Param filters.
-     */
-    public void setParamFilters(List paramFilters) {
-        this.paramFilters = paramFilters;
-    }
-
-    /**
      * Gets text match filters.
      * @return The text match filters.
      */
@@ -237,21 +218,6 @@ public class PropertyFilter implements DavConstants, CaldavConstants {
         this.timeRangeFilter = timeRangeFilter;
     }
 
-    /**
-     * ToString
-     * {@inheritDoc}
-     * The string.
-     */
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("name", name).
-            append("timeRangeFilter", timeRangeFilter).
-            append("textMatchFilter", textMatchFilter).
-            append("isNotDefinedFilter", isNotDefinedFilter).
-            append("paramFilters", paramFilters).
-            toString();
-    }
-    
     /**
      * Validates.
      */

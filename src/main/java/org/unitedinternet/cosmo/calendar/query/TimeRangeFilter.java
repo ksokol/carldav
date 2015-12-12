@@ -15,16 +15,14 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.text.ParseException;
-
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VTimeZone;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
+
+import java.text.ParseException;
 
 /**
  * Represents the CALDAV:time-range element. From sec 9.8:
@@ -162,11 +160,4 @@ public class TimeRangeFilter implements CaldavConstants {
         this.timezone = timezone;
     }
 
-    /** */
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("dstart", dstart).
-            append("dend", dend).
-            toString();
-    }
 }

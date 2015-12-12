@@ -15,14 +15,14 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.text.ParseException;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
+
+import java.text.ParseException;
 
 /**
  * Represents the CALDAV:param-filter element. From sec 9.6.3:
@@ -68,12 +68,6 @@ public class ParamFilter implements DavConstants, CaldavConstants {
      */
     public ParamFilter(String name) {
         this.name = name;
-    }
-
-    /**
-     * Constructor.
-     */
-    public ParamFilter() {
     }
 
     /**

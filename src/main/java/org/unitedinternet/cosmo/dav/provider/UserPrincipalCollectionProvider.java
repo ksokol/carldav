@@ -15,20 +15,17 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
+import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.model.EntityFactory;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -40,15 +37,15 @@ import org.unitedinternet.cosmo.model.EntityFactory;
  * @see DavUserPrincipalCollection
  */
 public class UserPrincipalCollectionProvider extends CollectionProvider {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(UserPrincipalCollectionProvider.class);
 
-    public UserPrincipalCollectionProvider(DavResourceFactory resourceFactory,
-            EntityFactory entityFactory) {
+    public UserPrincipalCollectionProvider(DavResourceFactory resourceFactory, EntityFactory entityFactory) {
         super(resourceFactory, entityFactory);
     }
 
-    // DavProvider methods
+    @Override
+    public void post(final DavRequest request, final DavResponse response, final WebDavResource resource) throws CosmoDavException, IOException {
+        super.post(request, response, resource);
+    }
 
     public void put(DavRequest request,
                     DavResponse response,

@@ -15,25 +15,19 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
-import org.unitedinternet.cosmo.model.PagedList;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.PageCriteria;
-import org.unitedinternet.cosmo.model.hibernate.HibPasswordRecovery;
 import org.unitedinternet.cosmo.model.hibernate.HibPreference;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Set;
 
 public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
     
@@ -318,59 +312,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         userDao.updateUser(queryUser1);
         clearSession();
     }
-    
-    /**
-     * Tests Paginate users.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testPaginatedUsers() throws Exception {
-        User user1 = helper.createDummyUser(userDao, 1);
-        User user2 = helper.createDummyUser(userDao, 2);
-        User user3 = helper.createDummyUser(userDao, 3);
-        User user4 = helper.createDummyUser(userDao, 4);
-
-        clearSession();
-
-        @SuppressWarnings("rawtypes")
-        PageCriteria pageCriteria = new PageCriteria();
-
-        pageCriteria.setPageNumber(1);
-        pageCriteria.setPageSize(2);
-        pageCriteria.setSortAscending(true);
-        pageCriteria.setSortType(User.SortType.NAME);
-
-        @SuppressWarnings("rawtypes")
-        PagedList pagedList = userDao.getUsers(pageCriteria);
-        @SuppressWarnings("rawtypes")
-        List results = pagedList.getList();
-        Assert.assertEquals(2, results.size());
-        Assert.assertEquals(4, pagedList.getTotal());
-        verifyUserInCollection(user1, results);
-        verifyUserInCollection(user2, results);
-
-        clearSession();
-
-        pageCriteria.setPageNumber(2);
-        pagedList = userDao.getUsers(pageCriteria);
-        results = pagedList.getList();
-        Assert.assertEquals(2, results.size());
-        Assert.assertEquals(4, pagedList.getTotal());
-        verifyUserInCollection(user3, results);
-        verifyUserInCollection(user4, results);
-
-        pageCriteria.setSortAscending(false);
-        pageCriteria.setSortType(User.SortType.NAME);
-        pageCriteria.setPageNumber(1);
-
-        pagedList = userDao.getUsers(pageCriteria);
-        results = pagedList.getList();
-        Assert.assertEquals(2, results.size());
-        Assert.assertEquals(4, pagedList.getTotal());
-        verifyUserInCollection(user3, results);
-        verifyUserInCollection(user4, results);
-    }
 
     /**
      * Tests delete user.
@@ -425,44 +366,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         queryUser1 = userDao.getUser("user1");
         Assert.assertNull(queryUser1);
-    }
-    
-    /**
-     * Tests create password recovery.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCreatePasswordRecovery() throws Exception {
-        User user1 = new HibUser();
-        user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
-        user1.setEmail("user1@user1.com");
-        user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
-
-        user1 = userDao.createUser(user1);
-        
-        PasswordRecovery passwordRecovery = new HibPasswordRecovery(user1, "1");
-        
-        userDao.createPasswordRecovery(passwordRecovery);
-        
-        String passwordRecoveryKey = passwordRecovery.getKey();
-        
-        clearSession();
-        
-        PasswordRecovery queryPasswordRecovery = 
-            userDao.getPasswordRecovery(passwordRecoveryKey);
-        
-        Assert.assertNotNull(queryPasswordRecovery);
-        Assert.assertEquals(passwordRecovery, queryPasswordRecovery);
-        
-        // Test delete
-        userDao.deletePasswordRecovery(queryPasswordRecovery);
-        queryPasswordRecovery = 
-            userDao.getPasswordRecovery(passwordRecoveryKey);
-        
-        Assert.assertNull(queryPasswordRecovery);
     }
 
     /**

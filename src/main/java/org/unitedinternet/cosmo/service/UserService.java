@@ -15,12 +15,9 @@
  */
 package org.unitedinternet.cosmo.service;
 
-import java.util.Set;
-
-import org.unitedinternet.cosmo.model.PagedList;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.PageCriteria;
+
+import java.util.Set;
 
 /**
  * Interface for services that manage user accounts.
@@ -30,7 +27,7 @@ public interface UserService extends Service {
     /**
      * Returns an unordered set of all user accounts in the repository.
      */
-    public Set<User> getUsers();
+    Set<User> getUsers();
 
 
     /**
@@ -41,18 +38,7 @@ public interface UserService extends Service {
      * @throws DataRetrievalFailureException if the account does not
      * exist
      */
-    public User getUser(String username);
-
-    /**
-     * Returns the all user accounts meeting the supplied
-     * <code>PageCriteria</code>'s requirements
-     *
-     * @param pageCriteria the Pagination Criteria for the PagedList
-     *
-     * @throws IllegalArgumentException if an invalid pageNumber is supplied in the <code>PageCriteria</code>
-     */
-    public PagedList<User, User.SortType> getUsers(
-            PageCriteria<User.SortType> pageCriteria);
+    User getUser(String username);
 
     /**
      * Returns the user account identified by the given email address.
@@ -62,29 +48,7 @@ public interface UserService extends Service {
      * @throws DataRetrievalFailureException if the account does not
      * exist
      */
-    public User getUserByEmail(String email);
-
-    /**
-     * Returns the user account associated with the given activation id.
-     *
-     * @param activationId the activation id associated with the account to return
-     *
-     * @return the User associated with activationId
-     *
-     * @throws DataRetrievalFailureException if there is no user associated with this
-     * activation id.
-     */
-    public User getUserByActivationId(String activationId);
-    
-    /**
-     * Returns a set of users that contain a user preference that
-     * matches a specific key and value.
-     * @param key user preference key to match
-     * @param value user preference value to match
-     * @return set of users containing a user preference that matches
-     *         key and value
-     */
-    public Set<User> findUsersByPreference(String key, String value);
+    User getUserByEmail(String email);
 
     /**
      * Creates a user account in the repository. Digests the raw
@@ -96,7 +60,7 @@ public interface UserService extends Service {
      * @throws DataIntegrityViolationException if the username or
      * email address is already in use
      */
-    public User createUser(User user);
+    User createUser(User user);
 
     /**
      * Creates a user account in the repository as per
@@ -108,8 +72,8 @@ public interface UserService extends Service {
      * @throws DataIntegrityViolationException if the username or
      * email address is already in use
      */
-    public User createUser(User user,
-                           ServiceListener[] listeners);
+    User createUser(User user,
+                    ServiceListener[] listeners);
 
     /**
      * Updates a user account that exists in the repository. If the
@@ -124,14 +88,14 @@ public interface UserService extends Service {
      * @throws DataIntegrityViolationException if the username or
      * email address is already in use
      */
-    public User updateUser(User user);
+    User updateUser(User user);
 
     /**
      * Removes a user account from the repository.
      *
      * @param user the account to remove
      */
-    public void removeUser(User user);
+    void removeUser(User user);
 
     /**
      * Removes the user account identified by the given username from
@@ -139,56 +103,12 @@ public interface UserService extends Service {
      *
      * @param username the username of the account to return
      */
-    public void removeUser(String username);
-
-    /**
-     * Removes a set of user accounts from the repository.
-     * @param users
-     * @throws OverlordDeletionException
-     */
-    public void removeUsers(Set<User> users) throws OverlordDeletionException;
-
-    /**
-     * Removes the user accounts identified by the given usernames from
-     * the repository.
-     * @param usernames
-     * @throws OverlordDeletionException
-     */
-    public void removeUsersByName(Set<String> usernames) throws OverlordDeletionException;
+    void removeUser(String username);
 
     /**
      * Generates a random password in a format suitable for
      * presentation as an authentication credential.
      */
-    public String generatePassword();
-    
-    /**
-     * Returns the PasswordRecovery entity associated with the given password recovery key.
-     * 
-     * If the specified PasswordRecovery entity has expired, returns null after removing 
-     * the PasswordRecovery object from persistant storage.
-     * 
-     * @param key the password recovery key associated with the account to return
-     * @return the User associated with key
-     * @throws DataRetrievalFailureException if there is no user associated with this
-     * activation id.
-     */
-    public PasswordRecovery getPasswordRecovery(String key);
-    
-    /**
-     * Creates a PasswordRecovery entity in the repository.
-     * 
-     * Returns a new instance of the PasswordRecovery object after saving the original.
-     * 
-     * @param passwordRecovery the PasswordRecovery object to create in the repository.
-     */
-    public PasswordRecovery createPasswordRecovery(PasswordRecovery passwordRecovery);
-    
-    /**
-     * Deletes the specified PasswordRecovery object from the repository.
-     * 
-     * @param passwordRecovery the PasswordRecovery object to delete.
-     */
-    public void deletePasswordRecovery(PasswordRecovery passwordRecovery);
-    
+    String generatePassword();
+
 }

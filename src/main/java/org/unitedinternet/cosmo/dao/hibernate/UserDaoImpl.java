@@ -15,27 +15,20 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import org.hibernate.Criteria;
+import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.ArrayPagedList;
-import org.unitedinternet.cosmo.model.PagedList;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.PageCriteria;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
-import carldav.service.generator.IdGenerator;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -50,9 +43,6 @@ import javax.validation.ConstraintViolationException;
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     private IdGenerator idGenerator;
-
-    private static final QueryCriteriaBuilder<User.SortType> QUERY_CRITERIA_BUILDER =
-            new UserQueryCriteriaBuilder<User.SortType>();
 
     public User createUser(User user) {
 
@@ -112,18 +102,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public User getUserByActivationId(String id) {
-        if (id == null) {
-            throw new IllegalArgumentException("id required");
-        }
-        try {
-            return findUserByActivationId(id);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
     public User getUserByEmail(String email) {
         if (email == null) {
             throw new IllegalArgumentException("email required");
@@ -150,24 +128,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
     }
-
-    public PagedList getUsers(PageCriteria<User.SortType> pageCriteria) {
-        try {
-            Criteria crit = QUERY_CRITERIA_BUILDER.buildQueryCriteria(
-                    getSession(), pageCriteria);
-            List<User> results = crit.list();
-
-            // Need the total
-            Long size = (Long) getSession().getNamedQuery("user.count")
-                    .uniqueResult();
-
-            return new ArrayPagedList<User, User.SortType>(pageCriteria, results, size.intValue());
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
 
     public Set<User> findUsersByPreference(String key, String value) {
         try {
@@ -205,10 +165,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     public void removeUser(User user) {
         try {
-            // TODO: should probably let db take care of this with
-            // cacade constaint
-            deleteAllPasswordRecoveries(user);
-
             getSession().delete(user);
             getSession().flush();
         } catch (HibernateException e) {
@@ -244,38 +200,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         } catch (ConstraintViolationException cve) {
             logConstraintViolationException(cve);
             throw cve;
-        }
-    }
-
-    public void createPasswordRecovery(PasswordRecovery passwordRecovery) {
-        try {
-            getSession().save(passwordRecovery);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public PasswordRecovery getPasswordRecovery(String key) {
-        try {
-            Query hibQuery = getSession().getNamedQuery("passwordRecovery.byKey")
-                    .setParameter("key", key);
-            hibQuery.setCacheable(true);
-            return (PasswordRecovery) hibQuery.uniqueResult();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public void deletePasswordRecovery(PasswordRecovery passwordRecovery) {
-        try {
-            getSession().delete(passwordRecovery);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
     }
 
@@ -368,62 +292,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         hibQuery.setCacheable(true);
         hibQuery.setFlushMode(FlushMode.MANUAL);
         return (User) hibQuery.uniqueResult();
-    }
-
-    private void deleteAllPasswordRecoveries(User user) {
-        Session session = getSession();
-        session.getNamedQuery("passwordRecovery.delete.byUser").setParameter(
-                "user", user).executeUpdate();
-    }
-
-    private User findUserByActivationId(String id) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery("user.byActivationId").setParameter(
-                "activationId", id);
-        hibQuery.setCacheable(true);
-        return (User) hibQuery.uniqueResult();
-    }
-
-    private static class UserQueryCriteriaBuilder<SortType extends User.SortType> extends
-            StandardQueryCriteriaBuilder<SortType> {
-
-        public UserQueryCriteriaBuilder() {
-            super(User.class);
-        }
-
-        protected List<Order> buildOrders(PageCriteria<SortType> pageCriteria) {
-            List<Order> orders = new ArrayList<Order>();
-
-            User.SortType sort = pageCriteria.getSortType();
-            if (sort == null) {
-                sort = User.SortType.USERNAME;
-            }
-
-            if (sort.equals(User.SortType.NAME)) {
-                orders.add(createOrder(pageCriteria, "lastName"));
-                orders.add(createOrder(pageCriteria, "firstName"));
-            } else if (sort.equals(User.SortType.ADMIN)) {
-                orders.add(createOrder(pageCriteria, "admin"));
-            } else if (sort.equals(User.SortType.EMAIL)) {
-                orders.add(createOrder(pageCriteria, "email"));
-            } else if (sort.equals(User.SortType.CREATED)) {
-                orders.add(createOrder(pageCriteria, "CreatedDate"));
-            } else if (sort.equals(User.SortType.LAST_MODIFIED)) {
-                orders.add(createOrder(pageCriteria, "ModifiedDate"));
-            } else if (sort.equals(User.SortType.ACTIVATED)) {
-                orders.add(createOrder(pageCriteria, "activationId"));
-            } else {
-                orders.add(createOrder(pageCriteria, "username"));
-            }
-
-            return orders;
-        }
-
-        private Order createOrder(PageCriteria pageCriteria, String property) {
-            return pageCriteria.isSortAscending() ?
-                    Order.asc(property) :
-                    Order.desc(property);
-        }
     }
 
     protected BaseModelObject getBaseModelObject(Object obj) {

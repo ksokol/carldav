@@ -30,7 +30,6 @@ import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.IntegerAttribute;
 import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.StringAttribute;
@@ -211,17 +210,6 @@ public class MockEntityFactory implements EntityFactory {
      */
     public MessageStamp createMessageStamp() {
         return new MockMessageStamp();
-    }
-
-    /**
-     * Creates password recovery.
-     * {@inheritDoc}
-     * @param user The user.
-     * @param key The key.
-     * @return password recovery.
-     */
-    public PasswordRecovery createPasswordRecovery(User user, String key) {
-        return new MockPasswordRecovery(user, key);
     }
 
     /**

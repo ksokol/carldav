@@ -76,12 +76,6 @@
 		<property name="triageStatusQueryProcessor" ref="triageStatusQueryProcessor" />
 	</bean>
 
-	<bean id="calendarService"
-		class="org.unitedinternet.cosmo.service.impl.StandardCalendarService"
-		init-method="init" destroy-method="destroy">
-		<property name="calendarDao" ref="calendarDao" />
-	</bean>
-
 	<bean id="calendarQueryProcessor"
 		class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
 		<property name="calendarDao" ref="calendarDao" />

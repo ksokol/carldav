@@ -19,14 +19,12 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.dao.mock.MockUserDao;
 import org.unitedinternet.cosmo.model.User;
 
-import java.security.SecureRandom;
 import java.util.Set;
 
 /**
@@ -35,7 +33,6 @@ import java.util.Set;
 public class StandardUserServiceTest {
 
     private StandardUserService service;
-    private MockContentDao contentDao;
     private MockUserDao userDao;
     private TestHelper testHelper;
 
@@ -46,17 +43,8 @@ public class StandardUserServiceTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        contentDao = new MockContentDao(new MockDaoStorage());
         userDao = new MockUserDao(new MockDaoStorage());
-        service = new StandardUserService();
-        service.setContentDao(contentDao);
-        service.setUserDao(userDao);
-        KeyBasedPersistenceTokenService keyBasedPersistenceTokenService = new KeyBasedPersistenceTokenService();
-        keyBasedPersistenceTokenService.setServerSecret("cosmossecret");
-        keyBasedPersistenceTokenService.setServerInteger(123);
-        keyBasedPersistenceTokenService.setSecureRandom(new SecureRandom());
-        service.setPasswordGenerator(keyBasedPersistenceTokenService);
-        service.init();
+        service = new StandardUserService("MD5", new MockContentDao(new MockDaoStorage()), userDao);
     }
 
     /**
@@ -191,45 +179,6 @@ public class StandardUserServiceTest {
         service.removeUser(u1.getUsername());
 
         Assert.assertFalse("User not removed", userDao.getUsers().contains(u1));
-    }
-
-    /**
-     * Tests null user dao.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testNullUserDao() throws Exception {
-        service.setUserDao(null);
-        try {
-            service.init();
-            Assert.fail("Should not be able to initialize service without userDao");
-        } catch (IllegalStateException e) {
-            // expected
-        }
-    }
-
-    /**
-     * Tests null password generator.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testNullPasswordGenerator() throws Exception {
-        service.setPasswordGenerator(null);
-        try {
-            service.init();
-            Assert.fail("Should not be able to initialize service without passwordGenerator");
-        } catch (IllegalStateException e) {
-            // expected
-        }
-    }
-
-    /**
-     * Tests default digest algorithm.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testDefaultDigestAlgorithm() throws Exception {
-        Assert.assertEquals(service.getDigestAlgorithm(), "MD5");
     }
 
     /**

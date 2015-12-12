@@ -28,13 +28,4 @@ public class UnknownTimeZoneException extends Exception {
     public UnknownTimeZoneException(String message) {
         super(message);
     }
-
-    /**
-     * Constructor.
-     * @param message The message.
-     * @param cause The throwable.
-     */
-    public UnknownTimeZoneException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

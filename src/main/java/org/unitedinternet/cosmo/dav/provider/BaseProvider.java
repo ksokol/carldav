@@ -52,9 +52,7 @@ import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
-import org.unitedinternet.cosmo.dav.impl.DavInboxCollection;
 import org.unitedinternet.cosmo.dav.impl.DavItemResource;
-import org.unitedinternet.cosmo.dav.impl.DavOutboxCollection;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
 import org.unitedinternet.cosmo.model.EntityFactory;
@@ -517,10 +515,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants, AclCons
         } else {
             UserAclEvaluator uae = (UserAclEvaluator) evaluator;
 
-            if (resource instanceof DavUserPrincipalCollection
-                    || resource instanceof DavInboxCollection
-                    || resource instanceof DavOutboxCollection
-                    )
+            if (resource instanceof DavUserPrincipalCollection)
             {
                 hasPrivilege = uae.evaluateUserPrincipalCollection(privilege);
             } else {

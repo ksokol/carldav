@@ -57,7 +57,7 @@ import org.unitedinternet.cosmo.CosmoParseException;
 
 public class InstanceList extends TreeMap {
 
-    private static final long serialVersionUID = 1838360990532590681L;
+    private static final long serialVersionUID = 1838360990532590682L;
     private boolean isUTC = false;
     private TimeZone timezone = null;
 
@@ -357,10 +357,7 @@ public class InstanceList extends TreeMap {
             riddt = adjustFloatingDateIfNecessary(riddt);
         }
 
-        boolean future = getRange(comp);
-
-        Instance instance = new Instance(comp, dtstart, dtend, riddt, true,
-                future);
+        Instance instance = new Instance(comp, dtstart, dtend, riddt, true);
         String key = instance.getRid().toString();
 
         // Replace the master instance if it exists
@@ -461,7 +458,7 @@ public class InstanceList extends TreeMap {
 
                         // Replace with new instance
                         Instance newinstance = new Instance(comp, start, end,
-                                originalstart, false, false);
+                                originalstart, false);
                         remove(ikey);
                         put(newinstance.getRid().toString(), newinstance);
                         modified = true;
@@ -520,22 +517,6 @@ public class InstanceList extends TreeMap {
         RecurrenceId rid = (RecurrenceId) comp.getProperties().getProperty(
                 Property.RECURRENCE_ID);
         return (rid != null) ? rid.getDate() : null;
-    }
-
-    /**
-     * Gets range.
-     *
-     * @param comp The component.
-     * @return The result.
-     */
-    private final boolean getRange(Component comp) {
-        RecurrenceId rid = (RecurrenceId) comp.getProperties().getProperty(
-                Property.RECURRENCE_ID);
-        if (rid == null) {
-            return false;
-        }
-        Parameter range = rid.getParameters().getParameter(Parameter.RANGE);
-        return range != null && "THISANDFUTURE".equals(range.getValue());
     }
 
     /**

@@ -31,7 +31,6 @@ public class Instance {
     private Date end;
     private Date rid;
     private boolean overridden;
-    private boolean future;
 
     /**
      * @param comp The component.
@@ -39,7 +38,7 @@ public class Instance {
      * @param start The date.
      */
     public Instance(Component comp, Date start, Date end) {
-        this(comp, start, end, start, false, false);
+        this(comp, start, end, start, false);
     }
 
     /**
@@ -47,16 +46,14 @@ public class Instance {
      * @param start The date. 
      * @param end The date.
      * @param rid The date.
-     * @param future Boolean.
      * @param overridden Boolean.
      */
-    public Instance(Component comp, Date start, Date end, Date rid, boolean overridden, boolean future) {
+    public Instance(Component comp, Date start, Date end, Date rid, boolean overridden) {
         this.comp = comp;
         this.start = start;
         this.end = end;
         this.rid = copyNormalisedDate(rid);
         this.overridden = overridden;
-        this.future = future;
     }
 
     /**
@@ -94,14 +91,6 @@ public class Instance {
         return overridden;
     }
 
-    /**
-     * @return Returns the future.
-     */
-    public boolean isFuture() {
-        return future;
-    }
-
-   
     /**
      * Copy a Date/DateTime and normalise to UTC if its not floating.
      * 

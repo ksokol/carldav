@@ -49,16 +49,6 @@
 		<property name="enabled" value="false" />
 	</bean>
 
-	<bean id="ootbHelper"
-		class="org.unitedinternet.cosmo.service.account.OutOfTheBoxHelper">
-		<property name="contentDao">
-			<ref bean="contentDao" />
-		</property>
-		<property name="entityFactory">
-			<ref bean="cosmoEntityFactory" />
-		</property>
-	</bean>
-
 	<bean id="triageStatusQueryProcessor"
 		class="org.unitedinternet.cosmo.service.impl.StandardTriageStatusQueryProcessor">
 		<property name="contentDao">

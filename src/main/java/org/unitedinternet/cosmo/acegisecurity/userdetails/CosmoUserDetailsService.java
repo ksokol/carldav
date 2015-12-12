@@ -15,59 +15,45 @@
  */
 package org.unitedinternet.cosmo.acegisecurity.userdetails;
 
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.User;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.util.Assert;
+import org.unitedinternet.cosmo.dao.UserDao;
+import org.unitedinternet.cosmo.model.User;
 
-/**
- * Implements Acegi Security's <code>UserDetailsService</code>
- * interface by retrieving user details with a <code>UserDao</code>.
- * 
- * @see UserDetailsService
- * @see UserDao
- */
+import java.util.ArrayList;
+import java.util.List;
+
 public class CosmoUserDetailsService implements UserDetailsService {
 
-    private UserDao userDao;
+    private final UserDao userDao;
 
-    /**
-     * Locates the user with the given username by retrieving it
-     * with this service's <code>UserDao</code> and returns a
-     * <code>UserDetails</code> representing the user.
-     *
-     * @param username the username to look up
-     * @return a fully populated <code>UserDetails</code> (never
-     * <code>null</code>)
-     * @throws UsernameNotFoundException if the user could not be
-     * found
-     * @see UserDetails
-     * @throws DataAccessException - if something is wrong this exception is thrown.
-     */
-    public UserDetails loadUserByUsername(String username)
-        throws UsernameNotFoundException, DataAccessException {
+    public CosmoUserDetailsService(final UserDao userDao) {
+        Assert.notNull(userDao, "userDao is null");
+        this.userDao = userDao;
+    }
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
         User user = userDao.getUser(username);
         if (user == null) {
             throw new UsernameNotFoundException("user " + username + " not found");
         }
-        return new CosmoUserDetails(userDao.getUser(username));
-    }
 
-    /**
-     * Gets user dao.
-     * @return The user.
-     */
-    public UserDao getUserDao() {
-        return userDao;
-    }
+        final List<GrantedAuthority> authorities = new ArrayList<>();
 
-    /**
-     * Sets user dao.
-     * @param userDao The user dao.
-     */
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
+        if (user.getAdmin()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_ROOT"));
+        }
+        if (!user.isOverlord()) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+
+        final boolean accountNonLocked = user.isOverlord() || !user.isLocked();
+
+        return new CosmoUserDetails(user.getUsername(), user.getPassword(), user.isActivated(), true, true, accountNonLocked, authorities, user);
     }
 }

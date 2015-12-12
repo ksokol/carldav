@@ -21,8 +21,9 @@
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<bean id="protocolAuthenticationEntryPoint"
-		class="org.unitedinternet.cosmo.acegisecurity.ui.CosmoAuthenticationEntryPoint" />
+	<bean id="protocolAuthenticationEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
+        <property name="realmName" value="#{T(org.unitedinternet.cosmo.CosmoConstants).PRODUCT_NAME}" />
+    </bean>
 
 	<bean id="protocolBasicProcessingFilter"
 		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
@@ -48,8 +49,7 @@
 		</property>
 	</bean>
 
-	<bean id="davExceptionTranslationFilter"
-		class="org.unitedinternet.cosmo.filters.CosmoExceptionLoggerFilter">
+	<bean id="davExceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
 		<constructor-arg ref="protocolAuthenticationEntryPoint" />
 		<property name="accessDeniedHandler">
 			<bean

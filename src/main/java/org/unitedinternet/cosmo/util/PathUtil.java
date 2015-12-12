@@ -15,15 +15,10 @@
  */
 package org.unitedinternet.cosmo.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  * Provides utility methods for working with URL paths.
  */
 public class PathUtil {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(PathUtil.class);
 
     /**
      * Returns the final segment of the path (the portion after the
@@ -52,27 +47,5 @@ public class PathUtil {
             return "/";
         }
         return (idx == 0) ? "/" : path.substring(0, idx);
-    }
-
-    /**
-     * Returns the initial segment of the given path. If the path is
-     * simply "/", returns null;
-     */
-    public static String getInitialSegment(String path) {
-        if (path == null) {
-            throw new IllegalArgumentException("null path");
-        }
-        String segment = path;
-        if (segment.equals("/")) {
-            return null;
-        }
-        if (segment.startsWith("/")) {
-            segment = segment.substring(1);
-        }
-        int slash = segment.indexOf("/");
-        if (slash > 0) {
-            segment = segment.substring(0, slash);
-        }
-        return segment;
     }
 }

@@ -15,12 +15,6 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import java.util.Set;
-
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
-
 /**
  * Represents a server-wide security controller for Cosmo. It
  * provides entry points for obtaining information about the
@@ -35,17 +29,6 @@ public interface CosmoSecurityManager {
      * Provides a <code>CosmoSecurityContext</code> representing a
      * previously authenticated principal.
      */
-    public CosmoSecurityContext getSecurityContext()
+    CosmoSecurityContext getSecurityContext()
         throws CosmoSecurityException;
-
-    /**
-     * Associate additional tickets with the current security context.
-     * Additional tickets allow a principal to have additional access
-     * to resources.
-     * @param tickets additional tickets to associate with the current
-     *                security context
-     */
-    public void registerTickets(Set<Ticket> tickets);
-    
-    public void unregisterTickets();
 }

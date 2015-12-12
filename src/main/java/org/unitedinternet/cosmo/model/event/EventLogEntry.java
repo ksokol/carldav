@@ -15,39 +15,34 @@
  */
 package org.unitedinternet.cosmo.model.event;
 
-import java.util.Date;
-
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 
+import java.util.Date;
 
 /**
  * Base class for event log entry.
  *
  */
-public abstract class EventLogEntry { 
+public abstract class EventLogEntry {
+
     private Date date = null;
     private User user;
-    private Ticket ticket;
-    
+
     public User getUser() {
         return user;
     }
+
     public void setUser(User user) {
         this.user = user;
     }
-    public Ticket getTicket() {
-        return ticket;
-    }
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
+
     public Date getDate() {
-        return date != null? (Date)date.clone() : null;
+        return date != null ? (Date) date.clone() : null;
     }
+
     public void setDate(Date date) {
-        if(date != null){
-            this.date = (Date)date.clone();
+        if (date != null) {
+            this.date = (Date) date.clone();
         }
     }
 }

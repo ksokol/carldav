@@ -30,20 +30,6 @@
 		<constructor-arg ref="protocolAuthenticationEntryPoint" />
 	</bean>
 
-	<bean id="protocolTicketProcessingFilter"
-		class="org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketProcessingFilter" />
-
-	<bean id="protocolExtraTicketProcessingFilter"
-		class="org.unitedinternet.cosmo.acegisecurity.providers.ticket.ExtraTicketProcessingFilter">
-		<property name="securityManager">
-			<ref bean="securityManager" />
-		</property>
-		<property name="contentDao">
-			<ref bean="contentDao" />
-		</property>
-	</bean>
-
-
 	<bean id="clientICalendarFilterManagerFilter" class="org.unitedinternet.cosmo.filters.ClientICalendarFilter">
 		<property name="filterManager" ref="iCalendarClientFilterManager" />
 		<property name="clientKeyMap">
@@ -99,7 +85,6 @@
                         securityContextPersistenceFilter,
 				        httpLoggingFilter,
 				        protocolBasicProcessingFilter,
-         				protocolTicketProcessingFilter,
          				clientICalendarFilterManagerFilter,
          				davExceptionTranslationFilter,
          				davFilterInvocationInterceptor,
@@ -150,11 +135,6 @@
 		<constructor-arg value="badgerbadgerbadger" />
 	</bean>
 
-	<bean id="ticketAuthenticationProvider"
-		class="org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketAuthenticationProvider">
-		<property name="contentDao" ref="contentDao" />
-	</bean>
-
 	<bean id="authenticationManager"
 		class="org.springframework.security.authentication.ProviderManager">
 		<constructor-arg index="0" ref="authenticationProviders"/>
@@ -163,7 +143,6 @@
 	<util:list id="authenticationProviders">
 		<ref bean="daoAuthenticationProvider" />
 		<ref bean="anonymousAuthenticationProvider" />
-		<ref bean="ticketAuthenticationProvider" />
 	</util:list>
 	<!-- security facade resources -->
 

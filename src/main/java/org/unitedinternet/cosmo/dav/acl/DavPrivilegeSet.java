@@ -15,20 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav.acl;
 
-import java.util.Arrays;
-import java.util.HashSet;
-
 import org.apache.commons.lang.StringUtils;
-
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
-
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.model.Ticket;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.HashSet;
 
 /**
  * <p>
@@ -43,28 +38,6 @@ public class DavPrivilegeSet extends HashSet<DavPrivilege>
 
     public DavPrivilegeSet() {
         super();
-    }
-
-    public DavPrivilegeSet(DavPrivilege... privileges) {
-        super(Arrays.asList(privileges));
-    }
-
-    public DavPrivilegeSet(Ticket ticket) {
-        super();
-        for (String priv : ticket.getPrivileges()) {
-            if (priv.equals(Ticket.PRIVILEGE_READ)) {
-                add(DavPrivilege.READ);
-            }
-            else if (priv.equals(Ticket.PRIVILEGE_WRITE)) {
-                add(DavPrivilege.WRITE);
-            }
-            else if (priv.equals(Ticket.PRIVILEGE_FREEBUSY)) {
-                add(DavPrivilege.READ_FREE_BUSY);
-            }
-            else {
-                throw new IllegalStateException("Unrecognized ticket privilege " + priv);
-            }
-        }
     }
 
     // XmlSerializable methods
@@ -101,20 +74,6 @@ public class DavPrivilegeSet extends HashSet<DavPrivilege>
         return false;
     }
 
-    public void setTicketPrivileges(Ticket ticket) {
-        ticket.getPrivileges().clear();
-        if (contains(DavPrivilege.READ)) {
-            ticket.getPrivileges().add(Ticket.PRIVILEGE_READ);
-        }
-        if (contains(DavPrivilege.WRITE)) {
-            ticket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        }
-
-        // TODO not mentioned in https://tools.ietf.org/html/draft-ito-dav-ticket-00
-//        if (contains(DavPrivilege.READ_FREE_BUSY)) {
-//            ticket.getPrivileges().add(Ticket.PRIVILEGE_FREEBUSY);
-//        }
-    }
 
     public String toString() {
         return StringUtils.join(this, ", ");

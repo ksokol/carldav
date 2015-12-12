@@ -15,19 +15,11 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.SortedSet;
-
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
@@ -46,7 +38,6 @@ import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.NoteOccurrence;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
@@ -55,6 +46,13 @@ import org.unitedinternet.cosmo.service.lock.LockManager;
 import org.unitedinternet.cosmo.service.triage.TriageStatusQueryContext;
 import org.unitedinternet.cosmo.service.triage.TriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.SortedSet;
 
 /**
  * Standard implementation of <code>ContentService</code>.
@@ -931,94 +929,6 @@ public class StandardContentService implements ContentService {
      */
     public Set<Item> findItems(ItemFilter filter) {
         return contentDao.findItems(filter);
-    }
-
-    /**
-     * Creates a ticket on an item.
-     *
-     * @param item the item to be ticketed
-     * @param ticket the ticket to be saved
-     */
-    public void createTicket(Item item,
-                             Ticket ticket) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating ticket on item " + item.getUid());
-        }
-        contentDao.createTicket(item, ticket);
-    }
-
-    /**
-     * Creates a ticket on an item.
-     *
-     * @param path the path of the item to be ticketed
-     * @param ticket the ticket to be saved
-     */
-    public void createTicket(String path,
-                             Ticket ticket) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating ticket on item at path " + path);
-        }
-        Item item = contentDao.findItemByPath(path);
-        if (item == null) {
-            throw new IllegalArgumentException("item not found for path " + path);
-        }
-        contentDao.createTicket(item, ticket);
-    }
-
-    /**
-     * Returns the identified ticket on the given item, or
-     * <code>null</code> if the ticket does not exists. Tickets are
-     * inherited, so if the specified item does not have the ticket
-     * but an ancestor does, it will still be returned.
-     *
-     * @param item the ticketed item
-     * @param key the ticket to return
-     */
-    public Ticket getTicket(Item item,
-                            String key) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getting ticket " + key + " for item " + item.getUid());
-        }
-        return contentDao.getTicket(item, key);
-    }
-    
-    /**
-     * Removes a ticket from an item.
-     *
-     * @param item the item to be de-ticketed
-     * @param ticket the ticket to remove
-     */
-    public void removeTicket(Item item,
-                             Ticket ticket) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing ticket " + ticket.getKey() + " on item " +
-                      item.getUid());
-        }
-        contentDao.removeTicket(item, ticket);
-    }
-
-    /**
-     * Removes a ticket from an item.
-     *
-     * @param item the item to be de-ticketed
-     * @param key the key of the ticket to remove
-     */
-    public void removeTicket(Item item,
-                             String key) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing ticket " + key + " on item " +
-                      item.getUid());
-        }
-       
-        if (item == null) {
-            throw new IllegalArgumentException("item required");
-        }
-        
-        Ticket ticket = contentDao.getTicket(item, key);
-        if (ticket == null) {
-            return;
-        }
-        contentDao.removeTicket(item, ticket);
     }
 
     // Service methods

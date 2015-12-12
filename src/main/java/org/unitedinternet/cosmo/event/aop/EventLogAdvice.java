@@ -368,9 +368,6 @@ public class EventLogAdvice extends OrderedAdvice {
         if(context.getUser()!=null) {
             entry.setUser(context.getUser());
         }
-        else {
-            entry.setTicket(context.getTicket());
-        }
     }
 
     public void setEnabled(boolean enabled) {

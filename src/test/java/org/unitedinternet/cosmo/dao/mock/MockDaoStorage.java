@@ -15,6 +15,19 @@
  */
 package org.unitedinternet.cosmo.dao.mock;
 
+import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
+import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
+import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.EventStamp;
+import org.unitedinternet.cosmo.model.HomeCollectionItem;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
+import org.unitedinternet.cosmo.model.mock.MockHomeCollectionItem;
+import org.unitedinternet.cosmo.model.mock.MockItem;
+import org.unitedinternet.cosmo.util.VersionFourGenerator;
+
 import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,20 +36,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-
-import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockHomeCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockItem;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
-import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 
 /**
  * Simple in-memory storage system for mock data access objects.
@@ -234,12 +233,7 @@ public class MockDaoStorage {
                 note.getModifies().addModification(note);
             }
         }
-        
-        // handle tickets
-        for (Ticket ticket: item.getTickets()) {
-            this.createTicket(item, ticket);
-        }
-        
+
         itemsByUid.put(item.getUid(), item);
     }
 
@@ -305,60 +299,6 @@ public class MockDaoStorage {
         }
 
         return Collections.unmodifiableSet(children);
-    }
-
-    /**
-     * Finds item tickets.
-     * @param item The item.
-     * @return The set.
-     */
-    public Set<Ticket> findItemTickets(Item item) {
-        @SuppressWarnings("unchecked")
-        Set<Ticket> itemTickets = (Set<Ticket>) tickets.get(item.getUid());
-        if (itemTickets == null) {
-            itemTickets = new HashSet<Ticket>();
-            tickets.put(item.getUid(), itemTickets);
-        }
-        return itemTickets;
-    }
-    
-    /**
-     * Finds ticket.
-     * @param key The key.
-     * @return The ticket.
-     */
-    @SuppressWarnings("unchecked")
-    public Ticket findTicket(String key) {
-        for(@SuppressWarnings("rawtypes") Set ticketSet: tickets.values()) {
-            for(Ticket ticket: (Set<Ticket>) ticketSet) {
-                if(ticket.getKey().equals(key)) {
-                    return ticket;
-                }
-            }
-        }
-        
-        return null;
-    }
-
-    /**
-     * Creates ticket.
-     * @param item The item.
-     * @param ticket The ticket.
-     */
-    public void createTicket(Item item, Ticket ticket) {
-        if (ticket.getKey() == null) { 
-            ticket.setKey(calculateTicketKey());
-        }
-        findItemTickets(item).add(ticket);
-    }
-
-    /**
-     * Removes ticket.
-     * @param item The item.
-     * @param ticket The ticket.
-     */
-    public void removeTicket(Item item, Ticket ticket) {
-        findItemTickets(item).remove(ticket);
     }
 
     /**

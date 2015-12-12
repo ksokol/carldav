@@ -19,15 +19,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 import org.unitedinternet.cosmo.security.CosmoSecurityException;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.UserService;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * The default implementation of the {@link CosmoSecurityManager}
@@ -37,9 +33,6 @@ import java.util.Set;
 public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
 
     private UserService userService;
-
-    // store additional tickets for authenticated principal
-    private ThreadLocal<Set<Ticket>> tickets = new ThreadLocal<Set<Ticket>>();
 
     /* ----- CosmoSecurityManager methods ----- */
 
@@ -59,7 +52,7 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
         
         if (authen instanceof PreAuthenticatedAuthenticationToken) {
             User user = userService.getUser((String) authen.getPrincipal());
-            return new CosmoSecurityContextImpl(authen, tickets.get(), user);
+            return new CosmoSecurityContextImpl(authen, user);
         }
 
 
@@ -71,7 +64,7 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
     /**
      */
     protected CosmoSecurityContext createSecurityContext(Authentication authen) {
-        return new CosmoSecurityContextImpl(authen, tickets.get());
+        return new CosmoSecurityContextImpl(authen);
     }
 
     /**
@@ -81,16 +74,5 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-    
-    public void registerTickets(Set<Ticket> tickets) {
-        Set<Ticket> currentTickets = this.tickets.get();
-        if(currentTickets==null) {
-            this.tickets.set(new HashSet<Ticket>());
-        }
-        this.tickets.get().addAll(tickets);
-    }
-    
-    public void unregisterTickets() {
-        this.tickets.remove();
-    }
+
 }

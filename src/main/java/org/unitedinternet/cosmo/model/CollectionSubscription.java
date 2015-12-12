@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.model;
 /**
  * Represents a subscription to a shared collection.
  * A subscription belongs to a user and consists of 
- * a ticket key and a collection uid.
+ * a collection uid.
  */
 public interface CollectionSubscription extends AuditableObject{
 
@@ -29,31 +29,18 @@ public interface CollectionSubscription extends AuditableObject{
      * shared and then the owner deletes the collection.
      * @return Collection uid
      */
-    public String getCollectionUid();
+    String getCollectionUid();
 
-    public void setCollectionUid(String collectionUid);
+    void setCollectionUid(String collectionUid);
 
-    public void setCollection(CollectionItem collection);
+    void setCollection(CollectionItem collection);
 
-    public String getDisplayName();
+    String getDisplayName();
 
-    public void setDisplayName(String displayName);
+    void setDisplayName(String displayName);
 
-    public User getOwner();
+    User getOwner();
 
-    public void setOwner(User owner);
-
-    /**
-     * Return the ticket key used to subscribe to the shared collection.
-     * Note, it is possible that the Ticket represented by this key
-     * is not present in the system.  This happens when a ticket is
-     * created for a shared collection, and then removed by the owner.
-     * @return
-     */
-    public String getTicketKey();
-
-    public void setTicketKey(String ticketKey);
-
-    public void setTicket(Ticket ticket);
+    void setOwner(User owner);
 
 }

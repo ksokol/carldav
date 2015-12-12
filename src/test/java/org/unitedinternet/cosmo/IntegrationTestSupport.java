@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 @SpringApplicationConfiguration(classes = {CarldavApplication.class, TestData.class, MockBeans.class})
 @WebIntegrationTest("server.port:0")
 @Transactional
-public class IntegrationTestSupport {
+public abstract class IntegrationTestSupport {
 
     protected MockMvc mockMvc;
 

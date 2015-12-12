@@ -27,12 +27,10 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.ItemChangeRecord;
 import org.unitedinternet.cosmo.model.ItemChangeRecord.Action;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.security.mock.MockSecurityContext;
 import org.unitedinternet.cosmo.security.mock.MockSecurityManager;
-import org.unitedinternet.cosmo.security.mock.MockTicketPrincipal;
 import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.impl.StandardContentService;
@@ -121,69 +119,11 @@ public class EventLogAdviceTest {
     }
     
     /**
-     * Tests secured api with ticket.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testSecuredApiWithTicket() throws Exception {
-        Date startDate = new Date();
-        
-        
-        User user1 = testHelper.makeDummyUser("user1", "password");
-        testHelper.makeDummyUser("user2", "password");
-        CollectionItem rootCollection = contentDao.createRootItem(user1);
-        CollectionItem collection = testHelper.makeDummyCollection(user1);
-        collection.setUid("col");
-        
-        // create RO and RW tickets on collection
-        Ticket rwTicket = testHelper.makeDummyTicket();
-        rwTicket.setKey("T2");
-        rwTicket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        collection.getTickets().add(rwTicket);
-        
-        collection = contentDao.createCollection(rootCollection, collection);
-        
-        ContentItem dummyContent = new MockNoteItem();
-        dummyContent.setName("foo");
-        dummyContent.setOwner(user1);
-        dummyContent.setUid("1");
-        dummyContent = contentDao.createContent(collection, dummyContent);
-        
-        
-        // login as RW ticket
-        initiateContext(rwTicket);
-        
-        // update content
-        proxyService.updateContent(dummyContent);
-        
-        Date endDate = new Date();
-        
-        
-        // query ItemChangeRecords
-        List<ItemChangeRecord> records = eventLogDao.findChangesForCollection(collection, startDate, endDate);
-        Assert.assertEquals(1, records.size());
-        
-        ItemChangeRecord record = records.get(0);
-        Assert.assertEquals(dummyContent.getUid(), record.getItemUuid());
-        Assert.assertEquals(dummyContent.getDisplayName(), record.getItemDisplayName());
-        Assert.assertEquals("ticket: anonymous", record.getModifiedBy());
-        Assert.assertEquals(Action.ITEM_CHANGED, record.getAction());
-       
-    }
-    
-    /**
      * Initiate context.
      * @param user The user.
      */
     private void initiateContext(User user) {
         securityManager.initiateSecurityContext(new MockSecurityContext(new MockUserPrincipal(user)));
     }
-    
-    /**
-     * Initiate context.
-     * @param ticket The ticket.
-     */
-    private void initiateContext(Ticket ticket) {
-        securityManager.initiateSecurityContext(new MockSecurityContext(new MockTicketPrincipal(ticket)));
-    } 
+
 }

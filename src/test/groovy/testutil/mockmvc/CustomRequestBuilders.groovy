@@ -41,14 +41,6 @@ public class CustomRequestBuilders {
         return request(MOVE.name(), urlTemplate, urlVariables);
     }
 
-    public static MockHttpServletRequestBuilder mkticket(String urlTemplate, Object... urlVariables) {
-        return request(MKTICKET.name(), urlTemplate, urlVariables);
-    }
-
-    public static MockHttpServletRequestBuilder delticket(String urlTemplate, Object... urlVariables) {
-        return request(DELTICKET.name(), urlTemplate, urlVariables);
-    }
-
     public static MockHttpServletRequestBuilder mkcol(String urlTemplate, Object... urlVariables) {
         return request(MKCOL.name(), urlTemplate, urlVariables);
     }

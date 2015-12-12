@@ -15,6 +15,23 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.Length;
+import org.unitedinternet.cosmo.model.Attribute;
+import org.unitedinternet.cosmo.model.AttributeTombstone;
+import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.CollectionItemDetails;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.StampTombstone;
+import org.unitedinternet.cosmo.model.Tombstone;
+import org.unitedinternet.cosmo.model.User;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +49,7 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
@@ -39,27 +57,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyClass;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Index;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.Length;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.AttributeTombstone;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionItemDetails;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.StampTombstone;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.Tombstone;
-import org.unitedinternet.cosmo.model.User;
 
 
 /**
@@ -118,11 +117,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @BatchSize(size=50)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Map<QName, Attribute> attributes = new HashMap<QName, Attribute>(0);
-
-    @OneToMany(targetEntity=HibTicket.class, mappedBy = "item", 
-            fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Ticket> tickets = new HashSet<Ticket>(0);
 
     // turns out this creates a query that is unoptimized for MySQL
     //@Fetch(FetchMode.SUBSELECT)
@@ -240,21 +234,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      */
     public Map<QName, Attribute> getAttributes() {
         return Collections.unmodifiableMap(attributes);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#addTicket(org.unitedinternet.cosmo.model.Ticket)
-     */
-    public void addTicket(Ticket ticket) {
-        ticket.setItem(this);
-        tickets.add(ticket);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#removeTicket(org.unitedinternet.cosmo.model.Ticket)
-     */
-    public void removeTicket(Ticket ticket) {
-        tickets.remove(ticket);
     }
 
     /* (non-Javadoc)
@@ -546,13 +525,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      */
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getTickets()
-     */
-    public Set<Ticket> getTickets() {
-        return Collections.unmodifiableSet(tickets);
     }
 
     /* (non-Javadoc)

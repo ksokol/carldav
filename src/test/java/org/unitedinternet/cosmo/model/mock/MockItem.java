@@ -15,16 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.AttributeTombstone;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -33,9 +23,18 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.StampTombstone;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.User;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 
 /**
@@ -65,10 +64,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
     
     
     private Map<QName, Attribute> attributes = new HashMap<QName, Attribute>(0);
-    
-    
-    private Set<Ticket> tickets = new HashSet<Ticket>(0);
-    
+
     
     private Set<Stamp> stamps = new HashSet<Stamp>(0);
     
@@ -214,29 +210,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      */
     public Map<QName, Attribute> getAttributes() {
         return Collections.unmodifiableMap(attributes);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceItem#addTicket(org.unitedinternet.cosmo.model.copy.Ticket)
-     */
-    /**
-     * Adds ticket.
-     * @param ticket The ticket.
-     */
-    public void addTicket(Ticket ticket) {
-        ticket.setItem(this);
-        tickets.add(ticket);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceItem#removeTicket(org.unitedinternet.cosmo.model.copy.Ticket)
-     */
-    /**
-     * Removes ticket.
-     * @param ticket The ticket.
-     */
-    public void removeTicket(Ticket ticket) {
-        tickets.remove(ticket);
     }
 
     /* (non-Javadoc)
@@ -648,17 +621,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      */
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceItem#getTickets()
-     */
-    /**
-     * Gets tickets.
-     * @return The tickets.
-     */
-    public Set<Ticket> getTickets() {
-        return tickets;
     }
 
     /* (non-Javadoc)

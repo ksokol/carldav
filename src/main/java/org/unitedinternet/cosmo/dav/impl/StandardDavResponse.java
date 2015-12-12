@@ -19,14 +19,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.WebdavResponseImpl;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResponse;
-import org.unitedinternet.cosmo.dav.ticket.TicketConstants;
-import org.unitedinternet.cosmo.dav.ticket.property.TicketDiscovery;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,15 +36,13 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
 /**
- * Extends {@link org.apache.jackrabbit.webdav.WebdavResponseImpl} and
- * implements methods for the DAV ticket extension.
+ * Extends {@link org.apache.jackrabbit.webdav.WebdavResponseImpl}
  */
-public class StandardDavResponse extends WebdavResponseImpl
-    implements DavResponse, DavConstants, TicketConstants {
-    private static final Log LOG =
-        LogFactory.getLog(StandardDavResponse.class);
-    private static final XMLOutputFactory XML_OUTPUT_FACTORY =
-        XMLOutputFactory.newInstance();
+public class StandardDavResponse extends WebdavResponseImpl implements DavResponse, DavConstants {
+
+    private static final Log LOG = LogFactory.getLog(StandardDavResponse.class);
+
+    private static final XMLOutputFactory XML_OUTPUT_FACTORY = XMLOutputFactory.newInstance();
 
     private HttpServletResponse originalHttpServletResponse;
 
@@ -243,45 +235,6 @@ public class StandardDavResponse extends WebdavResponseImpl
     @Override
     public int getStatus() {
         return originalHttpServletResponse.getStatus();
-    }
-
-
-
-
-    // DavResponse methods
-
-    /**
-     * Send the <code>ticketdiscovery</code> response to a
-     * <code>MKTICKET</code> request.
-     *
-     * @param resource the resource on which the ticket was created
-     * @param ticketId the id of the newly created ticket
-     */
-    public void sendMkTicketResponse(DavItemResource resource,
-                                     String ticketId)
-        throws CosmoDavException, IOException {
-        setHeader(HEADER_TICKET, ticketId);
-
-        TicketDiscovery ticketdiscovery = (TicketDiscovery)
-            resource.getProperties().get(TICKETDISCOVERY);
-        MkTicketInfo info = new MkTicketInfo(ticketdiscovery);
-
-        sendXmlResponse(info, SC_OK);
-    }
-
-    private static class MkTicketInfo implements XmlSerializable {
-        private TicketDiscovery td;
-
-        public MkTicketInfo(TicketDiscovery td) {
-            this.td = td;
-        }
-
-        public Element toXml(Document document) {
-            Element prop =
-                DomUtil.createElement(document, XML_PROP, NAMESPACE);
-            prop.appendChild(td.toXml(document));
-            return prop;
-        }
     }
 
     public void sendDavError(CosmoDavException e)

@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.acegisecurity.ui;
 
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.unitedinternet.cosmo.CosmoConstants;
 import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketException;
 import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketedItemNotFoundException;
@@ -31,11 +31,7 @@ import javax.servlet.http.HttpServletResponse;
  * Implements an <code>AuthenticationEntryPoint</code> that is
  * cognizant of Cosmo's various authentication providers
  */
-public class CosmoAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
-
-    public CosmoAuthenticationEntryPoint() {
-        super.setRealmName(CosmoConstants.PRODUCT_NAME);
-    }
+public class CosmoAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     /**
      * <p>
@@ -75,8 +71,10 @@ public class CosmoAuthenticationEntryPoint extends BasicAuthenticationEntryPoint
                 httpResponse.setContentLength(0);
             }
         } else {
-            // all other requests get basic
-            super.commence(request, response, authException);
+            httpResponse.addHeader("WWW-Authenticate", "Basic realm=\""
+                    + CosmoConstants.PRODUCT_NAME + "\"");
+            httpResponse.setStatus(401);
+            httpResponse.setContentLength(0);
         }
     }
 }

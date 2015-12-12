@@ -115,10 +115,6 @@ public class HibEntityFactory implements EntityFactory {
         return new HibXmlAttribute(qname, e);
     }
 
-    public MessageStamp createMessageStamp() {
-        return new HibMessageStamp();
-    }
-
     public Preference createPreference() {
         return new HibPreference();
     }

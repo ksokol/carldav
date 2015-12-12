@@ -192,15 +192,6 @@ public class MockEntityFactory implements EntityFactory {
     }
 
     /**
-     * Creates message stamp.
-     * {@inheritDoc}
-     * @return message stamp.
-     */
-    public MessageStamp createMessageStamp() {
-        return new MockMessageStamp();
-    }
-
-    /**
      * Creates preference.
      * {@inheritDoc}
      * @return preference.

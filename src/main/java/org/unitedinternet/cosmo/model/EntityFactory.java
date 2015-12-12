@@ -130,23 +130,6 @@ public interface EntityFactory {
      */
     TaskStamp createTaskStamp();
 
-
-    /**
-     * Create new Preference
-     * @return new Preference
-     */
-    Preference createPreference();
-    
-    
-    /**
-     * Create new Preference with specified key and value
-     * @param key
-     * @param value
-     * @return new Preference
-     */
-    Preference createPreference(String key, String value);
-    
-    
     /**
      * Create new BinaryAttribute using InpuStream.
      * @param qname QName of attribute

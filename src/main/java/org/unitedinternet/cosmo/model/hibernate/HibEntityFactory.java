@@ -115,14 +115,6 @@ public class HibEntityFactory implements EntityFactory {
         return new HibXmlAttribute(qname, e);
     }
 
-    public Preference createPreference() {
-        return new HibPreference();
-    }
-
-    public Preference createPreference(String key, String value) {
-        return new HibPreference(key, value);
-    }
-
     public QName createQName(String namespace, String localname) {
         return new HibQName(namespace, localname);
     }

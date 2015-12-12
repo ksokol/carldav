@@ -25,35 +25,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Implements an <code>AuthenticationEntryPoint</code> that is
- * cognizant of Cosmo's various authentication providers
- */
 public class CosmoAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    /**
-     * <p>
-     * Returns the appropriate servlet response based on the
-     * authentication provider used to service the request and the
-     * specific authentication failure.
-     * </p>
-     * <p>
-     * When a ticket was provided, if the requested item could not
-     * be found, returns <code>404</code>, otherwise returns
-     * <code>401</code> and sets the <code>WWW-Authenticate</code>
-     * header to <code>Ticket</code>/<li>
-     * </p>
-     * <p>
-     * For all other requests, returns <code>401</code> and sets the
-     * <code>WWW-Authenticate</code> header to
-     * <code>Basic realm="Chandler Server"</code>.
-     * </p>
-     * @param request The HttpServletRequest.
-     * @param response The HttpServletResponse.
-     * @param authException The authentication exception.
-     * @throws IOException - if something is wrong this exception is thrown.
-     * @throws ServletException - if something is wrong this exception is thrown.
-     */
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         final HttpServletResponse httpResponse = response;

@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.mock;
 
-import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
@@ -28,7 +27,6 @@ import org.unitedinternet.cosmo.model.mock.MockHomeCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
-import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -44,10 +42,7 @@ public class MockDaoStorage {
     private HashMap<String, Item> itemsByPath;
     private HashMap<String, Item> itemsByUid;
     private HashMap<String, String> rootUidsByUsername;
-    @SuppressWarnings("rawtypes")
-    private HashMap<String, Set> tickets;
     private VersionFourGenerator idGenerator;
-    private KeyBasedPersistenceTokenService ticketIdGenerator;
 
     /**
      * Constructor.
@@ -57,12 +52,7 @@ public class MockDaoStorage {
         itemsByPath = new HashMap<String, Item>();
         itemsByUid = new HashMap<String, Item>();
         rootUidsByUsername = new HashMap<String, String>();
-        tickets = new HashMap<String, Set>();
         idGenerator = new VersionFourGenerator();
-        ticketIdGenerator = new KeyBasedPersistenceTokenService();
-        ticketIdGenerator.setServerSecret("cosmossecret");
-        ticketIdGenerator.setServerInteger(123);
-        ticketIdGenerator.setSecureRandom(new SecureRandom());
     }
 
     /**
@@ -82,15 +72,6 @@ public class MockDaoStorage {
     public Item getItemByUid(String uid) {
         return itemsByUid.get(uid);
     }
-    
-    /**
-     * Sets item bu uid.
-     * @param uid The id.
-     * @param item The item.
-     */
-    public void setItemByUid(String uid, Item item) {
-        itemsByUid.put(uid, item);
-    }
 
     /**
      * Removes item by uid.
@@ -107,15 +88,6 @@ public class MockDaoStorage {
      */
     public Item getItemByPath(String path) {
         return itemsByPath.get(path);
-    }
-
-    /**
-     * Sets item by path.
-     * @param path The path.
-     * @param item The item.
-     */
-    public void setItemByPath(String path, Item item) {
-        itemsByPath.put(path, item);
     }
 
     /**
@@ -343,14 +315,6 @@ public class MockDaoStorage {
         return idGenerator.nextStringIdentifier();
     }
 
-    /**
-     * Calculates the ticket key.
-     * @return The ticket key.
-     */
-    private String calculateTicketKey() {
-        return ticketIdGenerator.allocateToken("").getKey();
-    }
-    
     /**
      * Gets mock item.
      * @param item The item.

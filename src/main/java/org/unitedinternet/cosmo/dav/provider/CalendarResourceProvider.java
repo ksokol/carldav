@@ -61,8 +61,7 @@ public class CalendarResourceProvider extends FileProvider {
         throws CosmoDavException, IOException {
 
         // do content.getParent() check only for normal auth only, ticket auth is on the item only, not its parent.
-        if (request.getHeader(ServerConstants.HEADER_TICKET) == null && 
-            ! content.getParent().exists()) {
+        if (!content.getParent().exists()) {
             throw new ConflictException("One or more intermediate collections must be created");
         }
 
@@ -74,13 +73,8 @@ public class CalendarResourceProvider extends FileProvider {
                                              ctx.getCalendar());
         }
         
-        // case when event updates comes through a ticket, 
-        // the ticket is attached to the item (event) and not ticket is associated to the parent item (calendar)
-        if(request.getHeader(ServerConstants.HEADER_TICKET) != null && content instanceof DavEvent ) {
-            ((DavEvent) content).updateContent(content, ctx);
-        } else {
-            content.getParent().addContent(content, ctx);
-        }
+        content.getParent().addContent(content, ctx);
+
         response.setStatus(status);
         // since the iCalendar body is parsed and re-serialized for storage,
         // it's possible that what will be served for subsequent GETs is

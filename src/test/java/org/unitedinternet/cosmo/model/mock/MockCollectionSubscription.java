@@ -21,8 +21,7 @@ import org.unitedinternet.cosmo.model.User;
 
 /**
  * Represents a subscription to a shared collection.
- * A subscription belongs to a user and consists of 
- * a ticket key and a collection uid.
+ * A subscription belongs to a user
  */
 public class MockCollectionSubscription extends MockAuditableObject implements CollectionSubscription {
 
@@ -30,9 +29,7 @@ public class MockCollectionSubscription extends MockAuditableObject implements C
     
     
     private String displayName;
-    
-    private String ticketKey;
-    
+
     private String collectionUid;
 
     /* (non-Javadoc)

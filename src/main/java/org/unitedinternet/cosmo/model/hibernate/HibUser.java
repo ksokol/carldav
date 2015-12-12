@@ -476,34 +476,6 @@ public class HibUser extends HibAuditableObject implements User {
 
         return null;
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getSubscription(java.lang.String, java.lang.String)
-     */
-    public CollectionSubscription getSubscription(String collectionUid, String ticketKey){
-        for (CollectionSubscription sub : subscriptions) {
-            if (sub.getCollectionUid().equals(collectionUid)) {
-                return sub;
-            }
-        }
-
-        return null;
-    }
-
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#removeSubscription(java.lang.String, java.lang.String)
-     */
-    public void removeSubscription(String collectionUid, String ticketKey){
-        removeSubscription(getSubscription(collectionUid, ticketKey));
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#removeSubscription(java.lang.String)
-     */
-    public void removeSubscription(String displayName) {
-        removeSubscription(getSubscription(displayName));
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#removeSubscription(org.unitedinternet.cosmo.model.CollectionSubscription)
@@ -512,18 +484,6 @@ public class HibUser extends HibAuditableObject implements User {
         if (sub != null) {
             subscriptions.remove(sub);
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#isSubscribedTo(org.unitedinternet.cosmo.model.CollectionItem)
-     */
-    public boolean isSubscribedTo(CollectionItem collection){
-        for (CollectionSubscription sub : subscriptions){
-            if (collection.getUid().equals(sub.getCollectionUid())) {
-                return true; 
-            }
-        }
-        return false;
     }
 
     public String calculateEntityTag() {

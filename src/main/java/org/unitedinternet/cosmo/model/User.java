@@ -24,13 +24,13 @@ public interface User extends AuditableObject{
 
     /**
      */
-    public static final String USERNAME_OVERLORD = "root";
+    String USERNAME_OVERLORD = "root";
     
     // Sort Strings
     /**
      * A String indicating the results should be sorted by Last Name then First Name
      */
-    public static final String NAME_SORT_STRING = "Name";
+    String NAME_SORT_STRING = "Name";
     /**
      * A String indicating the results should be sorted by Username
      */
@@ -266,36 +266,8 @@ public interface User extends AuditableObject{
      */
     public CollectionSubscription getSubscription(String displayname);
 
-    /**
-     * Get the CollectionSubscription with the specified collectionUid 
-     * and ticketKey
-     * @param collectionUid collection uid of subscription to return
-     * @param ticketKey ticketKey of subscription to return
-     * @return subscription with specified collectionUid and ticketKey
-     */
-    public CollectionSubscription getSubscription(String collectionUid,
-            String ticketKey);
-
-    /**
-     * Remove the CollectionSubscription with the specifed collectionUid and ticketKey
-     * @param collectionUid collection uid of subscription to remove
-     * @param ticketKey ticketKey of subscription to remove
-     */
-    public void removeSubscription(String collectionUid, String ticketKey);
-
-    /**
-     * Remove the CollectionSubscription with the specifed displayName
-     * @param name display name of the subscription to remove
-     */
-    public void removeSubscription(String displayName);
-
     /** */
     public void removeSubscription(CollectionSubscription sub);
-
-    /**
-     * Return true if this user is subscribed to <code>collection</code>
-     */
-    public boolean isSubscribedTo(CollectionItem collection);
 
     public String calculateEntityTag();
 

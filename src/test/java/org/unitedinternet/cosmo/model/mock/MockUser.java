@@ -666,49 +666,6 @@ public class MockUser extends MockAuditableObject implements User {
 
         return null;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getSubscription(java.lang.String, java.lang.String)
-     */
-    /**
-     * Gets subscription.
-     * @param collectionUid The collection uid.
-     * @param ticketKey The ticket key.
-     * @return The collection subscription.
-     */
-    public final CollectionSubscription getSubscription(final String collectionUid, final String ticketKey){
-        for (CollectionSubscription sub : subscriptions) {
-            if (sub.getCollectionUid().equals(collectionUid)) {
-                return sub;
-            }
-        }
-
-        return null;
-    }
-
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#removeSubscription(java.lang.String, java.lang.String)
-     */
-    /**
-     * Removes sunbscription.
-     * @param collectionUid The collection Uid.
-     * @param ticketKey The ticket key.
-     */
-    public final void removeSubscription(final String collectionUid, final String ticketKey){
-        removeSubscription(getSubscription(collectionUid, ticketKey));
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#removeSubscription(java.lang.String)
-     */
-    /**
-     * Removes subscription.
-     * @param displayName The display name.
-     */
-    public final void removeSubscription(final String displayName) {
-        removeSubscription(getSubscription(displayName));
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#removeSubscription(org.unitedinternet.cosmo.model.copy.CollectionSubscription)
@@ -723,24 +680,6 @@ public class MockUser extends MockAuditableObject implements User {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isSubscribedTo(org.unitedinternet.cosmo.model.copy.CollectionItem)
-     */
-    /**
-     * Is subscribed to.
-     * @param collection The collection.
-     * @return The boolean that verify if it is subscribed.
-     */
-    public final boolean isSubscribedTo(final CollectionItem collection){
-        for (CollectionSubscription sub : subscriptions){
-            if (collection.getUid().equals(sub.getCollectionUid())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#calculateEntityTag()
      */

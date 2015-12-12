@@ -18,33 +18,21 @@ package org.unitedinternet.cosmo.model.hibernate;
 import carldav.service.generator.IdGenerator;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
-import org.unitedinternet.cosmo.model.BinaryAttribute;
-import org.unitedinternet.cosmo.model.CalendarAttribute;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.DecimalAttribute;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.FreeBusyItem;
-import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.StringAttribute;
 import org.unitedinternet.cosmo.model.TaskStamp;
-import org.unitedinternet.cosmo.model.TextAttribute;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.w3c.dom.Element;
-
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.util.Calendar;
 
 /**
  * EntityFactory implementation that uses Hibernate 
@@ -71,28 +59,12 @@ public class HibEntityFactory implements EntityFactory {
         return new HibAvailabilityItem();
     }
 
-    public BinaryAttribute createBinaryAttribute(QName qname, byte[] bytes) {
-        return new HibBinaryAttribute(qname, bytes);
-    }
-
-    public BinaryAttribute createBinaryAttribute(QName qname, InputStream is) {
-        return new HibBinaryAttribute(qname, is);
-    }
-
-    public CalendarAttribute createCalendarAttribute(QName qname, Calendar cal) {
-        return new HibCalendarAttribute(qname, cal);
-    }
-
     public CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col) {
         return new HibCalendarCollectionStamp(col);
     }
 
     public CollectionSubscription createCollectionSubscription() {
         return new HibCollectionSubscription();
-    }
-
-    public DecimalAttribute createDecimalAttribute(QName qname, BigDecimal bd) {
-        return new HibDecimalAttribute(qname, bd);
     }
 
     public EventExceptionStamp createEventExceptionStamp(NoteItem note) {
@@ -119,16 +91,8 @@ public class HibEntityFactory implements EntityFactory {
         return new HibQName(namespace, localname);
     }
 
-    public StringAttribute createStringAttribute(QName qname, String str) {
-        return new HibStringAttribute(qname, str);
-    }
-
     public TaskStamp createTaskStamp() {
         return new HibTaskStamp();
-    }
-
-    public TextAttribute createTextAttribute(QName qname, Reader reader) {
-        return new HibTextAttribute(qname, reader);
     }
 
     public TriageStatus createTriageStatus() {

@@ -38,11 +38,9 @@ import org.unitedinternet.cosmo.model.NoteOccurrence;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
-import org.unitedinternet.cosmo.service.triage.TriageStatusQueryContext;
 import org.unitedinternet.cosmo.service.triage.TriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 
@@ -51,7 +49,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * Standard implementation of <code>ContentService</code>.
@@ -655,72 +652,6 @@ public class StandardContentService implements ContentService {
         }   
     }
 
-    @Override
-    public void updateCollectionTimestamp(CollectionItem parent) {
-        if (! lockManager.lockCollection(parent, lockTimeout)) {
-            throw new CollectionLockedException("unable to obtain collection lock");
-        }
-        try {
-            contentDao.updateCollectionTimestamp(parent); 
-            LOG.info("collection timestamp updated");
-        } finally {
-            lockManager.unlockCollection(parent);
-        }   
-    }
-
-    @Override
-    public void createBatchContentItems(CollectionItem parent, Set<ContentItem> contentItems) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating content items in " + parent.getName());
-        }
-        
-        checkDatesForEvents(contentItems);
-        if (! lockManager.lockCollection(parent, lockTimeout)) {
-            throw new CollectionLockedException("unable to obtain collection lock");
-        }
-        try {
-            contentDao.createBatchContent(parent, contentItems);
-        } finally {
-            lockManager.unlockCollection(parent);
-        }   
-    }
-    
-    @Override
-    public void updateBatchContentItems(CollectionItem parent, Set<ContentItem> contentItems) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("updating content items in " + parent.getName());
-        }
-        
-        checkDatesForEvents(contentItems);
-        if (! lockManager.lockCollection(parent, lockTimeout)) {
-            throw new CollectionLockedException("unable to obtain collection lock");
-        }
-        try {
-            contentDao.updateBatchContent(contentItems);
-            contentDao.updateCollectionTimestamp(parent);
-        } finally {
-            lockManager.unlockCollection(parent);
-        }   
-    }
-    
-    @Override
-    public void removeBatchContentItems(CollectionItem parent, Set<ContentItem> contentItems) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing content items in " + parent.getName());
-        }
-        
-        checkDatesForEvents(contentItems);
-        if (! lockManager.lockCollection(parent, lockTimeout)) {
-            throw new CollectionLockedException("unable to obtain collection lock");
-        }
-        try {
-            contentDao.removeBatchContent(parent, contentItems);
-        } finally {
-            lockManager.unlockCollection(parent);
-        }   
-    }
-
-    
     /**
      * Update content items.  This includes creating new items, removing
      * existing items, and updating existing items.  ContentItem deletion is
@@ -824,32 +755,6 @@ public class StandardContentService implements ContentService {
         }
     }
 
-    /**
-     * Find note items by triage status that belong to a collection.
-     * @param collection collection
-     * @param context the query context
-     * @return set of notes that match the specified triage status label and
-     *         belong to the specified collection
-     */
-    public SortedSet<NoteItem> findNotesByTriageStatus(CollectionItem collection,
-            TriageStatusQueryContext context) {
-        return triageStatusQueryProcessor.processTriageStatusQuery(collection,
-                context);
-    }
-    
-    /**
-     * Find note items by triage status that belong to a recurring note series.
-     * @param note recurring note
-     * @param context the query context
-     * @return set of notes that match the specified triage status label and belong
-     *         to the specified recurring note series
-     */
-    public SortedSet<NoteItem> findNotesByTriageStatus(NoteItem note,
-            TriageStatusQueryContext context) {
-        return triageStatusQueryProcessor.processTriageStatusQuery(note,
-                context);
-    }
-    
     
     /**
      * find the set of collection items as children of the given collection item.
@@ -859,18 +764,6 @@ public class StandardContentService implements ContentService {
      */
     public Set<CollectionItem> findCollectionItems(CollectionItem collectionItem) {
         return contentDao.findCollectionItems(collectionItem);
-    }
-    
-    /**
-     * Find items by filter.
-     *
-     * @param filter
-     *            filter to use in search
-     * @return set items matching specified
-     *         filter.
-     */
-    public Set<Item> findItems(ItemFilter filter) {
-        return contentDao.findItems(filter);
     }
 
     // Service methods
@@ -1029,14 +922,5 @@ public class StandardContentService implements ContentService {
         }
         
         return null;
-    }
-
-    @Override
-    public void removeItemsFromCollection(CollectionItem collection) {
-        if(collection instanceof HomeCollectionItem) {
-            throw new IllegalArgumentException("cannot remove home collection");
-        }
-	    contentDao.removeItemsFromCollection(collection);
-	    contentDao.updateCollectionTimestamp(collection);
     }
 }

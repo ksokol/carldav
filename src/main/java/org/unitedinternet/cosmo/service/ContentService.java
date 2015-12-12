@@ -15,19 +15,13 @@
  */
 package org.unitedinternet.cosmo.service;
 
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.service.triage.TriageStatusQueryContext;
 
-import java.util.Date;
 import java.util.Set;
-import java.util.SortedSet;
 
 /**
  * Interface for services that manage access to user content.
@@ -215,51 +209,6 @@ public interface ContentService extends Service {
                             Set<ContentItem> contentItems);
 
     /**
-     * 
-     * @param parent parent collection of content items.
-     */
-    void updateCollectionTimestamp(CollectionItem parent);
-    
-    /**
-     * Create new content items in a parent collection.
-     * 
-     * @param parent
-     *            parent collection of content items.
-     * @param contentItems
-     *            content items to create
-     * @throws org.osaf.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
-     */
-    void createBatchContentItems(CollectionItem parent,
-                                 Set<ContentItem> contentItems);
-
-    /**
-     * updates existing content items in a parent collection.
-     * 
-     * @param parent
-     *            parent collection of content items.
-     * @param contentItems
-     *            content items to update
-     * @throws org.osaf.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
-     */
-    void updateBatchContentItems(CollectionItem parent,
-                                 Set<ContentItem> contentItems);
-    
-    /**
-     * remove existing content items in a parent collection.
-     * 
-     * @param parent
-     *            parent collection of content items.
-     * @param contentItems
-     *            content items to remove
-     * @throws org.osaf.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
-     */
-    void removeBatchContentItems(CollectionItem parent,
-                                 Set<ContentItem> contentItems);
-    
-    /**
      * Update content items.  This includes creating new items, removing
      * existing items, and updating existing items.  ContentItem deletion is
      * represented by setting ContentItem.isActive to false.  ContentItem deletion
@@ -300,42 +249,4 @@ public interface ContentService extends Service {
      * @return set of children collection items or empty list of parent collection has no children
      */
     Set<CollectionItem> findCollectionItems(CollectionItem collectionItem);
-    
-    /**
-     * Find items by filter.
-     *
-     * @param filter
-     *            filter to use in search
-     * @return set items matching specified
-     *         filter.
-     */
-    Set<Item> findItems(ItemFilter filter);
-    
-   
-    /**
-     * Find note items by triage status that belong to a collection.
-     * @param collection collection
-     * @param context the query context
-     * @return set of notes that match the specified triage status label and
-     *         belong to the specified collection
-     */
-    SortedSet<NoteItem> findNotesByTriageStatus(CollectionItem collection,
-                                                TriageStatusQueryContext context);
-    
-    /**
-     * Find note items by triage status that belong to a recurring note series.
-     * @param note recurring note
-     * @param context the query context
-     * @return set of notes that match the specified triage status label and belong
-     *         to the specified recurring note series
-     */
-    SortedSet<NoteItem> findNotesByTriageStatus(NoteItem note,
-                                                TriageStatusQueryContext context);
-
-    /**
-     * Remove items from a collection.
-     * @param collection The collection contains all items which will be removed. 
-     */
-    void removeItemsFromCollection(CollectionItem collection);
-
 }

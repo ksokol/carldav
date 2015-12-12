@@ -9,7 +9,6 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.Mockito.when
 import static org.springframework.http.HttpHeaders.ALLOW
@@ -25,7 +24,6 @@ import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.*
-import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol
@@ -252,7 +250,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>
-                                        <ticket:ticketdiscovery xmlns:ticket="http://www.xythos.com/namespaces/StorageServer"/>
                                         <D:acl>
                                             <D:ace>
                                                 <D:principal>
@@ -418,7 +415,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:iscollection/>
                                         <D:owner/>
                                         <D:supported-report-set/>
-                                        <ticket:ticketdiscovery xmlns:ticket="http://www.xythos.com/namespaces/StorageServer"/>
                                         <D:acl/>
                                         <D:getcontentlength/>
                                         <D:resourcetype/>
@@ -489,7 +485,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
                         <dt>{DAV:}supported-report-set</dt><dd>{DAV:}principal-match, {DAV:}principal-property-search, {urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
-                        <dt>{http://www.xythos.com/namespaces/StorageServer}ticketdiscovery</dt><dd></dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>1</dd>
                         </dl>
                         <p>
@@ -508,8 +503,8 @@ public class CalendarTests extends IntegrationTestSupport {
     public void calendarOptions() throws Exception {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule, ticket"))
-                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, MKTICKET, DELTICKET, REPORT"));
+                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule"))
+                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT"));
     }
 
     @Test
@@ -576,7 +571,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>
-                                        <ticket:ticketdiscovery xmlns:ticket="http://www.xythos.com/namespaces/StorageServer"/>
                                         <D:acl>
                                             <D:ace>
                                                 <D:principal>
@@ -770,107 +764,5 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(status().isNotFound())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_FOUND));
-    }
-
-    @Test
-    public void calendarMkticket() throws Exception {
-        def request = """\
-                        <C:ticketinfo xmlns:C="http://www.xythos.com/namespaces/StorageServer">
-                            <D:privilege xmlns:D="DAV:"><D:read/></D:privilege>
-                            <C:timeout>Second-3600</C:timeout>
-                            <C:visits>1</C:visits>
-                        </C:ticketinfo>"""
-
-        final MvcResult result = mockMvc.perform(mkticket("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request))
-                .andExpect(status().isOk())
-                .andExpect(textXmlContentType())
-                .andReturn();
-
-        final String ticket = result.getResponse().getHeader("Ticket");
-        final String content = result.getResponse().getContentAsString();
-
-        def response = """\
-                        <D:prop xmlns:D="DAV:">
-                            <ticket:ticketdiscovery xmlns:ticket="http://www.xythos.com/namespaces/StorageServer">
-                                <ticket:ticketinfo>
-                                    <ticket:id>${ticket}</ticket:id>
-                                    <D:owner>
-                                        <D:href>/dav/users/test01@localhost.de</D:href>
-                                    </D:owner>
-                                    <ticket:timeout>Second-3600</ticket:timeout>
-                                    <ticket:visits>infinity</ticket:visits>
-                                    <D:privilege>
-                                        <D:privilege>
-                                            <D:read/>
-                                        </D:privilege>
-                                    </D:privilege>
-                                </ticket:ticketinfo>
-                            </ticket:ticketdiscovery>
-                        </D:prop>"""
-
-        assertThat(content, equalXml(response));
-    }
-
-    @Test
-    public void calendarDelticket() throws Exception {
-        def request = """\
-                        <C:ticketinfo xmlns:C="http://www.xythos.com/namespaces/StorageServer">
-                            <D:privilege xmlns:D="DAV:"><D:read/></D:privilege>
-                            <C:timeout>Second-3600</C:timeout>
-                            <C:visits>1</C:visits>
-                        </C:ticketinfo>"""
-
-        final MvcResult result = mockMvc.perform(mkticket("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        final String ticket = result.getResponse().getHeader("Ticket");
-
-        def delResponse1 = """\
-                        <D:prop xmlns:D="DAV:">
-                            <ticket:ticketdiscovery xmlns:ticket="http://www.xythos.com/namespaces/StorageServer">
-                                <ticket:ticketinfo>
-                                    <ticket:id>
-                                        ${ticket}
-                                    </ticket:id>
-                                    <D:owner>
-                                        <D:href>/dav/users/test01@localhost.de</D:href>
-                                    </D:owner>
-                                    <ticket:timeout>Second-3600</ticket:timeout>
-                                    <ticket:visits>infinity</ticket:visits>
-                                    <D:privilege>
-                                        <D:privilege>
-                                            <D:read/>
-                                        </D:privilege>
-                                    </D:privilege>
-                                </ticket:ticketinfo>
-                            </ticket:ticketdiscovery>
-                        </D:prop>"""
-
-        assertThat(result.getResponse().getContentAsString(), equalXml(delResponse1));
-
-        mockMvc.perform(delticket("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .header("ticket", ticket))
-                .andExpect(status().isNoContent())
-
-        def delResponse2 = """\
-                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <cosmo:precondition-failed>Ticket
-                                ${ticket}
-                                does not exist
-                            </cosmo:precondition-failed>
-                        </D:error>"""
-
-        mockMvc.perform(delticket("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .header("ticket", ticket))
-                .andExpect(status().isPreconditionFailed())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(delResponse2))
     }
 }

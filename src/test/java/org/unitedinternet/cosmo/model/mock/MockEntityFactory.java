@@ -15,11 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.BinaryAttribute;
 import org.unitedinternet.cosmo.model.CalendarAttribute;
@@ -41,13 +36,16 @@ import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.StringAttribute;
 import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TextAttribute;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.TicketType;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 import org.w3c.dom.Element;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * EntityFactory implementation that uses mock objects.
@@ -289,16 +287,6 @@ public class MockEntityFactory implements EntityFactory {
     }
 
     /**
-     * Creates ticket.
-     * {@inheritDoc}
-     * @param type The type.
-     * @return The ticket.
-     */
-    public Ticket createTicket(TicketType type) {
-        return new MockTicket(type);
-    }
-
-    /**
      * Creates triage status.
      * {@inheritDoc}
      * @return The triage status.
@@ -314,15 +302,6 @@ public class MockEntityFactory implements EntityFactory {
      */
     public User createUser() {
         return new MockUser();
-    }
-
-    /**
-     * Creates ticket.
-     * {@inheritDoc}
-     * @return The ticket.
-     */
-    public Ticket creatTicket() {
-        return new MockTicket();
     }
 
     /**

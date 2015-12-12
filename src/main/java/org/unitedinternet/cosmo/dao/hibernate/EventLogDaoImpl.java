@@ -15,15 +15,10 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.EventLogDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
@@ -37,19 +32,17 @@ import org.unitedinternet.cosmo.model.event.ItemRemovedEntry;
 import org.unitedinternet.cosmo.model.event.ItemUpdatedEntry;
 import org.unitedinternet.cosmo.model.hibernate.HibEventLogEntry;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibTicket;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 /**
  * Implementation of EventLogDao using Hibernate persistence objects.
  */
 public class EventLogDaoImpl extends AbstractDaoImpl implements EventLogDao {
-
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(EventLogDaoImpl.class);
-
 
     public void addEventLogEntry(EventLogEntry entry) {
         try {
@@ -176,9 +169,6 @@ public class EventLogDaoImpl extends AbstractDaoImpl implements EventLogDao {
         if (entry.getUser() != null) {
             hibEntry.setAuthType("user");
             hibEntry.setAuthId(((HibUser) entry.getUser()).getId());
-        } else {
-            hibEntry.setAuthType("ticket");
-            hibEntry.setAuthId(((HibTicket) entry.getTicket()).getId());
         }
 
         return hibEntry;

@@ -121,7 +121,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
         if (!exists()) {
             return "OPTIONS, TRACE, PUT, MKCOL, MKCALENDAR";
         } else {
-            return "OPTIONS, GET, HEAD, PROPFIND, PROPPATCH, TRACE, COPY, DELETE, MOVE, MKTICKET, DELTICKET, REPORT";
+            return "OPTIONS, GET, HEAD, PROPFIND, PROPPATCH, TRACE, COPY, DELETE, MOVE, REPORT";
         }
     }
 

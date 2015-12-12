@@ -15,51 +15,33 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import java.security.Principal;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.unitedinternet.cosmo.model.User;
+
+import java.security.Principal;
 
 /**
  * Base class for implementations of {@link CosmoSecurityContext}.
  */
 public abstract class BaseSecurityContext implements CosmoSecurityContext {
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-        LogFactory.getLog(BaseSecurityContext.class);
 
     private boolean admin;
     private boolean anonymous;
     private Principal principal;
-    private Ticket ticket;
     private User user;
-    private Set<Ticket> tickets;
 
-    /**
-     */
-    public BaseSecurityContext(Principal principal, Set<Ticket> tickets) {
+    public BaseSecurityContext(Principal principal) {
         this.anonymous = false;
         this.principal = principal;
         this.admin = false;
-        this.tickets = tickets;
         processPrincipal();
     }
 
-    /**
-     */
-    public BaseSecurityContext(Principal principal, Set<Ticket> tickets, User preAuthUser) {
+    public BaseSecurityContext(Principal principal, User preAuthUser) {
         this.anonymous = false;
         this.principal = principal;
         this.admin = preAuthUser.getAdmin().booleanValue();
-        this.tickets = tickets;
         this.user = preAuthUser;
     }
     
@@ -67,15 +49,12 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
 
     /**
      * @return a name describing the principal for this security
-     * context (the name of the Cosmo user, the id of the ticket, or
+     * context (the name of the Cosmo user or
      * the string <code>anonymous</code>.
      */
     public String getName() {
         if (isAnonymous()) {
             return "anonymous";
-        }
-        if (ticket != null) {
-            return ticket.getKey();
         }
         return user.getUsername();
     }
@@ -98,56 +77,11 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
     }
 
     /**
-     * @return an instance of {@link Ticket} describing the ticket
-     * represented by the security context, or <code>null</code> if
-     * the context does not represent a ticket.
-     */
-    public Ticket getTicket() {
-        return ticket;
-    }
-
-    /**
      * @return Determines whether or not the security context represents an
      * administrator
      */
     public boolean isAdmin() {
         return admin;
-    }
-
-    /**
-     * @param item The given item that are visible to the current security context.
-     * @return The set of tickets granted on the given item that are
-     * visible to the current security context.
-     */
-    public Set<Ticket> findVisibleTickets(Item item) {
-        HashSet<Ticket> visible = new HashSet<Ticket>();
-
-        // Admin context has access to all tickets
-        if (admin) {
-            visible.addAll(item.getTickets());
-        }
-
-        // Ticket context can only see itself
-        else if (ticket != null) {
-            for (Ticket t : (Set<Ticket>) item.getTickets()) {
-                if (ticket.equals(t)) {
-                    visible.add(t);
-                }
-            }
-        }
-
-        // User context can only see the tickets he owns
-        else if (user != null) {
-            for (Ticket t : (Set<Ticket>) item.getTickets()) {
-                if (user.equals(t.getOwner())) {
-                    visible.add(t);
-                }
-            }
-        }
-
-        // Anonymous context can't see any tickets
-
-        return visible;
     }
 
     /* ----- our methods ----- */
@@ -168,13 +102,9 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
         this.admin = admin;
     }
 
-    protected void setTicket(Ticket ticket) {
-        this.ticket = ticket;
-    }
-
     /**
      * Called by the constructor to set the context state. Examines
-     * the principal to decide if it represents a ticket or user or
+     * the principal to decide if it represents user or
      * anonymous access.
      */
     protected abstract void processPrincipal();
@@ -184,11 +114,4 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
             reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 
-    public Set<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(Set<Ticket> tickets) {
-        this.tickets = tickets;
-    }
 }

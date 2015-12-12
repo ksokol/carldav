@@ -19,7 +19,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
@@ -55,11 +54,7 @@ public class HibCollectionSubscription extends HibAuditableObject implements Col
     @Column(name = "displayname", nullable = false, length = 255)
     @NotNull
     private String displayName;
-    
-    @Column(name = "ticketkey", nullable = false, length = 255)
-    @NotNull
-    private String ticketKey;
-    
+
     @Column(name = "collectionuid", nullable = false, length = 255)
     @NotNull
     private String collectionUid;
@@ -111,27 +106,6 @@ public class HibCollectionSubscription extends HibAuditableObject implements Col
      */
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionSubscription#getTicketKey()
-     */
-    public String getTicketKey() {
-        return ticketKey;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionSubscription#setTicketKey(java.lang.String)
-     */
-    public void setTicketKey(String ticketKey) {
-        this.ticketKey = ticketKey;
-    }  
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionSubscription#setTicket(org.unitedinternet.cosmo.model.Ticket)
-     */
-    public void setTicket(Ticket ticket) {
-        this.ticketKey = ticket.getKey();
     }
 
     public String calculateEntityTag() {

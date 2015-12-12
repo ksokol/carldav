@@ -15,12 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.util.Calendar;
-
-
+import carldav.service.generator.IdGenerator;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.BinaryAttribute;
@@ -43,13 +38,15 @@ import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.StringAttribute;
 import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TextAttribute;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.TicketType;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
-import carldav.service.generator.IdGenerator;
 import org.w3c.dom.Element;
+
+import java.io.InputStream;
+import java.io.Reader;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * EntityFactory implementation that uses Hibernate 
@@ -156,20 +153,12 @@ public class HibEntityFactory implements EntityFactory {
         return new HibTextAttribute(qname, reader);
     }
 
-    public Ticket createTicket(TicketType type) {
-        return new HibTicket(type);
-    }
-
     public TriageStatus createTriageStatus() {
         return new HibTriageStatus();
     }
 
     public User createUser() {
         return new HibUser();
-    }
-
-    public Ticket creatTicket() {
-        return new HibTicket();
     }
 
     public String generateUid() {

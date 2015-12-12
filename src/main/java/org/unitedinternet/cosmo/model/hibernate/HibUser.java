@@ -15,6 +15,18 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.CollectionSubscription;
+import org.unitedinternet.cosmo.model.Preference;
+import org.unitedinternet.cosmo.model.User;
+
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,18 +39,6 @@ import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.Preference;
-import org.unitedinternet.cosmo.model.User;
 
 /**
  * Hibernate persistent User.
@@ -482,8 +482,7 @@ public class HibUser extends HibAuditableObject implements User {
      */
     public CollectionSubscription getSubscription(String collectionUid, String ticketKey){
         for (CollectionSubscription sub : subscriptions) {
-            if (sub.getCollectionUid().equals(collectionUid)
-                    && sub.getTicketKey().equals(ticketKey)) {
+            if (sub.getCollectionUid().equals(collectionUid)) {
                 return sub;
             }
         }

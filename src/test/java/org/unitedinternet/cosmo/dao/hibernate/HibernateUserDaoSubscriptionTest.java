@@ -15,21 +15,18 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.Set;
-
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionSubscription;
-import org.unitedinternet.cosmo.model.hibernate.HibTicket;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Set;
 
 /**
  * Test HibernateUserDaoSubscription.
@@ -50,12 +47,10 @@ public class HibernateUserDaoSubscriptionTest extends AbstractHibernateDaoTestCa
         User user = getUser(userDao, "subuser1");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
         CollectionItem collection = getCollection(root, "subcoll1");
-        Ticket ticket = generateTicket(collection, user);
 
         CollectionSubscription sub1 = new HibCollectionSubscription();
         sub1.setDisplayName("sub1");
         sub1.setCollection(collection);
-        sub1.setTicket(ticket);
         user.addSubscription(sub1);
         userDao.updateUser(user);
 
@@ -73,8 +68,6 @@ public class HibernateUserDaoSubscriptionTest extends AbstractHibernateDaoTestCa
                 .getOwner().getUid());
         Assert.assertEquals("sub1 not same collection", collection.getUid(), querySub
                 .getCollectionUid());
-        Assert.assertEquals("sub1 not same ticket", ticket.getKey(), querySub
-                .getTicketKey());
 
         querySub.setDisplayName("sub2");
         userDao.updateUser(user);
@@ -135,19 +128,4 @@ public class HibernateUserDaoSubscriptionTest extends AbstractHibernateDaoTestCa
         return contentDao.createCollection(parent, collection);
     }
 
-    /**
-     * Generates ticket.
-     * @param item The item.
-     * @param owner The owner.
-     * @return The ticket.
-     */
-    private Ticket generateTicket(Item item,
-                                  User owner) {
-        Ticket ticket = new HibTicket();
-        ticket.setOwner(owner);
-        ticket.setTimeout(Ticket.TIMEOUT_INFINITE);
-        contentDao.createTicket(item, ticket);
-        return ticket;
-    }
-    
 }

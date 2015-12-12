@@ -91,18 +91,4 @@ public class UserPrincipalProvider extends BaseProvider {
         throws CosmoDavException, IOException {
         throw new MethodNotAllowedException("MKCALENDAR not allowed for user principal");
     }
-
-    public void mkticket(DavRequest request,
-                         DavResponse response,
-                         WebDavResource resource)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("MKTICKET not allowed for user principal");
-    }
-
-    public void delticket(DavRequest request,
-                          DavResponse response,
-                          WebDavResource resource)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("DELTICKET not allowed for user principal");
-    }
 }

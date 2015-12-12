@@ -40,8 +40,6 @@ import org.unitedinternet.cosmo.model.EntityFactory;
  * @see DavCollection
  */
 public class CollectionProvider extends BaseProvider {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(CollectionProvider.class);
 
     public CollectionProvider(DavResourceFactory resourceFactory,
             EntityFactory entityFactory) {

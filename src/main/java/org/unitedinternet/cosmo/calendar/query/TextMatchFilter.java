@@ -15,14 +15,13 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.text.ParseException;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
+
+import java.text.ParseException;
 
 /**
  * Represents the CALDAV:text-match element. From sec 9.6.5:
@@ -89,11 +88,6 @@ public class TextMatchFilter implements DavConstants, CaldavConstants {
     public TextMatchFilter() {
     }
 
-    
-    public String getCollation() {
-        return collation;
-    }
-
     public void setCollation(String collation) {
         this.collation = collation;
     }
@@ -138,16 +132,7 @@ public class TextMatchFilter implements DavConstants, CaldavConstants {
             collation = COLLATION_OCTET;
         }
     }
-    
-    /** */
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("value", value).
-            append("collation", collation).
-            append("isNegateCondition", isNegateCondition).
-            toString();
-    }
-    
+
     /**
      * Validates if collation is supported.
      */

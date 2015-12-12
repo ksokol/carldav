@@ -15,11 +15,6 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Stack;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -42,10 +37,14 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Trigger;
-
 import org.unitedinternet.cosmo.CosmoConstants;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.InstanceList;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Stack;
 
 
 /**
@@ -63,8 +62,6 @@ public class CalendarFilterEvaluater {
      * @param calendar calendar to evaluate against
      * @param filter filter to apply
      * @return true if the filter
-     * @throws UnsupportedQueryException if filter represents a query
-     *                              that the server does not support
      */
     public boolean evaluate(Calendar calendar, CalendarFilter filter) {
         ComponentFilter rootFilter = filter.getFilter();

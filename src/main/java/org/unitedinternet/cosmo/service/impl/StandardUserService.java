@@ -56,51 +56,15 @@ public class StandardUserService extends BaseService implements UserService {
         this.userDao = userDao;
     }
 
-    // UserService methods
-
-    /**
-     * Returns an unordered set of all user accounts in the repository.
-     */
     public Set<User> getUsers() {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("getting all users");
-        }
         return userDao.getUsers();
     }
 
-    /**
-     * Returns the user account identified by the given username.
-     *
-     * @param username the username of the account to return
-     *
-     * @throws DataRetrievalFailureException if the account does not
-     * exist
-     */
     public User getUser(String username) {
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker to forge log entries
-            //or inject malicious content into the logs.
-            LOG.debug("getting user " + username);
-        }
         return userDao.getUser(username);
     }
 
-    /**
-     * Returns the user account identified by the given email address.
-     *
-     * @param email the email address of the account to return
-     *
-     * @throws DataRetrievalFailureException if the account does not
-     * exist
-     */
     public User getUserByEmail(String email) {
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker to forge log entries
-            //or inject malicious content into the logs.
-            LOG.debug("getting user with email address " + email);
-        }
         return userDao.getUserByEmail(email);
     }
 
@@ -130,11 +94,7 @@ public class StandardUserService extends BaseService implements UserService {
      * @throws DataIntegrityViolationException if the username or
      * email address is already in use
      */
-    public User createUser(User user,
-                           ServiceListener[] listeners) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating user " + user.getUsername());
-        }
+    public User createUser(User user, ServiceListener[] listeners) {
 
         user.validateRawPassword();
 
@@ -175,25 +135,11 @@ public class StandardUserService extends BaseService implements UserService {
      *
      * @param user the account to update
      *
-     * @throws DataRetrievalFailureException if the account does not
-     * exist
      * @throws DataIntegrityViolationException if the username or
      * email address is already in use
      */
     public User updateUser(User user) {
         boolean isUsernameChanged = user.isUsernameChanged();
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker to forge
-            //log entries or inject malicious content into the logs.
-            LOG.debug("updating user " + user.getOldUsername());
-            if (isUsernameChanged) {
-                //Fix Log Forging - fortify
-                //Writing unvalidated user input to log files can allow an attacker to forge log entries
-                //or inject malicious content into the logs.
-                LOG.debug("... changing username to " + user.getUsername());
-            }
-        }
 
         if (user.getPassword().length() < 32) {
             user.validateRawPassword();
@@ -205,12 +151,6 @@ public class StandardUserService extends BaseService implements UserService {
         User newUser = userDao.getUser(user.getUsername());
 
         if (isUsernameChanged) {
-            if (LOG.isDebugEnabled()) {
-                //Fix Log Forging - fortify
-                //Writing unvalidated user input to log files can allow an attacker to forge log entries
-                //or inject malicious content into the logs.
-                LOG.debug("renaming root item for user " + newUser.getUsername());
-            }
             HomeCollectionItem rootCollection = contentDao.getRootItem(newUser);
             rootCollection.setName(newUser.getUsername());
             contentDao.updateCollection(rootCollection);
@@ -226,12 +166,6 @@ public class StandardUserService extends BaseService implements UserService {
      * @param username the username of the account to return
      */
     public void removeUser(String username) {
-        if (LOG.isDebugEnabled()) {
-        	//Fix Log Forging - fortify
-        	//Writing unvalidated user input to log files can allow an attacker to
-        	//forge log entries or inject malicious content into the logs.
-            LOG.debug("removing user " + username);
-        }
         User user = userDao.getUser(username);
         removeUserAndItems(user);
     }
@@ -242,12 +176,6 @@ public class StandardUserService extends BaseService implements UserService {
      * @param user the account to remove
      */
     public void removeUser(User user) {
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker to forge log entries
-            //or inject malicious content into the logs.
-            LOG.debug("removing user " + user.getUsername());
-        }
         removeUserAndItems(user);
     }
 

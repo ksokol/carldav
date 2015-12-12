@@ -129,15 +129,8 @@ public interface EntityFactory {
      * @return new TaskStamp
      */
     TaskStamp createTaskStamp();
-    
-    
-    /**
-     * Create new MessageStamp
-     * @return new MessageStamp
-     */
-    MessageStamp createMessageStamp();
 
-    
+
     /**
      * Create new Preference
      * @return new Preference

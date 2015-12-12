@@ -15,15 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import org.unitedinternet.cosmo.model.User;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.unitedinternet.cosmo.model.User;
 
 /**
  * Standard implementation of {@link DavResourceLocatorFactory}.
@@ -32,8 +29,6 @@ import org.unitedinternet.cosmo.model.User;
  * @see DavResourceLocatorFactory
  */
 public class StandardResourceLocatorFactory implements DavResourceLocatorFactory, ExtendedDavConstants {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(StandardResourceLocatorFactory.class);
 
     // DavResourceLocatorFactory methods
     

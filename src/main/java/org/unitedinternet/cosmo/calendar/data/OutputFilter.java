@@ -73,7 +73,6 @@ public class OutputFilter {
     private HashMap<String, Object> properties;
     private Period expand;
     private Period limit;
-    private Period limitfb;
 
     /**
      * Constructor.
@@ -484,36 +483,6 @@ public class OutputFilter {
     }
 
     /**
-     * Test component.
-     * @param comp The component.
-     * @return The result of this test.
-     */
-    public boolean testComponent(Component comp) {
-        return componentName.equalsIgnoreCase(comp.getName());
-    }
-
-    /**
-     * Test subcomponent.
-     * @param subcomp The component.
-     * @return The result.
-     */
-    public boolean testSubComponent(Component subcomp) {
-        if (allSubComponents) {
-            return true;
-        }
-
-        if (subComponents == null) {
-            return false;
-        }
-
-        if (subComponents.containsKey(subcomp.getName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE))) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Test property value.
      * @param name The name.
      * @return The property match.
@@ -583,8 +552,7 @@ public class OutputFilter {
         if (subComponents == null) {
             return null;
         }
-        return (OutputFilter)
-            subComponents.get(subcomp.getName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE));
+        return subComponents.get(subcomp.getName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE));
     }
 
     /**
@@ -653,22 +621,6 @@ public class OutputFilter {
      */
     public void setLimit(Period limit) {
         this.limit = limit;
-    }
-
-    /**
-     * Gets limitfb.
-     * @return The limitfb.
-     */
-    public Period getLimitfb() {
-        return limitfb;
-    }
-
-    /**
-     * Sets limitfb.
-     * @param limitfb The limitfb.
-     */
-    public void setLimitfb(Period limitfb) {
-        this.limitfb = limitfb;
     }
 
     /**

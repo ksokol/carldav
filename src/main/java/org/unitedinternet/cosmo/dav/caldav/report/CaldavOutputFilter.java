@@ -56,7 +56,6 @@ public class CaldavOutputFilter
         OutputFilter result = null;
         Period expand = null;
         Period limit = null;
-        Period limitfb = null;
 
         String contentType =
             DomUtil.getAttribute(cdata, ATTR_CALDAV_CONTENT_TYPE,
@@ -100,9 +99,6 @@ public class CaldavOutputFilter
             } else if (ELEMENT_CALDAV_LIMIT_RECURRENCE_SET.
                        equals(child.getLocalName())) {
                 limit = parsePeriod(child, true);
-            } else if (ELEMENT_CALDAV_LIMIT_FREEBUSY_SET.
-                       equals(child.getLocalName())) {
-                limitfb = parsePeriod(child, true);
             } else {
                 LOG.warn("Ignoring child " + child.getTagName() + " of " + cdata.getTagName());
             }
@@ -110,8 +106,7 @@ public class CaldavOutputFilter
 
         // Now add any limit/expand options, creating a filter if one is not
         // already present
-        if (result == null
-                && (expand != null || limit != null || limitfb != null)) {
+        if (result == null && (expand != null || limit != null)) {
             result = new OutputFilter("VCALENDAR");
             result.setAllSubComponents();
             result.setAllProperties();
@@ -121,9 +116,6 @@ public class CaldavOutputFilter
         }
         if (limit != null) {
             result.setLimit(limit);
-        }
-        if (limitfb != null) {
-            result.setLimitfb(limitfb);
         }
 
         return result;

@@ -40,8 +40,4 @@ public class CustomRequestBuilders {
     public static MockHttpServletRequestBuilder move(String urlTemplate, Object... urlVariables) {
         return request(MOVE.name(), urlTemplate, urlVariables);
     }
-
-    public static MockHttpServletRequestBuilder mkcol(String urlTemplate, Object... urlVariables) {
-        return request(MKCOL.name(), urlTemplate, urlVariables);
-    }
 }

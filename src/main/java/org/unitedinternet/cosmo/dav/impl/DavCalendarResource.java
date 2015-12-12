@@ -87,7 +87,7 @@ public abstract class DavCalendarResource extends DavContentBase
             return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, COPY, PUT, DELETE, MOVE, REPORT";
         }
         else {
-            return "OPTIONS, TRACE, PUT, MKCOL";
+            return "OPTIONS, TRACE, PUT";
         }
     }
 

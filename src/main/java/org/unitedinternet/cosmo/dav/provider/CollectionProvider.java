@@ -55,22 +55,6 @@ public class CollectionProvider extends BaseProvider {
         throw new MethodNotAllowedException("PUT not allowed for a collection");
     }
 
-    public void mkcol(DavRequest request,
-                      DavResponse response,
-                      DavCollection collection)
-        throws CosmoDavException, IOException {
-        if (collection.exists()) {
-            throw new ExistsException();
-        }
-        if (! collection.getParent().exists()) {
-            throw new ConflictException("One or more intermediate collections must be created");
-        }
-        checkNoRequestBody(request);
-
-        collection.getParent().addCollection(collection, null);
-        response.setStatus(201);
-    }
-    
 
     public void mkcalendar(DavRequest request,
                            DavResponse response,

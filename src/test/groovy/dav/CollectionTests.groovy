@@ -218,14 +218,6 @@ public class CollectionTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void collectionMkcol() throws Exception {
-        mockMvc.perform(mkcol("/dav/collection/{uid}", "1"))
-                .andExpect(status().isConflict())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(CONFLICT_RESPONSE));
-    }
-
-    @Test
     public void collectionMkcalendar() throws Exception {
         def response = """\
                         <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">

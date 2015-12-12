@@ -190,11 +190,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
         else {
             if (resource.isCollection()) {
-                if (request.getMethod().equals("MKCOL")) {
-                    provider.mkcol(request, response,
-                                   (DavCollection)resource);
-                }
-                else if (request.getMethod().equals("MKCALENDAR")) {
+                if (request.getMethod().equals("MKCALENDAR")) {
                     provider.mkcalendar(request, response,
                                         (DavCollection)resource);
                 }

@@ -38,7 +38,6 @@ public class CaldavMethodType  {
         WRITE.add("DELETE");
         READ.add("PROPFIND");
         WRITE.add("PROPPATCH");
-        WRITE.add("MKCOL");
         WRITE.add("COPY");
         WRITE.add("MOVE");
 

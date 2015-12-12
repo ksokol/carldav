@@ -57,12 +57,10 @@
 	</bean>
 
 
-	<bean id="userService"
-		class="org.unitedinternet.cosmo.service.impl.StandardUserService"
-		init-method="init" destroy-method="destroy">
-		<property name="contentDao" ref="contentDao" />
-		<property name="userDao" ref="userDao" />
-		<property name="passwordGenerator" ref="tokenGenerator" />
+	<bean id="userService" class="org.unitedinternet.cosmo.service.impl.StandardUserService">
+        <constructor-arg index="0" value="MD5" />
+        <constructor-arg index="1" ref="contentDao" />
+        <constructor-arg index="2" ref="userDao" />
 	</bean>
 
 	<bean id="contentLockManager"

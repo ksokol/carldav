@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.token.TokenService;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
@@ -42,15 +43,18 @@ public class StandardUserService extends BaseService implements UserService {
 
     private static final Log LOG = LogFactory.getLog(StandardUserService.class);
 
-    /**
-     * The service uses MD5 if no digest algorithm is explicitly set.
-     */
-    public static final String DEFAULT_DIGEST_ALGORITHM = "MD5";
-    
-    private String digestAlgorithm;
-    private TokenService passwordGenerator;
-    private ContentDao contentDao;
-    private UserDao userDao;
+    private final String digestAlgorithm;
+    private final ContentDao contentDao;
+    private final UserDao userDao;
+
+    public StandardUserService(final String digestAlgorithm, final ContentDao contentDao, final UserDao userDao) {
+        Assert.notNull(digestAlgorithm, "digestAlgorithm is null");
+        Assert.notNull(contentDao, "contentDao is null");
+        Assert.notNull(userDao, "userDao is null");
+        this.digestAlgorithm = digestAlgorithm;
+        this.contentDao = contentDao;
+        this.userDao = userDao;
+    }
 
     // UserService methods
 
@@ -248,48 +252,6 @@ public class StandardUserService extends BaseService implements UserService {
     }
 
     /**
-     * Generates a random password in a format suitable for
-     * presentation as an authentication credential.
-     */
-    public String generatePassword() {
-        String password = passwordGenerator.allocateToken("").getKey();
-        return password.length() <= User.PASSWORD_LEN_MAX ?
-            password :
-            password.substring(0, User.PASSWORD_LEN_MAX - 1);
-    }
-
-    // Service methods
-
-    /**
-     * Initializes the service, sanity checking required properties
-     * and defaulting optional properties.
-     */
-    public void init() {
-        if (contentDao == null) {
-            throw new IllegalStateException("contentDao is required");
-        }
-        if (userDao == null) {
-            throw new IllegalStateException("userDao is required");
-        }
-        if (passwordGenerator == null) {
-            throw new IllegalStateException("passwordGenerator is required");
-        }
-        if (digestAlgorithm == null) {
-            digestAlgorithm = DEFAULT_DIGEST_ALGORITHM;
-        }
-    }
-
-    /**
-     * Readies the service for garbage collection, shutting down any
-     * resources used.
-     */
-    public void destroy() {
-        // does nothing
-    }
-
-    // our methods
-
-    /**
      * Digests the given password using the set message digest and hex
      * encodes it.
      */
@@ -304,42 +266,6 @@ public class StandardUserService extends BaseService implements UserService {
             throw new CosmoException("cannot get digest for algorithm "
                     + digestAlgorithm, e);
         }
-    }
-
-    /**
-     */
-    public String getDigestAlgorithm() {
-        return this.digestAlgorithm;
-    }
-
-    /**
-     */
-    public void setPasswordGenerator(TokenService generator) {
-        this.passwordGenerator = generator;
-    }
-
-    /**
-     */
-    public ContentDao getContentDao() {
-        return this.contentDao;
-    }
-
-    /**
-     */
-    public void setContentDao(ContentDao contentDao) {
-        this.contentDao = contentDao;
-    }
-
-    /**
-     */
-    public UserDao getUserDao() {
-        return this.userDao;
-    }
-
-    /**
-     */
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
     }
 
     /**

@@ -22,7 +22,7 @@ import java.util.Set;
 /**
  * Interface for services that manage user accounts.
  */
-public interface UserService extends Service {
+public interface UserService {
 
     /**
      * Returns an unordered set of all user accounts in the repository.
@@ -104,11 +104,4 @@ public interface UserService extends Service {
      * @param username the username of the account to return
      */
     void removeUser(String username);
-
-    /**
-     * Generates a random password in a format suitable for
-     * presentation as an authentication credential.
-     */
-    String generatePassword();
-
 }

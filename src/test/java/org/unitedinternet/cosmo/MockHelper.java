@@ -54,9 +54,6 @@ public class MockHelper extends TestHelper {
     private User user;
     private HomeCollectionItem homeCollection;
     
-    /**
-     * Constructor.
-     */
     public MockHelper() {
         super();
 
@@ -74,15 +71,11 @@ public class MockHelper extends TestHelper {
         calendarQueryProcessor = new StandardCalendarQueryProcessor();
         calendarQueryProcessor.setCalendarDao(calendarDao);
         
-        userService = new StandardUserService();
-        userService.setContentDao(contentDao);
-        userService.setUserDao(userDao);
+        userService = new StandardUserService("MD5",  contentDao, userDao);
         KeyBasedPersistenceTokenService keyBasedPersistenceTokenService = new KeyBasedPersistenceTokenService();
         keyBasedPersistenceTokenService.setServerSecret("cosmossecret");
         keyBasedPersistenceTokenService.setServerInteger(123);
         keyBasedPersistenceTokenService.setSecureRandom(new SecureRandom());
-        userService.setPasswordGenerator(keyBasedPersistenceTokenService);
-        userService.init();
 
         user = userService.getUser("test");
         if (user == null) {

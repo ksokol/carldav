@@ -31,7 +31,6 @@ import org.unitedinternet.cosmo.model.BooleanAttribute;
 import org.unitedinternet.cosmo.model.CalendarAttribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.DecimalAttribute;
 import org.unitedinternet.cosmo.model.DictionaryAttribute;
 import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.FreeBusyItem;
@@ -54,7 +53,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibBooleanAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.hibernate.HibDecimalAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibDictionaryAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFreeBusyItem;
@@ -204,17 +202,12 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
     @Test
     public void testContentAttributes() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        CollectionItem root = contentDao.getRootItem(user);
 
         ContentItem item = generateTestContent();
         BooleanAttribute ba = new HibBooleanAttribute(new HibQName("booleanattribute"), Boolean.TRUE);
         item.addAttribute(ba);
-        
-        DecimalAttribute decAttr = 
-            new HibDecimalAttribute(new HibQName("decimalattribute"),
-                                        new BigDecimal("1.234567"));
-        item.addAttribute(decAttr);
-        
+
         // TODO: figure out db date type is handled because i'm seeing
         // issues with accuracy
         // item.addAttribute(new DateAttribute("dateattribute", new Date()));
@@ -240,11 +233,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
 
         ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
 
-        Attribute attr = queryItem.getAttribute(new HibQName("decimalattribute"));
-        Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof DecimalAttribute);
-        Assert.assertEquals(attr.getValue().toString(),"1.234567");
-        
         Set<String> querySet = (Set<String>) queryItem
                 .getAttributeValue("multistringattribute");
         Assert.assertTrue(querySet.contains("value1"));

@@ -15,27 +15,27 @@
  */
 package org.unitedinternet.cosmo.acegisecurity.ui;
 
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.unitedinternet.cosmo.CosmoConstants;
+import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketException;
+import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketedItemNotFoundException;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.AuthenticationEntryPoint;
-import org.unitedinternet.cosmo.CosmoConstants;
-import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketException;
-import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketedItemNotFoundException;
-
 /**
  * Implements an <code>AuthenticationEntryPoint</code> that is
  * cognizant of Cosmo's various authentication providers
  */
-public class CosmoAuthenticationEntryPoint implements AuthenticationEntryPoint {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(CosmoAuthenticationEntryPoint.class);
+public class CosmoAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
+
+    public CosmoAuthenticationEntryPoint() {
+        super.setRealmName(CosmoConstants.PRODUCT_NAME);
+    }
 
     /**
      * <p>
@@ -61,14 +61,11 @@ public class CosmoAuthenticationEntryPoint implements AuthenticationEntryPoint {
      * @throws ServletException - if something is wrong this exception is thrown.
      */
     @Override
-    public void commence(HttpServletRequest request,
-            HttpServletResponse response, AuthenticationException authException)
-            throws IOException, ServletException {
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        HttpServletResponse httpResponse = response;
 
         // requests with ticket credentials
         if (authException instanceof TicketException) {
-
             if (authException instanceof TicketedItemNotFoundException) {
                 httpResponse.setStatus(404);
                 httpResponse.setContentLength(0);
@@ -79,11 +76,7 @@ public class CosmoAuthenticationEntryPoint implements AuthenticationEntryPoint {
             }
         } else {
             // all other requests get basic
-            httpResponse.addHeader("WWW-Authenticate", "Basic realm=\""
-                    + CosmoConstants.PRODUCT_NAME + "\"");
-            httpResponse.setStatus(401);
-            httpResponse.setContentLength(0);
+            super.commence(request, response, authException);
         }
-
     }
 }

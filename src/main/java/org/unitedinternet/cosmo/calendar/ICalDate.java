@@ -157,14 +157,6 @@ public class ICalDate implements ICalendarConstants {
     }
 
     /**
-     * Verify if the value is the same with date time.
-     * @return The result of this verification.
-     */
-    public boolean isDateTime() {
-        return value != null && value.equals(Value.DATE_TIME);
-    }
-
-    /**
      * Verify if it is the date.
      * @return The result.
      */
@@ -194,14 +186,6 @@ public class ICalDate implements ICalendarConstants {
      */
     public String getText() {
         return text;
-    }
-
-    /**
-     * Gets timezone id.
-     * @return The timezone id.
-     */
-    public TzId getTzId() {
-        return tzid;
     }
 
     /**

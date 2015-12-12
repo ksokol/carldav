@@ -16,34 +16,21 @@
 package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.model.AvailabilityItem;
-import org.unitedinternet.cosmo.model.BinaryAttribute;
-import org.unitedinternet.cosmo.model.CalendarAttribute;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.DecimalAttribute;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.FreeBusyItem;
-import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.StringAttribute;
 import org.unitedinternet.cosmo.model.TaskStamp;
-import org.unitedinternet.cosmo.model.TextAttribute;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 import org.w3c.dom.Element;
-
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.util.Calendar;
 
 /**
  * EntityFactory implementation that uses mock objects.
@@ -80,39 +67,6 @@ public class MockEntityFactory implements EntityFactory {
     }
 
     /**
-     * Creates binary attribute.
-     * {@inheritDoc}
-     * @param qname The name.
-     * @param bytes The bytes.
-     * @return binary attribute
-     */
-    public BinaryAttribute createBinaryAttribute(QName qname, byte[] bytes) {
-        return new MockBinaryAttribute(qname, bytes);
-    }
-
-    /**
-     * Creates binary attribute.
-     * {@inheritDoc}
-     * @param qname The name.
-     * @param is The input stream.
-     * @return binary attribute
-     */
-    public BinaryAttribute createBinaryAttribute(QName qname, InputStream is) {
-        return new MockBinaryAttribute(qname, is);
-    }
-
-    /**
-     * Creates calendar attribute.
-     * {@inheritDoc}
-     * @param qname The name.
-     * @param cal The calendar.
-     * @return calendar attribute.
-     */
-    public CalendarAttribute createCalendarAttribute(QName qname, Calendar cal) {
-        return new MockCalendarAttribute(qname, cal);
-    }
-
-    /**
      * Creates calendar collection stamp.
      * {@inheritDoc}
      * @param col The collecton item.
@@ -121,27 +75,7 @@ public class MockEntityFactory implements EntityFactory {
     public CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col) {
         return new MockCalendarCollectionStamp(col);
     }
-    
-    /**
-     * Creates collection subscription.
-     * @return The collection subscription.
-     * {@inheritDoc}
-     */
-    public CollectionSubscription createCollectionSubscription() {
-        return new MockCollectionSubscription();
-    }
 
-    /**
-     * Creates decimal attribute.
-     * {@inheritDoc}
-     * @param qname The name.
-     * @param bd The big decimal.
-     * @return decimal attribute.
-     */
-    public DecimalAttribute createDecimalAttribute(QName qname, BigDecimal bd) {
-        return new MockDecimalAttribute(qname, bd);
-    }
-    
     /**
      * Creates xml attribute.
      * @param qname The name.
@@ -192,26 +126,6 @@ public class MockEntityFactory implements EntityFactory {
     }
 
     /**
-     * Creates preference.
-     * {@inheritDoc}
-     * @return preference.
-     */
-    public Preference createPreference() {
-        return new MockPreference();
-    }
-
-    /**
-     * Creates preference.
-     * {@inheritDoc}
-     * @param key The key.
-     * @param value The value.
-     * @return The preference.
-     */
-    public Preference createPreference(String key, String value) {
-        return new MockPreference(key, value);
-    }
-
-    /**
      * Creates QName.
      * @param namespace The namespace.
      * @param localname The local name.
@@ -223,34 +137,12 @@ public class MockEntityFactory implements EntityFactory {
     }
 
     /**
-     * Creates string attribute.
-     * @param qname The qname.
-     * @param str Str.
-     * @return The strin attribute.
-     * {@inheritDoc}
-     */
-    public StringAttribute createStringAttribute(QName qname, String str) {
-        return new MockStringAttribute(qname, str);
-    }
-
-    /**
      * Creates task stamp.
      * {@inheritDoc}
      * @return The task stamp.
      */
     public TaskStamp createTaskStamp() {
         return new MockTaskStamp();
-    }
-
-    /**
-     * Creates text attribute.
-     * {@inheritDoc}
-     * @param qname The qname.
-     * @param reader The reader.
-     * @return The text attribute.
-     */
-    public TextAttribute createTextAttribute(QName qname, Reader reader) {
-        return new MockTextAttribute(qname, reader);
     }
 
     /**

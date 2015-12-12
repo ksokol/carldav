@@ -40,10 +40,6 @@
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibBinaryAttribute" />
-        <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibCollectionItem" />
         <Bug pattern="SE_BAD_FIELD" />
     </Match>
@@ -73,10 +69,6 @@
     </Match>
     <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
-        <Bug pattern="EI_EXPOSE_REP" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibBinaryAttribute" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>

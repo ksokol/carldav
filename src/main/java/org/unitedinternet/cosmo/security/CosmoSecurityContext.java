@@ -26,7 +26,7 @@ public interface CosmoSecurityContext {
 
     /**
      * @return a name describing the principal for this security
-     * context (the name of the Cosmo user, the id of the ticket, or
+     * context (the name of the Cosmo user or
      * some other precise identification.
      */
     String getName();

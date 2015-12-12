@@ -21,29 +21,11 @@ package org.unitedinternet.cosmo.server;
  */
 public interface ServerConstants {
 
-    /** The request parameter containing a ticket key */
-    String PARAM_TICKET = "ticket";
-
-    /** The request header containing a ticket key */
-    String HEADER_TICKET = "Ticket";
-
     String ATTR_SERVICE_EXCEPTION = "server.exception";
 
-    /**
-     * The service id for CMP
-     */
-    String SVC_CMP = "cmp";
     /**
      * The service id for WebDAV
      */
     String SVC_DAV = "dav";
-    /**
-     * The service id for WebDAV principals
-     */
-    String SVC_DAV_PRINCIPAL = "davPrincipal";
-    /**
-     * The service id for CalDAV calendar homes
-     */
-    String SVC_DAV_CALENDAR_HOME = "davCalendarHome";
 
 }

@@ -18,9 +18,7 @@ package org.unitedinternet.cosmo.dav.impl;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
@@ -90,22 +88,5 @@ public class DavEvent extends DavCalendarResource {
     public boolean isCollection() {
         return false;
     }   
-    
-    /**
-     * this method is added as an extension to cosmo, to allow updating an event based on ticket auth.
-     * 
-     * @param content
-     * @param context
-     * @throws CosmoDavException
-     */
-    public void updateContent(DavContent content, InputContext context) throws CosmoDavException {
-        if(!(content instanceof DavContentBase)){
-            throw new IllegalArgumentException("Expected type for 'content' member :[" + DavContentBase.class.getName()+"]");
-        }
-        
-        DavContentBase base = (DavContentBase) content;
-        base.populateItem(context);
-        updateItem();
-    }
-    
+
 }

@@ -31,7 +31,7 @@ import org.unitedinternet.cosmo.security.CosmoSecurityContext;
  *
  * XXX: consider removing the direct dependency on Acegi Security,
  * instead possibly having separate implementations of
- * CosmoSecurityContext for users and tickets that don't use an
+ * CosmoSecurityContext for users that don't use an
  * Authentication at all
  */
 public class CosmoSecurityContextImpl extends BaseSecurityContext {

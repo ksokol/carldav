@@ -914,27 +914,12 @@ public class StandardContentService implements ContentService {
             TriageStatusQueryProcessor triageStatusQueryProcessor) {
         this.triageStatusQueryProcessor = triageStatusQueryProcessor;
     }
-    
-    /** */
-    public LockManager getLockManager() {
-        return lockManager;
-    }
 
     /** */
     public void setLockManager(LockManager lockManager) {
         this.lockManager = lockManager;
     }
-    
-    
-    /**
-     * Sets the maximum ammount of time (in millisecondes) that the
-     * service will wait on acquiring an exclusive lock on a CollectionItem.
-     * @param lockTimeout
-     */
-    public void setLockTimeout(long lockTimeout) {
-        this.lockTimeout = lockTimeout;
-    }
-    
+
     /**
      * Given a set of items, aquire a lock on all parents
      */

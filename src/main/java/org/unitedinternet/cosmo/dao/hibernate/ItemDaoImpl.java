@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
-import org.hibernate.LockMode;
 import org.hibernate.ObjectDeletedException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
@@ -475,10 +474,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         this.idGenerator = idGenerator;
     }
 
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
-    }
-
     /**
      * Set the unique key generator for new tickets
      *
@@ -486,14 +481,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      */
     public void setTicketKeyGenerator(TokenService ticketKeyGenerator) {
         this.ticketKeyGenerator = ticketKeyGenerator;
-    }
-
-    public TokenService getTicketKeyGenerator() {
-        return ticketKeyGenerator;
-    }
-
-    public ItemPathTranslator getItemPathTranslator() {
-        return itemPathTranslator;
     }
 
     /**
@@ -621,16 +608,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    /**
-     * Find the DbItem with the specified dbId
-     *
-     * @param dbId dbId of DbItem to find
-     * @return DbItem with specified dbId
-     */
-    protected Item findItemByDbId(Long dbId) {
-        return (Item) getSession().get(Item.class, dbId);
-    }
-
     // Set server generated item properties
     protected void setBaseItemProps(Item item) {
         if (item.getUid() == null) {
@@ -649,43 +626,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 }
             }
         }
-    }
-
-    protected Item findItemByParentAndName(Long userDbId, Long parentDbId,
-                                           String name) {
-        Query hibQuery = null;
-        if (parentDbId != null) {
-            hibQuery = getSession().getNamedQuery(
-                    "item.by.ownerId.parentId.name").setParameter("ownerid",
-                    userDbId).setParameter("parentid", parentDbId)
-                    .setParameter("name", name);
-
-        } else {
-            hibQuery = getSession().getNamedQuery(
-                    "item.by.ownerId.nullParent.name").setParameter("ownerid",
-                    userDbId).setParameter("name", name);
-        }
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        return (Item) hibQuery.uniqueResult();
-    }
-
-    protected Item findItemByParentAndNameMinusItem(Long userDbId, Long parentDbId,
-                                                    String name, Long itemId) {
-        Query hibQuery = null;
-        if (parentDbId != null) {
-            hibQuery = getSession().getNamedQuery(
-                    "item.by.ownerId.parentId.name.minusItem").setParameter("itemid", itemId)
-                    .setParameter("ownerid",
-                            userDbId).setParameter("parentid", parentDbId)
-                    .setParameter("name", name);
-        } else {
-            hibQuery = getSession().getNamedQuery(
-                    "item.by.ownerId.nullParent.name.minusItem").setParameter("itemid", itemId)
-                    .setParameter("ownerid",
-                            userDbId).setParameter("name", name);
-        }
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        return (Item) hibQuery.uniqueResult();
     }
 
     protected HomeCollectionItem findRootItem(Long dbUserId) {
@@ -715,13 +655,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                         + " already in use");
             }
         }
-    }
-
-    protected void attachToSession(Item item) {
-        if (getSession().contains(item)) {
-            return;
-        }
-        getSession().lock(item, LockMode.NONE);
     }
 
     protected void removeItemFromCollectionInternal(Item item, CollectionItem collection) {
@@ -764,9 +697,4 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     protected HibItem getHibItem(Item item) {
         return (HibItem) item;
     }
-
-    protected HibCollectionItem getHibCollectionItem(CollectionItem item) {
-        return (HibCollectionItem) item;
-    }
-
 }

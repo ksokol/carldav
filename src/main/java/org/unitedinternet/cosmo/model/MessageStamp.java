@@ -15,58 +15,25 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.io.Reader;
-
 /**
  * Stamp that associates message-specific attributes to an item.
  */
 public interface MessageStamp extends Stamp{
 
-    public static final String FORMAT_DATE_SENT = "EEE', 'dd' 'MMM' 'yyyy' 'HH:mm:ss' 'Z";
-    
-    // Property accessors
-    public String getMessageId();
+    String getFrom();
 
-    public void setMessageId(String id);
+    void setFrom(String from);
 
-    public String getHeaders();
+    String getTo();
 
-    public void setHeaders(String headers);
+    void setTo(String to);
 
-    public void setHeaders(Reader headers);
+    String getBcc();
 
-    public String getFrom();
+    void setBcc(String bcc);
 
-    public void setFrom(String from);
+    String getCc();
 
-    public String getTo();
-
-    public void setTo(String to);
-
-    public String getBcc();
-
-    public void setBcc(String bcc);
-
-    public String getCc();
-
-    public void setCc(String cc);
-
-    public String getOriginators();
-
-    public void setOriginators(String originators);
-
-    public String getDateSent();
-
-    public void setDateSent(String dateSent);
-
-    public String getInReplyTo();
-
-    public void setInReplyTo(String inReplyTo);
-
-    public String getReferences();
-
-    public void setReferences(String references);
-
-    public void setReferences(Reader references);
+    void setCc(String cc);
 
 }

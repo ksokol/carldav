@@ -15,17 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.io.Reader;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 
 /**
@@ -82,52 +80,7 @@ public class HibMessageStamp extends HibStamp implements MessageStamp {
     public String getType() {
         return "message";
     }
-    
-    // Property accessors
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#getMessageId()
-     */
-    public String getMessageId() {
-        // id stored as StringAttribute on Item
-        return HibStringAttribute.getValue(getItem(), ATTR_MESSAGE_ID);
-    }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setMessageId(java.lang.String)
-     */
-    public void setMessageId(String id) {
-        // id stored as StringAttribute on Item
-        HibStringAttribute.setValue(getItem(), ATTR_MESSAGE_ID, id);
-        updateTimestamp();
-    }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#getHeaders()
-     */
-    public String getHeaders() {
-        // headers stored as TextAttribute on Item
-        return HibTextAttribute.getValue(getItem(), ATTR_MESSAGE_HEADERS);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setHeaders(java.lang.String)
-     */
-    public void setHeaders(String headers) {
-        // headers stored as TextAttribute on Item
-        HibTextAttribute.setValue(getItem(), ATTR_MESSAGE_HEADERS, headers);
-        updateTimestamp();
-    }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setHeaders(java.io.Reader)
-     */
-    public void setHeaders(Reader headers) {
-        // headers stored as TextAttribute on Item
-        HibTextAttribute.setValue(getItem(), ATTR_MESSAGE_HEADERS, headers);
-        updateTimestamp();
-    }
-   
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.MessageStamp#getFrom()
      */
@@ -193,83 +146,6 @@ public class HibMessageStamp extends HibStamp implements MessageStamp {
     public void setCc(String cc) {
         // cc stored as StringAttribute on Item
         HibStringAttribute.setValue(getItem(), ATTR_MESSAGE_CC, cc);
-        updateTimestamp();
-    }
- 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#getOriginators()
-     */
-    public String getOriginators() {
-        // originators stored as StringAttribute on Item
-        return HibStringAttribute.getValue(getItem(), ATTR_MESSAGE_ORIGINATORS);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setOriginators(java.lang.String)
-     */
-    public void setOriginators(String originators) {
-        // originators stored as StringAttribute on Item
-        HibStringAttribute.setValue(getItem(), ATTR_MESSAGE_ORIGINATORS, originators);
-        updateTimestamp();
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#getDateSent()
-     */
-    public String getDateSent() {
-        // inReployTo stored as StringAttribute on Item
-        return HibStringAttribute.getValue(getItem(), ATTR_MESSAGE_DATE_SENT);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setDateSent(java.lang.String)
-     */
-    public void setDateSent(String dateSent) {
-        // inReployTo stored as TextAttribute on Item
-        HibStringAttribute.setValue(getItem(), ATTR_MESSAGE_DATE_SENT, dateSent);
-        updateTimestamp();
-    }
-  
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#getInReplyTo()
-     */
-    public String getInReplyTo() {
-        // inReployTo stored as StringAttribute on Item
-        return HibStringAttribute.getValue(getItem(), ATTR_MESSAGE_IN_REPLY_TO);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setInReplyTo(java.lang.String)
-     */
-    public void setInReplyTo(String inReplyTo) {
-        // inReployTo stored as TextAttribute on Item
-        HibStringAttribute.setValue(getItem(), ATTR_MESSAGE_IN_REPLY_TO, inReplyTo);
-        updateTimestamp();
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#getReferences()
-     */
-    public String getReferences() {
-        // references stored as TextAttribute on Item
-        return HibTextAttribute.getValue(getItem(), ATTR_MESSAGE_REFERENCES);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setReferences(java.lang.String)
-     */
-    public void setReferences(String references) {
-        // references stored as TextAttribute on Item
-        HibTextAttribute.setValue(getItem(), ATTR_MESSAGE_REFERENCES, references);
-        updateTimestamp();
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.MessageStamp#setReferences(java.io.Reader)
-     */
-    public void setReferences(Reader references) {
-        // references stored as TextAttribute on Item
-        HibTextAttribute.setValue(getItem(), ATTR_MESSAGE_REFERENCES, references);
         updateTimestamp();
     }
 

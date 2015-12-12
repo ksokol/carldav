@@ -59,14 +59,7 @@ public class FileProvider extends BaseProvider {
         int status = content.exists() ? 204 : 201;
         content.getParent().addContent(content, createInputContext(request));
         response.setStatus(status);
-        response.setHeader("ETag", ((DavItemResourceBase) content).getETag());
-    }
-
-    public void mkcol(DavRequest request,
-                      DavResponse response,
-                      DavCollection collection)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("MKCOL not allowed for a file");
+        response.setHeader("ETag", content.getETag());
     }
 
     public void mkcalendar(DavRequest request,

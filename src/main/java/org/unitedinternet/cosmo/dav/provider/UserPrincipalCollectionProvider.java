@@ -75,13 +75,6 @@ public class UserPrincipalCollectionProvider extends CollectionProvider {
         throw new MethodNotAllowedException("MOVE not allowed for user principal collection");
     }
 
-    public void mkcol(DavRequest request,
-                      DavResponse response,
-                      DavCollection collection)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("MKCOL not allowed for user principal collection");
-    }
-
     public void mkcalendar(DavRequest request,
                            DavResponse response,
                            DavCollection collection)

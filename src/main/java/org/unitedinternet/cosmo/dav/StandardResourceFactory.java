@@ -92,7 +92,6 @@ public class StandardResourceFactory
      * The type of resource to create is chosen as such:
      * <ul>
      * <li><code>MKCALENDAR</code>: {@link DavCalendarCollection}</li>
-     * <li><code>MKCOL</code>: {@link DavCollectionBase}</li>
      * <li><code>PUT</code>, <code>COPY</code>, <code>MOVE</code></li>:
      * {@link DavFile}</li>
      * </ul>
@@ -110,9 +109,6 @@ public class StandardResourceFactory
         // nonexistent item.
         if (request.getMethod().equals("MKCALENDAR")) {
             return new DavCalendarCollection(locator, this,entityFactory);
-        }
-        if (request.getMethod().equals("MKCOL")) {
-            return new DavCollectionBase(locator, this, entityFactory);
         }
         if (request.getMethod().equals("PUT")) {
             // will be replaced by the provider if a different resource

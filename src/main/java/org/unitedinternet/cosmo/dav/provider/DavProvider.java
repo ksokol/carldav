@@ -76,11 +76,6 @@ public interface DavProvider {
                      WebDavResource resource)
         throws CosmoDavException, IOException;
 
-    void mkcol(DavRequest request,
-                      DavResponse response,
-                      DavCollection collection)
-        throws CosmoDavException, IOException;
-
     void report(DavRequest request,
                        DavResponse response,
                        WebDavResource resource)

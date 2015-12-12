@@ -42,10 +42,6 @@ public class CaldavMethodType  {
         WRITE.add("COPY");
         WRITE.add("MOVE");
 
-        // Ticket methods
-        WRITE.add("MKTICKET");
-        WRITE.add("DELTICKET");
-
         // CalDAV methods
         WRITE.add("MKCALENDAR");
     }

@@ -15,6 +15,34 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import org.apache.abdera.util.EntityTag;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.jackrabbit.webdav.DavException;
+import org.apache.jackrabbit.webdav.WebdavRequestImpl;
+import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
+import org.apache.jackrabbit.webdav.property.DavPropertySet;
+import org.apache.jackrabbit.webdav.version.report.ReportInfo;
+import org.apache.jackrabbit.webdav.xml.DomUtil;
+import org.apache.jackrabbit.webdav.xml.ElementIterator;
+import org.unitedinternet.cosmo.dav.BadRequestException;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavRequest;
+import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
+import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
+import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
+import org.unitedinternet.cosmo.dav.acl.AclConstants;
+import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
+import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
+import org.unitedinternet.cosmo.model.EntityFactory;
+import org.unitedinternet.cosmo.server.ServerConstants;
+import org.unitedinternet.cosmo.util.BufferedServletInputStream;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -37,46 +65,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
-import javax.xml.stream.XMLStreamException;
-
-import org.apache.abdera.util.EntityTag;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.webdav.DavException;
-import org.apache.jackrabbit.webdav.WebdavRequestImpl;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
-import org.unitedinternet.cosmo.dav.BadRequestException;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
-import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
-import org.unitedinternet.cosmo.dav.acl.AclConstants;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilegeSet;
-import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
-import org.unitedinternet.cosmo.dav.ticket.TicketConstants;
-import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.server.ServerConstants;
-import org.unitedinternet.cosmo.util.BufferedServletInputStream;
-import org.unitedinternet.cosmo.util.DomWriter;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  */
 public class StandardDavRequest extends WebdavRequestImpl implements
-        DavRequest, ExtendedDavConstants, AclConstants, CaldavConstants,
-        TicketConstants {
+        DavRequest, ExtendedDavConstants, AclConstants, CaldavConstants {
     private static final Log LOG = LogFactory.getLog(StandardDavRequest.class);
     private static final MimeType APPLICATION_XML = registerMimeType("application/xml");
     private static final MimeType TEXT_XML = registerMimeType("text/xml");
@@ -99,7 +92,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements
     private DavPropertySet proppatchSet;
     private DavPropertyNameSet proppatchRemove;
     private DavPropertySet mkcalendarSet;
-    private Ticket ticket;
     private ReportInfo reportInfo;
     private boolean bufferRequestContent = false;
     private long bufferedContentLength = -1;
@@ -344,33 +336,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements
         return mkcalendarSet;
     }
 
-    // TicketDavRequest methods
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public Ticket getTicketInfo() throws CosmoDavException {
-        if (ticket == null) {
-            ticket = parseTicketRequest();
-        }
-        return ticket;
-    }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public String getTicketKey() throws CosmoDavException {
-        String key = getParameter(PARAM_TICKET);
-        if (key == null) {
-            key = getHeader(HEADER_TICKET);
-        }
-        if (key != null) {
-            return key;
-        }
-        throw new BadRequestException("Request does not contain a ticket key");
-    }
-    
     /**
      * 
      * {@inheritDoc}
@@ -585,66 +550,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements
         }
 
         return propertySet;
-    }
-
-    /**
-     * 
-     * @return Ticket 
-     * @throws CosmoDavException  
-     */
-    private Ticket parseTicketRequest() throws CosmoDavException {
-        Document requestDocument = getSafeRequestDocument();
-        if (requestDocument == null) {
-            throw new BadRequestException("MKTICKET requires entity body");
-        }
-
-        Element root = requestDocument.getDocumentElement();
-        if (!DomUtil.matches(root, ELEMENT_TICKET_TICKETINFO, NAMESPACE_TICKET)) {
-            throw new BadRequestException("Expected " + QN_TICKET_TICKETINFO
-                    + " root element");
-        }
-        if (DomUtil.hasChildElement(root, ELEMENT_TICKET_ID, NAMESPACE_TICKET)) {
-            throw new BadRequestException(QN_TICKET_TICKETINFO
-                    + " may not contain child " + QN_TICKET_ID);
-        }
-        if (DomUtil.hasChildElement(root, XML_OWNER, NAMESPACE)) {
-            throw new BadRequestException(QN_TICKET_TICKETINFO
-                    + " may not contain child " + QN_OWNER);
-        }
-
-        String timeout = DomUtil.getChildTextTrim(root, ELEMENT_TICKET_TIMEOUT,
-                NAMESPACE_TICKET);
-        if (timeout != null && !timeout.equals(TIMEOUT_INFINITE)) {
-            try {
-                int seconds = Integer.parseInt(timeout.substring(7));
-                LOG.trace("Timeout seconds: " + seconds);
-            } catch (NumberFormatException e) {
-                throw new BadRequestException("Malformed " + QN_TICKET_TIMEOUT
-                        + " value " + timeout);
-            }
-        } else {
-            timeout = TIMEOUT_INFINITE;
-        }
-
-        // visit limits are not supported
-
-        Element pe = DomUtil.getChildElement(root, XML_PRIVILEGE, NAMESPACE);
-        if (pe == null) {
-            throw new BadRequestException("Expected " + QN_PRIVILEGE
-                    + " child of " + QN_TICKET_TICKETINFO);
-        }
-
-        DavPrivilegeSet privileges = DavPrivilegeSet.createFromXml(pe);
-        if (!privileges.containsAny(DavPrivilege.READ, DavPrivilege.WRITE,
-                DavPrivilege.READ_FREE_BUSY)) {
-            throw new BadRequestException("Empty or invalid " + QN_PRIVILEGE);
-        }
-
-        Ticket ticket = entityFactory.creatTicket();
-        ticket.setTimeout(timeout);
-        privileges.setTicketPrivileges(ticket);
-
-        return ticket;
     }
 
     /**

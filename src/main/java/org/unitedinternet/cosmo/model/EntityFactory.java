@@ -32,21 +32,21 @@ public interface EntityFactory {
      * the uid of an entity.
      * @return unique identifier
      */
-    public String generateUid();
+    String generateUid();
     
     
     /**
      * Create new CollectionItem
      * @return new ColletionItem
      */
-    public CollectionItem createCollection();
+    CollectionItem createCollection();
     
     
     /**
      * Create new NoteItem
      * @return new NoteItem
      */
-    public NoteItem createNote();
+    NoteItem createNote();
     
     
     /**
@@ -55,28 +55,28 @@ public interface EntityFactory {
      * @param key recovery key
      * @return new PasswordRecovery
      */
-    public PasswordRecovery createPasswordRecovery(User user, String key);
+    PasswordRecovery createPasswordRecovery(User user, String key);
     
     
     /**
      * Create new User
      * @return new User
      */
-    public User createUser();
+    User createUser();
     
     
     /**
      * Create new CollectionSubscription
      * @return new CollectionSubscription
      */
-    public CollectionSubscription createCollectionSubscription();
+    CollectionSubscription createCollectionSubscription();
     
     
     /**
      * Create new AvailabilityItem
      * @return new AvailabilityItem
      */
-    public AvailabilityItem createAvailability();
+    AvailabilityItem createAvailability();
     
     
     /**
@@ -84,14 +84,14 @@ public interface EntityFactory {
      * @param col associated CollectionItem
      * @return new CalendarCollectionStamp
      */
-    public CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col);
+    CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col);
     
     
     /**
      * Create new TriageStatus
      * @return new TriageStatus
      */
-    public TriageStatus createTriageStatus();
+    TriageStatus createTriageStatus();
     
     
     /**
@@ -99,7 +99,7 @@ public interface EntityFactory {
      * @param note associated NoteItem
      * @return new EventStamp
      */
-    public EventStamp createEventStamp(NoteItem note);
+    EventStamp createEventStamp(NoteItem note);
     
     
     /**
@@ -107,21 +107,21 @@ public interface EntityFactory {
      * @param note associated NoteItem
      * @return new EventExceptionStamp
      */
-    public EventExceptionStamp createEventExceptionStamp(NoteItem note);
+    EventExceptionStamp createEventExceptionStamp(NoteItem note);
     
     
     /**
      * Create new FileItem
      * @return new FileItem
      */
-    public FileItem createFileItem();
+    FileItem createFileItem();
     
     
     /**
      * Create new FreeBusyItem
      * @return new FreeBusyItem
      */
-    public FreeBusyItem createFreeBusy();
+    FreeBusyItem createFreeBusy();
     
     
     /**
@@ -130,43 +130,28 @@ public interface EntityFactory {
      * @param localname
      * @return new QName
      */
-    public QName createQName(String namespace, String localname);
+    QName createQName(String namespace, String localname);
     
     
     /**
      * Create new TaskStamp
      * @return new TaskStamp
      */
-    public TaskStamp createTaskStamp();
+    TaskStamp createTaskStamp();
     
     
     /**
      * Create new MessageStamp
      * @return new MessageStamp
      */
-    public MessageStamp createMessageStamp();
-    
-    
-    /**
-     * Create new Ticket
-     * @return new Ticket
-     */
-    public Ticket creatTicket();
-    
-    
-    /**
-     * Create new Ticket with specified type.
-     * @param type ticket type
-     * @return new Ticket
-     */
-    public Ticket createTicket(TicketType type);
-    
+    MessageStamp createMessageStamp();
+
     
     /**
      * Create new Preference
      * @return new Preference
      */
-    public Preference createPreference();
+    Preference createPreference();
     
     
     /**
@@ -175,7 +160,7 @@ public interface EntityFactory {
      * @param value
      * @return new Preference
      */
-    public Preference createPreference(String key, String value);
+    Preference createPreference(String key, String value);
     
     
     /**
@@ -184,7 +169,7 @@ public interface EntityFactory {
      * @param is data
      * @return new BinaryAttribute
      */
-    public BinaryAttribute createBinaryAttribute(QName qname, InputStream is);
+    BinaryAttribute createBinaryAttribute(QName qname, InputStream is);
     
     /**
      * Create new BinaryAttribute using byte array.
@@ -192,7 +177,7 @@ public interface EntityFactory {
      * @param is data
      * @return new BinaryAttribute
      */
-    public BinaryAttribute createBinaryAttribute(QName qname, byte[] bytes);
+    BinaryAttribute createBinaryAttribute(QName qname, byte[] bytes);
     
     /**
      * Create new TextAttribute using Reader.
@@ -200,7 +185,7 @@ public interface EntityFactory {
      * @param reader text value
      * @return new TextAttribute
      */
-    public TextAttribute createTextAttribute(QName qname, Reader reader);
+    TextAttribute createTextAttribute(QName qname, Reader reader);
     
     
     /**
@@ -209,7 +194,7 @@ public interface EntityFactory {
      * @param bd decimal value
      * @return new DecimalAttribute
      */
-    public DecimalAttribute createDecimalAttribute(QName qname, BigDecimal bd);
+    DecimalAttribute createDecimalAttribute(QName qname, BigDecimal bd);
     
     
     /**
@@ -218,7 +203,7 @@ public interface EntityFactory {
      * @param cal calendar value
      * @return new CalendarAttribute
      */
-    public CalendarAttribute createCalendarAttribute(QName qname, Calendar cal);
+    CalendarAttribute createCalendarAttribute(QName qname, Calendar cal);
     
     /**
      * Create new IntegerAttribute using Long
@@ -226,7 +211,7 @@ public interface EntityFactory {
      * @param longVal integer value
      * @return new IntegerAttribute
      */
-    public IntegerAttribute createIntegerAttribute(QName qname, Long longVal);
+    IntegerAttribute createIntegerAttribute(QName qname, Long longVal);
     
     /**
      * Create new StringAttribute using string value
@@ -234,7 +219,7 @@ public interface EntityFactory {
      * @param str string value
      * @return new StringAttribute
      */
-    public StringAttribute createStringAttribute(QName qname, String str);
+    StringAttribute createStringAttribute(QName qname, String str);
     
     /**
      * Create new XMLAttribute using element value
@@ -242,5 +227,5 @@ public interface EntityFactory {
      * @param element element value
      * @return new XMLAttribute
      */
-    public XmlAttribute createXMLAttribute(QName qname, Element e);
+    XmlAttribute createXMLAttribute(QName qname, Element e);
 }

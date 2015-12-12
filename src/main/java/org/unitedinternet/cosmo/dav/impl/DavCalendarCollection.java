@@ -136,7 +136,7 @@ public class DavCalendarCollection extends DavCollectionBase
     /** */
     public String getSupportedMethods() {
         // calendar collections not allowed inside calendar collections
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, MKTICKET, DELTICKET, REPORT";
+        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT";
     }
 
     /** */

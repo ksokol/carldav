@@ -88,18 +88,4 @@ public class UserPrincipalCollectionProvider extends CollectionProvider {
         throws CosmoDavException, IOException {
         throw new MethodNotAllowedException("MKCALENDAR not allowed for user principal collection");
     }
-
-    public void mkticket(DavRequest request,
-                         DavResponse response,
-                         WebDavResource resource)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("MKTICKET not allowed for user principal collection");
-    }
-
-    public void delticket(DavRequest request,
-                          DavResponse response,
-                          WebDavResource resource)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("DELTICKET not allowed for user principal collection");
-    }
 }

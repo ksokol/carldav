@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import carldav.service.generator.IdGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
@@ -41,7 +42,6 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
@@ -51,9 +51,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItemTombstone;
-import carldav.service.generator.IdGenerator;
 
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -269,93 +267,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
-    }
-
-    public Set<Ticket> getTickets(Item item) {
-        if (item == null) {
-            throw new IllegalArgumentException("item cannot be null");
-        }
-
-        try {
-            getSession().refresh(item);
-            return item.getTickets();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public Ticket findTicket(String key) {
-        if (key == null) {
-            throw new IllegalArgumentException("key cannot be null");
-        }
-
-        try {
-            // prevent auto flushing when looking up ticket
-            getSession().setFlushMode(FlushMode.MANUAL);
-            Query hibQuery = getSession().getNamedQuery("ticket.by.key")
-                    .setParameter("key", key);
-            hibQuery.setCacheable(true);
-            hibQuery.setFlushMode(FlushMode.MANUAL);
-            return (Ticket) hibQuery.uniqueResult();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public void createTicket(Item item, Ticket ticket) {
-        try {
-            if (ticket == null) {
-                throw new IllegalArgumentException("ticket cannot be null");
-            }
-
-            if (item == null) {
-                throw new IllegalArgumentException("item cannot be null");
-            }
-
-            User owner = ticket.getOwner();
-            if (owner == null) {
-                throw new IllegalArgumentException("ticket must have owner");
-            }
-
-            if (ticket.getKey() == null) {
-                ticket.setKey(ticketKeyGenerator.allocateToken("").getKey());
-            }
-
-            ticket.setCreated(new Date());
-            getSession().update(item);
-            item.addTicket(ticket);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-
-    public Ticket getTicket(Item item, String key) {
-        try {
-            getSession().refresh(item);
-            return getTicketRecursive(item, key);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public void removeTicket(Item item, Ticket ticket) {
-        try {
-            getSession().update(item);
-            item.removeTicket(ticket);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-
     }
 
     /* (non-Javadoc)
@@ -769,18 +680,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 }
             }
         }
-        for (Ticket ticket : item.getTickets()) {
-            if (ticket.getOwner() == null) {
-                ticket.setOwner(item.getOwner());
-            }
-            if (ticket.getKey() == null) {
-                ticket.setKey(ticketKeyGenerator.allocateToken("").getKey());
-            }
-            if (ticket.getTimeout() == null) {
-                ticket.setTimeout(Ticket.TIMEOUT_INFINITE);
-            }
-            ticket.setCreated(new Date());
-        }
     }
 
     protected Item findItemByParentAndName(Long userDbId, Long parentDbId,
@@ -847,27 +746,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                         + " already in use");
             }
         }
-    }
-
-    protected Ticket getTicketRecursive(Item item, String key) {
-        if (item == null) {
-            return null;
-        }
-
-        for (Ticket ticket : item.getTickets()) {
-            if (ticket.getKey().equals(key)) {
-                return ticket;
-            }
-        }
-
-        for (Item parent : item.getParents()) {
-            Ticket ticket = getTicketRecursive(parent, key);
-            if (ticket != null) {
-                return ticket;
-            }
-        }
-
-        return null;
     }
 
     protected void attachToSession(Item item) {

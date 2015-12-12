@@ -15,6 +15,15 @@
  */
 package org.unitedinternet.cosmo.filters;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.security.CosmoSecurityContext;
+import org.unitedinternet.cosmo.security.CosmoSecurityException;
+import org.unitedinternet.cosmo.security.CosmoSecurityManager;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -25,16 +34,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.security.CosmoSecurityContext;
-import org.unitedinternet.cosmo.security.CosmoSecurityException;
-import org.unitedinternet.cosmo.security.CosmoSecurityManager;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
  * A servlet filter to log basic information about HTTP requests.
@@ -209,14 +208,10 @@ public class HttpLoggingFilter implements Filter {
                         break;
                     }
                     try {
-                        CosmoSecurityContext securityContext =
-                            securityManager.getSecurityContext();
-                        Ticket ticket = securityContext.getTicket();
+                        CosmoSecurityContext securityContext = securityManager.getSecurityContext();
 
                         User user = securityContext.getUser();
-                        if (ticket != null) {
-                            sb.append(ticket);
-                        } else if (user != null) {
+                        if (user != null) {
                             sb.append(user.getUsername());
                         } else {
                             sb.append("\"No auth token\"");

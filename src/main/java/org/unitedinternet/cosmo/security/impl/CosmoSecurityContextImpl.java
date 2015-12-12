@@ -15,18 +15,14 @@
  */
 package org.unitedinternet.cosmo.security.impl;
 
-import java.util.Set;
-
-import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketAuthenticationToken;
-import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.security.BaseSecurityContext;
-import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.unitedinternet.cosmo.CosmoException;
+import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
+import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.security.BaseSecurityContext;
+import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 
 /**
  * Standard implementation of {@link CosmoSecurityContext}. Wraps
@@ -39,13 +35,13 @@ import org.springframework.security.core.Authentication;
  * Authentication at all
  */
 public class CosmoSecurityContextImpl extends BaseSecurityContext {
-    
-    public CosmoSecurityContextImpl(Authentication authentication, Set<Ticket> tickets) {
-        super(authentication, tickets);
+
+    public CosmoSecurityContextImpl(Authentication authentication) {
+        super(authentication);
     }
 
-    public CosmoSecurityContextImpl(Authentication authentication, Set<Ticket> tickets, User preAuthUser) {
-        super(authentication, tickets, preAuthUser);
+    public CosmoSecurityContextImpl(Authentication authentication, User preAuthUser) {
+        super(authentication, preAuthUser);
     }
     
     protected void processPrincipal() {  
@@ -58,9 +54,6 @@ public class CosmoSecurityContextImpl extends BaseSecurityContext {
                 ((Authentication) getPrincipal()).getPrincipal();
             setUser(details.getUser());
             setAdmin(details.getUser().getAdmin().booleanValue());
-        } else if (getPrincipal() instanceof TicketAuthenticationToken) {
-            Ticket ticket = (Ticket)((Authentication) getPrincipal()).getPrincipal();
-            setTicket(ticket);
         } else {
             throw new CosmoException("Unknown principal type " + getPrincipal().getClass().getName(),
                     new CosmoException());

@@ -16,43 +16,24 @@
 package org.unitedinternet.cosmo.security.mock;
 
 import org.unitedinternet.cosmo.CosmoException;
+import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.BaseSecurityContext;
 
 import java.security.Principal;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
 
 /**
  * A mock implementation of {@link CosmoSecurityContext} that provides
  * dummy instances for use with unit mocks.
  */
 public class MockSecurityContext extends BaseSecurityContext {
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-        LogFactory.getLog(MockSecurityContext.class);
 
     /**
      * Constructor.
      * @param principal The principal.
      */
     public MockSecurityContext(Principal principal) {
-        super(principal, null);
+        super(principal);
     }
-    
-    /**
-     * Constructor.
-     * @param principal The principal
-     * @param tickets The tickets.
-     */
-    public MockSecurityContext(Principal principal, Set<Ticket> tickets) {
-        super(principal, tickets);
-    }
-
     /**
      * Process principal.
      * {@inheritDoc}
@@ -65,9 +46,6 @@ public class MockSecurityContext extends BaseSecurityContext {
             User user = ((MockUserPrincipal) getPrincipal()).getUser();
             setUser(user);
             setAdmin(user.getAdmin().booleanValue());
-        }
-        else if (getPrincipal() instanceof MockTicketPrincipal) {
-            setTicket(((MockTicketPrincipal) getPrincipal()).getTicket());
         }
         else {
             throw new CosmoException("unknown principal type " + getPrincipal().getClass().getName(), new CosmoException());

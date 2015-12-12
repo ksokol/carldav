@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 
 /**
@@ -112,39 +111,6 @@ public class MockCollectionSubscription extends MockAuditableObject implements C
      */
     public void setOwner(User owner) {
         this.owner = owner;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionSubscription#getTicketKey()
-     */
-    /**
-     * Gets ticket key.
-     * @return The ticket key.
-     */
-    public String getTicketKey() {
-        return ticketKey;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionSubscription#setTicketKey(java.lang.String)
-     */
-    /**
-     * Sets ticket key.
-     * @param ticketKey The ticket key.
-     */
-    public void setTicketKey(String ticketKey) {
-        this.ticketKey = ticketKey;
-    }  
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionSubscription#setTicket(org.unitedinternet.cosmo.model.copy.Ticket)
-     */
-    /**
-     * Sets ticket.
-     * @param ticket The ticket.
-     */
-    public void setTicket(Ticket ticket) {
-        this.ticketKey = ticket.getKey();
     }
 
     /**

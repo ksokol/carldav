@@ -15,24 +15,20 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import java.util.Date;
-
-import org.apache.jackrabbit.webdav.WebdavRequest;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-
 import org.apache.abdera.util.EntityTag;
-
+import org.apache.jackrabbit.webdav.WebdavRequest;
+import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
+import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dav.caldav.CaldavRequest;
 import org.unitedinternet.cosmo.dav.report.ReportRequest;
-import org.unitedinternet.cosmo.dav.ticket.TicketDavRequest;
+
+import java.util.Date;
 
 /**
  * A marker interface that collects the functionality defined by
  * the various WebDAV extensions implemented by the DAV service.
  */
-public interface DavRequest
-    extends WebdavRequest, CaldavRequest, ReportRequest, TicketDavRequest {
+public interface DavRequest extends WebdavRequest, CaldavRequest, ReportRequest {
 
     EntityTag[] getIfMatch();
 

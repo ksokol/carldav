@@ -77,7 +77,7 @@ class UsersTests extends IntegrationTestSupport {
     public void userOptions() throws Exception {
         mockMvc.perform(options("/dav/users/{uid}", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule, ticket"))
+                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT"));
     }
 
@@ -256,22 +256,6 @@ class UsersTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
-    }
-
-    @Test
-    public void userMkticket() throws Exception {
-        mockMvc.perform(mkticket("/dav/users/{uid}", USER01))
-                .andExpect(status().isMethodNotAllowed())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(notAllowed(MKTICKET).onUserPrincipal()));
-    }
-
-    @Test
-    public void userDelticket() throws Exception {
-        mockMvc.perform(delticket("/dav/users/{uid}", USER01))
-                .andExpect(status().isMethodNotAllowed())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(notAllowed(DELTICKET).onUserPrincipal()));
     }
 
     @Test

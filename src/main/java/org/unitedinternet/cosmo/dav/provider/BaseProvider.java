@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
@@ -37,7 +33,6 @@ import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResponse;
@@ -46,11 +41,11 @@ import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.AclConstants;
 import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
-import org.unitedinternet.cosmo.dav.acl.TicketAclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.UnsupportedPrivilegeException;
 import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
@@ -62,12 +57,14 @@ import org.unitedinternet.cosmo.dav.impl.DavItemResource;
 import org.unitedinternet.cosmo.dav.impl.DavOutboxCollection;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
-import org.unitedinternet.cosmo.dav.ticket.TicketConstants;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * <p>
@@ -76,8 +73,8 @@ import org.unitedinternet.cosmo.security.CosmoSecurityContext;
  *
  * @see DavProvider
  */
-public abstract class BaseProvider
-    implements DavProvider, DavConstants, AclConstants, TicketConstants {
+public abstract class BaseProvider implements DavProvider, DavConstants, AclConstants {
+
     private static final Log LOG = LogFactory.getLog(BaseProvider.class);
 
     private DavResourceFactory resourceFactory;
@@ -324,66 +321,6 @@ public abstract class BaseProvider
             throw new CosmoDavException(e);
         }
     }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void mkticket(DavRequest request,
-                         DavResponse response,
-                         WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (! resource.exists()){
-            throw new NotFoundException();
-        }
-        if (! (resource instanceof DavItemResource)){
-            throw new MethodNotAllowedException("MKTICKET requires a content collection or content resource");
-        }
-        DavItemResource dir = (DavItemResource) resource;
-
-        if (LOG.isDebugEnabled()){
-            LOG.debug("MKTICKET for " + resource.getResourcePath());
-        }
-        
-        Ticket ticket = request.getTicketInfo();
-        ticket.setOwner(getSecurityContext().getUser());
-
-        dir.saveTicket(ticket);
-
-        response.sendMkTicketResponse(dir, ticket.getKey());
-    }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void delticket(DavRequest request,
-                          DavResponse response,
-                          WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (! resource.exists()){
-            throw new NotFoundException();
-        }
-        checkNoRequestBody(request);
-
-        if (! (resource instanceof DavItemResource)){
-            throw new MethodNotAllowedException("DELTICKET requires a content collection or content resource");
-        }
-        DavItemResource dir = (DavItemResource) resource;
-
-        if (LOG.isDebugEnabled()){
-            LOG.debug("DELTICKET for " + resource.getResourcePath());
-        }
-
-        String key = request.getTicketKey();
-        Ticket ticket = dir.getTicket(key);
-        if (ticket == null) {
-            throw new PreconditionFailedException("Ticket " + key + " does not exist");
-        }
-        dir.removeTicket(ticket);
-
-        response.setStatus(204);
-    }
 
     /**
      * 
@@ -547,15 +484,6 @@ public abstract class BaseProvider
             throw new NeedsPrivilegesException(href, privilege);
         }
 
-        Ticket ticket = getSecurityContext().getTicket();
-        if (ticket != null) {
-            TicketAclEvaluator evaluator = new TicketAclEvaluator(ticket);
-            if (evaluator.evaluate(item, privilege)){
-                return;
-            }
-            throw new NeedsPrivilegesException(href, privilege);
-        }
-        
         throw new NeedsPrivilegesException(href, privilege);
     }
 
@@ -567,10 +495,6 @@ public abstract class BaseProvider
         User user = getSecurityContext().getUser();
         if (user != null){
             return new UserAclEvaluator(user);
-        }
-        Ticket ticket = getSecurityContext().getTicket();
-        if (ticket != null){
-            return new TicketAclEvaluator(ticket);
         }
         throw new IllegalStateException("Anonymous principal not supported for ACL evaluation");
     }
@@ -586,14 +510,11 @@ public abstract class BaseProvider
     protected boolean hasPrivilege(WebDavResource resource,
                                    AclEvaluator evaluator,
                                    DavPrivilege privilege) {
-        boolean hasPrivilege = false;
+        boolean hasPrivilege;
         if (resource instanceof DavItemResource) {
             Item item = ((DavItemResource)resource).getItem();
             hasPrivilege = evaluator.evaluate(item, privilege);
         } else {
-            if (evaluator instanceof TicketAclEvaluator){
-                throw new IllegalStateException("A ticket may not be used to access a user principal collection or resource");
-            }
             UserAclEvaluator uae = (UserAclEvaluator) evaluator;
 
             if (resource instanceof DavUserPrincipalCollection
@@ -641,12 +562,6 @@ public abstract class BaseProvider
         // privilege as well.
         int unprotected = 0;
         if (props.contains(CURRENTUSERPRIVILEGESET)){
-            unprotected++;
-        }
-        // ticketdiscovery is only unprotected when the principal is a
-        // ticket
-        if (props.contains(TICKETDISCOVERY) &&
-            evaluator instanceof TicketAclEvaluator){
             unprotected++;
         }
 

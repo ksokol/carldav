@@ -15,13 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.mock;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.CosmoException;
@@ -34,15 +27,19 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilterEvaluater;
 import org.unitedinternet.cosmo.model.filter.ItemFilterPostProcessor;
-import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockItem;
 import org.unitedinternet.cosmo.util.PathUtil;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Mock implementation of <code>ItemDao</code> useful for testing.
@@ -287,92 +284,6 @@ public class MockItemDao implements ItemDao {
             equals(item.getUid())) {
             storage.removeRootUid(item.getOwner().getUsername());
         }
-    }
-
-    /**
-     * Creates a ticket on an item.
-     *
-     * @param item the item to be ticketed
-     * @param ticket the ticket to be saved
-     */
-    public void createTicket(Item item,  Ticket ticket) {
-        item.addTicket(ticket);
-        ((MockAuditableObject) ticket).setModifiedDate(new Date());
-        storage.createTicket(item, ticket);
-    }
-
-    /**
-     * Returns all tickets on the given item.
-     *
-     * @param item the item to be ticketed.
-     * @return The tickets.
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public Set getTickets(Item item) {
-        return storage.findItemTickets(item);
-    }
-
-    /**
-     * Finds tickets.
-     * {@inheritDoc}
-     * @param key The key.
-     * @return The tickets.
-     */
-    public Ticket findTicket(String key) {
-        return storage.findTicket(key);
-    }
-    
-    
-    /**
-     * Returns the identified ticket on the given item, or
-     * <code>null</code> if the ticket does not exists. Tickets are
-     * inherited, so if the specified item does not have the ticket
-     * but an ancestor does, it will still be returned.
-     *
-     * @param item the ticketed item
-     * @param key the ticket to return
-     * @return The tickets.
-     */
-    @SuppressWarnings("deprecation")
-    public Ticket getTicket(Item item,  String key) {
-        for(Ticket t : storage.findItemTickets(item)) {
-            if (t.getKey().equals(key)) {
-                return t;
-            }
-        }
-        // the ticket might be on an ancestor, so check the parent
-        if (item.getParent() != null) {
-            return getTicket(storage.getItemByUid(item.getParent().getUid()),
-                             key);
-        }
-        // this is the root item; the ticket simply doesn't exist
-        // anywhere in the given path
-        return null;
-    }
-
-    /**
-     * Removes a ticket from an item.
-     *
-     * @param item the item to be de-ticketed
-     * @param ticket the ticket to remove
-     */
-    @SuppressWarnings("deprecation")
-    public void removeTicket(Item item, Ticket ticket) {
-        @SuppressWarnings("rawtypes")
-        Set itemTickets = storage.findItemTickets(item);
-        if (itemTickets.contains(ticket)) {
-            item.removeTicket(ticket);
-            storage.removeTicket(item, ticket);
-            return;
-        }
-        // the ticket might be on an ancestor, so check the parent
-        if (item.getParent() != null) {
-            removeTicket(storage.getItemByUid(item.getParent().getUid()),
-                         ticket);
-        }
-        // this is the root item; the ticket simply doesn't exist
-        // anywhere in the given path
-        return;
     }
 
     /**

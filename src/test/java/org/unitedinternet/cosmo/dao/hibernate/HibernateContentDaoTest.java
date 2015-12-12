@@ -15,26 +15,11 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.property.ProdId;
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
@@ -58,7 +43,6 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.ItemTombstone;
 import org.unitedinternet.cosmo.model.MultiValueStringAttribute;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.TimestampAttribute;
 import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.TriageStatus;
@@ -82,14 +66,27 @@ import org.unitedinternet.cosmo.model.hibernate.HibMultiValueStringAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibTicket;
 import org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.HibXmlAttribute;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.validation.ConstraintViolationException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Test for HibernateContentDao
@@ -1258,89 +1255,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
     }
 
     /**
-     * Tests tickets.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Test
-    public void testTickets() throws Exception {
-        User testuser = getUser(userDao, "testuser");
-        String name = "ticketable:" + System.currentTimeMillis();
-        ContentItem item = generateTestContent(name, "testuser");
-
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(testuser);
-        ContentItem newItem = contentDao.createContent(root, item);
-
-        clearSession();
-        newItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        Ticket ticket1 = new HibTicket();
-        ticket1.setKey("ticket1");
-        ticket1.setTimeout(10);
-        ticket1.setOwner(testuser);
-        HashSet privs = new HashSet();
-        privs.add("priv1");
-        privs.add("privs2");
-        ticket1.setPrivileges(privs);
-
-        contentDao.createTicket(newItem, ticket1);
-
-        Ticket ticket2 = new HibTicket();
-        ticket2.setKey("ticket2");
-        ticket2.setTimeout(100);
-        ticket2.setOwner(testuser);
-        privs = new HashSet();
-        privs.add("priv3");
-        privs.add("priv4");
-        ticket2.setPrivileges(privs);
-
-        contentDao.createTicket(newItem, ticket2);
-
-        clearSession();
-
-        Ticket queryTicket1 = contentDao.findTicket("ticket1");
-        Assert.assertNotNull(queryTicket1);
-        Assert.assertNull(contentDao.findTicket("blah"));
-        
-        clearSession();
-        
-        newItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        
-        queryTicket1 = contentDao.getTicket(newItem,"ticket1");
-        Assert.assertNotNull(queryTicket1);
-        verifyTicket(queryTicket1, ticket1);
-
-        Collection tickets = contentDao.getTickets(newItem);
-        Assert.assertEquals(2, tickets.size());
-        verifyTicketInCollection(tickets, ticket1.getKey());
-        verifyTicketInCollection(tickets, ticket2.getKey());
-
-        contentDao.removeTicket(newItem, ticket1);
-        clearSession();
-        
-        newItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        
-        tickets = contentDao.getTickets(newItem);
-        Assert.assertEquals(1, tickets.size());
-        verifyTicketInCollection(tickets, ticket2.getKey());
-
-        queryTicket1 = contentDao.getTicket(newItem, "ticket1");
-        Assert.assertNull(queryTicket1);
-
-        Ticket queryTicket2 = contentDao.getTicket(newItem, "ticket2");
-        Assert.assertNotNull(queryTicket2);
-        verifyTicket(queryTicket2, ticket2);
-
-        contentDao.removeTicket(newItem, ticket2);
-        
-        clearSession();
-        newItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        tickets = contentDao.getTickets(newItem);
-        Assert.assertEquals(0, tickets.size());
-    }
-    
-    /**
      * Tests item in multiple collections.
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -1762,40 +1676,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
             Assert.fail("able to create duplicate icaluids!");
         } catch (IcalUidInUseException e) {
         }
-    }
-    
-    /**
-     * Verify tickets.
-     * @param ticket1 Ticket1.
-     * @param ticket2 Ticket2.
-     */
-    private void verifyTicket(Ticket ticket1, Ticket ticket2) {
-        Assert.assertEquals(ticket1.getKey(), ticket2.getKey());
-        Assert.assertEquals(ticket1.getTimeout(), ticket2.getTimeout());
-        Assert.assertEquals(ticket1.getOwner().getUsername(), ticket2
-                .getOwner().getUsername());
-        @SuppressWarnings("rawtypes")
-        Iterator it1 = ticket1.getPrivileges().iterator();
-        @SuppressWarnings("rawtypes")
-        Iterator it2 = ticket2.getPrivileges().iterator();
-
-        Assert.assertEquals(ticket1.getPrivileges().size(), ticket1
-                .getPrivileges().size());
-
-        while (it1.hasNext()) {
-            Assert.assertEquals(it1.next(), it2.next());
-        }
-    }
-
-    private void verifyTicketInCollection(@SuppressWarnings("rawtypes") Collection tickets, String name) {
-        for (@SuppressWarnings("rawtypes")
-        Iterator it = tickets.iterator(); it.hasNext();) {
-            Ticket ticket = (Ticket) it.next();
-            if (ticket.getKey().equals(name))
-                return;
-        }
-
-        Assert.fail("could not find ticket: " + name);
     }
 
     private void verifyContains(@SuppressWarnings("rawtypes") Collection items, CollectionItem collection) {

@@ -15,10 +15,9 @@
  */
 package org.unitedinternet.cosmo;
 
-import java.security.SecureRandom;
-
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor;
 import org.unitedinternet.cosmo.dao.mock.MockCalendarDao;
@@ -27,18 +26,13 @@ import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.dao.mock.MockUserDao;
 import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Preference;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.security.mock.MockSecurityManager;
-import org.unitedinternet.cosmo.security.mock.MockTicketPrincipal;
 import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -46,7 +40,8 @@ import org.unitedinternet.cosmo.service.impl.StandardContentService;
 import org.unitedinternet.cosmo.service.impl.StandardTriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.service.impl.StandardUserService;
 import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
-import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
+
+import java.security.SecureRandom;
 
 /**
  */
@@ -136,14 +131,6 @@ public class MockHelper extends TestHelper {
     }
 
     /**
-     * Log in ticket.
-     * @param t - The ticket.
-     */
-    public void logInTicket(Ticket t) {
-        securityManager.setUpMockSecurityContext(new MockTicketPrincipal(t));
-    }
-
-    /**
      * Returns the security manager.
      * @return The security manager.
      */
@@ -198,15 +185,6 @@ public class MockHelper extends TestHelper {
     public HomeCollectionItem getHomeCollection() {
         return homeCollection;
     }
-    /**
-     * Makes and stores dummy collection.
-     * @return The collection item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public CollectionItem makeAndStoreDummyCollection()
-        throws Exception {
-        return makeAndStoreDummyCollection(homeCollection);
-    }
 
     /**
      * Makes and stores dummy collection.
@@ -243,57 +221,6 @@ public class MockHelper extends TestHelper {
     }
 
     /**
-     * Locks collection.
-     * @param collection The collection.
-     */
-    public void lockCollection(CollectionItem collection) {
-        contentService.getLockManager().lockCollection(collection);
-    }
-
-    /**
-     * Makes and stores dummy content.
-     * @return The collection item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public ContentItem makeAndStoreDummyContent()
-        throws Exception {
-        return makeAndStoreDummyContent(homeCollection);
-    }
-
-    /**
-     * Makes and stores dummy content.
-     * @param parent The collection item parent.
-     * @return The content item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public ContentItem makeAndStoreDummyContent(CollectionItem parent)
-        throws Exception {
-        ContentItem c = makeDummyContent(user);
-        return contentService.createContent(parent, c);
-    }
-
-    /**
-     * Makes and stores dummy item.
-     * @return The note item
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public NoteItem makeAndStoreDummyItem()
-        throws Exception {
-        return makeAndStoreDummyItem(homeCollection);
-    }
-
-    /**
-     * Makes and store dummy item.
-     * @param parent The collection item parent.
-     * @return The note item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public NoteItem makeAndStoreDummyItem(CollectionItem parent)
-        throws Exception {
-        return makeAndStoreDummyItem(parent, null);
-    }
-
-    /**
      * Makes and store dummy item.
      * @param parent The collection item parent.
      * @param name The name.
@@ -305,86 +232,6 @@ public class MockHelper extends TestHelper {
         throws Exception {
         NoteItem i = makeDummyItem(user, name);
         return (NoteItem) contentService.createContent(parent, i);
-    }
-
-    /**
-     * Makes and store dummy ticket.
-     * @param collection The collection item.
-     * @return The ticket.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public Ticket makeAndStoreDummyTicket(CollectionItem collection)
-        throws Exception {
-        Ticket ticket = makeDummyTicket(user);
-        contentService.createTicket(collection, ticket);
-        return ticket;
-    }
-
-    /**
-     * Makes and store dummy subscription.
-     * @return The collection subscription.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public CollectionSubscription makeAndStoreDummySubscription()
-        throws Exception {
-        CollectionItem collection = makeAndStoreDummyCollection();
-        Ticket ticket = makeAndStoreDummyTicket(collection);
-        return makeAndStoreDummySubscription(collection, ticket);
-    }
-
-    /**
-     * Makes and stores dummy subscription.
-     * @param collection The collection item.
-     * @param ticket The ticket.
-     * @return The collection subscription.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public CollectionSubscription makeAndStoreDummySubscription(CollectionItem collection, Ticket ticket)
-                                                                 throws Exception {
-        CollectionSubscription sub = makeDummySubscription(collection, ticket);
-        user.addSubscription(sub);
-        userService.updateUser(user);
-        return sub;
-    }
-
-    /**
-     * Makes and stores dummy preferences.
-     * @return The preference.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public Preference makeAndStoreDummyPreference()
-        throws Exception {
-        Preference pref = makeDummyPreference();
-        user.addPreference(pref);
-        userService.updateUser(user);
-        return pref;
-    }
-
-    /**
-     * Finds item.
-     * @param uid The ui.
-     * @return The note item.
-     */
-    public NoteItem findItem(String uid) {
-        return (NoteItem) contentService.findItemByUid(uid);
-    }
-
-    /**
-     * Finds collection.
-     * @param uid The uid.
-     * @return The collection item.
-     */
-    public CollectionItem findCollection(String uid) {
-        return (CollectionItem) contentService.findItemByUid(uid);
-    }
-
-    /**
-     * Finds subscription.
-     * @param displayName Display name parameter.
-     * @return The collection subscription.
-     */
-    public CollectionSubscription findSubscription(String displayName) {
-        return user.getSubscription(displayName);
     }
 
     public ICalendarClientFilterManager getClientFilterManager() {

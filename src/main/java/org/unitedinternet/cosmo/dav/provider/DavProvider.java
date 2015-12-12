@@ -91,16 +91,6 @@ public interface DavProvider {
                            DavCollection collection)
         throws CosmoDavException, IOException;
 
-    void mkticket(DavRequest request,
-                         DavResponse response,
-                         WebDavResource resource)
-        throws CosmoDavException, IOException;
-
-    void delticket(DavRequest request,
-                          DavResponse response,
-                          WebDavResource resource)
-        throws CosmoDavException, IOException;
-
     void acl(DavRequest request,
                     DavResponse response,
                     WebDavResource resource)

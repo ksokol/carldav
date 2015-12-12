@@ -29,7 +29,7 @@ class InboxTests extends IntegrationTestSupport {
         mockMvc.perform(options("/dav/{uid}/Inbox", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string(ALLOW, is("OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT")))
-                .andExpect(header().string("DAV", is("1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule, ticket")))
+                .andExpect(header().string("DAV", is("1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule")))
     }
 
     @Test

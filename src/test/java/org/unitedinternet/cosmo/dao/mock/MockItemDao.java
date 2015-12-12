@@ -66,18 +66,6 @@ public class MockItemDao implements ItemDao {
      * Find an item with the specified uid. The return type will be one of
      * Item, CollectionItem, CalendarCollectionItem, CalendarItem.
      * 
-     * @param id
-     *            id of item to find
-     * @return item represented by uid
-     */
-    public EventStamp findEventStampFromDbByUid(String id) {
-        return storage.getItemEventStampByUid(id);
-    }
-    
-    /**
-     * Find an item with the specified uid. The return type will be one of
-     * Item, CollectionItem, CalendarCollectionItem, CalendarItem.
-     * 
      * @param uid
      *            uid of item to find
      * @return item represented by uid

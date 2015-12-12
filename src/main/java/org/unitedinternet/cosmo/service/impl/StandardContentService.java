@@ -109,24 +109,6 @@ public class StandardContentService implements ContentService {
      *
      * @param uid
      *            uid of item to find
-     * @return eventStamp represented by uid
-     */
-    public BaseEventStamp findEventStampFromDbByUid(String uid) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("finding item with uid " + uid);
-        }
-        BaseEventStamp eventStamp = contentDao.findEventStampFromDbByUid(uid);
-        
-       return eventStamp;
-    }
-
-    /**
-     * Find an item with the specified uid.  If the uid is found, return
-     * the item found.  If the uid represents a recurring NoteItem occurrence
-     * (parentUid:recurrenceId), return a NoteOccurrence.
-     *
-     * @param uid
-     *            uid of item to find
      * @return item represented by uid
      */
     public Item findItemByUid(String uid) {
@@ -190,29 +172,6 @@ public class StandardContentService implements ContentService {
                       parentUid);
         }
         return contentDao.findItemByPath(path, parentUid);
-    }
-    
-    /**
-     * Find content item's parent by path. Path is of the format:
-     * /username/parent1/parent2/itemname.  In this example,
-     * the item at /username/parent1/parent2 would be returned.
-     */
-    public Item findItemParentByPath(String path) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("finding item's parent at path " + path);
-        }
-        return contentDao.findItemParentByPath(path);
-    }
-
-   
-    public void addItemToCollection(Item item, CollectionItem collection) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("adding item " + item.getUid() + " to collection "
-                    + collection.getUid());
-        }
-        
-        contentDao.addItemToCollection(item, collection);
-        contentDao.updateCollectionTimestamp(collection);
     }
 
     /**
@@ -359,22 +318,6 @@ public class StandardContentService implements ContentService {
         
         contentDao.removeItemFromCollection(item, collection);
         contentDao.updateCollectionTimestamp(collection);
-    }
-
-    
-    /**
-     * Load all children for collection that have been updated since a given
-     * timestamp. If no timestamp is specified, then return all children.
-     * 
-     * @param collection
-     *            collection
-     * @param timestamp
-     *            timestamp
-     * @return children of collection that have been updated since timestamp, or
-     *         all children if timestamp is null
-     */
-    public Set<ContentItem> loadChildren(CollectionItem collection, java.util.Date timestamp) {
-        return contentDao.loadChildren(collection, timestamp);
     }
 
     /**

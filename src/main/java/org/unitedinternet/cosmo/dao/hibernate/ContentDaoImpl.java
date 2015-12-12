@@ -456,41 +456,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
     }
 
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ContentDao#loadChildren(org.unitedinternet.cosmo.model.CollectionItem, java.util.Date)
-     */
-    public Set<ContentItem> loadChildren(CollectionItem collection, Date timestamp) {
-        try {
-            Set<ContentItem> children = new HashSet<ContentItem>();
-            Query query = null;
-
-            // use custom HQL query that will eager fetch all associations
-            if (timestamp == null) {
-                query = getSession().getNamedQuery("contentItem.by.parent")
-                        .setParameter("parent", collection);
-            } else {
-                query = getSession().getNamedQuery("contentItem.by.parent.timestamp")
-                        .setParameter("parent", collection).setParameter(
-                                "timestamp", timestamp);
-            }
-            query.setFlushMode(FlushMode.MANUAL);
-            List results = query.list();
-            for (Iterator it = results.iterator(); it.hasNext(); ) {
-                ContentItem content = (ContentItem) it.next();
-                initializeItem(content);
-                children.add(content);
-            }
-
-            return children;
-
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-
     @Override
     public void initializeItem(Item item) {
         super.initializeItem(item);

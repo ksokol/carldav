@@ -42,16 +42,6 @@ public interface ItemDao extends Dao {
     Item findItemByUid(String uid);
 
     /**
-     * Find an item with the specified uid. The return type will be one of
-     * ContentItem, CollectionItem, NoteItem.
-     *
-     * @param uid
-     *            uid of item to find
-     * @return BaseEventStamp represented by uid
-     */
-    BaseEventStamp findEventStampFromDbByUid(String uid);
-    
-    /**
      * Find an item with the specified path. The return type will be one of
      * ContentItem, NoteItem, CollectionItem.
      *

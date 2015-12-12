@@ -120,34 +120,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.ItemDao#findEventStampFromDbByUid(java.lang.String)
-     */
-    public BaseEventStamp findEventStampFromDbByUid(String uid) {
-        try {
-            // Lookup item by uid
-            Query hibQuery = getStatlessSession().getNamedQuery("item.stamps.by.uid")
-                    .setParameter("uid", uid).setFlushMode(null).setCacheMode(null);
-            @SuppressWarnings("unchecked")
-            List<Stamp> stamps = (List<Stamp>) hibQuery.list();
-            for(Stamp stamp:stamps) {
-                if(stamp instanceof BaseEventStamp) {
-                    BaseEventStamp eventStamp = (BaseEventStamp) stamp;
-                    return eventStamp;
-                }
-            }
-        } catch (HibernateException e) {
-            getStatlessSession().close();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } finally {
-            getStatlessSession().close();
-        }
-        return null;
-    }
-
     /*
      * (non-Javadoc)
      *

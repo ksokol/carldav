@@ -52,16 +52,6 @@ public interface ContentService extends Service {
     HomeCollectionItem getRootItem(User user, boolean forceReload);
 
     /**
-     * Find an item with the specified id. The return type will be one of
-     * ContentItem, CollectionItem, CalendarCollectionItem, CalendarItem.
-     *
-     * @param uid
-     *            uid of item to find
-     * @return eventStamp represented by uid
-     */
-    BaseEventStamp findEventStampFromDbByUid(String uid);
-    
-    /**
      * Find an item with the specified uid. The return type will be one of
      * ContentItem, CollectionItem, CalendarCollectionItem, CalendarItem.
      *
@@ -90,26 +80,6 @@ public interface ContentService extends Service {
      */
     Item findItemByPath(String path,
                         String parentUid);
-    
-    /**
-     * Find content item's parent by path. Path is of the format:
-     * /username/parent1/parent2/itemname. 
-     * @param path The given path.
-     * @return In this example,
-     * the item at /username/parent1/parent2 would be returned.
-     *
-     */
-    Item findItemParentByPath(String path);
-
-    /**
-     * Add an item to a collection.
-     * 
-     * @param item
-     *            item to add to collection
-     * @param collection
-     *            collection to add item to
-     */
-    void addItemToCollection(Item item, CollectionItem collection);
 
     /**
      * Copy an item to the given path
@@ -149,18 +119,6 @@ public interface ContentService extends Service {
      * @param collection item to remove item from
      */
     void removeItemFromCollection(Item item, CollectionItem collection);
-
-   
-    /**
-     * Load all children for collection that have been updated since a
-     * given timestamp.  If no timestamp is specified, then return all 
-     * children.
-     * @param collection collection
-     * @param timestamp timestamp
-     * @return children of collection that have been updated since 
-     *         timestamp, or all children if timestamp is null
-     */
-    Set<ContentItem> loadChildren(CollectionItem collection, Date timestamp);
 
     /**
      * Create a new collection.

@@ -253,10 +253,10 @@ public class StandardRequestHandler extends AbstractController implements Server
         // Create buffered request if method is PUT so we can retry
         // on concurrency exceptions
         if (request.getMethod().equals("PUT")) {
-            return new StandardDavRequest(request, locatorFactory, entityFactory, true);
+            return new StandardDavRequest(request, locatorFactory, true);
         }
         else {
-            return new StandardDavRequest(request, locatorFactory, entityFactory);
+            return new StandardDavRequest(request, locatorFactory);
         }
     }
 

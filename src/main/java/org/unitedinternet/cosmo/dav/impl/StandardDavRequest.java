@@ -66,11 +66,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
-/**
- */
-public class StandardDavRequest extends WebdavRequestImpl implements
-        DavRequest, ExtendedDavConstants, AclConstants, CaldavConstants {
-    private static final Log LOG = LogFactory.getLog(StandardDavRequest.class);
+public class StandardDavRequest extends WebdavRequestImpl implements DavRequest, ExtendedDavConstants, AclConstants, CaldavConstants {
+
     private static final MimeType APPLICATION_XML = registerMimeType("application/xml");
     private static final MimeType TEXT_XML = registerMimeType("text/xml");
     
@@ -98,7 +95,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements
     private DavResourceLocatorFactory locatorFactory;
     private DavResourceLocator locator;
     private DavResourceLocator destinationLocator;
-    private EntityFactory entityFactory;
     private HttpServletRequest originalHttpServletRequest;
     
     /**
@@ -170,33 +166,30 @@ public class StandardDavRequest extends WebdavRequestImpl implements
     public boolean isRequestedSessionIdFromUrl() {
         return originalHttpServletRequest.isRequestedSessionIdFromUrl();
     }
-    
+
     /**
-     * 
+     *
      * @param request HttpServletRequest
      * @param factory DavResourceLocatorFactory
-     * @param entityFactory EntityFactory
      */
     public StandardDavRequest(HttpServletRequest request,
-            DavResourceLocatorFactory factory, EntityFactory entityFactory) {
-        this(request, factory, entityFactory, false);
+            DavResourceLocatorFactory factory) {
+        this(request, factory, false);
     }
 
     /**
      * 
      * @param request HttpServletRequest
      * @param factory DavResourceLocatorFactory
-     * @param entityFactory EntityFactory
      * @param bufferRequestContent boolean
      */
     public StandardDavRequest(HttpServletRequest request,
-            DavResourceLocatorFactory factory, EntityFactory entityFactory,
+            DavResourceLocatorFactory factory,
             boolean bufferRequestContent) {
         super(request, null);
         originalHttpServletRequest = request;
         this.locatorFactory = factory;
         this.bufferRequestContent = bufferRequestContent;
-        this.entityFactory = entityFactory;
     }
 
     // DavRequest methods

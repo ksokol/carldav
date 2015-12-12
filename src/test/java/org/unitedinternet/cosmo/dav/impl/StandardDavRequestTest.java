@@ -41,9 +41,7 @@ public class StandardDavRequestTest extends BaseDavTestCase {
         MockHttpServletRequest httpRequest =
             new MockHttpServletRequest();
         StandardDavRequest request =
-            new StandardDavRequest(httpRequest,
-                                   testHelper.getResourceLocatorFactory(),
-                                   testHelper.getEntityFactory());
+            new StandardDavRequest(httpRequest, testHelper.getResourceLocatorFactory());
 
         Assert.assertEquals("no depth not infinity", DEPTH_INFINITY,
                      request.getDepth());
@@ -59,9 +57,7 @@ public class StandardDavRequestTest extends BaseDavTestCase {
             new MockHttpServletRequest();
         httpRequest.addHeader("Depth", "bad value");
         StandardDavRequest request =
-            new StandardDavRequest(httpRequest,
-                                   testHelper.getResourceLocatorFactory(),
-                                   testHelper.getEntityFactory());
+            new StandardDavRequest(httpRequest, testHelper.getResourceLocatorFactory());
 
         try {
             int depth = request.getDepth();
@@ -83,9 +79,7 @@ public class StandardDavRequestTest extends BaseDavTestCase {
             new MockHttpServletRequest();
         httpRequest.setContentType("text/xml");
         StandardDavRequest request =
-            new StandardDavRequest(httpRequest,
-                                   testHelper.getResourceLocatorFactory(),
-                                   testHelper.getEntityFactory());
+            new StandardDavRequest(httpRequest, testHelper.getResourceLocatorFactory());
 
         Assert.assertEquals("propfind type not allprop", PROPFIND_ALL_PROP,
                      request.getPropFindType());

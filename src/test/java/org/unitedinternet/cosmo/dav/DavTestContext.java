@@ -15,16 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import static org.mockito.Mockito.mock;
-
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.impl.StandardDavRequest;
 import org.unitedinternet.cosmo.dav.impl.StandardDavResponse;
-import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.hibernate.HibEntityFactory;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.mock.web.MockHttpServletResponse;
-import carldav.service.generator.IdGenerator;
 
 /**
  * A helper bean that provides access to low- and high-level request
@@ -44,7 +39,7 @@ public class DavTestContext {
     public DavTestContext(DavResourceLocatorFactory locatorFactory) {
         httpRequest = new MockHttpServletRequest();
         httpResponse = new MockHttpServletResponse();
-        davRequest = new StandardDavRequest(httpRequest, locatorFactory, new HibEntityFactory(mock(IdGenerator.class)));
+        davRequest = new StandardDavRequest(httpRequest, locatorFactory);
         davResponse = new StandardDavResponse(httpResponse);
     }
 

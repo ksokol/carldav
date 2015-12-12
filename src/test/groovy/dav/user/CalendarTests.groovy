@@ -9,8 +9,6 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static testutil.builder.GeneralResponse.*
-import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.Mockito.when
@@ -22,6 +20,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.builder.GeneralResponse.*
+import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.*
@@ -180,6 +180,22 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
+    }
+
+    @Test
+    public void calendarGetItem() {
+        mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+                .contentType(TEXT_CALENDAR)
+                .content(CALDAV_EVENT))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn();
+
+        mockMvc.perform(get("/dav/{email}/calendar/{uid}.ics", USER01, uuid)
+                .contentType(TEXT_XML))
+                .andExpect(textCalendarContentType())
+                .andExpect(status().isOk())
+                .andExpect(text(CALDAV_EVENT));
     }
 
     @Test

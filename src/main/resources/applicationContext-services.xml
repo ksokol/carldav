@@ -144,9 +144,8 @@
 
 	<!-- authentication resources -->
 
-	<bean id="userDetailsService"
-		class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
-		<property name="userDao" ref="userDao" />
+	<bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
+		<constructor-arg index="0" ref="userDao" />
 	</bean>
 
 

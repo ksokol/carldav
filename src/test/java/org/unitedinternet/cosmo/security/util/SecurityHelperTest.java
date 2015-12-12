@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.security.util;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -29,17 +28,12 @@ import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 import org.unitedinternet.cosmo.security.mock.MockSecurityContext;
-import org.unitedinternet.cosmo.security.mock.MockTicketPrincipal;
 import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Test Case for <code>SecurityHelper/code> which uses mock
@@ -80,38 +74,7 @@ public class SecurityHelperTest {
         context = getSecurityContext(admin);
         Assert.assertTrue(securityHelper.hasWriteAccess(context, col));
     }
-    
-    /**
-     * Tests collection ticket access.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCollectionTicketAccess() throws Exception {
-        User user1 = testHelper.makeDummyUser("user1","password");
-        
-        CollectionItem col = testHelper.makeDummyCalendarCollection(user1);
-        
-        Ticket roTicket = testHelper.makeDummyTicket();
-        roTicket.setKey("1");
-        roTicket.getPrivileges().add(Ticket.PRIVILEGE_READ);
-        col.getTickets().add(roTicket);
-        Ticket rwTicket = testHelper.makeDummyTicket();
-        rwTicket.setKey("2");
-        rwTicket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        col.getTickets().add(rwTicket);
-        Ticket rwBogus = testHelper.makeDummyTicket();
-        rwBogus.setKey("3");
-        rwBogus.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        
-        CosmoSecurityContext context = getSecurityContext(roTicket);
-        
-        Assert.assertFalse(securityHelper.hasWriteAccess(context, col));
-        context = getSecurityContext(rwTicket);
-        Assert.assertTrue(securityHelper.hasWriteAccess(context, col));
-        context = getSecurityContext(rwBogus);
-        Assert.assertFalse(securityHelper.hasWriteAccess(context, col));
-    }
-    
+
     /**
      * Tests content user access.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -152,107 +115,7 @@ public class SecurityHelperTest {
         Assert.assertFalse(securityHelper.hasWriteAccess(context, note));
         
     }
-    
-    /**
-     * Tests content ticket access.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentTicketAccess() throws Exception {
-        User user1 = testHelper.makeDummyUser("user1","password");
-        
-        MockCollectionItem col1 = new MockCollectionItem();
-        MockCollectionItem col2 = new MockCollectionItem();
-        col1.setOwner(user1);
-        col2.setOwner(user1);
-        col1.setUid("col1");
-        col2.setUid("col2");
-        MockNoteItem note = new MockNoteItem();
-        note.setUid("note1");
-        note.setOwner(user1);
-        note.addParent(col1);
-        note.addParent(col2);
-        
-        Ticket roTicket = testHelper.makeDummyTicket();
-        roTicket.setKey("1");
-        roTicket.getPrivileges().add(Ticket.PRIVILEGE_READ);
-        col2.getTickets().add(roTicket);
-        Ticket rwTicket = testHelper.makeDummyTicket();
-        rwTicket.setKey("2");
-        rwTicket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        col2.getTickets().add(rwTicket);
-        Ticket rwBogus = testHelper.makeDummyTicket();
-        rwBogus.setKey("3");
-        rwBogus.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        Ticket rwItemTicket = testHelper.makeDummyTicket();
-        rwItemTicket.setKey("4");
-        rwItemTicket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        note.getTickets().add(rwItemTicket);
-        
-        CosmoSecurityContext context = getSecurityContext(roTicket);
-        
-        Assert.assertFalse(securityHelper.hasWriteAccess(context, note));
-        context = getSecurityContext(rwTicket);
-        Assert.assertTrue(securityHelper.hasWriteAccess(context, note));
-        context = getSecurityContext(rwBogus);
-        Assert.assertFalse(securityHelper.hasWriteAccess(context, note));
-        
-        // remove note from col2, so rwTicket doesn't have access
-        note.removeParent(col2);
-        
-        context = getSecurityContext(rwTicket);
-        Assert.assertFalse(securityHelper.hasWriteAccess(context, note));
-        
-        // check item ticket
-        context = getSecurityContext(rwItemTicket);
-        Assert.assertTrue(securityHelper.hasWriteAccess(context, note));
-    }
-    
-    /**
-     * Tests content user with tickets access.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentUserWithTicketsAccess() throws Exception {
-        User user1 = testHelper.makeDummyUser("user1","password");
-        User user2 = testHelper.makeDummyUser("user2","password");
-        
-        MockCollectionItem col1 = new MockCollectionItem();
-        MockCollectionItem col2 = new MockCollectionItem();
-        col1.setOwner(user1);
-        col2.setOwner(user1);
-        col1.setUid("col1");
-        col2.setUid("col2");
-        MockNoteItem note = new MockNoteItem();
-        note.setUid("note1");
-        note.setOwner(user1);
-        note.addParent(col1);
-        note.addParent(col2);
-        
-        Ticket rwTicket = testHelper.makeDummyTicket();
-        rwTicket.setKey("2");
-        rwTicket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        col2.getTickets().add(rwTicket);
-        Ticket rwBogus = testHelper.makeDummyTicket();
-        rwBogus.setKey("3");
-        rwBogus.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        Ticket rwItemTicket = testHelper.makeDummyTicket();
-        rwItemTicket.setKey("4");
-        rwItemTicket.getPrivileges().add(Ticket.PRIVILEGE_WRITE);
-        note.getTickets().add(rwItemTicket);
-        
-        Set<Ticket> tickets = new HashSet<Ticket>();
-        tickets.add(rwTicket);
-        
-        CosmoSecurityContext context = getSecurityContextWithTickets(user2, tickets);
-        Assert.assertTrue(securityHelper.hasWriteAccess(context, note));
-        
-        tickets.clear();
-        Assert.assertFalse(securityHelper.hasWriteAccess(context, note));
-        
-        tickets.add(rwItemTicket);
-        Assert.assertTrue(securityHelper.hasWriteAccess(context, note));
-    }
+
 
     @Test
     public void testHasUserAccessIsNull() {
@@ -292,23 +155,5 @@ public class SecurityHelperTest {
     private CosmoSecurityContext getSecurityContext(User user) {
         return new MockSecurityContext(new MockUserPrincipal(user));
     }
-    
-    /**
-     * Gets security context with tickets.
-     * @param user The user.
-     * @param tickets The tickets.
-     * @return The cosmo security context.
-     */
-    private CosmoSecurityContext getSecurityContextWithTickets(User user, Set<Ticket> tickets) {
-        return new MockSecurityContext(new MockUserPrincipal(user), tickets);
-    }
-    
-    /**
-     * Gets security context.
-     * @param ticket The ticket.
-     * @return The security context.
-     */
-    private CosmoSecurityContext getSecurityContext(Ticket ticket) {
-        return new MockSecurityContext(new MockTicketPrincipal(ticket));
-    } 
+
 }

@@ -15,15 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -42,7 +33,6 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
@@ -52,13 +42,13 @@ import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.DavAce;
 import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.property.Owner;
 import org.unitedinternet.cosmo.dav.acl.property.PrincipalCollectionSet;
 import org.unitedinternet.cosmo.dav.property.CreationDate;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
@@ -66,8 +56,7 @@ import org.unitedinternet.cosmo.dav.property.LastModified;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.property.Uuid;
-import org.unitedinternet.cosmo.dav.ticket.TicketConstants;
-import org.unitedinternet.cosmo.dav.ticket.property.TicketDiscovery;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -76,11 +65,19 @@ import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;
 import org.w3c.dom.Element;
+
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -104,8 +101,8 @@ import org.w3c.dom.Element;
  * </p>
  * @see Item
  */
-public abstract class DavItemResourceBase extends DavResourceBase implements
-    DavItemResource, TicketConstants {
+public abstract class DavItemResourceBase extends DavResourceBase implements DavItemResource {
+
     private static final Log log = LogFactory.getLog(DavItemResourceBase.class);
 
     private Item item;
@@ -123,7 +120,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
         registerLiveProperty(OWNER);
         registerLiveProperty(PRINCIPALCOLLECTIONSET);
         registerLiveProperty(UUID);
-        registerLiveProperty(TICKETDISCOVERY);
     }
 
     public DavItemResourceBase(Item item, DavResourceLocator locator,
@@ -311,41 +307,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
         loadProperties();
     }
 
-    public void saveTicket(Ticket ticket) throws CosmoDavException {
-        if (log.isDebugEnabled())
-            log.debug("adding ticket for " + item.getName());
-
-        // TODO not mentioned in https://tools.ietf.org/html/draft-ito-dav-ticket-00
-        // automatically add freebusy privilege along with read
-//        if (ticket.getPrivileges().contains(Ticket.PRIVILEGE_READ))
-//            ticket.getPrivileges().add(Ticket.PRIVILEGE_FREEBUSY);
-
-        getContentService().createTicket(item, ticket);
-    }
-
-    public void removeTicket(Ticket ticket) throws CosmoDavException {
-        if (log.isDebugEnabled()) {
-            log.debug("removing ticket " + ticket.getKey() + " on "
-                    + item.getName());
-        }
-
-        getContentService().removeTicket(item, ticket);
-    }
-
-    public Ticket getTicket(String id) {
-        for (Iterator<Ticket> i = item.getTickets().iterator(); i.hasNext();) {
-            Ticket t = (Ticket) i.next();
-            if (t.getKey().equals(id))
-                return t;
-        }
-        return null;
-    }
-
-    public Set<Ticket> getTickets() {
-        return getSecurityManager().getSecurityContext().findVisibleTickets(
-                item);
-    }
-
     public EntityFactory getEntityFactory() {
         return entityFactory;
     }
@@ -392,11 +353,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
         // Only initialize owner once
         if (item.getOwner() == null) {
             User owner = getSecurityManager().getSecurityContext().getUser();
-            if (owner == null) {
-                Ticket ticket = getSecurityManager().getSecurityContext()
-                        .getTicket();
-                owner = ticket.getOwner();
-            }
             item.setOwner(owner);
         }
 
@@ -565,23 +521,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
             return privileges;
         }
 
-        Ticket ticket = getSecurityManager().getSecurityContext().getTicket();
-        if (ticket != null) {
-            privileges.add(DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET);
-
-            if (ticket.getPrivileges().contains(Ticket.PRIVILEGE_READ)){
-                privileges.add(DavPrivilege.READ);
-            }
-            if (ticket.getPrivileges().contains(Ticket.PRIVILEGE_WRITE)){
-                privileges.add(DavPrivilege.WRITE);
-            }
-            if (ticket.getPrivileges().contains(Ticket.PRIVILEGE_FREEBUSY)){
-                privileges.add(DavPrivilege.READ_FREE_BUSY);
-            }
-
-            return privileges;
-        }
-
         return privileges;
     }
 
@@ -598,7 +537,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
         properties.add(new IsCollection(isCollection()));
         properties.add(new Owner(getResourceLocator(), item.getOwner()));
         properties.add(new PrincipalCollectionSet(getResourceLocator()));
-        properties.add(new TicketDiscovery(getResourceLocator(), getTickets()));
         properties.add(new Uuid(item.getUid()));
     }
 
@@ -620,7 +558,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
                 || name.equals(DavPropertyName.RESOURCETYPE)
                 || name.equals(DavPropertyName.ISCOLLECTION)
                 || name.equals(OWNER) || name.equals(PRINCIPALCOLLECTIONSET)
-                || name.equals(TICKETDISCOVERY) || name.equals(UUID)) {
+                || name.equals(UUID)) {
             throw new ProtectedPropertyModificationException(name);
         }
 
@@ -642,7 +580,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements
                 || name.equals(DavPropertyName.RESOURCETYPE)
                 || name.equals(DavPropertyName.ISCOLLECTION)
                 || name.equals(OWNER) || name.equals(PRINCIPALCOLLECTIONSET)
-                || name.equals(TICKETDISCOVERY) || name.equals(UUID)) {
+                || name.equals(UUID)) {
             throw new ProtectedPropertyModificationException(name);
         }
 

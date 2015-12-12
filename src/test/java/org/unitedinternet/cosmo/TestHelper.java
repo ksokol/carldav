@@ -15,18 +15,6 @@
  */
 package org.unitedinternet.cosmo;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.security.Principal;
-import java.util.HashSet;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
@@ -44,7 +32,6 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -54,13 +41,23 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Preference;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.security.mock.MockAnonymousPrincipal;
 import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.security.Principal;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  */
@@ -179,48 +176,6 @@ public class TestHelper {
     }
 
     /**
-     * Makes dummy ticket.
-     * @param timeout The timout.
-     * @return The ticket.
-     */
-    public Ticket makeDummyTicket(String timeout) {
-        Ticket ticket = entityFactory.creatTicket();
-        ticket.setTimeout(timeout);
-        ticket.setPrivileges(new HashSet<String>());
-        ticket.getPrivileges().add(Ticket.PRIVILEGE_READ);
-        return ticket;
-    }
-
-    /**
-     * makes dummy ticket.
-     * @param timeout The timeout.
-     * @return The ticket.
-     */
-    public Ticket makeDummyTicket(int timeout) {
-        return makeDummyTicket("Second-" + timeout);
-    }
-
-    /**
-     * makes dummy ticket.
-     * @return The ticket.
-     */
-    public Ticket makeDummyTicket() {
-        return makeDummyTicket(Ticket.TIMEOUT_INFINITE);
-    }
-
-    /**
-     * Makes dummy ticket.
-     * @param user The user.
-     * @return The ticket.
-     */
-    public Ticket makeDummyTicket(User user) {
-        Ticket ticket = makeDummyTicket();
-        ticket.setOwner(user);
-        ticket.setKey(Integer.toString(++tseq));
-        return ticket;
-    }
-
-    /**
      * Makes dummy user.
      * @param username The username.
      * @param password The password.
@@ -259,15 +214,11 @@ public class TestHelper {
     /**
      * Makes dummy subscription.
      * @param collection The coolection item.
-     * @param ticket The ticket.
      * @return The collection subscrition.
      */
-    public CollectionSubscription makeDummySubscription(CollectionItem collection, Ticket ticket) {
+    public CollectionSubscription makeDummySubscription(CollectionItem collection) {
         if (collection == null) {
             throw new IllegalArgumentException("collection required");
-        }
-        if (ticket == null) {
-            throw new IllegalArgumentException("ticket required");
         }
 
         String serial = Integer.toString(++sseq);
@@ -275,24 +226,8 @@ public class TestHelper {
 
         CollectionSubscription sub = entityFactory.createCollectionSubscription();
         sub.setDisplayName(displayName);
-        sub.setTicketKey(ticket.getKey());
         sub.setCollectionUid(collection.getUid());
         
-        return sub;
-    }
-
-    /**
-     * Makes dummy subscription.
-     * @param user The user.
-     * @return The collection subscription.
-     */
-    public CollectionSubscription makeDummySubscription(User user) {
-        CollectionItem collection = makeDummyCollection(user);
-        Ticket ticket = makeDummyTicket(user);
-
-        CollectionSubscription sub = makeDummySubscription(collection, ticket);
-        sub.setOwner(user);
-
         return sub;
     }
 

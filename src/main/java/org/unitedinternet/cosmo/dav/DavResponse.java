@@ -15,19 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import java.io.IOException;
-
 import org.apache.jackrabbit.webdav.WebdavResponse;
 
-import org.unitedinternet.cosmo.dav.ticket.TicketDavResponse;
+import java.io.IOException;
 
 /**
  * A marker interface that collects the functionality defined by
  * the various WebDAV extensions implemented by the DAV service.
  */
-public interface DavResponse
-    extends WebdavResponse, TicketDavResponse {
+public interface DavResponse extends WebdavResponse {
 
-    void sendDavError(CosmoDavException e)
-        throws IOException;
+    void sendDavError(CosmoDavException e) throws IOException;
 }

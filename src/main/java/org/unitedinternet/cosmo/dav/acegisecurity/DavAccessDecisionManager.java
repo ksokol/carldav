@@ -15,25 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.acegisecurity;
 
-import java.util.Collection;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.acegisecurity.providers.ticket.TicketAuthenticationToken;
-import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
-import org.unitedinternet.cosmo.dav.CaldavMethodType;
-import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.TicketAclEvaluator;
-import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Ticket;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.service.UserService;
-import org.unitedinternet.cosmo.util.UriTemplate;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -42,6 +25,20 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
+import org.unitedinternet.cosmo.dav.CaldavMethodType;
+import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
+import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
+import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
+import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.service.UserService;
+import org.unitedinternet.cosmo.util.UriTemplate;
+
+import java.util.Collection;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -65,8 +62,7 @@ public class DavAccessDecisionManager
      * @throws InsufficientAuthenticationException
      *          if
      *          <code>Authentication</code> is not a
-     *          {@link UsernamePasswordAuthenticationToken} or a
-     *          {@link TicketAuthenticationToken}.
+     *          {@link UsernamePasswordAuthenticationToken}.
      */
     @Override
     public void decide(Authentication authentication, Object object,
@@ -80,9 +76,6 @@ public class DavAccessDecisionManager
         } else if (authentication instanceof PreAuthenticatedAuthenticationToken) {
             User user = userService.getUser((String)authentication.getPrincipal());
             evaluator = new UserAclEvaluator(user);
-        } else if (authentication instanceof TicketAuthenticationToken) {
-            Ticket ticket = (Ticket) authentication.getPrincipal();
-            evaluator = new TicketAclEvaluator(ticket);
         } else {
             LOG.error("Unrecognized authentication token");
             throw new InsufficientAuthenticationException("Unrecognized authentication token");
@@ -157,9 +150,6 @@ public class DavAccessDecisionManager
                                                    String method,
                                                    AclEvaluator evaluator)
             throws AclEvaluationException {
-        if (evaluator instanceof TicketAclEvaluator) {
-            throw new IllegalStateException("A ticket may not be used to access the user principal collection");
-        }
         if (method.equals("PROPFIND")) {
             if (LOG.isDebugEnabled()) {
                 //Fix Log Forging - fortify
@@ -189,9 +179,6 @@ public class DavAccessDecisionManager
                                          String method,
                                          AclEvaluator evaluator)
             throws AclEvaluationException {
-        if (evaluator instanceof TicketAclEvaluator) {
-            throw new IllegalStateException("A ticket may not be used to access the user principal collection");
-        }
 
         String username = match.get("username");
         User user = getUserService().getUser(username);

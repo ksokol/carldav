@@ -15,14 +15,10 @@
  */
 package org.unitedinternet.cosmo.security.util;
 
-import java.util.Set;
-
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
@@ -102,12 +98,9 @@ public class SecurityHelper {
      */
     public boolean hasReadAccess(CosmoSecurityContext context, Item item) {
         if(context.getUser()!=null) {
-            return hasReadAccess(context.getUser(), item, context.getTickets());
+            return hasReadAccess(context.getUser(), item);
         }
-        else if(context.getTicket()!=null) {
-            return  hasReadAccess(context.getTicket(), item, context.getTickets());
-        }
-        
+
         return false;
     }
     
@@ -132,16 +125,13 @@ public class SecurityHelper {
      */
     public boolean hasWriteAccess(CosmoSecurityContext context, Item item) {
         if(context.getUser()!=null) {
-            return hasWriteAccess(context.getUser(), item, context.getTickets());
+            return hasWriteAccess(context.getUser(), item);
         }
-        else if(context.getTicket()!=null) {
-            return  hasWriteAccess(context.getTicket(), item, context.getTickets());
-        }
-        
+
         return false;
     }
     
-    private boolean hasReadAccess(User user, Item item, Set<Ticket> tickets) {
+    private boolean hasReadAccess(User user, Item item) {
         // admin always has access
         if(user.getAdmin()!=null && user.getAdmin().booleanValue()) {
             return true;
@@ -158,65 +148,12 @@ public class SecurityHelper {
                 return true;
             }
         }
-        
-        // Case 3: ticket for item present
-        if(tickets!=null) {
-            for(Ticket ticket: tickets) {
-                if(hasReadAccess(ticket, item)) {
-                    return true;
-                }
-            }
-        }
-        
-        // Case 4: check subscriptions
-        // refresh user to prevent lazy init exceptions
-        user = userDao.getUser(user.getUsername());
-        if(user!=null) {
-            for(CollectionSubscription cs: user.getCollectionSubscriptions()) {
-                Ticket ticket = contentDao.findTicket(cs.getTicketKey());
-                if(ticket==null) {
-                    continue;
-                }
-                if(hasReadAccess(ticket,item)) {
-                    return true;
-                }
-            }
-        }
-        
+
         // otherwise no access
         return false;
     }
-    
-    private boolean hasReadAccess(Ticket ticket, Item item, Set<Ticket> tickets) {
-        // check principal ticket
-        if(hasReadAccess(ticket,item)) {
-            return true;
-        }
-        
-        // check other tickets
-        if(tickets!=null) {
-            for(Ticket t: tickets) {
-                if(hasReadAccess(t, item)) {
-                    return true;
-                }
-            }
-        }
-        
-        // otherwise no access
-        return false;
-    }
-    
-    private boolean hasReadAccess(Ticket ticket, Item item) {
-        // ticket must be valid
-        if(ticket.isGranted(item) && !ticket.hasTimedOut()) {
-            return true;
-        }
-       
-        // otherwise no access
-        return false;
-    }
-    
-    private boolean hasWriteAccess(User user, Item item, Set<Ticket> tickets) {
+
+    private boolean hasWriteAccess(User user, Item item) {
         // admin always has access
         if(user.getAdmin()!=null && user.getAdmin().booleanValue()) {
             return true;
@@ -233,63 +170,9 @@ public class SecurityHelper {
                 return true;
             }
         }
-        
-        // Case 3: ticket for item present
-        if(tickets!=null) {
-            for(Ticket ticket: tickets) {
-                if(hasWriteAccess(ticket, item)) {
-                    return true;
-                }
-            }
-        }
-        
-        // Case 4: check subscriptions
-        // refresh user to prevent lazy init exceptions
-        user = userDao.getUser(user.getUsername());
-        if(user!=null) {
-            for(CollectionSubscription cs: user.getCollectionSubscriptions()) {
-                Ticket ticket = contentDao.findTicket(cs.getTicketKey());
-                if(ticket==null) {
-                    continue;
-                }
-                if(hasWriteAccess(ticket,item)) {
-                    return true;
-                }
-            }
-        }
-        
+
         // otherwise no access
         return false;
     }
-    
-    private boolean hasWriteAccess(Ticket ticket, Item item, Set<Ticket> tickets) {
-        // check principal ticket
-        if(hasWriteAccess(ticket,item)) {
-            return true;
-        }
-        
-        // check other tickets
-        if(tickets!=null) {
-            for(Ticket t: tickets) {
-                if(hasWriteAccess(t, item)) {
-                    return true;
-                }
-            }
-        }
-            
-        // otherwise no access
-        return false;
-    }
-    
-    private boolean hasWriteAccess(Ticket ticket, Item item) {
-        // ticket must be valid
-        if(ticket.isGranted(item) && !ticket.hasTimedOut() && ticket.isReadWrite()) {
-            return true;
-        }
-       
-        // otherwise no access
-        return false;
-    }
-   
     
 }

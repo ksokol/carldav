@@ -15,17 +15,17 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  */
@@ -678,8 +678,7 @@ public class MockUser extends MockAuditableObject implements User {
      */
     public final CollectionSubscription getSubscription(final String collectionUid, final String ticketKey){
         for (CollectionSubscription sub : subscriptions) {
-            if (sub.getCollectionUid().equals(collectionUid)
-                    && sub.getTicketKey().equals(ticketKey)) {
+            if (sub.getCollectionUid().equals(collectionUid)) {
                 return sub;
             }
         }

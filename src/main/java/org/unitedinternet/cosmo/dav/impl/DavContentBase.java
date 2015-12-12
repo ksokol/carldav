@@ -87,7 +87,7 @@ public abstract class DavContentBase extends DavItemResourceBase
 
     /** */
     public String getSupportedMethods() {
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, COPY, PUT, DELETE, MOVE, MKTICKET, DELTICKET";
+        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, COPY, PUT, DELETE, MOVE";
     }
     
 

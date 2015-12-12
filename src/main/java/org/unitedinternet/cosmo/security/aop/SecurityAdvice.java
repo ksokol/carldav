@@ -15,9 +15,6 @@
  */
 package org.unitedinternet.cosmo.security.aop;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -30,7 +27,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Ticket;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
@@ -40,6 +36,9 @@ import org.unitedinternet.cosmo.security.ItemSecurityException;
 import org.unitedinternet.cosmo.security.Permission;
 import org.unitedinternet.cosmo.security.util.SecurityHelper;
 import org.unitedinternet.cosmo.service.triage.TriageStatusQueryContext;
+
+import java.util.Date;
+import java.util.Set;
 
 /**
  * Security Advice for determining access to service
@@ -568,65 +567,6 @@ public class SecurityAdvice extends OrderedAdvice {
         
         return pjp.proceed();
     }
-    
-    @Around("execution(* org.unitedinternet.cosmo.service.ContentService.createTicket(..)) &&"
-            + "args(item, ticket)")
-    public Object checkCreatTicket(ProceedingJoinPoint pjp,
-            Item item, Ticket ticket) throws Throwable {
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("in checkCreatTicket(item, ticket)");
-        }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-       
-        if (!securityHelper.hasWriteTicketAccess(securityManager.getSecurityContext(),item)) {
-            throw new CosmoSecurityException(
-                    "principal does not have access to add tickets to item "
-                            + item.getUid());
-        }
-        return pjp.proceed();
-    }
-    
-    @Around("execution(* org.unitedinternet.cosmo.service.ContentService.removeTicket(..)) &&"
-            + "args(item, ticket)")
-    public Object checkRemoveTicket(ProceedingJoinPoint pjp,
-            Item item, Ticket ticket) throws Throwable {
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("in checkRemoveTicket(item, ticket)");
-        }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-       
-        if (!securityHelper.hasWriteTicketAccess(securityManager.getSecurityContext(),item)) {
-            throw new CosmoSecurityException(
-                    "principal does not have access to remove tickets from item "
-                            + item.getUid());
-        }
-        
-        return pjp.proceed();
-    }
-    
-    @Around("execution(* org.unitedinternet.cosmo.service.ContentService.removeTicket(..)) &&"
-            + "args(item, key)")
-    public Object checkRemoveTicketKey(ProceedingJoinPoint pjp,
-            Item item, String key) throws Throwable {
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("in checkRemoveTicketKey(item, key)");
-        }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-       
-        if (!securityHelper.hasWriteTicketAccess(securityManager.getSecurityContext(),item)) {
-            throw new CosmoSecurityException(
-                    "principal does not have access to remove tickets from item "
-                            + item.getUid());
-        }
-        return pjp.proceed();
-    }
-
 
     public CosmoSecurityManager getSecurityManager() {
         return securityManager;

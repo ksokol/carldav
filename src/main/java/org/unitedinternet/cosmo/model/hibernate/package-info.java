@@ -96,10 +96,6 @@
                 + "HibICalendarItem item join item.parentDetails pd where"
                 + " pd.primaryKey.collection.id=:parentid and item.icalUid=:icaluid"),
         @NamedQuery(name = "contentItem.by.owner", query = "from HibContentItem i where i.owner=:owner"),
-
-    // Ticket Queries
-    @NamedQuery(name="ticket.by.key", query="from HibTicket t where t.key=:key"),
-    
     
     // User Queries
     @NamedQuery(name="user.byUsername", query="from HibUser where username=:username"),

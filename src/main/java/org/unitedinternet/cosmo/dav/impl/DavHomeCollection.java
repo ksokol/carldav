@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
@@ -33,6 +29,10 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Extends <code>DavCollection</code> to adapt the Cosmo
@@ -78,19 +78,6 @@ public class DavHomeCollection extends DavCollectionBase {
                 }
             }
 
-            // for now scheduling is an option
-            if (isSchedulingEnabled()) {
-                final WebDavResource inboxResource = memberToResource(TEMPLATE_USER_INBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath()));
-                if(inboxResource != null) {
-                    members.add(inboxResource);
-                }
-
-                final WebDavResource outboxResource = memberToResource(TEMPLATE_USER_OUTBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath()));
-                if(outboxResource != null) {
-                    members.add(outboxResource);
-                }
-            }
-
             if (LOG.isTraceEnabled()) {
                 //Fix Log Forging - fortify
                 //Writing unvalidated user input to log files can allow an attacker to forge log entries or
@@ -114,13 +101,6 @@ public class DavHomeCollection extends DavCollectionBase {
                     members.add(resource);
                 }
             }
-            
-            // for now scheduling is an option
-            if (isSchedulingEnabled()) {
-                members.add(memberToResource(TEMPLATE_USER_INBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath())));
-                members.add(memberToResource(TEMPLATE_USER_OUTBOX.bindAbsolute(getResourceLocator().getBaseHref(), getResourcePath())));
-            }
-            
         } catch (CosmoDavException e) {
             throw new CosmoException(e);
         }

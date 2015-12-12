@@ -503,7 +503,7 @@ public class CalendarTests extends IntegrationTestSupport {
     public void calendarOptions() throws Exception {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule"))
+                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT"));
     }
 

@@ -38,7 +38,6 @@ import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.IntegerAttribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.ItemTombstone;
 import org.unitedinternet.cosmo.model.MultiValueStringAttribute;
@@ -60,7 +59,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibDictionaryAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFreeBusyItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibIntegerAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibMultiValueStringAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -209,8 +207,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
         ContentItem item = generateTestContent();
-        IntegerAttribute ia = new HibIntegerAttribute(new HibQName("intattribute"), Long.valueOf(22));
-        item.addAttribute(ia);
         BooleanAttribute ba = new HibBooleanAttribute(new HibQName("booleanattribute"), Boolean.TRUE);
         item.addAttribute(ba);
         
@@ -773,7 +769,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         CollectionItem a = new HibCollectionItem();
         a.setName("a");
         a.setOwner(user);
-        a.setHue(Long.valueOf(1));
 
         a = contentDao.createCollection(root, a);
 
@@ -783,7 +778,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         clearSession();
 
         CollectionItem queryItem = (CollectionItem) contentDao.findItemByUid(a.getUid());
-        Assert.assertEquals(Long.valueOf(1), queryItem.getHue());
         helper.verifyItem(a, queryItem);
     }
     

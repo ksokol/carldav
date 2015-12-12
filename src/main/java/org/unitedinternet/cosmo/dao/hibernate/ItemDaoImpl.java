@@ -35,13 +35,11 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
@@ -65,7 +63,6 @@ import javax.validation.ConstraintViolationException;
  */
 public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
-    @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(ItemDaoImpl.class);
 
     private IdGenerator idGenerator = null;

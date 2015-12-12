@@ -15,6 +15,14 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.CollectionItemDetails;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.ItemTombstone;
+import org.unitedinternet.cosmo.model.QName;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,14 +31,6 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionItemDetails;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ItemTombstone;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * Hibernate persistent CollectionItem.
@@ -135,20 +135,6 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
      */
     public void setExcludeFreeBusyRollup(boolean flag) {
         HibBooleanAttribute.setValue(this, ATTR_EXCLUDE_FREE_BUSY_ROLLUP, flag);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#getHue()
-     */
-    public Long getHue() {
-        return HibIntegerAttribute.getValue(this, ATTR_HUE);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#setHue(java.lang.Long)
-     */
-    public void setHue(Long value) {
-        HibIntegerAttribute.setValue(this, ATTR_HUE, value);
     }
 
     /**

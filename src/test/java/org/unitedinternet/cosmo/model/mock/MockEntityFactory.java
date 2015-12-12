@@ -27,7 +27,6 @@ import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.FreeBusyItem;
-import org.unitedinternet.cosmo.model.IntegerAttribute;
 import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Preference;
@@ -190,17 +189,6 @@ public class MockEntityFactory implements EntityFactory {
      */
     public FreeBusyItem createFreeBusy() {
         return new MockFreeBusyItem();
-    }
-
-    /**
-     * Creates integer attribute.
-     * {@inheritDoc}
-     * @param qname The name.
-     * @param longVal LongVal.
-     * @return Integer attribute.
-     */
-    public IntegerAttribute createIntegerAttribute(QName qname, Long longVal) {
-        return new MockIntegerAttribute(qname, longVal);
     }
 
     /**

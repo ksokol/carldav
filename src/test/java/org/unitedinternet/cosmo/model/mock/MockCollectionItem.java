@@ -157,29 +157,7 @@ public class MockCollectionItem extends MockItem implements CollectionItem {
     public void setExcludeFreeBusyRollup(boolean flag) {
         MockBooleanAttribute.setValue(this, ATTR_EXCLUDE_FREE_BUSY_ROLLUP, flag);
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionItem#getHue()
-     */
-    /** 
-     * GetHue.
-     * @return hue.
-     */
-    public Long getHue() {
-        return MockIntegerAttribute.getValue(this, ATTR_HUE);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionItem#setHue(java.lang.Long)
-     */
-    /**
-     * Sets hue.
-     * @param value The value.
-     */
-    public void setHue(Long value) {
-        MockIntegerAttribute.setValue(this, ATTR_HUE, value);
-    }
-    
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionItem#removeTombstone(org.unitedinternet.cosmo.model.copy.Item)
      */

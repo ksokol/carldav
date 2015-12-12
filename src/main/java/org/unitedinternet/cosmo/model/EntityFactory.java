@@ -33,7 +33,7 @@ public interface EntityFactory {
      * @return unique identifier
      */
     String generateUid();
-    
+
     
     /**
      * Create new CollectionItem
@@ -195,15 +195,7 @@ public interface EntityFactory {
      * @return new CalendarAttribute
      */
     CalendarAttribute createCalendarAttribute(QName qname, Calendar cal);
-    
-    /**
-     * Create new IntegerAttribute using Long
-     * @param qname QName of attribute
-     * @param longVal integer value
-     * @return new IntegerAttribute
-     */
-    IntegerAttribute createIntegerAttribute(QName qname, Long longVal);
-    
+
     /**
      * Create new StringAttribute using string value
      * @param qname QName of attribute

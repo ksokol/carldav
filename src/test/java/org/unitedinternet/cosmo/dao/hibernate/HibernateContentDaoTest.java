@@ -38,7 +38,6 @@ import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.ItemTombstone;
-import org.unitedinternet.cosmo.model.MultiValueStringAttribute;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TimestampAttribute;
 import org.unitedinternet.cosmo.model.Tombstone;
@@ -56,7 +55,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFreeBusyItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibMultiValueStringAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
@@ -74,7 +72,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.Map;
 import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
@@ -212,8 +209,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         HashSet<String> values = new HashSet<String>();
         values.add("value1");
         values.add("value2");
-        MultiValueStringAttribute mvs = new HibMultiValueStringAttribute(new HibQName("multistringattribute"), values);
-        item.addAttribute(mvs);
 
         ContentItem newItem = contentDao.createContent(root, item);
 
@@ -224,11 +219,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
 
         ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
 
-        Set<String> querySet = (Set<String>) queryItem
-                .getAttributeValue("multistringattribute");
-        Assert.assertTrue(querySet.contains("value1"));
-        Assert.assertTrue(querySet.contains("value2"));
-
         Attribute custom = queryItem.getAttribute("customattribute");
         Assert.assertEquals("customattributevalue", custom.getValue());
 
@@ -237,8 +227,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         // set attribute value to null
         custom.setValue(null);
 
-        querySet.add("value3");
-
         queryItem.removeAttribute("intattribute");
 
         contentDao.updateContent(queryItem);
@@ -246,10 +234,8 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         clearSession();
 
         queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        querySet = (Set) queryItem.getAttributeValue("multistringattribute");
         Attribute queryAttribute = queryItem.getAttribute("customattribute");
-       
-        Assert.assertTrue(querySet.contains("value3"));
+
         Assert.assertNotNull(queryAttribute);
         Assert.assertNull(queryAttribute.getValue());
         Assert.assertNull(queryItem.getAttribute("intattribute"));

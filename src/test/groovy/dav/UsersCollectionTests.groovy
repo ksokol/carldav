@@ -38,7 +38,7 @@ public class UsersCollectionTests extends IntegrationTestSupport {
     public void usersOptions() throws Exception {
         mockMvc.perform(options("/dav/users"))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access, calendar-schedule, calendar-auto-schedule"))
+                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT"));
     }
 

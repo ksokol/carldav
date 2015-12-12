@@ -15,15 +15,13 @@
  */
 package org.unitedinternet.cosmo.calendar;
 
+import org.unitedinternet.cosmo.CosmoIOException;
+
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.util.HashMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.CosmoIOException;
 
 /**
  * Parser for a simplified iCalendar property value serialization
@@ -56,8 +54,6 @@ import org.unitedinternet.cosmo.CosmoIOException;
  * </dl>
  */
 public class ICalValueParser {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(ICalValueParser.class);
 
     private StreamTokenizer tokenizer;
     private String value;

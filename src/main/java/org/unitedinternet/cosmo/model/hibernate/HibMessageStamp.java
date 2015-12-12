@@ -35,13 +35,7 @@ import javax.persistence.Entity;
 public class HibMessageStamp extends HibStamp implements MessageStamp {
 
     private static final long serialVersionUID = -6100568628972081120L;
-    
-    public static final QName ATTR_MESSAGE_ID = new HibQName(
-            MessageStamp.class, "messageId");
-    
-    public static final QName ATTR_MESSAGE_HEADERS = new HibQName(
-            MessageStamp.class, "headers");
-    
+
     public static final QName ATTR_MESSAGE_FROM = new HibQName(
             MessageStamp.class, "from");
     
@@ -53,19 +47,7 @@ public class HibMessageStamp extends HibStamp implements MessageStamp {
     
     public static final QName ATTR_MESSAGE_BCC = new HibQName(
             MessageStamp.class, "bcc");
-    
-    public static final QName ATTR_MESSAGE_ORIGINATORS = new HibQName(
-            MessageStamp.class, "originators");
-    
-    public static final QName ATTR_MESSAGE_DATE_SENT = new HibQName(
-            MessageStamp.class, "dateSent");
-    
-    public static final QName ATTR_MESSAGE_IN_REPLY_TO = new HibQName(
-            MessageStamp.class, "inReplyTo");
-    
-    public static final QName ATTR_MESSAGE_REFERENCES = new HibQName(
-            MessageStamp.class, "references");
-    
+
     /** default constructor */
     public HibMessageStamp() {
     }

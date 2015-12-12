@@ -122,36 +122,7 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
 
         helper.verifyItem(newItem, queryItem);
     }
-    
-    /**
-     * Test content dao load children.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoLoadChildren() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        ContentItem item = generateTestContent();
-        item.setName("test");
-
-        ContentItem newItem = contentDao.createContent(root, item);
-
-        Assert.assertTrue(getHibItem(newItem).getId() > -1);
-        Assert.assertNotNull(newItem.getUid());
-
-        clearSession();
-
-        Set<ContentItem> children = contentDao.loadChildren(root, null);
-        Assert.assertEquals(1, children.size());
-        
-        children = contentDao.loadChildren(root, newItem.getModifiedDate());
-        Assert.assertEquals(0, children.size());
-        
-        children = contentDao.loadChildren(root, new Date(newItem.getModifiedDate().getTime() -1));
-        Assert.assertEquals(1, children.size());
-    }
-    
     /**
      * Test content dao create content duplicate uid.
      * @throws Exception - if something is wrong this exception is thrown.

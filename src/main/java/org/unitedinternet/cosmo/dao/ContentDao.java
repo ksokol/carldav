@@ -152,18 +152,7 @@ public interface ContentDao extends ItemDao {
      * @return updated collection
      */
     public CollectionItem updateCollectionTimestamp(CollectionItem collection);
-    
-    /**
-     * Load all children for collection that have been updated since a
-     * given timestamp.  If no timestamp is specified, then return all 
-     * children.
-     * @param collection collection
-     * @param timestamp timestamp
-     * @return children of collection that have been updated since 
-     *         timestamp, or all children if timestamp is null
-     */
-    public Set<ContentItem> loadChildren(CollectionItem collection, Date timestamp);
-    
+
     /**
      * Removes all items from a given collection.
      * @param collection The collection which contains all items which will be deleted.

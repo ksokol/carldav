@@ -118,19 +118,8 @@ public abstract class DavResourceBase
 
     // WebDavResource methods
 
-    public boolean isSchedulingEnabled() {
-        return ((StandardResourceFactory) factory).isSchedulingEnabled();
-    }
-    
     public String getComplianceClass() {
-        
-        // For now scheduling is an option
-        if(isSchedulingEnabled()) {
-            return WebDavResource.COMPLIANCE_CLASS_SCHEDULING;
-        }
-        else {
-            return WebDavResource.COMPLIANCE_CLASS;
-        }
+        return WebDavResource.COMPLIANCE_CLASS;
     }
 
     public org.apache.jackrabbit.webdav.DavResourceLocator getLocator() {

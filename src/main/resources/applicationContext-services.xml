@@ -111,8 +111,6 @@
 		<constructor-arg>
 			<ref bean="iCalendarClientFilterManager" />
 		</constructor-arg>
-
-		<property name="schedulingEnabled" value="${cosmo.caldav.schedulingEnabled}" />
 	</bean>
 
 	<bean id="davResourceLocatorFactory"

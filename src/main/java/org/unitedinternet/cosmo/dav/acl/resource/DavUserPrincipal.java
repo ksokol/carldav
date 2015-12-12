@@ -15,17 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.acl.resource;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,7 +23,6 @@ import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
@@ -56,9 +44,6 @@ import org.unitedinternet.cosmo.dav.acl.property.PrincipalUrl;
 import org.unitedinternet.cosmo.dav.acl.report.PrincipalMatchReport;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
-import org.unitedinternet.cosmo.dav.caldav.property.CalendarUserAddressSet;
-import org.unitedinternet.cosmo.dav.caldav.property.ScheduleInboxURL;
-import org.unitedinternet.cosmo.dav.caldav.property.ScheduleOutboxURL;
 import org.unitedinternet.cosmo.dav.impl.DavResourceBase;
 import org.unitedinternet.cosmo.dav.property.CreationDate;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
@@ -70,6 +55,17 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 /**
 * <p>
@@ -311,14 +307,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new Etag(user.getEntityTag()));
         properties.add(new LastModified(user.getModifiedDate()));
         properties.add(new CalendarHomeSet(getResourceLocator(), user));
-        
-        // for now scheduling is an option
-        if(isSchedulingEnabled()) {
-            properties.add(new CalendarUserAddressSet(user));
-            properties.add(new ScheduleInboxURL(getResourceLocator(), user));
-            properties.add(new ScheduleOutboxURL(getResourceLocator(), user));
-        }
-        
         properties.add(new AlternateUriSet());
         properties.add(new PrincipalUrl(getResourceLocator(), user));
         properties.add(new GroupMembership());

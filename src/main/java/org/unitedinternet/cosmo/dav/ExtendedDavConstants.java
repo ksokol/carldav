@@ -91,10 +91,6 @@ public interface ExtendedDavConstants extends DavConstants {
         new UriTemplate("/users");
     UriTemplate TEMPLATE_USER =
         new UriTemplate("/users/{username}");
-    UriTemplate TEMPLATE_USER_INBOX =
-        new UriTemplate("/{username}/Inbox");
-    UriTemplate TEMPLATE_USER_OUTBOX =
-        new UriTemplate("/{username}/Outbox");
     UriTemplate TEMPLATE_HOME =
         new UriTemplate("/{username}/*");
 }

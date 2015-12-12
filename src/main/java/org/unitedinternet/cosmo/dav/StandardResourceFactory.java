@@ -28,8 +28,6 @@ import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavFreeBusy;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
-import org.unitedinternet.cosmo.dav.impl.DavInboxCollection;
-import org.unitedinternet.cosmo.dav.impl.DavOutboxCollection;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
@@ -64,7 +62,6 @@ public class StandardResourceFactory
     private EntityFactory entityFactory;
     private CalendarQueryProcessor calendarQueryProcessor;
     private ICalendarClientFilterManager clientFilterManager;
-    private boolean schedulingEnabled = false;
 
     public StandardResourceFactory(ContentService contentService,
                                    UserService userService,
@@ -181,18 +178,6 @@ public class StandardResourceFactory
             return createUserPrincipalResource(locator, match);
         }
 
-        if(schedulingEnabled) {
-            match = TEMPLATE_USER_INBOX.match(uri);
-            if (match != null) {
-                return new DavInboxCollection(locator, this);
-            }
-            
-            match = TEMPLATE_USER_OUTBOX.match(uri);
-            if (match != null) {
-                return new DavOutboxCollection(locator, this);
-            }
-        }
-
         return createUnknownResource(locator, uri);
     }
 
@@ -291,13 +276,5 @@ public class StandardResourceFactory
 
     public ICalendarClientFilterManager getClientFilterManager() {
         return clientFilterManager;
-    }
-
-    public boolean isSchedulingEnabled() {
-        return schedulingEnabled;
-    }
-
-    public void setSchedulingEnabled(boolean schedulingEnabled) {
-        this.schedulingEnabled = schedulingEnabled;
     }
 }

@@ -15,11 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import org.w3c.dom.Element;
 
 /**
@@ -130,56 +125,6 @@ public interface EntityFactory {
      */
     TaskStamp createTaskStamp();
 
-    /**
-     * Create new BinaryAttribute using InpuStream.
-     * @param qname QName of attribute
-     * @param is data
-     * @return new BinaryAttribute
-     */
-    BinaryAttribute createBinaryAttribute(QName qname, InputStream is);
-    
-    /**
-     * Create new BinaryAttribute using byte array.
-     * @param qname QName of attribute
-     * @param is data
-     * @return new BinaryAttribute
-     */
-    BinaryAttribute createBinaryAttribute(QName qname, byte[] bytes);
-    
-    /**
-     * Create new TextAttribute using Reader.
-     * @param qname QName of attribute
-     * @param reader text value
-     * @return new TextAttribute
-     */
-    TextAttribute createTextAttribute(QName qname, Reader reader);
-    
-    
-    /**
-     * Create new DecimalAttribute using BigDecimal
-     * @param qname QName of attribute
-     * @param bd decimal value
-     * @return new DecimalAttribute
-     */
-    DecimalAttribute createDecimalAttribute(QName qname, BigDecimal bd);
-    
-    
-    /**
-     * Create new CalendarAttribute using Calendar
-     * @param qname QName of attribute
-     * @param cal calendar value
-     * @return new CalendarAttribute
-     */
-    CalendarAttribute createCalendarAttribute(QName qname, Calendar cal);
-
-    /**
-     * Create new StringAttribute using string value
-     * @param qname QName of attribute
-     * @param str string value
-     * @return new StringAttribute
-     */
-    StringAttribute createStringAttribute(QName qname, String str);
-    
     /**
      * Create new XMLAttribute using element value
      * @param qname QName of attribute

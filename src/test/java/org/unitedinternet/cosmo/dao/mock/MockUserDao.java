@@ -15,28 +15,22 @@
  */
 package org.unitedinternet.cosmo.dao.mock;
 
-import java.util.ArrayList;
+import org.unitedinternet.cosmo.dao.DuplicateEmailException;
+import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
+import org.unitedinternet.cosmo.dao.UserDao;
+import org.unitedinternet.cosmo.model.CollectionSubscription;
+import org.unitedinternet.cosmo.model.Preference;
+import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
+import org.unitedinternet.cosmo.model.mock.MockUser;
+import org.unitedinternet.cosmo.util.VersionFourGenerator;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
-
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
-import org.unitedinternet.cosmo.model.ArrayPagedList;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.PagedList;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
-import org.unitedinternet.cosmo.model.Preference;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.PageCriteria;
-import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
-import org.unitedinternet.cosmo.model.mock.MockUser;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 /**
  * Mock implementation of {@link UserDao} useful for testing.
@@ -52,7 +46,6 @@ public class MockUserDao implements UserDao {
     private HashMap uidIdx;
     @SuppressWarnings("rawtypes")
     private HashMap activationIdIdx;
-    private HashMap<String, PasswordRecovery> passwordRecoveryIdx;
 
     private MockDaoStorage storage = null;
     
@@ -69,7 +62,6 @@ public class MockUserDao implements UserDao {
         emailIdx = new HashMap();
         uidIdx = new HashMap();
         activationIdIdx = new HashMap();
-        passwordRecoveryIdx = new HashMap<String, PasswordRecovery>();
 
         // add overlord user
         MockUser overlord = new MockUser();
@@ -102,22 +94,6 @@ public class MockUserDao implements UserDao {
     }
 
     /**
-     * Gets users.
-     * {@inheritDoc}
-     * @param pageCriteria The page criteria.
-     * @return Tge page list.
-     */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public PagedList getUsers(PageCriteria pageCriteria) {
-        List list = new ArrayList();
-        for (Iterator i=usernameIdx.values().iterator(); i.hasNext();) {
-            list.add(i.next());
-        }
-        PagedList tmp = new ArrayPagedList(pageCriteria, list);
-        return tmp;
-    }
-
-    /**
      * Gets user.
      * {@inheritDoc}
      * @param username The username.
@@ -141,19 +117,6 @@ public class MockUserDao implements UserDao {
             return null;
         }
         return (User) uidIdx.get(uid);
-    }
-
-    /**
-     * Gets user by activation id.
-     * {@inheritDoc}
-     * @param id The id.
-     * @return The user.
-     */
-    public User getUserByActivationId(String id) {
-        if (id == null) {
-            return null;
-        }
-        return (User) activationIdIdx.get(id);
     }
 
     /**
@@ -324,36 +287,6 @@ public class MockUserDao implements UserDao {
      * resources used.
      */
     public void destroy() {
-    }
-
-    /**
-     * Creates password recovery.
-     * {@inheritDoc}
-     * @param passwordRecovery The password recovery.
-     */
-    public void createPasswordRecovery(PasswordRecovery passwordRecovery) {
-        passwordRecoveryIdx.put(passwordRecovery.getKey(), passwordRecovery);
-        
-    }
-
-    /**
-     * Deletes passwordRecovery.
-     * {@inheritDoc}
-     * @param passwordRecovery Password Recovery.
-     */
-    public void deletePasswordRecovery(PasswordRecovery passwordRecovery) {
-        passwordRecoveryIdx.remove(passwordRecovery.getKey());
-        
-    }
-
-    /**
-     * Gets the password Recovery.
-     * {@inheritDoc}
-     * @param key The key.
-     * @re passwordRecovery The passwordRecovery.
-     */
-    public PasswordRecovery getPasswordRecovery(String key) {
-        return passwordRecoveryIdx.get(key);
     }
 
     /**

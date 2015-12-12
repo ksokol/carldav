@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
-import java.util.Set;
-
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,19 +26,20 @@ import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
-import org.unitedinternet.cosmo.model.PagedList;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.PageCriteria;
-import org.unitedinternet.cosmo.service.OverlordDeletionException;
 import org.unitedinternet.cosmo.service.ServiceEvent;
 import org.unitedinternet.cosmo.service.ServiceListener;
 import org.unitedinternet.cosmo.service.UserService;
+
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.util.Set;
 
 /**
  * Standard implementation of {@link UserService}.
  */
 public class StandardUserService extends BaseService implements UserService {
+
     private static final Log LOG = LogFactory.getLog(StandardUserService.class);
 
     /**
@@ -65,22 +62,6 @@ public class StandardUserService extends BaseService implements UserService {
             LOG.debug("getting all users");
         }
         return userDao.getUsers();
-    }
-
-    /**
-     * Returns the sorted list of user accounts corresponding to the
-     * given <code>PageCriteria</code>.
-     *
-     * @param pageCriteria the pagination criteria
-     */
-    public PagedList<User, User.SortType> getUsers(PageCriteria<User.SortType> pageCriteria) {
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker to forge log entries
-            //or inject malicious content into the logs.
-            LOG.debug("getting users for criteria " + pageCriteria.toString());
-        }
-        return userDao.getUsers(pageCriteria);
     }
 
     /**
@@ -117,39 +98,6 @@ public class StandardUserService extends BaseService implements UserService {
             LOG.debug("getting user with email address " + email);
         }
         return userDao.getUserByEmail(email);
-    }
-
-    /**
-     * Returns the user account associated with the given activation id.
-     *
-     * @param activationId the activation id associated with the account to return
-     *
-     * @return the User associated with activationId
-     *
-     * @throws DataRetrievalFailureException if there is no user associated with this
-     * activation id.
-     */
-    public User getUserByActivationId(String activationId) {
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker to forge log entries
-            //or inject malicious content into the logs.
-            LOG.debug("getting user associated with activation id " +
-                    activationId);
-        }
-        return userDao.getUserByActivationId(activationId);
-    }
-    
-    /**
-     * Returns a set of users that contain a user preference that
-     * matches a specific key and value.
-     * @param key user preference key to match
-     * @param value user preference value to match
-     * @return set of users containing a user preference that matches
-     *         key and value
-     */
-    public Set<User> findUsersByPreference(String key, String value) {
-        return userDao.findUsersByPreference(key, value);
     }
 
     /**
@@ -300,55 +248,6 @@ public class StandardUserService extends BaseService implements UserService {
     }
 
     /**
-     * Removes a set of user accounts from the repository. Will not
-     * remove the overlord.
-     * @param users
-     */
-    public void removeUsers(Set<User> users) throws OverlordDeletionException{
-        for (User user : users){
-            if (user.isOverlord()) {
-                throw new OverlordDeletionException();
-            }
-            removeUserAndItems(user);
-        }
-        // Only log if all removes were successful
-        if (LOG.isDebugEnabled()) {
-            for (User user : users){
-                //Fix Log Forging - fortify
-                //Writing unvalidated user input to log files can allow an attacker to forge log entries
-                //or inject malicious content into the logs.
-                LOG.debug("removing user " + user.getUsername());
-            }
-        }
-
-
-    }
-
-    /**
-     * Removes the user accounts identified by the given usernames from
-     * the repository. Will not remove overlord.
-     * @param usernames
-     */
-    public void removeUsersByName(Set<String> usernames) throws OverlordDeletionException{
-        for (String username : usernames){
-            if (username.equals(User.USERNAME_OVERLORD)) {
-                    throw new OverlordDeletionException();
-            }
-            User user = userDao.getUser(username);
-            removeUserAndItems(user);
-        }
-        // Only log if all removes were successful
-        if (LOG.isDebugEnabled()) {
-            for (String username : usernames){
-                //Fix Log Forging - fortify
-                //Writing unvalidated user input to log files can allow an attacker
-                //to forge log entries or inject malicious content into the logs.
-                LOG.debug("removing user " + username);
-            }
-        }
-    }
-
-    /**
      * Generates a random password in a format suitable for
      * presentation as an authentication credential.
      */
@@ -415,18 +314,6 @@ public class StandardUserService extends BaseService implements UserService {
 
     /**
      */
-    public void setDigestAlgorithm(String digestAlgorithm) {
-        this.digestAlgorithm = digestAlgorithm;
-    }
-
-    /**
-     */
-    public TokenService getPasswordGenerator() {
-        return this.passwordGenerator;
-    }
-
-    /**
-     */
     public void setPasswordGenerator(TokenService generator) {
         this.passwordGenerator = generator;
     }
@@ -454,31 +341,6 @@ public class StandardUserService extends BaseService implements UserService {
     public void setUserDao(UserDao userDao) {
         this.userDao = userDao;
     }
-
-    public PasswordRecovery getPasswordRecovery(String key) {
-         PasswordRecovery passwordRecovery = userDao.getPasswordRecovery(key);
-         
-         if (passwordRecovery != null){
-             if (passwordRecovery.hasExpired()){
-                 userDao.deletePasswordRecovery(passwordRecovery);
-             } else {
-                 return passwordRecovery;
-             }
-         }
-         return null;
-     }
-     
-     public PasswordRecovery createPasswordRecovery(
-                 PasswordRecovery passwordRecovery){
-         
-         userDao.createPasswordRecovery(passwordRecovery);
-         
-         return userDao.getPasswordRecovery(passwordRecovery.getKey());
-     }
-     
-     public void deletePasswordRecovery(PasswordRecovery passwordRecovery){
-         userDao.deletePasswordRecovery(passwordRecovery);
-     }    
 
     /**
      * Remove all Items associated to User.

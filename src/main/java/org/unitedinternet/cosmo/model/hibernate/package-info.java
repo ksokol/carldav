@@ -115,10 +115,6 @@
         @NamedQuery(name = "users.withSchedules", query = "select u from HibUser u join u.preferences "
                 + "preference where preference.key like 'cosmo.scheduler.job.%.enabled' and " + "preference.value='true'"),
 
-        // Password Recovery entity query
-        @NamedQuery(name = "passwordRecovery.byKey", query = "from HibPasswordRecovery where key=:key"),
-        @NamedQuery(name = "passwordRecovery.delete.byUser", query = "delete from HibPasswordRecovery where user=:user"),
-
         // Event Queries
         @NamedQuery(name = "event.by.calendar.icaluid", query = "select i from HibNoteItem i join "
                 + "i.parentDetails pd join i.stamps stamp where pd.primaryKey.collection=:calendar and "

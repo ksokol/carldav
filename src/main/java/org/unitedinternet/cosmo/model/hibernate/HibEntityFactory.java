@@ -32,7 +32,6 @@ import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.IntegerAttribute;
 import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.StringAttribute;
@@ -123,10 +122,6 @@ public class HibEntityFactory implements EntityFactory {
 
     public MessageStamp createMessageStamp() {
         return new HibMessageStamp();
-    }
-
-    public PasswordRecovery createPasswordRecovery(User user, String key) {
-        return new HibPasswordRecovery(user, key);
     }
 
     public Preference createPreference() {

@@ -24,9 +24,7 @@ import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.dao.mock.MockUserDao;
-import org.unitedinternet.cosmo.model.PasswordRecovery;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibPasswordRecovery;
 
 import java.security.SecureRandom;
 import java.util.Set;
@@ -196,18 +194,6 @@ public class StandardUserServiceTest {
     }
 
     /**
-     * Tests generate password.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testGeneratePassword() throws Exception {
-        String pwd = service.generatePassword();
-
-        Assert.assertTrue("Password too long", pwd.length() <= User.PASSWORD_LEN_MAX);
-        Assert.assertTrue("Password too short", pwd.length() >= User.PASSWORD_LEN_MIN);
-    }
-
-    /**
      * Tests null user dao.
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -261,69 +247,5 @@ public class StandardUserServiceTest {
 
         // tests hex
         Assert.assertTrue("Digest not hex encoded", digested.matches("^[0-9a-f]+$"));
-    }
-    
-    /**
-     * Tests create password recovery.
-     */
-    @Test
-    public void testCreatePasswordRecovery(){
-        User user = testHelper.makeDummyUser();
-        user = userDao.createUser(user);
-        
-        PasswordRecovery passwordRecovery = 
-            new HibPasswordRecovery(user, "pwrecovery1");
-        
-        passwordRecovery = service.createPasswordRecovery(passwordRecovery);
-
-        PasswordRecovery storedPasswordRecovery = 
-            service.getPasswordRecovery(passwordRecovery.getKey());
-
-        Assert.assertEquals(passwordRecovery, storedPasswordRecovery);
-        
-        service.deletePasswordRecovery(storedPasswordRecovery);
-        
-        storedPasswordRecovery = 
-            service.getPasswordRecovery(storedPasswordRecovery.getKey());
-        
-        Assert.assertNull(storedPasswordRecovery);
-    }
-    
-    /**
-     * Tests recover password.
-     */
-    @Test
-    public void testRecoverPassword(){
-        User user = testHelper.makeDummyUser();
-        
-        userDao.createUser(user);
-
-        PasswordRecovery passwordRecovery = new HibPasswordRecovery(user, "pwrecovery2");
-        
-        passwordRecovery = service.createPasswordRecovery(passwordRecovery);
-        
-        Assert.assertEquals(user, passwordRecovery.getUser());
-        
-        // Recover password
-        
-        PasswordRecovery storedPasswordRecovery = 
-            service.getPasswordRecovery(passwordRecovery.getKey());
-        
-        User changingUser = storedPasswordRecovery.getUser();
-        
-        String newPassword = service.generatePassword();
-
-        changingUser.setPassword(newPassword);
-        
-        changingUser = service.updateUser(changingUser);
-        
-        String changedPassword = changingUser.getPassword();
-        
-        User changedUser = service.getUser(changingUser.getUsername());
-        
-        Assert.assertEquals(changedUser, changingUser);
-        
-        Assert.assertEquals(changedPassword, changedUser.getPassword());
-       
     }
 }

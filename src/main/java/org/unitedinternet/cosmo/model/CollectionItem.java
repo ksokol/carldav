@@ -26,26 +26,22 @@ public interface CollectionItem extends Item{
      * Return active children items (those with isActive=true).
      * @return active children items
      */
-    public Set<Item> getChildren();
+    Set<Item> getChildren();
     
-    public CollectionItemDetails getChildDetails(Item item);
+    CollectionItemDetails getChildDetails(Item item);
 
     /**
      * Return child item with matching uid
      * @return identified child item, or null if no child with that
      * uid exists
      */
-    public Item getChild(String uid);
+    Item getChild(String uid);
 
-    public Item getChildByName(String name);
+    Item getChildByName(String name);
 
-    public boolean isExcludeFreeBusyRollup();
+    boolean isExcludeFreeBusyRollup();
 
-    public void setExcludeFreeBusyRollup(boolean flag);
-
-    public Long getHue();
-
-    public void setHue(Long value);
+    void setExcludeFreeBusyRollup(boolean flag);
 
     /**
      * Generate alternative hash code for collection.
@@ -54,6 +50,6 @@ public interface CollectionItem extends Item{
      * has changed since the last hash code was generated.
      * @return
      */
-    public int generateHash();
+    int generateHash();
 
 }

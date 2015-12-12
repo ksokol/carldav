@@ -15,14 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.acl.resource;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -30,7 +22,15 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.unitedinternet.cosmo.dav.*;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavCollection;
+import org.unitedinternet.cosmo.dav.DavContent;
+import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
+import org.unitedinternet.cosmo.dav.ForbiddenException;
+import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.DavAce;
 import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
@@ -38,8 +38,18 @@ import org.unitedinternet.cosmo.dav.acl.report.PrincipalMatchReport;
 import org.unitedinternet.cosmo.dav.acl.report.PrincipalPropertySearchReport;
 import org.unitedinternet.cosmo.dav.acl.report.PrincipalSearchPropertySetReport;
 import org.unitedinternet.cosmo.dav.impl.DavResourceBase;
-import org.unitedinternet.cosmo.dav.property.*;
+import org.unitedinternet.cosmo.dav.property.CurrentUserPrincipal;
+import org.unitedinternet.cosmo.dav.property.DisplayName;
+import org.unitedinternet.cosmo.dav.property.IsCollection;
+import org.unitedinternet.cosmo.dav.property.ResourceType;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.User;
+
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 /**
  * <p>
@@ -51,11 +61,8 @@ import org.unitedinternet.cosmo.model.User;
  * @see DavCollection
  */
 public class DavUserPrincipalCollection extends DavResourceBase implements DavCollection {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(DavUserPrincipalCollection.class);
 
-    private static final Set<ReportType> REPORT_TYPES = new HashSet<ReportType>();
-    
+    private static final Set<ReportType> REPORT_TYPES = new HashSet<>();
 
     private DavAcl acl;
 
@@ -169,7 +176,7 @@ public class DavUserPrincipalCollection extends DavResourceBase implements DavCo
     // our methods
 
     protected Set<QName> getResourceTypes() {
-        HashSet<QName> rt = new HashSet<QName>(1);
+        HashSet<QName> rt = new HashSet<>(3);
         rt.add(RESOURCE_TYPE_COLLECTION);
         return rt;
     }

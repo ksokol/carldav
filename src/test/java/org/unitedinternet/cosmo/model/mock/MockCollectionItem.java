@@ -159,27 +159,6 @@ public class MockCollectionItem extends MockItem implements CollectionItem {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionItem#removeTombstone(org.unitedinternet.cosmo.model.copy.Item)
-     */
-    /**
-     * Removes tombstone.
-     * @param item The item.
-     * @return boolean.
-     */
-    public boolean removeTombstone(Item item) {
-        for(Iterator<Tombstone> it = getTombstones().iterator();it.hasNext();) {
-            Tombstone ts = it.next();
-            if(ts instanceof ItemTombstone) {
-                if(((ItemTombstone) ts).getItemUid().equals(item.getUid())) {
-                    it.remove();
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceCollectionItem#generateHash()
      */
     /**

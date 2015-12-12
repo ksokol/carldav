@@ -34,7 +34,6 @@ import org.unitedinternet.cosmo.security.mock.MockSecurityManager;
 import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.impl.StandardContentService;
-import org.unitedinternet.cosmo.service.impl.StandardTriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
 
 import java.util.Date;
@@ -62,12 +61,8 @@ public class EventLogAdviceTest {
         securityManager = new MockSecurityManager();
         contentDao = new MockContentDao(new MockDaoStorage());
         eventLogDao = new MockEventLogDao();
-        final StandardContentService service = new StandardContentService();
-        service.setContentDao(contentDao);
-        service.setLockManager(new SingleVMLockManager());
-        service.setTriageStatusQueryProcessor(new StandardTriageStatusQueryProcessor());
-        service.init();
-        
+        final StandardContentService service = new StandardContentService(contentDao, new SingleVMLockManager());
+
         // create a factory that can generate a proxy for the given target object
         AspectJProxyFactory factory = new AspectJProxyFactory(service); 
 

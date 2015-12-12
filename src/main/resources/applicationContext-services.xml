@@ -68,12 +68,9 @@
 	<bean id="contentLockManager"
 		class="org.unitedinternet.cosmo.service.lock.SingleVMLockManager" />
 
-	<bean id="contentService"
-		class="org.unitedinternet.cosmo.service.impl.StandardContentService"
-		init-method="init" destroy-method="destroy">
-		<property name="contentDao" ref="contentDao" />
-		<property name="lockManager" ref="contentLockManager" />
-		<property name="triageStatusQueryProcessor" ref="triageStatusQueryProcessor" />
+	<bean id="contentService" class="org.unitedinternet.cosmo.service.impl.StandardContentService">
+        <constructor-arg index="0" ref="contentDao" />
+        <constructor-arg index="1" ref="contentLockManager" />
 	</bean>
 
 	<bean id="calendarQueryProcessor"

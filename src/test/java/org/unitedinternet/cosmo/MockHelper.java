@@ -37,7 +37,6 @@ import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 import org.unitedinternet.cosmo.service.impl.StandardContentService;
-import org.unitedinternet.cosmo.service.impl.StandardTriageStatusQueryProcessor;
 import org.unitedinternet.cosmo.service.impl.StandardUserService;
 import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
 
@@ -70,16 +69,8 @@ public class MockHelper extends TestHelper {
         SingleVMLockManager lockManager = new SingleVMLockManager();
         
         entityFactory = new MockEntityFactory();
-        
-        contentService = new StandardContentService();
-        contentService.setContentDao(contentDao);
-        contentService.setLockManager(lockManager);
-        contentService.setTriageStatusQueryProcessor(new StandardTriageStatusQueryProcessor());
-        
-        contentService.init();
-
+        contentService = new StandardContentService(contentDao, lockManager);
         clientFilterManager = new ICalendarClientFilterManager();
-        
         calendarQueryProcessor = new StandardCalendarQueryProcessor();
         calendarQueryProcessor.setCalendarDao(calendarDao);
         

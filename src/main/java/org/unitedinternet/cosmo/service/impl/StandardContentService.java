@@ -22,6 +22,7 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
@@ -57,14 +58,20 @@ import java.util.Set;
  * @see ContentDao
  */
 public class StandardContentService implements ContentService {
-    private static final Log LOG =
-        LogFactory.getLog(StandardContentService.class);
 
-    private ContentDao contentDao;
-    private LockManager lockManager;
-    private TriageStatusQueryProcessor triageStatusQueryProcessor;
+    private static final Log LOG = LogFactory.getLog(StandardContentService.class);
+
+    private final ContentDao contentDao;
+    private final LockManager lockManager;
   
     private long lockTimeout = 100;
+
+    public StandardContentService(final ContentDao contentDao, final LockManager lockManager) {
+        Assert.notNull(contentDao, "contentDao is null");
+        Assert.notNull(lockManager, "lockManager is null");
+        this.contentDao = contentDao;
+        this.lockManager = lockManager;
+    }
 
     // ContentService methods
 
@@ -764,53 +771,6 @@ public class StandardContentService implements ContentService {
      */
     public Set<CollectionItem> findCollectionItems(CollectionItem collectionItem) {
         return contentDao.findCollectionItems(collectionItem);
-    }
-
-    // Service methods
-
-    /**
-     * Initializes the service, sanity checking required properties
-     * and defaulting optional properties.
-     */
-    public void init() {
-
-        if (contentDao == null) {
-            throw new IllegalStateException("contentDao must not be null");
-        }
-        if (lockManager == null) {
-            throw new IllegalStateException("lockManager must not be null");
-        }
-        if(triageStatusQueryProcessor == null) {
-            throw new IllegalStateException("triageStatusQueryProcessor must not be null");
-        }
-    }
-
-    /**
-     * Readies the service for garbage collection, shutting down any
-     * resources used.
-     */
-    public void destroy() {
-        // does nothing
-    }
-
-    /** */
-    public ContentDao getContentDao() {
-        return contentDao;
-    }
-
-    /** */
-    public void setContentDao(ContentDao dao) {
-        contentDao = dao;
-    }
-
-    public void setTriageStatusQueryProcessor(
-            TriageStatusQueryProcessor triageStatusQueryProcessor) {
-        this.triageStatusQueryProcessor = triageStatusQueryProcessor;
-    }
-
-    /** */
-    public void setLockManager(LockManager lockManager) {
-        this.lockManager = lockManager;
     }
 
     /**

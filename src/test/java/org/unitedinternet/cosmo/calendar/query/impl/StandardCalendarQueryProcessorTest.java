@@ -33,7 +33,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
-import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.dao.mock.MockCalendarDao;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
@@ -173,17 +172,6 @@ public class StandardCalendarQueryProcessorTest {
         verifyPeriods(vfb, FbType.BUSY, "20060103T100000Z/20060103T120000Z,20060104T100000Z/20060104T120000Z");
         verifyPeriods(vfb, FbType.BUSY_TENTATIVE, "20060102T100000Z/20060102T120000Z");
         verifyPeriods(vfb, FbType.BUSY_UNAVAILABLE, "20060105T010000Z/20060105T020000Z");
-    }
-    
-    /**
-     * Gets user.
-     * @param userDao UserDao.
-     * @param username Username.
-     * @return The user.
-     */
-    @SuppressWarnings("unused")
-	private User getUser(UserDao userDao, String username) {
-        return testHelper.makeDummyUser(username, username);
     }
 
     /**

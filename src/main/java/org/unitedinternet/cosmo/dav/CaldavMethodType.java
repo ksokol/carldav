@@ -23,8 +23,8 @@ import java.util.HashSet;
  */
 public class CaldavMethodType  {
 
-    private static final HashSet<String> READ = new HashSet<String>();
-    private static final HashSet<String> WRITE = new HashSet<String>();
+    private static final HashSet<String> READ = new HashSet<>();
+    private static final HashSet<String> WRITE = new HashSet<>();
 
     static {
         // HTTP methods
@@ -47,9 +47,5 @@ public class CaldavMethodType  {
 
     public static boolean isReadMethod(String method) {
         return READ.contains(method);
-    }
-
-    public static boolean isWriteMethod(String method) {
-        return WRITE.contains(method);
     }
 }

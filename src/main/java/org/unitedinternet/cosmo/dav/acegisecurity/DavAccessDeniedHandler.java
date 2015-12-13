@@ -15,59 +15,36 @@
  */
 package org.unitedinternet.cosmo.dav.acegisecurity;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
+import org.unitedinternet.cosmo.dav.impl.StandardDavResponse;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
-import org.unitedinternet.cosmo.dav.impl.StandardDavResponse;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.web.access.AccessDeniedHandler;
-
 /**
  * <p>
- * Handles <code>AccessDeniedException</code> by sending a 403 response
- * enclosing an XML body describing the error.
+ * Handles <code>AccessDeniedException</code> by sending a 403 response enclosing an XML body describing the error.
  * </p>
  */
 public class DavAccessDeniedHandler implements AccessDeniedHandler {
-    @SuppressWarnings("unused")
-    private static final Log LOG =
-            LogFactory.getLog(DavAccessDeniedHandler.class);
-
-    public void handle(ServletRequest request,
-                       ServletResponse response,
-                       AccessDeniedException exception) throws IOException, ServletException {
-        
-        if(!(response instanceof HttpServletResponse)){
-            throw new IllegalStateException( "Expected response of type: ["
-                    + HttpServletResponse.class.getName() + "], received :["
-                    + response.getClass().getName() + "]");
-        }
-        
-        StandardDavResponse sdr = new StandardDavResponse((HttpServletResponse) response);
-        NeedsPrivilegesException toSend = null;
-        if (exception instanceof DavAccessDeniedException) {
-            DavAccessDeniedException e = (DavAccessDeniedException) exception;
-            toSend =
-                    new NeedsPrivilegesException(e.getHref(), e.getPrivilege());
-        } else {
-            toSend = new NeedsPrivilegesException(exception.getMessage());
-        }
-        sdr.sendDavError(toSend);
-    }
 
     @Override
-    public void handle(HttpServletRequest request,
-                       HttpServletResponse response,
-                       AccessDeniedException accessDeniedException) throws IOException,
-            ServletException {
+    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
+        final StandardDavResponse davResponse = new StandardDavResponse(response);
+        NeedsPrivilegesException exceptionToSend;
 
+        if (accessDeniedException instanceof DavAccessDeniedException) {
+            DavAccessDeniedException exception = (DavAccessDeniedException) accessDeniedException;
+            exceptionToSend = new NeedsPrivilegesException(exception.getHref(), exception.getPrivilege());
+        } else {
+            exceptionToSend = new NeedsPrivilegesException(accessDeniedException.getMessage());
+        }
+
+        davResponse.sendDavError(exceptionToSend);
     }
 }

@@ -15,28 +15,23 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * <p>
@@ -44,13 +39,10 @@ import org.w3c.dom.Element;
  * </p>
  */
 public abstract class ReportBase implements Report, ExtendedDavConstants {
-    private static final Log LOG = LogFactory.getLog(ReportBase.class);
 
     private WebDavResource resource;
     private ReportInfo info;
     private HashSet<WebDavResource> results;
-
-    // Report methods
 
     /**
      * Puts the report into a state where it can be run. Parses the given
@@ -61,7 +53,7 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
             throws CosmoDavException {
         this.resource = (WebDavResource) resource;
         this.info = info;
-        this.results = new HashSet<WebDavResource>();
+        this.results = new HashSet<>();
         parseReport(info);
     }
 
@@ -70,12 +62,7 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
      * Calls {@link runQuery())} to execute the report and
      * {@link #output(DavServletResponse)} to write the result.
      */
-    public void run(DavServletResponse response)
-            throws CosmoDavException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("running report " + getType().getReportName() +
-                    " against " + resource.getResourcePath());
-        }
+    public void run(DavServletResponse response) throws CosmoDavException {
         runQuery();
         output(response);
     }
@@ -149,12 +136,7 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
      * Should recursively call the method against each of the children of the
      * provided collection that are themselves collections.
      */
-    protected void doQueryDescendents(DavCollection collection)
-            throws CosmoDavException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("querying descendents of " +
-                    collection.getResourcePath());
-        }
+    protected void doQueryDescendents(DavCollection collection) throws CosmoDavException {
         for (DavResourceIterator i = collection.getCollectionMembers(); i.hasNext(); ) {
             WebDavResource member = (WebDavResource) i.nextResource();
             if (member.isCollection()) {

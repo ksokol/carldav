@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
@@ -30,21 +28,14 @@ import org.w3c.dom.Element;
  * Base class for WebDAV reports that return multistatus responses.
  */
 public abstract class MultiStatusReport extends ReportBase {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(MultiStatusReport.class);
 
     private MultiStatus multistatus = new MultiStatus();
     private int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
 
-    // Report methods
-
     public final boolean isMultiStatusReport() {
         return true;
     }
-
-    // our methods
-
 
     /**
      * Generates and writes the multistatus response.
@@ -102,10 +93,6 @@ public abstract class MultiStatusReport extends ReportBase {
         }
 
         return multistatus.toXml(document);
-    }
-
-    public int getPropFindType() {
-        return propfindType;
     }
 
     public void setPropFindType(int type) {

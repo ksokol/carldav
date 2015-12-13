@@ -118,11 +118,7 @@
         // Event Queries
         @NamedQuery(name = "event.by.calendar.icaluid", query = "select i from HibNoteItem i join "
                 + "i.parentDetails pd join i.stamps stamp where pd.primaryKey.collection=:calendar and "
-                + "stamp.class=HibEventStamp and i.icalUid=:uid"),
-
-        // Event Log Queries
-        @NamedQuery(name = "logEntry.by.collection.date", query = "from HibEventLogEntry e where id1=:parentId "
-                + "and entryDate between :startDate and :endDate")
+                + "stamp.class=HibEventStamp and i.icalUid=:uid")
     
 })
 package org.unitedinternet.cosmo.model.hibernate;

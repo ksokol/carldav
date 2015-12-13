@@ -14,24 +14,6 @@
                             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 	
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
-	
-	
-	<!-- ICalendar Client Filter Manager The ICalendar Client Filter Manager 
-		provides a way for cosmo to tailor the icalendar data depending on the client 
-		requesting the data. -->
-
-	<!-- filter for iCal clients -->
-	<bean id="ical3ClientFilter" class="org.unitedinternet.cosmo.icalendar.ICal3ClientFilter" />
-
-	<bean id="iCalendarClientFilterManager"
-		class="org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager">
-		<property name="clientFilters">
-			<map>
-				<entry key="ical2" value-ref="ical3ClientFilter" />
-				<entry key="ical3" value-ref="ical3ClientFilter" />
-			</map>
-		</property>
-	</bean>
 
 	<bean id="userService" class="org.unitedinternet.cosmo.service.impl.StandardUserService">
         <constructor-arg index="0" value="MD5" />
@@ -70,9 +52,6 @@
 		</constructor-arg>
 		<constructor-arg>
 			<ref bean="calendarQueryProcessor" />
-		</constructor-arg>
-		<constructor-arg>
-			<ref bean="iCalendarClientFilterManager" />
 		</constructor-arg>
 	</bean>
 

@@ -26,36 +26,28 @@ public interface ICalendarConstants {
      * The highest version number of the iCalendar specification that
      * is implemented by Cosmo.
      */
-    public static final String ICALENDAR_VERSION = "2.0";
+    String ICALENDAR_VERSION = "2.0";
 
     /**
      * The MIME media type identifying a content item containing
      * data formatted with iCalendar.
      */
-    public static final String ICALENDAR_MEDIA_TYPE = "text/calendar";
-
-    /**
-     * The file extension commonly used to designate a file containing
-     * data formatted with iCalendar.
-     */
-    public static final String ICALENDAR_FILE_EXTENSION = "ics";
+    String ICALENDAR_MEDIA_TYPE = "text/calendar";
 
     /**
      * The icalender parameter used on a DTSTART to indicate that the event
      * which contains the DTSTART is an "anytime" event. This is a OSAF custom 
      * parameter.
      */
-    public static final String PARAM_X_OSAF_ANYTIME = "X-OSAF-ANYTIME";
+    String PARAM_X_OSAF_ANYTIME = "X-OSAF-ANYTIME";
 
     /**
      * iCalendar value for "TRUE"
      */
-    public static final String VALUE_TRUE = "TRUE";
-    
-    public static final String VALUE_FALSE = "FALSE";
-    
+    String VALUE_TRUE = "TRUE";
+
     /**
      * VAVAILABILITY component (not yet fully supported in ical4j)
      */
-    public static final String COMPONENT_VAVAILABLITY = "VAVAILABILITY";
+    String COMPONENT_VAVAILABLITY = "VAVAILABILITY";
 }

@@ -57,7 +57,6 @@ import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
@@ -319,10 +318,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     protected CalendarQueryProcessor getCalendarQueryProcesor() {
         return getResourceFactory().getCalendarQueryProcessor();
-    }
-
-    protected ICalendarClientFilterManager getClientFilterManager() {
-        return getResourceFactory().getClientFilterManager();
     }
 
     /**

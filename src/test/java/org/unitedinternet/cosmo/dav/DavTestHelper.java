@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import java.net.URL;
-
 import org.junit.Before;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.MockHelper;
@@ -28,6 +26,8 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.util.UriTemplate;
+
+import java.net.URL;
 
 /**
  * DavTestHelper.
@@ -50,8 +50,7 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
                                         getUserService(),
                                         getSecurityManager(),
                                         getEntityFactory(),
-                                        getCalendarQueryProcessor(),
-                                        getClientFilterManager());
+                                        getCalendarQueryProcessor());
         locatorFactory = new StandardResourceLocatorFactory();
         try {
             baseUrl = new URL("http", "localhost", -1, "/dav");

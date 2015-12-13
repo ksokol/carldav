@@ -19,7 +19,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.ContentDao;
@@ -28,8 +27,6 @@ import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.service.ServiceEvent;
-import org.unitedinternet.cosmo.service.ServiceListener;
 import org.unitedinternet.cosmo.service.UserService;
 
 import java.nio.charset.Charset;
@@ -39,7 +36,7 @@ import java.util.Set;
 /**
  * Standard implementation of {@link UserService}.
  */
-public class StandardUserService extends BaseService implements UserService {
+public class StandardUserService implements UserService {
 
     private static final Log LOG = LogFactory.getLog(StandardUserService.class);
 
@@ -80,27 +77,10 @@ public class StandardUserService extends BaseService implements UserService {
      * email address is already in use
      */
     public User createUser(User user) {
-        return createUser(user, new ServiceListener[] {});
-    }
-
-    /**
-     * Creates a user account in the repository as per
-     * {@link #createUser(User)}. Sends the <code>CREATE_USER</code>
-     * event to each provided listener, providing the newly created
-     * user and home collection as state.
-     *
-     * @param user the account to create
-     * @param listeners an array of listeners to notify
-     * @throws DataIntegrityViolationException if the username or
-     * email address is already in use
-     */
-    public User createUser(User user, ServiceListener[] listeners) {
 
         user.validateRawPassword();
 
         user.setPassword(digestPassword(user.getPassword()));
-        
-        fireBeforeEvent(new ServiceEvent("CREATE_USER", user), listeners);
 
         try {
             userDao.createUser(user);
@@ -117,12 +97,9 @@ public class StandardUserService extends BaseService implements UserService {
 
         User newUser = userDao.getUser(user.getUsername());
 
-        HomeCollectionItem home = null;
         if (! newUser.isOverlord()) {
-            home = contentDao.createRootItem(newUser);
+            contentDao.createRootItem(newUser);
         }
-
-        fireAfterEvent(new ServiceEvent("CREATE_USER", user, home), listeners);
 
         return newUser;
     }

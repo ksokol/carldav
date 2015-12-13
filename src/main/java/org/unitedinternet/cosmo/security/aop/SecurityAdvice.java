@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.security.ItemSecurityException;
 import org.unitedinternet.cosmo.security.Permission;
 import org.unitedinternet.cosmo.security.util.SecurityHelper;
-import org.unitedinternet.cosmo.service.triage.TriageStatusQueryContext;
 
 import java.util.Date;
 import java.util.Set;
@@ -529,42 +528,6 @@ public class SecurityAdvice extends OrderedAdvice {
                     "principal does not have access to use filter "
                             + filter.toString());
         }
-        return pjp.proceed();
-    }
-    
-    @Around("execution(* org.unitedinternet.cosmo.service.ContentService.findNotesByTriageStatus(..)) &&"
-            + "args(collection, context)")
-    public Object checkFindNotesByTriageStatus(ProceedingJoinPoint pjp,
-            CollectionItem collection, TriageStatusQueryContext context) throws Throwable {
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("in checkFindNotesByTriageStatus(collection, context)");
-        }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-       
-        if (!securityHelper.hasReadAccess(securityManager.getSecurityContext(),collection)) {
-            throwItemSecurityException(collection, Permission.READ); 
-        }
-        
-        return pjp.proceed();
-    }
-    
-    @Around("execution(* org.unitedinternet.cosmo.service.ContentService.findNotesByTriageStatus(..)) &&"
-            + "args(note, context)")
-    public Object checkFindNotesByTriageStatus(ProceedingJoinPoint pjp,
-            NoteItem note, TriageStatusQueryContext context) throws Throwable {
-        if(LOG.isDebugEnabled()) {
-            LOG.debug("in checkFindNotesByTriageStatus(note, context)");
-        }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-       
-        if (!securityHelper.hasReadAccess(securityManager.getSecurityContext(),note)) {
-            throwItemSecurityException(note, Permission.READ); 
-        }
-        
         return pjp.proceed();
     }
 

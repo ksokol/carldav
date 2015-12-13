@@ -23,30 +23,28 @@ import java.math.BigDecimal;
 public interface TriageStatus {
 
     /** */
-    public static final String LABEL_NOW = "NOW";
+    String LABEL_NOW = "NOW";
     /** */
-    public static final String LABEL_LATER = "LATER";
+    String LABEL_LATER = "LATER";
     /** */
-    public static final String LABEL_DONE = "DONE";
+    String LABEL_DONE = "DONE";
     /** */
-    public static final int CODE_NOW = 100;
+    int CODE_NOW = 100;
     /** */
-    public static final int CODE_LATER = 200;
+    int CODE_LATER = 200;
     /** */
-    public static final int CODE_DONE = 300;
+    int CODE_DONE = 300;
 
-    public Integer getCode();
+    Integer getCode();
 
-    public void setCode(Integer code);
+    void setCode(Integer code);
 
-    public BigDecimal getRank();
+    BigDecimal getRank();
 
-    public void setRank(BigDecimal rank);
+    void setRank(BigDecimal rank);
 
-    public Boolean getAutoTriage();
+    Boolean getAutoTriage();
 
-    public void setAutoTriage(Boolean autoTriage);
-
-    public TriageStatus copy();
+    void setAutoTriage(Boolean autoTriage);
 
 }

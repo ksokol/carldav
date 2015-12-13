@@ -23,18 +23,6 @@ import java.util.Date;
  * objects.
  */
 public class TriageStatusUtil {
-    public static String label(Integer code) {
-        if (code.equals(TriageStatus.CODE_NOW)) {
-            return TriageStatus.LABEL_NOW;
-        }
-        if (code.equals(TriageStatus.CODE_LATER)) {
-            return TriageStatus.LABEL_LATER;
-        }
-        if (code.equals(TriageStatus.CODE_DONE)) {
-            return TriageStatus.LABEL_DONE;
-        }
-        throw new IllegalStateException("Unknown code " + code);
-    }
 
     public static Integer code(String label) {
         if (label.equals(TriageStatus.LABEL_NOW)) {

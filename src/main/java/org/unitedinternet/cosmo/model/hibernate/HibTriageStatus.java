@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.model.TriageStatus;
 
@@ -81,25 +80,6 @@ public class HibTriageStatus implements TriageStatus {
      */
     public void setAutoTriage(Boolean autoTriage) {
         this.autoTriage = autoTriage;
-    }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TriageStatus#copy()
-     */
-    public TriageStatus copy() {
-        TriageStatus copy = new HibTriageStatus();
-        copy.setCode(code);
-        copy.setRank(rank);
-        copy.setAutoTriage(autoTriage);
-        return copy;
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("code", code).
-            append("rank", rank).
-            append("autoTriage", autoTriage).
-            toString();
     }
 
     @Override

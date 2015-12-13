@@ -63,19 +63,6 @@ public interface UserService {
     User createUser(User user);
 
     /**
-     * Creates a user account in the repository as per
-     * {@link #createUser(User)}. Sends the {@link #EVENT_CREATE_USER}
-     * event to each provided listener.
-     *
-     * @param user the account to create
-     * @param listeners an array of listeners to notify
-     * @throws DataIntegrityViolationException if the username or
-     * email address is already in use
-     */
-    User createUser(User user,
-                    ServiceListener[] listeners);
-
-    /**
      * Updates a user account that exists in the repository. If the
      * password has been changed, digests the raw new password and
      * uses the result to replace the stored password. Returns a new

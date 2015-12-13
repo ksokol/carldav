@@ -37,15 +37,12 @@ public class StandardUserService implements UserService {
 
     private static final Log LOG = LogFactory.getLog(StandardUserService.class);
 
-    private final String digestAlgorithm;
     private final ContentDao contentDao;
     private final UserDao userDao;
 
-    public StandardUserService(final String digestAlgorithm, final ContentDao contentDao, final UserDao userDao) {
-        Assert.notNull(digestAlgorithm, "digestAlgorithm is null");
+    public StandardUserService(final ContentDao contentDao, final UserDao userDao) {
         Assert.notNull(contentDao, "contentDao is null");
         Assert.notNull(userDao, "userDao is null");
-        this.digestAlgorithm = digestAlgorithm;
         this.contentDao = contentDao;
         this.userDao = userDao;
     }

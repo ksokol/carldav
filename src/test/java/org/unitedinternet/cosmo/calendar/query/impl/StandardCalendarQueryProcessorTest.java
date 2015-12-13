@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.calendar.query.impl;
 
-import java.util.Iterator;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
@@ -30,7 +28,6 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.FreeBusy;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +45,8 @@ import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
+
+import java.util.Iterator;
 
 /**
  * Test StandardCalendarQueryProcessorTest using mock implementations.
@@ -81,7 +80,7 @@ public class StandardCalendarQueryProcessorTest {
         User user = testHelper.makeDummyUser();
         CollectionItem root = contentDao.createRootItem(user);
         
-        CollectionItem calendar = generateCalendar("testcalendar", user);
+        CollectionItem calendar = generateCalendar(user);
         calendar.setUid(CALENDAR_UID);
         calendar.setName(calendar.getUid());
           
@@ -189,11 +188,10 @@ public class StandardCalendarQueryProcessorTest {
 
     /**
      * Generates calendar.
-     * @param name The name.
      * @param owner The owner
      * @return The collection item.
      */
-    private CollectionItem generateCalendar(String name, User owner) {
+    private CollectionItem generateCalendar(User owner) {
         CollectionItem calendar = factory.createCollection();
         calendar.setOwner(owner);
         

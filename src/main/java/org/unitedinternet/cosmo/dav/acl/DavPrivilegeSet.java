@@ -29,18 +29,10 @@ import java.util.HashSet;
  * <p>
  * A set of WebDAV access control privileges.
  * </p>
- 
  */
-public class DavPrivilegeSet extends HashSet<DavPrivilege>
-    implements ExtendedDavConstants, CaldavConstants, XmlSerializable {
+public class DavPrivilegeSet extends HashSet<DavPrivilege> implements ExtendedDavConstants, CaldavConstants, XmlSerializable {
 
-    private static final long serialVersionUID = 1977693588813371074L;
-
-    public DavPrivilegeSet() {
-        super();
-    }
-
-    // XmlSerializable methods
+    private static final long serialVersionUID = 1177693588813371074L;
 
     public Element toXml(Document document) {
         Element root =
@@ -54,47 +46,7 @@ public class DavPrivilegeSet extends HashSet<DavPrivilege>
         return root;
     }
 
-    // our methods
-
-    public boolean containsAny(DavPrivilege... privileges) {
-        for (DavPrivilege p : privileges) {
-            if (contains(p)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean containsRecursive(DavPrivilege test) {
-        for (DavPrivilege p : this) {
-            if (p.equals(test) || p.containsRecursive(test)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     public String toString() {
         return StringUtils.join(this, ", ");
-    }
-
-    public static final DavPrivilegeSet createFromXml(Element root) {
-        if (! DomUtil.matches(root, "privilege", NAMESPACE)) {
-            throw new IllegalArgumentException("Expected DAV:privilege element");
-        }
-        DavPrivilegeSet privileges = new DavPrivilegeSet();
-
-        if (DomUtil.hasChildElement(root, "read", NAMESPACE)) {
-            privileges.add(DavPrivilege.READ);
-        }
-        if (DomUtil.hasChildElement(root, "write", NAMESPACE)) {
-            privileges.add(DavPrivilege.WRITE);
-        }
-        if (DomUtil.hasChildElement(root, "read-free-busy", NAMESPACE_CALDAV)) {
-            privileges.add(DavPrivilege.READ_FREE_BUSY);
-        }
-
-        return privileges;
     }
 }

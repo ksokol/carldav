@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.security.util;
 
-import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
@@ -30,15 +28,7 @@ import org.unitedinternet.cosmo.security.CosmoSecurityContext;
  * resources.
  */
 public class SecurityHelper {
-    
-    private ContentDao contentDao;
-    private UserDao userDao;
-    
-    public SecurityHelper(ContentDao contentDao, UserDao userDao) {
-        this.contentDao = contentDao;
-        this.userDao = userDao;
-    }
-    
+
     /**
      * Determines if the current security context has access to
      * User.  The context must either be the user, or have admin access.

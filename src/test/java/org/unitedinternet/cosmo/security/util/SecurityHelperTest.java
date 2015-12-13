@@ -25,8 +25,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
@@ -52,7 +50,7 @@ public class SecurityHelperTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        securityHelper = new SecurityHelper(mock(ContentDao.class), mock(UserDao.class));
+        securityHelper = new SecurityHelper();
     }
 
     /**

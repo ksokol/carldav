@@ -68,7 +68,7 @@ public class MockHelper extends TestHelper {
         calendarQueryProcessor = new StandardCalendarQueryProcessor();
         calendarQueryProcessor.setCalendarDao(calendarDao);
         
-        userService = new StandardUserService("MD5",  contentDao, userDao);
+        userService = new StandardUserService(contentDao, userDao);
         KeyBasedPersistenceTokenService keyBasedPersistenceTokenService = new KeyBasedPersistenceTokenService();
         keyBasedPersistenceTokenService.setServerSecret("cosmossecret");
         keyBasedPersistenceTokenService.setServerInteger(123);

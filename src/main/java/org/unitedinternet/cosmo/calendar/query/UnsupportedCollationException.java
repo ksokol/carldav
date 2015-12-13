@@ -20,8 +20,8 @@ package org.unitedinternet.cosmo.calendar.query;
  * was specified.
  */
 public class UnsupportedCollationException extends RuntimeException {
-    /**
-     * Constructor.
-     */
-    public UnsupportedCollationException() {}
+
+
+    static final long serialVersionUID = -7034897190745766931L;
+
 }

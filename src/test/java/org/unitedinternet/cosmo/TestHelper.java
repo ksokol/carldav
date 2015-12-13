@@ -47,12 +47,6 @@ public class TestHelper {
     private EntityFactory entityFactory = new MockEntityFactory();
 
     /**
-     * Constructor.
-     */
-    public TestHelper() {
-    }
-
-    /**
      * Makes dummy user.
      * @param username The username.
      * @param password The password.

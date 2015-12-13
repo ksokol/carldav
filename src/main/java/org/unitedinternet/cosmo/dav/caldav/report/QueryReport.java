@@ -47,7 +47,6 @@ public class QueryReport extends CaldavMultiStatusReport {
         ReportType.register(ELEMENT_CALDAV_CALENDAR_QUERY,
                             NAMESPACE_CALDAV, QueryReport.class);
 
-    private VTimeZone tz;
     private CalendarFilter queryFilter;
 
     // Report methods
@@ -78,7 +77,7 @@ public class QueryReport extends CaldavMultiStatusReport {
             setOutputFilter(findOutputFilter(info));
         }
 
-        tz = findTimeZone(info);
+        VTimeZone tz = findTimeZone(info);
         if ( tz == null && getResource() instanceof DavCalendarCollection) {
             tz = ((DavCalendarCollection) getResource()).getTimeZone();
         }

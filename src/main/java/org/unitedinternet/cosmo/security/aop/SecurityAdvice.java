@@ -65,7 +65,7 @@ public class SecurityAdvice extends OrderedAdvice {
         if(userDao==null) {
             throw new IllegalStateException("userDao must not be null");
         }
-        securityHelper = new SecurityHelper(contentDao, userDao);
+        securityHelper = new SecurityHelper();
     }
     
     @Around("execution(* org.unitedinternet.cosmo.service.ContentService.getRootItem(..)) &&"

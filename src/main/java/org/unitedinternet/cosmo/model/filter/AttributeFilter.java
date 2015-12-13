@@ -24,8 +24,6 @@ public class AttributeFilter {
     
     private QName qname;
     private boolean isMissing = false;
-    
-    public AttributeFilter() {}
 
     public QName getQname() {
         return qname;

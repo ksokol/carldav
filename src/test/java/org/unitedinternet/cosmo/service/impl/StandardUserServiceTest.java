@@ -44,7 +44,7 @@ public class StandardUserServiceTest {
     public void setUp() throws Exception {
         testHelper = new TestHelper();
         userDao = new MockUserDao(new MockDaoStorage());
-        service = new StandardUserService("MD5", new MockContentDao(new MockDaoStorage()), userDao);
+        service = new StandardUserService(new MockContentDao(new MockDaoStorage()), userDao);
     }
 
     /**

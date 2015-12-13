@@ -119,6 +119,8 @@
         <aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice"/>
     </aop:config>
 
-    <bean id="securityAdvice" class="org.unitedinternet.cosmo.security.aop.SecurityAdvice"/>
+    <bean id="securityAdvice" class="org.unitedinternet.cosmo.security.aop.SecurityAdvice">
+        <constructor-arg index="0" ref="securityManager" />
+    </bean>
 
 </beans>

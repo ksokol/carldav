@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Locale;
 import java.util.Properties;
 
 /**
@@ -52,27 +51,17 @@ public final class CosmoConstants {
 
     // read the product version from VERSION_FILE
 
-    public static final Locale LANGUAGE_LOCALE;
-    
-    private static final String LOCALE_KEY = "application.locale";
-    
     private static final String PROPERTIES_FILE = "/application.properties";
-    
-    private static final Locale FALLBACK_LOCALE = Locale.GERMAN;
-    
+
     static {
         Properties props = loadCosmoProperties();
 
-        //PRODUCT_NAME = "test"; //props.getProperty(PRODUCT_NAME_KEY);
         PRODUCT_VERSION = props.getProperty(PRODUCT_VERSION_KEY);
 
         // form the product Id using current build version
         PRODUCT_ID = new StringBuilder(PRODUCT_NAME)
                 .append(" ").append(PRODUCT_VERSION).append(PRODUCT_SUFFIX)
                 .toString();
-
-        String localeKey = props.getProperty(LOCALE_KEY);
-        LANGUAGE_LOCALE = getLocaleFor(localeKey);
     }
 
     /**
@@ -96,19 +85,5 @@ public final class CosmoConstants {
             }
         }
         return props;
-    }
-    
-    private static Locale getLocaleFor(String language){
-        if(language == null){
-            return FALLBACK_LOCALE;
-        }
-        
-        for (String isoLanguage : Locale.getISOLanguages()){
-            if(isoLanguage.equalsIgnoreCase(language)){
-                return Locale.forLanguageTag(isoLanguage);
-            }
-        }
-        
-        return FALLBACK_LOCALE;
     }
 }

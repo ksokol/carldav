@@ -15,13 +15,7 @@
  */
 package org.unitedinternet.cosmo.calendar.data;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeSet;
+import static java.util.Locale.ENGLISH;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -47,12 +41,18 @@ import net.fortuna.ical4j.model.property.ExRule;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
-
-import org.unitedinternet.cosmo.CosmoConstants;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.Instance;
 import org.unitedinternet.cosmo.calendar.InstanceList;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
 
 /**
  * This is a filter object that allows filtering a {@link Calendar} by
@@ -496,7 +496,7 @@ public class OutputFilter {
             return new PropertyMatch(false, false);
         }
 
-        Boolean presult = (Boolean) properties.get(name.toUpperCase(CosmoConstants.LANGUAGE_LOCALE));
+        Boolean presult = (Boolean) properties.get(name.toUpperCase(ENGLISH));
         if (presult == null) {
             return new PropertyMatch(false, false);
         }
@@ -532,7 +532,7 @@ public class OutputFilter {
         if (subComponents == null) {
             subComponents = new HashMap();
         }
-        subComponents.put(filter.getComponentName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE), filter);
+        subComponents.put(filter.getComponentName().toUpperCase(ENGLISH), filter);
     }
 
     /**
@@ -552,7 +552,7 @@ public class OutputFilter {
         if (subComponents == null) {
             return null;
         }
-        return subComponents.get(subcomp.getName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE));
+        return subComponents.get(subcomp.getName().toUpperCase(ENGLISH));
     }
 
     /**
@@ -580,7 +580,7 @@ public class OutputFilter {
         if (properties == null) {
             properties = new HashMap<>();
         }
-        properties.put(name.toUpperCase(CosmoConstants.LANGUAGE_LOCALE), Boolean.valueOf(noValue));
+        properties.put(name.toUpperCase(ENGLISH), Boolean.valueOf(noValue));
     }
 
     /**

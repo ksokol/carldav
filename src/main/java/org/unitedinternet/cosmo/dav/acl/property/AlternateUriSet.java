@@ -15,16 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.acl.property;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.acl.AclConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents the DAV:alternate-URI-set property.
@@ -32,11 +30,9 @@ import org.w3c.dom.Element;
  * This property is protected. Its value is empty.
  */
 public class AlternateUriSet extends StandardDavProperty implements AclConstants {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(AlternateUriSet.class);
 
     public AlternateUriSet() {
-        super(ALTERNATEURISET, hrefs(), true);
+        super(ALTERNATEURISET, new HashSet<String>(), true);
     }
 
     public Set<String> getHrefs() {
@@ -53,13 +49,5 @@ public class AlternateUriSet extends StandardDavProperty implements AclConstants
         }
 
         return name;
-    }
-
-    private static HashSet<String> hrefs() {
-        HashSet<String> hrefs = new HashSet<String>();
-
-        // XXX: find a way to add Atom and CMP URLs here
-
-        return hrefs;
     }
 }

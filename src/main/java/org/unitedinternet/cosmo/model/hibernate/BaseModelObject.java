@@ -24,9 +24,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
 /**
  * Base class for model objects.
  */
@@ -34,16 +31,11 @@ import org.apache.commons.lang.builder.ToStringStyle;
 @MappedSuperclass
 public abstract class BaseModelObject implements Serializable {
 
-    private static final long serialVersionUID = 8396186357498363586L;
-    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    private static final long serialVersionUID = 8396186357498363587L;
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id = Long.valueOf(-1);
-    
-    /**
-     */
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this,
-                ToStringStyle.MULTI_LINE_STYLE);
-    }
 
     public Long getId() {
         return id;

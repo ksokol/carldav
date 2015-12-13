@@ -5,7 +5,6 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.TestUser
 
-import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpMethod.DELETE
@@ -21,7 +20,6 @@ import static testutil.mockmvc.CaldavHttpMethod.COPY
 import static testutil.mockmvc.CaldavHttpMethod.MOVE
 import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.*
-import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol
@@ -61,7 +59,7 @@ public class ItemTests extends IntegrationTestSupport {
                         <dt>{DAV:}owner</dt><dd>/dav/users/test01@localhost.de</dd>
                         <dt>{DAV:}principal-collection-set</dt><dd>/dav/users</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection</dd>
-                        <dt>{DAV:}supported-report-set</dt><dd>{DAV:}principal-match, {urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
+                        <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>de359448-1ee0-4151-872d-eea0ee462bc6</dd>
                         </dl>
                         <p>
@@ -186,12 +184,12 @@ public class ItemTests extends IntegrationTestSupport {
                         </D:principal-match>'''
 
         def response = """\
-                        <D:multistatus xmlns:D="DAV:"/>"""
+                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:"><cosmo:unprocessable-entity>Unknown report {DAV:}principal-match</cosmo:unprocessable-entity></D:error>"""
 
         mockMvc.perform(report("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
                 .contentType(TEXT_XML)
                 .content(request))
-                .andExpect(status().isMultiStatus())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }

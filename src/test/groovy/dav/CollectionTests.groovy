@@ -2,6 +2,7 @@ package dav
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.TestUser
 
@@ -74,7 +75,7 @@ public class CollectionTests extends IntegrationTestSupport {
                         <dt>{DAV:}owner</dt><dd>/dav/users/test01@localhost.de</dd>
                         <dt>{DAV:}principal-collection-set</dt><dd>/dav/users</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection</dd>
-                        <dt>{DAV:}supported-report-set</dt><dd>{DAV:}principal-match, {urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
+                        <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>de359448-1ee0-4151-872d-eea0ee462bc6</dd>
                         </dl>
                         <p>
@@ -199,12 +200,12 @@ public class CollectionTests extends IntegrationTestSupport {
                         </D:principal-match>'''
 
         def response = """\
-                        <D:multistatus xmlns:D="DAV:"/>"""
+                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:"><cosmo:unprocessable-entity>Unknown report {DAV:}principal-match</cosmo:unprocessable-entity></D:error>"""
 
         mockMvc.perform(report("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
                 .contentType(TEXT_XML)
                 .content(request))
-                .andExpect(status().isMultiStatus())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }

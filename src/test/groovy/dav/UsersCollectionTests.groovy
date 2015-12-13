@@ -13,8 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.builder.GeneralRequest.PROPFIND_DISPLAYNAME_REQUEST
-import static testutil.builder.GeneralRequest.UNPROCESSABLE_ENTITY_REQUEST
-import static testutil.builder.GeneralResponse.*
+import static testutil.builder.GeneralResponse.INTERNAL_SERVER_ERROR
+import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CaldavHttpMethod.COPY
 import static testutil.mockmvc.CaldavHttpMethod.MOVE
@@ -189,16 +189,6 @@ public class UsersCollectionTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void usersReportUnprocessableEntity() throws Exception {
-        mockMvc.perform(report("/dav/users")
-                .contentType(TEXT_XML)
-                .content(UNPROCESSABLE_ENTITY_REQUEST))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(UNPROCESSABLE_ENTITY));
-    }
-
-    @Test
     public void usersReport() throws Exception {
         def request = '''\
                         <D:principal-match xmlns:D="DAV:" xmlns:Z="http://www.w3.com/standards/z39.50/">
@@ -207,12 +197,16 @@ public class UsersCollectionTests extends IntegrationTestSupport {
                             </D:principal-property>
                         </D:principal-match>'''
 
+        def response = """\
+                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:"><cosmo:unprocessable-entity>Unknown report {DAV:}principal-match</cosmo:unprocessable-entity></D:error>
+                        """
+
         mockMvc.perform(report("/dav/users")
                 .contentType(TEXT_XML)
                 .content(request))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
-                .andExpect(xml(INTERNAL_SERVER_ERROR));
+                .andExpect(xml(response));
     }
 
     @Test

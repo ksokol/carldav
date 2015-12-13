@@ -41,7 +41,6 @@ import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.property.AlternateUriSet;
 import org.unitedinternet.cosmo.dav.acl.property.GroupMembership;
 import org.unitedinternet.cosmo.dav.acl.property.PrincipalUrl;
-import org.unitedinternet.cosmo.dav.acl.report.PrincipalMatchReport;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.impl.DavResourceBase;
@@ -96,8 +95,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         registerLiveProperty(ALTERNATEURISET);
         registerLiveProperty(PRINCIPALURL);
         registerLiveProperty(GROUPMEMBERSHIP);
-
-        REPORT_TYPES.add(PrincipalMatchReport.REPORT_TYPE_PRINCIPAL_MATCH);
     }
 
     private User user;

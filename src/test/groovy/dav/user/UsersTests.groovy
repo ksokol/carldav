@@ -13,11 +13,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static testutil.builder.GeneralRequest.UNPROCESSABLE_ENTITY_REQUEST
 import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
-import static testutil.builder.GeneralResponse.UNPROCESSABLE_ENTITY
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
-import static testutil.mockmvc.CaldavHttpMethod.*
+import static testutil.mockmvc.CaldavHttpMethod.COPY
+import static testutil.mockmvc.CaldavHttpMethod.MOVE
 import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.*
 
@@ -48,7 +47,7 @@ class UsersTests extends IntegrationTestSupport {
                         <dt>{DAV:}iscollection</dt><dd>0</dd>
                         <dt>{DAV:}principal-URL</dt><dd>/dav/users/test01@localhost.de</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}principal</dd>
-                        <dt>{DAV:}supported-report-set</dt><dd>{DAV:}principal-match</dd>
+                        <dt>{DAV:}supported-report-set</dt><dd></dd>
                         </dl>
                         <a href="/dav/users/">User Principals</a></li>
                         <p>
@@ -227,16 +226,6 @@ class UsersTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void userReportUnprocessable() throws Exception {
-        mockMvc.perform(report("/dav/users/{uid}", USER01)
-                .contentType(TEXT_XML)
-                .content(UNPROCESSABLE_ENTITY_REQUEST))
-                .andExpect(status().isUnprocessableEntity())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(UNPROCESSABLE_ENTITY));
-    }
-
-    @Test
     public void userReport() throws Exception {
         def request = '''\
                         <D:principal-match xmlns:D="DAV:">
@@ -245,12 +234,13 @@ class UsersTests extends IntegrationTestSupport {
                             </D:principal-property>
                         </D:principal-match>'''
 
-        def response = '<D:multistatus xmlns:D="DAV:"/>'
+        def response = """\
+                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:"><cosmo:unprocessable-entity>Unknown report {DAV:}principal-match</cosmo:unprocessable-entity></D:error>"""
 
         mockMvc.perform(report("/dav/users/{uid}", USER01)
                 .contentType(TEXT_XML)
                 .content(request))
-                .andExpect(status().isMultiStatus())
+                .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
     }

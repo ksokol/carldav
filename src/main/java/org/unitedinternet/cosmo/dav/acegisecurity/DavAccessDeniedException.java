@@ -29,9 +29,8 @@ public class DavAccessDeniedException extends AccessDeniedException {
     private String href;
     private transient DavPrivilege  privilege;
 
-    public DavAccessDeniedException(String href,
-                                    DavPrivilege privilege) {
-        super(null);
+    public DavAccessDeniedException(String href, DavPrivilege privilege) {
+        super("access denied for " + href + " with privilege " + privilege);
         this.href = href;
         this.privilege = privilege;
     }

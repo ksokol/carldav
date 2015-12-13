@@ -16,10 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 
-import java.io.FileInputStream;
-import java.util.Iterator;
-import java.util.Set;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -34,10 +30,8 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.Status;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.calendar.ICalDate;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
@@ -55,6 +49,10 @@ import org.unitedinternet.cosmo.model.mock.MockEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.model.mock.MockTaskStamp;
 import org.unitedinternet.cosmo.model.mock.MockTriageStatus;
+
+import java.io.FileInputStream;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Test EntityConverter.
@@ -407,7 +405,9 @@ public class EntityConverterTest {
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         eventStamp.setDuration(new Dur("PT1H"));
         eventStamp.setLocation("master location");
-        DateList dates = new ICalDate(";VALUE=DATE-TIME:20070212T074500,20070213T074500").getDateList();
+        DateList dates = new DateList();
+        dates.add(new DateTime("20070212T074500"));
+        dates.add(new DateTime("20070213T074500"));
         eventStamp.setRecurrenceDates(dates);
         master.addStamp(eventStamp);
         
@@ -470,7 +470,9 @@ public class EntityConverterTest {
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         eventStamp.setAnyTime(true);
-        DateList dates = new ICalDate(";VALUE=DATE-TIME:20070212T074500,20070213T074500").getDateList();
+        DateList dates = new DateList();
+        dates.add(new DateTime("20070212T074500"));
+        dates.add(new DateTime("20070213T074500"));
         eventStamp.setRecurrenceDates(dates);
         master.addStamp(eventStamp);
         

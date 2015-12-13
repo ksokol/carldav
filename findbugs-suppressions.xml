@@ -56,14 +56,6 @@
         <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibEventLogEntry" />
-        <Bug pattern="EI_EXPOSE_REP" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibEventLogEntry" />
-        <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibEventStamp" />
         <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
     </Match>

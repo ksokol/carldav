@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.QName;
 
 /**
@@ -27,10 +26,6 @@ public class AttributeFilter {
     private boolean isMissing = false;
     
     public AttributeFilter() {}
-    
-    public AttributeFilter(Attribute attribute) {
-        this.qname = attribute.getQName();
-    }
 
     public QName getQname() {
         return qname;

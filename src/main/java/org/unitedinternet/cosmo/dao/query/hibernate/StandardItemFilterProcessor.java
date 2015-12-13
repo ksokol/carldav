@@ -15,20 +15,12 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
+import static java.util.Locale.ENGLISH;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.unitedinternet.cosmo.CosmoConstants;
 import org.unitedinternet.cosmo.calendar.Instance;
 import org.unitedinternet.cosmo.calendar.InstanceList;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
@@ -56,6 +48,15 @@ import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.filter.TextAttributeFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  * Standard Implementation of <code>ItemFilterProcessor</code>.
@@ -522,7 +523,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                     expBuf.append(" like ");
                 }
 
-                params.put(param, formatForLike(exp.getValue().toString().toLowerCase(CosmoConstants.LANGUAGE_LOCALE)));
+                params.put(param, formatForLike(exp.getValue().toString().toLowerCase(ENGLISH)));
             }
 
             expBuf.append(":" + param);

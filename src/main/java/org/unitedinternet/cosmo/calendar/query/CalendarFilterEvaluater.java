@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
+import static java.util.Locale.ENGLISH;
+
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -37,7 +39,6 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Trigger;
-import org.unitedinternet.cosmo.CosmoConstants;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.InstanceList;
 
@@ -141,7 +142,7 @@ public class CalendarFilterEvaluater {
         attribute exists in the current scope;*/
         if(filter.getComponentFilters().size()==0 && filter.getPropFilters().size()==0 
                 && filter.getTimeRangeFilter()==null && filter.getIsNotDefinedFilter()==null) {
-            ComponentList comps = components.getComponents(filter.getName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE));
+            ComponentList comps = components.getComponents(filter.getName().toUpperCase(ENGLISH));
             return comps.size()>0;
         }
         
@@ -150,12 +151,12 @@ public class CalendarFilterEvaluater {
         component type specified by the "name" attribute does not exist
         in the current scope;*/
         if(filter.getIsNotDefinedFilter()!=null) {
-            ComponentList comps = components.getComponents(filter.getName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE));
+            ComponentList comps = components.getComponents(filter.getName().toUpperCase(ENGLISH));
             return comps.size()==0;
         }
         
         // Match the component
-        ComponentList comps = components.getComponents(filter.getName().toUpperCase(CosmoConstants.LANGUAGE_LOCALE));
+        ComponentList comps = components.getComponents(filter.getName().toUpperCase(ENGLISH));
         if(comps.size()==0) {
             return false;
         }
@@ -347,7 +348,7 @@ public class CalendarFilterEvaluater {
     private boolean evaluate(Property property, TextMatchFilter filter) {
         boolean matched = false;
         if(filter.isCaseless()) {
-            matched = property.getValue().toLowerCase(CosmoConstants.LANGUAGE_LOCALE).contains(filter.getValue().toLowerCase(CosmoConstants.LANGUAGE_LOCALE));
+            matched = property.getValue().toLowerCase(ENGLISH).contains(filter.getValue().toLowerCase(ENGLISH));
         }
         else {
             matched = property.getValue().contains(filter.getValue());
@@ -369,7 +370,7 @@ public class CalendarFilterEvaluater {
     private boolean evaluate(Parameter param, TextMatchFilter filter) {
         boolean matched = false;
         if(filter.isCaseless()) {
-            matched = param.getValue().toLowerCase(CosmoConstants.LANGUAGE_LOCALE).contains(filter.getValue().toLowerCase(CosmoConstants.LANGUAGE_LOCALE));
+            matched = param.getValue().toLowerCase(ENGLISH).contains(filter.getValue().toLowerCase(ENGLISH));
         }
         else {
             matched = param.getValue().contains(filter.getValue());

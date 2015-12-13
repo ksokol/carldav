@@ -42,11 +42,6 @@
     @TypeDef(
             name="long_timestamp",
             typeClass = org.unitedinternet.cosmo.hibernate.LongTimestampType.class
-    ),
-    
-    @TypeDef(
-            name="boolean_integer",
-            typeClass = org.unitedinternet.cosmo.hibernate.BooleanIntegerType.class
     )
 })
 

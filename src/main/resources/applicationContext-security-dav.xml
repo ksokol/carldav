@@ -73,7 +73,6 @@
 				filters="requestContextFilter,
 				        openSessionInViewFilter,
                         securityContextPersistenceFilter,
-				        httpLoggingFilter,
 				        protocolBasicProcessingFilter,
          				davExceptionTranslationFilter,
          				davFilterInvocationInterceptor,
@@ -83,7 +82,6 @@
 
     <bean id="openSessionInViewFilter" class="org.springframework.orm.hibernate4.support.OpenSessionInViewFilter" />
     <bean id="requestContextFilter" class="org.springframework.web.filter.RequestContextFilter" />
-    <bean id="httpLoggingFilter" class="org.unitedinternet.cosmo.filters.HttpLoggingFilter" />
 
     <bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
 

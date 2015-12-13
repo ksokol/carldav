@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
@@ -44,17 +42,9 @@ import org.w3c.dom.Element;
  * responsible for setting the output filter when parsing the report info.
  * </p>
  */
-public abstract class CaldavMultiStatusReport extends MultiStatusReport
-    implements CaldavConstants {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(CaldavMultiStatusReport.class);
+public abstract class CaldavMultiStatusReport extends MultiStatusReport implements CaldavConstants {
 
     private OutputFilter outputFilter;
-
-    // ReportBase methods
-
-
-    // MultiStatusReport methods
 
     /**
      * Removes <code>CALDAV:calendar-data</code> from the property spec

@@ -473,8 +473,8 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{DAV:}current-user-privilege-set</dt><dd>{DAV:}read, {DAV:}read-current-user-privilege-set, {DAV:}write, {urn:ietf:params:xml:ns:caldav}read-free-busy</dd>
                         <dt>{DAV:}displayname</dt><dd>newcalendar</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}exclude-free-busy-rollup</dt><dd>false</dd>
-                        <dt>{http://calendarserver.org/ns/}getctag</dt><dd>W5kE5atb5Q+0h5Ll3tlZKTW7S2o=</dd>
-                        <dt>{DAV:}getetag</dt><dd>&quot;W5kE5atb5Q+0h5Ll3tlZKTW7S2o=&quot;</dd>
+                        <dt>{http://calendarserver.org/ns/}getctag</dt><dd>1d21bc1d460b1085d53e3def7f7380f6</dd>
+                        <dt>{DAV:}getetag</dt><dd>&quot;1d21bc1d460b1085d53e3def7f7380f6&quot;</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>Thu, 01 Jan 1970 00:00:03 GMT</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}max-resource-size</dt><dd>10485760</dd>

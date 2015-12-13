@@ -15,13 +15,10 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.CosmoNoSuchAlgorithmException;
 import org.unitedinternet.cosmo.model.AuditableObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -32,20 +29,6 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class HibAuditableObject extends BaseModelObject implements AuditableObject {
-
-    private static final ThreadLocal<MessageDigest> ETAG_DIGEST_LOCAL = new ThreadLocal<MessageDigest>(){
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        protected MessageDigest initialValue() {
-            try {
-                return MessageDigest.getInstance("sha1");
-            } catch (NoSuchAlgorithmException e) {
-                throw new CosmoNoSuchAlgorithmException(e); 
-            }
-        }
-    };
 
     @Column(name = "createdate")
     @Type(type="long_timestamp")
@@ -110,10 +93,6 @@ public abstract class HibAuditableObject extends BaseModelObject implements Audi
      * </p>
      */
     protected static String encodeEntityTag(byte[] bytes) {
-        
-        // Use MessageDigest stored in threadlocal so that each
-        // thread has its own instance.
-        MessageDigest md = ETAG_DIGEST_LOCAL.get();        
-        return Base64.encodeBase64String(md.digest(bytes));
+        return DigestUtils.md5Hex(bytes);
     }
 }

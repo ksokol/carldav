@@ -16,7 +16,8 @@ import static testutil.builder.GeneralRequest.PROPFIND_DISPLAYNAME_REQUEST
 import static testutil.builder.GeneralRequest.UNPROCESSABLE_ENTITY_REQUEST
 import static testutil.builder.GeneralResponse.*
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
-import static testutil.mockmvc.CaldavHttpMethod.*
+import static testutil.mockmvc.CaldavHttpMethod.COPY
+import static testutil.mockmvc.CaldavHttpMethod.MOVE
 import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
 import static testutil.mockmvc.CustomResultMatchers.xml
@@ -220,5 +221,35 @@ public class UsersCollectionTests extends IntegrationTestSupport {
                 .andExpect(status().isForbidden())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
+    }
+
+    @Test
+    public void userSearch() throws Exception {
+        def request = """\
+                        <D:principal-property-search xmlns:D="DAV:">
+                             <D:property-search>
+                               <D:prop>
+                                 <D:displayname/>
+                               </D:prop>
+                               <D:match>Laurie</D:match>
+                             </D:property-search>
+                             <D:prop>
+                               <C:calendar-home-set
+                                  xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                               <D:displayname/>
+                             </D:prop>
+                        </D:principal-property-search>"""
+
+        def response = """\
+                        <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                            <cosmo:unprocessable-entity>Unknown report {DAV:}principal-property-search</cosmo:unprocessable-entity>
+                        </D:error>"""
+
+        mockMvc.perform(report("/dav/users")
+                .contentType(TEXT_XML)
+                .content(request))
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response));
     }
 }

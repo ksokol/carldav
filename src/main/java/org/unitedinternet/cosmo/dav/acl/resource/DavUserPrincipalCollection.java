@@ -35,8 +35,6 @@ import org.unitedinternet.cosmo.dav.acl.DavAce;
 import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.report.PrincipalMatchReport;
-import org.unitedinternet.cosmo.dav.acl.report.PrincipalPropertySearchReport;
-import org.unitedinternet.cosmo.dav.acl.report.PrincipalSearchPropertySetReport;
 import org.unitedinternet.cosmo.dav.impl.DavResourceBase;
 import org.unitedinternet.cosmo.dav.property.CurrentUserPrincipal;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
@@ -73,8 +71,6 @@ public class DavUserPrincipalCollection extends DavResourceBase implements DavCo
         registerLiveProperty(ExtendedDavConstants.CURRENTUSERPRINCIPAL);
 
         REPORT_TYPES.add(PrincipalMatchReport.REPORT_TYPE_PRINCIPAL_MATCH);
-        REPORT_TYPES.add(PrincipalPropertySearchReport.REPORT_TYPE_PRINCIPAL_PROPERTY_SEARCH);
-        REPORT_TYPES.add(PrincipalSearchPropertySetReport.REPORT_TYPE_PRINCIPAL_SEARCH_PROPERTY_SET);
     }
 
     public DavUserPrincipalCollection(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {

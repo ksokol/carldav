@@ -31,16 +31,6 @@
 		<constructor-arg ref="protocolAuthenticationEntryPoint" />
 	</bean>
 
-	<bean id="clientICalendarFilterManagerFilter" class="org.unitedinternet.cosmo.filters.ClientICalendarFilter">
-		<property name="filterManager" ref="iCalendarClientFilterManager" />
-		<property name="clientKeyMap">
-			<map>
-				<entry key=".*iCal 2.*" value="ical2" />
-				<entry key=".*iCal 3.*" value="ical3" />
-			</map>
-		</property>
-	</bean>
-
 	<!-- morse code AccessDecisionManager that verifies user paths -->
 	<bean id="davAccessDecisionManager"
 		class="org.unitedinternet.cosmo.dav.acegisecurity.DavAccessDecisionManager">
@@ -85,7 +75,6 @@
                         securityContextPersistenceFilter,
 				        httpLoggingFilter,
 				        protocolBasicProcessingFilter,
-         				clientICalendarFilterManagerFilter,
          				davExceptionTranslationFilter,
          				davFilterInvocationInterceptor,
          				retryFilter" />

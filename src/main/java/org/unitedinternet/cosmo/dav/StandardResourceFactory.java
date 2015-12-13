@@ -29,7 +29,6 @@ import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavFreeBusy;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
-import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -61,20 +60,17 @@ public class StandardResourceFactory
     private CosmoSecurityManager securityManager;
     private EntityFactory entityFactory;
     private CalendarQueryProcessor calendarQueryProcessor;
-    private ICalendarClientFilterManager clientFilterManager;
 
     public StandardResourceFactory(ContentService contentService,
                                    UserService userService,
                                    CosmoSecurityManager securityManager,
                                    EntityFactory entityFactory,
-                                   CalendarQueryProcessor calendarQueryProcessor,
-                                   ICalendarClientFilterManager clientFilterManager) {
+                                   CalendarQueryProcessor calendarQueryProcessor) {
         this.contentService = contentService;
         this.userService = userService;
         this.securityManager = securityManager;
         this.entityFactory = entityFactory;
         this.calendarQueryProcessor = calendarQueryProcessor;
-        this.clientFilterManager = clientFilterManager;
     }
 
     /**
@@ -262,15 +258,7 @@ public class StandardResourceFactory
         return calendarQueryProcessor;
     }
 
-    public UserService getUserService() {
-        return userService;
-    }
-
     public CosmoSecurityManager getSecurityManager() {
         return securityManager;
-    }
-
-    public ICalendarClientFilterManager getClientFilterManager() {
-        return clientFilterManager;
     }
 }

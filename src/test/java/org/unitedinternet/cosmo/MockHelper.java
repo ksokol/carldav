@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.dao.mock.MockCalendarDao;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.dao.mock.MockUserDao;
-import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
@@ -49,7 +48,6 @@ public class MockHelper extends TestHelper {
     private MockSecurityManager securityManager;
     private StandardContentService contentService;
     private StandardUserService userService;
-    private ICalendarClientFilterManager clientFilterManager;
     private StandardCalendarQueryProcessor calendarQueryProcessor;
     private User user;
     private HomeCollectionItem homeCollection;
@@ -67,7 +65,6 @@ public class MockHelper extends TestHelper {
         
         entityFactory = new MockEntityFactory();
         contentService = new StandardContentService(contentDao, lockManager);
-        clientFilterManager = new ICalendarClientFilterManager();
         calendarQueryProcessor = new StandardCalendarQueryProcessor();
         calendarQueryProcessor.setCalendarDao(calendarDao);
         
@@ -216,9 +213,5 @@ public class MockHelper extends TestHelper {
         throws Exception {
         NoteItem i = makeDummyItem(user, name);
         return (NoteItem) contentService.createContent(parent, i);
-    }
-
-    public ICalendarClientFilterManager getClientFilterManager() {
-        return clientFilterManager;
     }
 }

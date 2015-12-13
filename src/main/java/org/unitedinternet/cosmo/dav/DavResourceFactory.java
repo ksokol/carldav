@@ -16,11 +16,9 @@
 package org.unitedinternet.cosmo.dav;
 
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.icalendar.ICalendarClientFilterManager;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
-import org.unitedinternet.cosmo.service.UserService;
 
 /**
  * Interface for components that create dav resources to represent
@@ -69,12 +67,8 @@ public interface DavResourceFactory {
         throws CosmoDavException;
 
     ContentService getContentService();
-    
-    ICalendarClientFilterManager getClientFilterManager();
 
     CalendarQueryProcessor getCalendarQueryProcessor();
-    
-    UserService getUserService();
 
     CosmoSecurityManager getSecurityManager();
 }

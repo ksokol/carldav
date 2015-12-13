@@ -62,11 +62,7 @@ public class DavEvent extends DavCalendarResource {
      * Returns the calendar object associated with this resource.
      */
     public Calendar getCalendar() {
-        Calendar calendar = new EntityConverter(null).convertNote((NoteItem)getItem());
-        // run through client filter because unfortunatley
-        // all clients don't adhere to the spec
-        getClientFilterManager().filterCalendar(calendar);
-        return calendar;
+        return new EntityConverter(null).convertNote((NoteItem)getItem());
     }
     
     public EventStamp getEventStamp() {

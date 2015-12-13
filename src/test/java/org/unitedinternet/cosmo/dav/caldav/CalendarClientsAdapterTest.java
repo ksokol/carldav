@@ -7,6 +7,9 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -16,7 +19,6 @@ import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ValidationException;
-
 
 public class CalendarClientsAdapterTest {
     
@@ -31,13 +33,29 @@ public class CalendarClientsAdapterTest {
         Calendar calendar = new CalendarBuilder().build(new ByteArrayInputStream(geticalIOS7Calendar()));
         CalendarClientsAdapter.adaptTimezoneCalendarComponent(calendar);
         calendar.validate(true);//must not throw exceptions
+        assertThat(calendar.getProductId().getValue(), is("UNKNOWN_PRODID"));
+    }
+
+    @Test
+    public void timezoneProductIdNotOverriden() throws IOException, ParserException, ValidationException {
+        Calendar calendar = new CalendarBuilder().build(new ByteArrayInputStream(geticalIOS7Calendar("test")));
+        new CalendarClientsAdapter().adaptTimezoneCalendarComponent(calendar);
+        calendar.validate(true);//must not throw exceptions
+        assertThat(calendar.getProductId().getValue(), is("test"));
     }
 
     private byte[] geticalIOS7Calendar() {
+        return geticalIOS7Calendar(null);
+    }
+
+    private byte[] geticalIOS7Calendar(String productId) {
         StringBuilder sb = new StringBuilder();
         sb.append("BEGIN:VCALENDAR\n");
         sb.append("VERSION:2.0\n");
         sb.append("CALSCALE:GREGORIAN\n");
+        if(productId != null) {
+            sb.append("PRODID:" + productId + "\n");
+        }
         sb.append("BEGIN:VTIMEZONE\n");
         sb.append("TZID:Europe/Bucharest\n");
         sb.append("BEGIN:DAYLIGHT\n");
@@ -58,5 +76,4 @@ public class CalendarClientsAdapterTest {
         sb.append("END:VCALENDAR\n");
         return sb.toString().getBytes();
     }
-
 }

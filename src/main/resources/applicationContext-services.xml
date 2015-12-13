@@ -47,10 +47,8 @@
         <constructor-arg index="1" ref="contentLockManager" />
 	</bean>
 
-	<bean id="calendarQueryProcessor"
-		class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
+	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
 		<property name="calendarDao" ref="calendarDao" />
-		<property name="contentDao" ref="contentDao" />
 	</bean>
 
 	<!-- general protocol/interface resources -->

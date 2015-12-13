@@ -72,7 +72,6 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
     protected static final VersionFourGenerator UUID_GENERATOR = new VersionFourGenerator();
     
     private CalendarDao calendarDao = null;
-    private ContentDao contentDao = null;
     private EntityConverter entityConverter = new EntityConverter(null);
     
     /* (non-Javadoc)
@@ -91,8 +90,7 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
                     + " by filter " + filter);
         }
 
-        return new HashSet<ICalendarItem>((Set<ICalendarItem>) calendarDao
-                .findCalendarItems(collection, filter));
+        return new HashSet<>(calendarDao.findCalendarItems(collection, filter));
     }
 
     /* (non-Javadoc)
@@ -119,41 +117,6 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor#freeBusyQuery
-     * (org.unitedinternet.cosmo.model.User, net.fortuna.ical4j.model.Period)
-     */
-    /**
-     * VFreeBusy query.
-     * @param user The user.
-     * @param period The period.
-     * @return VFreeBusy. 
-     */
-    public VFreeBusy freeBusyQuery(User user, Period period) {
-        PeriodList busyPeriods = new PeriodList();
-        PeriodList busyTentativePeriods = new PeriodList();
-        PeriodList busyUnavailablePeriods = new PeriodList();
-        
-        HomeCollectionItem home = contentDao.getRootItem(user);
-        for(Item item: home.getChildren()) {
-            if(! (item instanceof CollectionItem)) {
-                continue;
-            }
-            
-            CollectionItem collection = (CollectionItem) item;
-            if(StampUtils.getCalendarCollectionStamp(collection)==null ||
-                    collection.isExcludeFreeBusyRollup()) {
-                continue;
-            }
-            
-            doFreeBusyQuery(busyPeriods, busyTentativePeriods, busyUnavailablePeriods,
-                    collection, period);  
-        }
-
-        return createVFreeBusy(busyPeriods, busyTentativePeriods,
-                busyUnavailablePeriods, period);
-    }
-    
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor#freeBusyQuery
      * (org.unitedinternet.cosmo.model.CollectionItem, net.fortuna.ical4j.model.Period)
@@ -466,10 +429,6 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
 
     public void setCalendarDao(CalendarDao calendarDao) {
         this.calendarDao = calendarDao;
-    }
-
-    public void setContentDao(ContentDao contentDao) {
-        this.contentDao = contentDao;
     }
 
 }

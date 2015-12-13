@@ -15,12 +15,11 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
@@ -29,8 +28,6 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.service.UserService;
 
-import java.nio.charset.Charset;
-import java.security.MessageDigest;
 import java.util.Set;
 
 /**
@@ -162,15 +159,10 @@ public class StandardUserService implements UserService {
      */
     protected String digestPassword(String password) {
         if (password == null) {
-            return password;
+            return null;
         }
-        try {
-            return new String(Hex.encodeHex(MessageDigest.getInstance(
-                    digestAlgorithm).digest(password.getBytes(Charset.forName("UTF-8")))));
-        } catch (Exception e) {
-            throw new CosmoException("cannot get digest for algorithm "
-                    + digestAlgorithm, e);
-        }
+
+        return DigestUtils.md5Hex(password);
     }
 
     /**

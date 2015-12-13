@@ -109,7 +109,7 @@ public class TimeZoneExtractor {
             return null;
         }
 
-        Calendar calendar = null;
+        Calendar calendar;
         try {
             CalendarBuilder builder =
                 CalendarBuilderDispenser.getCalendarBuilder();

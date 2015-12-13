@@ -41,14 +41,6 @@
 		</property>
 	</bean>
 
-	<!-- Intercepts service calls and logs events -->
-	<bean id="eventLogAspect" class="org.unitedinternet.cosmo.event.aop.EventLogAdvice">
-        <constructor-arg index="0" ref="securityManager" />
-        <constructor-arg index="1" ref="eventLogDao" />
-		<property name="order" value="6" />
-		<property name="enabled" value="false" />
-	</bean>
-
 	<bean id="triageStatusQueryProcessor"
 		class="org.unitedinternet.cosmo.service.impl.StandardTriageStatusQueryProcessor">
 		<property name="contentDao">

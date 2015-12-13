@@ -54,4 +54,47 @@ class GeneralData {
                         END:VEVENT
                         END:VCALENDAR
                         """.stripIndent()
+
+    static final String UUID_TODO = "f3bc6436-991a-4a50-88b1-f27838e615c1";
+
+    static final String CALDAV_TODO = """\
+                                        BEGIN:VCALENDAR
+                                        PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
+                                        VERSION:2.0
+                                        BEGIN:VTIMEZONE
+                                        TZID:Europe/Berlin
+                                        BEGIN:DAYLIGHT
+                                        TZOFFSETFROM:+0100
+                                        TZOFFSETTO:+0200
+                                        TZNAME:CEST
+                                        DTSTART:19700329T020000
+                                        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+                                        END:DAYLIGHT
+                                        BEGIN:STANDARD
+                                        TZOFFSETFROM:+0200
+                                        TZOFFSETTO:+0100
+                                        TZNAME:CET
+                                        DTSTART:19701025T030000
+                                        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+                                        END:STANDARD
+                                        END:VTIMEZONE
+                                        BEGIN:VTODO
+                                        CREATED:20151213T203529Z
+                                        LAST-MODIFIED:20151213T203552Z
+                                        DTSTAMP:20151213T203552Z
+                                        UID:f3bc6436-991a-4a50-88b1-f27838e615c1
+                                        SUMMARY:test task
+                                        STATUS:NEEDS-ACTION
+                                        RRULE:FREQ=WEEKLY
+                                        DTSTART;TZID=Europe/Berlin:20151213T220000
+                                        DUE;TZID=Europe/Berlin:20151214T220000
+                                        PERCENT-COMPLETE:25
+                                        BEGIN:VALARM
+                                        ACTION:DISPLAY
+                                        TRIGGER;VALUE=DURATION:-PT15M
+                                        DESCRIPTION:Default Mozilla Description
+                                        END:VALARM
+                                        END:VTODO
+                                        END:VCALENDAR
+                                        """.stripIndent()
 }

@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static testutil.builder.GeneralData.CALDAV_EVENT
+import static testutil.builder.GeneralData.*
 import static testutil.builder.GeneralResponse.*
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
@@ -336,6 +336,64 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
+    }
+
+    @Test
+    public void calendarQuery() {
+        def request = """\
+                        <C:calendar-query xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                         <D:prop>
+                           <C:calendar-data>
+                             <C:comp name="VCALENDAR">
+                               <C:prop name="VERSION"/>
+                               <C:comp name="VEVENT">
+                                 <C:prop name="SUMMARY"/>
+                                 <C:prop name="UID"/>
+                                 <C:prop name="DTSTART"/>
+                                 <C:prop name="DTEND"/>
+                                 <C:prop name="DURATION"/>
+                                 <C:prop name="RRULE"/>
+                                 <C:prop name="RDATE"/>
+                                 <C:prop name="EXRULE"/>
+                                 <C:prop name="EXDATE"/>
+                                 <C:prop name="RECURRENCE-ID"/>
+                               </C:comp>
+                               <C:comp name="VTIMEZONE"/>
+                             </C:comp>
+                           </C:calendar-data>
+                         </D:prop>
+                         <C:filter>
+                           <C:comp-filter name="VCALENDAR">
+                             <C:comp-filter name="VEVENT">
+                               <C:time-range start="20011014T000000Z" end="20160105T000000Z"/>
+                             </C:comp-filter>
+                           </C:comp-filter>
+                         </C:filter>
+                        </C:calendar-query>"""
+
+        def response = """\
+                        <D:multistatus xmlns:D="DAV:"/>
+                        """
+
+        mockMvc.perform(report("/dav/{email}/calendar", USER01)
+                .content(request)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response));
+    }
+
+    @Test
+    public void addTodo() {
+        mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, UUID_TODO)
+                .content(CALDAV_TODO)
+                .contentType(TEXT_CALENDAR))
+                .andExpect(etag(notNullValue()))
+                .andExpect(status().isCreated())
+
+        mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID_TODO)
+                .contentType(TEXT_CALENDAR))
+                .andExpect(textCalendarContentType())
+                .andExpect(text(CALDAV_TODO));
     }
 
     @Test

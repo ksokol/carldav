@@ -15,14 +15,12 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VFreeBusy;
-
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
-import org.unitedinternet.cosmo.model.User;
+
+import java.util.Set;
 
 /**
  * <p>
@@ -67,19 +65,6 @@ public interface CalendarQueryProcessor {
      * @return True if the item matches the provided filter.
      */
     boolean filterQuery(ICalendarItem item, CalendarFilter filter);
-    
-    /**
-     * <p>
-     * Executes a free-busy query against a User. Returns a
-     * <code>VFREEBUSY</code> component containing the aggregate free-busy
-     * periods for every member of every collection that has an occurrence
-     * during the given period.
-     * </p>
-     * @param user The user.
-     * @param period The period.
-     * @return VFreeBusy.
-     */
-    VFreeBusy freeBusyQuery(User user, Period period);
 
     /**
      * <p>

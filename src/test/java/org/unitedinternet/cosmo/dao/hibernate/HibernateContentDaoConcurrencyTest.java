@@ -15,6 +15,26 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import org.hibernate.SessionFactory;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.unitedinternet.cosmo.CosmoException;
+import org.unitedinternet.cosmo.dao.UserDao;
+import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.FileItem;
+import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
+import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
+
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -24,27 +44,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
-
-import org.hibernate.SessionFactory;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.CosmoInterruptedException;
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
-import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
-import org.springframework.dao.DataRetrievalFailureException;
-import org.springframework.dao.OptimisticLockingFailureException;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
 
 /**
  * Test concurrent modification of an item.  Since cosmo uses
@@ -409,12 +408,12 @@ public class HibernateContentDaoConcurrencyTest extends AbstractHibernateDaoTest
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
-                        throw new CosmoInterruptedException(e);
+                        throw new RuntimeException(e);
                     }
                     continue;
                 }
 
-                Object returnValue = null;
+                Object returnValue;
                 
                 try {
                     returnValue = rc.runnable.run();

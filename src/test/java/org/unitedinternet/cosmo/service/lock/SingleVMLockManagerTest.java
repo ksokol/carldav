@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.service.lock;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.CosmoInterruptedException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 
@@ -149,7 +148,7 @@ public class SingleVMLockManagerTest {
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
-                    throw new CosmoInterruptedException("thread interrupted!", e);
+                    throw new RuntimeException("thread interrupted!", e);
                 }
                 lockManager.unlockCollection(collection);
                 hasLock = false;

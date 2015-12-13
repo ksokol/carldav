@@ -15,17 +15,16 @@
  */
 package org.unitedinternet.cosmo.service.lock;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.unitedinternet.cosmo.CosmoException;
+import org.unitedinternet.cosmo.model.CollectionItem;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.CosmoInterruptedException;
-import org.unitedinternet.cosmo.model.CollectionItem;
 
 /**
  * And implementation of <code>LockManager</code>
@@ -112,7 +111,7 @@ public class SingleVMLockManager implements LockManager {
      */
     public boolean lockCollection(CollectionItem collection, long timeout) {
         
-        CollectionLock lock = null;
+        CollectionLock lock;
         
         synchronized (this) {
             lock = locks.get(collection.getUid());
@@ -148,7 +147,7 @@ public class SingleVMLockManager implements LockManager {
                 }
             }
         } catch (InterruptedException e) {
-            throw new CosmoInterruptedException("thread interrupted, no lock acquired", e);
+            throw new RuntimeException("thread interrupted, no lock acquired", e);
         } finally {
             // done calling lock(), so clear inUse flag
             lock.inUse = false;

@@ -49,7 +49,6 @@ public class SecurityAdvice {
 
     private static final Log LOG = LogFactory.getLog(SecurityAdvice.class);
 
-    private boolean enabled = true;
     private final CosmoSecurityManager securityManager;
     private final SecurityHelper securityHelper = new SecurityHelper();
 
@@ -64,9 +63,6 @@ public class SecurityAdvice {
             User user) throws Throwable {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkGetRootItem(user)");
-        }
-        if (!enabled) {
-            return pjp.proceed();
         }
         if (!securityHelper.hasUserAccess(securityManager.getSecurityContext(),user)) {
             throw new CosmoSecurityException(
@@ -83,10 +79,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkFindItemByUid(uid)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         Item item = (Item) pjp.proceed();
         if (item!=null && !securityHelper.hasReadAccess(securityManager.getSecurityContext(),item)) {
             throwItemSecurityException(item, Permission.READ); 
@@ -102,10 +94,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkFindItemByPath(path)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         Item item = (Item) pjp.proceed();
         if (item!=null && !securityHelper.hasReadAccess(securityManager.getSecurityContext(),item)) {
             throwItemSecurityException(item, Permission.READ);  
@@ -121,10 +109,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkFindItemByPathAndParent(path,parentUid)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         Item item = (Item) pjp.proceed();
         if (item!=null && !securityHelper.hasReadAccess(securityManager.getSecurityContext(),item)) {
             throwItemSecurityException(item, Permission.READ);   
@@ -140,10 +124,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkFindItemParentByPath(path)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         Item item = (Item) pjp.proceed();
         if (item!=null && !securityHelper.hasReadAccess(securityManager.getSecurityContext(),item)) {
             throwItemSecurityException(item, Permission.READ);    
@@ -159,11 +139,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkAddItemToCollection(item, collection)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),collection)) {
             throwItemSecurityException(collection, Permission.WRITE); 
         }
@@ -182,10 +157,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkRemoveItem(item)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),item)) {
             throwItemSecurityException(item, Permission.WRITE);  
         }
@@ -200,11 +171,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkRemoveItemFromCollection(item, collection)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),collection)) {
             throwItemSecurityException(collection, Permission.WRITE); 
         }
@@ -222,10 +188,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkLoadChildren(collection, date)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasReadAccess(securityManager.getSecurityContext(),collection)) {
             throwItemSecurityException(collection, Permission.READ); 
         }
@@ -240,10 +202,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkCreateCollection(parent, collection)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),parent)) {
             throwItemSecurityException(parent, Permission.WRITE); 
         }
@@ -258,10 +216,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkCreateCollection(parent, collection, children)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),parent)) {
             throwItemSecurityException(parent, Permission.WRITE); 
         }
@@ -283,10 +237,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkUpdateCollection(collection, children)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),collection)) {
             throwItemSecurityException(collection, Permission.WRITE); 
         }
@@ -308,10 +258,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkRemoveCollection(collection)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),collection)) {
             throwItemSecurityException(collection, Permission.WRITE); 
         }
@@ -326,10 +272,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkUpdateCollection(collection)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),collection)) {
             throwItemSecurityException(collection, Permission.WRITE); 
         }
@@ -345,10 +287,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkCopyItem(item, targetParent, path, deepCopy)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),targetParent)) {
             throwItemSecurityException(targetParent, Permission.WRITE); 
         }
@@ -364,10 +302,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkMoveItem(item, oldParent, newParent)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),item)) {
             throwItemSecurityException(item, Permission.WRITE); 
         }
@@ -389,10 +323,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkCreateContent(parent, content)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),parent)) {
             throwItemSecurityException(parent, Permission.WRITE); 
         }
@@ -407,10 +337,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkCreateContent(parent, contentItems)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),parent)) {
             throwItemSecurityException(parent, Permission.WRITE); 
         }
@@ -424,9 +350,6 @@ public class SecurityAdvice {
             ContentItem content) throws Throwable {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkUpdateContent(content)");
-        }
-        if (!enabled) {
-            return pjp.proceed();
         }
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),content)) {
             throwItemSecurityException(content, Permission.WRITE); 
@@ -442,10 +365,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkUpdateContentItems(parents, contentItems)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         CosmoSecurityContext context = securityManager.getSecurityContext();
             
         for(ContentItem content: contentItems) {
@@ -492,9 +411,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkRemoveContent(content)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
         if (!securityHelper.hasWriteAccess(securityManager.getSecurityContext(),content)) {
             throwItemSecurityException(content, Permission.WRITE); 
         }
@@ -509,10 +425,6 @@ public class SecurityAdvice {
         if(LOG.isDebugEnabled()) {
             LOG.debug("in checkFindItems(filter)");
         }
-        if (!enabled) {
-            return pjp.proceed();
-        }
-        
         if (!securityHelper.hasAccessToFilter(securityManager.getSecurityContext(),filter)) {
             throw new CosmoSecurityException(
                     "principal does not have access to use filter "

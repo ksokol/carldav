@@ -496,7 +496,7 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VFREEBUSY, VJOURNAL, VTODO</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
-                        <dt>{DAV:}supported-report-set</dt><dd>{DAV:}principal-match, {DAV:}principal-property-search, {urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
+                        <dt>{DAV:}supported-report-set</dt><dd>{DAV:}principal-match, {urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>1</dd>
                         </dl>
                         <p>
@@ -565,11 +565,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                             <D:supported-report>
                                                 <D:report>
                                                     <D:principal-match/>
-                                                </D:report>
-                                            </D:supported-report>
-                                            <D:supported-report>
-                                                <D:report>
-                                                    <D:principal-property-search/>
                                                 </D:report>
                                             </D:supported-report>
                                             <D:supported-report>

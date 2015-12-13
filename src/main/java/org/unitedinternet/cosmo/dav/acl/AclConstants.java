@@ -29,17 +29,7 @@ public interface AclConstants extends DavConstants {
 
     /** The ACL XML element name <DAV:principal> */
     String ELEMENT_ACL_PRINCIPAL = "principal";
-    /** The ACL XML element name <DAV:alternate-URI-set> */
-    String ELEMENT_ACL_ALTERNATE_URI_SET =
-        "alternate-URI-set";
-    /** The ACL XML element name <DAV:principal-URL> */
-    String ELEMENT_ACL_PRINCIPAL_URL =
-        "principal-URL";
-    /** The ACL XML element name <DAV:group-membership> */
-    String ELEMENT_ACL_GROUP_MEMBERSHIP =
-        "group-membership";
-    String ELEMENT_ACL_PRINCIPAL_COLLECTION_SET =
-        "principal-collection-set";
+
     String ELEMENT_ACL_PRINCIPAL_MATCH =
         "principal-match";
     String ELEMENT_ACL_SELF = "self";
@@ -49,12 +39,6 @@ public interface AclConstants extends DavConstants {
         "principal-property";
     String QN_ACL_PRINCIPAL_PROPERTY =
         DomUtil.getQualifiedName(ELEMENT_ACL_PRINCIPAL_PROPERTY, NAMESPACE);
-    String ELEMENT_ACL_PRINCIPAL_PROPERTY_SEARCH =
-        "principal-property-search";
-    String QN_ACL_PRINCIPAL_PROPERTY_SEARCH =
-        DomUtil.getQualifiedName(ELEMENT_ACL_PRINCIPAL_PROPERTY_SEARCH,
-                                 NAMESPACE);
-
     /** The ACL property name DAV:alternate-URI-set */
     String PROPERTY_ACL_ALTERNATE_URI_SET =
         "alternate-URI-set";

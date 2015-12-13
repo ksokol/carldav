@@ -15,22 +15,13 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.QName;
-
 /**
  * Filter that matches Items with a TextAttribute.
  *
  */
 public class TextAttributeFilter extends AttributeFilter {
     
-    FilterCriteria value = null;
-    
-    public TextAttributeFilter() {
-    }
-    
-    public TextAttributeFilter(QName qname) {
-        this.setQname(qname);
-    }
+    private FilterCriteria value = null;
 
     public FilterCriteria getValue() {
         return value;

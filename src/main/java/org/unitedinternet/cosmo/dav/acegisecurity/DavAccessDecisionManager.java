@@ -47,28 +47,16 @@ import javax.servlet.http.HttpServletRequest;
  * for all other resources.
  * </p>
  */
-public class DavAccessDecisionManager
-        implements AccessDecisionManager, ExtendedDavConstants {
+public class DavAccessDecisionManager implements AccessDecisionManager, ExtendedDavConstants {
     private static final Log LOG = LogFactory.getLog(DavAccessDecisionManager.class);
 
     private UserService userService;
 
-    // DavAccessDecisionManager methods
-
-    /**
-     * <p>
-     * </p>
-     *
-     * @throws InsufficientAuthenticationException
-     *          if
-     *          <code>Authentication</code> is not a
-     *          {@link UsernamePasswordAuthenticationToken}.
-     */
     @Override
     public void decide(Authentication authentication, Object object,
                        Collection<ConfigAttribute> configAttributes)
             throws AccessDeniedException, InsufficientAuthenticationException {
-        AclEvaluator evaluator = null;
+        AclEvaluator evaluator;
         if (authentication instanceof UsernamePasswordAuthenticationToken) {
             CosmoUserDetails details = (CosmoUserDetails)
                     authentication.getPrincipal();
@@ -123,15 +111,7 @@ public class DavAccessDecisionManager
                          String method,
                          AclEvaluator evaluator)
             throws AclEvaluationException {
-        if (LOG.isDebugEnabled()) {
-            //Fix Log Forging - fortify
-            //Writing unvalidated user input to log files can allow an attacker
-            //to forge log entries or inject malicious content into the logs.
-            LOG.debug("matching resource " + path
-                    + " with method " + method);
-        }
-
-        UriTemplate.Match match = null;
+        UriTemplate.Match match;
 
         match = TEMPLATE_USERS.match(false, path);
         if (match != null) {
@@ -181,45 +161,25 @@ public class DavAccessDecisionManager
             throws AclEvaluationException {
 
         String username = match.get("username");
-        User user = getUserService().getUser(username);
+        User user = userService.getUser(username);
         if (user == null) {
-            if (LOG.isDebugEnabled()) {
-                //Fix Log Forging - fortify
-                //Writing unvalidated user input to log files can allow an attacker to forge log entries or
-                //inject malicious content into the logs.
-                LOG.debug("User " + username + " not found; allowing for 404");
-            }
             return;
         }
 
         if (method.equals("PROPFIND")) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Allowing method " + method + " so provider can evaluate check access itself");
-            }
             return;
         }
 
         UserAclEvaluator uae = (UserAclEvaluator) evaluator;
-        DavPrivilege privilege = CaldavMethodType.isReadMethod(method) ?
-                DavPrivilege.READ : DavPrivilege.WRITE;
-        if (!uae.evaluateUserPrincipal(user, privilege)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Principal does not have privilege " + privilege + "; denying access");
-            }
-            throw new AclEvaluationException(null, privilege);
-        }
+        DavPrivilege privilege = CaldavMethodType.isReadMethod(method) ? DavPrivilege.READ : DavPrivilege.WRITE;
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Principal has privilege " + privilege + "; allowing access");
+        if (!uae.evaluateUserPrincipal(user, privilege)) {
+            throw new AclEvaluationException(null, privilege);
         }
     }
 
     public void setUserService(UserService userService) {
         this.userService = userService;
-    }
-
-    public UserService getUserService() {
-        return userService;
     }
 
     public static class AclEvaluationException extends Exception {

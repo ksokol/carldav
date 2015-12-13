@@ -72,13 +72,8 @@ public class SecurityAdviceTest {
         // create a factory that can generate a proxy for the given target object
         AspectJProxyFactory factory = new AspectJProxyFactory(service); 
 
-        sa.setEnabled(true);
-        sa.setSecurityManager(securityManager);
-        sa.setContentDao(contentDao);
-        sa.setUserDao(new MockUserDao(new MockDaoStorage()));
         //this bean has request scope
         //sa.setSecuredMethod(Proxy) should be called by Spring
-        sa.init();
         factory.addAspect(sa);
 
         // now get the proxy object...

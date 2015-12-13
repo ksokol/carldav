@@ -20,9 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.unitedinternet.cosmo.aop.OrderedAdvice;
-import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.UserDao;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.Item;
@@ -47,27 +45,19 @@ import java.util.Set;
  * will be logged as insecure.
  */
 @Aspect
-public class SecurityAdvice extends OrderedAdvice {
+public class SecurityAdvice {
+
+    private static final Log LOG = LogFactory.getLog(SecurityAdvice.class);
 
     private boolean enabled = true;
-    private CosmoSecurityManager securityManager = null;
-    private ContentDao contentDao = null;
-    private UserDao userDao = null;
-    private SecurityHelper securityHelper = null;
-    
-    private static final Log LOG =
-        LogFactory.getLog(SecurityAdvice.class);
-    
-    public void init() {
-        if(contentDao==null) {
-            throw new IllegalStateException("contentDao must not be null");
-        }
-        if(userDao==null) {
-            throw new IllegalStateException("userDao must not be null");
-        }
-        securityHelper = new SecurityHelper();
+    private final CosmoSecurityManager securityManager;
+    private final SecurityHelper securityHelper = new SecurityHelper();
+
+    public SecurityAdvice(final CosmoSecurityManager securityManager) {
+        Assert.notNull(securityManager, "securityManager is null");
+        this.securityManager = securityManager;
     }
-    
+
     @Around("execution(* org.unitedinternet.cosmo.service.ContentService.getRootItem(..)) &&"
             + "args(user)")
     public Object checkGetRootItem(ProceedingJoinPoint pjp,
@@ -531,29 +521,6 @@ public class SecurityAdvice extends OrderedAdvice {
         return pjp.proceed();
     }
 
-    public CosmoSecurityManager getSecurityManager() {
-        return securityManager;
-    }
-
-
-    public void setContentDao(ContentDao contentDao) {
-        this.contentDao = contentDao;
-    }
-
-    public void setSecurityManager(CosmoSecurityManager securityManager) {
-        this.securityManager = securityManager;
-    }
-
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-    
     private boolean isNoteMod(Item item) {
         if(item instanceof NoteItem) {
             NoteItem note = (NoteItem) item;
@@ -568,10 +535,4 @@ public class SecurityAdvice extends OrderedAdvice {
                 "principal does not have access to item "
                         + item.getUid(), permission);
     }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-
 }

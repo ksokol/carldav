@@ -1,96 +1,89 @@
 package dav
 
+import carldav.service.generator.IdGenerator
+import carldav.service.time.TimeService
+import org.junit.Before
 import org.junit.Test
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
+import testutil.builder.GeneralData
 
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
+import static org.mockito.Mockito.when
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static testutil.TestUser.USER02
+import static testutil.builder.GeneralData.CALDAV_EVENT
 import static testutil.builder.GeneralResponse.PRECONDITION_FAILED_RESPONSE
-import static testutil.mockmvc.CustomResultMatchers.*
+import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static testutil.mockmvc.CustomResultMatchers.etag
+import static testutil.mockmvc.CustomResultMatchers.xml
 
 /**
  * @author Kamill Sokol
  */
+@WithUserDetails(USER01)
 class EtagTests extends IntegrationTestSupport {
 
-    @WithUserDetails(USER01)
+    private static final String ETAG = '"1d21bc1d460b1085d53e3def7f7380f6"'
+    private static final String uuid = GeneralData.UUID
+
+    @Autowired
+    private TimeService timeService;
+
+    @Autowired
+    private IdGenerator idGenerator;
+
+    @Before
+    public void before() {
+        when(timeService.getCurrentTime()).thenReturn(new Date(3600));
+        when(idGenerator.nextStringIdentifier()).thenReturn("1");
+
+         mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+                .contentType(TEXT_CALENDAR)
+                .content(CALDAV_EVENT))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn();
+    }
+
     @Test
     public void user01IfMatchWildcardIsOkReturnEtag() throws Exception {
-        mockMvc.perform(head("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
+        mockMvc.perform(head("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .header("If-Match", '*'))
                 .andExpect(status().isOk())
-                .andExpect(etag(is('"ghFexXxxU+9KC/of1jmJ82wMFig="')));
+                .andExpect(etag(is(ETAG)));
     }
 
-    @WithUserDetails(USER01)
     @Test
     public void user01IfMatchEtagIsOkReturnEtag() throws Exception {
-        mockMvc.perform(head("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
-                .header("If-Match", '"ghFexXxxU+9KC/of1jmJ82wMFig="'))
+        mockMvc.perform(head("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+                .header("If-Match", ETAG))
                 .andExpect(status().isOk())
-                .andExpect(etag(is('"ghFexXxxU+9KC/of1jmJ82wMFig="')));
+                .andExpect(etag(is(ETAG)));
     }
 
-    @WithUserDetails(USER02)
-    @Test
-    public void user02IfMatchEtagIsOkReturnLastModified() throws Exception {
-        mockMvc.perform(head("/dav/collection/{uid}", "1e359448-1ee0-4151-872d-eea0ee462bc6")
-                .header("If-Match", '"ghFexXxxU+9KC/of1jmJ82wMFig="'))
-                .andExpect(status().isOk())
-                .andExpect(lastModified(notNullValue()))
-    }
-
-    @WithUserDetails(USER02)
-    @Test
-    public void user02NoEtagIsOkReturnLastModified() throws Exception {
-        mockMvc.perform(head("/dav/collection/{uid}", "1e359448-1ee0-4151-872d-eea0ee462bc6"))
-                .andExpect(status().isOk())
-                .andExpect(lastModified(notNullValue()))
-    }
-
-    @WithUserDetails(USER01)
     @Test
     public void user01IfNoneMatchGetIsNotModified() throws Exception {
-        mockMvc.perform(get("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
-                .header("If-None-Match", '"ghFexXxxU+9KC/of1jmJ82wMFig="'))
+        mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+                .header("If-None-Match", ETAG))
                 .andExpect(status().isNotModified())
     }
 
-    @WithUserDetails(USER01)
     @Test
     public void user01IfNoneMatchOptionsIsPrecodnitionFailed() throws Exception {
-        mockMvc.perform(options("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
-                .header("If-None-Match", '"ghFexXxxU+9KC/of1jmJ82wMFig="'))
+        mockMvc.perform(options("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+                .header("If-None-Match", ETAG))
                 .andExpect(status().isPreconditionFailed())
                 .andExpect(xml(PRECONDITION_FAILED_RESPONSE))
     }
 
-    @WithUserDetails(USER01)
-    @Test
-    public void user01IfNoneMatchGetIsOk() throws Exception {
-        mockMvc.perform(get("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
-                .header("If-None-Match", '"1hFexXxxU+9KC/of1jmJ82wMFig="'))
-                .andExpect(status().isOk())
-    }
-
-    @WithUserDetails(USER01)
     @Test
     public void user01IfNoneMatchHeadIsNotModified() throws Exception {
-        mockMvc.perform(head("/dav/collection/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6")
-                .header("If-None-Match", '"ghFexXxxU+9KC/of1jmJ82wMFig="'))
+        mockMvc.perform(head("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+                .header("If-None-Match", ETAG))
                 .andExpect(status().isNotModified())
-    }
-
-    @WithUserDetails(USER02)
-    @Test
-    public void user02IfNoneMatchOptionsIsOk() throws Exception {
-        mockMvc.perform(options("/dav/collection/{uid}", "1e359448-1ee0-4151-872d-eea0ee462bc6")
-                .header("If-None-Match", '"1hFexXxxU+9KC/of1jmJ82wMFig="'))
-                .andExpect(status().isOk())
     }
 }

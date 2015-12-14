@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav.acl;
 
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.util.CosmoQName;
 
 /**
@@ -30,15 +29,6 @@ public interface AclConstants extends DavConstants {
     /** The ACL XML element name <DAV:principal> */
     String ELEMENT_ACL_PRINCIPAL = "principal";
 
-    String ELEMENT_ACL_PRINCIPAL_MATCH =
-        "principal-match";
-    String ELEMENT_ACL_SELF = "self";
-    String QN_ACL_SELF =
-        DomUtil.getQualifiedName(ELEMENT_ACL_SELF, NAMESPACE);
-    String ELEMENT_ACL_PRINCIPAL_PROPERTY =
-        "principal-property";
-    String QN_ACL_PRINCIPAL_PROPERTY =
-        DomUtil.getQualifiedName(ELEMENT_ACL_PRINCIPAL_PROPERTY, NAMESPACE);
     /** The ACL property name DAV:alternate-URI-set */
     String PROPERTY_ACL_ALTERNATE_URI_SET =
         "alternate-URI-set";
@@ -52,7 +42,6 @@ public interface AclConstants extends DavConstants {
         "principal-collection-set";
     String PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET =
         "current-user-privilege-set";
-    String PROPERTY_ACL_ACL = "acl";
 
     /** The ACL property DAV:alternate-URI-set */
     DavPropertyName ALTERNATEURISET =
@@ -69,8 +58,6 @@ public interface AclConstants extends DavConstants {
     DavPropertyName CURRENTUSERPRIVILEGESET =
         DavPropertyName.create(PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET,
                                NAMESPACE);
-    DavPropertyName ACL =
-        DavPropertyName.create(PROPERTY_ACL_ACL, NAMESPACE);
 
     CosmoQName RESOURCE_TYPE_PRINCIPAL =
         new CosmoQName(NAMESPACE.getURI(), ELEMENT_ACL_PRINCIPAL,

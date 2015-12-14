@@ -13,7 +13,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CaldavHttpMethod.COPY
 import static testutil.mockmvc.CaldavHttpMethod.MOVE
@@ -35,7 +34,6 @@ class UsersTests extends IntegrationTestSupport {
                         <h1>test01@localhost.de</h1>
                         <h2>Properties</h2>
                         <dl>
-                        <dt>{DAV:}acl</dt><dd>not implemented yet</dd>
                         <dt>{DAV:}alternate-URI-set</dt><dd></dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}calendar-home-set</dt><dd>/dav/test01@localhost.de</dd>
                         <dt>{DAV:}creationdate</dt><dd>2015-11-16T15:35:16Z</dd>
@@ -73,7 +71,7 @@ class UsersTests extends IntegrationTestSupport {
     public void userOptions() throws Exception {
         mockMvc.perform(options("/dav/users/{uid}", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access"))
+                .andExpect(header().string("DAV", "1, 3, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT"));
     }
 
@@ -243,13 +241,5 @@ class UsersTests extends IntegrationTestSupport {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
-    }
-
-    @Test
-    public void userAcl() throws Exception {
-        mockMvc.perform(acl("/dav/users/{uid}", USER01))
-                .andExpect(status().isForbidden())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
 }

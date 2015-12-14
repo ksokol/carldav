@@ -15,14 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.acl.property;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.acl.AclConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents the DAV:group-membership property.
@@ -53,12 +53,4 @@ public class GroupMembership extends StandardDavProperty
 
         return name;
     }
-
-    /*private static HashSet<String> hrefs(DavResourceLocator locator,
-                                         User user) {
-        HashSet<String> hrefs = new HashSet<String>();
-        // XXX: when we add groups, use the service locator to find the
-        // principal url for each of the user's groups
-        return hrefs;
-    }*/
 }

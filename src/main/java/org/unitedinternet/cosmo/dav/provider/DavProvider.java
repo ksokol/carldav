@@ -15,14 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-
+import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.DavResponse;
+import org.unitedinternet.cosmo.dav.WebDavResource;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -84,10 +84,5 @@ public interface DavProvider {
     void mkcalendar(DavRequest request,
                            DavResponse response,
                            DavCollection collection)
-        throws CosmoDavException, IOException;
-
-    void acl(DavRequest request,
-                    DavResponse response,
-                    WebDavResource resource)
         throws CosmoDavException, IOException;
 }

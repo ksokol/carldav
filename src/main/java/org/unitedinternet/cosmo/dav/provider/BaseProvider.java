@@ -46,7 +46,6 @@ import org.unitedinternet.cosmo.dav.acl.AclConstants;
 import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
-import org.unitedinternet.cosmo.dav.acl.UnsupportedPrivilegeException;
 import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
@@ -318,23 +317,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants, AclCons
             }
             throw new CosmoDavException(e);
         }
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void acl(DavRequest request,
-                    DavResponse response,
-                    WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (! resource.exists()){
-            throw new NotFoundException();
-        }
-        if (LOG.isDebugEnabled()){
-            LOG.debug("ACL for " + resource.getResourcePath());
-        }
-        throw new UnsupportedPrivilegeException("No unprotected ACEs are supported on this resource");
     }
 
     // our methods

@@ -35,8 +35,6 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavAce;
-import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.property.AlternateUriSet;
 import org.unitedinternet.cosmo.dav.acl.property.GroupMembership;
@@ -99,7 +97,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     private User user;
     private DavUserPrincipalCollection parent;
-    private DavAcl acl;
 
     public DavUserPrincipal(User user,
                             DavResourceLocator locator,
@@ -107,7 +104,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         throws CosmoDavException {
         super(locator, factory);
         this.user = user;
-        this.acl = makeAcl();
     }
 
 
@@ -134,7 +130,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         String lastName = user.getLastName();
         String email = user.getEmail();
         
-        String toReturn = null;
+        String toReturn;
         
         if(firstName == null && lastName == null){
             toReturn = email;
@@ -224,55 +220,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     public Set<ReportType> getReportTypes() {
         return REPORT_TYPES;
-    }
-    
-    /**
-     * Returns the resource's access control list. The list contains the
-     * following ACEs:
-     *
-     * <ol>
-     * <li> <code>DAV:unauthenticated</code>: deny <code>DAV:all</code> </li>
-     * <li> <code>DAV:owner</code>: allow <code>DAV:all</code> </li>
-     * <li> <code>DAV:all</code>: allow
-     * <code>DAV:read-current-user-privilege-set</code> </li>
-     * <li> <code>DAV:all</code>: deny <code>DAV:all</code> </li>
-     * </ol>
-     *
-     * <p>
-     * TODO: Include administrative users in the ACL, probably with a group
-     * principal.
-     * </p>
-     */
-    protected DavAcl getAcl() {
-        return acl;
-    }
-
-    private DavAcl makeAcl() {
-        DavAcl acl = new DavAcl();
-
-        DavAce unauthenticated = new DavAce.UnauthenticatedAce();
-        unauthenticated.setDenied(true);
-        unauthenticated.getPrivileges().add(DavPrivilege.ALL);
-        unauthenticated.setProtected(true);
-        acl.getAces().add(unauthenticated);
-
-        DavAce owner = new DavAce.SelfAce();
-        owner.getPrivileges().add(DavPrivilege.ALL);
-        owner.setProtected(true);
-        acl.getAces().add(owner);
-
-        DavAce allAllow = new DavAce.AllAce();
-        allAllow.getPrivileges().add(DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET);
-        allAllow.setProtected(true);
-        acl.getAces().add(allAllow);
-
-        DavAce allDeny = new DavAce.AllAce();
-        allDeny.setDenied(true);
-        allDeny.getPrivileges().add(DavPrivilege.ALL);
-        allDeny.setProtected(true);
-        acl.getAces().add(allDeny);
-
-        return acl;
     }
 
     /**

@@ -43,7 +43,6 @@ class UsersTests extends IntegrationTestSupport {
                         <dt>{DAV:}resourcetype</dt><dd></dd>
                         <dt>{DAV:}supported-report-set</dt><dd></dd>
                         </dl>
-                        <a href="/dav/users/">User Principals</a></li>
                         <p>
                         <a href="/dav/test01@localhost.de/">Home collection</a><br>
                         </body></html>

@@ -47,7 +47,6 @@ import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
 import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
-import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavItemResource;
@@ -495,14 +494,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             hasPrivilege = evaluator.evaluate(item, privilege);
         } else {
             UserAclEvaluator uae = (UserAclEvaluator) evaluator;
-
-            if (resource instanceof DavUserPrincipalCollection)
-            {
-                hasPrivilege = uae.evaluateUserPrincipalCollection(privilege);
-            } else {
-                User user = ((DavUserPrincipal)resource).getUser();
-                hasPrivilege = uae.evaluateUserPrincipal(user, privilege);
-            }
+            User user = ((DavUserPrincipal)resource).getUser();
+            hasPrivilege = uae.evaluateUserPrincipal(user, privilege);
         }        
 
         if (hasPrivilege) {

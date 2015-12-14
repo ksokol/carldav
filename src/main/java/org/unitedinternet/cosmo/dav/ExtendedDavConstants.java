@@ -80,8 +80,6 @@ public interface ExtendedDavConstants extends DavConstants {
         new UriTemplate("/collection/{uid}/*");
     UriTemplate TEMPLATE_ITEM =
         new UriTemplate("/item/{uid}/*");
-    UriTemplate TEMPLATE_USERS =
-        new UriTemplate("/users");
     UriTemplate TEMPLATE_USER =
         new UriTemplate("/users/{username}");
     UriTemplate TEMPLATE_HOME =

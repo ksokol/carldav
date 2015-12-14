@@ -34,7 +34,6 @@ import org.unitedinternet.cosmo.dav.NotModifiedException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
-import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
@@ -47,7 +46,6 @@ import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
 import org.unitedinternet.cosmo.dav.provider.FileProvider;
 import org.unitedinternet.cosmo.dav.provider.HomeCollectionProvider;
-import org.unitedinternet.cosmo.dav.provider.UserPrincipalCollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.UserPrincipalProvider;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.server.ServerConstants;
@@ -101,14 +99,14 @@ public class StandardRequestHandler extends AbstractController implements Server
     protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         final DavRequest wreq = createDavRequest(request);
         final DavResponse wres = createDavResponse(response);
-        
+
         try {
             final WebDavResource resource = resolveTarget(wreq);
             preconditions(wreq, wres, resource);
             process(wreq, wres, resource);
         } catch (Exception e) {
             CosmoDavException de = ExceptionMapper.map(e, request);
-            
+
             // We need a way to differentiate exceptions that are "expected" so that the
             // logs don't get too polluted with errors.  For example, OptimisticLockingFailureException
             // is expected and should be handled by the retry logic that is one layer above.
@@ -230,9 +228,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
         if (resource instanceof DavCalendarResource) {
             return new CalendarResourceProvider(resourceFactory, entityFactory);
-        }
-        if (resource instanceof DavUserPrincipalCollection) {
-            return new UserPrincipalCollectionProvider(resourceFactory, entityFactory);
         }
         if (resource instanceof DavUserPrincipal) {
             return new UserPrincipalProvider(resourceFactory, entityFactory);

@@ -20,7 +20,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
-import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.dav.impl.DavAvailability;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
@@ -158,11 +157,6 @@ public class StandardResourceFactory
         match = TEMPLATE_ITEM.match(uri);
         if (match != null) {
             return createUidResource(locator, match);
-        }
-
-        match = TEMPLATE_USERS.match(uri);
-        if (match != null) {
-            return new DavUserPrincipalCollection(locator, this);
         }
 
         match = TEMPLATE_USER.match(uri);

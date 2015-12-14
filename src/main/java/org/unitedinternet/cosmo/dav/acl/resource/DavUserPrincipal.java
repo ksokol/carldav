@@ -91,7 +91,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     private User user;
-    private DavUserPrincipalCollection parent;
 
     public DavUserPrincipal(User user,
                             DavResourceLocator locator,
@@ -191,14 +190,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     public DavCollection getParent()
         throws CosmoDavException {
-        if (parent == null) {
-            DavResourceLocator parentLocator =
-                getResourceLocator().getParentLocator();
-            parent = (DavUserPrincipalCollection)
-                getResourceFactory().resolve(parentLocator);
-        }
-
-        return parent;
+        return null;
     }
 
     // our methods
@@ -319,14 +311,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
                 writer.write("</dd>\n");
             }
             writer.write("</dl>\n");
-    
-            WebDavResource parent = getParent();
-            writer.write("<a href=\"");
-            writer.write(parent.getResourceLocator().getHref(true));
-            writer.write("\">");
-            writer.write(StringEscapeUtils.escapeHtml(parent.getDisplayName()));
-            writer.write("</a></li>\n");
-            
+
             User user = getSecurityManager().getSecurityContext().getUser();
 
             writer.write("<p>\n");

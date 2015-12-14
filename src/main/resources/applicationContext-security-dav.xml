@@ -37,9 +37,6 @@
 		<constructor-arg index="1">
             <bean class="org.unitedinternet.cosmo.dav.acegisecurity.UserPrincipalEvaluator" />
         </constructor-arg>
-        <constructor-arg index="2">
-            <bean class="org.unitedinternet.cosmo.dav.acegisecurity.UserPrincipalCollectionEvaluator" />
-        </constructor-arg>
 	</bean>
 
 	<bean id="davExceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">

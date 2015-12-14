@@ -47,14 +47,11 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
 
     private final UserService userService;
     private final PrincipalEvaluator userPrincipalEvaluator;
-    private final PrincipalEvaluator userPrincipalCollectionEvaluator;
 
-    public DavAccessDecisionManager(final UserService userService, final PrincipalEvaluator userPrincipalEvaluator, final PrincipalEvaluator userPrincipalCollectionEvaluator) {
+    public DavAccessDecisionManager(final UserService userService, final PrincipalEvaluator userPrincipalEvaluator) {
         Assert.notNull(userService, "userService is null");
         Assert.notNull(userPrincipalEvaluator, "userPrincipalEvaluator is null");
-        Assert.notNull(userPrincipalCollectionEvaluator, "userPrincipalCollectionEvaluator is null");
         this.userPrincipalEvaluator = userPrincipalEvaluator;
-        this.userPrincipalCollectionEvaluator = userPrincipalCollectionEvaluator;
         this.userService = userService;
     }
 
@@ -107,11 +104,6 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
     }
 
     protected void match(String path, String method, AclEvaluator evaluator) {
-        if (TEMPLATE_USERS.match(false, path) != null) {
-            userPrincipalCollectionEvaluator.evaluate(method, (UserAclEvaluator) evaluator);
-            return;
-        }
-
         final UriTemplate.Match match = TEMPLATE_USER.match(false, path);
         if (match != null) {
             String username = match.get("username");

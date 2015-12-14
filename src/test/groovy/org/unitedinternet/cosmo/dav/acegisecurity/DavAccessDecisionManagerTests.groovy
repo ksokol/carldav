@@ -1,23 +1,22 @@
 package org.unitedinternet.cosmo.dav.acegisecurity
 
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.security.authentication.InsufficientAuthenticationException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.FilterInvocation
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails
-
-import static org.hamcrest.MatcherAssert.assertThat
-import static org.hamcrest.Matchers.is
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.ExpectedException
 import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator
 import org.unitedinternet.cosmo.model.mock.MockUser
 import org.unitedinternet.cosmo.service.UserService
 
-
+import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
+import static org.mockito.Matchers.anyObject
 import static org.mockito.Mockito.*
 
 /**
@@ -28,7 +27,7 @@ class DavAccessDecisionManagerTests {
     def UserService userService = mock(UserService.class)
     def PrincipalEvaluator userPrincipalEvaluator = mock(PrincipalEvaluator.class)
     def PrincipalEvaluator userPrincipalCollectionEvaluator = mock(PrincipalEvaluator.class)
-    def DavAccessDecisionManager uut = new DavAccessDecisionManager(userService, userPrincipalEvaluator, userPrincipalCollectionEvaluator)
+    def DavAccessDecisionManager uut = new DavAccessDecisionManager(userService, userPrincipalEvaluator)
     def token = new UsernamePasswordAuthenticationToken(new CosmoUserDetails("user", "password", new MockUser()), "password")
     def invocation = mock(FilterInvocation.class)
 
@@ -116,18 +115,4 @@ class DavAccessDecisionManagerTests {
         verify(userPrincipalEvaluator, never()).evaluate(anyObject(), anyObject())
         verify(userPrincipalCollectionEvaluator, never()).evaluate(anyObject(), anyObject())
     }
-
-    @Test(expected = DavAccessDeniedException.class)
-    void expectDavAccessDeniedException() {
-        def request = new MockHttpServletRequest()
-        request.setPathInfo("/users")
-        when(invocation.getHttpRequest()).thenReturn(request)
-        when(userPrincipalCollectionEvaluator.evaluate(anyObject(), anyObject())).thenThrow(new AclEvaluationException(null))
-
-        uut.decide(token, invocation, null)
-
-        verify(userPrincipalEvaluator, never()).evaluate(anyObject(), anyObject())
-        verify(userPrincipalCollectionEvaluator, never()).evaluate(anyObject(), anyObject())
-    }
-
 }

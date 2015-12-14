@@ -42,11 +42,9 @@ import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.AclConstants;
 import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
-import org.unitedinternet.cosmo.dav.acl.UnsupportedPrivilegeException;
 import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipalCollection;
@@ -71,7 +69,7 @@ import java.io.OutputStream;
  *
  * @see DavProvider
  */
-public abstract class BaseProvider implements DavProvider, DavConstants, AclConstants {
+public abstract class BaseProvider implements DavProvider, DavConstants {
 
     private static final Log LOG = LogFactory.getLog(BaseProvider.class);
 
@@ -320,23 +318,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants, AclCons
         }
     }
 
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void acl(DavRequest request,
-                    DavResponse response,
-                    WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (! resource.exists()){
-            throw new NotFoundException();
-        }
-        if (LOG.isDebugEnabled()){
-            LOG.debug("ACL for " + resource.getResourcePath());
-        }
-        throw new UnsupportedPrivilegeException("No unprotected ACEs are supported on this resource");
-    }
-
     // our methods
     /**
      * 
@@ -552,22 +533,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants, AclCons
             return;
         }
 
-        // if there is at least one property that can be viewed with
-        // DAV:read-current-user-privilege-set, then check for that
-        // privilege as well.
-        int unprotected = 0;
-        if (props.contains(CURRENTUSERPRIVILEGESET)){
-            unprotected++;
-        }
-
-        if (unprotected > 0 && hasPrivilege(resource, evaluator,
-                         DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET)) {
-
-            if (props.getContentSize() > unprotected){
-                // XXX: if they don't have DAV:read, they shouldn't be
-                // able to access any other properties
-                LOG.warn("Exposing secured properties to ticket without DAV:read");
-            }
+        if (hasPrivilege(resource, evaluator, DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET)) {
             if (LOG.isDebugEnabled()){
                 LOG.debug("Allowing PROPFIND");
             }

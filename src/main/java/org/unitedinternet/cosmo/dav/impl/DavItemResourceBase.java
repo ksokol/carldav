@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.ExistsException;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.LockedException;
@@ -43,11 +42,7 @@ import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavAce;
-import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.property.Owner;
-import org.unitedinternet.cosmo.dav.acl.property.PrincipalCollectionSet;
 import org.unitedinternet.cosmo.dav.property.CreationDate;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
@@ -106,7 +101,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     private Item item;
     private DavCollection parent;
-    private DavAcl acl;
     private EntityFactory entityFactory;
 
     static {
@@ -116,8 +110,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(DavPropertyName.DISPLAYNAME);
         registerLiveProperty(DavPropertyName.ISCOLLECTION);
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
-        registerLiveProperty(OWNER);
-        registerLiveProperty(PRINCIPALCOLLECTIONSET);
         registerLiveProperty(UUID);
     }
 
@@ -127,7 +119,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         super(locator, factory);
         this.item = item;
         this.entityFactory = entityFactory;
-        this.acl = makeAcl();
     }
 
     // WebDavResource methods
@@ -411,78 +402,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     }
 
     /**
-     * Returns the resource's access control list. The list contains the
-     * following ACEs:
-     * 
-     * <ol>
-     * <li> <code>DAV:unauthenticated</code>: deny <code>DAV:all</code></li>
-     * <li> <code>DAV:owner</code>: allow <code>DAV:all</code></li>
-     * <li>owner of each parent collection: allow <code>DAV:all</code></li>
-     * <li> <code>DAV:all</code>: allow
-     * <code>DAV:read-current-user-privilege-set</code></li>
-     * <li> <code>DAV:all</code>: deny <code>DAV:all</code></li>
-     * </ol>
-     * 
-     * <p>
-     * TODO: Include administrative users in the ACL, probably with a group
-     * principal.<br/>
-     * TODO: Include tickets, both those granted on the resource itself and
-     * those inherited from ancestor resources.<br/>
-     * </p>
-     */
-    protected DavAcl getAcl() {
-        return acl;
-    }
-
-    private DavAcl makeAcl() {
-        DavAcl acl = new DavAcl();
-
-        DavAce unauthenticated = new DavAce.UnauthenticatedAce();
-        unauthenticated.setDenied(true);
-        unauthenticated.getPrivileges().add(DavPrivilege.ALL);
-        unauthenticated.setProtected(true);
-        acl.getAces().add(unauthenticated);
-
-        DavAce owner = new DavAce.PropertyAce(OWNER);
-        owner.getPrivileges().add(DavPrivilege.ALL);
-        owner.setProtected(true);
-        acl.getAces().add(owner);
-
-        for (CollectionItem parent : item.getParents()) {
-            if (parent.getOwner().equals(item.getOwner())){
-                continue;
-            }
-            try {
-                DavResourceLocatorFactory f = getResourceLocator().getFactory();
-                DavResourceLocator l = f.createPrincipalLocator(
-                        getResourceLocator().getContext(), parent.getOwner());
-                DavAce parentOwner = new DavAce.PropertyAce(OWNER);
-                parentOwner.getPrivileges().add(DavPrivilege.ALL);
-                parentOwner.setProtected(true);
-                parentOwner.setInherited(l.getHref(false));
-                acl.getAces().add(parentOwner);
-            } catch (CosmoDavException e) {
-                log.warn("Could not create principal locator for parent collection owner '"
-                        + parent.getOwner().getUsername() + "' - skipping ACE");
-            }
-        }
-
-        DavAce allAllow = new DavAce.AllAce();
-        allAllow.getPrivileges().add(
-                DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET);
-        allAllow.setProtected(true);
-        acl.getAces().add(allAllow);
-
-        DavAce allDeny = new DavAce.AllAce();
-        allDeny.setDenied(true);
-        allDeny.getPrivileges().add(DavPrivilege.ALL);
-        allDeny.setProtected(true);
-        acl.getAces().add(allDeny);
-
-        return acl;
-    }
-
-    /**
      * <p>
      * Extends the superclass method.
      * </p>
@@ -490,9 +409,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
      * If the principal is a user, returns {@link DavPrivilege#READ} and
      * {@link DavPrivilege@WRITE}. This is a shortcut that assumes the security
      * layer has only allowed access to the owner of the home collection
-     * specified in the URL used to access this resource. Eventually this method
-     * will check the ACL for all ACEs corresponding to the current principal
-     * and return the privileges those ACEs grant.
+     * specified in the URL used to access this resource.
      * </p>
      * <p>
      * If the principal is a ticket, returns the dav privileges corresponding to
@@ -530,8 +447,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
-        properties.add(new Owner(getResourceLocator(), item.getOwner()));
-        properties.add(new PrincipalCollectionSet(getResourceLocator()));
         properties.add(new Uuid(item.getUid()));
     }
 
@@ -552,7 +467,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                 || name.equals(DavPropertyName.GETETAG)
                 || name.equals(DavPropertyName.RESOURCETYPE)
                 || name.equals(DavPropertyName.ISCOLLECTION)
-                || name.equals(OWNER) || name.equals(PRINCIPALCOLLECTIONSET)
                 || name.equals(UUID)) {
             throw new ProtectedPropertyModificationException(name);
         }
@@ -574,7 +488,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                 || name.equals(DavPropertyName.DISPLAYNAME)
                 || name.equals(DavPropertyName.RESOURCETYPE)
                 || name.equals(DavPropertyName.ISCOLLECTION)
-                || name.equals(OWNER) || name.equals(PRINCIPALCOLLECTIONSET)
                 || name.equals(UUID)) {
             throw new ProtectedPropertyModificationException(name);
         }

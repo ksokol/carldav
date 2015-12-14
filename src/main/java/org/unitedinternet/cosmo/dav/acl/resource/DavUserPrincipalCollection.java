@@ -31,8 +31,6 @@ import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavAce;
-import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.impl.DavResourceBase;
 import org.unitedinternet.cosmo.dav.property.CurrentUserPrincipal;
@@ -61,8 +59,6 @@ public class DavUserPrincipalCollection extends DavResourceBase implements DavCo
 
     private static final Set<ReportType> REPORT_TYPES = new HashSet<>();
 
-    private DavAcl acl;
-
     static {
         registerLiveProperty(DavPropertyName.DISPLAYNAME);
         registerLiveProperty(DavPropertyName.ISCOLLECTION);
@@ -72,7 +68,6 @@ public class DavUserPrincipalCollection extends DavResourceBase implements DavCo
 
     public DavUserPrincipalCollection(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
-        acl = makeAcl();
     }
 
     // Jackrabbit WebDavResource
@@ -176,43 +171,6 @@ public class DavUserPrincipalCollection extends DavResourceBase implements DavCo
 
     public Set<ReportType> getReportTypes() {
         return REPORT_TYPES;
-    }
-
-    /**
-     * Returns the resource's access control list. The list contains the following ACEs:
-     * 
-     * <ol>
-     * <li> <code>DAV:unauthenticated</code>: deny <code>DAV:all</code></li>
-     * <li> <code>DAV:all</code>: allow <code>DAV:read, DAV:read-current-user-privilege-set</code></li>
-     * <li> <code>DAV:all</code>: deny <code>DAV:all</code></li>
-     * </ol>
-     */
-    protected DavAcl getAcl() {
-        return acl;
-    }
-
-    private DavAcl makeAcl() {
-        DavAcl acl = new DavAcl();
-
-        DavAce unauthenticated = new DavAce.UnauthenticatedAce();
-        unauthenticated.setDenied(true);
-        unauthenticated.getPrivileges().add(DavPrivilege.ALL);
-        unauthenticated.setProtected(true);
-        acl.getAces().add(unauthenticated);
-
-        DavAce allAllow = new DavAce.AllAce();
-        allAllow.getPrivileges().add(DavPrivilege.READ);
-        allAllow.getPrivileges().add(DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET);
-        allAllow.setProtected(true);
-        acl.getAces().add(allAllow);
-
-        DavAce allDeny = new DavAce.AllAce();
-        allDeny.setDenied(true);
-        allDeny.getPrivileges().add(DavPrivilege.ALL);
-        allDeny.setProtected(true);
-        acl.getAces().add(allDeny);
-
-        return acl;
     }
 
     /**

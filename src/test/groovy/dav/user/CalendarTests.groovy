@@ -179,14 +179,8 @@ public class CalendarTests extends IntegrationTestSupport {
                                     <D:prop>
                                         <D:creationdate>1970-01-01T00:00:03Z</D:creationdate>
                                         <D:getetag>${eTag}</D:getetag>
-                                        <D:principal-collection-set>
-                                            <D:href>/dav/users</D:href>
-                                        </D:principal-collection-set>
                                         <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
                                         <D:iscollection>0</D:iscollection>
-                                        <D:owner>
-                                            <D:href>/dav/users/test01@localhost.de</D:href>
-                                        </D:owner>
                                         <D:supported-report-set>
                                             <D:supported-report>
                                                 <D:report>
@@ -204,79 +198,9 @@ public class CalendarTests extends IntegrationTestSupport {
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>
-                                        <D:acl>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:unauthenticated/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:property>
-                                                        <D:owner/>
-                                                    </D:property>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:read-current-user-privilege-set/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                        </D:acl>
                                         <D:getcontentlength>920</D:getcontentlength>
                                         <D:resourcetype/>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">1</cosmo:uuid>
-                                        <D:current-user-privilege-set>
-                                            <D:privilege>
-                                                <D:read/>
-                                            </D:privilege>
-                                            <D:privilege>
-                                                <D:write/>
-                                            </D:privilege>
-                                            <D:privilege>
-                                                <D:read-current-user-privilege-set/>
-                                            </D:privilege>
-                                            <D:privilege>
-                                                <C:read-free-busy xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            </D:privilege>
-                                        </D:current-user-privilege-set>
                                         <D:displayname>all entities meeting</D:displayname>
                                         <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
                                         <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
@@ -422,16 +346,12 @@ public class CalendarTests extends IntegrationTestSupport {
                                     <D:prop>
                                         <D:creationdate/>
                                         <D:getetag/>
-                                        <D:principal-collection-set/>
                                         <D:getlastmodified/>
                                         <D:iscollection/>
-                                        <D:owner/>
                                         <D:supported-report-set/>
-                                        <D:acl/>
                                         <D:getcontentlength/>
                                         <D:resourcetype/>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV"/>
-                                        <D:current-user-privilege-set/>
                                         <D:displayname/>
                                         <D:getcontenttype/>
                                     </D:prop>
@@ -478,11 +398,9 @@ public class CalendarTests extends IntegrationTestSupport {
                         </ul>
                         <h2>Properties</h2>
                         <dl>
-                        <dt>{DAV:}acl</dt><dd>not implemented yet</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}calendar-description</dt><dd>newcalendar</dd>
                         <dt>{urn:ietf:params:xml:ns:xcaldavoneandone}calendar-visible</dt><dd>false</dd>
                         <dt>{DAV:}creationdate</dt><dd>1970-01-01T00:00:03Z</dd>
-                        <dt>{DAV:}current-user-privilege-set</dt><dd>{DAV:}read, {DAV:}read-current-user-privilege-set, {DAV:}write, {urn:ietf:params:xml:ns:caldav}read-free-busy</dd>
                         <dt>{DAV:}displayname</dt><dd>newcalendar</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}exclude-free-busy-rollup</dt><dd>false</dd>
                         <dt>{http://calendarserver.org/ns/}getctag</dt><dd>1d21bc1d460b1085d53e3def7f7380f6</dd>
@@ -490,8 +408,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{DAV:}getlastmodified</dt><dd>Thu, 01 Jan 1970 00:00:03 GMT</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}max-resource-size</dt><dd>10485760</dd>
-                        <dt>{DAV:}owner</dt><dd>/dav/users/test01@localhost.de</dd>
-                        <dt>{DAV:}principal-collection-set</dt><dd>/dav/users</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VFREEBUSY, VJOURNAL, VTODO</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
@@ -515,7 +431,7 @@ public class CalendarTests extends IntegrationTestSupport {
     public void calendarOptions() throws Exception {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access"))
+                .andExpect(header().string("DAV", "1, 3, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT"));
     }
 
@@ -524,14 +440,6 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(head("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(notNullValue()));
-    }
-
-    @Test
-    public void calendarAcl() throws Exception {
-        mockMvc.perform(acl("/dav/{email}/calendar/", USER01))
-                .andExpect(status().isForbidden())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
 
     @Test
@@ -544,18 +452,12 @@ public class CalendarTests extends IntegrationTestSupport {
                                     <D:prop>
                                         <D:creationdate>2015-11-21T21:11:00Z</D:creationdate>
                                         <D:getetag>"NVy57RJot0LhdYELkMDJ9gQZjOM="</D:getetag>
-                                        <D:principal-collection-set>
-                                            <D:href>/dav/users</D:href>
-                                        </D:principal-collection-set>
                                         <C:supported-calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:calendar-data C:content-type="text/calendar" C:version="2.0"/>
                                         </C:supported-calendar-data>
                                         <C:calendar-color xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">#f0f0f0</C:calendar-color>
                                         <D:getlastmodified>Sat, 21 Nov 2015 21:11:00 GMT</D:getlastmodified>
                                         <D:iscollection>1</D:iscollection>
-                                        <D:owner>
-                                            <D:href>/dav/users/test01@localhost.de</D:href>
-                                        </D:owner>
                                         <D:supported-report-set>
                                             <D:supported-report>
                                                 <D:report>
@@ -573,62 +475,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>
-                                        <D:acl>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:unauthenticated/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:property>
-                                                        <D:owner/>
-                                                    </D:property>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:read-current-user-privilege-set/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                        </D:acl>
                                         <D:resourcetype>
                                             <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             <D:collection/>
@@ -639,20 +485,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         </C:supported-collation-set>
                                         <C:max-resource-size xmlns:C="urn:ietf:params:xml:ns:caldav">10485760</C:max-resource-size>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">a172ed34-0106-4616-bb40-a416a8305465</cosmo:uuid>
-                                        <D:current-user-privilege-set>
-                                            <D:privilege>
-                                                <D:read/>
-                                            </D:privilege>
-                                            <D:privilege>
-                                                <D:write/>
-                                            </D:privilege>
-                                            <D:privilege>
-                                                <D:read-current-user-privilege-set/>
-                                            </D:privilege>
-                                            <D:privilege>
-                                                <C:read-free-busy xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            </D:privilege>
-                                        </D:current-user-privilege-set>
                                         <C:calendar-visible xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">true</C:calendar-visible>
                                         <D:displayname>calendarDisplayName</D:displayname>
                                         <cosmo:exclude-free-busy-rollup xmlns:cosmo="http://osafoundation.org/cosmo/DAV">false</cosmo:exclude-free-busy-rollup>

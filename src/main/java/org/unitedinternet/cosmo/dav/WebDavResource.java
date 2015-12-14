@@ -37,7 +37,7 @@ public interface WebDavResource
      */
     // see bug 5137 for why we don't include class 2
     String COMPLIANCE_CLASS =
-        "1, 3, access-control, calendar-access";
+        "1, 3, calendar-access";
 
     /**
      * @return Returns the parent collection for this resource.

@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.acl.resource;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,12 +36,7 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavAce;
-import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.property.AlternateUriSet;
-import org.unitedinternet.cosmo.dav.acl.property.GroupMembership;
-import org.unitedinternet.cosmo.dav.acl.property.PrincipalUrl;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.impl.DavResourceBase;
@@ -92,14 +88,10 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         registerLiveProperty(CALENDARUSERADDRESSSET);
         registerLiveProperty(SCHEDULEINBOXURL);
         registerLiveProperty(SCHEDULEOUTBOXURL);
-        registerLiveProperty(ALTERNATEURISET);
-        registerLiveProperty(PRINCIPALURL);
-        registerLiveProperty(GROUPMEMBERSHIP);
     }
 
     private User user;
     private DavUserPrincipalCollection parent;
-    private DavAcl acl;
 
     public DavUserPrincipal(User user,
                             DavResourceLocator locator,
@@ -107,7 +99,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         throws CosmoDavException {
         super(locator, factory);
         this.user = user;
-        this.acl = makeAcl();
     }
 
 
@@ -134,7 +125,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         String lastName = user.getLastName();
         String email = user.getEmail();
         
-        String toReturn = null;
+        String toReturn;
         
         if(firstName == null && lastName == null){
             toReturn = email;
@@ -217,62 +208,11 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     protected Set<QName> getResourceTypes() {
-        HashSet<QName> rt = new HashSet<QName>(1);
-        rt.add(RESOURCE_TYPE_PRINCIPAL);
-        return rt;
+        return Collections.emptySet();
     }
 
     public Set<ReportType> getReportTypes() {
         return REPORT_TYPES;
-    }
-    
-    /**
-     * Returns the resource's access control list. The list contains the
-     * following ACEs:
-     *
-     * <ol>
-     * <li> <code>DAV:unauthenticated</code>: deny <code>DAV:all</code> </li>
-     * <li> <code>DAV:owner</code>: allow <code>DAV:all</code> </li>
-     * <li> <code>DAV:all</code>: allow
-     * <code>DAV:read-current-user-privilege-set</code> </li>
-     * <li> <code>DAV:all</code>: deny <code>DAV:all</code> </li>
-     * </ol>
-     *
-     * <p>
-     * TODO: Include administrative users in the ACL, probably with a group
-     * principal.
-     * </p>
-     */
-    protected DavAcl getAcl() {
-        return acl;
-    }
-
-    private DavAcl makeAcl() {
-        DavAcl acl = new DavAcl();
-
-        DavAce unauthenticated = new DavAce.UnauthenticatedAce();
-        unauthenticated.setDenied(true);
-        unauthenticated.getPrivileges().add(DavPrivilege.ALL);
-        unauthenticated.setProtected(true);
-        acl.getAces().add(unauthenticated);
-
-        DavAce owner = new DavAce.SelfAce();
-        owner.getPrivileges().add(DavPrivilege.ALL);
-        owner.setProtected(true);
-        acl.getAces().add(owner);
-
-        DavAce allAllow = new DavAce.AllAce();
-        allAllow.getPrivileges().add(DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET);
-        allAllow.setProtected(true);
-        acl.getAces().add(allAllow);
-
-        DavAce allDeny = new DavAce.AllAce();
-        allDeny.setDenied(true);
-        allDeny.getPrivileges().add(DavPrivilege.ALL);
-        allDeny.setProtected(true);
-        acl.getAces().add(allDeny);
-
-        return acl;
     }
 
     /**
@@ -304,9 +244,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new Etag(user.getEntityTag()));
         properties.add(new LastModified(user.getModifiedDate()));
         properties.add(new CalendarHomeSet(getResourceLocator(), user));
-        properties.add(new AlternateUriSet());
-        properties.add(new PrincipalUrl(getResourceLocator(), user));
-        properties.add(new GroupMembership());
     }
 
     protected void setLiveProperty(WebDavProperty property, boolean create)

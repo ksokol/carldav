@@ -185,9 +185,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         else if (request.getMethod().equals("REPORT")) {
             provider.report(request, response, resource);
         }
-        else if (request.getMethod().equals("ACL")) {
-            provider.acl(request, response, resource);
-        }
         else {
             if (resource.isCollection()) {
                 if (request.getMethod().equals("MKCALENDAR")) {

@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.builder.GeneralRequest.PROPFIND_DISPLAYNAME_REQUEST
-import static testutil.builder.GeneralResponse.NOT_SUPPORTED_PRIVILEGE
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CaldavHttpMethod.COPY
 import static testutil.mockmvc.CaldavHttpMethod.MOVE
@@ -31,7 +30,7 @@ public class ItemTests extends IntegrationTestSupport {
     public void itemOptions() throws Exception {
         mockMvc.perform(options("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access"))
+                .andExpect(header().string("DAV", "1, 3, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH"));
     }
 
@@ -48,16 +47,12 @@ public class ItemTests extends IntegrationTestSupport {
                         </ul>
                         <h2>Properties</h2>
                         <dl>
-                        <dt>{DAV:}acl</dt><dd>not implemented yet</dd>
                         <dt>{DAV:}creationdate</dt><dd>2015-11-21T21:11:00Z</dd>
-                        <dt>{DAV:}current-user-privilege-set</dt><dd>{DAV:}read, {DAV:}read-current-user-privilege-set, {DAV:}write, {urn:ietf:params:xml:ns:caldav}read-free-busy</dd>
                         <dt>{DAV:}displayname</dt><dd>-- no value --</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}exclude-free-busy-rollup</dt><dd>false</dd>
                         <dt>{DAV:}getetag</dt><dd>&quot;ghFexXxxU+9KC/of1jmJ82wMFig=&quot;</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>Sat, 21 Nov 2015 21:11:00 GMT</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
-                        <dt>{DAV:}owner</dt><dd>/dav/users/test01@localhost.de</dd>
-                        <dt>{DAV:}principal-collection-set</dt><dd>/dav/users</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection</dd>
                         <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>de359448-1ee0-4151-872d-eea0ee462bc6</dd>
@@ -192,13 +187,5 @@ public class ItemTests extends IntegrationTestSupport {
                 .andExpect(status().isUnprocessableEntity())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
-    }
-
-    @Test
-    public void itemAcl() throws Exception {
-        mockMvc.perform(acl("/dav/item/{uid}", "de359448-1ee0-4151-872d-eea0ee462bc6"))
-                .andExpect(status().isForbidden())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
 }

@@ -34,7 +34,6 @@ class UsersTests extends IntegrationTestSupport {
                         <h1>test01@localhost.de</h1>
                         <h2>Properties</h2>
                         <dl>
-                        <dt>{DAV:}alternate-URI-set</dt><dd></dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}calendar-home-set</dt><dd>/dav/test01@localhost.de</dd>
                         <dt>{DAV:}creationdate</dt><dd>2015-11-16T15:35:16Z</dd>
                         <dt>{DAV:}current-user-privilege-set</dt><dd>{DAV:}read</dd>

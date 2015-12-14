@@ -53,7 +53,6 @@ public class ItemTests extends IntegrationTestSupport {
                         <dt>{DAV:}getetag</dt><dd>&quot;ghFexXxxU+9KC/of1jmJ82wMFig=&quot;</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>Sat, 21 Nov 2015 21:11:00 GMT</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
-                        <dt>{DAV:}owner</dt><dd>/dav/users/test01@localhost.de</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection</dd>
                         <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>de359448-1ee0-4151-872d-eea0ee462bc6</dd>

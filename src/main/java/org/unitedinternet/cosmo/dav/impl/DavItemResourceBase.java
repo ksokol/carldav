@@ -43,7 +43,6 @@ import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.property.Owner;
 import org.unitedinternet.cosmo.dav.property.CreationDate;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
@@ -111,7 +110,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(DavPropertyName.DISPLAYNAME);
         registerLiveProperty(DavPropertyName.ISCOLLECTION);
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
-        registerLiveProperty(OWNER);
         registerLiveProperty(UUID);
     }
 
@@ -449,7 +447,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
-        properties.add(new Owner(getResourceLocator(), item.getOwner()));
         properties.add(new Uuid(item.getUid()));
     }
 
@@ -470,7 +467,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                 || name.equals(DavPropertyName.GETETAG)
                 || name.equals(DavPropertyName.RESOURCETYPE)
                 || name.equals(DavPropertyName.ISCOLLECTION)
-                || name.equals(OWNER)
                 || name.equals(UUID)) {
             throw new ProtectedPropertyModificationException(name);
         }
@@ -492,7 +488,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                 || name.equals(DavPropertyName.DISPLAYNAME)
                 || name.equals(DavPropertyName.RESOURCETYPE)
                 || name.equals(DavPropertyName.ISCOLLECTION)
-                || name.equals(OWNER)
                 || name.equals(UUID)) {
             throw new ProtectedPropertyModificationException(name);
         }

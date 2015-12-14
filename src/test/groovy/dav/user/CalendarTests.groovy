@@ -181,9 +181,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:getetag>${eTag}</D:getetag>
                                         <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
                                         <D:iscollection>0</D:iscollection>
-                                        <D:owner>
-                                            <D:href>/dav/users/test01@localhost.de</D:href>
-                                        </D:owner>
                                         <D:supported-report-set>
                                             <D:supported-report>
                                                 <D:report>
@@ -351,7 +348,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:getetag/>
                                         <D:getlastmodified/>
                                         <D:iscollection/>
-                                        <D:owner/>
                                         <D:supported-report-set/>
                                         <D:getcontentlength/>
                                         <D:resourcetype/>
@@ -412,7 +408,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{DAV:}getlastmodified</dt><dd>Thu, 01 Jan 1970 00:00:03 GMT</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}max-resource-size</dt><dd>10485760</dd>
-                        <dt>{DAV:}owner</dt><dd>/dav/users/test01@localhost.de</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VFREEBUSY, VJOURNAL, VTODO</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
@@ -463,9 +458,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <C:calendar-color xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">#f0f0f0</C:calendar-color>
                                         <D:getlastmodified>Sat, 21 Nov 2015 21:11:00 GMT</D:getlastmodified>
                                         <D:iscollection>1</D:iscollection>
-                                        <D:owner>
-                                            <D:href>/dav/users/test01@localhost.de</D:href>
-                                        </D:owner>
                                         <D:supported-report-set>
                                             <D:supported-report>
                                                 <D:report>

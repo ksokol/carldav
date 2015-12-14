@@ -19,7 +19,6 @@ import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
-
 import org.unitedinternet.cosmo.util.CosmoQName;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
@@ -55,8 +54,6 @@ public interface ExtendedDavConstants extends DavConstants {
     DavPropertyName UUID =
         DavPropertyName.create(PROPERTY_UUID, NAMESPACE_COSMO);
 
-    DavPropertyName OWNER =
-        DavPropertyName.create(XML_OWNER, NAMESPACE);
     DavPropertyName SUPPORTEDREPORTSET =
         DavPropertyName.create("supported-report-set", NAMESPACE);
     DavPropertyName CURRENTUSERPRINCIPAL =
@@ -73,12 +70,8 @@ public interface ExtendedDavConstants extends DavConstants {
         DomUtil.getQualifiedName(XML_REMOVE, NAMESPACE);
     String QN_PROP =
         DomUtil.getQualifiedName(XML_PROP, NAMESPACE);
-    String QN_PRIVILEGE =
-        DomUtil.getQualifiedName(XML_PRIVILEGE, NAMESPACE);
     String QN_HREF =
         DomUtil.getQualifiedName(XML_HREF, NAMESPACE);
-    String QN_OWNER =
-        DomUtil.getQualifiedName(XML_OWNER, NAMESPACE);
 
     CosmoQName RESOURCE_TYPE_COLLECTION =
         new CosmoQName(NAMESPACE.getURI(), XML_COLLECTION, NAMESPACE.getPrefix());

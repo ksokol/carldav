@@ -80,7 +80,7 @@ class DavAccessDecisionManagerTests {
         def request = new MockHttpServletRequest()
         when(invocation.getHttpRequest()).thenReturn(request)
         expectedException.expect(DavAccessDeniedException.class)
-        expectedException.expectMessage("access denied for null")
+        expectedException.expectMessage("access denied for ")
 
         uut.decide(new PreAuthenticatedAuthenticationToken("user", "password"), invocation, null)
     }
@@ -88,7 +88,7 @@ class DavAccessDecisionManagerTests {
     @Test
     void decideDifferentPathInfo() {
         def request = new MockHttpServletRequest()
-        request.setPathInfo("/test/")
+        request.setRequestURI("/test/")
         when(invocation.getHttpRequest()).thenReturn(request)
         expectedException.expect(DavAccessDeniedException.class)
         expectedException.expectMessage("access denied for /test/")

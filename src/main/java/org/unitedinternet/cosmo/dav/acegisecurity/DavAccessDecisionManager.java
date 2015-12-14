@@ -28,6 +28,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Collection;
 import java.util.List;
 
@@ -55,11 +57,18 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
         }
 
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
-        match(userId, request.getPathInfo());
+        match(userId, request.getRequestURI());
     }
 
     protected void match(String userId, String path) {
-        final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(path);
+        UriComponentsBuilder uriComponentsBuilder;
+
+        try {
+            uriComponentsBuilder = UriComponentsBuilder.fromPath(URLDecoder.decode(path, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            //TODO
+            throw new RuntimeException(e.getMessage(), e);
+        }
 
         final List<String> pathSegments = uriComponentsBuilder.build().getPathSegments();
 

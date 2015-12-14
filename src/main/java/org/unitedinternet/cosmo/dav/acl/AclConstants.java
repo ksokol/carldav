@@ -29,16 +29,8 @@ public interface AclConstants extends DavConstants {
     /** The ACL XML element name <DAV:principal> */
     String ELEMENT_ACL_PRINCIPAL = "principal";
 
-    /** The ACL property name DAV:principal-URL-set */
-    String PROPERTY_ACL_PRINCIPAL_URL =
-        "principal-URL";
-
     String PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET =
         "current-user-privilege-set";
-
-    /** The ACL property DAV:principal-URL */
-    DavPropertyName PRINCIPALURL =
-        DavPropertyName.create(PROPERTY_ACL_PRINCIPAL_URL, NAMESPACE);
 
     DavPropertyName CURRENTUSERPRIVILEGESET =
         DavPropertyName.create(PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET,

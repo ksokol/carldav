@@ -483,15 +483,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
                     writer.write("Home collection");
                     writer.write("</a><br>\n");
                 }
-    
-                DavResourceLocator principalLocator = getResourceLocator()
-                        .getFactory().createPrincipalLocator(
-                                getResourceLocator().getContext(), user);
-                writer.write("<a href=\"");
-                writer.write(principalLocator.getHref(false));
-                writer.write("\">");
-                writer.write("Principal resource");
-                writer.write("</a><br>\n");
             }
     
             writer.write("</body>");

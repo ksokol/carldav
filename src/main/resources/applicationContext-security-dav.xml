@@ -32,12 +32,7 @@
 	</bean>
 
 	<!-- morse code AccessDecisionManager that verifies user paths -->
-	<bean id="davAccessDecisionManager" class="org.unitedinternet.cosmo.dav.acegisecurity.DavAccessDecisionManager">
-		<constructor-arg index="0" ref="userService" />
-		<constructor-arg index="1">
-            <bean class="org.unitedinternet.cosmo.dav.acegisecurity.UserPrincipalEvaluator" />
-        </constructor-arg>
-	</bean>
+	<bean id="davAccessDecisionManager" class="org.unitedinternet.cosmo.dav.acegisecurity.DavAccessDecisionManager" />
 
 	<bean id="davExceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
 		<constructor-arg ref="protocolAuthenticationEntryPoint" />

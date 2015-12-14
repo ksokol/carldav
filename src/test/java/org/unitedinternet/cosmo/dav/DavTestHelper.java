@@ -18,13 +18,11 @@ package org.unitedinternet.cosmo.dav;
 import org.junit.Before;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.MockHelper;
-import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
 import java.net.URL;
@@ -108,35 +106,11 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
     }
 
     /**
-     * Gets principal.
-     * @param user The user.
-     * @return The dav user principal.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public DavUserPrincipal getPrincipal(User user)
-        throws Exception {
-        String path = TEMPLATE_USER.bind(false, user.getUsername());
-        DavResourceLocator locator =
-            locatorFactory.createResourceLocatorByPath(baseUrl, path);
-        return new DavUserPrincipal(user, locator, resourceFactory);
-    }
-
-    /**
      * Creates test context.
      * @return The dav test context.
      */
     public DavTestContext createTestContext() {
         return new DavTestContext(locatorFactory);
-    }
-
-    /**
-     * Creates locator.
-     * @param path The path.
-     * @return The dav resource locator.
-     */
-    public DavResourceLocator createLocator(String path) {
-        return locatorFactory.
-            createResourceLocatorByPath(homeLocator.getContext(), path);
     }
 
     /**

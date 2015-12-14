@@ -40,7 +40,7 @@ public class DavAccessDeniedHandler implements AccessDeniedHandler {
 
         if (accessDeniedException instanceof DavAccessDeniedException) {
             DavAccessDeniedException exception = (DavAccessDeniedException) accessDeniedException;
-            exceptionToSend = new NeedsPrivilegesException(exception.getHref(), exception.getPrivilege());
+            exceptionToSend = new NeedsPrivilegesException(exception.getHref());
         } else {
             exceptionToSend = new NeedsPrivilegesException(accessDeniedException.getMessage());
         }

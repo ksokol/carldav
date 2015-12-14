@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.acegisecurity;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
@@ -23,16 +24,12 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.springframework.util.Assert;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
-import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.service.UserService;
-import org.unitedinternet.cosmo.util.UriTemplate;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -45,45 +42,35 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class DavAccessDecisionManager implements AccessDecisionManager, ExtendedDavConstants {
 
-    private final UserService userService;
-    private final PrincipalEvaluator userPrincipalEvaluator;
-
-    public DavAccessDecisionManager(final UserService userService, final PrincipalEvaluator userPrincipalEvaluator) {
-        Assert.notNull(userService, "userService is null");
-        Assert.notNull(userPrincipalEvaluator, "userPrincipalEvaluator is null");
-        this.userPrincipalEvaluator = userPrincipalEvaluator;
-        this.userService = userService;
-    }
-
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
+        String userId;
 
-        AclEvaluator evaluator;
         if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            CosmoUserDetails details = (CosmoUserDetails) authentication.getPrincipal();
-            evaluator = new UserAclEvaluator(details.getUser());
+            userId = ((CosmoUserDetails) authentication.getPrincipal()).getUsername();
         } else if (authentication instanceof PreAuthenticatedAuthenticationToken) {
-            User user = userService.getUser((String)authentication.getPrincipal());
-            evaluator = new UserAclEvaluator(user);
+            userId = authentication.getPrincipal().toString(); //userService.getUser((String)authentication.getPrincipal()).getEmail();
         } else {
             throw new InsufficientAuthenticationException("Unrecognized authentication token");
         }
 
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
+        match(userId, request.getPathInfo());
+    }
 
-        String path = request.getPathInfo();
-        if (path == null) {
-            path = "/";
-        }
-        // remove trailing slash that denotes a collection
-        if (!path.equals("/") && path.endsWith("/")) {
-            path = path.substring(0, path.length() - 1);
+    protected void match(String userId, String path) {
+        final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath(path);
+
+        final List<String> pathSegments = uriComponentsBuilder.build().getPathSegments();
+
+        if(pathSegments.size() < 2) {
+            throw new DavAccessDeniedException(path);
         }
 
-        try {
-            match(path, request.getMethod(), evaluator);
-        } catch (AclEvaluationException e) {
-            throw new DavAccessDeniedException(request.getRequestURI(), e.getPrivilege());
+        final String userIdFromUrl = pathSegments.get(1);
+
+        if(!StringUtils.equalsIgnoreCase(userId, userIdFromUrl)) {
+            throw new DavAccessDeniedException(path);
         }
     }
 
@@ -101,18 +88,5 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
      */
     public boolean supports(Class<?> clazz) {
         return FilterInvocation.class.isAssignableFrom(clazz);
-    }
-
-    protected void match(String path, String method, AclEvaluator evaluator) {
-        final UriTemplate.Match match = TEMPLATE_USER.match(false, path);
-        if (match != null) {
-            String username = match.get("username");
-            User user = userService.getUser(username);
-            if (user == null) {
-                return;
-            }
-
-            userPrincipalEvaluator.evaluate(method, (UserAclEvaluator) evaluator);
-        }
     }
 }

@@ -417,7 +417,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         </dl>
                         <p>
                         <a href="/dav/test01@localhost.de/">Home collection</a><br>
-                        <a href="/dav/users/test01@localhost.de">Principal resource</a><br>
                         </body></html>
                         """.stripIndent()
 

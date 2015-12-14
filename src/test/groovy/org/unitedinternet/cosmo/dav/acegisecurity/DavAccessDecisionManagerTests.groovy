@@ -1,43 +1,33 @@
 package org.unitedinternet.cosmo.dav.acegisecurity
 
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.authentication.InsufficientAuthenticationException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.FilterInvocation
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails
-import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator
 import org.unitedinternet.cosmo.model.mock.MockUser
-import org.unitedinternet.cosmo.service.UserService
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
-import static org.mockito.Matchers.anyObject
-import static org.mockito.Mockito.*
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 
 /**
  * @author Kamill Sokol
  */
 class DavAccessDecisionManagerTests {
 
-    def UserService userService = mock(UserService.class)
-    def PrincipalEvaluator userPrincipalEvaluator = mock(PrincipalEvaluator.class)
-    def PrincipalEvaluator userPrincipalCollectionEvaluator = mock(PrincipalEvaluator.class)
-    def DavAccessDecisionManager uut = new DavAccessDecisionManager(userService, userPrincipalEvaluator)
+    def DavAccessDecisionManager uut = new DavAccessDecisionManager()
     def token = new UsernamePasswordAuthenticationToken(new CosmoUserDetails("user", "password", new MockUser()), "password")
     def invocation = mock(FilterInvocation.class)
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none()
-
-    @Before
-    public void before() {
-        reset(userService, userPrincipalCollectionEvaluator, invocation);
-    }
 
     @Test
     void supportsClass() {
@@ -46,32 +36,36 @@ class DavAccessDecisionManagerTests {
 
     @Test
     void supportsConfigAttribute() {
-        assertThat(uut.supports(null), is(true))
+        assertThat(uut.supports((ConfigAttribute) null), is(true))
     }
 
     @Test
     void didNotMatchUri() {
-        uut.match("/test", "POST", new UserAclEvaluator(new MockUser(admin: true)))
+        expectedException.expect(DavAccessDeniedException.class)
+        expectedException.expectMessage("access denied for /dav")
+        uut.match("user1", "/dav")
     }
 
     @Test
     void matchUsers() {
-        def evaluator = new UserAclEvaluator(new MockUser(admin: true))
-        uut.match("/users", "POST", evaluator)
+        uut.match("user1", "/dav/user1")
+    }
+
+    @Test
+    void matchUsers2() {
+        uut.match("user1", "/dav/user1/level1/level2")
     }
 
     @Test
     void matchSpecificUnknownUser() {
-        def evaluator = new UserAclEvaluator(new MockUser(admin: true))
-        uut.match("/users/user", "POST", evaluator)
+        expectedException.expect(DavAccessDeniedException.class)
+        expectedException.expectMessage("access denied for /dav/user2")
+        uut.match("user1", "/dav/user2")
     }
 
     @Test
     void matchSpecificKnownUser() {
-        def user = new MockUser(admin: true)
-        when(userService.getUser("user")).thenReturn(user)
-        def evaluator = new UserAclEvaluator(user)
-        uut.match("/users/user", "POST", evaluator)
+        uut.match("user", "dav/user")
     }
 
     @Test
@@ -82,37 +76,23 @@ class DavAccessDecisionManagerTests {
     }
 
     @Test
-    void decideWithUsernamePasswordAuthenticationToken() {
-        def request = new MockHttpServletRequest()
-        when(invocation.getHttpRequest()).thenReturn(request)
-
-        uut.decide(token, invocation, null)
-
-        verify(userPrincipalEvaluator, never()).evaluate(anyObject(), anyObject())
-        verify(userPrincipalCollectionEvaluator, never()).evaluate(anyObject(), anyObject())
-    }
-
-    @Test
     void decideWithPreAuthenticatedAuthenticationToken() {
         def request = new MockHttpServletRequest()
         when(invocation.getHttpRequest()).thenReturn(request)
+        expectedException.expect(DavAccessDeniedException.class)
+        expectedException.expectMessage("access denied for null")
 
         uut.decide(new PreAuthenticatedAuthenticationToken("user", "password"), invocation, null)
-
-        verify(userPrincipalEvaluator, never()).evaluate(anyObject(), anyObject())
-        verify(userPrincipalCollectionEvaluator, never()).evaluate(anyObject(), anyObject())
     }
 
     @Test
     void decideDifferentPathInfo() {
         def request = new MockHttpServletRequest()
         request.setPathInfo("/test/")
-        request.setMethod("POST")
         when(invocation.getHttpRequest()).thenReturn(request)
+        expectedException.expect(DavAccessDeniedException.class)
+        expectedException.expectMessage("access denied for /test/")
 
         uut.decide(token, invocation, null)
-
-        verify(userPrincipalEvaluator, never()).evaluate(anyObject(), anyObject())
-        verify(userPrincipalCollectionEvaluator, never()).evaluate(anyObject(), anyObject())
     }
 }

@@ -56,9 +56,6 @@ public interface ExtendedDavConstants extends DavConstants {
 
     DavPropertyName SUPPORTEDREPORTSET =
         DavPropertyName.create("supported-report-set", NAMESPACE);
-    DavPropertyName CURRENTUSERPRINCIPAL =
-            DavPropertyName.create("current-user-principal", NAMESPACE);
-
 
     String QN_PROPFIND =
         DomUtil.getQualifiedName(XML_PROPFIND, NAMESPACE);
@@ -80,8 +77,6 @@ public interface ExtendedDavConstants extends DavConstants {
         new UriTemplate("/collection/{uid}/*");
     UriTemplate TEMPLATE_ITEM =
         new UriTemplate("/item/{uid}/*");
-    UriTemplate TEMPLATE_USER =
-        new UriTemplate("/users/{username}");
     UriTemplate TEMPLATE_HOME =
         new UriTemplate("/{username}/*");
 }

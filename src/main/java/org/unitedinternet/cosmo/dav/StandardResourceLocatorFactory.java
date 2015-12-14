@@ -102,13 +102,6 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
         return new StandardResourceLocator(context, path, this);
     }
 
-    public DavResourceLocator createPrincipalLocator(URL context,
-                                                     User user)
-        throws CosmoDavException {
-        String path = TEMPLATE_USER.bind(user.getUsername());
-        return new StandardResourceLocator(context, path, this);
-    }
-    
     private int translatePort(String protocol, int port) {
         if (port == -1 || port == 80 && "http".equals(protocol) 
                 || port == 443 && "https".equals(protocol)) {

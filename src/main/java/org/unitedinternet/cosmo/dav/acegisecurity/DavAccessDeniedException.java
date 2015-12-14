@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dav.acegisecurity;
 
 
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.springframework.security.access.AccessDeniedException;
 
 /**
@@ -27,19 +26,13 @@ import org.springframework.security.access.AccessDeniedException;
  */
 public class DavAccessDeniedException extends AccessDeniedException {
     private String href;
-    private transient DavPrivilege  privilege;
 
-    public DavAccessDeniedException(String href, DavPrivilege privilege) {
-        super("access denied for " + href + " with privilege " + privilege);
+    public DavAccessDeniedException(String href) {
+        super("access denied for " + href);
         this.href = href;
-        this.privilege = privilege;
     }
 
     public String getHref() {
         return href;
-    }
-
-    public DavPrivilege getPrivilege() {
-        return privilege;
     }
 }

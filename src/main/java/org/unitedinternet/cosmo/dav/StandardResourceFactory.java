@@ -159,11 +159,6 @@ public class StandardResourceFactory
             return createUidResource(locator, match);
         }
 
-        match = TEMPLATE_USER.match(uri);
-        if (match != null) {
-            return createUserPrincipalResource(locator, match);
-        }
-
         return createUnknownResource(locator, uri);
     }
 

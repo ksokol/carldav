@@ -45,7 +45,7 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
     public void unauthorized() throws Exception {
         mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
                 .header(AUTHORIZATION, user(USER02, USER02_PASSWORD)))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isForbidden())
     }
 
     @Test

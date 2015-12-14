@@ -15,19 +15,16 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.model.EntityFactory;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -39,8 +36,6 @@ import org.unitedinternet.cosmo.model.EntityFactory;
  * @see DavHomeCollection
  */
 public class HomeCollectionProvider extends CollectionProvider {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(HomeCollectionProvider.class);
 
     public HomeCollectionProvider(DavResourceFactory resourceFactory,
             EntityFactory entityFactory) {
@@ -57,16 +52,6 @@ public class HomeCollectionProvider extends CollectionProvider {
             throw new MethodNotAllowedException("DELETE not allowed for home collection");
         }
         super.delete(request, response, resource);
-    }
-
-    public void copy(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (resource instanceof DavHomeCollection) {
-            throw new MethodNotAllowedException("COPY not allowed for home collection");
-        }
-        super.copy(request, response, resource);
     }
 
     public void move(DavRequest request,

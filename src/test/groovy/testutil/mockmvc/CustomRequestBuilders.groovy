@@ -29,10 +29,6 @@ public class CustomRequestBuilders {
         return request(PROPPATCH.name(), urlTemplate, urlVariables);
     }
 
-    public static MockHttpServletRequestBuilder copy(String urlTemplate, Object... urlVariables) {
-        return request(COPY.name(), urlTemplate, urlVariables);
-    }
-
     public static MockHttpServletRequestBuilder move(String urlTemplate, Object... urlVariables) {
         return request(MOVE.name(), urlTemplate, urlVariables);
     }

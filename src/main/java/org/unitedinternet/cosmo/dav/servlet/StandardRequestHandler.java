@@ -33,7 +33,6 @@ import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.dav.NotModifiedException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
@@ -46,7 +45,6 @@ import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
 import org.unitedinternet.cosmo.dav.provider.FileProvider;
 import org.unitedinternet.cosmo.dav.provider.HomeCollectionProvider;
-import org.unitedinternet.cosmo.dav.provider.UserPrincipalProvider;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
@@ -174,9 +172,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         else if (request.getMethod().equals("DELETE")) {
             provider.delete(request, response, resource);
         }
-        else if (request.getMethod().equals("COPY")) {
-            provider.copy(request, response, resource);
-        }
         else if (request.getMethod().equals("MOVE")) {
             provider.move(request, response, resource);
         }
@@ -228,9 +223,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
         if (resource instanceof DavCalendarResource) {
             return new CalendarResourceProvider(resourceFactory, entityFactory);
-        }
-        if (resource instanceof DavUserPrincipal) {
-            return new UserPrincipalProvider(resourceFactory, entityFactory);
         }
         return new FileProvider(resourceFactory, entityFactory);
     }

@@ -19,7 +19,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.impl.DavAvailability;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
@@ -38,7 +37,6 @@ import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -221,15 +219,6 @@ public class StandardResourceFactory
             contentService.findItemByPath(path, uid) :
             contentService.findItemByUid(uid);
         return item != null ? createResource(locator, item) : null;
-    }
-
-    protected WebDavResource
-        createUserPrincipalResource(DavResourceLocator locator,
-                                    UriTemplate.Match match)
-        throws CosmoDavException {
-        User user = userService.getUser(match.get("username"));
-        return user != null ? new DavUserPrincipal(user, locator, this) :
-            null;
     }
 
     protected WebDavResource createUnknownResource(DavResourceLocator locator,

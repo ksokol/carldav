@@ -66,11 +66,6 @@ public interface DavProvider {
                        WebDavResource resource)
         throws CosmoDavException, IOException;
 
-    void copy(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
-        throws CosmoDavException, IOException;
-
     void move(DavRequest request,
                      DavResponse response,
                      WebDavResource resource)

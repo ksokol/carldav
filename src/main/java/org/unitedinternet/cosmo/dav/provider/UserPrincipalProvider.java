@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -39,8 +37,6 @@ import java.io.IOException;
  * @see DavUserPrincipal
  */
 public class UserPrincipalProvider extends BaseProvider {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(UserPrincipalProvider.class);
 
     public UserPrincipalProvider(DavResourceFactory resourceFactory,
             EntityFactory entityFactory) {
@@ -61,13 +57,6 @@ public class UserPrincipalProvider extends BaseProvider {
                        WebDavResource resource)
         throws CosmoDavException, IOException {
         throw new MethodNotAllowedException("DELETE not allowed for user principal");
-    }
-
-    public void copy(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("COPY not allowed for user principal");
     }
 
     public void move(DavRequest request,

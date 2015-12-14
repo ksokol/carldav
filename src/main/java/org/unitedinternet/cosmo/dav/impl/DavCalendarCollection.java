@@ -146,15 +146,6 @@ public class DavCalendarCollection extends DavCollectionBase
         super.move(destination);
     }
 
-    /** */
-    public void copy(org.apache.jackrabbit.webdav.DavResource destination, boolean shallow)
-        throws org.apache.jackrabbit.webdav.DavException {
-        validateDestination(destination);
-        super.copy(destination, shallow);
-    }
-
-    // DavCollection
-
     public boolean isCalendarCollection() {
         return true;
     }

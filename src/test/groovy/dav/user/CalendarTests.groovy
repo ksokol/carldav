@@ -21,7 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.builder.GeneralData.*
-import static testutil.builder.GeneralResponse.*
+import static testutil.builder.GeneralResponse.NOT_FOUND
+import static testutil.builder.GeneralResponse.RESOURCE_MUST_BE_NULL
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.*
@@ -567,18 +568,6 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(status().isNotFound())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_FOUND))
-    }
-
-    @Test
-    public void calendarCopy() throws Exception {
-        mockMvc.perform(copy("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .header("Destination", "/dav/" + USER01 + "/newcalendar/"))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
-                .contentType(TEXT_XML))
-                .andExpect(status().isOk());
     }
 
     @Test

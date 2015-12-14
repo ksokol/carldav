@@ -210,45 +210,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new CosmoDavException(e);
         }
     }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void copy(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (! resource.exists()){
-            throw new NotFoundException();
-        }
-        checkNoRequestBody(request);
 
-        int depth = getDepth(request);
-        if (! (depth == DEPTH_0 || depth == DEPTH_INFINITY)){
-            throw new BadRequestException("Depth for COPY must be 0 or infinity");
-        }
-        WebDavResource destination =
-            resolveDestination(request.getDestinationResourceLocator(),
-                               resource);
-        validateDestination(request, destination);
-
-        checkCopyMoveAccess(resource, destination);
-
-        try {
-            if (destination.exists() && request.isOverwrite()){
-                destination.getCollection().removeMember(destination);
-            }
-            resource.copy(destination, depth == DEPTH_0);
-            response.setStatus(destination.exists() ? 204 : 201);
-        } catch (DavException e) {
-            if (e instanceof CosmoDavException){
-                throw (CosmoDavException)e;
-            }
-            throw new CosmoDavException(e);
-        }
-    }
-    
     /**
      * 
      * {@inheritDoc}
@@ -496,7 +458,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             UserAclEvaluator uae = (UserAclEvaluator) evaluator;
             User user = ((DavUserPrincipal)resource).getUser();
             hasPrivilege = uae.evaluateUserPrincipal(user, privilege);
-        }        
+        }
 
         if (hasPrivilege) {
             if (LOG.isDebugEnabled()){
@@ -505,7 +467,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             return true;
         }
 
-        
+
         if (LOG.isDebugEnabled()){
             LOG.debug("Principal does not have privilege " + privilege);
         }

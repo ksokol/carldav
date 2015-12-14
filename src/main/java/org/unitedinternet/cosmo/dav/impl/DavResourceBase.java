@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.jackrabbit.webdav.DavException;
+import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.lock.ActiveLock;
@@ -164,7 +165,7 @@ public abstract class DavResourceBase
         if(!(property instanceof WebDavProperty)){
             throw new IllegalArgumentException("Expected type for 'property' is :[" + WebDavProperty.class.getName() + "]");
         }
-        setResourceProperty((WebDavProperty)property, false);
+        setResourceProperty((WebDavProperty) property, false);
     }
 
     public void removeProperty(DavPropertyName propertyName)
@@ -233,6 +234,11 @@ public abstract class DavResourceBase
 
     public org.apache.jackrabbit.webdav.DavSession getSession() {
         return null;
+    }
+
+    @Override
+    public void copy(final DavResource destination, final boolean shallow) throws DavException {
+        throw new UnsupportedOperationException();
     }
 
     // WebDavResource methods

@@ -15,15 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VFreeBusy;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
@@ -53,6 +47,11 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.NoteItem;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Abstract calendar resource.
@@ -88,17 +87,6 @@ public abstract class DavCalendarResource extends DavContentBase
         }
         else {
             return "OPTIONS, TRACE, PUT";
-        }
-    }
-
-    @Override
-    public void copy(org.apache.jackrabbit.webdav.DavResource destination,
-            boolean shallow) throws org.apache.jackrabbit.webdav.DavException {
-        validateDestination(destination);
-        try {
-            super.copy(destination, shallow);
-        } catch (IcalUidInUseException e) {
-            throw new UidConflictException(e);
         }
     }
 

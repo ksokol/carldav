@@ -225,33 +225,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         }
     }
 
-    public void copy(org.apache.jackrabbit.webdav.DavResource destination,
-            boolean shallow) throws org.apache.jackrabbit.webdav.DavException {
-        if (!exists()) {
-            throw new NotFoundException();
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("copying resource " + getResourcePath() + " to "
-                    + destination.getResourcePath());
-        }
-
-        try {
-            getContentService().copyItem(
-                    item,
-                    (CollectionItem) ((DavItemResourceBase) destination
-                            .getCollection()).getItem(),
-                    destination.getResourcePath(), !shallow);
-        } catch (ItemNotFoundException e) {
-            throw new ConflictException(
-                    "One or more intermediate collections must be created");
-        } catch (DuplicateItemNameException e) {
-            throw new ExistsException();
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
-        }
-    }
-
     // WebDavResource methods
 
     public DavCollection getParent() throws CosmoDavException {

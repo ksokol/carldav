@@ -36,7 +36,6 @@ import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.property.GroupMembership;
 import org.unitedinternet.cosmo.dav.acl.property.PrincipalUrl;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
@@ -90,7 +89,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         registerLiveProperty(SCHEDULEINBOXURL);
         registerLiveProperty(SCHEDULEOUTBOXURL);
         registerLiveProperty(PRINCIPALURL);
-        registerLiveProperty(GROUPMEMBERSHIP);
     }
 
     private User user;
@@ -250,7 +248,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new LastModified(user.getModifiedDate()));
         properties.add(new CalendarHomeSet(getResourceLocator(), user));
         properties.add(new PrincipalUrl(getResourceLocator(), user));
-        properties.add(new GroupMembership());
     }
 
     protected void setLiveProperty(WebDavProperty property, boolean create)

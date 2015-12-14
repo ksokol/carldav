@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav.acl;
 
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.unitedinternet.cosmo.util.CosmoQName;
 
 /**
  * Provides constants for media types, XML namespaces, names and
@@ -26,17 +25,10 @@ import org.unitedinternet.cosmo.util.CosmoQName;
  */
 public interface AclConstants extends DavConstants {
 
-    /** The ACL XML element name <DAV:principal> */
-    String ELEMENT_ACL_PRINCIPAL = "principal";
-
     String PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET =
         "current-user-privilege-set";
 
     DavPropertyName CURRENTUSERPRIVILEGESET =
         DavPropertyName.create(PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET,
                                NAMESPACE);
-
-    CosmoQName RESOURCE_TYPE_PRINCIPAL =
-        new CosmoQName(NAMESPACE.getURI(), ELEMENT_ACL_PRINCIPAL,
-                  NAMESPACE.getPrefix());
 }

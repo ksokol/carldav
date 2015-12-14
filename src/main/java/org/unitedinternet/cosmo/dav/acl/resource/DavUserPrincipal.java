@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.acl.resource;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -207,9 +208,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     protected Set<QName> getResourceTypes() {
-        HashSet<QName> rt = new HashSet<QName>(1);
-        rt.add(RESOURCE_TYPE_PRINCIPAL);
-        return rt;
+        return Collections.emptySet();
     }
 
     public Set<ReportType> getReportTypes() {

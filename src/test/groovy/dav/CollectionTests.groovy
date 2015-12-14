@@ -65,7 +65,6 @@ public class CollectionTests extends IntegrationTestSupport {
                         <h2>Properties</h2>
                         <dl>
                         <dt>{DAV:}creationdate</dt><dd>2015-11-21T21:11:00Z</dd>
-                        <dt>{DAV:}current-user-privilege-set</dt><dd>{DAV:}read, {DAV:}read-current-user-privilege-set, {DAV:}write, {urn:ietf:params:xml:ns:caldav}read-free-busy</dd>
                         <dt>{DAV:}displayname</dt><dd>-- no value --</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}exclude-free-busy-rollup</dt><dd>false</dd>
                         <dt>{DAV:}getetag</dt><dd>&quot;ghFexXxxU+9KC/of1jmJ82wMFig=&quot;</dd>

@@ -44,9 +44,7 @@ import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.AclConstants;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.property.CurrentUserPrivilegeSet;
 import org.unitedinternet.cosmo.dav.property.SupportedReportSet;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -81,7 +79,7 @@ import javax.xml.namespace.QName;
  * @see WebDavResource
  */
 public abstract class DavResourceBase
-    implements ExtendedDavConstants, AclConstants, DeltaVResource{
+    implements ExtendedDavConstants, DeltaVResource{
 
     private static final HashSet<DavPropertyName> LIVE_PROPERTIES =
         new HashSet<DavPropertyName>();
@@ -90,7 +88,6 @@ public abstract class DavResourceBase
 
     static {
         registerLiveProperty(SUPPORTEDREPORTSET);
-        registerLiveProperty(CURRENTUSERPRIVILEGESET);
     }
 
     private DavResourceLocator locator;
@@ -435,7 +432,6 @@ public abstract class DavResourceBase
         }
 
         properties.add(new SupportedReportSet(getReportTypes()));
-        properties.add(new CurrentUserPrivilegeSet(getCurrentPrincipalPrivileges()));
 
         loadLiveProperties(properties);
         loadDeadProperties(properties);

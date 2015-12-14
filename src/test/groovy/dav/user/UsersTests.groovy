@@ -41,7 +41,7 @@ class UsersTests extends IntegrationTestSupport {
                         <dt>{DAV:}getetag</dt><dd>q0leu+2ctlWs3jLUakICskqYGms=</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>Mon, 16 Nov 2015 15:35:16 GMT</dd>
                         <dt>{DAV:}iscollection</dt><dd>0</dd>
-                        <dt>{DAV:}resourcetype</dt><dd>{DAV:}principal</dd>
+                        <dt>{DAV:}resourcetype</dt><dd></dd>
                         <dt>{DAV:}supported-report-set</dt><dd></dd>
                         </dl>
                         <a href="/dav/users/">User Principals</a></li>

@@ -179,9 +179,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                     <D:prop>
                                         <D:creationdate>1970-01-01T00:00:03Z</D:creationdate>
                                         <D:getetag>${eTag}</D:getetag>
-                                        <D:principal-collection-set>
-                                            <D:href>/dav/users</D:href>
-                                        </D:principal-collection-set>
                                         <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
                                         <D:iscollection>0</D:iscollection>
                                         <D:owner>
@@ -366,7 +363,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                     <D:prop>
                                         <D:creationdate/>
                                         <D:getetag/>
-                                        <D:principal-collection-set/>
                                         <D:getlastmodified/>
                                         <D:iscollection/>
                                         <D:owner/>
@@ -433,7 +429,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}max-resource-size</dt><dd>10485760</dd>
                         <dt>{DAV:}owner</dt><dd>/dav/users/test01@localhost.de</dd>
-                        <dt>{DAV:}principal-collection-set</dt><dd>/dav/users</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VFREEBUSY, VJOURNAL, VTODO</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
@@ -478,9 +473,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                     <D:prop>
                                         <D:creationdate>2015-11-21T21:11:00Z</D:creationdate>
                                         <D:getetag>"NVy57RJot0LhdYELkMDJ9gQZjOM="</D:getetag>
-                                        <D:principal-collection-set>
-                                            <D:href>/dav/users</D:href>
-                                        </D:principal-collection-set>
                                         <C:supported-calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:calendar-data C:content-type="text/calendar" C:version="2.0"/>
                                         </C:supported-calendar-data>

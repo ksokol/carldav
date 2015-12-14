@@ -38,8 +38,7 @@ public interface AclConstants extends DavConstants {
     /** The ACL property name DAV:group-membership */
     String PROPERTY_ACL_GROUP_MEMBERSHIP =
         "group-membership";
-    String PROPERTY_ACL_PRINCIPAL_COLLECTION_SET =
-        "principal-collection-set";
+
     String PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET =
         "current-user-privilege-set";
 
@@ -52,9 +51,7 @@ public interface AclConstants extends DavConstants {
     /** The ACL property DAV:group-membership */
     DavPropertyName GROUPMEMBERSHIP =
         DavPropertyName.create(PROPERTY_ACL_GROUP_MEMBERSHIP, NAMESPACE);
-    DavPropertyName PRINCIPALCOLLECTIONSET =
-        DavPropertyName.create(PROPERTY_ACL_PRINCIPAL_COLLECTION_SET,
-                               NAMESPACE);
+
     DavPropertyName CURRENTUSERPRIVILEGESET =
         DavPropertyName.create(PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET,
                                NAMESPACE);

@@ -21,10 +21,6 @@ public class CustomRequestBuilders {
         return request(MKCALENDAR.name(), urlTemplate, urlVariables);
     }
 
-    public static MockHttpServletRequestBuilder acl(String urlTemplate, Object... urlVariables) {
-        return request(ACL.name(), urlTemplate, urlVariables);
-    }
-
     public static MockHttpServletRequestBuilder propfind(String urlTemplate, Object... urlVariables) {
         return request(PROPFIND.name(), urlTemplate, urlVariables);
     }

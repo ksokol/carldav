@@ -204,62 +204,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>
-                                        <D:acl>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:unauthenticated/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:property>
-                                                        <D:owner/>
-                                                    </D:property>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:read-current-user-privilege-set/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                        </D:acl>
                                         <D:getcontentlength>920</D:getcontentlength>
                                         <D:resourcetype/>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">1</cosmo:uuid>
@@ -427,7 +371,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:iscollection/>
                                         <D:owner/>
                                         <D:supported-report-set/>
-                                        <D:acl/>
                                         <D:getcontentlength/>
                                         <D:resourcetype/>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV"/>
@@ -478,7 +421,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         </ul>
                         <h2>Properties</h2>
                         <dl>
-                        <dt>{DAV:}acl</dt><dd>not implemented yet</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}calendar-description</dt><dd>newcalendar</dd>
                         <dt>{urn:ietf:params:xml:ns:xcaldavoneandone}calendar-visible</dt><dd>false</dd>
                         <dt>{DAV:}creationdate</dt><dd>1970-01-01T00:00:03Z</dd>
@@ -515,7 +457,7 @@ public class CalendarTests extends IntegrationTestSupport {
     public void calendarOptions() throws Exception {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, access-control, calendar-access"))
+                .andExpect(header().string("DAV", "1, 3, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT"));
     }
 
@@ -524,14 +466,6 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(head("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(notNullValue()));
-    }
-
-    @Test
-    public void calendarAcl() throws Exception {
-        mockMvc.perform(acl("/dav/{email}/calendar/", USER01))
-                .andExpect(status().isForbidden())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(NOT_SUPPORTED_PRIVILEGE));
     }
 
     @Test
@@ -573,62 +507,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>
-                                        <D:acl>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:unauthenticated/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:property>
-                                                        <D:owner/>
-                                                    </D:property>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:grant>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:read-current-user-privilege-set/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:grant>
-                                                <D:protected/>
-                                            </D:ace>
-                                            <D:ace>
-                                                <D:principal>
-                                                    <D:all/>
-                                                </D:principal>
-                                                <D:deny>
-                                                    <D:privilege>
-                                                        <D:privilege>
-                                                            <D:all/>
-                                                        </D:privilege>
-                                                    </D:privilege>
-                                                </D:deny>
-                                                <D:protected/>
-                                            </D:ace>
-                                        </D:acl>
                                         <D:resourcetype>
                                             <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             <D:collection/>

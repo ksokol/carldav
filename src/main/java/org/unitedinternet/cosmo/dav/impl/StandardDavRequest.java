@@ -17,8 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.abdera.util.EntityTag;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.WebdavRequestImpl;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
@@ -34,10 +32,8 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
-import org.unitedinternet.cosmo.dav.acl.AclConstants;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.server.ServerConstants;
 import org.unitedinternet.cosmo.util.BufferedServletInputStream;
 import org.w3c.dom.Document;
@@ -66,7 +62,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpUpgradeHandler;
 import javax.servlet.http.Part;
 
-public class StandardDavRequest extends WebdavRequestImpl implements DavRequest, ExtendedDavConstants, AclConstants, CaldavConstants {
+public class StandardDavRequest extends WebdavRequestImpl implements DavRequest, ExtendedDavConstants, CaldavConstants {
 
     private static final MimeType APPLICATION_XML = registerMimeType("application/xml");
     private static final MimeType TEXT_XML = registerMimeType("text/xml");

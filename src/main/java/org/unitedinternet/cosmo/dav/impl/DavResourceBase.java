@@ -15,19 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import javax.xml.namespace.QName;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.OutputContext;
@@ -49,23 +36,31 @@ import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
-import org.unitedinternet.cosmo.dav.StandardResourceFactory;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.AclConstants;
-import org.unitedinternet.cosmo.dav.acl.DavAcl;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.property.Acl;
 import org.unitedinternet.cosmo.dav.acl.property.CurrentUserPrivilegeSet;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.dav.property.SupportedReportSet;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+
+import javax.xml.namespace.QName;
 
 /**
  * <p>
@@ -77,7 +72,6 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
  * </p>
  * <ul>
  * <li> DAV:supported-report-set </li>
- * <li> DAV:acl </li>
  * <li> DAV:current-user-privilege-set </li>
  * </ul>
  * <p>
@@ -88,9 +82,7 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
  */
 public abstract class DavResourceBase
     implements ExtendedDavConstants, AclConstants, DeltaVResource{
-	@SuppressWarnings("unused")
-    private static final Log LOG =
-        LogFactory.getLog(DavResourceBase.class);
+
     private static final HashSet<DavPropertyName> LIVE_PROPERTIES =
         new HashSet<DavPropertyName>();
     private static final Set<ReportType> REPORT_TYPES =
@@ -98,7 +90,6 @@ public abstract class DavResourceBase
 
     static {
         registerLiveProperty(SUPPORTEDREPORTSET);
-        registerLiveProperty(ACL);
         registerLiveProperty(CURRENTUSERPRIVILEGESET);
     }
 
@@ -372,11 +363,6 @@ public abstract class DavResourceBase
     }
 
     /**
-     * Returns the resource's access control list.
-     */
-    protected abstract DavAcl getAcl();
-
-    /**
      * <p>
      * Returns the set of privileges granted on the resource to the current
      * principal.
@@ -449,7 +435,6 @@ public abstract class DavResourceBase
         }
 
         properties.add(new SupportedReportSet(getReportTypes()));
-        properties.add(new Acl(getAcl()));
         properties.add(new CurrentUserPrivilegeSet(getCurrentPrincipalPrivileges()));
 
         loadLiveProperties(properties);

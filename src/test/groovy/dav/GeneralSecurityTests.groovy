@@ -42,30 +42,28 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void testUnauthorized() throws Exception {
-        mockMvc.perform(get("/dav/users")
-                .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
-                .andExpect(status().isInternalServerError())
+    public void unauthorized() throws Exception {
+        mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
+                .header(AUTHORIZATION, user(USER02, USER02_PASSWORD)))
+                .andExpect(status().isNotFound())
     }
 
     @Test
-    public void testAuthorizedShouldReturnInternalServerError() throws Exception {
-        mockMvc.perform(get("/dav/users")
+    public void authorizedShouldReturnInternalServerError() throws Exception {
+        mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
                 .header(AUTHORIZATION, user(UNKNOWN, UNKNOWN_PASSWORD)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
     }
 
     @Test
-    public void calendarGetItem() {
+    public void calendarPutSameUser() {
         mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
                 .contentType(TEXT_CALENDAR)
                 .header(AUTHORIZATION, user(USER01, USER01_PASSWORD))
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
-
         mockMvc.perform(get("/dav/{email}/calendar/{uid}.ics", USER01, UUID)
                 .contentType(TEXT_XML)
                 .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
@@ -79,6 +77,15 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(status().isNotFound())
                 .andExpect(xml(GeneralResponse.NOT_FOUND));
+    }
+
+    @Test
+    public void calendarPutDifferentUser() {
+        mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
+                .contentType(TEXT_CALENDAR)
+                .header(AUTHORIZATION, user(USER02, USER02_PASSWORD))
+                .content(CALDAV_EVENT))
+                .andExpect(status().isForbidden())
     }
 
     private static String user(String username, String password) {

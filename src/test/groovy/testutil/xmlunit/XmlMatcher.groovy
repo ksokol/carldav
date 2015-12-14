@@ -1,15 +1,14 @@
-package testutil.xmlunit;
+package testutil.xmlunit
 
-import static org.xmlunit.diff.ElementSelectors.byNameAndAllAttributes;
-import static org.xmlunit.diff.ElementSelectors.selectorForElementNamed;
-import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
+import org.hamcrest.Matcher
+import org.xmlunit.builder.Input
+import org.xmlunit.diff.DefaultNodeMatcher
+import org.xmlunit.diff.ElementSelector
 
-import org.hamcrest.Matcher;
-import org.xmlunit.builder.Input;
-import org.xmlunit.diff.DefaultNodeMatcher;
-import org.xmlunit.diff.ElementSelector;
+import javax.xml.transform.Source
 
-import javax.xml.transform.Source;
+import static org.xmlunit.diff.ElementSelectors.*
+import static org.xmlunit.matchers.CompareMatcher.isSimilarTo
 
 /**
  * @author Kamill Sokol
@@ -29,7 +28,7 @@ public class XmlMatcher {
     }
 
     private static ElementSelector unorderedSupportedReportNodes() {
-        return unorderedNodes("supported-report");
+        return selectorForElementNamed("supported-report", new FirstChildElementNameSelector());
     }
 
     private static ElementSelector unorderedPrivilegeNodes() {
@@ -41,6 +40,6 @@ public class XmlMatcher {
     }
 
     private static ElementSelector unorderedNodes(final String localName) {
-        return selectorForElementNamed(localName, new FirstChildElementNameSelector());
+        return selectorForElementNamed(localName, byXPath("./*[1]", byNameAndAllAttributes));
     }
 }

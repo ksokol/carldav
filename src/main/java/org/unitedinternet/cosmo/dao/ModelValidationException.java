@@ -45,8 +45,4 @@ public class ModelValidationException
         super(message, cause);
         this.offendingObject = offendingObject;
     }
-
-    public Object getOffendingObject() {
-        return offendingObject;
-    }
 }

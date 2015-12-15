@@ -612,32 +612,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
     }
 
     /**
-     * Test delete content by path.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testDeleteContentByPath() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-
-        ContentItem item = generateTestContent();
-
-        ContentItem newItem = contentDao.createContent(root, item);
-
-        clearSession();
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        helper.verifyItem(newItem, queryItem);
-
-        contentDao.removeItemByPath("/testuser/test");
-
-        clearSession();
-
-        queryItem = (ContentItem) contentDao.findItemByUid(queryItem.getUid());
-        Assert.assertNull(queryItem);
-    }
-
-    /**
      * Test delete content by uid.
      * @throws Exception - if something is wrong this exception is thrown.
      */

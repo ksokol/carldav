@@ -36,9 +36,7 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
-import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.ExcludeFreeBusyRollup;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -89,9 +87,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
     static {
         registerLiveProperty(EXCLUDEFREEBUSYROLLUP);
 
-        REPORT_TYPES.add(FreeBusyReport.REPORT_TYPE_CALDAV_FREEBUSY);
         REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
-        REPORT_TYPES.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
 
         DEAD_PROPERTY_FILTER.add(CollectionItem.class.getName());
     }

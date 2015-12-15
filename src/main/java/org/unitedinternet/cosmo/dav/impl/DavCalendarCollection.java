@@ -17,15 +17,12 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -136,50 +133,11 @@ public class DavCalendarCollection extends DavCollectionBase
     /** */
     public String getSupportedMethods() {
         // calendar collections not allowed inside calendar collections
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT";
+        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, DELETE, REPORT";
     }
 
     public boolean isCalendarCollection() {
         return true;
-    }
-
-    // our methods
-
-    /**
-     * Returns the member resources in this calendar collection matching
-     * the given filter.
-     */
-    public Set<DavCalendarResource> findMembers(CalendarFilter filter)
-        throws CosmoDavException {
-        Set<DavCalendarResource> members =
-            new HashSet<DavCalendarResource>();
-
-        CollectionItem collection = (CollectionItem) getItem();
-        for (ContentItem memberItem :
-             getCalendarQueryProcesor().filterQuery(collection, filter)) {
-            WebDavResource resource = memberToResource(memberItem);
-            if(resource!=null) {
-                members.add((DavCalendarResource) resource);
-            }
-        }
-        
-        return members;
-    }
-
-    /**
-     * Returns a VFREEBUSY component containing
-     * the freebusy periods for the calendar collection for the
-     * specified time range.
-     * @param period time range for freebusy information
-     * @return VFREEBUSY component containing FREEBUSY periods for
-     *         specified timerange
-     */
-    public VFreeBusy generateFreeBusy(Period period) {
-
-        VFreeBusy vfb = this.getCalendarQueryProcesor().freeBusyQuery(
-                (CollectionItem) getItem(), period);
-        
-        return vfb;
     }
 
     /**

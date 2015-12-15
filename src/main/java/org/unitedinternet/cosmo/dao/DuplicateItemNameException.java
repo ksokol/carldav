@@ -34,10 +34,4 @@ public class DuplicateItemNameException extends ModelValidationException {
     public DuplicateItemNameException(Item item, String message) {
         super(item, message);
     }
-
-    /**
-     */
-    public DuplicateItemNameException(Item item, String message, Throwable cause) {
-        super(item, message, cause);
-    }
 }

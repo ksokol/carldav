@@ -15,12 +15,10 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
 
 import java.util.Set;
 
@@ -132,12 +130,6 @@ public interface ItemDao extends Dao {
     void removeItem(Item item);
 
     /**
-     * Remove an item give the item's path
-     * @param path path of item to remove
-     */
-    void removeItemByPath(String path);
-
-    /**
      * Remove an item given the item's uid
      * @param uid the uid of the item to remove
      */
@@ -158,14 +150,7 @@ public interface ItemDao extends Dao {
      * @param collection the collection to remove from
      */
     void removeItemFromCollection(Item item, CollectionItem collection);
-    
-    /**
-     * Refresh item with persistent state.
-     *
-     * @param item the item
-     */
-    void refreshItem(Item item);
-    
+
     /**
      * Initialize item, ensuring any proxied associations will be loaded.
      * @param item The item initialized.
@@ -179,26 +164,4 @@ public interface ItemDao extends Dao {
      * @return set of children collection items or empty list of parent collection has no children
      */
     Set<CollectionItem> findCollectionItems(CollectionItem collectionItem);
-    
-    /**
-     * Find a set of items using an ItemFilter.
-     * @param filter criteria to filter items by
-     * @return set of items matching ItemFilter
-     */
-    Set<Item> findItems(ItemFilter filter);
-
-    /**
-     * Find a set of items using a set of ItemFilters.  The set of items
-     * returned includes all items that match any of the filters.
-     * @param filters criteria to filter items by
-     * @return set of items matching any of the filters
-     */
-    Set<Item> findItems(ItemFilter[] filters);
-
-    /**
-     * Generates a unique ID. Provided for consumers that need to
-     * manipulate an item's UID before creating the item.
-     * @return The id generated.
-     */
-    String generateUid();
 }

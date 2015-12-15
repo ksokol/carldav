@@ -27,7 +27,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.xml.Namespace;
-import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -214,10 +213,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     protected ContentService getContentService() {
         return getResourceFactory().getContentService();
-    }
-
-    protected CalendarQueryProcessor getCalendarQueryProcesor() {
-        return getResourceFactory().getCalendarQueryProcessor();
     }
 
     /**

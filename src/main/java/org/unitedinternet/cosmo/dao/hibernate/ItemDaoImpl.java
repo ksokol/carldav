@@ -32,7 +32,6 @@ import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
@@ -41,7 +40,6 @@ import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
@@ -67,7 +65,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     private IdGenerator idGenerator = null;
     private TokenService ticketKeyGenerator = null;
     private ItemPathTranslator itemPathTranslator = null;
-    private ItemFilterProcessor itemFilterProcessor = null;
 
     /*
      * (non-Javadoc)
@@ -238,24 +235,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#removeItemByPath(java.lang.String)
-     */
-    public void removeItemByPath(String path) {
-        try {
-            Item item = itemPathTranslator.findItemByPath(path);
-            if (item == null) {
-                throw new ItemNotFoundException("item at " + path
-                        + " not found");
-            }
-            removeItem(item);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#removeItemByUid(java.lang.String)
      */
     public void removeItemByUid(String uid) {
@@ -366,20 +345,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#refreshItem(org.unitedinternet.cosmo.model.Item)
-     */
-    public void refreshItem(Item item) {
-        try {
-            getSession().refresh(item);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#initializeItem(org.unitedinternet.cosmo.model.Item)
      */
@@ -404,7 +369,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      * @param collectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    public Set<CollectionItem> findCollectionItems(CollectionItem collectionItem){
+    public Set<CollectionItem> findCollectionItems(CollectionItem collectionItem) {
         try {
             HashSet<CollectionItem> children = new HashSet<CollectionItem>();
             Query hibQuery = getSession().getNamedQuery("collections.children.by.parent")
@@ -420,49 +385,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
-    }
-    
-    /**
-     * Find a set of items using an ItemFilter.
-     *
-     * @param filter criteria to filter items by
-     * @return set of items matching ItemFilter
-     */
-    public Set<Item> findItems(ItemFilter filter) {
-        try {
-            return itemFilterProcessor.processFilter(filter);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    /**
-     * Find a set of items using a set of ItemFilters.  The set of items
-     * returned includes all items that match any of the filters.
-     *
-     * @param filters criteria to filter items by
-     * @return set of items matching any of the filters
-     */
-    public Set<Item> findItems(ItemFilter[] filters) {
-        try {
-            HashSet<Item> returnSet = new HashSet<Item>();
-            for (ItemFilter filter : filters) {
-                returnSet.addAll(itemFilterProcessor.processFilter(filter));
-            }
-            return returnSet;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    /**
-     * Generates a unique ID. Provided for consumers that need to
-     * manipulate an item's UID before creating the item.
-     */
-    public String generateUid() {
-        return idGenerator.nextStringIdentifier();
     }
 
     /**
@@ -483,26 +405,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         this.ticketKeyGenerator = ticketKeyGenerator;
     }
 
-    /**
-     * Set the path translator. The path translator is responsible for
-     * translating a path to an item in the database.
-     *
-     * @param itemPathTranslator
-     */
-    public void setItemPathTranslator(ItemPathTranslator itemPathTranslator) {
-        this.itemPathTranslator = itemPathTranslator;
-    }
-
-
-    public ItemFilterProcessor getItemFilterProcessor() {
-        return itemFilterProcessor;
-    }
-
-    public void setItemFilterProcessor(ItemFilterProcessor itemFilterProcessor) {
-        this.itemFilterProcessor = itemFilterProcessor;
-    }
-
-
     /*
      * (non-Javadoc)
      *
@@ -510,11 +412,10 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      */
     public abstract void destroy();
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.Dao#init()
-     */
+    public void setItemPathTranslator(final ItemPathTranslator itemPathTranslator) {
+        this.itemPathTranslator = itemPathTranslator;
+    }
+
     public void init() {
         if (idGenerator == null) {
             throw new IllegalStateException("idGenerator is required");
@@ -527,11 +428,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         if (itemPathTranslator == null) {
             throw new IllegalStateException("itemPathTranslator is required");
         }
-
-        if (itemFilterProcessor == null) {
-            throw new IllegalStateException("itemFilterProcessor is required");
-        }
-
     }
 
     protected Item copyItemInternal(Item item, CollectionItem newParent, boolean deepCopy) {

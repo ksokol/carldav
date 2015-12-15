@@ -185,16 +185,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:supported-report-set>
                                             <D:supported-report>
                                                 <D:report>
-                                                    <C:free-busy-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                </D:report>
-                                            </D:supported-report>
-                                            <D:supported-report>
-                                                <D:report>
-                                                    <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                </D:report>
-                                            </D:supported-report>
-                                            <D:supported-report>
-                                                <D:report>
                                                     <C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                                 </D:report>
                                             </D:supported-report>
@@ -257,50 +247,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         </D:multistatus>"""
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
-                .content(request)
-                .contentType(TEXT_XML))
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response));
-    }
-
-    @Test
-    public void calendarQuery() {
-        def request = """\
-                        <C:calendar-query xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
-                         <D:prop>
-                           <C:calendar-data>
-                             <C:comp name="VCALENDAR">
-                               <C:prop name="VERSION"/>
-                               <C:comp name="VEVENT">
-                                 <C:prop name="SUMMARY"/>
-                                 <C:prop name="UID"/>
-                                 <C:prop name="DTSTART"/>
-                                 <C:prop name="DTEND"/>
-                                 <C:prop name="DURATION"/>
-                                 <C:prop name="RRULE"/>
-                                 <C:prop name="RDATE"/>
-                                 <C:prop name="EXRULE"/>
-                                 <C:prop name="EXDATE"/>
-                                 <C:prop name="RECURRENCE-ID"/>
-                               </C:comp>
-                               <C:comp name="VTIMEZONE"/>
-                             </C:comp>
-                           </C:calendar-data>
-                         </D:prop>
-                         <C:filter>
-                           <C:comp-filter name="VCALENDAR">
-                             <C:comp-filter name="VEVENT">
-                               <C:time-range start="20011014T000000Z" end="20160105T000000Z"/>
-                             </C:comp-filter>
-                           </C:comp-filter>
-                         </C:filter>
-                        </C:calendar-query>"""
-
-        def response = """\
-                        <D:multistatus xmlns:D="DAV:"/>
-                        """
-
-        mockMvc.perform(report("/dav/{email}/calendar", USER01)
                 .content(request)
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
@@ -413,7 +359,7 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VFREEBUSY, VJOURNAL, VTODO</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
-                        <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
+                        <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>1</dd>
                         </dl>
                         <p>
@@ -432,7 +378,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, calendar-access"))
-                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT"));
+                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, DELETE, REPORT"));
     }
 
     @Test
@@ -462,16 +408,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                             <D:supported-report>
                                                 <D:report>
                                                     <C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                </D:report>
-                                            </D:supported-report>
-                                            <D:supported-report>
-                                                <D:report>
-                                                    <C:free-busy-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                </D:report>
-                                            </D:supported-report>
-                                            <D:supported-report>
-                                                <D:report>
-                                                    <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>

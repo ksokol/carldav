@@ -19,7 +19,7 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
 /**
- * Iterface for translating a path to an item
+ * Interface for translating a path to an item
  */
 public interface ItemPathTranslator {
     Item findItemByPath(String path);

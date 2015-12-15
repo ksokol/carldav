@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -67,8 +66,6 @@ public interface DavResourceFactory {
         throws CosmoDavException;
 
     ContentService getContentService();
-
-    CalendarQueryProcessor getCalendarQueryProcessor();
 
     CosmoSecurityManager getSecurityManager();
 }

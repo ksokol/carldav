@@ -15,21 +15,13 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -42,15 +34,17 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItemTombstone;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolationException;
 
 /**
  * Implementation of ContentDao using hibernate persistence objects
  */
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
-
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(ContentDaoImpl.class);
 
     /*
      * (non-Javadoc)
@@ -212,72 +206,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw cve;
         }
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#createBatchContent(org.unitedinternet.cosmo.model.CollectionItem,
-     *      java.util.Set)
-     */
-    public void createBatchContent(CollectionItem parent, Set<ContentItem> contents) {
-        
-        try {
-            for(ContentItem content : contents) {
-                createContentInternal(parent, content);
-            }
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            getSession().clear();
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#updateBatchContent(java.util.Set)
-     */
-    public void updateBatchContent(Set<ContentItem> contents) {
-        try {
-            for(ContentItem content : contents) {
-                updateContentInternal(content);
-            }
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#removeBatchContent(org.unitedinternet.cosmo.model.CollectionItem,
-     *      java.util.Set)
-     */
-    public void removeBatchContent(CollectionItem parent, Set<ContentItem> contents) {
-        try {
-            for(ContentItem content : contents) {
-                removeItemFromCollectionInternal(content, parent);
-            }
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-    
-    
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ContentDao#createContent(java.util.Set, org.unitedinternet.cosmo.model.ContentItem)
@@ -478,19 +406,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     @Override
     public void removeItem(Item item) {
-        if (item instanceof ContentItem) {
-            removeContent((ContentItem) item);
-        } else if (item instanceof CollectionItem) {
-            removeCollection((CollectionItem) item);
-        } else {
-            super.removeItem(item);
-        }
-    }
-
-
-    @Override
-    public void removeItemByPath(String path) {
-        Item item = this.findItemByPath(path);
         if (item instanceof ContentItem) {
             removeContent((ContentItem) item);
         } else if (item instanceof CollectionItem) {

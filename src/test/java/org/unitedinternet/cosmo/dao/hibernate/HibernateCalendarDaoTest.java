@@ -15,22 +15,10 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Period;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
-import org.unitedinternet.cosmo.calendar.query.ComponentFilter;
-import org.unitedinternet.cosmo.calendar.query.IsNotDefinedFilter;
-import org.unitedinternet.cosmo.calendar.query.PropertyFilter;
-import org.unitedinternet.cosmo.calendar.query.TextMatchFilter;
-import org.unitedinternet.cosmo.calendar.query.TimeRangeFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
@@ -38,7 +26,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
@@ -47,7 +34,8 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Set;
 
 /**
  * Test CalendarDaoImpl
@@ -206,213 +194,9 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
      * Gets calendar querying.
      * @throws Exception - if something is wrong this exception is thrown.
      */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Test
-    public void testCalendarQuerying() throws Exception {
-        CollectionItem calendar = generateCalendar("test", "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(getUser(userDao, "testuser"));
-        
-        contentDao.createCollection(root, calendar);
-
-        for (int i = 1; i <= 5; i++) {
-            ContentItem event = generateEvent("test" + i + ".ics", "testdata/cal"
-                    + i + ".ics", "testuser");
-            contentDao.createContent(calendar, event);
-        }
-
-        CalendarFilter filter = new CalendarFilter();
-        ComponentFilter compFilter = new ComponentFilter("VCALENDAR");
-        ComponentFilter eventFilter = new ComponentFilter("VEVENT");
-        filter.setFilter(compFilter);
-        compFilter.getComponentFilters().add(eventFilter);
-        PropertyFilter propFilter = new PropertyFilter("SUMMARY");
-        propFilter.setTextMatchFilter(new TextMatchFilter("Visible"));
-        eventFilter.getPropFilters().add(propFilter);
-
-        clearSession();
-        
-        calendar = (CollectionItem) contentDao.findItemByUid(calendar.getUid());
-
-        // Should match ics.1
-        Set<ICalendarItem> queryEvents = calendarDao.findCalendarItems(calendar,
-                filter);
-        Assert.assertEquals(1, queryEvents.size());
-        ContentItem nextItem = queryEvents.iterator().next();
-        Assert.assertEquals("test1.ics", nextItem.getName());
-
-        // Should match all
-        eventFilter.setPropFilters(new ArrayList());
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(5, queryEvents.size());
-
-        // should match three
-        PropertyFilter propFilter2 = new PropertyFilter("SUMMARY");
-        propFilter2.setTextMatchFilter(new TextMatchFilter("Physical"));
-        eventFilter.getPropFilters().add(propFilter2);
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(3, queryEvents.size());
-
-        // should match everything except #1...so that means 4
-        eventFilter.getPropFilters().remove(propFilter2);
-        eventFilter.getPropFilters().add(propFilter);
-        propFilter.getTextMatchFilter().setNegateCondition(true);
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(4, queryEvents.size());
-
-        // should match ics.1 again
-        propFilter.getTextMatchFilter().setNegateCondition(false);
-        propFilter.getTextMatchFilter().setValue("vISiBlE");
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(1, queryEvents.size());
-        nextItem = (ContentItem) queryEvents.iterator().next();
-        Assert.assertEquals("test1.ics", nextItem.getName());
-
-        // should match all 5 (none have rrules)
-        propFilter.setTextMatchFilter(null);
-        propFilter.setName("RRULE");
-        propFilter.setIsNotDefinedFilter(new IsNotDefinedFilter());
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(5, queryEvents.size());
-
-        // time range test
-        eventFilter.setPropFilters(new ArrayList());
-        DateTime start = new DateTime("20050817T115000Z");
-        DateTime end = new DateTime("20050818T115000Z");
-        
-        Period period = new Period(start, end);
-        TimeRangeFilter timeRange = new TimeRangeFilter(period);
-        eventFilter.setTimeRangeFilter(timeRange);
-
-        // should match ics.1
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(1, queryEvents.size());
-        nextItem = (ContentItem) queryEvents.iterator().next();
-        Assert.assertEquals("test1.ics", nextItem.getName());
-
-        // 10 year period
-        start.setTime(new GregorianCalendar(1996, 1, 22).getTimeInMillis());
-        end.setTime(System.currentTimeMillis());
-        period = new Period(start, end);
-        timeRange.setPeriod(period);
-
-        // should match all now
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(5, queryEvents.size());
-
-        propFilter = new PropertyFilter("SUMMARY");
-        propFilter.setTextMatchFilter(new TextMatchFilter("Visible"));
-        eventFilter.getPropFilters().add(propFilter);
-
-        // should match ics.1
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(1, queryEvents.size());
-        nextItem = (ContentItem) queryEvents.iterator().next();
-        Assert.assertEquals("test1.ics", nextItem.getName());
-
-        start.setTime(new GregorianCalendar(2006, 8, 6).getTimeInMillis());
-        end.setTime(System.currentTimeMillis());
-        period = new Period(start, end);
-
-        timeRange.setPeriod(period);
-
-        // should match none
-        queryEvents = calendarDao.findCalendarItems(calendar, filter);
-        Assert.assertEquals(0, queryEvents.size());
-    }
-    
-    /**
-     * Gets calendar querying.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
     @Test
     public void testCalendarQueryingTimeRangeDaily() throws Exception {
         
-    }
-    
-    /**
-     * Tests calendar Time range querying.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCalendarTimeRangeQuerying() throws Exception {
-
-        CollectionItem calendar = generateCalendar("test", "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(getUser(userDao, "testuser"));
-        
-        calendar = contentDao.createCollection(root, calendar);
-
-        // create 3 events, 2 of them recurring, one of those infinite
-      //  clearSession();
-        NoteItem event = generateEvent("test1.ics", "testdata/eventwithtimezone1.ics", "testuser");
-        NoteItem newEvent = (NoteItem) contentDao.createContent(calendar, event);
-        event = generateEvent("test2.ics", "testdata/eventwithtimezone2.ics", "testuser");
-        newEvent = (NoteItem) contentDao.createContent(calendar, event);
-        event = generateEvent("test3.ics", "testdata/eventwithtimezone3.ics", "testuser");
-        event.setUid("test3uid");
-        newEvent = (NoteItem) contentDao.createContent(calendar, event);
-        
-
-        // modification to infinite daily recurring eventwithtimezone3.ics
-        event = generateEventException("mod.ics", "testdata/eventmodwithtimezone.ics", "testuser");
-        event.setModifies(newEvent);
-        newEvent = (NoteItem) contentDao.createContent(calendar, event);
-        
-        clearSession();
-
-        // Should match all except modification
-        Set<ContentItem> queryEvents = calendarDao.findEvents(calendar, 
-                new DateTime("20070501T010000Z"), new DateTime("20070601T010000Z"), false);
-        Assert.assertEquals(3, queryEvents.size());
-        
-        verifyItemNameInSet(queryEvents, "test1.ics");
-        verifyItemNameInSet(queryEvents, "test2.ics");
-        verifyItemNameInSet(queryEvents, "test3.ics");
-        
-        // Should match two
-        queryEvents = calendarDao.findEvents(calendar, new DateTime("20070515T010000Z"), new DateTime("20070518T010000Z"), false);
-        Assert.assertEquals(2, queryEvents.size());
-        verifyItemNameInSet(queryEvents, "test1.ics");
-        verifyItemNameInSet(queryEvents, "test3.ics");
-        
-        // Should match one (the infinite recurring event)
-        queryEvents = calendarDao.findEvents(calendar, new DateTime("20200517T010000Z"), new DateTime("20200518T010000Z"), false);
-        Assert.assertEquals(1, queryEvents.size());
-        verifyItemNameInSet(queryEvents, "test3.ics");
-        
-        // Should match the modification, so the results should include the 
-        // modification and the master
-        queryEvents = calendarDao.findEvents(calendar, new DateTime("20060501T010000Z"), new DateTime("20060601T010000Z"), false);
-        Assert.assertEquals(2, queryEvents.size());
-        verifyItemNameInSet(queryEvents, "test3.ics");
-        verifyItemNameInSet(queryEvents, "mod.ics");
-        
-        // Should match none
-        queryEvents = calendarDao.findEvents(calendar, new DateTime("20060401T010000Z"), new DateTime("20060501T010000Z"), false);
-        Assert.assertEquals(0, queryEvents.size());
-        
-        // Test expand
-        // Should match the modification, so the results should include the modification
-        // and the master (but no occurences because the only occurrence is the mod)
-        queryEvents = calendarDao.findEvents(calendar, new DateTime("20060501T010000Z"), new DateTime("20060601T010000Z"), true);
-        Assert.assertEquals(2, queryEvents.size());
-        verifyItemNameInSet(queryEvents, "test3.ics");
-        verifyItemNameInSet(queryEvents, "mod.ics");
-        
-        // Should match 10 occurences in the future, so the results should include
-        // the master plus 10 occurence items
-        queryEvents = calendarDao.findEvents(calendar, new DateTime("20200517T010000Z"), new DateTime("20200527T010000Z"), true);
-        Assert.assertEquals(11, queryEvents.size());
-        verifyItemNameInSet(queryEvents, "test3.ics");
-        verifyUidInSet(queryEvents, "test3uid:20200517T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200518T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200519T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200520T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200521T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200522T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200523T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200524T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200525T081500Z");
-        verifyUidInSet(queryEvents, "test3uid:20200526T081500Z");
     }
 
     /**

@@ -15,10 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao.mock;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
+import org.springframework.dao.ConcurrencyFailureException;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
@@ -27,7 +24,9 @@ import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockItem;
-import org.springframework.dao.ConcurrencyFailureException;
+
+import java.util.Date;
+import java.util.Set;
 
 /**
  * Mock implementation of <code>ContentDao</code> useful for testing.
@@ -97,34 +96,6 @@ public class MockContentDao extends MockItemDao implements ContentDao {
     }
 
     /**
-     * Find all children for collection. Children can consist of ContentItem and
-     * CollectionItem objects.
-     *
-     * @param collection
-     *            collection to find children for
-     * @return collection of child objects for parent collection. Child objects
-     *         can be either CollectionItem or ContentItem.
-     */
-    @SuppressWarnings("rawtypes")
-    public Set findChildren(CollectionItem collection) {
-        return getStorage().findItemChildren(collection);
-    }
-
-    /**
-     * Find all top level children for user. Children can consist of ContentItem
-     * and CollectionItem objects.
-     *
-     * @param user
-     *            The user.
-     * @return collection of child objects for parent collection. Child objects
-     *         can be either CollectionItem or ContentItem.
-     */
-    @SuppressWarnings("rawtypes")
-    public Set findChildren(User user) {
-        return findRootChildren(user);
-    }
-
-    /**
      * Create new content item. A content item represents a piece of content or
      * file.
      *
@@ -185,28 +156,6 @@ public class MockContentDao extends MockItemDao implements ContentDao {
 
         return content;
     }
-
-    /**
-     * Move an Item to a different collection
-     *
-     * @param parent
-     *            collection to add item to
-     * @param item
-     *            item to move
-     */
-    public void moveContent(CollectionItem parent,
-                            Item item) {
-        if (parent == null) {
-            throw new IllegalArgumentException("parent cannot be null"); 
-        }
-        if (item == null) {
-            throw new IllegalArgumentException("item cannot be null");
-        }
-
-        item.getParents().add(parent);
-        getStorage().updateItem(item);
-    }
-
 
     /**
      * Remove content item
@@ -307,43 +256,8 @@ public class MockContentDao extends MockItemDao implements ContentDao {
         return collection;
     }
 
-    /**
-     * Loads children.
-     * {@inheritDoc}
-     * @param collection The collection.
-     * @param timestamp The date.
-     * @return Set<ContentItem>.
-     */
-    public Set<ContentItem> loadChildren(CollectionItem collection, Date timestamp) {
-        Set<ContentItem> items = new HashSet<ContentItem>();
-        for(Item item : collection.getChildren()) {
-            if(item instanceof ContentItem) {
-                if (timestamp==null || item.getModifiedDate().after(timestamp)) {
-                    items.add((ContentItem) item);
-                }
-            }
-        }
-        return items;
-    }
-
     @Override
     public void removeItemsFromCollection(CollectionItem collection) {
         
     }
-
-    @Override
-    public void createBatchContent(CollectionItem parent, Set<ContentItem> contents) {
-        
-    }
-
-    @Override
-    public void updateBatchContent(Set<ContentItem> contents) {
-        
-    }
-
-    @Override
-    public void removeBatchContent(CollectionItem parent, Set<ContentItem> contents) {
-        
-    }
-    
 }

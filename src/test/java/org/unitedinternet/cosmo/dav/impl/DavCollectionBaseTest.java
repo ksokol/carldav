@@ -24,9 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unitedinternet.cosmo.dav.BaseDavTestCase;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
-import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.ExcludeFreeBusyRollup;
 import org.unitedinternet.cosmo.model.CollectionItem;
 
@@ -147,9 +145,7 @@ public class DavCollectionBaseTest extends BaseDavTestCase
     public void testCaldavReportTypes() throws Exception {
         DavCollectionBase test = new DavCollectionBase(null, null, testHelper.getEntityFactory());
 
-        assert(test.getReportTypes().contains(FreeBusyReport.REPORT_TYPE_CALDAV_FREEBUSY));
         assert(test.getReportTypes().contains(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET));
-        assert(test.getReportTypes().contains(QueryReport.REPORT_TYPE_CALDAV_QUERY));
     }
 
     /**

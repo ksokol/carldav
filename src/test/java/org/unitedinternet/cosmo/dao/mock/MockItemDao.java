@@ -22,15 +22,11 @@ import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.filter.ItemFilterEvaluater;
-import org.unitedinternet.cosmo.model.filter.ItemFilterPostProcessor;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockItem;
 import org.unitedinternet.cosmo.util.PathUtil;
@@ -115,18 +111,6 @@ public class MockItemDao implements ItemDao {
      */
     public String getItemPath(Item item) {
         return storage.getItemPath(item);
-    }
-
-    /**
-     * Return the path to an item. The path has the format:
-     * /username/parent1/parent2/itemname
-     * 
-     * @param uid
-     *            the uid of the item to calculate the path for
-     * @return hierarchical path to item
-     */
-    public String getItemPath(String uid) {
-        return storage.getItemPath(uid);
     }
 
     /**
@@ -286,15 +270,6 @@ public class MockItemDao implements ItemDao {
     }
 
     /**
-     * Removes item by path.
-     * {@inheritDoc}
-     * @param path The path.
-     */
-    public void removeItemByPath(String path) {
-        removeItem(findItemByPath(path));
-    }
-
-    /**
      * Removes item by uid.
      * {@inheritDoc}
      * @param uid The uid.
@@ -327,74 +302,13 @@ public class MockItemDao implements ItemDao {
             removeItem(item);
         }
     }
-    
-    /**
-     * Refresh item.
-     * {@inheritDoc}
-     * @param item The item.
-     */
-    public void refreshItem(Item item) {
-    }
-    
+
     /**
      * Initializes item
      * {@inheritDoc}
      * @param item The item.
      */
     public void initializeItem(Item item) {
-    }
-
-    /**
-     * Finds item.
-     * {@inheritDoc}
-     * @param filter The filter.
-     * @return Set with item.
-     */
-    public Set<Item> findItems(ItemFilter filter) {
-        ItemFilterEvaluater evaluater = new ItemFilterEvaluater();
-        ItemFilterPostProcessor postProcessor = new ItemFilterPostProcessor();
-        HashSet<Item> results = new HashSet<Item>();
-        for (Item i : storage.getAllItems()) {
-            if (evaluater.evaulate(i, filter)) {
-                results.add(i);
-            }
-        }
-        
-        return postProcessor.processResults(results, filter);
-    }
-    
-    /**
-     * Finds items.
-     * {@inheritDoc}
-     * @param filters The filters.
-     * @return The items.
-     */
-    public Set<Item> findItems(ItemFilter[] filters) {
-        ItemFilterEvaluater evaluater = new ItemFilterEvaluater();
-        ItemFilterPostProcessor postProcessor = new ItemFilterPostProcessor();
-        HashSet<Item> allResults = new HashSet<Item>();
-        
-        for(ItemFilter f: filters) {
-            HashSet<Item> results = new HashSet<Item>();
-            for (Item i : storage.getAllItems()) {
-                if (evaluater.evaulate(i, f)) {
-                    results.add(i);
-                }
-            }
-            
-            allResults.addAll(postProcessor.processResults(results, f));
-        }
-        
-        return allResults;
-    }
-
-    /**
-     * Generates uid.
-     * {@inheritDoc}
-     * @return The uid.
-     */
-    public String generateUid() {
-        return storage.calculateUid();
     }
 
     // Dao methods
@@ -422,16 +336,6 @@ public class MockItemDao implements ItemDao {
         return storage;
     }
 
-    /**
-     * Finds root children.
-     * @param user The user.
-     * @return The root.
-     */
-    @SuppressWarnings("rawtypes")
-    protected Set findRootChildren(User user) {
-        return storage.findItemChildren(storage.getRootItem(user.getUid()));
-    }
-    
     private static String decode(String urlPath){
         try {
             return new URI(urlPath).getPath();

@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.User;
-
 /**
  * An exception indicating that an existing user is already using the
  * specified username.
@@ -27,17 +25,5 @@ public class DuplicateUsernameException extends ModelValidationException {
      */
     public DuplicateUsernameException(String userName) {
         super(userName, "duplicate username: " + userName);
-    }
-
-    /**
-     */
-    public DuplicateUsernameException(User user, String message) {
-        super(user, message);
-    }
-
-    /**
-     */
-    public DuplicateUsernameException(User user, String message, Throwable cause) {
-        super(user, message, cause);
     }
 }

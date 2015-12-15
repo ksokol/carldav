@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.User;
-
 /**
  * An exception indicating that an existing user is already using the
  * specified email.
@@ -27,17 +25,5 @@ public class DuplicateEmailException extends ModelValidationException {
      */
     public DuplicateEmailException(String userEmail) {
         super(userEmail, "duplicate email: " + userEmail);
-    }
-
-    /**
-     */
-    public DuplicateEmailException(User user, String message) {
-        super(user, message);
-    }
-
-    /**
-     */
-    public DuplicateEmailException(User user, String message, Throwable cause) {
-        super(user, message, cause);
     }
 }

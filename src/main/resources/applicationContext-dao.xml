@@ -37,19 +37,14 @@
 
     <bean id="contentDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl"
         init-method="init" destroy-method="destroy">
-        <property name="itemPathTranslator" ref="itemPathTranslator" />
         <property name="idGenerator">
             <ref bean="idGenerator" />
         </property>
         <property name="ticketKeyGenerator">
             <ref bean="tokenGenerator" />
         </property>
-        <property name="itemFilterProcessor">
-            <ref bean="itemFilterProcessor" />
-        </property>
+        <property name="itemPathTranslator" ref="itemPathTranslator" />
     </bean>
-
-    <bean id="itemFilterProcessor" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor" />
 
     <bean id="itemPathTranslator" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.DefaultItemPathTranslator" />
 
@@ -59,12 +54,6 @@
         </property>
     </bean>
 
-    <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" init-method="init">
-        <property name="itemFilterProcessor">
-            <ref bean="itemFilterProcessor" />
-        </property>
-        <property name="entityFactory" ref="cosmoEntityFactory" />
-    </bean>
-    <!--  Transaction Definitions -->
+    <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" init-method="init" />
 
 </beans>

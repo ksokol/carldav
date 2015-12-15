@@ -46,8 +46,8 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
         resourceFactory =
             new StandardResourceFactory(getContentService(),
                                         getSecurityManager(),
-                                        getEntityFactory(),
-                                        getCalendarQueryProcessor());
+                                        getEntityFactory()
+            );
         locatorFactory = new StandardResourceLocatorFactory();
         try {
             baseUrl = new URL("http", "localhost", -1, "/dav");

@@ -28,10 +28,6 @@
         <constructor-arg index="1" ref="contentLockManager" />
 	</bean>
 
-	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
-		<property name="calendarDao" ref="calendarDao" />
-	</bean>
-
 	<!-- general protocol/interface resources -->
 
 	<!-- dav protocol resources -->
@@ -45,9 +41,6 @@
 		</constructor-arg>
 		<constructor-arg>
 			<ref bean="cosmoEntityFactory" />
-		</constructor-arg>
-		<constructor-arg>
-			<ref bean="calendarQueryProcessor" />
 		</constructor-arg>
 	</bean>
 

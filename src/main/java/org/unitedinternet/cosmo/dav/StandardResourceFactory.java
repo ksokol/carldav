@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dav;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.impl.DavAvailability;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
@@ -52,16 +51,13 @@ public class StandardResourceFactory
     private ContentService contentService;
     private CosmoSecurityManager securityManager;
     private EntityFactory entityFactory;
-    private CalendarQueryProcessor calendarQueryProcessor;
 
     public StandardResourceFactory(ContentService contentService,
                                    CosmoSecurityManager securityManager,
-                                   EntityFactory entityFactory,
-                                   CalendarQueryProcessor calendarQueryProcessor) {
+                                   EntityFactory entityFactory) {
         this.contentService = contentService;
         this.securityManager = securityManager;
         this.entityFactory = entityFactory;
-        this.calendarQueryProcessor = calendarQueryProcessor;
     }
 
     /**
@@ -220,10 +216,6 @@ public class StandardResourceFactory
 
     public ContentService getContentService() {
         return contentService;
-    }
-    
-    public CalendarQueryProcessor getCalendarQueryProcessor() {
-        return calendarQueryProcessor;
     }
 
     public CosmoSecurityManager getSecurityManager() {

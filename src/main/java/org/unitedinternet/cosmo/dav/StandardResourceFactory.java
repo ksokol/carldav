@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
-import org.unitedinternet.cosmo.dav.impl.DavFreeBusy;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
@@ -33,7 +32,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
@@ -192,10 +190,6 @@ public class StandardResourceFactory
             else {
                 return new DavTask(note, locator, this, entityFactory);
             }
-        }
-        
-        if(item instanceof FreeBusyItem) {
-            return new DavFreeBusy((FreeBusyItem) item, locator, this, entityFactory);
         }
         if(item instanceof AvailabilityItem) {
             return new DavAvailability((AvailabilityItem) item, locator, this, entityFactory);

@@ -24,17 +24,14 @@ import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResponse;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavAvailability;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavFreeBusy;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.server.ServerConstants;
 
 import java.io.IOException;
 
@@ -83,27 +80,6 @@ public class CalendarResourceProvider extends FileProvider {
         response.setHeader("ETag", content.getETag());
     }
 
-    protected WebDavResource resolveDestination(DavResourceLocator locator,
-                                             WebDavResource original)
-        throws CosmoDavException {
-        if (locator == null) {
-            return null;
-        }
-        if (original instanceof DavTask) {
-            return new DavTask(locator, getResourceFactory(), getEntityFactory());
-        }
-        if (original instanceof DavJournal) {
-            return new DavJournal(locator, getResourceFactory(), getEntityFactory());
-        }
-        if (original instanceof DavFreeBusy) {
-            return new DavFreeBusy(locator, getResourceFactory(), getEntityFactory());
-        }
-        if (original instanceof DavAvailability) {
-            return new DavAvailability(locator, getResourceFactory(), getEntityFactory());
-        }
-        return new DavEvent(locator, getResourceFactory(), getEntityFactory());
-    }
-
     protected DavContent createCalendarResource(DavRequest request,
                                                 DavResponse response,
                                                 DavResourceLocator locator,
@@ -117,9 +93,6 @@ public class CalendarResourceProvider extends FileProvider {
         }
         if (!calendar.getComponents(Component.VJOURNAL).isEmpty()) {
             return new DavJournal(locator, getResourceFactory(), getEntityFactory());
-        }
-        if (!calendar.getComponents(Component.VFREEBUSY).isEmpty()) {
-            return new DavFreeBusy(locator, getResourceFactory(), getEntityFactory());
         }
         if (!calendar.getComponents(ICalendarConstants.COMPONENT_VAVAILABLITY)
                 .isEmpty()) {

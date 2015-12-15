@@ -7,14 +7,13 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.StatelessSession;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 
 /**
  * Abstract Dao implementation.
@@ -39,13 +38,6 @@ public abstract class AbstractDaoImpl {
         return sessionFactory.getCurrentSession();
     }
 
-    /**
-     * @return Returns the current Hibernate StatelessSession.
-     */
-    protected StatelessSession getStatlessSession() {
-        return sessionFactory.openStatelessSession();
-    }
-    
     /**
      * Logs constraint violeation exception
      *

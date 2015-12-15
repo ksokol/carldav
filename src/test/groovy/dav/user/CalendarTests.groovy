@@ -569,22 +569,4 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_FOUND))
     }
-
-    @Test
-    public void calendarMove() throws Exception {
-        mockMvc.perform(move("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .header("Destination", "/dav/" + USER01 + "/newcalendar/"))
-                .andExpect(status().isCreated());
-
-        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
-                .contentType(TEXT_XML))
-                .andExpect(status().isOk());
-
-        mockMvc.perform(get("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML))
-                .andExpect(status().isNotFound())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(NOT_FOUND));
-    }
 }

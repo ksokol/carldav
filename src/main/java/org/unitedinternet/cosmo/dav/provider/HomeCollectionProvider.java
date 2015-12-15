@@ -53,14 +53,4 @@ public class HomeCollectionProvider extends CollectionProvider {
         }
         super.delete(request, response, resource);
     }
-
-    public void move(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (resource instanceof DavHomeCollection) {
-            throw new MethodNotAllowedException("MOVE not allowed for home collection");
-        }
-        super.move(request, response, resource);
-    }
 }

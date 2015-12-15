@@ -33,7 +33,6 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarLocationException;
-import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
@@ -45,7 +44,6 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.ICalendarItem;
-import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.NoteItem;
 
 import java.io.ByteArrayInputStream;
@@ -83,20 +81,10 @@ public abstract class DavCalendarResource extends DavContentBase
 
     public String getSupportedMethods() {
         if(exists()) {
-            return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, COPY, PUT, DELETE, MOVE, REPORT";
+            return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, DELETE, REPORT";
         }
         else {
             return "OPTIONS, TRACE, PUT";
-        }
-    }
-
-    @Override
-    public void move(org.apache.jackrabbit.webdav.DavResource destination)
-            throws org.apache.jackrabbit.webdav.DavException {
-        try {
-            super.move(destination);
-        } catch (IcalUidInUseException e) {
-            throw new UidConflictException(e);
         }
     }
 

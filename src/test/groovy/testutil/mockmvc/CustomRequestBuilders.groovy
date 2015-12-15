@@ -28,8 +28,4 @@ public class CustomRequestBuilders {
     public static MockHttpServletRequestBuilder proppatch(String urlTemplate, Object... urlVariables) {
         return request(PROPPATCH.name(), urlTemplate, urlVariables);
     }
-
-    public static MockHttpServletRequestBuilder move(String urlTemplate, Object... urlVariables) {
-        return request(MOVE.name(), urlTemplate, urlVariables);
-    }
 }

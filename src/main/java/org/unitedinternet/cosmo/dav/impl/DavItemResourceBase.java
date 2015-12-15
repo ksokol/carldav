@@ -28,17 +28,11 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
-import org.unitedinternet.cosmo.dao.ItemNotFoundException;
-import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ExistsException;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.LockedException;
-import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -53,8 +47,6 @@ import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
@@ -167,61 +159,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             return getParent();
         } catch (CosmoDavException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    public void move(org.apache.jackrabbit.webdav.DavResource destination)
-            throws org.apache.jackrabbit.webdav.DavException {
-        if (!exists()) {
-            throw new NotFoundException();
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("moving resource " + getResourcePath() + " to "
-                    + destination.getResourcePath());
-        }
-
-        if (destination.exists()) {
-            throw new ExistsException();
-        }
-        
-        if(!(destination instanceof DavItemResourceBase)){
-            throw new IllegalArgumentException("Required type for 'destination' is:[" + DavItemResourceBase.class.getName() + "]");
-        }
-        DavItemResourceBase destinationItemResource = (DavItemResourceBase) destination;
-
-        try {
-
-            DavItemResourceBase parentItemResource = (DavItemResourceBase) destinationItemResource
-                    .getParent();
-            CollectionItem newParent = (CollectionItem) parentItemResource
-                    .getItem();
-            if (!parentItemResource.exists() || newParent == null) {
-                throw new ConflictException(
-                        "One or more intermediate collections must be created");
-            }
-            CollectionItem oldParent = (CollectionItem) ((DavItemResourceBase) getParent())
-                    .getItem();
-
-            // update name
-            getItem().setName(
-                    PathUtil.getBasename(destination.getResourcePath()));
-
-            // only move if parents are different
-            if (!newParent.equals(oldParent)) {
-                getContentService().moveItem(getItem(), oldParent, newParent);
-            } else {
-                // otherwise update name
-                updateItem();
-            }
-
-        } catch (ItemNotFoundException e) {
-            throw new ConflictException(
-                    "One or more intermediate collections must be created");
-        } catch (DuplicateItemNameException e) {
-            throw new ExistsException();
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
         }
     }
 

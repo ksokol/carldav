@@ -139,13 +139,6 @@ public class DavCalendarCollection extends DavCollectionBase
         return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT";
     }
 
-    /** */
-    public void move(org.apache.jackrabbit.webdav.DavResource destination)
-        throws org.apache.jackrabbit.webdav.DavException {
-        validateDestination(destination);
-        super.move(destination);
-    }
-
     public boolean isCalendarCollection() {
         return true;
     }

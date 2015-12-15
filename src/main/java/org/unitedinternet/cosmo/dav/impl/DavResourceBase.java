@@ -82,6 +82,11 @@ import javax.xml.namespace.QName;
 public abstract class DavResourceBase
     implements ExtendedDavConstants, DeltaVResource{
 
+    @Override
+    public void move(final DavResource destination) throws DavException {
+        throw new UnsupportedOperationException();
+    }
+
     private static final HashSet<DavPropertyName> LIVE_PROPERTIES =
         new HashSet<DavPropertyName>();
     private static final Set<ReportType> REPORT_TYPES =

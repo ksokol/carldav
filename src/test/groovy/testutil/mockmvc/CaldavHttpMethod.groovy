@@ -5,5 +5,5 @@ package testutil.mockmvc;
  */
 public enum CaldavHttpMethod {
 
-    MOVE, PROPPATCH, PROPFIND, MKCALENDAR, REPORT
+    PROPPATCH, PROPFIND, MKCALENDAR, REPORT
 }

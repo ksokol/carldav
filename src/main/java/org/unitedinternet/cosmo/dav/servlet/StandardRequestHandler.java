@@ -172,9 +172,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         else if (request.getMethod().equals("DELETE")) {
             provider.delete(request, response, resource);
         }
-        else if (request.getMethod().equals("MOVE")) {
-            provider.move(request, response, resource);
-        }
         else if (request.getMethod().equals("REPORT")) {
             provider.report(request, response, resource);
         }

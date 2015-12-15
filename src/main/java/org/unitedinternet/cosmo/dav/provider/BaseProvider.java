@@ -37,18 +37,9 @@ import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
-import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
-import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
-import org.unitedinternet.cosmo.dav.impl.DavItemResource;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -118,8 +109,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new BadRequestException("Depth must be 0 for non-collection resources");
         }
 
-        DavPropertyNameSet props = null;
-        int type = -1;
+        DavPropertyNameSet props;
+        int type;
         
         try{
             
@@ -130,12 +121,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         }catch(DavException de){
             throw new CosmoDavException(de);
         }
-        
-
-        // Since the propfind properties could not be determined in the
-        // security filter in order to check specific property privileges, the
-        // check must be done manually here.
-        checkPropFindAccess(resource, props, type);
 
         MultiStatus ms = new MultiStatus();
         ms.addResourceProperties(resource, props, type, depth);
@@ -210,10 +195,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
                     throw new BadRequestException("REPORT requires entity body");
                 }
             }
-            // Since the report type could not be determined in the security
-            // filter in order to check ticket permissions on REPORT, the
-            // check must be done manually here.
-            checkReportAccess(resource, info);
 
             ((ReportBase) resource.getReport(info)).run(response);
         } catch (DavException e) {
@@ -289,113 +270,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
 
     /**
      * 
-     * @return AclEvaluator
-     */
-    protected AclEvaluator createAclEvaluator() {
-        User user = getSecurityContext().getUser();
-        if (user != null){
-            return new UserAclEvaluator(user);
-        }
-        throw new IllegalStateException("Anonymous principal not supported for ACL evaluation");
-    }
-    
-    
-    /**
-     * 
-     * @param resource WebDavResource
-     * @param evaluator AclEvaluator
-     * @param privilege DavPrivilege
-     * @return boolean
-     */
-    protected boolean hasPrivilege(WebDavResource resource,
-                                   AclEvaluator evaluator,
-                                   DavPrivilege privilege) {
-        boolean hasPrivilege;
-        if (resource instanceof DavItemResource) {
-            Item item = ((DavItemResource)resource).getItem();
-            hasPrivilege = evaluator.evaluate(item, privilege);
-        } else {
-            UserAclEvaluator uae = (UserAclEvaluator) evaluator;
-            User user = ((DavUserPrincipal)resource).getUser();
-            hasPrivilege = uae.evaluateUserPrincipal(user, privilege);
-        }
-
-        if (hasPrivilege) {
-            if (LOG.isDebugEnabled()){
-                LOG.debug("Principal has privilege " + privilege);
-            }
-            return true;
-        }
-
-
-        if (LOG.isDebugEnabled()){
-            LOG.debug("Principal does not have privilege " + privilege);
-        }
-        return false;
-    }
-
-    protected void checkPropFindAccess(WebDavResource resource,
-                                       DavPropertyNameSet props,
-                                       int type)
-        throws CosmoDavException {
-        AclEvaluator evaluator = createAclEvaluator();
-
-        // if the principal has DAV:read, then the propfind can continue
-        if (hasPrivilege(resource, evaluator, DavPrivilege.READ)) {
-            if (LOG.isDebugEnabled()){
-                LOG.debug("Allowing PROPFIND");
-            }
-            return;
-        }
-
-        if (hasPrivilege(resource, evaluator, DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET)) {
-            if (LOG.isDebugEnabled()){
-                LOG.debug("Allowing PROPFIND");
-            }
-            return;
-         }
-
-        // don't allow the client to know that this resource actually
-        // exists
-        if (LOG.isDebugEnabled()){
-            LOG.debug("Denying PROPFIND");
-        }
-        throw new NotFoundException();
-    }
-
-    protected void checkReportAccess(WebDavResource resource,
-                                     ReportInfo info)
-        throws CosmoDavException {
-        AclEvaluator evaluator = createAclEvaluator();
-
-        // if the principal has DAV:read, then the propfind can continue
-        if (hasPrivilege(resource, evaluator, DavPrivilege.READ)) {
-            if (LOG.isDebugEnabled()){
-                LOG.debug("Allowing REPORT");
-            }
-            return;
-        }
-
-        // if this is a free-busy report, then check CALDAV:read-free-busy
-        // also
-        if (isFreeBusyReport(info) && hasPrivilege(resource, evaluator,
-                         DavPrivilege.READ_FREE_BUSY)) {
-            if (LOG.isDebugEnabled()){
-                LOG.debug("Allowing REPORT");
-            }
-            return;
-        }
-
-        // don't allow the client to know that this resource actually
-        // exists
-        if (LOG.isDebugEnabled()){
-            LOG.debug("Denying PROPFIND");
-        }
-        throw new NotFoundException();
-    }
-
-    /**
-     * 
      * @param request DavRequest
      * @throws CosmoDavException 
      */
@@ -431,10 +305,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         }
     }
 
-    protected CosmoSecurityContext getSecurityContext() {
-        return getResourceFactory().getSecurityManager().getSecurityContext();
-    }
-
     public DavResourceFactory getResourceFactory() {
         return resourceFactory;
     }
@@ -443,16 +313,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         return entityFactory;
     }
 
-    /**
-     * 
-     * @param info ReportInfo
-     * @return boolean 
-     */
-    private boolean isFreeBusyReport(ReportInfo info) {
-        return FreeBusyReport.REPORT_TYPE_CALDAV_FREEBUSY.
-            isRequestedReportType(info);
-    }
-    
     /**
      * 
      * @param msr MultiStatusResponse

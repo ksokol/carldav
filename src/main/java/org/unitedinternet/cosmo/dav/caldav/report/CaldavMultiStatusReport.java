@@ -78,10 +78,6 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
 
     // our methods
 
-    public OutputFilter getOutputFilter() {
-        return outputFilter;
-    }
-
     public void setOutputFilter(OutputFilter outputFilter) {
         this.outputFilter = outputFilter;
     }

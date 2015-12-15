@@ -29,6 +29,5 @@ public interface CosmoSecurityManager {
      * Provides a <code>CosmoSecurityContext</code> representing a
      * previously authenticated principal.
      */
-    CosmoSecurityContext getSecurityContext()
-        throws CosmoSecurityException;
+    CosmoSecurityContext getSecurityContext();
 }

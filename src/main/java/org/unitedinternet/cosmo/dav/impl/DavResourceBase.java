@@ -45,7 +45,6 @@ import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.property.SupportedReportSet;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -368,33 +367,6 @@ public abstract class DavResourceBase
 
     protected Set<ReportType> getReportTypes() {
      return REPORT_TYPES;
-    }
-
-    /**
-     * <p>
-     * Returns the set of privileges granted on the resource to the current
-     * principal.
-     * </p>
-     * <p>
-     * If the request is unauthenticated, returns an empty set. If the
-     * current principal is an admin user, returns {@link DavPrivilege#ALL}.
-     * </p>
-     */
-    protected Set<DavPrivilege> getCurrentPrincipalPrivileges() {
-        HashSet<DavPrivilege> privileges = new HashSet<DavPrivilege>();
-
-        // anonymous access has no privileges
-        if (getSecurityManager().getSecurityContext().isAnonymous()) {
-            return privileges;
-        }
-
-        // all privileges are implied for admin users
-        if (getSecurityManager().getSecurityContext().isAdmin()) {
-            privileges.add(DavPrivilege.ALL);
-            return privileges;
-        }
-
-        return privileges;
     }
 
     /**

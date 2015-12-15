@@ -53,7 +53,6 @@ public class CosmoSecurityContextImpl extends BaseSecurityContext {
             CosmoUserDetails details = (CosmoUserDetails)
                 ((Authentication) getPrincipal()).getPrincipal();
             setUser(details.getUser());
-            setAdmin(details.getUser().getAdmin().booleanValue());
         } else {
             throw new CosmoException("Unknown principal type " + getPrincipal().getClass().getName(),
                     new CosmoException());

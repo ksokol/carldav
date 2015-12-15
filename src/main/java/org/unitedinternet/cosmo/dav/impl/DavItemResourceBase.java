@@ -36,7 +36,6 @@ import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
 import org.unitedinternet.cosmo.dav.property.CreationDate;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
@@ -309,41 +308,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         msr.add(failed, error.getErrorCode());
 
         return msr;
-    }
-
-    /**
-     * <p>
-     * Extends the superclass method.
-     * </p>
-     * <p>
-     * If the principal is a user, returns {@link DavPrivilege#READ} and
-     * {@link DavPrivilege@WRITE}. This is a shortcut that assumes the security
-     * layer has only allowed access to the owner of the home collection
-     * specified in the URL used to access this resource.
-     * </p>
-     * <p>
-     * If the principal is a ticket, returns the dav privileges corresponding to
-     * the ticket's privileges, since a ticket is in effect its own ACE.
-     * </p>
-     */
-    protected Set<DavPrivilege> getCurrentPrincipalPrivileges() {
-        Set<DavPrivilege> privileges = super.getCurrentPrincipalPrivileges();
-        if (!privileges.isEmpty()) {
-            return privileges;
-        }
-
-        // XXX eventually we will want to find the aces for the user and
-        // add each of their granted privileges
-        User user = getSecurityManager().getSecurityContext().getUser();
-        if (user != null) {
-            privileges.add(DavPrivilege.READ);
-            privileges.add(DavPrivilege.WRITE);
-            privileges.add(DavPrivilege.READ_CURRENT_USER_PRIVILEGE_SET);
-            privileges.add(DavPrivilege.READ_FREE_BUSY);
-            return privileges;
-        }
-
-        return privileges;
     }
 
     protected void loadLiveProperties(DavPropertySet properties) {

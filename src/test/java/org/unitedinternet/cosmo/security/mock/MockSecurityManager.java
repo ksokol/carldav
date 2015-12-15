@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.security.mock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
-import org.unitedinternet.cosmo.security.CosmoSecurityException;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 
 import java.security.Principal;
@@ -42,27 +41,16 @@ public class MockSecurityManager implements CosmoSecurityManager {
      * Cosmo user previously authenticated by the Cosmo security
      * system.
      * @return cosmo security context.
-     * @throws CosmoSecurityException - if something is wrong this exception is thrown.
      */
-    public CosmoSecurityContext getSecurityContext() throws CosmoSecurityException {
+    public CosmoSecurityContext getSecurityContext() {
         CosmoSecurityContext context = (CosmoSecurityContext) contexts.get();
         if (context == null) {
-            throw new CosmoSecurityException("security context not set up");
+            throw new RuntimeException("security context not set up");
         }
         if (LOG.isDebugEnabled()) {
             LOG.debug("getting security context for " + context.getName());
         }
         return context;
-    }
-
-    // for testing
-    /**
-     * Initiates security context.
-     * @param context The cosmo security context.
-     */
-    @SuppressWarnings("unchecked")
-    public void initiateSecurityContext(CosmoSecurityContext context) {
-        contexts.set(context);
     }
 
     /* ----- our methods ----- */

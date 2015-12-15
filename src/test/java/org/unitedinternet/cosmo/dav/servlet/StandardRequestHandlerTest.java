@@ -17,14 +17,6 @@ package org.unitedinternet.cosmo.dav.servlet;
 
 import static org.mockito.Mockito.mock;
 
-import java.util.Date;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.ValidationException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -41,15 +33,15 @@ import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.NotModifiedException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavExceptionExtMkCalendarForbidden;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.security.ItemSecurityException;
-import org.unitedinternet.cosmo.security.Permission;
-import org.unitedinternet.cosmo.security.PermissionDeniedException;
 import org.unitedinternet.cosmo.server.ServerConstants;
+
+import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
 
 /**
  * Test class for {@link StandardRequestHandler}.
@@ -267,29 +259,7 @@ public class StandardRequestHandlerTest extends BaseDavTestCase {
             Assert.fail("If-Unmodified-Since succeeded for modified resource");
         } catch (PreconditionFailedException e) {}
     }
-    
-    @Test
-    public void shouldUseNeedsPrivilegesExceptionForPermissionDeniedExceptionInErrorResponse() throws Exception {
-        PermissionDeniedException pde = new PermissionDeniedException("some error message");
-        CosmoDavException actual = captureExceptionForErrorResponseCausedBy(pde);
-        
-        Assert.assertTrue(actual instanceof NeedsPrivilegesException);
-    }
-    
-    @Test
-    public void shouldUseNeedsPrivilegesExceptionForItemSecurityExceptionInErrorResponseWithSpecificAtts() throws Exception{
-        Item item = testHelper.getHomeCollection();
-        ItemSecurityException pde = new ItemSecurityException(item, "some security message", Permission.READ);
-        CosmoDavException actual = captureExceptionForErrorResponseCausedBy(pde);
-        
-        Assert.assertTrue(actual instanceof NeedsPrivilegesException);
-        
-        //specific atts
-        Assert.assertEquals(DavPrivilege.READ, ((NeedsPrivilegesException)actual).getPrivilege());
-        Assert.assertEquals("test/Request/Uri", ((NeedsPrivilegesException)actual).getHref());
-        
-    }
-    
+
     @Test
     public void shouldUseTheSameExceptionForCosmoDavExceptionInstances() throws Exception{
         BadRequestException bre = new BadRequestException("an error message");

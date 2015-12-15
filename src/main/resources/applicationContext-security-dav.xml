@@ -37,8 +37,7 @@
 	<bean id="davExceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
 		<constructor-arg ref="protocolAuthenticationEntryPoint" />
 		<property name="accessDeniedHandler">
-			<bean
-				class="org.unitedinternet.cosmo.dav.acegisecurity.DavAccessDeniedHandler" />
+			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl" />
 		</property>
 	</bean>
 

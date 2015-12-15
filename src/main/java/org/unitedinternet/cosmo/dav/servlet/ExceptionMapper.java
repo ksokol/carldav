@@ -4,36 +4,12 @@ import static org.unitedinternet.cosmo.server.ServerConstants.ATTR_SERVICE_EXCEP
 
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavExceptionForbidden;
-import org.unitedinternet.cosmo.security.CosmoSecurityException;
-import org.unitedinternet.cosmo.security.ItemSecurityException;
-import org.unitedinternet.cosmo.security.Permission;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 
 public enum ExceptionMapper {
-    SECURITY_EXCEPTION_MAPPER (CosmoSecurityException.class) {
-        @Override
-        protected CosmoDavException doMap(Throwable t, HttpServletRequest request) {
-            // handle security errors
-            NeedsPrivilegesException npe = null;
-            // Determine required privilege if we can and include
-            // in response
-            if(t instanceof ItemSecurityException) {
-                ItemSecurityException ise = (ItemSecurityException) t;
-                DavPrivilege priv = ise.getPermission()== Permission.READ ? DavPrivilege.READ : DavPrivilege.WRITE;
-                npe = new NeedsPrivilegesException(request.getRequestURI(), priv);
-            } else {
-                // otherwise send generic response
-                npe = new NeedsPrivilegesException(t.getMessage());
-            }
-
-            return npe;
-        }
-    },
     FORBIDDEN_EXCEPTION_MAPPER(CaldavExceptionForbidden.class),
     DAV_EXCEPTION_MAPPER (CosmoDavException.class){
         @Override

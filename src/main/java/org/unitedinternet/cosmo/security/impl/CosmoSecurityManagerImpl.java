@@ -21,7 +21,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
-import org.unitedinternet.cosmo.security.CosmoSecurityException;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.UserService;
 
@@ -41,13 +40,11 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
      * Cosmo user previously authenticated by the Cosmo security
      * system.
      */
-    public CosmoSecurityContext getSecurityContext()
-        throws CosmoSecurityException {
+    public CosmoSecurityContext getSecurityContext() {
         SecurityContext context = SecurityContextHolder.getContext();
         Authentication authen = context.getAuthentication();
         if (authen == null) {
-            throw new CosmoSecurityException("no Authentication found in " +
-                                             "SecurityContext");
+            throw new RuntimeException("no Authentication found in SecurityContext");
         }
         
         if (authen instanceof PreAuthenticatedAuthenticationToken) {

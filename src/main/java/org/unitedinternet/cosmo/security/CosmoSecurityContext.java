@@ -43,10 +43,4 @@ public interface CosmoSecurityContext {
      * the context does not represent a user.
      */
     User getUser();
-
-    /**
-     * @return Determines whether or not the security context represents an
-     * administrative user.
-     */
-    boolean isAdmin();
 }

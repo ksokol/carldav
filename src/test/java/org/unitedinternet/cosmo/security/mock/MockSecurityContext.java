@@ -45,7 +45,6 @@ public class MockSecurityContext extends BaseSecurityContext {
         else if (getPrincipal() instanceof MockUserPrincipal) {
             User user = ((MockUserPrincipal) getPrincipal()).getUser();
             setUser(user);
-            setAdmin(user.getAdmin().booleanValue());
         }
         else {
             throw new CosmoException("unknown principal type " + getPrincipal().getClass().getName(), new CosmoException());

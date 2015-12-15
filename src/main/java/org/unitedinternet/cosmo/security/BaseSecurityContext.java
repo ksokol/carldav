@@ -26,7 +26,6 @@ import java.security.Principal;
  */
 public abstract class BaseSecurityContext implements CosmoSecurityContext {
 
-    private boolean admin;
     private boolean anonymous;
     private Principal principal;
     private User user;
@@ -34,14 +33,12 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
     public BaseSecurityContext(Principal principal) {
         this.anonymous = false;
         this.principal = principal;
-        this.admin = false;
         processPrincipal();
     }
 
     public BaseSecurityContext(Principal principal, User preAuthUser) {
         this.anonymous = false;
         this.principal = principal;
-        this.admin = preAuthUser.getAdmin().booleanValue();
         this.user = preAuthUser;
     }
     
@@ -76,14 +73,6 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
         return user;
     }
 
-    /**
-     * @return Determines whether or not the security context represents an
-     * administrator
-     */
-    public boolean isAdmin() {
-        return admin;
-    }
-
     /* ----- our methods ----- */
 
     protected Principal getPrincipal() {
@@ -96,10 +85,6 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
 
     protected void setUser(User user) {
         this.user = user;
-    }
-
-    protected void setAdmin(boolean admin) {
-        this.admin = admin;
     }
 
     /**

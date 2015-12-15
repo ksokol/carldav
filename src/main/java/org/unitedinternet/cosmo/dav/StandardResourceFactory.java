@@ -22,14 +22,12 @@ import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
-import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -156,11 +154,6 @@ public class StandardResourceFactory
      */
     public WebDavResource createResource(DavResourceLocator locator, Item item)  throws CosmoDavException {
         Assert.notNull(item, "item cannot be null");
-
-        if (item instanceof HomeCollectionItem) {
-            return new DavHomeCollection((HomeCollectionItem) item, locator,
-                                         this, entityFactory);
-        }
 
         if (item instanceof CollectionItem) {
             if (item.getStamp(CalendarCollectionStamp.class) != null) {

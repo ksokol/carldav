@@ -21,7 +21,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
@@ -33,14 +32,11 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.ModificationUid;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.NoteOccurrence;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
-import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,9 +105,6 @@ public class StandardContentService implements ContentService {
             NoteItem parent = (NoteItem) contentDao.findItemByUid(modUid.getParentUid());
             if(parent==null) {
                 return null;
-            }
-            else {
-                return getNoteOccurrence(parent, modUid.getRecurrenceId());
             }
         }
         
@@ -775,22 +768,5 @@ public class StandardContentService implements ContentService {
         for(CollectionItem lock : locks) {
             lockManager.unlockCollection(lock);
         }
-    }
-    
-    private NoteOccurrence getNoteOccurrence(NoteItem parent, net.fortuna.ical4j.model.Date recurrenceId) {
-        EventStamp eventStamp = StampUtils.getEventStamp(parent);
-        
-        // parent must be a recurring event
-        if(eventStamp==null || !eventStamp.isRecurring()) {
-            return null;
-        }
-        
-        // verify that occurrence date is valid
-        RecurrenceExpander expander = new RecurrenceExpander();
-        if(expander.isOccurrence(eventStamp.getEventCalendar(), recurrenceId)) {
-            return NoteOccurrenceUtil.createNoteOccurrence(recurrenceId, parent);
-        }
-        
-        return null;
     }
 }

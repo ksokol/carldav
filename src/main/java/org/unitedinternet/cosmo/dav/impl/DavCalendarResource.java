@@ -32,7 +32,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
-import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarLocationException;
 import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
@@ -134,21 +133,6 @@ public abstract class DavCalendarResource extends DavContentBase
      */
     protected abstract void setCalendar(Calendar calendar)
         throws CosmoDavException;
-
-    private void validateDestination(org.apache.jackrabbit.webdav.DavResource destination)
-        throws CosmoDavException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("validating destination " + destination.getResourcePath());
-        }
-
-        // XXX: we should allow items to be moved/copied out of
-        // calendar collections into regular collections, but they
-        // need to be stripped of their calendar-ness
-        if ( destination instanceof DavItemResource && 
-             ! (((DavItemResource)destination).getParent() instanceof DavCalendarCollection)) {
-            throw new InvalidCalendarLocationException("Destination collection must be a calendar collection");
-        }
-    }
 
     public void writeTo(OutputContext outputContext)
         throws CosmoDavException, IOException {

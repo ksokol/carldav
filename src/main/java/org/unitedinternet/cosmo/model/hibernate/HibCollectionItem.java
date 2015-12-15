@@ -39,17 +39,10 @@ import javax.persistence.OneToMany;
 @DiscriminatorValue("collection")
 public class HibCollectionItem extends HibItem implements CollectionItem {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 2873258323314048223L;
 
-    // CollectionItem specific attributes
     public static final QName ATTR_EXCLUDE_FREE_BUSY_ROLLUP =
             new HibQName(CollectionItem.class, "excludeFreeBusyRollup");
-
-    public static final QName ATTR_HUE =
-            new HibQName(CollectionItem.class, "hue");
 
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="primaryKey.collection", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE }) 
@@ -57,12 +50,6 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
 
     private transient Set<Item> children = null;
 
-    public HibCollectionItem() {
-    };
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#getChildren()
-     */
     public Set<Item> getChildren() {
         if(children!=null) {
             return children;

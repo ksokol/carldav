@@ -41,9 +41,6 @@
 			<ref bean="contentService" />
 		</constructor-arg>
 		<constructor-arg>
-			<ref bean="userService" />
-		</constructor-arg>
-		<constructor-arg>
 			<ref bean="securityManager" />
 		</constructor-arg>
 		<constructor-arg>
@@ -78,13 +75,6 @@
 
 	<bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
 		<constructor-arg index="0" ref="userDao" />
-	</bean>
-
-
-	<!-- Logging resources -->
-	<bean id="httpLoggingFormat" class="java.lang.String">
-		<constructor-arg type="java.lang.String"
-			value="${cosmo.log.HttpLoggingFilter.format}" />
 	</bean>
 
     <!-- Retry Filter -->

@@ -45,7 +45,6 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
 
         resourceFactory =
             new StandardResourceFactory(getContentService(),
-                                        getUserService(),
                                         getSecurityManager(),
                                         getEntityFactory(),
                                         getCalendarQueryProcessor());

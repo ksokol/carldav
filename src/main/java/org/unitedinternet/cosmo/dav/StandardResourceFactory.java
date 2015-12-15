@@ -39,7 +39,6 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
-import org.unitedinternet.cosmo.service.UserService;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
 /**
@@ -53,18 +52,15 @@ public class StandardResourceFactory
     private static final Log LOG =  LogFactory.getLog(StandardResourceFactory.class);
 
     private ContentService contentService;
-    private UserService userService;
     private CosmoSecurityManager securityManager;
     private EntityFactory entityFactory;
     private CalendarQueryProcessor calendarQueryProcessor;
 
     public StandardResourceFactory(ContentService contentService,
-                                   UserService userService,
                                    CosmoSecurityManager securityManager,
                                    EntityFactory entityFactory,
                                    CalendarQueryProcessor calendarQueryProcessor) {
         this.contentService = contentService;
-        this.userService = userService;
         this.securityManager = securityManager;
         this.entityFactory = entityFactory;
         this.calendarQueryProcessor = calendarQueryProcessor;

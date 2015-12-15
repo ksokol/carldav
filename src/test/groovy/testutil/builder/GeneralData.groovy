@@ -97,4 +97,39 @@ class GeneralData {
                                         END:VTODO
                                         END:VCALENDAR
                                         """.stripIndent()
+
+
+    static final String UUID_EVENT2 = "18f0e0e5-4e1e-4e0d-b317-0d861d3e575c";
+
+    static final String CALDAV_EVENT2 = """\
+                                            BEGIN:VCALENDAR
+                                            PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
+                                            VERSION:2.0
+                                            BEGIN:VEVENT
+                                            CREATED:20151215T212053Z
+                                            LAST-MODIFIED:20151215T212127Z
+                                            DTSTAMP:20151215T212127Z
+                                            UID:18f0e0e5-4e1e-4e0d-b317-0d861d3e575c
+                                            SUMMARY:title
+                                            ORGANIZER;RSVP=TRUE;PARTSTAT=ACCEPTED;ROLE=CHAIR:mailto:kamill@sokol-web.d
+                                             e
+                                            ATTENDEE;RSVP=TRUE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT:attende
+                                            RRULE:FREQ=DAILY
+                                            X-MOZ-LASTACK:20151215T212127Z
+                                            DTSTART;VALUE=DATE:20151206
+                                            DTEND;VALUE=DATE:20151207
+                                            TRANSP:TRANSPARENT
+                                            LOCATION:location
+                                            DESCRIPTION:description
+                                            X-MOZ-SEND-INVITATIONS:TRUE
+                                            X-MOZ-SEND-INVITATIONS-UNDISCLOSED:FALSE
+                                            X-MOZ-GENERATION:1
+                                            BEGIN:VALARM
+                                            ACTION:DISPLAY
+                                            TRIGGER;VALUE=DURATION:-PT15M
+                                            DESCRIPTION:Default Mozilla Description
+                                            END:VALARM
+                                            END:VEVENT
+                                            END:VCALENDAR
+                                            """.stripIndent()
 }

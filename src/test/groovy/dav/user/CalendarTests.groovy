@@ -35,6 +35,7 @@ import static testutil.mockmvc.CustomResultMatchers.*
 public class CalendarTests extends IntegrationTestSupport {
 
     private final String uuid = GeneralData.UUID;
+    private final String uuid2 = GeneralData.UUID_EVENT2;
 
     @Autowired
     private TimeService timeService;
@@ -118,6 +119,76 @@ public class CalendarTests extends IntegrationTestSupport {
                                             SEQUENCE:4&#13;
                                             DTSTAMP:20050520T014148Z&#13;
                                             DURATION:PT1H&#13;
+                                            END:VEVENT&#13;
+                                            END:VCALENDAR&#13;
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>
+                        """
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(getRequest)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response));
+    }
+
+    @Test
+    public void putCalendarItem() throws Exception {
+        final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid2)
+                .contentType(TEXT_CALENDAR)
+                .content(CALDAV_EVENT2))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn();
+
+        final String eTag = mvcResult.getResponse().getHeader(ETAG);
+
+        def getRequest = """\
+                        <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:prop>
+                                <D:getetag />
+                                <C:calendar-data />
+                            </D:prop>
+                            <D:href>/dav/test01%40localhost.de/calendar/18f0e0e5-4e1e-4e0d-b317-0d861d3e575c.ics</D:href>
+                        </C:calendar-multiget>"""
+
+        def response = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01%40localhost.de/calendar/18f0e0e5-4e1e-4e0d-b317-0d861d3e575c.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${eTag}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                            PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
+                                            VERSION:2.0&#13;
+                                            BEGIN:VEVENT&#13;
+                                            CREATED:20151215T212053Z&#13;
+                                            LAST-MODIFIED:20151215T212127Z&#13;
+                                            DTSTAMP:20151215T212127Z&#13;
+                                            UID:18f0e0e5-4e1e-4e0d-b317-0d861d3e575c&#13;
+                                            SUMMARY:title&#13;
+                                            ORGANIZER;RSVP=TRUE;PARTSTAT=ACCEPTED;ROLE=CHAIR:mailto:kamill@sokol-web.de&#13;
+                                            ATTENDEE;RSVP=TRUE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT:attende&#13;
+                                            RRULE:FREQ=DAILY&#13;
+                                            X-MOZ-LASTACK:20151215T212127Z&#13;
+                                            DTSTART;VALUE=DATE:20151206&#13;
+                                            DTEND;VALUE=DATE:20151207&#13;
+                                            TRANSP:TRANSPARENT&#13;
+                                            LOCATION:location&#13;
+                                            DESCRIPTION:description&#13;
+                                            X-MOZ-SEND-INVITATIONS:TRUE&#13;
+                                            X-MOZ-SEND-INVITATIONS-UNDISCLOSED:FALSE&#13;
+                                            X-MOZ-GENERATION:1&#13;
+                                            BEGIN:VALARM&#13;
+                                            ACTION:DISPLAY&#13;
+                                            TRIGGER;VALUE=DURATION:-PT15M&#13;
+                                            DESCRIPTION:Default Mozilla Description&#13;
+                                            END:VALARM&#13;
                                             END:VEVENT&#13;
                                             END:VCALENDAR&#13;
                                         </C:calendar-data>

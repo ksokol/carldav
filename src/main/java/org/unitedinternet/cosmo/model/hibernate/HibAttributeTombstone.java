@@ -15,20 +15,19 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.hibernate.annotations.Target;
+import org.unitedinternet.cosmo.model.AttributeTombstone;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.QName;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.hibernate.annotations.Target;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.AttributeTombstone;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * Hibernate persistent AttributeTombstone.
@@ -48,12 +47,7 @@ public class HibAttributeTombstone extends HibTombstone implements AttributeTomb
 
     public HibAttributeTombstone() {
     }
-    
-    public HibAttributeTombstone(Item item, Attribute attribute) {
-        super(item);
-        qname = attribute.getQName();
-    }
-    
+
     public HibAttributeTombstone(Item item, QName qname) {
         super(item);
         this.qname = qname;

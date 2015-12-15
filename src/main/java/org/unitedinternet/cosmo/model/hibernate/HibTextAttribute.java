@@ -15,6 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.apache.commons.io.IOUtils;
+import org.hibernate.annotations.Type;
+import org.unitedinternet.cosmo.CosmoIOException;
+import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.model.Attribute;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.TextAttribute;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -24,17 +33,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.CosmoIOException;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TextAttribute;
-
 
 /**
  * Hibernate persistent TextAttribute.
@@ -42,8 +40,7 @@ import org.unitedinternet.cosmo.model.TextAttribute;
 @Entity
 @DiscriminatorValue("text")
 public class HibTextAttribute extends HibAttribute implements TextAttribute {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(TextAttribute.class);
+
     private static final long serialVersionUID = 2417093506524504993L;
     
     @Column(name="textvalue", length= 2147483647)

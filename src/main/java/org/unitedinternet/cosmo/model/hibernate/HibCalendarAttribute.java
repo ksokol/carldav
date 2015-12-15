@@ -15,13 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.text.ParseException;
-import java.util.Calendar;
-
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
@@ -29,6 +22,13 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CalendarAttribute;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.util.DateUtil;
+
+import java.text.ParseException;
+import java.util.Calendar;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
  * Hibernate persistent CalendarAtttribute.
@@ -47,15 +47,6 @@ public class HibCalendarAttribute extends HibAttribute implements CalendarAttrib
     public HibCalendarAttribute() {
     }
 
-    /**
-     * @param qname qualified name
-     * @param value initial value
-     */
-    public HibCalendarAttribute(QName qname, Calendar value) {
-        setQName(qname);
-        this.value = value;
-    }
-    
     /**
      * @param qname qualified name
      * @param value String representation of Calendar

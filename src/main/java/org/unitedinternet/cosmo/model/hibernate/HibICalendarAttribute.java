@@ -15,16 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
-
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
@@ -33,6 +25,13 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
  * Hibernate persistent ICalendarAtttribute.
@@ -58,15 +57,6 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
     public HibICalendarAttribute(QName qname, Calendar value) {
         setQName(qname);
         this.value = value;
-    }
-    
-    /**
-     * @param qname qualified name
-     * @param value calendar
-     */
-    public HibICalendarAttribute(QName qname, String value) {
-        setQName(qname);
-        setValue(value);
     }
 
     /* (non-Javadoc)

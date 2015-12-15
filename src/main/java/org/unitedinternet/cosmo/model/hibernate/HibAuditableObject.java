@@ -48,10 +48,6 @@ public abstract class HibAuditableObject extends BaseModelObject implements Audi
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.AuditableObject#getModifiedDate()
      */
@@ -77,11 +73,7 @@ public abstract class HibAuditableObject extends BaseModelObject implements Audi
     public String getEntityTag() {
         return etag;
     }
-    
-    public void setEntityTag(String etag) {
-        this.etag = etag;
-    }
-    
+
     /**
      * Calculates object's entity tag. Returns the empty string. Subclasses should override this.
      */

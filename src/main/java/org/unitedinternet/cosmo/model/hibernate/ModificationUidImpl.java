@@ -15,16 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.text.ParseException;
-
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.ModificationUid;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
+import java.text.ParseException;
 
 /**
  * Represents a uid for a NoteItem modification.
@@ -55,11 +54,6 @@ public class ModificationUidImpl implements ModificationUid {
         this.recurrenceId = recurrenceId;
     }
 
-    public ModificationUidImpl(Item parent, String recurrenceId)
-        throws ParseException {
-        this(parent, fromStringToDate(recurrenceId));
-    }
-
     /**
      * Construct modification uid from String.
      * @param modUid modification uid
@@ -87,16 +81,8 @@ public class ModificationUidImpl implements ModificationUid {
         return parentUid;
     }
 
-    public void setParentUid(String parentUid) {
-        this.parentUid = parentUid;
-    }
-
     public Date getRecurrenceId() {
         return recurrenceId;
-    }
-
-    public void setRecurrenceId(Date recurrenceId) {
-        this.recurrenceId = recurrenceId;
     }
     
     public boolean equals(Object obj) {
@@ -159,7 +145,7 @@ public class ModificationUidImpl implements ModificationUid {
         }
         
         // handle date with no time first
-        if(dateStr.indexOf("T") ==  -1) { 
+        if(dateStr.indexOf('T') ==  -1) {
             return new Date(dateStr);
         }
         // otherwise it must be a date time

@@ -15,18 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
-import javax.validation.constraints.NotNull;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
@@ -60,13 +48,24 @@ import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
-
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SecondaryTable;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -123,11 +122,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
         return timeRangeIndex;
     }
 
-    public void setTimeRangeIndex(HibEventTimeRangeIndex timeRangeIndex) {
-        this.timeRangeIndex = timeRangeIndex;
-    }
-    
-      
     /**
      * Return BaseEventStamp from Item
      * @param item

@@ -95,10 +95,6 @@ public class HibEventTimeRangeIndex {
     public void setIsFloating(Boolean isFloating) {
         this.isFloating = isFloating;
     }
-    
-    public Boolean getIsRecurring() {
-        return isRecurring;
-    }
 
     public void setIsRecurring(Boolean isRecurring) {
         this.isRecurring = isRecurring;

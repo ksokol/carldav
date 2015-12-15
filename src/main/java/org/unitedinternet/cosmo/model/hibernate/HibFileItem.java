@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.CosmoIOException;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.FileItem;
@@ -217,15 +216,5 @@ public class HibFileItem extends HibContentItem implements FileItem {
         } catch (IOException e) {
             throw new CosmoIOException("Error copying content", e);
         }
-    }
-
-    /**
-     */
-    public String toString() {
-        return new ToStringBuilder(this).appendSuper(super.toString()).append(
-                "contentLength", getContentLength()).append("contentType",
-                getContentType()).append("contentEncoding",
-                getContentEncoding()).append("contentLanguage",
-                getContentLanguage()).toString();
     }
 }

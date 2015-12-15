@@ -81,18 +81,6 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#getChild(java.lang.String)
-     */
-    public Item getChild(String uid) {
-        for (Item child : getChildren()) {
-            if (child.getUid().equals(uid)) {
-                return child;
-            }
-        }
-        return null;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.CollectionItem#getChildByName(java.lang.String)
      */
     public Item getChildByName(String name) {
@@ -102,26 +90,6 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
             }
         }
         return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#isExcludeFreeBusyRollup()
-     */
-    public boolean isExcludeFreeBusyRollup() {
-        Boolean bv =  HibBooleanAttribute.getValue(this, ATTR_EXCLUDE_FREE_BUSY_ROLLUP);
-        if(bv==null) {
-            return false;
-        }
-        else {
-            return bv.booleanValue();
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#setExcludeFreeBusyRollup(boolean)
-     */
-    public void setExcludeFreeBusyRollup(boolean flag) {
-        HibBooleanAttribute.setValue(this, ATTR_EXCLUDE_FREE_BUSY_ROLLUP, flag);
     }
 
     /**

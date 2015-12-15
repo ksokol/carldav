@@ -73,10 +73,6 @@ public interface ExtendedDavConstants extends DavConstants {
     CosmoQName RESOURCE_TYPE_COLLECTION =
         new CosmoQName(NAMESPACE.getURI(), XML_COLLECTION, NAMESPACE.getPrefix());
 
-    UriTemplate TEMPLATE_COLLECTION =
-        new UriTemplate("/collection/{uid}/*");
-    UriTemplate TEMPLATE_ITEM =
-        new UriTemplate("/item/{uid}/*");
     UriTemplate TEMPLATE_HOME =
         new UriTemplate("/{username}/*");
 }

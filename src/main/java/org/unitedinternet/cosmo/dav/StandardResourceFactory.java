@@ -32,7 +32,6 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
-import org.unitedinternet.cosmo.util.UriTemplate;
 
 /**
  * Standard implementation of <code>DavResourceFactory</code>.
@@ -131,18 +130,6 @@ public class StandardResourceFactory
             LOG.debug("resolving URI " + uri);
         }
 
-        UriTemplate.Match match;
-
-        match = TEMPLATE_COLLECTION.match(uri);
-        if (match != null) {
-            return createUidResource(locator, match);
-        }
-
-        match = TEMPLATE_ITEM.match(uri);
-        if (match != null) {
-            return createUidResource(locator, match);
-        }
-
         return createUnknownResource(locator, uri);
     }
 
@@ -180,19 +167,6 @@ public class StandardResourceFactory
         }
 
         return new DavFile((FileItem) item, locator, this, entityFactory);
-    }
-
-    // our methods
-
-    protected WebDavResource createUidResource(DavResourceLocator locator,
-                                            UriTemplate.Match match)
-        throws CosmoDavException {
-        String uid = match.get("uid");
-        String path = match.get("*");
-        Item item = path != null ?
-            contentService.findItemByPath(path, uid) :
-            contentService.findItemByUid(uid);
-        return item != null ? createResource(locator, item) : null;
     }
 
     protected WebDavResource createUnknownResource(DavResourceLocator locator,

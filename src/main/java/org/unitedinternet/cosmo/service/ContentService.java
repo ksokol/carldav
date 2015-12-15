@@ -63,41 +63,7 @@ public interface ContentService {
      *
      */
     Item findItemByPath(String path);
-    
-    /**
-     * Find content item by path relative to the identified parent
-     * item.
-     * @param path The pathe relative.
-     * @param parentUid Identified parent item.
-     * @return The content item,.
-     *
-     */
-    Item findItemByPath(String path,
-                        String parentUid);
 
-    /**
-     * Copy an item to the given path
-     * @param item item to copy
-     * @param targetParent existing source collection
-     * @param path path to copy item to
-     * @param deepCopy true for deep copy, else shallow copy will
-     *                 be performed
-     * @throws org.osaf.cosmo.dao.hibernate.ItemNotFoundException
-     *         if parent item specified by path does not exist
-     * @throws org.osaf.cosmo.dao.hibernate.DuplicateItemNameException
-     *         if path points to an item with the same path
-     */
-    void copyItem(Item item, CollectionItem targetParent,
-                  String path, boolean deepCopy);
-  
-    /**
-     * Move item from one collection to another
-     * @param item item to move
-     * @param oldParent parent to remove item from
-     * @param newParent parent to add item to
-     */
-    void moveItem(Item item, CollectionItem oldParent, CollectionItem newParent);
-    
     /**
      * Remove an item. Removes item from all collections.
      * 

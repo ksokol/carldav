@@ -15,14 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import net.fortuna.ical4j.model.Component;
-
 import org.apache.commons.lang.StringUtils;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * An exception indicating that a calendar resource did not contain any
@@ -33,8 +32,7 @@ public class SupportedCalendarComponentException
     implements ICalendarConstants, CaldavConstants {
     
     private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL, Component.VFREEBUSY,
-        COMPONENT_VAVAILABLITY };
+        Component.VTODO, Component.VJOURNAL};
     /**
      * Constructor.
      */

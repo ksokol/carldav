@@ -32,7 +32,6 @@ import org.unitedinternet.cosmo.model.CalendarAttribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
@@ -52,7 +51,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibCalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
-import org.unitedinternet.cosmo.model.hibernate.HibFreeBusyItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -1347,38 +1345,7 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         triageStatus = queryItem.getTriageStatus();
         Assert.assertNull(triageStatus);
     }
-    
-    /**
-     * Tests content dao create freeBusy.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoCreateFreeBusy() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        FreeBusyItem newItem = new HibFreeBusyItem();
-        newItem.setOwner(user);
-        newItem.setName("test");
-        newItem.setIcalUid("icaluid");
-        
-        CalendarBuilder cb = new CalendarBuilder();
-        net.fortuna.ical4j.model.Calendar calendar = cb.build(helper.getInputStream("testdata/vfreebusy.ics"));
-        
-        newItem.setFreeBusyCalendar(calendar);
-        
-        newItem = (FreeBusyItem) contentDao.createContent(root, newItem);
-
-        Assert.assertTrue(getHibItem(newItem).getId() > -1);
-        Assert.assertNotNull(newItem.getUid());
-
-        clearSession();
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        helper.verifyItem(newItem, queryItem);
-    }
-    
     /**
      * Tests content dao create availability.
      * @throws Exception - if something is wrong this exception is thrown.

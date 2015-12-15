@@ -23,24 +23,13 @@ public class IcalUidInUseException extends RuntimeException {
     
     public String testUid = null;
     public String existingUid = null;
-    
-    /** */
-    public IcalUidInUseException(String message) {
-        super(message);
-    }
-    
+
     /** */
     public IcalUidInUseException(String message, String testUid,
             String existingUid) {
         super(message);
         this.testUid = testUid;
         this.existingUid = existingUid;
-    }
-
-    /** */
-    public IcalUidInUseException(String message,
-                             Throwable cause) {
-        super(message, cause);
     }
 
     /**

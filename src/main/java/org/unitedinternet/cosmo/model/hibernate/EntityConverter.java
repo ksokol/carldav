@@ -15,17 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.Vector;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -40,7 +29,6 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
@@ -57,7 +45,6 @@ import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
-
 import org.apache.commons.lang.StringUtils;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
@@ -70,7 +57,6 @@ import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
@@ -79,6 +65,17 @@ import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.Vector;
 
 /**
  * A component that converts iCalendar objects to entities and vice versa.
@@ -124,9 +121,6 @@ public class EntityConverter {
             }
             else if(cc.type.equals(Component.VJOURNAL)) {
                 items.add(convertJournalCalendar(cc.calendar));
-            }
-            else if(cc.type.equals(Component.VFREEBUSY)) {
-                items.add(convertFreeBusyCalendar(cc.calendar));
             }
         }
         
@@ -253,33 +247,6 @@ public class EntityConverter {
         
         return note;
     }
-    
-    /**
-     * Convert calendar containing single VFREEBUSY into FreeBusyItem
-     * @param calendar calendar containing VFREEBUSY
-     * @return FreeBusyItem representation of VFREEBUSY
-     */
-    public FreeBusyItem convertFreeBusyCalendar(Calendar calendar) {
-        FreeBusyItem freeBusy = entityFactory.createFreeBusy();
-        freeBusy.setUid(entityFactory.generateUid());
-        setBaseContentAttributes(freeBusy);
-        return convertFreeBusyCalendar(freeBusy, calendar);
-    }
-    
-    /**
-     * Convert calendar containing single VFREEBUSY into FreeBusyItem
-     * @param freeBusy freebusy to update
-     * @param calendar calendar containing VFREEBUSY
-     * @return FreeBusyItem representation of VFREEBUSY
-     */
-    public FreeBusyItem convertFreeBusyCalendar(FreeBusyItem freeBusy, Calendar calendar) {
-       
-        freeBusy.setFreeBusyCalendar(calendar);
-        VFreeBusy vfb = (VFreeBusy) getMasterComponent(calendar.getComponents(Component.VFREEBUSY));
-        setCalendarAttributes(freeBusy, vfb);
-        
-        return freeBusy;
-    }
 
     /**
      * Returns an icalendar representation of a calendar collection.  
@@ -358,12 +325,6 @@ public class EntityConverter {
         if(item instanceof NoteItem) {
             return convertNote((NoteItem) item);
         }
-        else if(item instanceof FreeBusyItem) {
-            return convertFreeBusyItem((FreeBusyItem) item);
-        }
-        else if(item instanceof AvailabilityItem) {
-            return convertAvailability((AvailabilityItem) item);
-        }
 
         return null;
     }
@@ -393,16 +354,7 @@ public class EntityConverter {
 
         return getCalendarFromNote(note);
     }
-    
-    /**
-     * Converts FreeBusy item.
-     * @param freeBusyItem The freeBusy item.
-     * @return The calendar.
-     */
-    public Calendar convertFreeBusyItem(FreeBusyItem freeBusyItem) {
-        return freeBusyItem.getFreeBusyCalendar();
-    }
-    
+
     /**
      * Converts availability.
      * @param availability The availability item.
@@ -1120,24 +1072,7 @@ public class EntityConverter {
             note.setClientModifiedDate(journal.getDateStamp().getDate());
         }
     }
-    
-    /**
-     * Sets calendar attributes.
-     * @param freeBusy The freeBusy.
-     * @param vfb The VFreeBusy.
-     */
-    private void setCalendarAttributes(FreeBusyItem freeBusy, VFreeBusy vfb) {
-        // UID
-        if(vfb.getUid()!=null) {
-            freeBusy.setIcalUid(vfb.getUid().getValue());
-        }
-        
-        // look for DTSTAMP
-        if (vfb.getDateStamp() != null) {
-            freeBusy.setClientModifiedDate(vfb.getDateStamp().getDate());
-        }
-    }
-    
+
     /**
      * gets master component.
      * @param components The component list.

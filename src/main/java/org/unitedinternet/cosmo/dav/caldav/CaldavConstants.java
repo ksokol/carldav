@@ -53,9 +53,6 @@ public interface CaldavConstants {
     String ELEMENT_CALDAV_SUPPORTEDCOLLATION = "supported-collation";
     /** The CalDAV XML element name <CALDAV:calendar-data> */
     String ELEMENT_CALDAV_CALENDAR_DATA = "calendar-data";
-    /** The CalDAV XML element name <CALDAV:timezone> */
-    String ELEMENT_CALDAV_TIMEZONE = "timezone";
-    String QN_CALDAV_TIMEZONE = DomUtil.getQualifiedName(ELEMENT_CALDAV_TIMEZONE, NAMESPACE_CALDAV);
     /** The CalDAV XML element name <CALDAV:allcomp> */
     String ELEMENT_CALDAV_ALLCOMP = "allcomp";
     /** The CalDAV XML element name <CALDAV:allprop> */
@@ -66,29 +63,8 @@ public interface CaldavConstants {
     String ELEMENT_CALDAV_EXPAND = "expand";
     /** The CalDAV XML element name <CALDAV:limit-recurrence-set> */
     String ELEMENT_CALDAV_LIMIT_RECURRENCE_SET = "limit-recurrence-set";
-    /** The CalDAV XML element name <CALDAV:filter> */
-    String ELEMENT_CALDAV_FILTER = "filter";
-    /** The CalDAV XML element name <CALDAV:comp-filter> */
-    String ELEMENT_CALDAV_COMP_FILTER = "comp-filter";
-    /** The CalDAV XML element name <CALDAV:prop-filter> */
-    String ELEMENT_CALDAV_PROP_FILTER = "prop-filter";
-    /** The CalDAV XML element name <CALDAV:param-filter> */
-    String ELEMENT_CALDAV_PARAM_FILTER = "param-filter";
-    /** The CalDAV XML element name <CALDAV:time-range> */
-    String ELEMENT_CALDAV_TIME_RANGE = "time-range";
-    String QN_CALDAV_TIME_RANGE = DomUtil.getQualifiedName(ELEMENT_CALDAV_TIME_RANGE, NAMESPACE_CALDAV);
-    /** The CalDAV XML element name <CALDAV:is-not-defined> */
-    String ELEMENT_CALDAV_IS_NOT_DEFINED = "is-not-defined";
-    /** The (old) CalDAV XML element name <CALDAV:is-defined> */
-    String ELEMENT_CALDAV_IS_DEFINED = "is-defined";
-    /** The CalDAV XML element name <CALDAV:text-match> */
-    String ELEMENT_CALDAV_TEXT_MATCH = "text-match";
     /** The CalDAV XML element name <CALDAV:calendar-multiget> */
     String ELEMENT_CALDAV_CALENDAR_MULTIGET = "calendar-multiget";
-    /** The CalDAV XML element name <CALDAV:calendar-query> */
-    String ELEMENT_CALDAV_CALENDAR_QUERY = "calendar-query";
-    /** The CalDAV XML element name <CALDAV:free-busy-query> */
-    String ELEMENT_CALDAV_CALENDAR_FREEBUSY = "free-busy-query";
     /** The CalDAV XML attribute name CALDAV:name */
     String ATTR_CALDAV_NAME = "name";
     /** The CalDAV XML attribute name CALDAV:content-type */
@@ -97,10 +73,6 @@ public interface CaldavConstants {
     String ATTR_CALDAV_VERSION = "version";
     /** The CalDAV XML attribute name CALDAV:novalue */
     String ATTR_CALDAV_NOVALUE = "novalue";
-    /** The CalDAV XML attribute name CALDAV:collation */
-    String ATTR_CALDAV_COLLATION = "collation";
-    /** The CalDAV XML attribute name CALDAV:negate-condition */
-    String ATTR_CALDAV_NEGATE_CONDITION = "negate-condition";
     /** The CalDAV XML attribute name CALDAV:start */
     String ATTR_CALDAV_START = "start";
     /** The CalDAV XML attribute name CALDAV:end */
@@ -120,12 +92,6 @@ public interface CaldavConstants {
     String PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA = "supported-calendar-data";
     /** The CalDAV property name CALDAV:calendar-home-set */
     String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
-    /** The CalDAV XML element name <CALDAV:calendar-user-address-set> */
-    String PROPERTY_CALDAV_CALENDAR_USER_ADDRESS_SET = "calendar-user-address-set";
-    /** The CalDAV XML element name <CALDAV:schedule-inbox-URL> */
-    String PROPERTY_CALDAV_SCHEDULE_INBOX_URL = "schedule-inbox-URL";
-    /** The CalDAV XML element name <CALDAV:schedule-outbox-URL> */
-    String PROPERTY_CALDAV_SCHEDULE_OUTBOX_URL = "schedule-outbox-URL";
     /** The CalDAV property name CALDAV:max-resource-size */
     String PROPERTY_CALDAV_MAX_RESOURCE_SIZE = "max-resource-size";
 
@@ -147,12 +113,6 @@ public interface CaldavConstants {
     DavPropertyName SUPPORTEDCALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:calendar-home-set */
     DavPropertyName CALENDARHOMESET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:calendar-user-address-set */
-    DavPropertyName CALENDARUSERADDRESSSET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_USER_ADDRESS_SET, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:schedule-inbox-URL */
-    DavPropertyName SCHEDULEINBOXURL = DavPropertyName.create(PROPERTY_CALDAV_SCHEDULE_INBOX_URL, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:schedule-outbox-URL */
-    DavPropertyName SCHEDULEOUTBOXURL = DavPropertyName.create(PROPERTY_CALDAV_SCHEDULE_OUTBOX_URL, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:max-resource-size */
     DavPropertyName MAXRESOURCESIZE = DavPropertyName.create(PROPERTY_CALDAV_MAX_RESOURCE_SIZE, NAMESPACE_CALDAV);
 

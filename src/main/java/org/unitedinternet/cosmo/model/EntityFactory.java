@@ -94,14 +94,7 @@ public interface EntityFactory {
      * @return new FileItem
      */
     FileItem createFileItem();
-    
-    
-    /**
-     * Create new FreeBusyItem
-     * @return new FreeBusyItem
-     */
-    FreeBusyItem createFreeBusy();
-    
+
     
     /**
      * Create new QName

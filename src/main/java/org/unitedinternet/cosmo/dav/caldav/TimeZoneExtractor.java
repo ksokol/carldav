@@ -16,19 +16,18 @@
 
 package org.unitedinternet.cosmo.dav.caldav;
 
-import java.io.IOException;
-import java.io.StringReader;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.VTimeZone;
-
 import org.unitedinternet.cosmo.calendar.util.CalendarBuilderDispenser;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
+
+import java.io.IOException;
+import java.io.StringReader;
 
 /**
  * Helper class for extracting a <code>VTimeZone</code> from an iCalendar
@@ -62,30 +61,6 @@ public class TimeZoneExtractor {
         }
 
         return extractInCalendar(prop.getValueText());
-    }
-
-    /**
-     * Creates an instance of <code>VTimeZone</code> from an
-     * iCalendar string.
-     *
-     * The iCalendar string must include an enclosing VCALENDAR object
-     * and exactly one enclosed VTIMEZONE component. All components,
-     * properties and parameters are validated according to RFC 2445.
-     *
-     * @param ical the iCalendar string to parse
-     * @return the  <code>VTimeZone</code> representing the extracted
-     * timezone, or <code>null</code> if the iCalendar string is
-     *  <code>null</code>
-     * @throws CosmoDavException if the iCalendar string cannot be parsed or is
-     * not a valid iCalendar object containing a single VTIMEZONE component
-     */
-    public static VTimeZone extract(String ical)
-        throws CosmoDavException {
-        Calendar calendar = extractInCalendar(ical);
-        if (calendar == null) {
-            return null;
-        }
-        return (VTimeZone) calendar.getComponent(Component.VTIMEZONE);
     }
 
     /**

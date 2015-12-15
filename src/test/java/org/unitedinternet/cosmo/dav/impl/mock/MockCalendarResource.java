@@ -16,8 +16,6 @@
 package org.unitedinternet.cosmo.dav.impl.mock;
 
 import net.fortuna.ical4j.model.Calendar;
-
-import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -83,35 +81,6 @@ public class MockCalendarResource extends DavCalendarResource {
      */
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
-    }
-
-    /**
-     * Is Match Filters.
-     * {@inheritDoc}
-     * @param filter - calendar filter.
-     * @return - boolean : is match filters.
-     */
-    public boolean matches(CalendarFilter filter)
-        throws CosmoDavException {
-        return isMatchFilters();
-    }
-
-    // our methods
-
-    /**
-     * Is match filter.
-     * @return boolean.
-     */
-    public boolean isMatchFilters() {
-        return matchFilters;
-    }
-
-    /**
-     * Sets match filters.
-     * @param matchFilters - Match filters.
-     */
-    public void setMatchFilters(boolean matchFilters) {
-        this.matchFilters = matchFilters;
     }
 
     @Override

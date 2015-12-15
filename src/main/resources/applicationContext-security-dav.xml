@@ -80,12 +80,6 @@
 
     <bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
 
-	<!-- Intercepts service calls and verifies current principal has sufficient 
-		privileges to execute api. Aspect bean is annotated with aspecj annotations. -->
-	<bean id="securityAspect" class="org.unitedinternet.cosmo.security.aop.SecurityAdvice">
-		<constructor-arg index="0" ref="securityManager" />
-	</bean>
-
 	<!-- authentication manager definition and dependencies -->
 
 	<bean id="daoAuthenticationProvider"

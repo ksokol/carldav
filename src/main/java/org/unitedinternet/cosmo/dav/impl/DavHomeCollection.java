@@ -61,12 +61,6 @@ public class DavHomeCollection extends DavCollectionBase {
         return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH";
     }
 
-    // DavCollection
-
-    public boolean isHomeCollection() {
-        return true;
-    }
-
     @Override
     public DavResourceIterator getMembers() {
         List<org.apache.jackrabbit.webdav.DavResource> members = new ArrayList<>();

@@ -23,7 +23,6 @@ import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.util.UriTemplate;
 
 import java.net.URL;
 
@@ -64,7 +63,7 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
     public void setUp() throws Exception {
         super.setUp();
 
-        String path = TEMPLATE_HOME.bind(false, getUser().getUsername());
+        String path = "/" + getUser().getUsername();
         homeLocator =
             locatorFactory.createResourceLocatorByPath(baseUrl, path);
     }
@@ -122,21 +121,6 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
         String path = locator.getPath() + "/" + segment;
         return locatorFactory.
             createResourceLocatorByPath(locator.getContext(), path);
-    }
-
-    /**
-     * Finds member.
-     * @param collection The collection.
-     * @param segment The segment.
-     * @return The dav resource.
-     * @throws CosmoDavException - if something is wrong this exception is thrown.
-     */
-    public WebDavResource findMember(DavCollection collection,
-                                  String segment)
-        throws CosmoDavException {
-        String href = collection.getResourceLocator().getHref(false) + "/" +
-            UriTemplate.escapeSegment(segment);
-        return collection.findMember(href);
     }
 
     /**

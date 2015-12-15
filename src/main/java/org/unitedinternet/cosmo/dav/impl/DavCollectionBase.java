@@ -37,14 +37,12 @@ import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
-import org.unitedinternet.cosmo.dav.property.ExcludeFreeBusyRollup;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
 
@@ -224,21 +222,9 @@ public class DavCollectionBase extends DavItemResourceBase implements
         return memberToResource(href);
     }
 
-    // DavItemCollection
-
     public boolean isCalendarCollection() {
         return false;
     }
-
-    public boolean isHomeCollection() {
-        return false;
-    }
-
-    public boolean isExcludedFromFreeBusyRollups() {
-        return ((CollectionItem) getItem()).isExcludeFreeBusyRollup();
-    }
-
-    // our methods
 
     protected Set<QName> getResourceTypes() {
         HashSet<QName> rt = new HashSet<QName>(1);
@@ -258,8 +244,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
         if (cc == null) {
             return;
         }
-
-        properties.add(new ExcludeFreeBusyRollup(cc.isExcludeFreeBusyRollup()));
     }
 
     /** */
@@ -277,11 +261,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
             throw new UnprocessableEntityException("Property " + name
                     + " requires a value");
         }
-
-        if (name.equals(EXCLUDEFREEBUSYROLLUP)) {
-            Boolean flag = Boolean.valueOf(property.getValueText());
-            cc.setExcludeFreeBusyRollup(flag);
-        }
     }
 
     /** */
@@ -292,10 +271,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
         CollectionItem cc = (CollectionItem) getItem();
         if (cc == null) {
             return;
-        }
-
-        if (name.equals(EXCLUDEFREEBUSYROLLUP)) {
-            cc.setExcludeFreeBusyRollup(false);
         }
     }
 
@@ -465,22 +440,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
                 writer.write("</dd>\n");
             }
             writer.write("</dl>\n");
-    
-            User user = getSecurityManager().getSecurityContext().getUser();
-            if (user != null) {
-                writer.write("<p>\n");
-                if (!isHomeCollection()) {
-                    DavResourceLocator homeLocator = getResourceLocator()
-                            .getFactory().createHomeLocator(
-                                    getResourceLocator().getContext(), user);
-                    writer.write("<a href=\"");
-                    writer.write(homeLocator.getHref(true));
-                    writer.write("\">");
-                    writer.write("Home collection");
-                    writer.write("</a><br>\n");
-                }
-            }
-    
+
             writer.write("</body>");
             writer.write("</html>\n");
         }finally{

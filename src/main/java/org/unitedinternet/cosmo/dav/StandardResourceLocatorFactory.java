@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.unitedinternet.cosmo.model.User;
-
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -93,13 +91,6 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
         } catch (URISyntaxException | MalformedURLException e) {
             throw new BadRequestException("Invalid URL: " + e.getMessage());
         }
-    }
-
-    public DavResourceLocator createHomeLocator(URL context,
-                                                User user)
-        throws CosmoDavException {
-        String path = TEMPLATE_HOME.bind(user.getUsername());
-        return new StandardResourceLocator(context, path, this);
     }
 
     private int translatePort(String protocol, int port) {

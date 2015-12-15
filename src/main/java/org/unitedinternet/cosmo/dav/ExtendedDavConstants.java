@@ -20,7 +20,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.util.CosmoQName;
-import org.unitedinternet.cosmo.util.UriTemplate;
 
 /**
  * Provides constants defined by Cosmo proprietary *DAV extensions.
@@ -72,7 +71,4 @@ public interface ExtendedDavConstants extends DavConstants {
 
     CosmoQName RESOURCE_TYPE_COLLECTION =
         new CosmoQName(NAMESPACE.getURI(), XML_COLLECTION, NAMESPACE.getPrefix());
-
-    UriTemplate TEMPLATE_HOME =
-        new UriTemplate("/{username}/*");
 }

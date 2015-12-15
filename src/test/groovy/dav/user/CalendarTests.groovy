@@ -349,7 +349,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{urn:ietf:params:xml:ns:xcaldavoneandone}calendar-visible</dt><dd>false</dd>
                         <dt>{DAV:}creationdate</dt><dd>1970-01-01T00:00:03Z</dd>
                         <dt>{DAV:}displayname</dt><dd>newcalendar</dd>
-                        <dt>{http://osafoundation.org/cosmo/DAV}exclude-free-busy-rollup</dt><dd>false</dd>
                         <dt>{http://calendarserver.org/ns/}getctag</dt><dd>1d21bc1d460b1085d53e3def7f7380f6</dd>
                         <dt>{DAV:}getetag</dt><dd>&quot;1d21bc1d460b1085d53e3def7f7380f6&quot;</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>Thu, 01 Jan 1970 00:00:03 GMT</dd>
@@ -362,8 +361,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>1</dd>
                         </dl>
-                        <p>
-                        <a href="/dav/test01@localhost.de/">Home collection</a><br>
                         </body></html>
                         """.stripIndent()
 
@@ -423,7 +420,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">a172ed34-0106-4616-bb40-a416a8305465</cosmo:uuid>
                                         <C:calendar-visible xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">true</C:calendar-visible>
                                         <D:displayname>calendarDisplayName</D:displayname>
-                                        <cosmo:exclude-free-busy-rollup xmlns:cosmo="http://osafoundation.org/cosmo/DAV">false</cosmo:exclude-free-busy-rollup>
                                         <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:comp name="VEVENT"/>
                                             <C:comp name="VAVAILABILITY"/>

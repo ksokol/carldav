@@ -30,18 +30,7 @@ public interface CollectionItem extends Item{
     
     CollectionItemDetails getChildDetails(Item item);
 
-    /**
-     * Return child item with matching uid
-     * @return identified child item, or null if no child with that
-     * uid exists
-     */
-    Item getChild(String uid);
-
     Item getChildByName(String name);
-
-    boolean isExcludeFreeBusyRollup();
-
-    void setExcludeFreeBusyRollup(boolean flag);
 
     /**
      * Generate alternative hash code for collection.

@@ -63,28 +63,6 @@ public interface UserService {
     User createUser(User user);
 
     /**
-     * Updates a user account that exists in the repository. If the
-     * password has been changed, digests the raw new password and
-     * uses the result to replace the stored password. Returns a new
-     * instance of <code>User</code>  after saving the original one.
-     *
-     * @param user the account to update
-     *
-     * @throws DataRetrievalFailureException if the account does not
-     * exist
-     * @throws DataIntegrityViolationException if the username or
-     * email address is already in use
-     */
-    User updateUser(User user);
-
-    /**
-     * Removes a user account from the repository.
-     *
-     * @param user the account to remove
-     */
-    void removeUser(User user);
-
-    /**
      * Removes the user account identified by the given username from
      * the repository.
      *

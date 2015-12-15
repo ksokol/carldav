@@ -113,61 +113,6 @@ public class StandardUserServiceTest {
     }
 
     /**
-     * Tests update user.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testUpdateUser() throws Exception {
-        User u1 = testHelper.makeDummyUser();
-        u1.setPassword(service.digestPassword(u1.getPassword()));
-        String digestedPassword = u1.getPassword();
-        
-        userDao.createUser(u1);
-
-        // change password
-        u1.setPassword("changedpwd");
-
-        Thread.sleep(1000); // let modified date change
-        User user = service.updateUser(u1);
-        try {
-            userDao.getUser(user.getUsername());
-        } catch (DataRetrievalFailureException e) {
-            Assert.fail("User not stored");
-        }
-        Assert.assertFalse("Original and stored password are the same",
-                    user.getPassword().equals(digestedPassword));
-        Assert.assertTrue("Created and modified dates are the same",
-                   ! user.getCreationDate().equals(user.getModifiedDate()));
-
-        // leave password
-        Thread.sleep(1000); // let modified date change
-        User user2 = service.updateUser(u1);
-        try {
-            userDao.getUser(user.getUsername());
-        } catch (DataRetrievalFailureException e) {
-            Assert.fail("User not stored");
-        }
-        Assert.assertTrue("Original and stored password are not the same",
-                    user2.getPassword().equals(user.getPassword()));
-        Assert.assertTrue("Created and modified dates are the same",
-                   ! user2.getCreationDate().equals(user2.getModifiedDate()));
-    }
-
-    /**
-     * Tests remove user.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testRemoveUser() throws Exception {
-        User u1 = testHelper.makeDummyUser();
-        service.createUser(u1);
-
-        service.removeUser(u1);
-
-        Assert.assertFalse("User not removed", userDao.getUsers().contains(u1));
-    }
-
-    /**
      * Tests remove user by username.
      * @throws Exception - if something is wrong this exception is thrown.
      */

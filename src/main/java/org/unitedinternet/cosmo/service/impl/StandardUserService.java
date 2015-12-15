@@ -99,38 +99,6 @@ public class StandardUserService implements UserService {
     }
 
     /**
-     * Updates a user account that exists in the repository. If the
-     * password has been changed, digests the raw new password and
-     * uses the result to replace the stored password. Returns a new
-     * instance of <code>User</code>  after saving the original one.
-     *
-     * @param user the account to update
-     *
-     * @throws DataIntegrityViolationException if the username or
-     * email address is already in use
-     */
-    public User updateUser(User user) {
-        boolean isUsernameChanged = user.isUsernameChanged();
-
-        if (user.getPassword().length() < 32) {
-            user.validateRawPassword();
-            user.setPassword(digestPassword(user.getPassword()));
-        }
-       
-        userDao.updateUser(user);
-
-        User newUser = userDao.getUser(user.getUsername());
-
-        if (isUsernameChanged) {
-            HomeCollectionItem rootCollection = contentDao.getRootItem(newUser);
-            rootCollection.setName(newUser.getUsername());
-            contentDao.updateCollection(rootCollection);
-        }
-
-        return newUser;
-    }
-
-    /**
      * Removes the user account identified by the given username from
      * the repository.
      *
@@ -138,16 +106,16 @@ public class StandardUserService implements UserService {
      */
     public void removeUser(String username) {
         User user = userDao.getUser(username);
-        removeUserAndItems(user);
-    }
-
-    /**
-     * Removes a user account from the repository.
-     *
-     * @param user the account to remove
-     */
-    public void removeUser(User user) {
-        removeUserAndItems(user);
+        if(user==null) {
+            return;
+        }
+        HomeCollectionItem home = contentDao.getRootItem(user);
+        // remove collections/subcollections
+        contentDao.removeCollection(home);
+        // remove dangling items
+        // (items that only exist in other user's collections)
+        contentDao.removeUserContent(user);
+        userDao.removeUser(user);
     }
 
     /**
@@ -160,23 +128,5 @@ public class StandardUserService implements UserService {
         }
 
         return DigestUtils.md5Hex(password);
-    }
-
-    /**
-     * Remove all Items associated to User.
-     * This is done by removing the HomeCollectionItem, which is the root
-     * collection of all the user's items.
-     */
-    private void removeUserAndItems(User user) {
-        if(user==null) {
-            return;
-        }
-        HomeCollectionItem home = contentDao.getRootItem(user);
-        // remove collections/subcollections
-        contentDao.removeCollection(home);
-        // remove dangling items 
-        // (items that only exist in other user's collections)
-        contentDao.removeUserContent(user);
-        userDao.removeUser(user);
     }
 }

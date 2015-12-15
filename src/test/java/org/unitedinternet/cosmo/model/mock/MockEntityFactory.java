@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
@@ -54,15 +53,6 @@ public class MockEntityFactory implements EntityFactory {
      */
     public NoteItem createNote() {
         return new MockNoteItem();
-    }
-
-    /**
-     * Creates availability.
-     * {@inheritDoc}
-     * @return availability item.
-     */
-    public AvailabilityItem createAvailability() {
-        return new MockAvailabilityItem();
     }
 
     /**

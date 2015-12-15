@@ -52,13 +52,6 @@ public interface EntityFactory {
 
     
     /**
-     * Create new AvailabilityItem
-     * @return new AvailabilityItem
-     */
-    AvailabilityItem createAvailability();
-    
-    
-    /**
      * Create new CalendarCollectionStamp
      * @param col associated CollectionItem
      * @return new CalendarCollectionStamp

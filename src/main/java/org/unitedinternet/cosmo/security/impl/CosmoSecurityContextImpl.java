@@ -15,12 +15,10 @@
  */
 package org.unitedinternet.cosmo.security.impl;
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
-import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.BaseSecurityContext;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 
@@ -40,16 +38,10 @@ public class CosmoSecurityContextImpl extends BaseSecurityContext {
         super(authentication);
     }
 
-    public CosmoSecurityContextImpl(Authentication authentication, User preAuthUser) {
-        super(authentication, preAuthUser);
-    }
-    
     protected void processPrincipal() {  
         //anonymous principals do not have CosmoUserDetails and by
         //definition are not running as other principals
-        if (getPrincipal() instanceof AnonymousAuthenticationToken) {
-            setAnonymous(true);
-        } else if (getPrincipal() instanceof UsernamePasswordAuthenticationToken) {
+        if (getPrincipal() instanceof UsernamePasswordAuthenticationToken) {
             CosmoUserDetails details = (CosmoUserDetails)
                 ((Authentication) getPrincipal()).getPrincipal();
             setUser(details.getUser());

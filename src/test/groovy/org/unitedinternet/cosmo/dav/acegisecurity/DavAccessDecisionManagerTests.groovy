@@ -8,7 +8,6 @@ import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.authentication.InsufficientAuthenticationException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.FilterInvocation
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails
 import org.unitedinternet.cosmo.model.mock.MockUser
 
@@ -73,16 +72,6 @@ class DavAccessDecisionManagerTests {
         expectedException.expect(InsufficientAuthenticationException.class)
         expectedException.expectMessage("Unrecognized authentication token")
         uut.decide(null, null, null)
-    }
-
-    @Test
-    void decideWithPreAuthenticatedAuthenticationToken() {
-        def request = new MockHttpServletRequest()
-        when(invocation.getHttpRequest()).thenReturn(request)
-        expectedException.expect(DavAccessDeniedException.class)
-        expectedException.expectMessage("access denied for ")
-
-        uut.decide(new PreAuthenticatedAuthenticationToken("user", "password"), invocation, null)
     }
 
     @Test

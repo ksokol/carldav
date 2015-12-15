@@ -23,7 +23,6 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
@@ -50,8 +49,6 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
 
         if (authentication instanceof UsernamePasswordAuthenticationToken) {
             userId = ((CosmoUserDetails) authentication.getPrincipal()).getUsername();
-        } else if (authentication instanceof PreAuthenticatedAuthenticationToken) {
-            userId = authentication.getPrincipal().toString(); //userService.getUser((String)authentication.getPrincipal()).getEmail();
         } else {
             throw new InsufficientAuthenticationException("Unrecognized authentication token");
         }

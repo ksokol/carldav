@@ -15,16 +15,15 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 /**
  * Default implementation for ItempPathTranslator. This implementation expects
@@ -53,21 +52,6 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
         return (Item) findItemByPath(getSession(), path);
 
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.query.ItemPathTranslator#findItemByPath(java.lang.String, org.unitedinternet.cosmo.model.CollectionItem)
-     */
-
-    /**
-     * Finds item by the given path.
-     *
-     * @param path The given path.
-     * @param root The collection item.
-     * @return The expected item.
-     */
-    public Item findItemByPath(final String path, final CollectionItem root) {
-        return (Item) findItemByPath(getSession(), path, root);
-    }
 
     /**
      * {@inheritDoc}
@@ -89,26 +73,6 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
         String parentPath = path.substring(0, lastIndex);
 
         return findItemByPath(parentPath);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getItemName(String path) {
-        if (path == null) {
-            return null;
-        }
-
-        int lastIndex = path.lastIndexOf("/");
-        if (lastIndex == -1) {
-            return null;
-        }
-
-        if ((lastIndex + 1) >= path.length()) {
-            return null;
-        }
-
-        return path.substring(lastIndex + 1);
     }
 
     /**
@@ -146,44 +110,6 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
 
         Item parentItem = rootItem;
         for (int i = 1; i < segments.length; i++) {
-            Item nextItem = findItemByParentAndName(session, parentItem,
-                    decode(segments[i]));
-            parentItem = nextItem;
-            // if any parent item doesn't exist then bail now
-            if (parentItem == null) {
-                return null;
-            }
-        }
-
-        return parentItem;
-    }
-
-    /**
-     * Finds item by path.
-     *
-     * @param session The current session.
-     * @param path    The given path.
-     * @param root    The collection root.
-     * @return The expected item.
-     */
-    protected Item findItemByPath(Session session, String path, CollectionItem root) {
-
-        if (path == null || "".equals(path)) {
-            return null;
-        }
-
-        if (path.charAt(0) == '/') {
-            path = path.substring(1, path.length());
-        }
-
-        String[] segments = path.split("/");
-
-        if (segments.length == 0) {
-            return null;
-        }
-
-        Item parentItem = root;
-        for (int i = 0; i < segments.length; i++) {
             Item nextItem = findItemByParentAndName(session, parentItem,
                     decode(segments[i]));
             parentItem = nextItem;

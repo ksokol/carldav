@@ -48,20 +48,7 @@ public interface ItemDao extends Dao {
      * @return item represented by path
      */
     Item findItemByPath(String path);
-    
-    /**
-     * Find an item with the specified path, relative to a parent collection.
-     * The return type will be one of
-     * ContentItem, NoteItem, CollectionItem.
-     *
-     * @param path
-     *            path of item to find
-     * @param parentUid
-     *            uid of parent that path is relative to
-     * @return item represented by path
-     */
-    Item findItemByPath(String path, String parentUid);
-    
+
     /**
      * Find the parent item of the item with the specified path. 
      * The return type will be of type CollectionItem.
@@ -96,31 +83,6 @@ public interface ItemDao extends Dao {
      */
     HomeCollectionItem createRootItem(User user);
 
-    /**
-     * Copy an item to the given path
-     * @param item item to copy
-     * @param destPath destination path to copy item to
-     * @param deepCopy true for deep copy, else shallow copy will
-     *                 be performed
-     * @throws ItemNotFoundException
-     *         if parent item specified by path does not exist
-     * @throws DuplicateItemNameException
-     *         if path points to an item with the same path
-     */
-    void copyItem(Item item, String destPath, boolean deepCopy);
-    
-  
-    /**
-     * Move item to the given path
-     * @param fromPath path of item to move
-     * @param toPath path to move item to
-     * @throws ItemNotFoundException
-     *         if parent item specified by path does not exist
-     * @throws DuplicateItemNameException
-     *         if path points to an item with the same path
-     */
-    void moveItem(String fromPath, String toPath);
-    
     /**
      * Remove an item.
      *

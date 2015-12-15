@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.query;
 
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
 /**
@@ -23,10 +22,6 @@ import org.unitedinternet.cosmo.model.Item;
  */
 public interface ItemPathTranslator {
     Item findItemByPath(String path);
-
-    Item findItemByPath(String path, CollectionItem root);
-
-    String getItemName(String path);
 
     Item findItemParent(String path);
 }

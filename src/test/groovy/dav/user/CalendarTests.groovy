@@ -572,4 +572,211 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(NOT_FOUND))
     }
+
+    @Test
+    public void updateCalendarEvent() {
+        def uid = "9bb25dec-c1e5-468c-92ea-0152f9f4c1ee"
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
+                        VERSION:2.0
+                        BEGIN:VTIMEZONE
+                        TZID:Europe/Berlin
+                        BEGIN:DAYLIGHT
+                        TZOFFSETFROM:+0100
+                        TZOFFSETTO:+0200
+                        TZNAME:CEST
+                        DTSTART:19700329T020000
+                        RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        TZNAME:CET
+                        DTSTART:19701025T030000
+                        RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+                        END:STANDARD
+                        END:VTIMEZONE
+                        BEGIN:VEVENT
+                        CREATED:20151215T214602Z
+                        LAST-MODIFIED:20151215T214606Z
+                        DTSTAMP:20151215T214606Z
+                        UID:${uid}
+                        SUMMARY:event1
+                        DTSTART;TZID=Europe/Berlin:20151201T230000
+                        DTEND;TZID=Europe/Berlin:20151202T000000
+                        TRANSP:OPAQUE
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        final MvcResult mvcResult1 = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uid)
+                .contentType(TEXT_CALENDAR)
+                .content(request1))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn();
+
+        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG);
+
+        def request2 = """\
+                        <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:prop>
+                                <D:getetag />
+                                <C:calendar-data />
+                            </D:prop>
+                            <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                        </C:calendar-multiget>"""
+
+        def response1 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01%40localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${eTag1}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                            PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
+                                            VERSION:2.0&#13;
+                                            BEGIN:VTIMEZONE&#13;
+                                            TZID:Europe/Berlin&#13;
+                                            BEGIN:DAYLIGHT&#13;
+                                            TZOFFSETFROM:+0100&#13;
+                                            TZOFFSETTO:+0200&#13;
+                                            TZNAME:CEST&#13;
+                                            DTSTART:19700329T020000&#13;
+                                            RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
+                                            END:DAYLIGHT&#13;
+                                            BEGIN:STANDARD&#13;
+                                            TZOFFSETFROM:+0200&#13;
+                                            TZOFFSETTO:+0100&#13;
+                                            TZNAME:CET&#13;
+                                            DTSTART:19701025T030000&#13;
+                                            RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
+                                            END:STANDARD&#13;
+                                            END:VTIMEZONE&#13;
+                                            BEGIN:VEVENT&#13;
+                                            CREATED:20151215T214602Z&#13;
+                                            LAST-MODIFIED:20151215T214606Z&#13;
+                                            DTSTAMP:20151215T214606Z&#13;
+                                            UID:9bb25dec-c1e5-468c-92ea-0152f9f4c1ee&#13;
+                                            SUMMARY:event1&#13;
+                                            DTSTART;TZID=Europe/Berlin:20151201T230000&#13;
+                                            DTEND;TZID=Europe/Berlin:20151202T000000&#13;
+                                            TRANSP:OPAQUE&#13;
+                                            END:VEVENT&#13;
+                                            END:VCALENDAR&#13;
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>
+                        """
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request2)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request3 = """\
+                        BEGIN:VCALENDAR
+                        PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
+                        VERSION:2.0
+                        BEGIN:VTIMEZONE
+                        TZID:Europe/Berlin
+                        BEGIN:DAYLIGHT
+                        TZOFFSETFROM:+0100
+                        TZOFFSETTO:+0200
+                        TZNAME:CEST
+                        DTSTART:19700329T020000
+                        RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        TZNAME:CET
+                        DTSTART:19701025T030000
+                        RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+                        END:STANDARD
+                        END:VTIMEZONE
+                        BEGIN:VEVENT
+                        CREATED:20151215T214602Z
+                        LAST-MODIFIED:20151215T214624Z
+                        DTSTAMP:20151215T214624Z
+                        UID:9bb25dec-c1e5-468c-92ea-0152f9f4c1ee
+                        SUMMARY:event2
+                        DTSTART;TZID=Europe/Berlin:20151201T230000
+                        DTEND;TZID=Europe/Berlin:20151202T000000
+                        TRANSP:OPAQUE
+                        X-MOZ-GENERATION:1
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        final MvcResult mvcResult2 = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uid)
+                .contentType(TEXT_CALENDAR)
+                .content(request3))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(notNullValue()))
+                .andReturn();
+
+
+        final String eTag2 = mvcResult2.getResponse().getHeader(ETAG);
+
+        def response2 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01%40localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${eTag2}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                            PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
+                                            VERSION:2.0&#13;
+                                            BEGIN:VTIMEZONE&#13;
+                                            TZID:Europe/Berlin&#13;
+                                            BEGIN:DAYLIGHT&#13;
+                                            TZOFFSETFROM:+0100&#13;
+                                            TZOFFSETTO:+0200&#13;
+                                            TZNAME:CEST&#13;
+                                            DTSTART:19700329T020000&#13;
+                                            RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
+                                            END:DAYLIGHT&#13;
+                                            BEGIN:STANDARD&#13;
+                                            TZOFFSETFROM:+0200&#13;
+                                            TZOFFSETTO:+0100&#13;
+                                            TZNAME:CET&#13;
+                                            DTSTART:19701025T030000&#13;
+                                            RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
+                                            END:STANDARD&#13;
+                                            END:VTIMEZONE&#13;
+                                            BEGIN:VEVENT&#13;
+                                            CREATED:20151215T214602Z&#13;
+                                            LAST-MODIFIED:20151215T214624Z&#13;
+                                            DTSTAMP:20151215T214624Z&#13;
+                                            UID:9bb25dec-c1e5-468c-92ea-0152f9f4c1ee&#13;
+                                            SUMMARY:event2&#13;
+                                            DTSTART;TZID=Europe/Berlin:20151201T230000&#13;
+                                            DTEND;TZID=Europe/Berlin:20151202T000000&#13;
+                                            TRANSP:OPAQUE&#13;
+                                            X-MOZ-GENERATION:1&#13;
+                                            END:VEVENT&#13;
+                                            END:VCALENDAR&#13;
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>
+                        """
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request2)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+    }
 }

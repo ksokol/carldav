@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 import org.unitedinternet.cosmo.model.User;
 
 import java.security.Principal;
@@ -93,10 +91,5 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
      * anonymous access.
      */
     protected abstract void processPrincipal();
-
-    public String toString() {
-        return ToStringBuilder.
-            reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
 
 }

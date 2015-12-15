@@ -21,13 +21,11 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -70,8 +68,7 @@ public class StandardResourceFactory
      * The type of resource to create is chosen as such:
      * <ul>
      * <li><code>MKCALENDAR</code>: {@link DavCalendarCollection}</li>
-     * <li><code>PUT</code>, <code>COPY</code>, <code>MOVE</code></li>:
-     * {@link DavFile}</li>
+     * <li><code>PUT</code>, <code>COPY</code>, <code>MOVE</code></li>
      * </ul>
      */
     public WebDavResource resolve(DavResourceLocator locator,
@@ -95,7 +92,6 @@ public class StandardResourceFactory
             if (parent instanceof DavCalendarCollection) {
                 return new DavEvent(locator, this, entityFactory);
             }
-            return new DavFile(locator, this, entityFactory);
         }
         
         // handle OPTIONS for non-existent resource
@@ -166,7 +162,7 @@ public class StandardResourceFactory
             }
         }
 
-        return new DavFile((FileItem) item, locator, this, entityFactory);
+        throw new NotFoundException();
     }
 
     protected WebDavResource createUnknownResource(DavResourceLocator locator,

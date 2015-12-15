@@ -56,19 +56,9 @@ public interface DavProvider {
                     DavContent content)
         throws CosmoDavException, IOException;
 
-    void post(DavRequest request,
-            DavResponse response,
-            WebDavResource resource)
-        throws CosmoDavException, IOException;
-
     void delete(DavRequest request,
                        DavResponse response,
                        WebDavResource resource)
-        throws CosmoDavException, IOException;
-
-    void move(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
         throws CosmoDavException, IOException;
 
     void report(DavRequest request,

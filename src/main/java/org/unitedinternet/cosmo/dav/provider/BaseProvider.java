@@ -29,26 +29,19 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.dav.BadRequestException;
-import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResponse;
-import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.dav.NotFoundException;
-import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.acl.AclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.DavPrivilege;
-import org.unitedinternet.cosmo.dav.acl.NeedsPrivilegesException;
 import org.unitedinternet.cosmo.dav.acl.UserAclEvaluator;
 import org.unitedinternet.cosmo.dav.acl.resource.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
-import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavItemResource;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
@@ -108,21 +101,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         throws CosmoDavException, IOException {
         spool(request, response, resource, false);
     }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void post(
-            DavRequest request
-            , DavResponse response
-            , WebDavResource resource
-            )
-    throws CosmoDavException, IOException 
-    {
-        throw new MethodNotAllowedException("POST not allowed for a collection");
-    }
-    
+
     /**
      * 
      * {@inheritDoc}
@@ -211,40 +190,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         }
     }
 
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void move(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (! resource.exists()){
-            throw new NotFoundException();
-        }
-        checkNoRequestBody(request);
-
-        WebDavResource destination =
-            resolveDestination(request.getDestinationResourceLocator(),
-                               resource);
-        validateDestination(request, destination);
-
-        checkCopyMoveAccess(resource, destination);
-
-        try {
-            if (destination.exists() && request.isOverwrite()){
-                destination.getCollection().removeMember(destination);
-            }
-            resource.move(destination);
-            response.setStatus(destination.exists() ? 204 : 201);
-        } catch (DavException e) {
-            if (e instanceof CosmoDavException){
-                throw (CosmoDavException)e;
-            }
-            throw new CosmoDavException(e);
-        }
-    }
-    
     /**
      * 
      * {@inheritDoc}
@@ -340,91 +285,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         throws IOException {
         OutputStream out = withEntity ? response.getOutputStream() : null;
         return new OutputContextImpl(response, out);
-    }
-
-    /**
-     * 
-     * @param locator DavResourceLocator
-     * @param original WebDavResource
-     * @return WebDavResource 
-     * @throws CosmoDavException 
-     */
-    protected WebDavResource resolveDestination(DavResourceLocator locator,
-                                             WebDavResource original)
-        throws CosmoDavException {
-        if (locator == null){
-            return null;
-        }
-        WebDavResource destination = resourceFactory.resolve(locator);
-        return destination != null ? destination :
-            new DavFile(locator, resourceFactory, entityFactory);
-    }
-
-    /**
-     * 
-     * @param request DavRequest
-     * @param destination WebDavResource
-     * @throws CosmoDavException 
-     */
-    protected void validateDestination(DavRequest request,
-                                       WebDavResource destination)
-        throws CosmoDavException {
-        if (destination == null){
-            throw new BadRequestException("Destination required");
-        }
-        if (destination.getResourceLocator().equals(request.getResourceLocator())){
-            throw new ForbiddenException("Destination URI is the same as the original resource URI");
-        }
-        if (destination.exists() && ! request.isOverwrite()){
-            throw new PreconditionFailedException("Overwrite header false was not specified for existing destination");
-        }
-        if (! destination.getParent().exists()){
-            throw new ConflictException("One or more intermediate collections must be created");
-        }
-    }
-
-    /**
-     * 
-     * @param source WebDavResource
-     * @param destination WebDavResource
-     * @throws CosmoDavException 
-     */
-    protected void checkCopyMoveAccess(WebDavResource source,
-                                       WebDavResource destination)
-        throws CosmoDavException {
-        // XXX refactor a BaseItemProvider so we don't have to do this check
-        if (! (source instanceof DavItemResource)){
-            // we're operating on a principal resource which can't be moved
-            // anyway
-            return;
-        }
-
-        // because the security filter let us get this far, we know the
-        // security context has access to the source resource. we have to
-        // check that it also has access to the destination resource.
-        
-        if (getSecurityContext().isAdmin()){
-            return;
-        }
-
-        WebDavResource toCheck = destination.exists() ?
-            destination : destination.getParent();
-        Item item = ((DavItemResource)toCheck).getItem();
-        DavResourceLocator locator = toCheck.getResourceLocator();
-        String href = locator.getHref(toCheck.isCollection());
-        DavPrivilege privilege = destination.exists() ?
-            DavPrivilege.WRITE : DavPrivilege.BIND;
-
-        User user = getSecurityContext().getUser();
-        if (user != null) {
-            UserAclEvaluator evaluator = new UserAclEvaluator(user);
-            if (evaluator.evaluate(item, privilege)){
-                return;
-            }
-            throw new NeedsPrivilegesException(href, privilege);
-        }
-
-        throw new NeedsPrivilegesException(href, privilege);
     }
 
     /**

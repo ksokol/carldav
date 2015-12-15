@@ -160,9 +160,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         else if (request.getMethod().equals("HEAD")) {
             provider.head(request, response, resource);
         }
-        else if (request.getMethod().equals("POST")) {
-            provider.post(request, response, resource);
-        }
         else if (request.getMethod().equals("PROPFIND")) {
             provider.propfind(request, response, resource);
         }

@@ -20,7 +20,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
-import org.unitedinternet.cosmo.service.UserService;
 
 /**
  * The default implementation of the {@link CosmoSecurityManager}
@@ -28,8 +27,6 @@ import org.unitedinternet.cosmo.service.UserService;
  * security information contained in JAAS or Acegi Security.
  */
 public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
-
-    private UserService userService;
 
     /**
      * Provide a <code>CosmoSecurityContext</code> representing a
@@ -48,9 +45,4 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
     protected CosmoSecurityContext createSecurityContext(Authentication authen) {
         return new CosmoSecurityContextImpl(authen);
     }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
 }

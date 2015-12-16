@@ -19,10 +19,7 @@ public class HibEventTimeRangeIndex {
     
     @Column(table="event_stamp", name = "isfloating")
     private Boolean isFloating = null;
-    
-    @Column(table="event_stamp", name = "isrecurring")
-    private Boolean isRecurring = null;
-    
+
     /**
      * The end date of the event.  If the event is recurring, the
      * value is the earliest start date for the recurring series.
@@ -94,9 +91,5 @@ public class HibEventTimeRangeIndex {
 
     public void setIsFloating(Boolean isFloating) {
         this.isFloating = isFloating;
-    }
-
-    public void setIsRecurring(Boolean isRecurring) {
-        this.isRecurring = isRecurring;
     }
 }

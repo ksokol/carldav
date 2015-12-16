@@ -25,8 +25,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -77,15 +75,11 @@ import javax.validation.constraints.NotNull;
         indexes = {
                 @Index(name = "idx_startdt",columnList = "startDate"),
                 @Index(name = "idx_enddt",columnList = "endDate"),
-                @Index(name = "idx_floating",columnList = "isFloating"),
-                @Index(name = "idx_recurring",columnList = "isrecurring")}
+                @Index(name = "idx_floating",columnList = "isFloating")}
 )
 @DiscriminatorValue("baseevent")
 public abstract class HibBaseEventStamp extends HibStamp implements ICalendarConstants, BaseEventStamp {
 
-    protected static final TimeZoneRegistry TIMEZONE_REGISTRY =
-        TimeZoneRegistryFactory.getInstance().createRegistry();
-    
     public static final String TIME_INFINITY = "Z-TIME-INFINITY";
     
     protected static final String VALUE_MISSING = "MISSING";

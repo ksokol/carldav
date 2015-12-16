@@ -26,13 +26,10 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 /**
  * <p>
  * Mock extension of {@link DavCalendarResource}. Does not persist the
- * backing calendar. Provides attributes that control filter matching and
- * freebusy generation operations rather than delegating them to the
- * service layer, allowing classes using this mock to be tested in isolation.
+ * backing calendar. Allowing classes using this mock to be tested in isolation.
  */
 public class MockCalendarResource extends DavCalendarResource {
     private Calendar calendar;
-    private boolean matchFilters;
 
     /**
      * Constructor.
@@ -48,7 +45,6 @@ public class MockCalendarResource extends DavCalendarResource {
                                 EntityFactory entityFactory)
         throws CosmoDavException {
         super(item, locator, factory, entityFactory);
-        this.matchFilters = false;
     }
 
     /**
@@ -65,20 +61,10 @@ public class MockCalendarResource extends DavCalendarResource {
         this(entityFactory.createNote(), locator, factory, entityFactory);
     }
 
-    // DavCalendarResource methods
-    /**
-     * Gets calendar.
-     * @return The calendar.
-     */
     public Calendar getCalendar() {
         return calendar;
     }
 
-    /**
-     * Sets calendar.
-     * {@inheritDoc}
-     * @param calendar The calendar.
-     */
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }

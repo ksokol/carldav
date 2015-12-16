@@ -31,9 +31,7 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarLocationException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
@@ -94,8 +92,7 @@ import javax.xml.namespace.QName;
 public class DavCalendarCollection extends DavCollectionBase
     implements CaldavConstants, ICalendarConstants {
     private static final Log LOG =  LogFactory.getLog(DavCalendarCollection.class);
-    private static final Set<String> DEAD_PROPERTY_FILTER =
-        new HashSet<String>();
+    private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<>();
 
     static {
         registerLiveProperty(CALENDARDESCRIPTION);
@@ -308,7 +305,7 @@ public class DavCalendarCollection extends DavCollectionBase
 
     /** */
     protected Set<String> getDeadPropertyFilter() {
-        Set<String> copy = new HashSet<String>();
+        Set<String> copy = new HashSet<>();
         copy.addAll(super.getDeadPropertyFilter());
         copy.addAll(DEAD_PROPERTY_FILTER);
         return copy;
@@ -338,7 +335,7 @@ public class DavCalendarCollection extends DavCollectionBase
         ContentItem content = (ContentItem) member.getItem();
         EventStamp event = StampUtils.getEventStamp(content);
         EntityConverter converter = new EntityConverter(getEntityFactory());
-        Set<ContentItem> toUpdate = new LinkedHashSet<ContentItem>();
+        Set<ContentItem> toUpdate = new LinkedHashSet<>();
         
         try {
             // convert icalendar representation to cosmo data model
@@ -403,14 +400,6 @@ public class DavCalendarCollection extends DavCollectionBase
             }
         } catch (CollectionLockedException e) {
             throw new LockedException();
-        }
-    }
-
-    private void validateDestination(org.apache.jackrabbit.webdav.DavResource destination)
-        throws CosmoDavException {
-        if (destination instanceof WebDavResource 
-            && ((WebDavResource)destination).getParent() instanceof DavCalendarCollection) {
-            throw new InvalidCalendarLocationException("Parent collection of destination must not be a calendar collection");
         }
     }
 }

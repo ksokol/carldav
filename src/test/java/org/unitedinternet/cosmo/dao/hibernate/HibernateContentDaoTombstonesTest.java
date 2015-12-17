@@ -15,11 +15,9 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.AttributeTombstone;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -28,17 +26,16 @@ import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.ItemTombstone;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
-import org.unitedinternet.cosmo.model.hibernate.HibStampTombstone;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibTaskStamp;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Test that HibernateContentDao correctly manages Tombstones.
@@ -168,50 +165,7 @@ public class HibernateContentDaoTombstonesTest extends AbstractHibernateDaoTestC
         Assert.assertNotNull(getItemTombstone(b, note2.getUid()));
         
     }
-    
-    /**
-     * Tests content dao stamp tombstones.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoStampTombstones() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem item = generateTestNote();
-        
-        item.setIcalUid("icaluid");
-        item.setBody("this is a body");
-        
-        TaskStamp task = new HibTaskStamp();
-        item.addStamp(task);
-        
-        contentDao.createContent(root, item);
-        clearSession();
-
-        item = (NoteItem) contentDao.findItemByUid(item.getUid());
-        Assert.assertEquals(0, item.getTombstones().size());
-        
-        item.removeStamp(item.getStamp(TaskStamp.class));
-        
-        contentDao.updateContent(item);
-        item = (NoteItem) contentDao.findItemByUid(item.getUid());
-        Assert.assertEquals(1, item.getTombstones().size());
-        
-        Assert.assertTrue(item.getTombstones().contains(new HibStampTombstone(item, "task")));
-        
-        // re-add
-        task = new HibTaskStamp();
-        item.addStamp(task);
-        
-        contentDao.updateContent(item);
-        
-        clearSession();
-        
-        item = (NoteItem) contentDao.findItemByUid(item.getUid());
-        Assert.assertEquals(0, item.getTombstones().size());
-    }
-    
     /**
      * Gets item tombstones.
      * @param item The item.

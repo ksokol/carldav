@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.StampTombstone;
 import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.User;
 
@@ -174,14 +173,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
             throw new IllegalArgumentException("stamp cannot be null");
         }
 
-        // remove old tombstone if exists
-        for(Iterator<Tombstone> it=tombstones.iterator();it.hasNext();) {
-            Tombstone ts = it.next();
-            if(ts instanceof StampTombstone && ((StampTombstone) ts).getStampType().equals(stamp.getType())) {
-                it.remove();
-            }
-        }
-
         stamp.setItem(this);
         stamps.add(stamp);
     }
@@ -196,9 +187,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
         }
 
         stamps.remove(stamp);
-
-        // add tombstone for tracking purposes
-        tombstones.add(new HibStampTombstone(this, stamp));
     }
 
     /* (non-Javadoc)

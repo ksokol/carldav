@@ -15,16 +15,14 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import javax.validation.ConstraintViolationException;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -43,7 +41,8 @@ import org.unitedinternet.cosmo.model.hibernate.HibMessageStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.ConstraintViolationException;
 
 /**
  * Test for hibernate content dao stamping.
@@ -241,53 +240,7 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
             Assert.fail("able to create invalid event!");
         } catch (IllegalStateException is) {}
     }
-    
-    /**
-     * Test for removing stamp.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testRemoveStamp() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem item = generateTestContent();
-        
-        item.setIcalUid("icaluid");
-        item.setBody("this is a body");
-        
-        EventStamp event = new HibEventStamp();
-        event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
-        
-        item.addStamp(event);
-        
-        ContentItem newItem = contentDao.createContent(root, item);
-        clearSession();
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(1, queryItem.getStamps().size());
-       
-        Stamp stamp = queryItem.getStamp(EventStamp.class);
-        queryItem.removeStamp(stamp);
-        contentDao.updateContent(queryItem);
-        clearSession();
-        
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertNotNull(queryItem);
-        Assert.assertEquals(queryItem.getStamps().size(),0);
-        Assert.assertEquals(1, queryItem.getTombstones().size());
-        
-        event = new HibEventStamp();
-        event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
-        queryItem.addStamp(event);
-        
-        contentDao.updateContent(queryItem);
-        clearSession();
-        
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(1, queryItem.getStamps().size());
-    }
-    
     /**
      * test calendar collection stamp.
      * @throws Exception - if something is wrong this exception is thrown.

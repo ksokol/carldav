@@ -22,17 +22,13 @@ import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
-import org.unitedinternet.cosmo.dav.property.ContentLength;
-import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.ContentItem;
@@ -137,20 +133,6 @@ public abstract class DavCalendarResource extends DavContentBase
 
     public Set<ReportType> getReportTypes() {
         return REPORT_TYPES;
-    }
-
-    /** */
-    protected void loadLiveProperties(DavPropertySet properties) {
-        super.loadLiveProperties(properties);
-
-        try {
-            byte[] calendarBytes = getCalendar().toString().getBytes("UTF-8");
-            properties.add(new ContentLength(Long.valueOf(calendarBytes.length)));
-        } catch (Exception e) {
-            throw new CosmoException("Can't convert calendar", e);
-        }
-
-        properties.add(new ContentType(ICALENDAR_MEDIA_TYPE, "UTF-8"));
     }
 
     /** */

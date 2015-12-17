@@ -7,6 +7,7 @@ import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralData
 
@@ -249,9 +250,8 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:creationdate>1970-01-01T00:00:03Z</D:creationdate>
                                         <D:getetag>${eTag}</D:getetag>
-                                        <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
+                                         <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
                                         <D:iscollection>0</D:iscollection>
                                         <D:supported-report-set>
                                             <D:supported-report>
@@ -260,10 +260,8 @@ public class CalendarTests extends IntegrationTestSupport {
                                                 </D:report>
                                             </D:supported-report>
                                         </D:supported-report-set>
-                                        <D:getcontentlength>920</D:getcontentlength>
                                         <D:resourcetype/>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">1</cosmo:uuid>
-                                        <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
                                         <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
                                             VERSION:2.0&#13;
                                             X-WR-CALNAME:Work&#13;
@@ -320,7 +318,8 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(request)
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+        .andDo(MockMvcResultHandlers.print())
+                    .andExpect(xml(response));
     }
 
     @Test
@@ -361,15 +360,12 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:creationdate/>
                                         <D:getetag/>
                                         <D:getlastmodified/>
                                         <D:iscollection/>
                                         <D:supported-report-set/>
-                                        <D:getcontentlength/>
                                         <D:resourcetype/>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV"/>
-                                        <D:getcontenttype/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -414,7 +410,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         </ul>
                         <h2>Properties</h2>
                         <dl>
-                        <dt>{DAV:}creationdate</dt><dd>1970-01-01T00:00:03Z</dd>
                         <dt>{http://calendarserver.org/ns/}getctag</dt><dd>1d21bc1d460b1085d53e3def7f7380f6</dd>
                         <dt>{DAV:}getetag</dt><dd>&quot;1d21bc1d460b1085d53e3def7f7380f6&quot;</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>Thu, 01 Jan 1970 00:00:03 GMT</dd>
@@ -458,7 +453,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:creationdate>2015-11-21T21:11:00Z</D:creationdate>
                                         <D:getetag>"NVy57RJot0LhdYELkMDJ9gQZjOM="</D:getetag>
                                         <C:supported-calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:calendar-data C:content-type="text/calendar" C:version="2.0"/>

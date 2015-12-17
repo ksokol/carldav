@@ -46,25 +46,12 @@ public interface CalendarCollectionStamp extends Stamp{
     public TimeZone getTimezone();
 
     /**
-     * @return name of timezone if one is set
-     */
-    public String getTimezoneName();
-
-    /**
      * Set timezone definition for calendar.
      * 
      * @param timezone
      *            timezone definition in ical format
      */
     public void setTimezoneCalendar(Calendar timezone);
-    
-    /**
-     * Return a set of all EventStamps for the collection's children.
-     * @return set of EventStamps contained in children
-     */
-    public Set<EventStamp> getEventStamps();
-    
-    
 
     public String getColor();
 

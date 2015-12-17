@@ -415,7 +415,6 @@ public class CalendarTests extends IntegrationTestSupport {
                         <h2>Properties</h2>
                         <dl>
                         <dt>{urn:ietf:params:xml:ns:caldav}calendar-description</dt><dd>newcalendar</dd>
-                        <dt>{urn:ietf:params:xml:ns:xcaldavoneandone}calendar-visible</dt><dd>false</dd>
                         <dt>{DAV:}creationdate</dt><dd>1970-01-01T00:00:03Z</dd>
                         <dt>{http://calendarserver.org/ns/}getctag</dt><dd>1d21bc1d460b1085d53e3def7f7380f6</dd>
                         <dt>{DAV:}getetag</dt><dd>&quot;1d21bc1d460b1085d53e3def7f7380f6&quot;</dd>
@@ -483,7 +482,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                             <C:supported-collation>i;octet</C:supported-collation>
                                         </C:supported-collation-set>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">a172ed34-0106-4616-bb40-a416a8305465</cosmo:uuid>
-                                        <C:calendar-visible xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">true</C:calendar-visible>
                                         <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:comp name="VEVENT"/>
                                             <C:comp name="VTODO"/>

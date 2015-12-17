@@ -154,17 +154,4 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     public String calculateEntityTag() {
         return "";
     }
-
-    @Override
-    public Boolean getVisibility() {
-        // color stored as BooleanAttribute on Item
-        return HibBooleanAttribute.getValue(getItem(), ATTR_CALENDAR_VISIBILITY);
-    }
-
-    @Override
-    public void setVisibility(Boolean visibility) {
-        // color stored as BooleanAttribute on Item
-        HibBooleanAttribute.setValue(getItem(), ATTR_CALENDAR_VISIBILITY, visibility);
-        
-    }
 }

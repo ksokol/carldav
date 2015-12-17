@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.mock;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.hibernate.validator.Timezone;
@@ -165,22 +164,6 @@ public class MockCalendarCollectionStamp extends MockStamp implements
         VTimeZone vtz = (VTimeZone) timezone.getComponents().getComponent(Component.VTIMEZONE);
         return new TimeZone(vtz);
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCalendarCollectionStamp#getTimezoneName()
-     */
-    /**
-     * Gets timezone name.
-     * @return The timezone.
-     */
-    public String getTimezoneName() {
-        Calendar timezone = getTimezoneCalendar();
-        if (timezone == null) {
-            return null;
-        }
-        return timezone.getComponents().getComponent(Component.VTIMEZONE).
-            getProperties().getProperty(Property.TZID).getValue();
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceCalendarCollectionStamp#setTimezoneCalendar(net.fortuna.ical4j.model.Calendar)
@@ -197,18 +180,5 @@ public class MockCalendarCollectionStamp extends MockStamp implements
     @Override
     public String calculateEntityTag() {
         return "";
-    }
-
-    @Override
-    public Boolean getVisibility() {
-        // color stored as BooleanAttribute on Item
-        return MockBooleanAttribute.getValue(getItem(), ATTR_CALENDAR_VISIBILITY);
-    }
-
-    @Override
-    public void setVisibility(Boolean visibility) {
-        // color stored as BooleanAttribute on Item
-        MockBooleanAttribute.setValue(getItem(), ATTR_CALENDAR_VISIBILITY, visibility);
-        
     }
 }

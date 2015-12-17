@@ -50,9 +50,4 @@ public interface CalendarCollectionStamp extends Stamp{
      *            timezone definition in ical format
      */
     public void setTimezoneCalendar(Calendar timezone);
-
-    public Boolean getVisibility();
-
-
-    public void setVisibility(Boolean visibility);
 }

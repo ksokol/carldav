@@ -36,9 +36,7 @@ import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
-import org.unitedinternet.cosmo.dav.caldav.XCaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarDescription;
-import org.unitedinternet.cosmo.dav.caldav.property.CalendarVisibility;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarData;
@@ -96,7 +94,6 @@ public class DavCalendarCollection extends DavCollectionBase
         registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
         registerLiveProperty(SUPPORTEDCALENDARDATA);
         registerLiveProperty(GET_CTAG);
-        registerLiveProperty(XCaldavConstants.CALENDAR_VISIBLE);
         
         DEAD_PROPERTY_FILTER.add(CalendarCollectionStamp.class.getName());
     }
@@ -193,10 +190,6 @@ public class DavCalendarCollection extends DavCollectionBase
         properties.add(new SupportedCalendarComponentSet());
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());
-        
-        if(cc.getVisibility() != null){
-            properties.add(new CalendarVisibility(cc.getVisibility()));
-        }
     }
 
     /** 
@@ -241,9 +234,6 @@ public class DavCalendarCollection extends DavCollectionBase
         if (name.equals(CALENDARTIMEZONE)) {
             cc.setTimezoneCalendar(TimeZoneExtractor.extract(property));
         }
-        if(name.equals(XCaldavConstants.CALENDAR_VISIBLE)){
-            cc.setVisibility(Boolean.parseBoolean(property.getValueText()));
-        }
     }
 
     /** */
@@ -271,9 +261,6 @@ public class DavCalendarCollection extends DavCollectionBase
         if (name.equals(CALENDARTIMEZONE)) {
             cc.setTimezoneCalendar(null);
             return;
-        }
-        if(name.equals(XCaldavConstants.CALENDAR_VISIBLE)){
-            cc.setVisibility(null);
         }
     }
 

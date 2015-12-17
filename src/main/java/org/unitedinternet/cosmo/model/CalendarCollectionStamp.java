@@ -55,9 +55,4 @@ public interface CalendarCollectionStamp extends Stamp{
 
 
     public void setVisibility(Boolean visibility);
-
-
-    public String getDisplayName();
-
-    public void setDisplayName(String displayName) ;
 }

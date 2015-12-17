@@ -43,7 +43,6 @@ import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarData;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCollationSet;
-import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
@@ -197,10 +196,6 @@ public class DavCalendarCollection extends DavCollectionBase
         
         if(cc.getVisibility() != null){
             properties.add(new CalendarVisibility(cc.getVisibility()));
-        }
-
-        if(cc.getDisplayName() != null){
-            properties.add(new DisplayName(cc.getDisplayName()));
         }
     }
 

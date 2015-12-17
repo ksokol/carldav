@@ -21,7 +21,6 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.unitedinternet.cosmo.hibernate.validator.DisplayName;
 import org.unitedinternet.cosmo.hibernate.validator.Timezone;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
@@ -167,16 +166,5 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
         // color stored as BooleanAttribute on Item
         HibBooleanAttribute.setValue(getItem(), ATTR_CALENDAR_VISIBILITY, visibility);
         
-    }
-
-    @Override
-    @DisplayName
-    public String getDisplayName() {
-        return getItem().getDisplayName();
-    }
-
-    @Override
-    public void setDisplayName(String displayName) {
-        getItem().setDisplayName(displayName);
     }
 }

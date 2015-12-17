@@ -211,15 +211,4 @@ public class MockCalendarCollectionStamp extends MockStamp implements
         MockBooleanAttribute.setValue(getItem(), ATTR_CALENDAR_VISIBILITY, visibility);
         
     }
-    
-    @Override
-    public String getDisplayName() {
-        return MockStringAttribute.getValue(getItem(), ATTR_CALENDAR_DISPLAY_NAME);
-    }
-
-    @Override
-    public void setDisplayName(String displayName) {
-        MockStringAttribute.setValue(getItem(), ATTR_CALENDAR_DISPLAY_NAME, displayName);
-        
-    }
 }

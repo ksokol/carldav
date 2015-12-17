@@ -314,39 +314,12 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
         } 
     }
 
-    @Test(expected=ConstraintViolationException.class)
-    public void shouldNotAllowDisplayNamesWithLengthGreaterThan64() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-        
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setDisplayName("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        root.addStamp(calendarStamp);
-        
-        contentDao.updateCollection(root);
-        clearSession();
-    }
-    
-    @Test(expected=ConstraintViolationException.class)
-    public void shouldNotAllowEmptyDisplayNames() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-        
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setDisplayName("");
-        root.addStamp(calendarStamp);
-        
-        contentDao.updateCollection(root);
-        clearSession();
-    }
-    
     public void shouldAllowLegalDisplayNames() throws Exception {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
         
         
         CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setDisplayName("Valid display name");
         root.addStamp(calendarStamp);
         try{
             contentDao.updateCollection(root);

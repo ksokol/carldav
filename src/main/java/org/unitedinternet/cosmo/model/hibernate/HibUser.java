@@ -22,9 +22,7 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
@@ -128,12 +126,7 @@ public class HibUser extends HibAuditableObject implements User {
     
     @Column(name = "locked")
     private Boolean locked;
-    
-    @OneToMany(targetEntity=HibPreference.class, mappedBy = "user", 
-            fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Preference> preferences = new HashSet<Preference>(0);
-    
+
     @OneToMany(targetEntity=HibCollectionSubscription.class, mappedBy = "owner", 
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -402,52 +395,7 @@ public class HibUser extends HibAuditableObject implements User {
                                                " characters in length");
         }
     }
-    
-    
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getPreferences()
-     */
-    public Set<Preference> getPreferences() {
-        return preferences;
-    }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#addPreference(org.unitedinternet.cosmo.model.Preference)
-     */
-    public void addPreference(Preference preference) {
-        preference.setUser(this);
-        preferences.add(preference);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getPreference(java.lang.String)
-     */
-    public Preference getPreference(String key) {
-        for (Preference pref : preferences) {
-            if (pref.getKey().equals(key)) {
-                return pref;
-            }
-        }
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#removePreference(java.lang.String)
-     */
-    public void removePreference(String key) {
-        removePreference(getPreference(key));
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#removePreference(org.unitedinternet.cosmo.model.Preference)
-     */
-    public void removePreference(Preference preference) {
-        if (preference != null) {
-            preferences.remove(preference);
-        }
-    }
-    
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#getCollectionSubscriptions()
      */

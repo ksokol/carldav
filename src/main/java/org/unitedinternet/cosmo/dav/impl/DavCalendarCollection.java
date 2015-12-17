@@ -20,7 +20,6 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
@@ -33,10 +32,8 @@ import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
-import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
-import org.unitedinternet.cosmo.dav.caldav.property.CalendarDescription;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarData;
@@ -47,7 +44,6 @@ import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
@@ -89,7 +85,6 @@ public class DavCalendarCollection extends DavCollectionBase
     private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<>();
 
     static {
-        registerLiveProperty(CALENDARDESCRIPTION);
         registerLiveProperty(CALENDARTIMEZONE);
         registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
         registerLiveProperty(SUPPORTEDCALENDARDATA);
@@ -151,21 +146,6 @@ public class DavCalendarCollection extends DavCollectionBase
         return StampUtils.getCalendarCollectionStamp(getItem());
     }
 
-
-    /** */
-    protected void populateItem(InputContext inputContext) throws CosmoDavException {
-        super.populateItem(inputContext);
-
-        CalendarCollectionStamp cc = getCalendarCollectionStamp();
-
-        try {
-            cc.setDescription(getItem().getName());
-            // XXX: language should come from the input context
-        } catch (DataSizeException e) {
-            throw new MaxResourceSizeException(e.getMessage());
-        }
-    }
-
     /** */
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
@@ -173,11 +153,6 @@ public class DavCalendarCollection extends DavCollectionBase
         CalendarCollectionStamp cc = getCalendarCollectionStamp();
         if (cc == null) {
             return;
-        }
-
-        if (cc.getDescription() != null) {
-            properties.add(new CalendarDescription(cc.getDescription(),
-                                                   cc.getLanguage()));
         }
 
         // add CS:getctag property, which is the collection's entitytag
@@ -223,13 +198,6 @@ public class DavCalendarCollection extends DavCollectionBase
                 name.equals(GET_CTAG))) {
                 throw new ProtectedPropertyModificationException(name);
         }
-        
-
-        if (name.equals(CALENDARDESCRIPTION)) {
-            cc.setDescription(property.getValueText());
-            cc.setLanguage(property.getLanguage());
-            return;
-        }
 
         if (name.equals(CALENDARTIMEZONE)) {
             cc.setTimezoneCalendar(TimeZoneExtractor.extract(property));
@@ -250,12 +218,6 @@ public class DavCalendarCollection extends DavCollectionBase
             name.equals(SUPPORTEDCALENDARDATA) ||
             name.equals(GET_CTAG)) {
             throw new ProtectedPropertyModificationException(name);
-        }
-
-        if (name.equals(CALENDARDESCRIPTION)) {
-            cc.setDescription(null);
-            cc.setLanguage(null);
-            return;
         }
 
         if (name.equals(CALENDARTIMEZONE)) {

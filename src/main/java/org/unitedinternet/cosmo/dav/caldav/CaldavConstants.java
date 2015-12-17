@@ -96,8 +96,6 @@ public interface CaldavConstants {
 
     /** The CalDAV property CALDAV:calendar-data */
     DavPropertyName CALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DATA, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:calendar-description */
-    DavPropertyName CALENDARDESCRIPTION = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DESCRIPTION, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:calendar-timezone */
     DavPropertyName CALENDARTIMEZONE = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_TIMEZONE, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:supported-calendar-component-set */

@@ -69,12 +69,9 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertNotNull(queryItem);
         Assert.assertEquals("test", queryItem.getName());
         Assert.assertEquals("en", ccs.getLanguage());
-        Assert.assertEquals("test description", ccs.getDescription());
-
         // test update
         queryItem.setName("test2");
         ccs.setLanguage("es");
-        ccs.setDescription("test description2");
 
         contentDao.updateCollection(queryItem);
         Assert.assertNotNull(queryItem);
@@ -86,7 +83,6 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         
         Assert.assertEquals("test2", queryItem.getName());
         Assert.assertEquals("es", ccs.getLanguage());
-        Assert.assertEquals("test description2", ccs.getDescription());
 
         // test add event
         ContentItem event = generateEvent("test.ics", "testdata/cal1.ics"
@@ -206,8 +202,7 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         
         CalendarCollectionStamp ccs = new HibCalendarCollectionStamp();
         calendar.addStamp(ccs);
-        
-        ccs.setDescription("test description");
+
         ccs.setLanguage("en");
         
         return calendar;

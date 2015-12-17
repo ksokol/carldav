@@ -32,7 +32,7 @@ public class SupportedCalendarComponentException
     implements ICalendarConstants, CaldavConstants {
     
     private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL};
+        Component.VTODO };
     /**
      * Constructor.
      */

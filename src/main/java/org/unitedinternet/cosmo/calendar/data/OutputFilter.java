@@ -135,7 +135,7 @@ public class OutputFilter {
         
         // Filter override components based on limit range
         for (Object comp: calendar.getComponents()) {
-            // Only care about VEVENT, VJOURNAL, VTODO
+            // Only care about VEVENT, VTODO
             if ((comp instanceof VEvent) ||
                 (comp instanceof VJournal) ||
                 (comp instanceof VToDo)) {

@@ -203,12 +203,10 @@ public class EntityConverterTest {
         // into ICalendarItems
         
         Calendar calendar = getCalendar("bigcalendar.ics");
-        @SuppressWarnings("unused")
-		NoteItem master = entityFactory.createNote();
         Set<ICalendarItem> items = converter.convertCalendar(calendar);
         
         // should be 8
-        Assert.assertEquals(8, items.size());
+        Assert.assertEquals(7, items.size());
         
         ICalendarItem item = findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
         Assert.assertNotNull(item);
@@ -247,12 +245,6 @@ public class EntityConverterTest {
         item = findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof NoteItem);
-       
-        item = findItemByIcalUid(items, "19970901T130000Z-123405@host.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-        Assert.assertEquals(0, item.getStamps().size());
-        
     }
     
     /**

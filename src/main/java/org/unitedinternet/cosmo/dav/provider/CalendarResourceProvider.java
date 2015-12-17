@@ -26,7 +26,6 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.model.EntityFactory;
@@ -88,9 +87,6 @@ public class CalendarResourceProvider extends FileProvider {
         }
         if (!calendar.getComponents(Component.VTODO).isEmpty()) {
             return new DavTask(locator, getResourceFactory(), getEntityFactory());
-        }
-        if (!calendar.getComponents(Component.VJOURNAL).isEmpty()) {
-            return new DavJournal(locator, getResourceFactory(), getEntityFactory());
         }
         throw new SupportedCalendarComponentException();
   }

@@ -29,7 +29,6 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.XParameter;
@@ -116,9 +115,6 @@ public class EntityConverter {
             else if(cc.type.equals(Component.VTODO)) {
                 items.add(convertTaskCalendar(cc.calendar));
             }
-            else if(cc.type.equals(Component.VJOURNAL)) {
-                items.add(convertJournalCalendar(cc.calendar));
-            }
         }
         
         return items;
@@ -186,32 +182,7 @@ public class EntityConverter {
         setBaseContentAttributes(note);
         return convertEventCalendar(note, calendar);
     }
-    
-    /**
-     * Convert calendar containing single VJOURNAL into NoteItem
-     * @param calendar calendar containing VJOURNAL
-     * @return NoteItem representation of VJOURNAL
-     */
-    public NoteItem convertJournalCalendar(Calendar calendar) {
-        NoteItem note = entityFactory.createNote();
-        note.setUid(entityFactory.generateUid());
-        setBaseContentAttributes(note);
-        return convertJournalCalendar(note, calendar);
-    }
-    
-    /**
-     * Update existing NoteItem with calendar containing single VJOURNAL
-     * @param note note to update
-     * @param calendar calendar containing VJOURNAL
-     * @return NoteItem representation of VJOURNAL
-     */
-    public NoteItem convertJournalCalendar(NoteItem  note, Calendar calendar) {
-        
-        VJournal vj = (VJournal) getMasterComponent(calendar.getComponents(Component.VJOURNAL));
-        setCalendarAttributes(note, vj);
-        return note;
-    }
-    
+
     /**
      * Convert calendar containing single VTODO into NoteItem
      * 
@@ -332,7 +303,6 @@ public class EntityConverter {
      * If the note is a modification, returns null. If the note has an event
      * stamp, returns a calendar containing the event and any exceptions. If
      * the note has a task stamp, returns a calendar containing the task.
-     * Otherwise, returns a calendar containing a journal.
      * </p>
      * @param note The note item.
      * @return calendar The calendar.
@@ -1031,33 +1001,6 @@ public class EntityConverter {
             if (taskStamp == null) {
                 note.addStamp(entityFactory.createTaskStamp());
             }
-        }
-    }
-    
-    /**
-     * Sets calendar attributes.
-     * @param note The note item.
-     * @param journal The VJournal.
-     */
-    private void setCalendarAttributes(NoteItem note, VJournal journal) {
-        // UID
-        if(journal.getUid()!=null) {
-            note.setIcalUid(journal.getUid().getValue());
-        }
-        
-        // for now displayName is limited to 1024 chars
-        if (journal.getSummary() != null) {
-            note.setDisplayName(StringUtils.substring(journal.getSummary()
-                    .getValue(), 0, 1024));
-        }
-
-        if (journal.getDescription() != null) {
-            note.setBody(journal.getDescription().getValue());
-        }
-
-        // look for DTSTAMP
-        if (journal.getDateStamp() != null) {
-            note.setClientModifiedDate(journal.getDateStamp().getDate());
         }
     }
 

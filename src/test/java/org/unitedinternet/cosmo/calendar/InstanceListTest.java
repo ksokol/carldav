@@ -531,7 +531,7 @@ public class InstanceListTest {
     /**
      * Property Name: RDATE
      * <p/>
-     * Purpose: This property defines the list of DATE-TIME values for recurring events, to-dos, journal entries, or
+     * Purpose: This property defines the list of DATE-TIME values for recurring events, to-dos, or
      * time zone definitions. Value Type: The default value type for this property is DATE-TIME. The value type can be
      * set to DATE or PERIOD. Description: This property can appear along with the "RRULE" property to define an
      * aggregate set of repeating occurrences. When they both appear in a recurring component, the recurrence instances

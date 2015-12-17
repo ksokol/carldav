@@ -15,22 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VTimeZone;
-
 import org.unitedinternet.cosmo.hibernate.validator.Timezone;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
@@ -201,50 +194,9 @@ public class MockCalendarCollectionStamp extends MockStamp implements
         MockICalendarAttribute.setValue(getItem(), ATTR_CALENDAR_TIMEZONE, timezone);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#getEventStamps()
-     */
-    /**
-     * Gets event stamps.
-     * @return The events.
-     */
-    public Set<EventStamp> getEventStamps() {
-        Set<EventStamp> events = new HashSet<EventStamp>();
-        for (Iterator<Item> i= ((CollectionItem) getItem()).getChildren().iterator(); i.hasNext();) {
-            Item child = i.next();
-            Stamp stamp = child.getStamp(EventStamp.class);
-            if (stamp != null) {
-                events.add((EventStamp) stamp);
-            }
-        }
-        return events;
-    }
-    
-    /**
-     * Return CalendarCollectionStamp from Item
-     * @param item The item
-     * @return CalendarCollectionStamp from Item
-     */
-    public static CalendarCollectionStamp getStamp(Item item) {
-        return (CalendarCollectionStamp) item.getStamp(CalendarCollectionStamp.class);
-    }
-
     @Override
     public String calculateEntityTag() {
         return "";
-    }
-
-    @Override
-    public String getColor() {
-        // color stored as StringAttribute on Item
-        return MockStringAttribute.getValue(getItem(), ATTR_CALENDAR_COLOR);
-    }
-
-    @Override
-    public void setColor(String color) {
-        // color stored as StringAttribute on Item
-        MockStringAttribute.setValue(getItem(), ATTR_CALENDAR_COLOR, color);
-        
     }
 
     @Override

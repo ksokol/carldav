@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.TimeZone;
 
@@ -52,12 +50,6 @@ public interface CalendarCollectionStamp extends Stamp{
      *            timezone definition in ical format
      */
     public void setTimezoneCalendar(Calendar timezone);
-
-    public String getColor();
-
-
-    public void setColor(String color);
-
 
     public Boolean getVisibility();
 

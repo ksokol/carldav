@@ -45,9 +45,4 @@ public interface ICalendarConstants {
      * iCalendar value for "TRUE"
      */
     String VALUE_TRUE = "TRUE";
-
-    /**
-     * VAVAILABILITY component (not yet fully supported in ical4j)
-     */
-    String COMPONENT_VAVAILABLITY = "VAVAILABILITY";
 }

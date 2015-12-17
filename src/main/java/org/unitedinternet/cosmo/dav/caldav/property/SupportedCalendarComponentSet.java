@@ -15,11 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.property;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Component;
-
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
@@ -29,6 +25,9 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Represents the CalDAV supported-calendar-component-set
  * property. Valid component types are defined by
@@ -37,7 +36,7 @@ import org.w3c.dom.Element;
 public class SupportedCalendarComponentSet extends StandardDavProperty
     implements CaldavConstants, ICalendarConstants {
     private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL, COMPONENT_VAVAILABLITY };
+        Component.VTODO, Component.VJOURNAL };
     /**
      * Constructor.
      */

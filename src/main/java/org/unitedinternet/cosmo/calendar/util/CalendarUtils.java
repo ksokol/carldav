@@ -41,7 +41,7 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 public class CalendarUtils implements ICalendarConstants {
     
     private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL, COMPONENT_VAVAILABLITY };
+        Component.VTODO, Component.VJOURNAL };
     
     private static String[] SUPPORTED_COLLATIONS = {
         "i;ascii-casemap", "i;octet"

@@ -19,7 +19,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.AttributeTombstone;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.FileItem;
@@ -47,46 +46,6 @@ public class HibernateContentDaoTombstonesTest extends AbstractHibernateDaoTestC
     @Autowired
     private ContentDaoImpl contentDao;
 
-    /**
-     * Test content dao attribute tombstones.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoAttributeTombstones() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-
-        ContentItem item = generateTestContent();
-
-        ContentItem newItem = contentDao.createContent(root, item);
-        
-        clearSession();
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        queryItem.removeAttribute(new HibQName("customattribute"));
-
-        queryItem = contentDao.updateContent(queryItem);
-
-        clearSession();
-
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(0, queryItem.getAttributes().size());
-        Assert.assertEquals(1, queryItem.getTombstones().size());
-        
-        Tombstone ts = queryItem.getTombstones().iterator().next();
-        Assert.assertTrue(ts instanceof AttributeTombstone);
-        Assert.assertTrue(((AttributeTombstone) ts).getQName().equals(new HibQName("customattribute")));
-        
-        queryItem.addAttribute(new HibStringAttribute(new HibQName("customattribute"),"customattributevalue"));
-        contentDao.updateContent(queryItem);
-        clearSession();
-
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(1, queryItem.getAttributes().size());
-        Assert.assertEquals(0, queryItem.getTombstones().size());
-    }
-    
     /**
      * Tests content dao item tombstones.
      * @throws Exception - if something is wrong this exception is thrown.

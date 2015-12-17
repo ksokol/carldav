@@ -22,7 +22,6 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.AttributeTombstone;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
@@ -37,7 +36,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -232,15 +230,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
             throw new IllegalArgumentException("attribute cannot be null");
         }
 
-        // remove old tombstone if exists
-        for(Iterator<Tombstone> it=tombstones.iterator();it.hasNext();) {
-            Tombstone ts = it.next();
-            if(ts instanceof AttributeTombstone && 
-               ((AttributeTombstone) ts).getQName().equals(attribute.getQName())) {
-                it.remove();
-            }
-        }
-        
         ((HibAttribute) attribute).validate();
         attribute.setItem(this);
         attributes.put(attribute.getQName(), attribute);
@@ -259,7 +248,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     public void removeAttribute(QName qname) {
         if(attributes.containsKey(qname)) {
             attributes.remove(qname);
-            tombstones.add(new HibAttributeTombstone(this, qname));
         }
     }
 

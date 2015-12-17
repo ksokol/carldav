@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.AttributeTombstone;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
@@ -30,7 +29,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -210,16 +208,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
             throw new IllegalArgumentException("attribute cannot be null");
         }
 
-        // remove old tombstone if exists
-        for(Iterator<Tombstone> it=tombstones.iterator();it.hasNext();) {
-            Tombstone ts = it.next();
-            if (ts instanceof AttributeTombstone) {
-                if(((AttributeTombstone) ts).getQName().equals(attribute.getQName())) {
-                    it.remove();
-                }
-            }
-        }
-        
         ((MockAttribute) attribute).validate();
         attribute.setItem(this);
         attributes.put(attribute.getQName(), attribute);
@@ -246,7 +234,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
     public void removeAttribute(QName qname) {
         if(attributes.containsKey(qname)) {
             attributes.remove(qname);
-            tombstones.add(new MockAttributeTombstone(this, qname));
         }
     }
 

@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -31,9 +29,7 @@ import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItemTombstone;
 
 import java.util.HashMap;
 import java.util.List;
@@ -454,7 +450,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         // Add a tombstone to each parent collection to track
         // when the removal occurred.
         for (CollectionItem parent : content.getParents()) {
-            getHibItem(parent).addTombstone(new HibItemTombstone(parent, content));
             getSession().update(parent);
         }
     }
@@ -501,7 +496,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             return;
         }
 
-        getHibItem(collection).addTombstone(new HibItemTombstone(collection, note));
         ((HibItem) note).removeParent(collection);
 
         for (NoteItem mod : note.getModifications()) {
@@ -564,19 +558,11 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
             // Add modification to all parents of master
             for (CollectionItem col : note.getModifies().getParents()) {
-                if (((HibCollectionItem) col).removeTombstone(content) == true) {
-                    getSession().update(col);
-                }
                 ((HibItem) note).addParent(col);
             }
         } else {
             // add parent to new content
             ((HibItem) content).addParent(parent);
-
-            // remove tombstone (if it exists) from parent
-            if (((HibCollectionItem) parent).removeTombstone(content) == true) {
-                getSession().update(parent);
-            }
         }
 
 
@@ -643,9 +629,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         for (CollectionItem parent : parents) {
             ((HibItem) content).addParent(parent);
-            if (((HibCollectionItem) parent).removeTombstone(content) == true) {
-                getSession().update(parent);
-            }
         }
 
 

@@ -21,7 +21,6 @@ import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.User;
 
 import java.util.ArrayList;
@@ -64,9 +63,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
 
     
     private Set<Stamp> stamps = new HashSet<Stamp>(0);
-    
-    
-    private Set<Tombstone> tombstones = new HashSet<Tombstone>(0);
+
     
     private transient Map<String, Stamp> stampMap = null;
     
@@ -596,30 +593,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
         this.isActive = isActive;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceItem#getTombstones()
-     */
-    /**
-     * Gets tombstones.
-     * @return the tombstones.
-     */
-    public Set<Tombstone> getTombstones() {
-        return tombstones;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceItem#addTombstone(org.unitedinternet.cosmo.model.copy.Tombstone)
-     */
-    /**
-     * Adds tombstone.
-     * @param tombstone The tombstone.
-     */
-    public void addTombstone(Tombstone tombstone) {
-        tombstone.setItem(this);
-        tombstones.add(tombstone);
-    }
-    
-    
     /**
      * Item uid determines equality
      * @param obj The object.

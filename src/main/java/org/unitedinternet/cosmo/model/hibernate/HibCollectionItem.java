@@ -20,7 +20,6 @@ import org.hibernate.annotations.CascadeType;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ItemTombstone;
 import org.unitedinternet.cosmo.model.QName;
 
 import java.util.Collections;
@@ -90,16 +89,6 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
             }
         }
         return null;
-    }
-
-    /**
-     * Remove ItemTombstone with an itemUid equal to a given Item's uid
-     * @param item
-     * @return true if a tombstone was removed
-     */
-    public boolean removeTombstone(Item item) {
-        ItemTombstone ts = new HibItemTombstone(this, item);
-        return tombstones.remove(ts);
     }
 
     /* (non-Javadoc)

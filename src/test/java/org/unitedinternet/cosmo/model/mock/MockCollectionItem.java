@@ -15,17 +15,14 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ItemTombstone;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.Tombstone;
+
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Extends {@link Item} to represent a collection of items

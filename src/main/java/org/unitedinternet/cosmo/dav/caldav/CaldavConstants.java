@@ -90,10 +90,6 @@ public interface CaldavConstants {
     String PROPERTY_CALDAV_SUPPORTED_COLLATION_SET = "supported-collation-set";
     /** The CalDAV property name CALDAV:supported-calendar-data */
     String PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA = "supported-calendar-data";
-    /** The CalDAV property name CALDAV:calendar-home-set */
-    String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
-    /** The CalDAV property name CALDAV:max-resource-size */
-    String PROPERTY_CALDAV_MAX_RESOURCE_SIZE = "max-resource-size";
 
     /** The Calendar Server property name CS:getctag */
     String PROPERTY_CS_GET_CTAG = "getctag";
@@ -111,10 +107,6 @@ public interface CaldavConstants {
     DavPropertyName SUPPORTEDCOLLATIONSET = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_COLLATION_SET, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:supported-calendar-data */
     DavPropertyName SUPPORTEDCALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:calendar-home-set */
-    DavPropertyName CALENDARHOMESET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:max-resource-size */
-    DavPropertyName MAXRESOURCESIZE = DavPropertyName.create(PROPERTY_CALDAV_MAX_RESOURCE_SIZE, NAMESPACE_CALDAV);
 
     CosmoQName RESOURCE_TYPE_CALENDAR = new CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
 

@@ -80,15 +80,7 @@ public interface EntityFactory {
      * @return new EventExceptionStamp
      */
     EventExceptionStamp createEventExceptionStamp(NoteItem note);
-    
-    
-    /**
-     * Create new FileItem
-     * @return new FileItem
-     */
-    FileItem createFileItem();
 
-    
     /**
      * Create new QName
      * @param namespace 

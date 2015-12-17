@@ -20,7 +20,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TaskStamp;
@@ -94,15 +93,6 @@ public class MockEntityFactory implements EntityFactory {
      */
     public EventStamp createEventStamp(NoteItem note) {
         return new MockEventStamp(note);
-    }
-
-    /**
-     * Creates file item.
-     * {@inheritDoc}
-     * @return The file item.
-     */
-    public FileItem createFileItem() {
-        return new MockFileItem();
     }
 
     /**

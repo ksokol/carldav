@@ -417,8 +417,4 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     protected BaseModelObject getBaseModelObject(Object obj) {
         return (BaseModelObject) obj;
     }
-
-    protected HibItem getHibItem(Item item) {
-        return (HibItem) item;
-    }
 }

@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibPreference;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 import java.util.Collection;
@@ -114,67 +113,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         // delete user
         userDao.removeUser("user2");
     }
-    
-    /**
-     * Tests user properties.
-     */
-    @Test
-    public void testUserProperties() {
-        User user1 = new HibUser();
-        user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
-        user1.setEmail("user1@user1.com");
-        user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
-        user1 = userDao.createUser(user1);
-        
-        clearSession();
-
-        // find by username
-        User queryUser1 = userDao.getUser("user1");
-        Assert.assertNotNull(queryUser1);
-        Assert.assertNotNull(queryUser1.getUid());
-        verifyUser(user1, queryUser1);
-        
-        // attempt to find by pref
-        Assert.assertEquals(0, userDao.findUsersByPreference("prop1", "value1").size());
-        
-        queryUser1.addPreference(new HibPreference("prop1", "value1"));
-        queryUser1.addPreference(new HibPreference("prop2", "value2"));
-
-        userDao.updateUser(queryUser1);
-        
-        clearSession();
-
-        // find by uid
-        queryUser1 = userDao.getUserByUid(user1.getUid());
-        Assert.assertNotNull(queryUser1);
-        Assert.assertEquals(2, queryUser1.getPreferences().size());
-        Assert.assertEquals("value1",
-                            queryUser1.getPreference("prop1").getValue());
-        Assert.assertEquals("value2",
-                            queryUser1.getPreference("prop2").getValue());
-        
-        // find by preference
-        Assert.assertEquals(1, userDao.findUsersByPreference("prop1", "value1").size());
-        
-        queryUser1.removePreference("prop2");
-        queryUser1.getPreference("prop1").setValue("value1changed");
-        userDao.updateUser(queryUser1);
-
-        clearSession();
-
-        queryUser1 = userDao.getUserByUid(user1.getUid());
-        Assert.assertNotNull(queryUser1);
-        Assert.assertEquals(1, queryUser1.getPreferences().size());
-        Assert.assertEquals("value1changed", queryUser1.getPreference("prop1").getValue());
-        
-        userDao.removeUser(queryUser1);
-        clearSession();
-    }
-    
     /**
      * Tests create duplicate user email.
      */

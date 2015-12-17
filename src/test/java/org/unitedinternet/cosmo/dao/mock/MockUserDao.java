@@ -19,13 +19,11 @@ import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
 import org.unitedinternet.cosmo.model.mock.MockUser;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -159,14 +157,7 @@ public class MockUserDao implements UserDao {
             ((MockAuditableObject) cs).setModifiedDate(new Date());
             ((MockAuditableObject) cs).setCreationDate(new Date());
         }
-        
-        for(Preference p: user.getPreferences()) {
-            ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
-                    .calculateEntityTag());
-            ((MockAuditableObject) p).setModifiedDate(new Date());
-            ((MockAuditableObject) p).setCreationDate(new Date());
-        }
-            
+
         ((MockUser) user).validate();
         if (usernameIdx.containsKey(user.getUsername())) {
             throw new DuplicateUsernameException(user.getUsername());
@@ -208,16 +199,7 @@ public class MockUserDao implements UserDao {
                 ((MockAuditableObject) cs).setCreationDate(new Date());
             }
         }
-        
-        for(Preference p: user.getPreferences()) {
-            ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
-                    .calculateEntityTag());
-            ((MockAuditableObject) p).setModifiedDate(new Date());
-            if (p.getCreationDate()==null) {
-                ((MockAuditableObject) p).setCreationDate(new Date());
-            }
-        }
-        
+
         ((MockUser) user).validate();
         String key = user.isUsernameChanged() ?
             user.getOldUsername() :
@@ -287,27 +269,6 @@ public class MockUserDao implements UserDao {
      * resources used.
      */
     public void destroy() {
-    }
-
-    /**
-     * Finds users by preference.
-     * {@inheritDoc}
-     * @param key The key.
-     * @param value The value.
-     * @return The users.
-     */
-    @SuppressWarnings("unchecked")
-    public Set<User> findUsersByPreference(String key, String value) {
-        HashSet<User> results = new HashSet<User>();
-        for (User user : (Collection<User>) usernameIdx.values()) {
-            for (Preference pref: user.getPreferences()) {
-                if (pref.getKey().equals(key) && pref.getValue().equals(value)) {
-                    results.add(user);
-                }
-            }
-        }
-        
-        return results;
     }
 
 }

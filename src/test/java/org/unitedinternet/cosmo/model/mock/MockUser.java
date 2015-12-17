@@ -17,9 +17,7 @@ package org.unitedinternet.cosmo.model.mock;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionSubscription;
-import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
 
 import java.util.HashSet;
@@ -85,9 +83,7 @@ public class MockUser extends MockAuditableObject implements User {
     private transient Boolean oldAdmin;
     
     private Boolean locked;
-    
-    private Set<Preference> preferences = new HashSet<Preference>(0);
-    
+
     private Set<CollectionSubscription> subscriptions = 
         new HashSet<CollectionSubscription>(0);
 
@@ -561,70 +557,6 @@ public class MockUser extends MockAuditableObject implements User {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getPreferences()
-     */
-    /**
-     * Gets preferences.
-     * @return preferences.
-     */
-    public final Set<Preference> getPreferences() {
-        return preferences;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#addPreference(org.unitedinternet.cosmo.model.copy.Preference)
-     */
-    /**
-     * Adds preference.
-     * @param preference The preference.
-     */
-    public final void addPreference(final Preference preference) {
-        preference.setUser(this);
-        preferences.add(preference);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getPreference(java.lang.String)
-     */
-    /**
-     * Gets preference.
-     * @param key The key.
-     * @return The preference.
-     */
-    public final Preference getPreference(final String key) {
-        for (Preference pref : preferences) {
-            if (pref.getKey().equals(key)) {
-                return pref;
-            }
-        }
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#removePreference(java.lang.String)
-     */
-    /**
-     * Removes preference.
-     * @param key The key.
-     */
-    public final void removePreference(final String key) {
-        removePreference(getPreference(key));
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#removePreference(org.unitedinternet.cosmo.model.copy.Preference)
-     */
-    /**
-     * Removes preference.
-     * @param preference The preference.
-     */
-    public final void removePreference(final Preference preference) {
-        if (preference != null) {
-            preferences.remove(preference);
-        }
-    }
-    
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getCollectionSubscriptions()
      */

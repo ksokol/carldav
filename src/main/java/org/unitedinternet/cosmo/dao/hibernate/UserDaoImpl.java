@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -120,27 +119,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             Iterator it = getSession().getNamedQuery("user.all").iterate();
             while (it.hasNext()) {
                 users.add((User) it.next());
-            }
-
-            return users;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public Set<User> findUsersByPreference(String key, String value) {
-        try {
-            Query hibQuery = getSession().getNamedQuery("users.byPreference");
-            hibQuery.setParameter("key", key).setParameter("value", value);
-            List<User> results = hibQuery.list();
-
-            Set<User> users = new HashSet<User>();
-
-            // TODO figure out how to load all properties using HQL
-            for (User user : results) {
-                Hibernate.initialize(user);
-                users.add(user);
             }
 
             return users;

@@ -124,16 +124,6 @@ public interface User extends AuditableObject{
      */
     void validateRawPassword();
 
-    Set<Preference> getPreferences();
-
-    void addPreference(Preference preference);
-
-    Preference getPreference(String key);
-
-    void removePreference(String key);
-
-    void removePreference(Preference preference);
-
     Set<CollectionSubscription> getCollectionSubscriptions();
 
     void addSubscription(CollectionSubscription subscription);

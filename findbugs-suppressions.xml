@@ -78,16 +78,7 @@
     <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute"/>
         <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>      
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibTombstone"/>
-        <Bug pattern="EI_EXPOSE_REP" />
     </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibTombstone"/>
-        <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibUser"/>
         <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
     </Match>

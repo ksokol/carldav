@@ -88,13 +88,6 @@ public interface EntityFactory {
      * @return new QName
      */
     QName createQName(String namespace, String localname);
-    
-    
-    /**
-     * Create new TaskStamp
-     * @return new TaskStamp
-     */
-    TaskStamp createTaskStamp();
 
     /**
      * Create new XMLAttribute using element value

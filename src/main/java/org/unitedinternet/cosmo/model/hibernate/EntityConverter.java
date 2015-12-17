@@ -59,7 +59,6 @@ import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
@@ -920,14 +919,6 @@ public class EntityConverter {
         }
 
         triageStatus.setCode(code);
-        
-        // check for X-OSAF-STARRED
-        if ("TRUE".equals(ICalendarUtils.getXProperty(X_OSAF_STARRED, event))) {
-            TaskStamp ts = StampUtils.getTaskStamp(note);
-            if (ts == null) {
-                note.addStamp(entityFactory.createTaskStamp());
-            }
-        }
     }
     
     /**
@@ -992,14 +983,6 @@ public class EntityConverter {
             else {
                 note.getTriageStatus().setRank(
                         TriageStatusUtil.getRank(System.currentTimeMillis()));
-            }
-        }
-        
-        // check for X-OSAF-STARRED
-        if ("TRUE".equals(ICalendarUtils.getXProperty(X_OSAF_STARRED, task))) {
-            TaskStamp taskStamp = StampUtils.getTaskStamp(note);
-            if (taskStamp == null) {
-                note.addStamp(entityFactory.createTaskStamp());
             }
         }
     }

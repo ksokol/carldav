@@ -20,7 +20,6 @@ import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.MockHelper;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 
@@ -90,25 +89,6 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
      */
     public DavResourceLocator getHomeLocator() {
         return homeLocator;
-    }
-
-    /**
-     * Initializes home resource.
-     * @return The dav home collection.
-     * @throws CosmoDavException - if something is wrong this exception is thrown.
-     */
-    public DavHomeCollection initializeHomeResource()
-        throws CosmoDavException {
-        return new DavHomeCollection(getHomeCollection(), homeLocator,
-                                     resourceFactory, getEntityFactory());
-    }
-
-    /**
-     * Creates test context.
-     * @return The dav test context.
-     */
-    public DavTestContext createTestContext() {
-        return new DavTestContext(locatorFactory);
     }
 
     /**

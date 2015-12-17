@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.hibernate.annotations.Cache;
@@ -28,14 +27,9 @@ import org.unitedinternet.cosmo.hibernate.validator.Timezone;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -140,18 +134,6 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
         VTimeZone vtz = (VTimeZone) timezone.getComponents().getComponent(Component.VTIMEZONE);
         return new TimeZone(vtz);
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#getTimezoneName()
-     */
-    public String getTimezoneName() {
-        Calendar timezone = getTimezoneCalendar();
-        if (timezone == null) {
-            return null;
-        }
-        return timezone.getComponents().getComponent(Component.VTIMEZONE).
-            getProperties().getProperty(Property.TZID).getValue();
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#setTimezoneCalendar(net.fortuna.ical4j.model.Calendar)
@@ -160,23 +142,7 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
         // timezone stored as ICalendarAttribute on Item
         HibICalendarAttribute.setValue(getItem(), ATTR_CALENDAR_TIMEZONE, timezone);
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#getEventStamps()
-     */
-    public Set<EventStamp> getEventStamps() {
-        Set<EventStamp> events = new HashSet<EventStamp>();
-        for (Iterator<Item> i= ((CollectionItem) getItem()).getChildren().iterator(); i.hasNext();) {
-            Item child = i.next();
-            Stamp stamp = child.getStamp(EventStamp.class);
-            if(stamp!=null) {
-                events.add((EventStamp) stamp);
-            }
-        }
-        return events;
-    }
 
-    
     /**
      * Return CalendarCollectionStamp from Item
      * @param item

@@ -117,13 +117,6 @@ public class HibUser extends HibAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#isUsernameChanged()
-     */
-    public boolean isUsernameChanged() {
-        return oldUsername != null && ! oldUsername.equals(username);
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#getPassword()
      */
     public String getPassword() {

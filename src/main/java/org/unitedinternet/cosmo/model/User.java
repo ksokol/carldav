@@ -41,10 +41,6 @@ public interface User extends AuditableObject{
 
     /**
      */
-    boolean isUsernameChanged();
-
-    /**
-     */
     String getPassword();
 
     /**

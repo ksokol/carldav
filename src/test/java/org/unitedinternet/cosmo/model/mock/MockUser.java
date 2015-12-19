@@ -101,17 +101,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isUsernameChanged()
-     */
-    /**
-     * Verify if the username is changed.
-     * @return The boolean if the username is changed.
-     */
-    public final boolean isUsernameChanged() {
-        return oldUsername != null && ! oldUsername.equals(username);
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getPassword()
      */
     /**

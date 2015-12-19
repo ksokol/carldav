@@ -36,32 +36,14 @@
     )
 })
 
-/*
- * Named Queries
- */
 @NamedQueries({
     // Item Queries
         @NamedQuery(name = "homeCollection.by.ownerId", query = "from HibHomeCollectionItem where owner.id=:ownerid"),
-        @NamedQuery(name = "item.by.ownerId.parentId.name", query = "select item from HibItem item join"
-                + " item.parentDetails pd where item.owner.id=:ownerid and "
-                + "pd.primaryKey.collection.id=:parentid and item.name=:name"),
         @NamedQuery(name = "collections.children.by.parent", query = "select item from HibItem item join"
                 + " item.parentDetails pd where pd.primaryKey.collection=:parent and item.class=HibCollectionItem"),
-        @NamedQuery(name = "item.by.ownerId.nullParent.name", query = "select item from HibItem item"
-                + " where item.owner.id=:ownerid and size(item.parentDetails)=0 and item.name=:name"),
-        @NamedQuery(name = "item.by.ownerId.nullParent.name.minusItem", query = "select item from"
-                + " HibItem item where item.id!=:itemid and item.owner.id=:ownerid and "
-                + "size(item.parentDetails)=0 and item.name=:name"),
-        @NamedQuery(name = "item.by.ownerId.parentId.name.minusItem", query = "select item from HibItem "
-                + "item join item.parentDetails pd where item.id!=:itemid and item.owner.id=:ownerid and"
-                + " pd.primaryKey.collection.id=:parentid and item.name=:name"),
         @NamedQuery(name = "itemId.by.parentId.name", query = "select item.id from HibItem item join"
                 + " item.parentDetails pd where pd.primaryKey.collection.id=:parentid and item.name=:name"),
-        @NamedQuery(name = "item.by.uid", query = "from HibItem i where i.uid=:uid"),
-        @NamedQuery(name = "item.stamps.by.uid", query = "select i.stamps from HibItem i where i.uid=:uid"),
         @NamedQuery(name = "itemid.by.uid", query = "select i.id from HibItem i where i.uid=:uid"),
-        @NamedQuery(name = "collectionItem.by.uid", query = "from HibCollectionItem i where i.uid=:uid"),
-        @NamedQuery(name = "contentItem.by.uid", query = "from HibContentItem i where i.uid=:uid"),
         @NamedQuery(name = "item.by.parent.name", query = "select item from HibItem item join"
                 + " item.parentDetails pd where pd.primaryKey.collection=:parent and item.name=:name"),
         // FIXME stfl .and.nullparent is not the correct name anymore!
@@ -84,9 +66,7 @@
         @NamedQuery(name = "user.byUsernameOrEmail.ignorecase.ingoreId", query = "from HibUser where"
                 + " id!=:userid and (lower(username)=lower(:username) or lower(email)=lower(:email))"),
         @NamedQuery(name = "user.byUid", query = "from HibUser where uid=:uid"),
-        @NamedQuery(name = "user.byActivationId", query = "from HibUser where activationid=:activationId"),
         @NamedQuery(name = "user.all", query = "from HibUser"),
-        @NamedQuery(name = "user.count", query = "select count(id) from HibUser"),
 
         // Event Queries
         @NamedQuery(name = "event.by.calendar.icaluid", query = "select i from HibNoteItem i join "

@@ -280,20 +280,6 @@ public class HibUser extends HibAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#isActivated()
-     */
-    public boolean isActivated() {
-        return this.activationId == null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#activate()
-     */
-    public void activate(){
-       this.activationId = null;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#isLocked()
      */
     public Boolean isLocked() {

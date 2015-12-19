@@ -103,10 +103,6 @@ public interface User extends AuditableObject{
      */
     boolean isOverlord();
 
-    /**
-     */
-    boolean isActivated();
-
     Boolean isLocked();
 
     /**

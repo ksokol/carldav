@@ -297,17 +297,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setActivationId(java.lang.String)
-     */
-    /**
-     * Sets activation id.
-     * @param activationId The activation id.
-     */
-    public final void setActivationId(final String activationId) {
-        this.activationId = activationId;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isOverlord()
      */
     /**
@@ -319,27 +308,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isActivated()
-     */
-    /**
-     * Verify if it is activated.
-     * @return The boolean for is activated.
-     */
-    public final boolean isActivated() {
-        return this.activationId == null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#activate()
-     */
-    /**
-     * Activate.
-     */
-    public final void activate(){
-       this.activationId = null;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isLocked()
      */
     /**
@@ -348,17 +316,6 @@ public class MockUser extends MockAuditableObject implements User {
      */
     public final Boolean isLocked() {
         return locked;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setLocked(java.lang.Boolean)
-     */
-    /**
-     * Sets locked.
-     * @param locked The locked.
-     */
-    public final void setLocked(final Boolean locked) {
-        this.locked = locked;
     }
 
     /**

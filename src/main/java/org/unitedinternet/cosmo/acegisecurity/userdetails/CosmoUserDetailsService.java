@@ -54,6 +54,6 @@ public class CosmoUserDetailsService implements UserDetailsService {
 
         final boolean accountNonLocked = user.isOverlord() || !user.isLocked();
 
-        return new CosmoUserDetails(user.getUsername(), user.getPassword(), user.isActivated(), true, true, accountNonLocked, authorities, user);
+        return new CosmoUserDetails(user.getUsername(), user.getPassword(), true, true, true, accountNonLocked, authorities, user);
     }
 }

@@ -49,7 +49,7 @@
         // FIXME stfl .and.nullparent is not the correct name anymore!
         // FIXME check on class == HibCollectionItem  or select from HibCollectionItem
         @NamedQuery(name = "item.by.ownerName.name.nullParent", query = "select i from "
-                + "HibCollectionItem i, HibUser u where i.owner=u and u.username=:username and" + " i.name=:name"),
+                + "HibCollectionItem i, HibUser u where i.owner=u and u.email=:username and" + " i.name=:name"),
         @NamedQuery(name = "noteItemId.by.parent.icaluid", query = "select item.id from HibNoteItem item"
                 + " join item.parentDetails pd where pd.primaryKey.collection.id=:parentid and "
                 + "item.icalUid=:icaluid and item.modifies is null"),

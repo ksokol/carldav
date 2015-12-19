@@ -43,9 +43,6 @@ public class HibUser extends HibAuditableObject implements User {
     public static final int EMAIL_LEN_MIN = 1;
     public static final int EMAIL_LEN_MAX = 128;
 
-    @Column(name = "username")
-    private String username = "";
-
     @Column(name = "password")
     @NotNull
     private String password;
@@ -73,13 +70,6 @@ public class HibUser extends HibAuditableObject implements User {
     public HibUser() {
         admin = Boolean.FALSE;
         locked = Boolean.FALSE;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setUsername(java.lang.String)
-     */
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     /* (non-Javadoc)

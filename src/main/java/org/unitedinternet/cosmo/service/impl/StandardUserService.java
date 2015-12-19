@@ -51,10 +51,6 @@ public class StandardUserService implements UserService {
         return userDao.getUsers();
     }
 
-    public User getUser(String username) {
-        return userDao.getUser(username);
-    }
-
     public User getUserByEmail(String email) {
         return userDao.getUserByEmail(email);
     }

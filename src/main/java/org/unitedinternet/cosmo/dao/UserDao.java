@@ -35,15 +35,6 @@ public interface UserDao {
     Set<User> getUsers();
 
     /**
-     * Returns the user account identified by the given username.
-     *
-     * @param username the username of the account to return
-     * exist
-     * @return The user account.
-     */
-    User getUser(String username);
-
-    /**
      * Returns the user account identified by the given email address.
      *
      * @param email the email address of the account to return

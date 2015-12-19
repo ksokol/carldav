@@ -69,19 +69,6 @@ public class MockUserDao implements UserDao {
     }
 
     /**
-     * Gets user.
-     * {@inheritDoc}
-     * @param username The username.
-     * @return The user.
-     */
-    public User getUser(String username) {
-        if (username == null) {
-            return null;
-        }
-        return (User) emailIdx.get(username);
-    }
-
-    /**
      * Gets user by email.
      * {@inheritDoc}
      * @param email The email.

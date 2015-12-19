@@ -25,7 +25,6 @@ import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
-import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -57,16 +56,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         } catch (ConstraintViolationException cve) {
             logConstraintViolationException(cve);
             throw cve;
-        }
-
-    }
-
-    public User getUser(String username) {
-        try {
-            return findUserByUsername(username);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
     }
 
@@ -109,10 +98,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
-    }
-
-    private User findUserByUsername(String username) {
-        return (User) getSession().byNaturalId(HibUser.class).using("username", username).load();
     }
 
     private User findUserByEmailIgnoreCase(String email) {

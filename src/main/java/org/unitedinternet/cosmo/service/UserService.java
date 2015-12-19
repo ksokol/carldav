@@ -29,17 +29,6 @@ public interface UserService {
      */
     Set<User> getUsers();
 
-
-    /**
-     * Returns the user account identified by the given username.
-     *
-     * @param username the username of the account to return
-     *
-     * @throws DataRetrievalFailureException if the account does not
-     * exist
-     */
-    User getUser(String username);
-
     /**
      * Returns the user account identified by the given email address.
      *

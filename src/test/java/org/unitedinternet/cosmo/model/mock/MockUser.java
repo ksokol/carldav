@@ -101,17 +101,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getOldUsername()
-     */
-    /**
-     * Gets old username.
-     * @return The old username.
-     */
-    public final String getOldUsername() {
-        return oldUsername != null ? oldUsername : username;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isUsernameChanged()
      */
     /**

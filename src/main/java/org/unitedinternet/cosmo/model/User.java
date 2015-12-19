@@ -41,10 +41,6 @@ public interface User extends AuditableObject{
 
     /**
      */
-    String getOldUsername();
-
-    /**
-     */
     boolean isUsernameChanged();
 
     /**

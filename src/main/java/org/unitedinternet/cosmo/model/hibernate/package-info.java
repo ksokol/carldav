@@ -19,6 +19,7 @@
  * Type Definitions for custom hibernate data types.
  */
 @TypeDefs({
+
     @TypeDef(
             name="calendar_clob",
             typeClass = org.unitedinternet.cosmo.hibernate.CalendarClobType.class
@@ -28,12 +29,7 @@
             name="xml_clob",
             typeClass = org.unitedinternet.cosmo.hibernate.XmlClobType.class
     ),
-    
-    @TypeDef(
-            name="composite_calendar",
-            typeClass = org.unitedinternet.cosmo.hibernate.CalendarType.class
-    ),
-    
+
     @TypeDef(
             name="long_timestamp",
             typeClass = org.unitedinternet.cosmo.hibernate.LongTimestampType.class

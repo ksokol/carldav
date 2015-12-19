@@ -57,10 +57,6 @@ public interface User extends AuditableObject{
 
     /**
      */
-    boolean isEmailChanged();
-
-    /**
-     */
     Boolean getAdmin();
 
     /**

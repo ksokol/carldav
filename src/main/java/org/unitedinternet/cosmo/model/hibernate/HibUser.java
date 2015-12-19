@@ -78,8 +78,6 @@ public class HibUser extends HibAuditableObject implements User {
     @Length(min=EMAIL_LEN_MIN, max=EMAIL_LEN_MAX)
     @Email
     private String email;
-    
-    private transient String oldEmail;
 
     @Column(name = "admin")
     private Boolean admin;
@@ -138,15 +136,7 @@ public class HibUser extends HibAuditableObject implements User {
      * @see org.unitedinternet.cosmo.model.User#setEmail(java.lang.String)
      */
     public void setEmail(String email) {
-        oldEmail = this.email;
         this.email = email;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#isEmailChanged()
-     */
-    public boolean isEmailChanged() {
-        return oldEmail != null && ! oldEmail.equals(email);
     }
 
     /* (non-Javadoc)

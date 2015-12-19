@@ -61,8 +61,6 @@ public class MockUser extends MockAuditableObject implements User {
     private String password;
 
     private String email;
-    
-    private transient String oldEmail;
 
     private Boolean admin;
     
@@ -138,19 +136,7 @@ public class MockUser extends MockAuditableObject implements User {
      * @param email The email.
      */
     public final void setEmail(final String email) {
-        oldEmail = this.email;
         this.email = email;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isEmailChanged()
-     */
-    /**
-     * Is email changed.
-     * @return If email is changed.
-     */
-    public final boolean isEmailChanged() {
-        return oldEmail != null && ! oldEmail.equals(email);
     }
 
     /* (non-Javadoc)

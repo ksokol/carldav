@@ -57,7 +57,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user2 = userDao.createUser(user2);
 
         // find by username
-        User queryUser1 = userDao.getUser("user1");
+        User queryUser1 = userDao.getUserByEmail("user1@user1.com");
         Assert.assertNotNull(queryUser1);
         Assert.assertNotNull(queryUser1.getEmail());
         verifyUser(user1, queryUser1);
@@ -150,13 +150,13 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         userDao.createUser(user1);
         clearSession();
         
-        User queryUser1 = userDao.getUser("user1");
+        User queryUser1 = userDao.getUserByEmail("user1@user1.com");
         Assert.assertNotNull(queryUser1);
         userDao.removeUser(queryUser1.getEmail());
         
         clearSession();
         
-        queryUser1 = userDao.getUser("user1");
+        queryUser1 = userDao.getUserByEmail("user1@user1.com");
         Assert.assertNull(queryUser1);
     }
 
@@ -175,13 +175,13 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         clearSession();
         
-        User queryUser1 = userDao.getUser("user1");
+        User queryUser1 = userDao.getUserByEmail("user1@user1.com");
         Assert.assertNotNull(queryUser1);
         userDao.removeUser(user1.getEmail());
         
         clearSession();
         
-        queryUser1 = userDao.getUser("user1");
+        queryUser1 = userDao.getUserByEmail("user1@user1.com");
         Assert.assertNull(queryUser1);
     }
 

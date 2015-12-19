@@ -81,9 +81,7 @@ public class HibUser extends HibAuditableObject implements User {
 
     @Column(name = "admin")
     private Boolean admin;
-    
-    private transient Boolean oldAdmin;
-    
+
     @Column(name = "locked")
     private Boolean locked;
 
@@ -145,26 +143,11 @@ public class HibUser extends HibAuditableObject implements User {
     public Boolean getAdmin() {
         return admin;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getOldAdmin()
-     */
-    public Boolean getOldAdmin() {
-        return oldAdmin;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#isAdminChanged()
-     */
-    public boolean isAdminChanged() {
-        return oldAdmin != null && ! oldAdmin.equals(admin);
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#setAdmin(java.lang.Boolean)
      */
     public void setAdmin(Boolean admin) {
-        oldAdmin = this.admin;
         this.admin = admin;
     }
 

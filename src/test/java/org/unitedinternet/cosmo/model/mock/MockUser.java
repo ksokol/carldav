@@ -63,9 +63,7 @@ public class MockUser extends MockAuditableObject implements User {
     private String email;
 
     private Boolean admin;
-    
-    private transient Boolean oldAdmin;
-    
+
     private Boolean locked;
 
     public MockUser() {
@@ -149,28 +147,6 @@ public class MockUser extends MockAuditableObject implements User {
     public final Boolean getAdmin() {
         return admin;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getOldAdmin()
-     */
-    /**
-     * Gets old admin.
-     * @return The old admin.
-     */
-    public final Boolean getOldAdmin() {
-        return oldAdmin;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isAdminChanged()
-     */
-    /**
-     * Verify if admin is changed.
-     * @return If admin is changed or not.
-     */
-    public final boolean isAdminChanged() {
-        return oldAdmin != null && ! oldAdmin.equals(admin);
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setAdmin(java.lang.Boolean)
@@ -180,7 +156,6 @@ public class MockUser extends MockAuditableObject implements User {
      * @param admin The admin.
      */
     public final void setAdmin(final Boolean admin) {
-        oldAdmin = this.admin;
         this.admin = admin;
     }
 

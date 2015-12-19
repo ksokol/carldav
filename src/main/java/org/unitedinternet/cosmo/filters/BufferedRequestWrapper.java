@@ -35,12 +35,7 @@ public class BufferedRequestWrapper extends HttpServletRequestWrapper {
     
     private BufferedServletInputStream inputStream = null;
     private boolean retryRequest = false;
-    
-    public BufferedRequestWrapper(HttpServletRequest request) throws IOException {
-        super(request);
-        inputStream = new BufferedServletInputStream(request.getInputStream());
-    }
-    
+
     /**
      * @param request servlet request
      * @param maxMemoryBuffer Maximum size of request that will be 

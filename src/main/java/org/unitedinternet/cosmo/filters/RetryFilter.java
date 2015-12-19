@@ -15,6 +15,10 @@
  */
 package org.unitedinternet.cosmo.filters;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.unitedinternet.cosmo.server.ServerConstants;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -25,10 +29,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.server.ServerConstants;
 
 /**
  * Filter that searches for known exception types (either caught
@@ -197,10 +197,6 @@ public class RetryFilter implements Filter, ServerConstants {
     
     public void setMaxRetries(int maxRetries) {
         this.maxRetries = maxRetries;
-    }
-
-    public void setMaxMemoryBuffer(int maxMemoryBuffer) {
-        this.maxMemoryBuffer = maxMemoryBuffer;
     }
 
     public void setExceptions(Class[] exceptions) {

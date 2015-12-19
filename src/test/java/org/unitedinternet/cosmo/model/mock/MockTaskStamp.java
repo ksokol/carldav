@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.TaskStamp;
 
@@ -38,24 +36,14 @@ public class MockTaskStamp extends MockStamp implements java.io.Serializable, Ta
     public String getType() {
         return "task";
     }
-    
-    /**
-     * Return TaskStamp from Item
-     * @param item The item.
-     * @return TaskStamp from Item
-     */
-    public static TaskStamp getStamp(Item item) {
-        return (TaskStamp) item.getStamp(TaskStamp.class);
-    }
-    
+
     /**
      * Copy.
      * {@inheritDoc}
      * @return The stamp.
      */
     public Stamp copy() {
-        TaskStamp stamp = new MockTaskStamp();
-        return stamp;
+        return new MockTaskStamp();
     }
 
     @Override

@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import org.w3c.dom.Element;
-
 /**
  * Factory api for creating model objects.
  */
@@ -88,12 +86,4 @@ public interface EntityFactory {
      * @return new QName
      */
     QName createQName(String namespace, String localname);
-
-    /**
-     * Create new XMLAttribute using element value
-     * @param qname QName of attribute
-     * @param element element value
-     * @return new XMLAttribute
-     */
-    XmlAttribute createXMLAttribute(QName qname, Element e);
 }

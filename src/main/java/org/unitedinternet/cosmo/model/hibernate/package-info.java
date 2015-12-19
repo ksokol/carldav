@@ -26,11 +26,6 @@
     ),
 
     @TypeDef(
-            name="xml_clob",
-            typeClass = org.unitedinternet.cosmo.hibernate.XmlClobType.class
-    ),
-
-    @TypeDef(
             name="long_timestamp",
             typeClass = org.unitedinternet.cosmo.hibernate.LongTimestampType.class
     )

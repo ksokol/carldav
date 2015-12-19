@@ -78,7 +78,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             throw new IllegalArgumentException("email required");
         }
         try {
-            return findUserByEmail(email);
+            return findUserByEmailIgnoreCase(email);
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -125,20 +125,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     private User findUserByUsername(String username) {
         return (User) getSession().byNaturalId(HibUser.class).using("username", username).load();
-    }
-
-    private User findUserByEmail(String email) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery("user.byEmail").setParameter(
-                "email", email);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        List users = hibQuery.list();
-        if (users.size() > 0) {
-            return (User) users.get(0);
-        } else {
-            return null;
-        }
     }
 
     private User findUserByEmailIgnoreCase(String email) {

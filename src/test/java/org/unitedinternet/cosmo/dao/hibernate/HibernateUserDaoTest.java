@@ -90,13 +90,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user3.setEmail("user1@user1.com");
         user3.setPassword("user1password");
         user3.setAdmin(Boolean.TRUE);
-
-        try {
-            userDao.createUser(user3);
-            Assert.fail("able to create user with duplicate username");
-        } catch (DuplicateUsernameException due) {
-        }
-
         user3.setUsername("user3");
         try {
             userDao.createUser(user3);
@@ -127,15 +120,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
         user2.setAdmin(Boolean.FALSE);
-
-        try {
-            user2 = userDao.createUser(user2);
-            clearSession();
-            Assert.fail("able to create duplicate usernames!");
-        } catch (DuplicateUsernameException e) {
-        }
-        
-        
         user2.setUsername("user2");   
         user2 = userDao.createUser(user2);
         clearSession();

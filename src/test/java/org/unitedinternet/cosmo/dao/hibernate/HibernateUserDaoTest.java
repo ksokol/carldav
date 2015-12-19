@@ -191,7 +191,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
      * @param user2 User2.
      */
     private void verifyUser(User user1, User user2) {
-        Assert.assertEquals(user1.getUsername(), user2.getUsername());
         Assert.assertEquals(user1.getEmail(), user2.getEmail());
         Assert.assertEquals(user1.getPassword(), user2.getPassword());
     }
@@ -206,7 +205,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         Iterator it = users.iterator();
         while (it.hasNext()) {
             User nextUser = (User) it.next();
-            if (nextUser.getUsername().equals(user.getUsername())) {
+            if (nextUser.getEmail().equals(user.getEmail())) {
                 verifyUser(user, nextUser);
                 return;
             }

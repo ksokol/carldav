@@ -28,29 +28,6 @@ public class MockUser extends MockAuditableObject implements User {
 
     /**
      */
-    public static final int USERNAME_LEN_MIN = 3;
-    /**
-     */
-    public static final int USERNAME_LEN_MAX = 32;
-    /**
-     */
-    public static final Pattern USERNAME_PATTERN =
-        Pattern.compile("^[\\u0020-\\ud7ff\\ue000-\\ufffd&&[^\\u007f\\u003a;/\\\\]]+$");
-    
-    /**
-     */
-    public static final int FIRSTNAME_LEN_MIN = 1;
-    /**
-     */
-    public static final int FIRSTNAME_LEN_MAX = 128;
-    /**
-     */
-    public static final int LASTNAME_LEN_MIN = 1;
-    /**
-     */
-    public static final int LASTNAME_LEN_MAX = 128;
-    /**
-     */
     public static final int EMAIL_LEN_MIN = 1;
     /**
      */
@@ -198,32 +175,7 @@ public class MockUser extends MockAuditableObject implements User {
      * Validate.
      */
     public final void validate() {
-        validateUsername();
         validateEmail();
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#validateUsername()
-     */
-    /**
-     * Validate username.
-     */
-    public final void validateUsername() {
-        if (username == null) {
-            throw new ModelValidationException(this,"Username not specified");
-        }
-        if (username.length() < USERNAME_LEN_MIN ||
-            username.length() > USERNAME_LEN_MAX) {
-            throw new ModelValidationException(this,"Username must be " +
-                                               USERNAME_LEN_MIN + " to " +
-                                               USERNAME_LEN_MAX +
-                                               " characters in length");
-        }
-        Matcher m = USERNAME_PATTERN.matcher(username);
-        if (! m.matches()) {
-            throw new ModelValidationException(this,"Username contains illegal " +
-                                               "characters");
-        }
     }
 
     /* (non-Javadoc)

@@ -64,8 +64,6 @@ public class TestHelper {
 
         User user = entityFactory.createUser();
         user.setUsername(username);
-        user.setFirstName(username);
-        user.setLastName(username);
         user.setEmail(username + "@localhost");
         user.setPassword(password);
 

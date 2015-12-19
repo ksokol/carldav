@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
@@ -30,7 +28,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Index;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -39,8 +36,7 @@ import javax.validation.constraints.NotNull;
  * Hibernate persistent User.
  */
 @Entity
-@Table(name="users",indexes={@Index(name = "idx_activationid",columnList = "activationId" )})
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Table(name="users")
 public class HibUser extends HibAuditableObject implements User {
 
     /**
@@ -91,26 +87,14 @@ public class HibUser extends HibAuditableObject implements User {
     @Column(name = "password")
     @NotNull
     private String password;
-    
-    @Column(name = "firstname")
-    @Length(min=FIRSTNAME_LEN_MIN, max=FIRSTNAME_LEN_MAX)
-    private String firstName;
-    
-    @Column(name = "lastname")
-    @Length(min=LASTNAME_LEN_MIN, max=LASTNAME_LEN_MAX)
-    private String lastName;
-    
+
     @Column(name = "email", nullable=true, unique=true)
     @Length(min=EMAIL_LEN_MIN, max=EMAIL_LEN_MAX)
     @Email
     private String email;
     
     private transient String oldEmail;
-    
-    @Column(name = "activationid", nullable=true, length=255)
-    @Length(min=1, max=255)
-    private String activationId;
-    
+
     @Column(name = "admin")
     private Boolean admin;
     
@@ -173,34 +157,6 @@ public class HibUser extends HibAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getFirstName()
-     */
-    public String getFirstName() {
-        return firstName;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setFirstName(java.lang.String)
-     */
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getLastName()
-     */
-    public String getLastName() {
-        return lastName;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setLastName(java.lang.String)
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#getEmail()
      */
     public String getEmail() {
@@ -256,13 +212,6 @@ public class HibUser extends HibAuditableObject implements User {
     public void setAdmin(Boolean admin) {
         oldAdmin = this.admin;
         this.admin = admin;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setActivationId(java.lang.String)
-     */
-    public void setActivationId(String activationId) {
-        this.activationId = activationId;
     }
 
     /* (non-Javadoc)

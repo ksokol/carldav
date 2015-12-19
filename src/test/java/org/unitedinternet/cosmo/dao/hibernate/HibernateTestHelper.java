@@ -42,22 +42,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibUser;
  *
  */
 public class HibernateTestHelper {
-    /**
-     * Creates dummy user.
-     * @param userDao The userDao.
-     * @param index The index.
-     * @return The user.
-     */
-    public User createDummyUser(UserDao userDao, int index) {
-        User user = new HibUser();
-        user.setUsername("user" + index);
-        user.setPassword("password" + index);
-        user.setEmail("user" + index + "@test" + index);
-        user.setAdmin(Boolean.TRUE);
-        user.setFirstName("fristname" + index);
-        user.setLastName("lastname" + index);
-        return userDao.createUser(user);
-    }
 
     /**
      * Verify item.
@@ -263,8 +247,6 @@ public class HibernateTestHelper {
             user.setPassword(username);
             user.setEmail(username + "@testem");
             user.setAdmin(Boolean.TRUE);
-            user.setFirstName("testfn");
-            user.setLastName("testln");
             userDao.createUser(user);
 
             user = userDao.getUser(username);

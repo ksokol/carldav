@@ -57,22 +57,6 @@ public interface User extends AuditableObject{
 
     /**
      */
-    String getFirstName();
-
-    /**
-     */
-    void setFirstName(String firstName);
-
-    /**
-     */
-    String getLastName();
-
-    /**
-     */
-    void setLastName(String lastName);
-
-    /**
-     */
     String getEmail();
 
     /**

@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.User;
 
@@ -62,17 +61,11 @@ public class MockUser extends MockAuditableObject implements User {
     private transient String oldUsername;
     
     private String password;
-    
-    private String firstName;
-    
-    private String lastName;
-    
+
     private String email;
     
     private transient String oldEmail;
-   
-    private String activationId;
-  
+
     private Boolean admin;
     
     private transient Boolean oldAdmin;
@@ -149,50 +142,6 @@ public class MockUser extends MockAuditableObject implements User {
      */
     public final void setPassword(final String password) {
         this.password = password;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getFirstName()
-     */
-    /**
-     * Gets first name.
-     * @return The first name.
-     */
-    public final String getFirstName() {
-        return firstName;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setFirstName(java.lang.String)
-     */
-    /**
-     * Sets first name.
-     * @param firstName The first name.
-     */
-    public final void setFirstName(final String firstName) {
-        this.firstName = firstName;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getLastName()
-     */
-    /**
-     * Gets last name.
-     * @return The last name.
-     */
-    public final String getLastName() {
-        return lastName;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setLastName(java.lang.String)
-     */
-    /**
-     * Sets last name.
-     * @param lastName The last name.
-     */
-    public final void setLastName(final String lastName) {
-        this.lastName = lastName;
     }
 
     /* (non-Javadoc)
@@ -339,24 +288,6 @@ public class MockUser extends MockAuditableObject implements User {
         }
     }
 
-    /**
-     * ToString.
-     * {@inheritDoc}
-     * @return The string.
-     */
-    public final String toString() {
-        return new ToStringBuilder(this).
-            append("username", username).
-            append("password", "xxxxxx").
-            append("firstName", firstName).
-            append("lastName", lastName).
-            append("email", email).
-            append("admin", admin).
-            append("activationId", activationId).
-            append("locked", locked).
-            toString();
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#validate()
      */
@@ -365,8 +296,6 @@ public class MockUser extends MockAuditableObject implements User {
      */
     public final void validate() {
         validateUsername();
-        validateFirstName();
-        validateLastName();
         validateEmail();
     }
 
@@ -409,44 +338,6 @@ public class MockUser extends MockAuditableObject implements User {
             throw new ModelValidationException(this,"Password must be " +
                                                PASSWORD_LEN_MIN + " to " +
                                                PASSWORD_LEN_MAX +
-                                               " characters in length");
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#validateFirstName()
-     */
-    /**
-     * Validate first name.
-     */
-    public final void validateFirstName() {
-        if (firstName == null) {
-            throw new ModelValidationException(this,"First name is null");
-        }
-        if (firstName.length() < FIRSTNAME_LEN_MIN ||
-            firstName.length() > FIRSTNAME_LEN_MAX) {
-            throw new ModelValidationException(this,"First name must be " +
-                                               FIRSTNAME_LEN_MIN + " to " +
-                                               FIRSTNAME_LEN_MAX +
-                                               " characters in length");
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#validateLastName()
-     */
-    /**
-     * Validate last name.
-     */
-    public final void validateLastName() {
-        if (lastName == null) {
-            throw new ModelValidationException(this,"Last name is null");
-        }
-        if (lastName.length() < LASTNAME_LEN_MIN ||
-            lastName.length() > LASTNAME_LEN_MAX) {
-            throw new ModelValidationException(this,"Last name must be " +
-                                               LASTNAME_LEN_MIN + " to " +
-                                               LASTNAME_LEN_MAX +
                                                " characters in length");
         }
     }

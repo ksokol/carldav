@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.service.impl;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.mock.MockContentDao;
 import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
@@ -43,7 +42,7 @@ public class StandardUserServiceTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        userDao = new MockUserDao(new MockDaoStorage());
+        userDao = new MockUserDao();
         service = new StandardUserService(new MockContentDao(new MockDaoStorage()), userDao);
     }
 

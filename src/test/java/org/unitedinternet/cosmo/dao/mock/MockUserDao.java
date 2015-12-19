@@ -40,15 +40,7 @@ public class MockUserDao implements UserDao {
     @SuppressWarnings("rawtypes")
     private HashMap uidIdx;
 
-    private MockDaoStorage storage = null;
-
-    /**
-     * Constructor.
-     * @param storage The mock dao storage.
-     */
-    @SuppressWarnings("rawtypes")
-    public MockUserDao(MockDaoStorage storage) {
-        this.storage = storage;
+    public MockUserDao() {
         usernameIdx = new HashMap();
         emailIdx = new HashMap();
         uidIdx = new HashMap();
@@ -137,50 +129,6 @@ public class MockUserDao implements UserDao {
         usernameIdx.put(user.getUsername(), user);
         emailIdx.put(user.getEmail(), user);
         uidIdx.put(user.getEmail(), user);
-        return user;
-    }
-
-    /**
-     * Updates user.
-     * {@inheritDoc}
-     * @param user The user.
-     * @return The user.
-     */
-    @SuppressWarnings("unchecked")
-    public User updateUser(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("null user");
-        }
-        
-        // Update modified date, etag for User and associated subscriptions
-        // and preferences.
-        ((MockAuditableObject) user).setModifiedDate(new Date());
-        ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
-                .calculateEntityTag());
-
-        ((MockUser) user).validate();
-        String key = user.isUsernameChanged() ?
-            user.getOldUsername() :
-            user.getUsername();
-        if (! usernameIdx.containsKey(key)) {
-            throw new IllegalArgumentException("user not found");
-        }
-        if (user.isUsernameChanged() &&
-            usernameIdx.containsKey(user.getUsername())) {
-            throw new DuplicateUsernameException(user.getUsername());
-        }
-        if (user.isEmailChanged() && emailIdx.containsKey(user.getEmail())) {
-            throw new DuplicateEmailException(user.getEmail());
-        }
-        usernameIdx.put(user.getUsername(), user);
-        if (user.isUsernameChanged()) {
-            usernameIdx.remove(user.getOldUsername());
-            storage.setRootUid(user.getUsername(), storage.getRootUid(user.getOldUsername()));
-        }
-        emailIdx.put(user.getEmail(), user);
-        if (user.isEmailChanged()) {
-            emailIdx.remove(user.getOldEmail());
-        }
         return user;
     }
 

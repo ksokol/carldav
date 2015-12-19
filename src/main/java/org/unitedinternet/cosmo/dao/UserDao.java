@@ -62,17 +62,6 @@ public interface UserDao {
     User createUser(User user);
 
     /**
-     * Updates a user account that exists in the repository. Returns a
-     * new instance of <code>User</code>  after saving the original
-     * one.
-     *
-     * @param user the account to update
-     * @return The updated account of the user.
-     *
-     */
-    User updateUser(User user);
-
-    /**
      * Removes the user account identified by the given username from
      * the repository.
      *

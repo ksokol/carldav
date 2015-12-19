@@ -53,7 +53,7 @@ public class MockHelper extends TestHelper {
 
         MockDaoStorage storage = new MockDaoStorage();
         MockContentDao contentDao = new MockContentDao(storage);
-        MockUserDao userDao = new MockUserDao(storage);
+        MockUserDao userDao = new MockUserDao();
         SingleVMLockManager lockManager = new SingleVMLockManager();
         
         entityFactory = new MockEntityFactory();

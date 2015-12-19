@@ -127,36 +127,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public User updateUser(User user) {
-        try {
-            // prevent auto flushing when querying for existing users
-            getSession().setFlushMode(FlushMode.MANUAL);
-
-            User findUser = findUserByUsernameOrEmailIgnoreCaseAndId(getBaseModelObject(user)
-                    .getId(), user.getUsername(), user.getEmail());
-
-            if (findUser != null) {
-                if (findUser.getEmail().equals(user.getEmail())) {
-                    throw new DuplicateEmailException(user.getEmail());
-                } else {
-                    throw new DuplicateUsernameException(user.getUsername());
-                }
-            }
-
-            user.updateTimestamp();
-            getSession().update(user);
-            getSession().flush();
-
-            return user;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-
     private User findUserByUsername(String username) {
         return (User) getSession().byNaturalId(HibUser.class).using("username", username).load();
     }

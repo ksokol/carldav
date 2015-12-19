@@ -17,16 +17,12 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarData;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.report.MultiStatusReport;
-import org.w3c.dom.Element;
 
 /**
  * <p>
@@ -43,8 +39,6 @@ import org.w3c.dom.Element;
  * </p>
  */
 public abstract class CaldavMultiStatusReport extends MultiStatusReport implements CaldavConstants {
-
-    private OutputFilter outputFilter;
 
     /**
      * Removes <code>CALDAV:calendar-data</code> from the property spec
@@ -76,46 +70,13 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
         return msr;
     }
 
-    // our methods
-
-    public void setOutputFilter(OutputFilter outputFilter) {
-        this.outputFilter = outputFilter;
-    }
-
-    /**
-     * Parses an output filter out of the given report info.
-     */
-    protected static OutputFilter findOutputFilter(ReportInfo info)
-        throws CosmoDavException {
-        Element propdata =
-            DomUtil.getChildElement(getReportElementFrom(info),
-                                    XML_PROP, NAMESPACE);
-        if (propdata == null) {
-            return null;
-        }
-
-        Element cdata =
-            DomUtil.getChildElement(propdata, ELEMENT_CALDAV_CALENDAR_DATA,
-                                    NAMESPACE_CALDAV);
-        if (cdata == null) {
-            return null;
-        }
-
-        return CaldavOutputFilter.createFromXml(cdata);
-    }
-
     private String readCalendarData(DavCalendarResource resource)
         throws CosmoDavException {
         if (! resource.exists()) {
             return null;
         }
         StringBuffer buffer = new StringBuffer();
-        if (outputFilter != null) {
-            outputFilter.filter(resource.getCalendar(), buffer);
-        }
-        else {
-            buffer.append(resource.getCalendar().toString());
-        }
+        buffer.append(resource.getCalendar().toString());
         return buffer.toString();
     }
 }

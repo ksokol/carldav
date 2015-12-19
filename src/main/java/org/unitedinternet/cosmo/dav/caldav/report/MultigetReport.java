@@ -94,7 +94,6 @@ public class MultigetReport extends CaldavMultiStatusReport {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
-            setOutputFilter(findOutputFilter(info));
         }
 
         List<Element> hrefElements =

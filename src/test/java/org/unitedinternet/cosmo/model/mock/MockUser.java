@@ -149,17 +149,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setAdmin(java.lang.Boolean)
-     */
-    /**
-     * Sets admin.
-     * @param admin The admin.
-     */
-    public final void setAdmin(final Boolean admin) {
-        this.admin = admin;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isLocked()
      */
     /**

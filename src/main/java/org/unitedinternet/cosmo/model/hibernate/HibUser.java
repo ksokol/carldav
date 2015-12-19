@@ -145,13 +145,6 @@ public class HibUser extends HibAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setAdmin(java.lang.Boolean)
-     */
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#isLocked()
      */
     public Boolean isLocked() {

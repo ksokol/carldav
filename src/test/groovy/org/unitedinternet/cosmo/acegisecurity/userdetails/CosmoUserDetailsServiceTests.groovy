@@ -36,7 +36,7 @@ class CosmoUserDetailsServiceTests {
 
     @Test
     void hasRootRole() {
-        when(user.getAdmin()).thenReturn(true)
+        when(user.getRoles()).thenReturn("ROLE_ROOT")
 
         UserDetails userDetails = uut.loadUserByUsername(USERNAME)
 

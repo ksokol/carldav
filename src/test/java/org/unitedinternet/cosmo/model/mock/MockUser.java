@@ -159,6 +159,16 @@ public class MockUser extends MockAuditableObject implements User {
         return locked;
     }
 
+    @Override
+    public String getRoles() {
+        return null;
+    }
+
+    @Override
+    public void setRoles(final String roles) {
+
+    }
+
     /**
      * Username determines equality
      * @param obj The object.

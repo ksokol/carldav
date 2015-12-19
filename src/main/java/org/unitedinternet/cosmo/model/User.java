@@ -55,11 +55,11 @@ public interface User extends AuditableObject{
      */
     void setEmail(String email);
 
-    /**
-     */
-    Boolean getAdmin();
-
     Boolean isLocked();
+
+    String getRoles();
+
+    void setRoles(String roles);
 
     /**
      */

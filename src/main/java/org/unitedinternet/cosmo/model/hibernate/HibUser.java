@@ -85,6 +85,9 @@ public class HibUser extends HibAuditableObject implements User {
     @Column(name = "locked")
     private Boolean locked;
 
+    @Column(name = "roles")
+    private String roles;
+
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HibItem> items;
 
@@ -156,6 +159,16 @@ public class HibUser extends HibAuditableObject implements User {
      */
     public void setLocked(Boolean locked) {
         this.locked = locked;
+    }
+
+    @Override
+    public String getRoles() {
+        return roles;
+    }
+
+    @Override
+    public void setRoles(final String roles) {
+        this.roles = roles;
     }
 
     /**

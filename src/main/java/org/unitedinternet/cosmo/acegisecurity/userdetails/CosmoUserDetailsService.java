@@ -15,17 +15,18 @@
  */
 package org.unitedinternet.cosmo.acegisecurity.userdetails;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class CosmoUserDetailsService implements UserDetailsService {
@@ -43,12 +44,12 @@ public class CosmoUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("user " + username + " not found");
         }
 
-        final List<GrantedAuthority> authorities = new ArrayList<>();
+        final List<GrantedAuthority> authorities;
 
-        if (user.getAdmin()) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_ROOT"));
+        if(StringUtils.isEmpty(user.getRoles())) {
+            authorities = Collections.emptyList();
         } else {
-            authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRoles());
         }
 
         return new CosmoUserDetails(user.getUsername(), user.getPassword(), true, true, true, !user.isLocked(), authorities, user);

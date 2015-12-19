@@ -21,7 +21,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
 import org.unitedinternet.cosmo.model.mock.MockUser;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -33,7 +32,6 @@ import java.util.Set;
  * Mock implementation of {@link UserDao} useful for testing.
  */
 public class MockUserDao implements UserDao {
-    static int idseq = 0;
 
     @SuppressWarnings("rawtypes")
     private HashMap usernameIdx;
@@ -45,8 +43,6 @@ public class MockUserDao implements UserDao {
     private HashMap activationIdIdx;
 
     private MockDaoStorage storage = null;
-    
-    private VersionFourGenerator idGenerator = new VersionFourGenerator();
 
     /**
      * Constructor.
@@ -141,8 +137,6 @@ public class MockUserDao implements UserDao {
             throw new IllegalArgumentException("null user");
         }
 
-        user.setUid(idGenerator.nextStringIdentifier());
-        
         // Set create/modified date, etag for User and associated subscriptions
         // and perferences.
         ((MockAuditableObject) user).setModifiedDate(new Date());
@@ -160,7 +154,7 @@ public class MockUserDao implements UserDao {
         
         usernameIdx.put(user.getUsername(), user);
         emailIdx.put(user.getEmail(), user);
-        uidIdx.put(user.getUid(), user);
+        uidIdx.put(user.getEmail(), user);
         activationIdIdx.put(user.getActivationId(), user);
         return user;
     }

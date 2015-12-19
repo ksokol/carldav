@@ -15,13 +15,11 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
-import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
@@ -36,18 +34,7 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 
-
-/**
- * Implemtation of UserDao using Hibernate persistence objects.
- */
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
-
-    private final IdGenerator idGenerator;
-
-    public UserDaoImpl(final IdGenerator idGenerator) {
-        Assert.notNull(idGenerator, "idGenerator is null");
-        this.idGenerator = idGenerator;
-    }
 
     public User createUser(User user) {
 
@@ -66,10 +53,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
             if (findUserByEmailIgnoreCase(user.getEmail()) != null) {
                 throw new DuplicateEmailException(user.getEmail());
-            }
-
-            if (user.getUid() == null || "".equals(user.getUid())) {
-                user.setUid(idGenerator.nextStringIdentifier());
             }
 
             getSession().save(user);

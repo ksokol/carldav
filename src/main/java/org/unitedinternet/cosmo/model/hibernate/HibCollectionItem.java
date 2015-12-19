@@ -20,7 +20,6 @@ import org.hibernate.annotations.CascadeType;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,10 +37,7 @@ import javax.persistence.OneToMany;
 @DiscriminatorValue("collection")
 public class HibCollectionItem extends HibItem implements CollectionItem {
 
-    private static final long serialVersionUID = 2873258323314048223L;
-
-    public static final QName ATTR_EXCLUDE_FREE_BUSY_ROLLUP =
-            new HibQName(CollectionItem.class, "excludeFreeBusyRollup");
+    private static final long serialVersionUID = 2873258323314148223L;
 
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="primaryKey.collection", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE }) 
@@ -64,14 +60,11 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
         return children;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#getChildDetails(org.unitedinternet.cosmo.model.Item)
-     */
     public CollectionItemDetails getChildDetails(Item item) {
         for(CollectionItemDetails cid: childDetails) {
             if(cid.getItem().getUid().equals(item.getUid()) && 
                     cid.getItem().getName().equals(item.getName())&& 
-                    cid.getItem().getOwner().getUid().equals(item.getOwner().getUid()) ) {
+                    cid.getItem().getOwner().getEmail().equals(item.getOwner().getEmail()) ) {
                 return cid;
             }
         }
@@ -79,9 +72,6 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CollectionItem#getChildByName(java.lang.String)
-     */
     public Item getChildByName(String name) {
         for (Item child : getChildren()) {
             if (child.getName().equals(name)) {

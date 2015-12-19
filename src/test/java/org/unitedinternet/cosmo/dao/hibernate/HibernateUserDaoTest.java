@@ -66,7 +66,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         // find by username
         User queryUser1 = userDao.getUser("user1");
         Assert.assertNotNull(queryUser1);
-        Assert.assertNotNull(queryUser1.getUid());
+        Assert.assertNotNull(queryUser1.getEmail());
         verifyUser(user1, queryUser1);
 
         clearSession();
@@ -313,7 +313,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
      * @param user2 User2.
      */
     private void verifyUser(User user1, User user2) {
-        Assert.assertEquals(user1.getUid(), user2.getUid());
         Assert.assertEquals(user1.getUsername(), user2.getUsername());
         Assert.assertEquals(user1.getAdmin(), user2.getAdmin());
         Assert.assertEquals(user1.getEmail(), user2.getEmail());

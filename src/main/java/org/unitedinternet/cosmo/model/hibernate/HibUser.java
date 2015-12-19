@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
@@ -74,11 +73,6 @@ public class HibUser extends HibAuditableObject implements User {
      */
     public static final int EMAIL_LEN_MAX = 128;
 
-    @Column(name = "uid", nullable=false, unique=true, length=255)
-    @NotNull
-    @Length(min=1, max=255)
-    private String uid;
-    
     @Column(name = "username", nullable=false)
     @NotNull
     @NaturalId
@@ -133,20 +127,6 @@ public class HibUser extends HibAuditableObject implements User {
     public HibUser() {
         admin = Boolean.FALSE;
         locked = Boolean.FALSE;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getUid()
-     */
-    public String getUid() {
-        return uid;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setUid(java.lang.String)
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     /* (non-Javadoc)
@@ -352,35 +332,18 @@ public class HibUser extends HibAuditableObject implements User {
         }
     }
 
-    /**
-     */
-    public String toString() {
-        return new ToStringBuilder(this).
-            append("username", username).
-            append("password", "xxxxxx").
-            append("firstName", firstName).
-            append("lastName", lastName).
-            append("email", email).
-            append("admin", admin).
-            append("activationId", activationId).
-            append("locked", locked).
-            append("uid", uid).
-            toString();
-    }
-
-   
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#validateRawPassword()
      */
     public void validateRawPassword() {
         if (password == null) {
-            throw new ModelValidationException("UserName" + this.getUsername() + " UID" + this.getUid(), 
+            throw new ModelValidationException("UserName" + this.getUsername() + " EMAIL " + this.getEmail(),
                     "Password not specified");
         }
         if (password.length() < PASSWORD_LEN_MIN ||
             password.length() > PASSWORD_LEN_MAX) {
             
-            throw new ModelValidationException("UserName" + this.getUsername() + " UID" + this.getUid(), 
+            throw new ModelValidationException("UserName" + this.getUsername() + " EMAIL " + this.getEmail(),
                                                "Password must be " +
                                                PASSWORD_LEN_MIN + " to " +
                                                PASSWORD_LEN_MAX +

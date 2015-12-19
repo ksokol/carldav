@@ -33,15 +33,6 @@ public interface User extends AuditableObject{
 
     /**
      */
-    String getUid();
-
-    /**
-     * @param uid
-     */
-    void setUid(String uid);
-
-    /**
-     */
     String getUsername();
 
     /**

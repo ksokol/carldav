@@ -57,8 +57,6 @@ public class MockUser extends MockAuditableObject implements User {
     public static final int EMAIL_LEN_MAX = 128;
 
     
-    private String uid;
-    
     private String username;
     
     private transient String oldUsername;
@@ -84,28 +82,6 @@ public class MockUser extends MockAuditableObject implements User {
     public MockUser() {
         admin = Boolean.FALSE;
         locked = Boolean.FALSE;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getUid()
-     */
-    /**
-     * Gets uid.
-     * @return The string.
-     */
-    public final String getUid() {
-        return uid;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setUid(java.lang.String)
-     */
-    /**
-     * Sets uid.
-     * @param uid The id.
-     */
-    public final void setUid(final String uid) {
-        this.uid = uid;
     }
 
     /* (non-Javadoc)

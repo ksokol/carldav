@@ -65,14 +65,7 @@ public interface UserDao {
      * Removes the user account identified by the given username from
      * the repository.
      *
-     * @param username the username of the account to return
+     * @param email the username of the account to return
      */
-    void removeUser(String username);
-
-    /**
-     * Removes a user account from the repository.
-     *
-     * @param user the user to remove
-     */
-    void removeUser(User user);
+    void removeUser(String email);
 }

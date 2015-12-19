@@ -20,7 +20,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
@@ -37,7 +36,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
     public void cleanup() {
         final Set<User> usersToDelete = userDao.getUsers();
         for (final User user : usersToDelete) {
-            userDao.removeUser(user);
+            userDao.removeUser(user.getEmail());
         }
     }
 
@@ -98,7 +97,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         }
 
         // delete user
-        userDao.removeUser("user2");
+        userDao.removeUser("user1@user1.com");
     }
 
     /**
@@ -160,7 +159,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         User queryUser1 = userDao.getUser("user1");
         Assert.assertNotNull(queryUser1);
-        userDao.removeUser(queryUser1);
+        userDao.removeUser(queryUser1.getEmail());
         
         clearSession();
         
@@ -186,7 +185,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         User queryUser1 = userDao.getUser("user1");
         Assert.assertNotNull(queryUser1);
-        userDao.removeUser(user1.getUsername());
+        userDao.removeUser(user1.getEmail());
         
         clearSession();
         

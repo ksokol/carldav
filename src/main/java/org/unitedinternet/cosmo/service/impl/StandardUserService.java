@@ -22,7 +22,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.User;
@@ -80,16 +79,13 @@ public class StandardUserService implements UserService {
             userDao.createUser(user);
             LOG.info("created new user:" + user.getEmail());
         } catch (DataIntegrityViolationException e) {
-            if (userDao.getUser(user.getUsername()) != null) {
-                throw new DuplicateUsernameException(user.getUsername());
-            }
             if (userDao.getUserByEmail(user.getEmail()) != null) {
                 throw new DuplicateEmailException(user.getEmail());
             }
             throw e;
         }
 
-        User newUser = userDao.getUser(user.getUsername());
+        User newUser = userDao.getUserByEmail(user.getEmail());
         contentDao.createRootItem(newUser);
         return newUser;
     }
@@ -101,7 +97,7 @@ public class StandardUserService implements UserService {
      * @param username the username of the account to return
      */
     public void removeUser(String username) {
-        User user = userDao.getUser(username);
+        User user = userDao.getUserByEmail(username);
         if(user==null) {
             return;
         }
@@ -111,7 +107,7 @@ public class StandardUserService implements UserService {
         // remove dangling items
         // (items that only exist in other user's collections)
         contentDao.removeUserContent(user);
-        userDao.removeUser(user);
+        userDao.removeUser(user.getEmail());
     }
 
     /**

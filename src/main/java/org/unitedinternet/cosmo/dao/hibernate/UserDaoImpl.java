@@ -20,8 +20,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
@@ -37,11 +37,8 @@ import javax.validation.ConstraintViolationException;
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     public User createUser(User user) {
-
         try {
-            if (user == null) {
-                throw new IllegalArgumentException("user is required");
-            }
+            Assert.notNull(user, "user is required");
 
             if (getBaseModelObject(user).getId() != -1) {
                 throw new IllegalArgumentException("new user is required");
@@ -100,23 +97,14 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public void removeUser(String username) {
+    public void removeUser(String email) {
         try {
-            User user = findUserByUsername(username);
+            User user = findUserByEmailIgnoreCase(email);
             // delete user
             if (user != null) {
-                removeUser(user);
+                getSession().delete(user);
+                getSession().flush();
             }
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public void removeUser(User user) {
-        try {
-            getSession().delete(user);
-            getSession().flush();
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);

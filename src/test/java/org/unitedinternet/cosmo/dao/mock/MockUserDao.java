@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dao.mock;
 
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
@@ -34,14 +33,11 @@ import java.util.Set;
 public class MockUserDao implements UserDao {
 
     @SuppressWarnings("rawtypes")
-    private HashMap usernameIdx;
-    @SuppressWarnings("rawtypes")
     private HashMap emailIdx;
     @SuppressWarnings("rawtypes")
     private HashMap uidIdx;
 
     public MockUserDao() {
-        usernameIdx = new HashMap();
         emailIdx = new HashMap();
         uidIdx = new HashMap();
 
@@ -67,7 +63,7 @@ public class MockUserDao implements UserDao {
         @SuppressWarnings("rawtypes")
         Set tmp = new HashSet();
         for (@SuppressWarnings("rawtypes")
-        Iterator i=usernameIdx.values().iterator(); i.hasNext();) {
+        Iterator i=emailIdx.values().iterator(); i.hasNext();) {
             tmp.add(i.next());
         }
         return tmp;
@@ -83,7 +79,7 @@ public class MockUserDao implements UserDao {
         if (username == null) {
             return null;
         }
-        return (User) usernameIdx.get(username);
+        return (User) emailIdx.get(username);
     }
 
     /**
@@ -115,18 +111,14 @@ public class MockUserDao implements UserDao {
         // and perferences.
         ((MockAuditableObject) user).setModifiedDate(new Date());
         ((MockAuditableObject) user).setCreationDate(new Date());
-        ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
+        ((MockAuditableObject) user).setEntityTag(user
                 .calculateEntityTag());
 
         ((MockUser) user).validate();
-        if (usernameIdx.containsKey(user.getUsername())) {
-            throw new DuplicateUsernameException(user.getUsername());
-        }
         if (emailIdx.containsKey(user.getEmail())) {
             throw new DuplicateEmailException(user.getEmail());
         }
-        
-        usernameIdx.put(user.getUsername(), user);
+
         emailIdx.put(user.getEmail(), user);
         uidIdx.put(user.getEmail(), user);
         return user;
@@ -141,23 +133,10 @@ public class MockUserDao implements UserDao {
         if (username == null) {
             throw new IllegalArgumentException("null username");
         }
-        if (usernameIdx.containsKey(username)) {
-            User user = (User) usernameIdx.get(username);
-            usernameIdx.remove(username);
+        if (emailIdx.containsKey(username)) {
+            User user = (User) emailIdx.get(username);
+            emailIdx.remove(username);
             emailIdx.remove(user.getEmail());
         }
-    }
-
-    /**
-     * Removes user.
-     * {@inheritDoc}
-     * @param user The user.
-     */
-    public void removeUser(User user) {
-        if (user == null) {
-            return;
-        }
-        usernameIdx.remove(user.getUsername());
-        emailIdx.remove(user.getEmail());
     }
 }

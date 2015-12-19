@@ -68,20 +68,6 @@ public class StandardUserServiceTest {
     }
 
     /**
-     * Tests get user.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testGetUser() throws Exception {
-        User u1 = testHelper.makeDummyUser();
-        String username1 = u1.getUsername();
-        userDao.createUser(u1);
-
-        User user = service.getUser(username1);
-        Assert.assertNotNull("User " + username1 + " null", user);
-    }
-
-    /**
      * Tests get user by email.
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -105,7 +91,7 @@ public class StandardUserServiceTest {
         String password = u1.getPassword();
 
         User user = service.createUser(u1);
-        Assert.assertNotNull("User not stored", userDao.getUser(u1.getUsername()));
+        Assert.assertNotNull("User not stored", userDao.getUserByEmail(u1.getEmail()));
         Assert.assertFalse("Original and stored password are the same",
                     user.getPassword().equals(password));
         Assert.assertEquals(user.getCreationDate(), user.getModifiedDate());
@@ -116,11 +102,11 @@ public class StandardUserServiceTest {
      * @throws Exception - if something is wrong this exception is thrown.
      */
     @Test
-    public void testRemoveUserByUsername() throws Exception {
+    public void testRemoveUserByEmail() throws Exception {
         User u1 = testHelper.makeDummyUser();
         service.createUser(u1);
 
-        service.removeUser(u1.getUsername());
+        service.removeUser(u1.getEmail());
 
         Assert.assertFalse("User not removed", userDao.getUsers().contains(u1));
     }

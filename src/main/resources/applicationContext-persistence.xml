@@ -42,12 +42,10 @@
         <constructor-arg index="0" ref="timeService" />
     </bean>
 
-    <bean id="eventStampInterceptor" class="org.unitedinternet.cosmo.model.hibernate.EventStampInterceptor" />
     <bean id="cosmoHibernateInterceptor" class="org.unitedinternet.cosmo.hibernate.CompoundInterceptor">
         <property name="interceptors">
             <list>
                 <ref bean="auditableObjectInterceptor" />
-                <ref bean="eventStampInterceptor" />
             </list>
         </property>
     </bean>

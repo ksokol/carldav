@@ -58,9 +58,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.Index;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SecondaryTable;
 import javax.validation.constraints.NotNull;
@@ -71,17 +69,11 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @SecondaryTable(name="event_stamp", pkJoinColumns={
-        @PrimaryKeyJoinColumn(name="stampid", referencedColumnName="id")},
-        indexes = {
-                @Index(name = "idx_startdt",columnList = "startDate"),
-                @Index(name = "idx_enddt",columnList = "endDate"),
-                @Index(name = "idx_floating",columnList = "isFloating")}
+        @PrimaryKeyJoinColumn(name="stampid", referencedColumnName="id")}
 )
 @DiscriminatorValue("baseevent")
 public abstract class HibBaseEventStamp extends HibStamp implements ICalendarConstants, BaseEventStamp {
 
-    public static final String TIME_INFINITY = "Z-TIME-INFINITY";
-    
     protected static final String VALUE_MISSING = "MISSING";
     
     @Column(table="event_stamp", name = "icaldata", length=102400000, nullable = false)
@@ -89,9 +81,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
     @NotNull
     private Calendar eventCalendar = null;
 
-    @Embedded
-    private HibEventTimeRangeIndex timeRangeIndex = null;
-    
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.BaseEventStamp#getEvent()
@@ -110,10 +99,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
      */
     public void setEventCalendar(Calendar calendar) {
         this.eventCalendar = calendar;
-    }
-    
-    public HibEventTimeRangeIndex getTimeRangeIndex() {
-        return timeRangeIndex;
     }
 
     /**

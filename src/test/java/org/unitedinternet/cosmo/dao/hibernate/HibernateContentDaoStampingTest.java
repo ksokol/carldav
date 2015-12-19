@@ -17,9 +17,6 @@ package org.unitedinternet.cosmo.dao.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Date;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,55 +51,6 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
     @Autowired
     private ContentDaoImpl contentDao;
 
-    private static final Log LOG = LogFactory.getLog(HibernateContentDaoStampingTest.class);
-
-    /**
-     * Test stamp handlers.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testStampHandlers() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-
-        NoteItem item = generateTestContent();
-        
-        item.setIcalUid("icaluid");
-        item.setBody("this is a body");
-        
-        HibEventStamp event = new HibEventStamp();
-        event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
-        
-        item.addStamp(event);
-        
-        Assert.assertNull(event.getTimeRangeIndex());
-        
-        ContentItem newItem = contentDao.createContent(root, item);
-        clearSession();
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        
-        event = (HibEventStamp) queryItem.getStamp(EventStamp.class);
-        Assert.assertEquals("20050817T115000Z", event.getTimeRangeIndex().getStartDate());
-        Assert.assertEquals("20050817T131500Z",event.getTimeRangeIndex().getEndDate());
-        Assert.assertFalse(event.getTimeRangeIndex().getIsFloating().booleanValue());
-        
-        event.setStartDate(new Date("20070101"));
-        //event.setEntityTag("foo"); // FIXME setStartDate does not modify any persistent field, so object is not marked dirty
-        event.setEndDate(null);
-        
-        contentDao.updateContent(queryItem);
-        clearSession();
-        
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        
-        event = (HibEventStamp) queryItem.getStamp(EventStamp.class);
-        Assert.assertEquals("20070101", event.getTimeRangeIndex().getStartDate());
-        Assert.assertEquals("20070101",event.getTimeRangeIndex().getEndDate());
-        Assert.assertTrue(event.getTimeRangeIndex().getIsFloating().booleanValue());
-    }
-
-    
     /**
      * Test event stamp validation.
      * @throws Exception - if something is wrong this exception is thrown.

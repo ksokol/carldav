@@ -27,7 +27,7 @@ import java.util.Set;
  * server.
  *
  */
-public interface ItemDao extends Dao {
+public interface ItemDao {
 
     /**
      * Find an item with the specified uid. The return type will be one of

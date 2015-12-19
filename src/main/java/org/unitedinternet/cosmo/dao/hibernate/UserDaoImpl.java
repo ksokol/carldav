@@ -21,6 +21,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
@@ -41,7 +42,12 @@ import javax.validation.ConstraintViolationException;
  */
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
-    private IdGenerator idGenerator;
+    private final IdGenerator idGenerator;
+
+    public UserDaoImpl(final IdGenerator idGenerator) {
+        Assert.notNull(idGenerator, "idGenerator is null");
+        this.idGenerator = idGenerator;
+    }
 
     public User createUser(User user) {
 
@@ -63,7 +69,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             }
 
             if (user.getUid() == null || "".equals(user.getUid())) {
-                user.setUid(getIdGenerator().nextStringIdentifier());
+                user.setUid(idGenerator.nextStringIdentifier());
             }
 
             getSession().save(user);
@@ -179,25 +185,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             logConstraintViolationException(cve);
             throw cve;
         }
-    }
-
-    public void destroy() {
-        // TODO Auto-generated method stub
-
-    }
-
-    public void init() {
-        if (idGenerator == null) {
-            throw new IllegalStateException("idGenerator is required");
-        }
-    }
-
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
-    }
-
-    public void setIdGenerator(IdGenerator idGenerator) {
-        this.idGenerator = idGenerator;
     }
 
     private User findUserByUsername(String username) {

@@ -21,7 +21,6 @@ import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.EntityFactory;
 
 
 /**
@@ -29,11 +28,9 @@ import org.unitedinternet.cosmo.model.EntityFactory;
  */
 public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
 
-    public ContentItem findEventByIcalUid(String uid,
-                                          CollectionItem calendar) {
+    public ContentItem findEventByIcalUid(String uid, CollectionItem calendar) {
         try {
-            Query hibQuery = getSession().getNamedQuery(
-                    "event.by.calendar.icaluid");
+            Query hibQuery = getSession().getNamedQuery("event.by.calendar.icaluid");
             hibQuery.setParameter("calendar", calendar);
             hibQuery.setParameter("uid", uid);
             return (ContentItem) hibQuery.uniqueResult();
@@ -41,13 +38,6 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
-    }
-
-    /**
-     * Initializes the DAO, sanity checking required properties and defaulting
-     * optional properties.
-     */
-    public void init() {
     }
 
 }

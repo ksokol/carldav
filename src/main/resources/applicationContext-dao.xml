@@ -35,25 +35,17 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-    <bean id="contentDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl"
-        init-method="init" destroy-method="destroy">
-        <property name="idGenerator">
-            <ref bean="idGenerator" />
-        </property>
-        <property name="ticketKeyGenerator">
-            <ref bean="tokenGenerator" />
-        </property>
-        <property name="itemPathTranslator" ref="itemPathTranslator" />
+    <bean id="contentDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl">
+        <constructor-arg index="0" ref="idGenerator" />
+        <constructor-arg index="1" ref="itemPathTranslator" />
     </bean>
 
     <bean id="itemPathTranslator" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.DefaultItemPathTranslator" />
 
-    <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" init-method="init" destroy-method="destroy">
-        <property name="idGenerator">
-            <ref bean="idGenerator" />
-        </property>
+    <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl">
+        <constructor-arg index="0" ref="idGenerator" />
     </bean>
 
-    <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" init-method="init" />
+    <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" />
 
 </beans>

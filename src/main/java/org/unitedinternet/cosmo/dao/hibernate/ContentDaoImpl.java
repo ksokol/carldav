@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -22,6 +23,7 @@ import org.hibernate.Query;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
@@ -42,12 +44,10 @@ import javax.validation.ConstraintViolationException;
  */
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#createCollection(org.unitedinternet.cosmo.model.CollectionItem,
-     *      org.unitedinternet.cosmo.model.CollectionItem)
-     */
+    public ContentDaoImpl(final IdGenerator idGenerator, final ItemPathTranslator itemPathTranslator) {
+        super(idGenerator, itemPathTranslator);
+    }
+
     public CollectionItem createCollection(CollectionItem parent,
                                            CollectionItem collection) {
 
@@ -795,11 +795,4 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         return ((NoteItem) item).getModifies() != null;
     }
-
-
-    @Override
-    public void destroy() {
-
-    }
-
 }

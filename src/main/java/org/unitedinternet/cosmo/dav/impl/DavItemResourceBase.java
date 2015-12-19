@@ -43,7 +43,6 @@ import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
@@ -402,20 +401,16 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                     + property.getName() + " requires a value");
         }
 
-        try {
-            QName qname = propNameToQName(property.getName());
-            Element value = (Element) property.getValue();
-            Attribute attr = item.getAttribute(qname);
+        QName qname = propNameToQName(property.getName());
+        Element value = (Element) property.getValue();
+        Attribute attr = item.getAttribute(qname);
 
-            // first check for existing attribute otherwise add
-            if (attr != null) {
-                attr.setValue(value);
-            } else {
-                item.addAttribute(entityFactory
-                        .createXMLAttribute(qname, value));
-            }
-        } catch (DataSizeException e) {
-            throw new ForbiddenException(e.getMessage());
+        // first check for existing attribute otherwise add
+        if (attr != null) {
+            attr.setValue(value);
+        } else {
+            item.addAttribute(entityFactory
+                    .createXMLAttribute(qname, value));
         }
     }
 

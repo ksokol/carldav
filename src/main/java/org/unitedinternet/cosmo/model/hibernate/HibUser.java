@@ -175,28 +175,28 @@ public class HibUser extends HibAuditableObject implements User {
      */
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || username == null) {
+        if (obj == null || email == null) {
             return false;
         }
         if (! (obj instanceof User)) {
             return false;
         }
         
-        return username.equals(((User) obj).getUsername());
+        return email.equals(((User) obj).getEmail());
     }
 
     @Override
         public int hashCode() {
-        if (username == null) {
+        if (email == null) {
             return super.hashCode();
         }
         else {
-            return username.hashCode();
+            return email.hashCode();
         }
     }
 
     public String calculateEntityTag() {
-        String username = getUsername() != null ? getUsername() : "-";
+        String username = getEmail() != null ? getEmail() : "-";
         String modTime = getModifiedDate() != null ?
             Long.valueOf(getModifiedDate().getTime()).toString() : "-";
         String etag = username + ":" + modTime;

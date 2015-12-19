@@ -177,14 +177,14 @@ public class MockUser extends MockAuditableObject implements User {
      */
     @Override
     public final boolean equals(final Object obj) {
-        if (obj == null || username == null) {
+        if (obj == null || email == null) {
             return false;
         }
         if (! (obj instanceof User)) {
             return false;
         }
         
-        return username.equals(((User) obj).getUsername());
+        return email.equals(((User) obj).getEmail());
     }
 
     /**
@@ -274,7 +274,7 @@ public class MockUser extends MockAuditableObject implements User {
      * @return The entity tag
      */
     public final String calculateEntityTag() {
-        String username = getUsername() != null ? getUsername() : "-";
+        String username = getEmail() != null ? getEmail() : "-";
         String modTime = getModifiedDate() != null ?
             Long.valueOf(getModifiedDate().getTime()).toString() : "-";
         String etag = username + ":" + modTime;

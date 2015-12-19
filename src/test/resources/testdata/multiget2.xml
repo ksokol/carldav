@@ -4,6 +4,6 @@
     <D:getetag/>
     <C:calendar-data/>
   </D:prop>
-  <D:href>/dav/test/multiget/foo.ics</D:href>
-  <D:href>/dav/test/multiget/bar.ics</D:href>
+  <D:href>/dav/test@localhost/multiget/foo.ics</D:href>
+  <D:href>/dav/test@localhost/multiget/bar.ics</D:href>
 </C:calendar-multiget>

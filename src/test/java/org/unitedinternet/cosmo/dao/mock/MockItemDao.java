@@ -125,7 +125,7 @@ public class MockItemDao implements ItemDao {
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("getting root item for user " + user.getUsername());
+            LOG.debug("getting root item for user " + user.getEmail());
         }
 
         return getStorage().getRootItem(user.getEmail());
@@ -142,7 +142,7 @@ public class MockItemDao implements ItemDao {
         }
 
         if (LOG.isDebugEnabled()) {
-            LOG.debug("creating root item for user " + user.getUsername());
+            LOG.debug("creating root item for user " + user.getEmail());
         }
 
         HomeCollectionItem rootCollection = storage.createRootItem(user);

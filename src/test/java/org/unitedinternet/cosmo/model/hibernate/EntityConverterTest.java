@@ -28,7 +28,6 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VToDo;
-import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.Status;
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,8 +46,6 @@ import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.model.mock.MockEventExceptionStamp;
 import org.unitedinternet.cosmo.model.mock.MockEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
-import org.unitedinternet.cosmo.model.mock.MockTaskStamp;
-import org.unitedinternet.cosmo.model.mock.MockTriageStatus;
 
 import java.io.FileInputStream;
 import java.util.Iterator;
@@ -274,51 +271,7 @@ public class EntityConverterTest {
         Assert.assertEquals(1, fullCal.getComponents(Component.VEVENT).size());
         Assert.assertEquals(1, fullCal.getComponents(Component.VTODO).size());
     }
-    
-    /**
-     * Tests convert task.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testConvertTask() throws Exception {
-        @SuppressWarnings("unused")
-		TimeZoneRegistry registry =
-            TimeZoneRegistryFactory.getInstance().createRegistry();
-        NoteItem master = new MockNoteItem();
-        master.setDisplayName("displayName");
-        master.setBody("body");
-        master.setIcalUid("icaluid");
-        master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        master.setTriageStatus(TriageStatusUtil.initialize(new MockTriageStatus()));
-        
-        Calendar cal = converter.convertNote(master);
-        cal.validate();
-        
-        Assert.assertEquals(1, cal.getComponents().size());
-        
-        ComponentList comps = cal.getComponents(Component.VTODO);
-        Assert.assertEquals(1, comps.size());
-        VToDo task = (VToDo) comps.get(0);
-        
-        Assert.assertNull(task.getDateCompleted());
-        Assert.assertNull(ICalendarUtils.getXProperty("X-OSAF-STARRED", task));
-        
-        DateTime completeDate = new DateTime("20080122T100000Z");
-        
-        master.getTriageStatus().setCode(TriageStatus.CODE_DONE);
-        master.getTriageStatus().setRank(TriageStatusUtil.getRank(completeDate.getTime()));
-        master.addStamp(new MockTaskStamp());
-        
-        cal = converter.convertNote(master);
-        task = (VToDo) cal.getComponents().get(0);
-        
-        Completed completed = task.getDateCompleted();
-        Assert.assertNotNull(completed);
-        Assert.assertEquals(completeDate.getTime(), completed.getDate().getTime());
-        Assert.assertEquals("TRUE", ICalendarUtils.getXProperty("X-OSAF-STARRED", task));
-        
-    }
-    
+
     /**
      * Tests convert event.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -442,7 +395,6 @@ public class EntityConverterTest {
         cal = converter.convertNote(master);
         comps = cal.getComponents(Component.VEVENT);
         Assert.assertEquals(2, comps.size());
-        masterEvent = (VEvent) comps.get(0);
         modEvent = (VEvent) comps.get(1);
         
         Assert.assertEquals("master displayName", modEvent.getSummary().getValue());
@@ -582,8 +534,7 @@ public class EntityConverterTest {
     protected Calendar getCalendar(String name) throws Exception {
         CalendarBuilder cb = new CalendarBuilder();
         FileInputStream fis = new FileInputStream(baseDir + name);
-        Calendar calendar = cb.build(fis);
-        return calendar;
+        return cb.build(fis);
     }
     
 }

@@ -16,13 +16,12 @@
 package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.TaskStamp;
 
 
 /**
  * Represents a Task Stamp.
  */
-public class MockTaskStamp extends MockStamp implements java.io.Serializable, TaskStamp {
+public class MockTaskStamp extends MockStamp implements java.io.Serializable, Stamp {
 
     private static final long serialVersionUID = -6197756070431706553L;
 

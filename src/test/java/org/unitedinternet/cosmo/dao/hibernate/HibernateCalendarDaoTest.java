@@ -63,30 +63,21 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         CollectionItem queryItem = (CollectionItem) contentDao
                 .findItemByUid(calendar.getUid());
 
-        CalendarCollectionStamp ccs = (CalendarCollectionStamp) queryItem
-                .getStamp(CalendarCollectionStamp.class);
-        
         Assert.assertNotNull(queryItem);
         Assert.assertEquals("test", queryItem.getName());
-        Assert.assertEquals("en", ccs.getLanguage());
         // test update
         queryItem.setName("test2");
-        ccs.setLanguage("es");
-
         contentDao.updateCollection(queryItem);
         Assert.assertNotNull(queryItem);
 
         clearSession();
 
         queryItem = (CollectionItem) contentDao.findItemByUid(calendar.getUid());
-        ccs = (CalendarCollectionStamp) queryItem.getStamp(CalendarCollectionStamp.class);
         
         Assert.assertEquals("test2", queryItem.getName());
-        Assert.assertEquals("es", ccs.getLanguage());
 
         // test add event
-        ContentItem event = generateEvent("test.ics", "testdata/cal1.ics"
-        );
+        ContentItem event = generateEvent("test.ics", "testdata/cal1.ics");
         
         calendar = (CollectionItem) contentDao.findItemByUid(calendar.getUid());
         ContentItem newEvent = contentDao.createContent(calendar, event);
@@ -203,8 +194,6 @@ public class HibernateCalendarDaoTest extends AbstractHibernateDaoTestCase {
         CalendarCollectionStamp ccs = new HibCalendarCollectionStamp();
         calendar.addStamp(ccs);
 
-        ccs.setLanguage("en");
-        
         return calendar;
     }
     

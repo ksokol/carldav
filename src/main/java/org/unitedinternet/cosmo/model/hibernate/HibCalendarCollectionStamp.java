@@ -79,38 +79,6 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
         CalendarCollectionStamp stamp = new HibCalendarCollectionStamp();
         return stamp;
     }
-        
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#getDescription()
-     */
-    public String getDescription() {
-        // description stored as StringAttribute on Item
-        return HibStringAttribute.getValue(getItem(), ATTR_CALENDAR_DESCRIPTION);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#setDescription(java.lang.String)
-     */
-    public void setDescription(String description) {
-        // description stored as StringAttribute on Item
-        HibStringAttribute.setValue(getItem(), ATTR_CALENDAR_DESCRIPTION, description);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#getLanguage()
-     */
-    public String getLanguage() {
-        // language stored as StringAttribute on Item
-        return HibStringAttribute.getValue(getItem(), ATTR_CALENDAR_LANGUAGE);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#setLanguage(java.lang.String)
-     */
-    public void setLanguage(String language) {
-        // language stored as StringAttribute on Item
-        HibStringAttribute.setValue(getItem(), ATTR_CALENDAR_LANGUAGE, language);
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#getTimezoneCalendar()

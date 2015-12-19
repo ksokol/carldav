@@ -37,22 +37,7 @@ public class MockCalendarCollectionStamp extends MockStamp implements
     // CalendarCollection specific attributes
     public static final QName ATTR_CALENDAR_TIMEZONE = new MockQName(
             CalendarCollectionStamp.class, "timezone");
-    
-    public static final QName ATTR_CALENDAR_DESCRIPTION = new MockQName(
-            CalendarCollectionStamp.class, "description");
-    
-    public static final QName ATTR_CALENDAR_LANGUAGE = new MockQName(
-            CalendarCollectionStamp.class, "language");
-    
-    public static final QName ATTR_CALENDAR_COLOR = new MockQName(
-            CalendarCollectionStamp.class, "color");
-    
-    public static final QName ATTR_CALENDAR_VISIBILITY = new MockQName(
-            CalendarCollectionStamp.class, "visibility");
-    
-    public static final QName ATTR_CALENDAR_DISPLAY_NAME = new HibQName(
-            CalendarCollectionStamp.class, "displayName");
-    
+
     /** default constructor */
     public MockCalendarCollectionStamp() {
     }
@@ -85,55 +70,6 @@ public class MockCalendarCollectionStamp extends MockStamp implements
     public Stamp copy() {
         CalendarCollectionStamp stamp = new MockCalendarCollectionStamp();
         return stamp;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCalendarCollectionStamp#getDescription()
-     */
-    /**
-     * Gets description.
-     * @return The description.
-     */
-    public String getDescription() {
-        // description stored as StringAttribute on Item
-        return MockStringAttribute.getValue(getItem(), ATTR_CALENDAR_DESCRIPTION);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCalendarCollectionStamp#setDescription(java.lang.String)
-     */
-    /**
-     * Sets description.
-     * @param description - The description.
-     * 
-     */
-    public void setDescription(String description) {
-        // description stored as StringAttribute on Item
-        MockStringAttribute.setValue(getItem(), ATTR_CALENDAR_DESCRIPTION, description);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCalendarCollectionStamp#getLanguage()
-     */
-    /**
-     * Gets language.
-     * @return The language.
-     */
-    public String getLanguage() {
-        // language stored as StringAttribute on Item
-        return MockStringAttribute.getValue(getItem(), ATTR_CALENDAR_LANGUAGE);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceCalendarCollectionStamp#setLanguage(java.lang.String)
-     */
-    /**
-     * Sets language.
-     * @param language The language
-     */
-    public void setLanguage(String language) {
-        // language stored as StringAttribute on Item
-        MockStringAttribute.setValue(getItem(), ATTR_CALENDAR_LANGUAGE, language);
     }
 
     /* (non-Javadoc)

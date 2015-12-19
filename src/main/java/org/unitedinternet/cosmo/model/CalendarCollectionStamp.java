@@ -25,10 +25,6 @@ import net.fortuna.ical4j.model.TimeZone;
  */
 public interface CalendarCollectionStamp extends Stamp{
 
-    public String getLanguage();
-
-    public void setLanguage(String language);
-
     /**
      * @return calendar object representing timezone
      */

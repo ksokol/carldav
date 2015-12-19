@@ -34,8 +34,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
-import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
 
 import javax.validation.ConstraintViolationException;
 
@@ -86,8 +84,7 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
         
         CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setTimezoneCalendar(testCal);
-        calendarStamp.setLanguage("en");
-        
+
         root.addStamp(calendarStamp);
         
         contentDao.updateCollection(root);
@@ -111,8 +108,7 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
         Assert.assertEquals("calendar", stamp.getType());
         CalendarCollectionStamp ccs = (CalendarCollectionStamp) stamp;
         Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
-        Assert.assertEquals("en", ccs.getLanguage());
-        
+
         Calendar cal = new EntityConverter(null).convertCollection(queryCol);
         Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());
     }
@@ -251,8 +247,6 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
         content.setName(name);
         content.setDisplayName(name);
         content.setOwner(getUser(userDao, owner));
-        content.addAttribute(new HibStringAttribute(new HibQName("customattribute"),
-                "customattributevalue"));
         return content;
     }
 

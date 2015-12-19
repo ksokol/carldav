@@ -57,10 +57,6 @@ public interface User extends AuditableObject{
 
     /**
      */
-    String getOldEmail();
-
-    /**
-     */
     boolean isEmailChanged();
 
     /**

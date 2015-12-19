@@ -57,9 +57,7 @@ public class MockUser extends MockAuditableObject implements User {
 
     
     private String username;
-    
-    private transient String oldUsername;
-    
+
     private String password;
 
     private String email;
@@ -96,7 +94,6 @@ public class MockUser extends MockAuditableObject implements User {
      * @param username The username.
      */
     public final void setUsername(final String username) {
-        oldUsername = this.username;
         this.username = username;
     }
 
@@ -143,17 +140,6 @@ public class MockUser extends MockAuditableObject implements User {
     public final void setEmail(final String email) {
         oldEmail = this.email;
         this.email = email;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getOldEmail()
-     */
-    /**
-     * Gets old email.
-     * @return The email.
-     */
-    public final String getOldEmail() {
-        return oldEmail;
     }
 
     /* (non-Javadoc)

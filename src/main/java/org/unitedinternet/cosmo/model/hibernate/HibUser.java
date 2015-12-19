@@ -69,9 +69,7 @@ public class HibUser extends HibAuditableObject implements User {
     // them in urls (tomcat doesn't support it)
     @javax.validation.constraints.Pattern(regexp="^[\\u0020-\\ud7ff\\ue000-\\ufffd&&[^\\u007f\\u003a;/\\\\]]+$")
     private String username;
-    
-    private transient String oldUsername;
-    
+
     @Column(name = "password")
     @NotNull
     private String password;
@@ -112,7 +110,6 @@ public class HibUser extends HibAuditableObject implements User {
      * @see org.unitedinternet.cosmo.model.User#setUsername(java.lang.String)
      */
     public void setUsername(String username) {
-        oldUsername = this.username;
         this.username = username;
     }
 
@@ -143,13 +140,6 @@ public class HibUser extends HibAuditableObject implements User {
     public void setEmail(String email) {
         oldEmail = this.email;
         this.email = email;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getOldEmail()
-     */
-    public String getOldEmail() {
-        return oldEmail;
     }
 
     /* (non-Javadoc)

@@ -25,7 +25,7 @@ public interface User extends AuditableObject{
 
     void setEmail(String email);
 
-    Boolean isLocked();
+    boolean isLocked();
 
     String getRoles();
 

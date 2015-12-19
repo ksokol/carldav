@@ -22,19 +22,10 @@ import org.unitedinternet.cosmo.service.impl.StandardUserService;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- */
 public class MockUser extends MockAuditableObject implements User {
 
-    /**
-     */
     public static final int EMAIL_LEN_MIN = 1;
-    /**
-     */
     public static final int EMAIL_LEN_MAX = 128;
-
-    
-    private String username;
 
     private String password;
 
@@ -111,7 +102,7 @@ public class MockUser extends MockAuditableObject implements User {
      * Is locked.
      * @return The boolean for it is locked or not.
      */
-    public final Boolean isLocked() {
+    public final boolean isLocked() {
         return locked;
     }
 
@@ -148,13 +139,13 @@ public class MockUser extends MockAuditableObject implements User {
      * @return The hashCode.
      */
     @Override
-        public final int hashCode() {
-        if (username == null) {
-            return super.hashCode();
-        }
-        else {
-            return username.hashCode();
-        }
+    public final int hashCode() {
+    if (email == null) {
+        return super.hashCode();
+    }
+    else {
+        return email.hashCode();
+    }
     }
 
     /* (non-Javadoc)

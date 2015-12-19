@@ -54,19 +54,13 @@ public class HibUser extends HibAuditableObject implements User {
     private String email;
 
     @Column(name = "locked")
-    private Boolean locked;
+    private boolean locked;
 
     @Column(name = "roles")
     private String roles;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HibItem> items;
-
-    /**
-     */
-    public HibUser() {
-        locked = Boolean.FALSE;
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#getPassword()
@@ -99,14 +93,14 @@ public class HibUser extends HibAuditableObject implements User {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#isLocked()
      */
-    public Boolean isLocked() {
+    public boolean isLocked() {
         return locked;
     }
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#setLocked(java.lang.Boolean)
      */
-    public void setLocked(Boolean locked) {
+    public void setLocked(boolean locked) {
         this.locked = locked;
     }
 

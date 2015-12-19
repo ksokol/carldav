@@ -15,14 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -37,11 +29,16 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 /**
  * Extends <code>DavItemResourceBase</code> to adapt the Cosmo
@@ -60,15 +57,13 @@ import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
  */
 public abstract class DavContentBase extends DavItemResourceBase
     implements DavItemContent {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(DavContentBase.class);
+
     private static final Set<String> DEAD_PROPERTY_FILTER =
         new HashSet<String>();
 
     static {
 
         DEAD_PROPERTY_FILTER.add(NoteItem.class.getName());
-        DEAD_PROPERTY_FILTER.add(MessageStamp.class.getName());
     }
 
     /** */

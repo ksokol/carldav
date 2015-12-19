@@ -63,8 +63,6 @@
     @NamedQuery(name="user.byUsername.ignorecase", query="from HibUser where lower(username)=lower(:username)"),
     @NamedQuery(name="user.byEmail", query="from HibUser where email=:email"),
     @NamedQuery(name="user.byEmail.ignorecase", query="from HibUser where lower(email)=lower(:email)"),
-        @NamedQuery(name = "user.byUsernameOrEmail.ignorecase.ingoreId", query = "from HibUser where"
-                + " id!=:userid and (lower(username)=lower(:username) or lower(email)=lower(:email))"),
         @NamedQuery(name = "user.all", query = "from HibUser"),
 
         // Event Queries

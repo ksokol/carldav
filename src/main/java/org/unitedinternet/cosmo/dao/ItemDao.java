@@ -50,16 +50,6 @@ public interface ItemDao {
     Item findItemByPath(String path);
 
     /**
-     * Find the parent item of the item with the specified path. 
-     * The return type will be of type CollectionItem.
-     *
-     * @param path
-     *            path of item
-     * @return parent item of item represented by path
-     */
-    Item findItemParentByPath(String path);
-
-    /**
      * Get the root item for a user
      *
      * @param user The user for get the root item.

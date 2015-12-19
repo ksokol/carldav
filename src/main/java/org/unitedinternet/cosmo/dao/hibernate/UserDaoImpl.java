@@ -94,19 +94,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public User getUserByUid(String uid) {
-        if (uid == null) {
-            throw new IllegalArgumentException("uid required");
-        }
-
-        try {
-            return findUserByUid(uid);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
     public User getUserByEmail(String email) {
         if (email == null) {
             throw new IllegalArgumentException("email required");
@@ -248,15 +235,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         } else {
             return null;
         }
-    }
-
-    private User findUserByUid(String uid) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery("user.byUid").setParameter(
-                "uid", uid);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        return (User) hibQuery.uniqueResult();
     }
 
     protected BaseModelObject getBaseModelObject(Object obj) {

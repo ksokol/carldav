@@ -42,16 +42,6 @@ public interface UserDao {
      * @return The user account.
      */
     User getUser(String username);
-    
-    
-    /**
-     * Returns the user account identified by the given uid.
-     *
-     * @param uid the uid of the account to return
-     * exist
-     * @return The user account identified by the given uid.
-     */
-    User getUserByUid(String uid);
 
     /**
      * Returns the user account identified by the given email address.

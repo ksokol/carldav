@@ -72,7 +72,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         clearSession();
 
         // find by uid
-        queryUser1 = userDao.getUserByUid(user1.getUid());
+        queryUser1 = userDao.getUserByEmail(user1.getEmail());
         Assert.assertNotNull(queryUser1);
         verifyUser(user1, queryUser1);
 
@@ -190,7 +190,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         clearSession();
         
         // find by uid
-        User queryUser1 = userDao.getUserByUid(user1.getUid());
+        User queryUser1 = userDao.getUserByEmail(user1.getEmail());
         Assert.assertNotNull(queryUser1);
         verifyUser(user1, queryUser1);
         
@@ -198,7 +198,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         userDao.updateUser(queryUser1);
         
         clearSession();
-        queryUser1 = userDao.getUserByUid(user1.getUid());
+        queryUser1 = userDao.getUserByEmail(user1.getEmail());
         Assert.assertEquals(queryUser1.getPassword(), "user2password");
     }
     
@@ -231,7 +231,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         clearSession();
         
         // find by uid
-        User queryUser1 = userDao.getUserByUid(user1.getUid());
+        User queryUser1 = userDao.getUserByEmail(user1.getEmail());
         queryUser1.setUsername("user2");
         try {
             userDao.updateUser(queryUser1);

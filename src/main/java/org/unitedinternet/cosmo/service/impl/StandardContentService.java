@@ -410,10 +410,6 @@ public class StandardContentService implements ContentService {
         VEvent masterEvent = eventStamp.getMasterEvent();
         
         checkDatesForComponent(masterEvent);
-        
-        for(Component component : eventStamp.getExceptions()){
-            checkDatesForComponent(component);
-        }
     }
     
     private void checkDatesForComponent(Component component){

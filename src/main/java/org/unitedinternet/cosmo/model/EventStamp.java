@@ -15,22 +15,12 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.List;
-
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 
 /**
  * Represents a calendar event, recurring or non-recurring.
  */
 public interface EventStamp extends BaseEventStamp{
-
-    
-    /**
-     * Returns a list of exception components for a recurring event.
-     * If the event is not recurring, the list will be empty.
-     */
-    public List<Component> getExceptions();
 
     /**
      * Returns the master event extracted from the underlying

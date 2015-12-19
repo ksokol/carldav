@@ -74,26 +74,7 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
     private Calendar getValidationCalendar() {//NOPMD
         return getEventCalendar();
     }
-    
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.EventStamp#getExceptions()
-     */
-    public List<Component> getExceptions() {
-        ArrayList<Component> exceptions = new ArrayList<Component>();
-        
-        // add all exception events
-        NoteItem note = (NoteItem) getItem();
-        for(NoteItem exception : note.getModifications()) {
-            EventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
-            if(exceptionStamp!=null) {
-                exceptions.add(exceptionStamp.getEvent());
-            }
-        }
-        
-        return exceptions;
-    }
-   
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.EventStamp#getMasterEvent()
      */

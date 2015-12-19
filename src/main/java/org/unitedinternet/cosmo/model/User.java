@@ -15,44 +15,20 @@
  */
 package org.unitedinternet.cosmo.model;
 
-/**
- * Represents a user in the cosmo server.
- */
 public interface User extends AuditableObject{
 
-    /**
-     */
-    String USERNAME_OVERLORD = "root";
+     String USERNAME_OVERLORD = "root";
 
-    /**
-     */
-    int PASSWORD_LEN_MIN = 5;
-    /**
-     */
-    int PASSWORD_LEN_MAX = 16;
-
-    /**
-     */
     String getUsername();
 
-    /**
-     */
     void setUsername(String username);
 
-    /**
-     */
     String getPassword();
 
-    /**
-     */
     void setPassword(String password);
 
-    /**
-     */
     String getEmail();
 
-    /**
-     */
     void setEmail(String email);
 
     Boolean isLocked();
@@ -61,10 +37,5 @@ public interface User extends AuditableObject{
 
     void setRoles(String roles);
 
-    /**
-     */
-    void validateRawPassword();
-
     String calculateEntityTag();
-
 }

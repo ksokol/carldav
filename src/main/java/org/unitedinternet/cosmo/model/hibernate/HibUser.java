@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
@@ -193,25 +192,6 @@ public class HibUser extends HibAuditableObject implements User {
         }
         else {
             return username.hashCode();
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#validateRawPassword()
-     */
-    public void validateRawPassword() {
-        if (password == null) {
-            throw new ModelValidationException("UserName" + this.getUsername() + " EMAIL " + this.getEmail(),
-                    "Password not specified");
-        }
-        if (password.length() < PASSWORD_LEN_MIN ||
-            password.length() > PASSWORD_LEN_MAX) {
-            
-            throw new ModelValidationException("UserName" + this.getUsername() + " EMAIL " + this.getEmail(),
-                                               "Password must be " +
-                                               PASSWORD_LEN_MIN + " to " +
-                                               PASSWORD_LEN_MAX +
-                                               " characters in length");
         }
     }
 

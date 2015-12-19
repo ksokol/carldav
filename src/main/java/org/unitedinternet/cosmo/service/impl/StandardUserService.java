@@ -22,6 +22,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
+import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.User;
@@ -71,7 +72,7 @@ public class StandardUserService implements UserService {
      */
     public User createUser(User user) {
 
-        user.validateRawPassword();
+        validateRawPassword(user);
 
         user.setPassword(digestPassword(user.getPassword()));
 
@@ -120,5 +121,27 @@ public class StandardUserService implements UserService {
         }
 
         return DigestUtils.md5Hex(password);
+    }
+
+    @Deprecated
+    private static int PASSWORD_LEN_MIN = 5;
+    @Deprecated
+    private static int PASSWORD_LEN_MAX = 16;
+
+    @Deprecated
+    public static void validateRawPassword(User user) {
+        if (user.getPassword() == null) {
+            throw new ModelValidationException(" EMAIL " + user.getEmail(),
+                    "Password not specified");
+        }
+        if (user.getPassword().length() < PASSWORD_LEN_MIN ||
+                user.getPassword().length() > PASSWORD_LEN_MAX) {
+
+            throw new ModelValidationException(" EMAIL " + user.getEmail(),
+                    "Password must be " +
+                            PASSWORD_LEN_MIN + " to " +
+                            PASSWORD_LEN_MAX +
+                            " characters in length");
+        }
     }
 }

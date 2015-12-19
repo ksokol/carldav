@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.service.impl.StandardUserService;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -243,16 +244,7 @@ public class MockUser extends MockAuditableObject implements User {
      * Validate raw password.
      */
     public final void validateRawPassword() {
-        if (password == null) {
-            throw new ModelValidationException(this,"Password not specified");
-        }
-        if (password.length() < PASSWORD_LEN_MIN ||
-            password.length() > PASSWORD_LEN_MAX) {
-            throw new ModelValidationException(this,"Password must be " +
-                                               PASSWORD_LEN_MIN + " to " +
-                                               PASSWORD_LEN_MAX +
-                                               " characters in length");
-        }
+        StandardUserService.validateRawPassword(this);
     }
 
     /* (non-Javadoc)

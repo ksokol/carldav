@@ -25,19 +25,6 @@ import org.unitedinternet.cosmo.model.User;
 public interface CosmoSecurityContext {
 
     /**
-     * @return a name describing the principal for this security
-     * context (the name of the Cosmo user or
-     * some other precise identification.
-     */
-    String getName();
-
-    /**
-     * @return Determines whether or not the context represents an anonymous
-     * Cosmo user.
-     */
-    boolean isAnonymous();
-
-    /**
      * @return an instance of {@link User} describing the user
      * represented by the security context, or <code>null</code> if
      * the context does not represent a user.

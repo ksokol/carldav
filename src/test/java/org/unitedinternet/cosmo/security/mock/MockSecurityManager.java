@@ -48,7 +48,7 @@ public class MockSecurityManager implements CosmoSecurityManager {
             throw new RuntimeException("security context not set up");
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("getting security context for " + context.getName());
+            LOG.debug("getting security context for " + context.getUser().getUid());
         }
         return context;
     }
@@ -65,7 +65,7 @@ public class MockSecurityManager implements CosmoSecurityManager {
         CosmoSecurityContext context = createSecurityContext(principal);
         contexts.set(context);
         if (LOG.isDebugEnabled()) {
-            LOG.debug("setting up security context for " + context.getName());
+            LOG.debug("setting up security context for " + context.getUser().getUid());
         }
         return context;
     }

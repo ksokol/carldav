@@ -24,34 +24,12 @@ import java.security.Principal;
  */
 public abstract class BaseSecurityContext implements CosmoSecurityContext {
 
-    private boolean anonymous;
     private Principal principal;
     private User user;
 
     public BaseSecurityContext(Principal principal) {
-        this.anonymous = false;
         this.principal = principal;
         processPrincipal();
-    }
-
-    /**
-     * @return a name describing the principal for this security
-     * context (the name of the Cosmo user or
-     * the string <code>anonymous</code>.
-     */
-    public String getName() {
-        if (isAnonymous()) {
-            return "anonymous";
-        }
-        return user.getUsername();
-    }
-
-    /**
-     * @return Determines whether or not the context represents an anonymous
-     * Cosmo user.
-     */
-    public boolean isAnonymous() {
-        return anonymous;
     }
 
     /**
@@ -67,10 +45,6 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
 
     protected Principal getPrincipal() {
         return principal;
-    }
-
-    protected void setAnonymous(boolean anonymous) {
-        this.anonymous = anonymous;
     }
 
     protected void setUser(User user) {

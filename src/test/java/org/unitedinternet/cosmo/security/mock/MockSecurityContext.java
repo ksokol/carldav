@@ -39,10 +39,7 @@ public class MockSecurityContext extends BaseSecurityContext {
      * {@inheritDoc}
      */
     protected void processPrincipal() {
-        if (getPrincipal() instanceof MockAnonymousPrincipal) {
-            setAnonymous(true);
-        }
-        else if (getPrincipal() instanceof MockUserPrincipal) {
+        if (getPrincipal() instanceof MockUserPrincipal) {
             User user = ((MockUserPrincipal) getPrincipal()).getUser();
             setUser(user);
         }

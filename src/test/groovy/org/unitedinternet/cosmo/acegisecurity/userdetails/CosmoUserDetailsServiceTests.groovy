@@ -29,7 +29,7 @@ class CosmoUserDetailsServiceTests {
 
         user = mock(User.class)
 
-        when(user.getUsername()).thenReturn(USERNAME)
+        when(user.getEmail()).thenReturn(USERNAME)
         when(user.getPassword()).thenReturn(USERNAME)
         when(userDao.getUserByEmail(USERNAME)).thenReturn(user)
     }

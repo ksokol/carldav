@@ -52,6 +52,6 @@ public class CosmoUserDetailsService implements UserDetailsService {
             authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRoles());
         }
 
-        return new CosmoUserDetails(user.getUsername(), user.getPassword(), true, true, true, !user.isLocked(), authorities, user);
+        return new CosmoUserDetails(user.getEmail(), user.getPassword(), true, true, true, !user.isLocked(), authorities, user);
     }
 }

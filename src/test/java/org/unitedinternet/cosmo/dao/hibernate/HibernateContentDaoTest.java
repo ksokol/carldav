@@ -214,7 +214,7 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
 
         Assert.assertNotNull(root);
         root.setName("alsfjal;skfjasd");
-        Assert.assertEquals(root.getName(), "testuser2");
+        Assert.assertEquals(root.getName(), "testuser2@testem");
 
     }
 
@@ -225,7 +225,7 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
     @Test
     public void testContentDaoUpdateCollection2() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        CollectionItem root = contentDao.getRootItem(user);
 
         NoteItem note1 = generateTestNote("test1", "testuser");
         NoteItem note2 = generateTestNote("test2", "testuser");

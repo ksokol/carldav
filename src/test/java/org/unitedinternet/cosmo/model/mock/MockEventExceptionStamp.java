@@ -24,9 +24,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Trigger;
-
 import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.hibernate.validator.EventException;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
@@ -68,17 +66,7 @@ public class MockEventExceptionStamp extends MockBaseEventStamp implements
     public String getType() {
         return "eventexception";
     }
-    
-    /** 
-     * Used by the hibernate validator.
-     * @return The calendar.
-     */
-    @SuppressWarnings("unused")
-    @EventException
-    private Calendar getValidationCalendar() {
-        return getEventCalendar();
-    }
-    
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceEventExceptionStamp#getEvent()
      */

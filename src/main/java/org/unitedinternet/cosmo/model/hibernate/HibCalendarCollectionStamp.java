@@ -46,19 +46,7 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     // CalendarCollection specific attributes
     public static final QName ATTR_CALENDAR_TIMEZONE = new HibQName(
             CalendarCollectionStamp.class, "timezone");
-    
-    public static final QName ATTR_CALENDAR_DESCRIPTION = new HibQName(
-            CalendarCollectionStamp.class, "description");
-    
-    public static final QName ATTR_CALENDAR_LANGUAGE = new HibQName(
-            CalendarCollectionStamp.class, "language");
-    
-    public static final QName ATTR_CALENDAR_COLOR = new HibQName(
-            CalendarCollectionStamp.class, "color");
-    
-    public static final QName ATTR_CALENDAR_VISIBILITY = new HibQName(
-            CalendarCollectionStamp.class, "visibility");
-   
+
     /** default constructor */
     public HibCalendarCollectionStamp() {
     }

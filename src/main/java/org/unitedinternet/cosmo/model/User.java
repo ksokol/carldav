@@ -97,10 +97,6 @@ public interface User extends AuditableObject{
 
     /**
      */
-    String getActivationId();
-
-    /**
-     */
     boolean isOverlord();
 
     Boolean isLocked();

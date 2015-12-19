@@ -286,17 +286,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getActivationId()
-     */
-    /**
-     * Gets activation id.
-     * @return The activation id.
-     */
-    public final String getActivationId() {
-        return activationId;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isOverlord()
      */
     /**

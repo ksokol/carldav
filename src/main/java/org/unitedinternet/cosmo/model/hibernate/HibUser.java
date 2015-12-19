@@ -259,13 +259,6 @@ public class HibUser extends HibAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getActivationId()
-     */
-    public String getActivationId() {
-        return activationId;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#setActivationId(java.lang.String)
      */
     public void setActivationId(String activationId) {

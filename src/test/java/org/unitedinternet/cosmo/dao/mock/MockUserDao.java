@@ -39,8 +39,6 @@ public class MockUserDao implements UserDao {
     private HashMap emailIdx;
     @SuppressWarnings("rawtypes")
     private HashMap uidIdx;
-    @SuppressWarnings("rawtypes")
-    private HashMap activationIdIdx;
 
     private MockDaoStorage storage = null;
 
@@ -54,7 +52,6 @@ public class MockUserDao implements UserDao {
         usernameIdx = new HashMap();
         emailIdx = new HashMap();
         uidIdx = new HashMap();
-        activationIdIdx = new HashMap();
 
         // add overlord user
         MockUser overlord = new MockUser();
@@ -100,19 +97,6 @@ public class MockUserDao implements UserDao {
     }
 
     /**
-     * Gets user by uid.
-     * {@inheritDoc}
-     * @param uid The uid.
-     * @return The user.
-     */
-    public User getUserByUid(String uid) {
-        if (uid == null) { 
-            return null;
-        }
-        return (User) uidIdx.get(uid);
-    }
-
-    /**
      * Gets user by email.
      * {@inheritDoc}
      * @param email The email.
@@ -155,7 +139,6 @@ public class MockUserDao implements UserDao {
         usernameIdx.put(user.getUsername(), user);
         emailIdx.put(user.getEmail(), user);
         uidIdx.put(user.getEmail(), user);
-        activationIdIdx.put(user.getActivationId(), user);
         return user;
     }
 
@@ -231,21 +214,4 @@ public class MockUserDao implements UserDao {
         usernameIdx.remove(user.getUsername());
         emailIdx.remove(user.getEmail());
     }
-
-    // Dao methods
-
-    /**
-     * Initializes the DAO, sanity checking required properties
-     * and defaulting optional properties.
-     */
-    public void init() {
-    }
-
-    /**
-     * Readies the DAO for garbage collection, shutting down any
-     * resources used.
-     */
-    public void destroy() {
-    }
-
 }

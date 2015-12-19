@@ -150,9 +150,6 @@ public class MultigetReport extends CaldavMultiStatusReport {
         }
         return davHref;
     }
-    
-    protected void doQuerySelf(WebDavResource resource)
-        throws CosmoDavException {}
 
     protected void doQueryChildren(DavCollection collection)
         throws CosmoDavException {}

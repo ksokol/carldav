@@ -84,7 +84,6 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
      * Calls the following methods:
      * </p>
      * <ol>
-     * <li> {@link #doQuerySelf(WebDavResource)} on the targeted resource </li>
      * <li> {@link #doQueryChildren(DavCollection)} if the targeted resource is
      * a collection and the depth is 1 or Infinity </li>
      * <li> {@link #doQueryDescendents(DavCollection)} if the targeted resource
@@ -93,7 +92,6 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
      */
     protected void runQuery()
             throws CosmoDavException {
-        doQuerySelf(resource);
 
         if (info.getDepth() == DEPTH_0) {
             return;
@@ -120,12 +118,6 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
             throws CosmoDavException;
 
     /**
-     * Performs the report query on the specified resource.
-     */
-    protected abstract void doQuerySelf(WebDavResource resource)
-            throws CosmoDavException;
-
-    /**
      * Performs the report query on the specified collection's children.
      */
     protected abstract void doQueryChildren(DavCollection collection)
@@ -141,7 +133,6 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
             WebDavResource member = (WebDavResource) i.nextResource();
             if (member.isCollection()) {
                 DavCollection dc = (DavCollection) member;
-                doQuerySelf(dc);
                 doQueryChildren(dc);
                 doQueryDescendents(dc);
             }

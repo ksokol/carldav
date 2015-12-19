@@ -951,4 +951,94 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
     }
+
+    @Test
+    public void deleteCalendarTodo() {
+        def uid = UUID_TODO
+
+        def mvcResult1 = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uid)
+                .content(CALDAV_TODO)
+                .contentType(TEXT_CALENDAR))
+                .andExpect(etag(notNullValue()))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG);
+
+        def request2 = """\
+                        <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:prop>
+                                <D:getetag />
+                                <C:calendar-data />
+                            </D:prop>
+                            <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                        </C:calendar-multiget>"""
+
+        def response1 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01%40localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${eTag1}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                            PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
+                                            VERSION:2.0&#13;
+                                            BEGIN:VTIMEZONE&#13;
+                                            TZID:Europe/Berlin&#13;
+                                            BEGIN:DAYLIGHT&#13;
+                                            TZOFFSETFROM:+0100&#13;
+                                            TZOFFSETTO:+0200&#13;
+                                            TZNAME:CEST&#13;
+                                            DTSTART:19700329T020000&#13;
+                                            RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
+                                            END:DAYLIGHT&#13;
+                                            BEGIN:STANDARD&#13;
+                                            TZOFFSETFROM:+0200&#13;
+                                            TZOFFSETTO:+0100&#13;
+                                            TZNAME:CET&#13;
+                                            DTSTART:19701025T030000&#13;
+                                            RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
+                                            END:STANDARD&#13;
+                                            END:VTIMEZONE&#13;
+                                            BEGIN:VTODO&#13;
+                                            CREATED:20151213T203529Z&#13;
+                                            LAST-MODIFIED:20151213T203552Z&#13;
+                                            DTSTAMP:20151213T203552Z&#13;
+                                            UID:f3bc6436-991a-4a50-88b1-f27838e615c1&#13;
+                                            SUMMARY:test task&#13;
+                                            STATUS:NEEDS-ACTION&#13;
+                                            RRULE:FREQ=WEEKLY&#13;
+                                            DTSTART;TZID=Europe/Berlin:20151213T220000&#13;
+                                            DUE;TZID=Europe/Berlin:20151214T220000&#13;
+                                            PERCENT-COMPLETE:25&#13;
+                                            BEGIN:VALARM&#13;
+                                            ACTION:DISPLAY&#13;
+                                            TRIGGER;VALUE=DURATION:-PT15M&#13;
+                                            DESCRIPTION:Default Mozilla Description&#13;
+                                            END:VALARM&#13;
+                                            END:VTODO&#13;
+                                            END:VCALENDAR&#13;
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>
+                        """
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request2)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        mockMvc.perform(delete("/dav/{email}/calendar/{uuid}.ics", USER01, uid))
+                .andExpect(status().isNoContent())
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request2)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+    }
 }

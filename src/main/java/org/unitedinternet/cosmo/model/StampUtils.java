@@ -52,7 +52,7 @@ public class StampUtils {
      * @param item
      * @return TaskStamp from Item
      */
-    public static TaskStamp getTaskStamp(Item item) {
-        return (TaskStamp) item.getStamp(TaskStamp.class);
+    public static Stamp getTaskStamp(Item item) {
+        return item.getStamp(TaskStamp.class);
     }
 }

@@ -53,9 +53,6 @@ public class HibUser extends HibAuditableObject implements User {
     @NaturalId
     private String email;
 
-    @Column(name = "admin")
-    private Boolean admin;
-
     @Column(name = "locked")
     private Boolean locked;
 
@@ -68,7 +65,6 @@ public class HibUser extends HibAuditableObject implements User {
     /**
      */
     public HibUser() {
-        admin = Boolean.FALSE;
         locked = Boolean.FALSE;
     }
 
@@ -98,13 +94,6 @@ public class HibUser extends HibAuditableObject implements User {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getAdmin()
-     */
-    public Boolean getAdmin() {
-        return admin;
     }
 
     /* (non-Javadoc)

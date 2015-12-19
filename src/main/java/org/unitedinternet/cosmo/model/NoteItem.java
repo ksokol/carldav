@@ -35,10 +35,6 @@ public interface NoteItem extends ICalendarItem{
 
     public void setBody(Reader body);
 
-    public Date getReminderTime();
-
-    public void setReminderTime(Date reminderTime);
-
     /**
      * Return the Calendar object containing a VTODO component.
      * @return calendar

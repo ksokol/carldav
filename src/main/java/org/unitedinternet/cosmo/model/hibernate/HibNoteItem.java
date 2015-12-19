@@ -15,10 +15,19 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import net.fortuna.ical4j.model.Calendar;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.unitedinternet.cosmo.hibernate.validator.Task;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.QName;
+
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,17 +39,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import net.fortuna.ical4j.model.Calendar;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.unitedinternet.cosmo.hibernate.validator.Task;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.QName;
-
 /**
  * Hibernate persistent NoteItem.
  */
@@ -50,10 +48,7 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
 
     public static final QName ATTR_NOTE_BODY = new HibQName(
             NoteItem.class, "body");
-    
-    public static final QName ATTR_REMINDER_TIME = new HibQName(
-            NoteItem.class, "reminderTime");
-    
+
     private static final long serialVersionUID = -6100568628972081120L;
     
     private static final Set<NoteItem> EMPTY_MODS = Collections
@@ -94,21 +89,6 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
     public void setBody(Reader body) {
         // body stored as TextAttribute on Item
         HibTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
-    }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#getReminderTime()
-     */
-    public Date getReminderTime() {
-        return HibTimestampAttribute.getValue(this, ATTR_REMINDER_TIME);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#setReminderTime(java.util.Date)
-     */
-    public void setReminderTime(Date reminderTime) {
-        // reminderDate stored as TimestampAttribute on Item
-        HibTimestampAttribute.setValue(this, ATTR_REMINDER_TIME, reminderTime);
     }
    
     @Task

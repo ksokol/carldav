@@ -41,7 +41,6 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang.StringUtils;
@@ -893,16 +892,6 @@ public class EntityConverter {
         if(event.getDateStamp()!=null) {
             note.setClientModifiedDate(event.getDateStamp().getDate());
         }
-        
-        // look for absolute VALARM
-        VAlarm va = ICalendarUtils.getDisplayAlarm(event);
-        if (va != null && va.getTrigger()!=null) {
-            Trigger trigger = va.getTrigger();
-            Date reminderTime = trigger.getDateTime();
-            if (reminderTime != null) {
-                note.setReminderTime(reminderTime);
-            }
-        }
 
         // calculate triage status based on start date
         java.util.Date now =java.util.Calendar.getInstance().getTime();
@@ -948,16 +937,6 @@ public class EntityConverter {
             note.setClientModifiedDate(task.getDateStamp().getDate());
         }
 
-        // look for absolute VALARM
-        VAlarm va = ICalendarUtils.getDisplayAlarm(task);
-        if (va != null && va.getTrigger()!=null) {
-            Trigger trigger = va.getTrigger();
-            Date reminderTime = trigger.getDateTime();
-           if (reminderTime != null) {
-                note.setReminderTime(reminderTime);
-           }
-        }
-        
         // look for COMPLETED or STATUS:COMPLETED
         Completed completed = task.getDateCompleted();
         Status status = task.getStatus();

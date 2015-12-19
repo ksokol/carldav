@@ -248,7 +248,7 @@ public class HibernateTestHelper {
             user.setEmail(username + "@testem");
             userDao.createUser(user);
 
-            user = userDao.getUser(username);
+            user = userDao.getUserByEmail(username + "@testem");
 
             // create root item
             contentDao.createRootItem(user);

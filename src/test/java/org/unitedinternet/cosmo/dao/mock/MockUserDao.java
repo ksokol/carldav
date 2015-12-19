@@ -43,7 +43,7 @@ public class MockUserDao implements UserDao {
 
         // add overlord user
         MockUser overlord = new MockUser();
-        overlord.setUsername(User.USERNAME_OVERLORD);
+        overlord.setUsername("username");
         overlord.setPassword("32a8bd4d676f4fef0920c7da8db2bad7");
         overlord.setEmail("root@localhost");
         overlord.setCreationDate(new Date());

@@ -17,8 +17,6 @@ package org.unitedinternet.cosmo.model;
 
 public interface User extends AuditableObject{
 
-     String USERNAME_OVERLORD = "root";
-
     String getUsername();
 
     void setUsername(String username);

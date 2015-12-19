@@ -90,11 +90,7 @@ public class StandardUserService implements UserService {
         }
 
         User newUser = userDao.getUser(user.getUsername());
-
-        if (! newUser.isOverlord()) {
-            contentDao.createRootItem(newUser);
-        }
-
+        contentDao.createRootItem(newUser);
         return newUser;
     }
 

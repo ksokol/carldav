@@ -47,13 +47,10 @@ public class CosmoUserDetailsService implements UserDetailsService {
 
         if (user.getAdmin()) {
             authorities.add(new SimpleGrantedAuthority("ROLE_ROOT"));
-        }
-        if (!user.isOverlord()) {
+        } else {
             authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
 
-        final boolean accountNonLocked = user.isOverlord() || !user.isLocked();
-
-        return new CosmoUserDetails(user.getUsername(), user.getPassword(), true, true, true, accountNonLocked, authorities, user);
+        return new CosmoUserDetails(user.getUsername(), user.getPassword(), true, true, true, !user.isLocked(), authorities, user);
     }
 }

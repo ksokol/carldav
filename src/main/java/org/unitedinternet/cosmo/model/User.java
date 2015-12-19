@@ -79,10 +79,6 @@ public interface User extends AuditableObject{
      */
     void setAdmin(Boolean admin);
 
-    /**
-     */
-    boolean isOverlord();
-
     Boolean isLocked();
 
     /**

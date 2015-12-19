@@ -49,19 +49,7 @@ public class HibUser extends HibAuditableObject implements User {
     /**
      */
     public static final int USERNAME_LEN_MAX = 64;
-   
-    /**
-     */
-    public static final int FIRSTNAME_LEN_MIN = 1;
-    /**
-     */
-    public static final int FIRSTNAME_LEN_MAX = 128;
-    /**
-     */
-    public static final int LASTNAME_LEN_MIN = 1;
-    /**
-     */
-    public static final int LASTNAME_LEN_MAX = 128;
+
     /**
      */
     public static final int EMAIL_LEN_MIN = 1;
@@ -212,13 +200,6 @@ public class HibUser extends HibAuditableObject implements User {
     public void setAdmin(Boolean admin) {
         oldAdmin = this.admin;
         this.admin = admin;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#isOverlord()
-     */
-    public boolean isOverlord() {
-        return username != null && username.equals(USERNAME_OVERLORD);
     }
 
     /* (non-Javadoc)

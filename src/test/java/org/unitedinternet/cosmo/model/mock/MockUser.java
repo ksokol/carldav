@@ -235,17 +235,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isOverlord()
-     */
-    /**
-     * Is overload.
-     * @return The boolean for is overload.
-     */
-    public final boolean isOverlord() {
-        return username != null && username.equals(USERNAME_OVERLORD);
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#isLocked()
      */
     /**

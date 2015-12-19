@@ -43,8 +43,7 @@ public class HibUser extends HibAuditableObject implements User {
     public static final int EMAIL_LEN_MIN = 1;
     public static final int EMAIL_LEN_MAX = 128;
 
-    @Column(name = "username", nullable=false)
-    @NaturalId
+    @Column(name = "username")
     private String username = "";
 
     @Column(name = "password")
@@ -54,6 +53,7 @@ public class HibUser extends HibAuditableObject implements User {
     @Column(name = "email", nullable=true, unique=true)
     @Length(min=EMAIL_LEN_MIN, max=EMAIL_LEN_MAX)
     @Email
+    @NaturalId
     private String email;
 
     @Column(name = "admin")

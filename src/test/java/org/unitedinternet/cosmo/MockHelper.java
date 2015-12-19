@@ -47,8 +47,6 @@ public class MockHelper extends TestHelper {
     private HomeCollectionItem homeCollection;
     
     public MockHelper() {
-        super();
-
         securityManager = new MockSecurityManager();
 
         MockDaoStorage storage = new MockDaoStorage();
@@ -65,7 +63,7 @@ public class MockHelper extends TestHelper {
         keyBasedPersistenceTokenService.setServerInteger(123);
         keyBasedPersistenceTokenService.setSecureRandom(new SecureRandom());
 
-        user = userService.getUser("test");
+        user = userService.getUserByEmail("test@localhost");
         if (user == null) {
             user = makeDummyUser("test", "password");
             userService.createUser(user);

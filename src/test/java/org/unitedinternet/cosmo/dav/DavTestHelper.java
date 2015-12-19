@@ -35,12 +35,7 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
 
     private URL baseUrl;
 
-    /**
-     * Constructor.
-     */
     public DavTestHelper() {
-        super();
-
         resourceFactory =
             new StandardResourceFactory(getContentService(),
                                         getSecurityManager(),

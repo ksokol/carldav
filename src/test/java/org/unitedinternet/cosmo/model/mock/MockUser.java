@@ -17,11 +17,8 @@ package org.unitedinternet.cosmo.model.mock;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.User;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,12 +81,6 @@ public class MockUser extends MockAuditableObject implements User {
     
     private Boolean locked;
 
-    private Set<CollectionSubscription> subscriptions = 
-        new HashSet<CollectionSubscription>(0);
-
-    /**
-     * Constructor.
-     */
     public MockUser() {
         admin = Boolean.FALSE;
         locked = Boolean.FALSE;
@@ -554,61 +545,6 @@ public class MockUser extends MockAuditableObject implements User {
                                                EMAIL_LEN_MIN + " to " +
                                                EMAIL_LEN_MAX +
                                                " characters in length");
-        }
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getCollectionSubscriptions()
-     */
-    /**
-     * Gets collection subscriptions.
-     * @return collection subscriptions.
-     */
-    public final Set<CollectionSubscription> getCollectionSubscriptions() {
-        return subscriptions;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#addSubscription(org.unitedinternet.cosmo.model.copy.CollectionSubscription)
-     */
-    /**
-     * Adds subscription.
-     * @param subscription The subscription.
-     */
-    public final void addSubscription(final CollectionSubscription subscription) {
-        subscription.setOwner(this);
-        subscriptions.add(subscription);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getSubscription(java.lang.String)
-     */
-    /**
-     * Gets subscription.
-     * @param displayname The display name.
-     * @return collection subscription.
-     */
-    public final CollectionSubscription getSubscription(final String displayname) {
-
-        for (CollectionSubscription sub : subscriptions) {
-            if (sub.getDisplayName().equals(displayname)) {
-                return sub;
-            }
-        }
-
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#removeSubscription(org.unitedinternet.cosmo.model.copy.CollectionSubscription)
-     */
-    /**
-     * Removes subscription.
-     * @param sub The collection subscription.
-     */
-    public final void removeSubscription(final CollectionSubscription sub) {
-        if (sub != null) {
-            subscriptions.remove(sub);
         }
     }
 

@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dao.mock;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
 import org.unitedinternet.cosmo.model.mock.MockUser;
@@ -150,13 +149,6 @@ public class MockUserDao implements UserDao {
         ((MockAuditableObject) user).setCreationDate(new Date());
         ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
                 .calculateEntityTag());
-        
-        for(CollectionSubscription cs: user.getCollectionSubscriptions()) {
-            ((MockAuditableObject) cs).setEntityTag(((MockAuditableObject) cs)
-                    .calculateEntityTag());
-            ((MockAuditableObject) cs).setModifiedDate(new Date());
-            ((MockAuditableObject) cs).setCreationDate(new Date());
-        }
 
         ((MockUser) user).validate();
         if (usernameIdx.containsKey(user.getUsername())) {
@@ -190,15 +182,6 @@ public class MockUserDao implements UserDao {
         ((MockAuditableObject) user).setModifiedDate(new Date());
         ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
                 .calculateEntityTag());
-        
-        for(CollectionSubscription cs: user.getCollectionSubscriptions()) {
-            ((MockAuditableObject) cs).setEntityTag(((MockAuditableObject) cs)
-                    .calculateEntityTag());
-            ((MockAuditableObject) cs).setModifiedDate(new Date());
-            if (cs.getCreationDate()==null) {
-                ((MockAuditableObject) cs).setCreationDate(new Date());
-            }
-        }
 
         ((MockUser) user).validate();
         String key = user.isUsernameChanged() ?

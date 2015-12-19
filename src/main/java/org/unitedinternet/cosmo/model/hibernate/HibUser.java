@@ -98,13 +98,6 @@ public class HibUser extends HibAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getUsername()
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#setUsername(java.lang.String)
      */
     public void setUsername(String username) {

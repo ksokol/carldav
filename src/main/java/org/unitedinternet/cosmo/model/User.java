@@ -17,8 +17,6 @@ package org.unitedinternet.cosmo.model;
 
 public interface User extends AuditableObject{
 
-    String getUsername();
-
     void setUsername(String username);
 
     String getPassword();

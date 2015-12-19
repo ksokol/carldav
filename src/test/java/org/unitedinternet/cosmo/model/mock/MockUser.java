@@ -73,17 +73,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getUsername()
-     */
-    /**
-     * Gets username.
-     * @return The username.
-     */
-    public final String getUsername() {
-        return username;
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#setUsername(java.lang.String)
      */
     /**

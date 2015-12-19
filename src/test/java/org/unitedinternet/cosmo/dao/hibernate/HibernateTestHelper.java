@@ -243,7 +243,6 @@ public class HibernateTestHelper {
         User user = userDao.getUserByEmail(username + "@testem");
         if (user == null) {
             user = new HibUser();
-            user.setUsername(username);
             user.setPassword(username);
             user.setEmail(username + "@testem");
             userDao.createUser(user);

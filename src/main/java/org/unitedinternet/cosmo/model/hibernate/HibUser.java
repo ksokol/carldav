@@ -38,36 +38,14 @@ import javax.validation.constraints.NotNull;
 @Table(name="users")
 public class HibUser extends HibAuditableObject implements User {
 
-    /**
-     */
     private static final long serialVersionUID = -5401963358519490736L;
-   
-    /**
-     */
-    public static final int USERNAME_LEN_MIN = 3;
-    /**
-     */
-    public static final int USERNAME_LEN_MAX = 64;
 
-    /**
-     */
     public static final int EMAIL_LEN_MIN = 1;
-    /**
-     */
     public static final int EMAIL_LEN_MAX = 128;
 
     @Column(name = "username", nullable=false)
-    @NotNull
     @NaturalId
-    @Length(min=USERNAME_LEN_MIN, max=USERNAME_LEN_MAX)
-    //per bug 11599:
-    // Usernames must be between 3 and 64 characters; may contain any Unicode
-    //character in the following range of unicode code points: [#x20-#xD7FF] |
-    //[#xE000-#xFFFD] EXCEPT #x7F or #x3A
-    // Oh and don't allow ';' or '/' because there are problems with encoding
-    // them in urls (tomcat doesn't support it)
-    @javax.validation.constraints.Pattern(regexp="^[\\u0020-\\ud7ff\\ue000-\\ufffd&&[^\\u007f\\u003a;/\\\\]]+$")
-    private String username;
+    private String username = "";
 
     @Column(name = "password")
     @NotNull

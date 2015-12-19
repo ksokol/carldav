@@ -128,7 +128,7 @@ public class MockItemDao implements ItemDao {
             LOG.debug("getting root item for user " + user.getUsername());
         }
 
-        return getStorage().getRootItem(user.getUsername());
+        return getStorage().getRootItem(user.getEmail());
     }
 
     /**
@@ -252,21 +252,10 @@ public class MockItemDao implements ItemDao {
 
         storage.removeItemByUid(item.getUid());
         storage.removeItemByPath(getItemPath(item));
-        if (storage.getRootUid(item.getOwner().getUsername()).
+        if (storage.getRootUid(item.getOwner().getEmail()).
             equals(item.getUid())) {
-            storage.removeRootUid(item.getOwner().getUsername());
+            storage.removeRootUid(item.getOwner().getEmail());
         }
-    }
-
-    /**
-     * Finds item by path.
-     * {@inheritDoc}
-     * @param path The path.
-     * @param parentUid The parent's id.
-     * @return The item.
-     */
-    public Item findItemByPath(String path, String parentUid) {
-        return null;
     }
 
     /**

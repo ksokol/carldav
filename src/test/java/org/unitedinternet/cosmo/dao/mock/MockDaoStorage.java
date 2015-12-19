@@ -152,7 +152,7 @@ public class MockDaoStorage {
      */
     public HomeCollectionItem createRootItem(User user) {
         MockHomeCollectionItem rootCollection = new MockHomeCollectionItem();
-        rootCollection.setName(user.getUsername());
+        rootCollection.setName(user.getEmail());
         rootCollection.setOwner(user);
         rootCollection.setUid(calculateUid());
         rootCollection.setCreationDate(new Date());
@@ -161,7 +161,7 @@ public class MockDaoStorage {
 
         itemsByUid.put(rootCollection.getUid(), rootCollection);
         itemsByPath.put("/" + rootCollection.getName(), rootCollection);
-        rootUidsByUsername.put(user.getUsername(), rootCollection.getUid());
+        rootUidsByUsername.put(user.getEmail(), rootCollection.getUid());
 
         return rootCollection;
     }

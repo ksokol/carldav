@@ -211,7 +211,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
             }
         }
         Assert.fail("specified User doesn't exist in Set: "
-                + user.getUsername());
+                + user.getEmail());
     }
 
 }

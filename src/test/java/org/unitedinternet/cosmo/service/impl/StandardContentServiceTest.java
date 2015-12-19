@@ -90,7 +90,7 @@ public class StandardContentServiceTest {
         dummyContent.setOwner(user);
         dummyContent = contentDao.createContent(rootCollection, dummyContent);
 
-        String path = "/" + user.getUsername() + "/" + dummyContent.getName();
+        String path = "/" + user.getEmail() + "/" + dummyContent.getName();
         Item item = service.findItemByPath(path);
 
         // XXX service should throw exception rather than return null

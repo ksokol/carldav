@@ -187,33 +187,6 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
         Assert.assertEquals(ees.getEventCalendar().toString(), eventex.getEventCalendar()
                 .toString());
     }
-    
-    /**
-     * Test event exception stamp validation.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEventExceptionStampValidation() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-
-        NoteItem item = generateTestContent();
-        
-        item.setIcalUid("icaluid");
-        item.setBody("this is a body");
-        
-        EventExceptionStamp eventex = new HibEventExceptionStamp();
-        eventex.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
-        
-        item.addStamp(eventex);
-        
-        try {
-            contentDao.createContent(root, item);
-            clearSession();
-            Assert.fail("able to save invalid exception event, is TimezoneValidator active?");
-        } catch (ConstraintViolationException cve) {
-        }
-    }
 
     /**
      * Gets user.

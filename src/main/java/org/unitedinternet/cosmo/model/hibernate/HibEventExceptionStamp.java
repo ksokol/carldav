@@ -15,9 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Dur;
@@ -27,16 +24,17 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Trigger;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.hibernate.validator.EventException;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
  * Hibernate persistent EventExceptionStamp.
@@ -67,14 +65,7 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
     public String getType() {
         return "eventexception";
     }
-    
-    /** Used by the hibernate validator **/
-    @EventException
-    
-    private Calendar getValidationCalendar() {//NOPMD
-        return getEventCalendar();
-    }
-    
+
     @Override
     public VEvent getEvent() {
         return getExceptionEvent();

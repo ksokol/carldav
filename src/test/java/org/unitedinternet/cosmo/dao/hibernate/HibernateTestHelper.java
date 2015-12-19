@@ -240,7 +240,7 @@ public class HibernateTestHelper {
      * @return The user.
      */
     public User getUser(UserDao userDao, ContentDao contentDao, String username) {
-        User user = userDao.getUser(username);
+        User user = userDao.getUserByEmail(username + "@testem");
         if (user == null) {
             user = new HibUser();
             user.setUsername(username);

@@ -141,7 +141,7 @@ public class StandardContentServiceTest {
 
         service.removeItem(dummyContent);
 
-        String path = "/" + user.getUsername() + "/" + dummyContent.getName();
+        String path = "/" + user.getEmail() + "/" + dummyContent.getName();
         Item item = service.findItemByPath(path);
 
         // XXX service should throw exception rather than return null
@@ -320,7 +320,7 @@ public class StandardContentServiceTest {
 
         service.removeContent(dummyContent);
 
-        String path = "/" + user.getUsername() + "/" + dummyContent.getName();
+        String path = "/" + user.getEmail() + "/" + dummyContent.getName();
         Item item = service.findItemByPath(path);
 
         // XXX service should throw exception rather than return null

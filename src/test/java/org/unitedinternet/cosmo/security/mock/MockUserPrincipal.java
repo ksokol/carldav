@@ -69,7 +69,7 @@ public class MockUserPrincipal implements Principal {
      * @return The name.
      */
     public String getName() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     /**

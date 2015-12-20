@@ -53,6 +53,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyClass;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
@@ -92,11 +94,11 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     private String displayName;
 
     @Column(name = "clientcreatedate")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date clientCreationDate;
 
     @Column(name = "clientmodifieddate")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date clientModifiedDate;
 
     @Version

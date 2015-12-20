@@ -15,18 +15,19 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
-import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TimestampAttribute;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Hibernate persistent TimestampAtttribute.
@@ -41,7 +42,7 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
     private static final long serialVersionUID = 5263977785074085449L;
     
     @Column(name = "intvalue")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date value;
 
     /** default constructor */

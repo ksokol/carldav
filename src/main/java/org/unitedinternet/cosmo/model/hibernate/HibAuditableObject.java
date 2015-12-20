@@ -23,6 +23,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Hibernate persistent AuditableObject.
@@ -31,11 +33,11 @@ import javax.persistence.MappedSuperclass;
 public abstract class HibAuditableObject extends BaseModelObject implements AuditableObject {
 
     @Column(name = "createdate")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
     
     @Column(name = "modifydate")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
     
     @Column(name="etag")

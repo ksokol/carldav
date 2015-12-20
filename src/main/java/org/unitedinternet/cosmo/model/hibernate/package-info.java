@@ -23,11 +23,6 @@
     @TypeDef(
             name="calendar_clob",
             typeClass = org.unitedinternet.cosmo.hibernate.CalendarClobType.class
-    ),
-
-    @TypeDef(
-            name="long_timestamp",
-            typeClass = org.unitedinternet.cosmo.hibernate.LongTimestampType.class
     )
 })
 

@@ -457,7 +457,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <C:supported-calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:calendar-data C:content-type="text/calendar" C:version="2.0"/>
                                         </C:supported-calendar-data>
-                                        <D:getlastmodified>Sat, 21 Nov 2015 21:11:00 GMT</D:getlastmodified>
+                                        <D:getlastmodified>Sat, 21 Nov 2015 08:11:00 GMT</D:getlastmodified>
                                         <D:iscollection>1</D:iscollection>
                                         <D:supported-report-set>
                                             <D:supported-report>

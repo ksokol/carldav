@@ -25,6 +25,7 @@ import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibUser;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 import org.w3c.dom.Element;
 
@@ -120,7 +121,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return The user.
      */
     public User createUser() {
-        return new MockUser();
+        return new HibUser();
     }
 
     /**

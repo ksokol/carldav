@@ -18,10 +18,8 @@ package org.unitedinternet.cosmo.dao.mock;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
-import org.unitedinternet.cosmo.model.mock.MockUser;
+import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -42,7 +40,7 @@ public class MockUserDao implements UserDao {
         uidIdx = new HashMap();
 
         // add overlord user
-        MockUser overlord = new MockUser();
+        User overlord = new HibUser();
         overlord.setPassword("32a8bd4d676f4fef0920c7da8db2bad7");
         overlord.setEmail("root@localhost");
         createUser(overlord);
@@ -90,7 +88,6 @@ public class MockUserDao implements UserDao {
             throw new IllegalArgumentException("null user");
         }
 
-        ((MockUser) user).validate();
         if (emailIdx.containsKey(user.getEmail())) {
             throw new DuplicateEmailException(user.getEmail());
         }

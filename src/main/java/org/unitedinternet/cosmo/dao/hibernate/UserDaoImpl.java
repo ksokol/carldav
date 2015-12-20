@@ -38,7 +38,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         try {
             Assert.notNull(user, "user is required");
 
-            if (user.getId() != -1) {
+            if (user.getId() != null) {
                 throw new IllegalArgumentException("new user is required");
             }
 

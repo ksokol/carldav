@@ -39,7 +39,7 @@ public class HibUser implements User, Serializable {
 
     private static final long serialVersionUID = -5401963358119490736L;
 
-    private Long id = Long.valueOf(-1);
+    private Long id;
     private String email;
     private String password;
     private boolean locked;

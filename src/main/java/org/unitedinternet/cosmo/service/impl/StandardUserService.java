@@ -120,24 +120,10 @@ public class StandardUserService implements UserService {
     }
 
     @Deprecated
-    private static int PASSWORD_LEN_MIN = 5;
-    @Deprecated
-    private static int PASSWORD_LEN_MAX = 16;
-
-    @Deprecated
-    public static void validateRawPassword(User user) {
+    private static void validateRawPassword(User user) {
         if (user.getPassword() == null) {
             throw new ModelValidationException(" EMAIL " + user.getEmail(),
                     "Password not specified");
-        }
-        if (user.getPassword().length() < PASSWORD_LEN_MIN ||
-                user.getPassword().length() > PASSWORD_LEN_MAX) {
-
-            throw new ModelValidationException(" EMAIL " + user.getEmail(),
-                    "Password must be " +
-                            PASSWORD_LEN_MIN + " to " +
-                            PASSWORD_LEN_MAX +
-                            " characters in length");
         }
     }
 }

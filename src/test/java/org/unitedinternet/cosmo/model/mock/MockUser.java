@@ -20,9 +20,6 @@ import org.unitedinternet.cosmo.model.User;
 
 public class MockUser implements User {
 
-    public static final int EMAIL_LEN_MIN = 1;
-    public static final int EMAIL_LEN_MAX = 128;
-
     private Long id;
     private String password;
     private String email;
@@ -154,13 +151,6 @@ public class MockUser implements User {
     public final void validateEmail() {
         if (email == null) {
             throw new ModelValidationException(this,"Email is null");
-        }
-        if (email.length() < EMAIL_LEN_MIN ||
-            email.length() > EMAIL_LEN_MAX) {
-            throw new ModelValidationException(this,"Email must be " +
-                                               EMAIL_LEN_MIN + " to " +
-                                               EMAIL_LEN_MAX +
-                                               " characters in length");
         }
     }
 }

@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.User;
 
 import java.io.Serializable;
@@ -40,9 +39,6 @@ public class HibUser implements User, Serializable {
 
     private static final long serialVersionUID = -5401963358119490736L;
 
-    public static final int EMAIL_LEN_MIN = 1;
-    public static final int EMAIL_LEN_MAX = 128;
-
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id = Long.valueOf(-1);
@@ -62,7 +58,6 @@ public class HibUser implements User, Serializable {
     private String password;
 
     @Column(name = "email", nullable=true, unique=true)
-    @Length(min=EMAIL_LEN_MIN, max=EMAIL_LEN_MAX)
     @Email
     @NaturalId
     private String email;

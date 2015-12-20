@@ -100,38 +100,6 @@ public class MockUser implements User {
 
     }
 
-    /**
-     * Username determines equality
-     * @param obj The object.
-     * @return The equals boolean. 
-     */
-    @Override
-    public final boolean equals(final Object obj) {
-        if (obj == null || email == null) {
-            return false;
-        }
-        if (! (obj instanceof User)) {
-            return false;
-        }
-        
-        return email.equals(((User) obj).getEmail());
-    }
-
-    /**
-     * Hashcode.
-     * {@inheritDoc}
-     * @return The hashCode.
-     */
-    @Override
-    public final int hashCode() {
-    if (email == null) {
-        return super.hashCode();
-    }
-    else {
-        return email.hashCode();
-    }
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#validate()
      */

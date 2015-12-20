@@ -39,10 +39,15 @@ public class HibUser implements User, Serializable {
 
     private static final long serialVersionUID = -5401963358119490736L;
 
+    private Long id = Long.valueOf(-1);
+    private String email;
+    private String password;
+    private boolean locked;
+    private String roles;
+    private Set<HibItem> items;
+
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id = Long.valueOf(-1);
-
     @Override
     public Long getId() {
         return id;
@@ -53,63 +58,36 @@ public class HibUser implements User, Serializable {
         this.id = id;
     }
 
-    @Column(name = "password")
-    @NotNull
-    private String password;
-
-    @Column(name = "email", nullable=true, unique=true)
+    @Column(name = "email", nullable = true, unique = true)
     @Email
     @NaturalId
-    private String email;
-
-    @Column(name = "locked")
-    private boolean locked;
-
-    @Column(name = "roles")
-    private String roles;
-
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private Set<HibItem> items;
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getPassword()
-     */
-    public String getPassword() {
-        return password;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setPassword(java.lang.String)
-     */
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getEmail()
-     */
+    @Override
     public String getEmail() {
         return email;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setEmail(java.lang.String)
-     */
-    public void setEmail(String email) {
+    @Override
+    public void setEmail(final String email) {
         this.email = email;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#isLocked()
-     */
+    @NotNull
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public void setPassword(final String password) {
+        this.password = password;
+    }
+
+    @Override
     public boolean isLocked() {
         return locked;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setLocked(java.lang.Boolean)
-     */
-    public void setLocked(boolean locked) {
+
+    public void setLocked(final boolean locked) {
         this.locked = locked;
     }
 
@@ -123,28 +101,12 @@ public class HibUser implements User, Serializable {
         this.roles = roles;
     }
 
-    /**
-     * Username determines equality 
-     */
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || email == null) {
-            return false;
-        }
-        if (! (obj instanceof User)) {
-            return false;
-        }
-        
-        return email.equals(((User) obj).getEmail());
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    public Set<HibItem> getItems() {
+        return items;
     }
 
-    @Override
-        public int hashCode() {
-        if (email == null) {
-            return super.hashCode();
-        }
-        else {
-            return email.hashCode();
-        }
+    public void setItems(final Set<HibItem> items) {
+        this.items = items;
     }
 }

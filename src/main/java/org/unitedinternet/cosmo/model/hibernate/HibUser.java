@@ -20,28 +20,42 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.User;
 
-import java.nio.charset.Charset;
+import java.io.Serializable;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-/**
- * Hibernate persistent User.
- */
 @Entity
 @Table(name="users")
-public class HibUser extends HibAuditableObject implements User {
+public class HibUser implements User, Serializable {
 
-    private static final long serialVersionUID = -5401963358519490736L;
+    private static final long serialVersionUID = -5401963358119490736L;
 
     public static final int EMAIL_LEN_MIN = 1;
     public static final int EMAIL_LEN_MAX = 128;
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id = Long.valueOf(-1);
+
+    @Override
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     @Column(name = "password")
     @NotNull
@@ -137,13 +151,5 @@ public class HibUser extends HibAuditableObject implements User {
         else {
             return email.hashCode();
         }
-    }
-
-    public String calculateEntityTag() {
-        String username = getEmail() != null ? getEmail() : "-";
-        String modTime = getModifiedDate() != null ?
-            Long.valueOf(getModifiedDate().getTime()).toString() : "-";
-        String etag = username + ":" + modTime;
-        return encodeEntityTag(etag.getBytes(Charset.forName("UTF-8")));
     }
 }

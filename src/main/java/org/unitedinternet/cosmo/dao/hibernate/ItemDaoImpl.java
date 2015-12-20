@@ -154,7 +154,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      */
     public HomeCollectionItem getRootItem(User user) {
         try {
-            return findRootItem(getBaseModelObject(user).getId());
+            return findRootItem(user.getId());
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -171,7 +171,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 throw new IllegalArgumentException("invalid user");
             }
 
-            if (findRootItem(getBaseModelObject(user).getId()) != null) {
+            if (findRootItem(user.getId()) != null) {
                 throw new CosmoException("user already has root item", new CosmoException());
             }
 

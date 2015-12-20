@@ -45,8 +45,6 @@ public class MockUserDao implements UserDao {
         MockUser overlord = new MockUser();
         overlord.setPassword("32a8bd4d676f4fef0920c7da8db2bad7");
         overlord.setEmail("root@localhost");
-        overlord.setCreationDate(new Date());
-        overlord.setModifiedDate(new Date());
         createUser(overlord);
     }
 
@@ -91,13 +89,6 @@ public class MockUserDao implements UserDao {
         if (user == null) {
             throw new IllegalArgumentException("null user");
         }
-
-        // Set create/modified date, etag for User and associated subscriptions
-        // and perferences.
-        ((MockAuditableObject) user).setModifiedDate(new Date());
-        ((MockAuditableObject) user).setCreationDate(new Date());
-        ((MockAuditableObject) user).setEntityTag(user
-                .calculateEntityTag());
 
         ((MockUser) user).validate();
         if (emailIdx.containsKey(user.getEmail())) {

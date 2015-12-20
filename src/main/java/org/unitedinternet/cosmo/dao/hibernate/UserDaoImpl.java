@@ -24,7 +24,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,7 +38,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         try {
             Assert.notNull(user, "user is required");
 
-            if (getBaseModelObject(user).getId() != -1) {
+            if (user.getId() != -1) {
                 throw new IllegalArgumentException("new user is required");
             }
 
@@ -113,9 +112,4 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             return null;
         }
     }
-
-    protected BaseModelObject getBaseModelObject(Object obj) {
-        return (BaseModelObject) obj;
-    }
-
 }

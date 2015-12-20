@@ -17,27 +17,25 @@ package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.service.impl.StandardUserService;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class MockUser extends MockAuditableObject implements User {
+public class MockUser implements User {
 
     public static final int EMAIL_LEN_MIN = 1;
     public static final int EMAIL_LEN_MAX = 128;
 
+    private Long id;
     private String password;
-
     private String email;
+    private Boolean locked = Boolean.FALSE;
 
-    private Boolean admin;
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-    private Boolean locked;
-
-    public MockUser() {
-        admin = Boolean.FALSE;
-        locked = Boolean.FALSE;
+    @Override
+    public void setId(final Long id) {
+        this.id = id;
     }
 
     /* (non-Javadoc)
@@ -82,17 +80,6 @@ public class MockUser extends MockAuditableObject implements User {
      */
     public final void setEmail(final String email) {
         this.email = email;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#getAdmin()
-     */
-    /**
-     * Gets admin.
-     * @return admin.
-     */
-    public final Boolean getAdmin() {
-        return admin;
     }
 
     /* (non-Javadoc)
@@ -159,16 +146,6 @@ public class MockUser extends MockAuditableObject implements User {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#validateRawPassword()
-     */
-    /**
-     * Validate raw password.
-     */
-    public final void validateRawPassword() {
-        StandardUserService.validateRawPassword(this);
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#validateEmail()
      */
     /**
@@ -185,20 +162,5 @@ public class MockUser extends MockAuditableObject implements User {
                                                EMAIL_LEN_MAX +
                                                " characters in length");
         }
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceUser#calculateEntityTag()
-     */
-    /**
-     * Calculates entity tag.
-     * @return The entity tag
-     */
-    public final String calculateEntityTag() {
-        String username = getEmail() != null ? getEmail() : "-";
-        String modTime = getModifiedDate() != null ?
-            Long.valueOf(getModifiedDate().getTime()).toString() : "-";
-        String etag = username + ":" + modTime;
-        return encodeEntityTag(etag.getBytes());
     }
 }

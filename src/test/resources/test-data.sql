@@ -1,6 +1,6 @@
-INSERT INTO users(id,createdate,etag,modifydate,locked,email,password,roles) VALUES (1,to_timestamp('2015-11-16 15:35:00','YYYY-MM-DD HH:MI:SS'),'c3hz93Topi4igzn82UA+JAOHyVU=',to_timestamp('2015-11-16 15:35:00','YYYY-MM-DD HH:MI:SS'),0,'root@localhost','098f6bcd4621d373cade4e832627b4f6','ROLE_ROOT');
-INSERT INTO users(id,createdate,etag,modifydate,locked,email,password,roles) VALUES (2,to_timestamp('2015-11-16 15:35:00','YYYY-MM-DD HH:MI:SS'),'q0leu+2ctlWs3jLUakICskqYGms=',to_timestamp('2015-11-16 15:35:00','YYYY-MM-DD HH:MI:SS'),0,'test01@localhost.de','098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
-INSERT INTO users(id,createdate,etag,modifydate,locked,email,password,roles) VALUES (3,to_timestamp('2015-11-16 15:35:00','YYYY-MM-DD HH:MI:SS'),'10leu+2ctlWs3jLUakICskqYGms=',to_timestamp('2015-11-16 15:35:00','YYYY-MM-DD HH:MI:SS'),0,'test02@localhost.de','098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
+INSERT INTO users(id,locked,email,password,roles) VALUES (1,0,'root@localhost','098f6bcd4621d373cade4e832627b4f6','ROLE_ROOT');
+INSERT INTO users(id,locked,email,password,roles) VALUES (2,0,'test01@localhost.de','098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
+INSERT INTO users(id,locked,email,password,roles) VALUES (3,0,'test02@localhost.de','098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
 
 INSERT INTO item (itemtype, id, createdate, etag, modifydate, clientcreatedate, clientmodifieddate, displayname, itemname, uid, version, lastmodification, lastmodifiedby, needsreply, sent, isautotriage, triagestatuscode, triagestatusrank, icaluid, hasmodifications, ownerid, modifiesitemid) VALUES
 ('homecollection', 1, to_timestamp('2015-11-21 09:11:00','YYYY-MM-DD HH:MI:SS'), 'ghFexXxxU+9KC/of1jmJ82wMFig=', to_timestamp('2015-11-21 09:11:00','YYYY-MM-DD HH:MI:SS'), null, null, null, 'test01@localhost.de', 'de359448-1ee0-4151-872d-eea0ee462bc6', 0, null, null, null, null, null, null, null, null, null, 2, null);

@@ -94,7 +94,6 @@ public class StandardUserServiceTest {
         Assert.assertNotNull("User not stored", userDao.getUserByEmail(u1.getEmail()));
         Assert.assertFalse("Original and stored password are the same",
                     user.getPassword().equals(password));
-        Assert.assertEquals(user.getCreationDate(), user.getModifiedDate());
     }
 
     /**

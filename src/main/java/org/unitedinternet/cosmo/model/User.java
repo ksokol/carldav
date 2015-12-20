@@ -15,7 +15,11 @@
  */
 package org.unitedinternet.cosmo.model;
 
-public interface User extends AuditableObject{
+public interface User {
+
+    Long getId();
+
+    void setId(Long id);
 
     String getPassword();
 
@@ -30,6 +34,4 @@ public interface User extends AuditableObject{
     String getRoles();
 
     void setRoles(String roles);
-
-    String calculateEntityTag();
 }

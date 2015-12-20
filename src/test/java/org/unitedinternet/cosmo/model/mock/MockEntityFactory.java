@@ -65,17 +65,6 @@ public class MockEntityFactory implements EntityFactory {
     }
 
     /**
-     * Creates xml attribute.
-     * @param qname The name.
-     * @param e The element.
-     * @return xml attribute.
-     * {@inheritDoc}
-     */
-    public XmlAttribute createXMLAttribute(QName qname, Element e) {
-        return new MockXmlAttribute(qname, e);
-    }
-
-    /**
      * Creates event exception stamp.
      * @param note The note item.
      * {@inheritDoc}

@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.io.Reader;
-
 /**
  * Attribute that stores text value.
  */
@@ -26,11 +24,6 @@ public interface TextAttribute extends Attribute{
     public String getValue();
 
     public void setValue(String value);
-
-    /**
-     * @return reader to value
-     */
-    public Reader getReader();
 
     /**
      * @return length of text

@@ -26,17 +26,12 @@ import org.unitedinternet.cosmo.model.TextAttribute;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-
-/**
- * Hibernate persistent TextAttribute.
- */
 @Entity
 @DiscriminatorValue("text")
 public class HibTextAttribute extends HibAttribute implements TextAttribute {
@@ -47,9 +42,6 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
     @Type(type="materialized_clob")
     private String value;
 
-    // Constructors
-
-    /** default constructor */
     public HibTextAttribute() {
     }
 
@@ -57,48 +49,20 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
         setQName(qname);
         this.value = value;
     }
-    
-    /**
-     * Construct TextAttribute from Reader
-     * @param qname
-     * @param reader
-     */
+
     public HibTextAttribute(QName qname, Reader reader) {
         setQName(qname);
         this.value = read(reader);
     }
 
-    // Property accessors
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getValue()
-     */
     public String getValue() {
         return this.value;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TextAttribute#setValue(java.lang.String)
-     */
     public void setValue(String value) {
         this.value = value;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TextAttribute#getReader()
-     */
-    public Reader getReader() {
-        if(value!=null) {
-            return new StringReader(value);
-        }
-        else {
-            return null;
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TextAttribute#getLength()
-     */
+
     public int getLength() {
         if(value!=null) {
             return value.length();

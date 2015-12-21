@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.security.mock;
 
 import java.security.Principal;
 
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 /**
  */

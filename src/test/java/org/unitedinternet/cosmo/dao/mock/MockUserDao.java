@@ -17,8 +17,7 @@ package org.unitedinternet.cosmo.dao.mock;
 
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibUser;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,7 +39,7 @@ public class MockUserDao implements UserDao {
         uidIdx = new HashMap();
 
         // add overlord user
-        User overlord = new HibUser();
+        User overlord = new User();
         overlord.setPassword("32a8bd4d676f4fef0920c7da8db2bad7");
         overlord.setEmail("root@localhost");
         createUser(overlord);

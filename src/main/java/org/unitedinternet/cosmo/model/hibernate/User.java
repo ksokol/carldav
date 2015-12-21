@@ -1,12 +1,12 @@
 /*
- * Copyright 2006 Open Source Applications Foundation
- *
+ * Copyright 2007 Open Source Applications Foundation
+ * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Email;
-import org.unitedinternet.cosmo.model.User;
 
 import java.io.Serializable;
 import java.util.Set;
@@ -35,7 +34,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="users")
-public class HibUser implements User, Serializable {
+public class User implements Serializable {
 
     private static final long serialVersionUID = -5401963358119490736L;
 
@@ -48,12 +47,10 @@ public class HibUser implements User, Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    @Override
     public Long getId() {
         return id;
     }
 
-    @Override
     public void setId(Long id) {
         this.id = id;
     }
@@ -61,28 +58,23 @@ public class HibUser implements User, Serializable {
     @Column(name = "email", nullable = true, unique = true)
     @Email
     @NaturalId
-    @Override
     public String getEmail() {
         return email;
     }
 
-    @Override
     public void setEmail(final String email) {
         this.email = email;
     }
 
     @NotNull
-    @Override
     public String getPassword() {
         return password;
     }
 
-    @Override
     public void setPassword(final String password) {
         this.password = password;
     }
 
-    @Override
     public boolean isLocked() {
         return locked;
     }
@@ -91,12 +83,10 @@ public class HibUser implements User, Serializable {
         this.locked = locked;
     }
 
-    @Override
     public String getRoles() {
         return roles;
     }
 
-    @Override
     public void setRoles(final String roles) {
         this.roles = roles;
     }

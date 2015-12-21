@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 /**
  * An interface that represents a user-specific context for Cosmo

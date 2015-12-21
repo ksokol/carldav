@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.security.mock;
 
 import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.security.BaseSecurityContext;
 
 import java.security.Principal;

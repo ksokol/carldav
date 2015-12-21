@@ -19,7 +19,6 @@ import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -27,7 +26,6 @@ import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -133,7 +131,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
 
     private transient Set<CollectionItem> parents = null;
 
-    @ManyToOne(targetEntity=HibUser.class, fetch=FetchType.LAZY)
+    @ManyToOne(targetEntity=User.class, fetch=FetchType.LAZY)
     @JoinColumn(name="ownerid", nullable = false)
     @NotNull
     private User owner;

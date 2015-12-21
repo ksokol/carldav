@@ -20,7 +20,7 @@ import org.junit.Ignore;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;

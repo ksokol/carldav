@@ -33,9 +33,8 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 /**
  * Test Hibernate helper.
@@ -242,7 +241,7 @@ public class HibernateTestHelper {
     public User getUser(UserDao userDao, ContentDao contentDao, String username) {
         User user = userDao.getUserByEmail(username + "@testem");
         if (user == null) {
-            user = new HibUser();
+            user = new User();
             user.setPassword(username);
             user.setEmail(username + "@testem");
             userDao.createUser(user);

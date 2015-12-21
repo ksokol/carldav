@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.service;
 
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.Set;
 

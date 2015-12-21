@@ -20,8 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibUser;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -42,13 +41,13 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
 
     @Test
     public void testCreateUser() {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
 
-        User user2 = new HibUser();
+        User user2 = new User();
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
 
@@ -80,7 +79,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         clearSession();
 
         // try to create duplicate
-        User user3 = new HibUser();
+        User user3 = new User();
         user3.setEmail("user1@user1.com");
         user3.setPassword("user1password");
         try {
@@ -98,20 +97,20 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
      */
     @Test
     public void testCreateDuplicateUserEmail() {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
         clearSession();
 
-        User user2 = new HibUser();
+        User user2 = new User();
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
         user2 = userDao.createUser(user2);
         clearSession();
         
-        User user3 = new HibUser();
+        User user3 = new User();
         user3.setEmail("USER2@user2.com");
         user3.setPassword("user2password");
         
@@ -134,7 +133,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
      */
     @Test
     public void testDeleteUser() throws Exception {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
@@ -157,7 +156,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
      */
     @Test
     public void testDeleteUserByUsername() throws Exception {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 

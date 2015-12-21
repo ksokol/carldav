@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TriageStatus;
 
 /**
  * EntityFactory implementation that uses Hibernate 
@@ -64,7 +63,7 @@ public class HibEntityFactory implements EntityFactory {
     }
 
     public TriageStatus createTriageStatus() {
-        return new HibTriageStatus();
+        return new TriageStatus();
     }
 
     public User createUser() {

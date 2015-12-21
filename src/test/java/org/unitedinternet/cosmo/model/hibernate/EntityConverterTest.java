@@ -38,7 +38,6 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.mock.MockCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
@@ -82,7 +81,7 @@ public class EntityConverterTest {
         VToDo vtodo = (VToDo) calendar.getComponents(Component.VTODO).get(0);
         ICalendarUtils.setCompleted(completeDate, vtodo);
         note = converter.convertTaskCalendar(calendar);
-        
+
         TriageStatus ts = note.getTriageStatus();
         Assert.assertTrue(TriageStatus.CODE_DONE==ts.getCode());
         Assert.assertTrue(TriageStatusUtil.getDateFromRank(ts.getRank()).getTime()==completeDate.getTime());

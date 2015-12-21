@@ -15,11 +15,13 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * Contains static helper methods for dealing with TriageStatus
+ * Contains static helper methods for dealing with TriageStatusUtil
  * objects.
  */
 public class TriageStatusUtil {
@@ -36,7 +38,7 @@ public class TriageStatusUtil {
         }
         throw new IllegalStateException("Unknown label " + label);
     }
-    
+
     public static TriageStatus initialize(TriageStatus ts) {
         ts.setCode(Integer.valueOf(TriageStatus.CODE_NOW));
         ts.setRank(getRank(System.currentTimeMillis()));
@@ -48,7 +50,7 @@ public class TriageStatusUtil {
         String time = (date / 1000) + ".00";
         return new BigDecimal(time).negate();
     }
-    
+
     public static Date getDateFromRank(BigDecimal rank) {
         return new Date(rank.negate().scaleByPowerOfTen(3).longValue());
     }

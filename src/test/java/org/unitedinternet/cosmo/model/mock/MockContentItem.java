@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.TriageStatus;
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 
 /**
  * Extends {@link Item} to represent an abstract
@@ -28,9 +28,8 @@ public abstract class MockContentItem extends MockItem implements ContentItem {
     private String lastModifiedBy = null;
   
     private Integer lastModification = null;
-    
    
-    private TriageStatus triageStatus = new MockTriageStatus();
+    private TriageStatus triageStatus = new TriageStatus();
     
     private Boolean sent = null;
     

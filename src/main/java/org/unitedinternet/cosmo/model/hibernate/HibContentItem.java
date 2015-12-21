@@ -15,15 +15,14 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Target;
+import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.Item;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-
-import org.hibernate.annotations.Target;
-import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.TriageStatus;
 
 /**
  * Hibernate persistent ContentItem.
@@ -41,8 +40,8 @@ public abstract class HibContentItem extends HibItem implements ContentItem {
     private Integer lastModification = null;
     
     @Embedded
-    @Target(HibTriageStatus.class)
-    private TriageStatus triageStatus = new HibTriageStatus();
+    @Target(TriageStatus.class)
+    private TriageStatus triageStatus = new TriageStatus();
     
     @Column(name = "sent")
     private Boolean sent = null;

@@ -22,7 +22,7 @@ import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TriageStatus;
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
@@ -98,7 +98,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return The triage status.
      */
     public TriageStatus createTriageStatus() {
-        return new MockTriageStatus();
+        return new TriageStatus();
     }
 
     /**

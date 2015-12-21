@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
+
 /**
  * Extends {@link Item} to represent an abstract
  * content item.

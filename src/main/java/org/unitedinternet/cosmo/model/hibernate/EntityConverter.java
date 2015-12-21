@@ -58,7 +58,6 @@ import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
 import java.util.ArrayList;
@@ -574,7 +573,7 @@ public class EntityConverter {
         // Set COMPLETED/STATUS if triagestatus is DONE
         TriageStatus ts = note.getTriageStatus();
         DateTime completeDate = null;
-        if(ts!=null && ts.getCode()==TriageStatus.CODE_DONE) {
+        if(ts!=null && ts.getCode()== TriageStatus.CODE_DONE) {
             ICalendarUtils.setStatus(Status.VTODO_COMPLETED, task);
             if (ts.getRank() != null) {
                 completeDate =  new DateTime(TriageStatusUtil.getDateFromRank(ts.getRank()));
@@ -853,7 +852,7 @@ public class EntityConverter {
      * @param item The content item.
      */
     private void setBaseContentAttributes(ContentItem item) {
-        
+
         TriageStatus ts = entityFactory.createTriageStatus();
         TriageStatusUtil.initialize(ts);
 
@@ -897,7 +896,7 @@ public class EntityConverter {
         java.util.Date now =java.util.Calendar.getInstance().getTime();
         boolean later = event.getStartDate().getDate().after(now);
         int code = later ? TriageStatus.CODE_LATER : TriageStatus.CODE_DONE;
-        
+
         TriageStatus triageStatus = note.getTriageStatus();
         
         // initialize TriageStatus if not present

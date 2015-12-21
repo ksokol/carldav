@@ -32,7 +32,7 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.hibernate.User;
-import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -122,7 +122,7 @@ public abstract class DavContentBase extends DavItemResourceBase
         content.setLastModifiedBy(user != null ? user.getEmail() : "");
 
         if (content.getUid() == null) {
-            content.setTriageStatus(TriageStatusUtil.initialize(new HibTriageStatus()));
+            content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
             content.setLastModification(ContentItem.Action.CREATED);
             content.setSent(Boolean.FALSE);
             content.setNeedsReply(Boolean.FALSE);

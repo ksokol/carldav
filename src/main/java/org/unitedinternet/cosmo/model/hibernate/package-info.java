@@ -28,7 +28,7 @@
 
 @NamedQueries({
     // Item Queries
-        @NamedQuery(name = "homeCollection.by.ownerId", query = "from HibHomeCollectionItem where owner.id=:ownerid"),
+        @NamedQuery(name = "homeCollection.by.ownerId", query = "from HomeCollectionItem where owner.id=:ownerid"),
         @NamedQuery(name = "collections.children.by.parent", query = "select item from HibItem item join"
                 + " item.parentDetails pd where pd.primaryKey.collection=:parent and item.class=HibCollectionItem"),
         @NamedQuery(name = "itemId.by.parentId.name", query = "select item.id from HibItem item join"

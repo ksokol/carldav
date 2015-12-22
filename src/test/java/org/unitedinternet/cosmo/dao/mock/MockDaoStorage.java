@@ -18,16 +18,14 @@ package org.unitedinternet.cosmo.dao.mock;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -108,15 +106,6 @@ public class MockDaoStorage {
     }
 
     /**
-     * Sets root id.
-     * @param userName The username.
-     * @param uid The id.
-     */
-    public void setRootUid(String userName, String uid) {
-        rootUidsByUsername.put(userName, uid);
-    }
-
-    /**
      * Removes root uid.
      * @param userName The username.
      */
@@ -124,14 +113,6 @@ public class MockDaoStorage {
         rootUidsByUsername.remove(userName);
     }
 
-    /**
-     * Gets all items.
-     * @return All items.
-     */
-    public Collection<Item> getAllItems() {
-        return itemsByUid.values();
-    }
-    
     /**
      * Gets root item.
      * @param userName The username
@@ -151,7 +132,7 @@ public class MockDaoStorage {
      * @return Home collection item.
      */
     public HomeCollectionItem createRootItem(User user) {
-        HibHomeCollectionItem rootCollection = new HibHomeCollectionItem();
+        HomeCollectionItem rootCollection = new HomeCollectionItem();
         rootCollection.setName(user.getEmail());
         rootCollection.setOwner(user);
         rootCollection.setUid(calculateUid());

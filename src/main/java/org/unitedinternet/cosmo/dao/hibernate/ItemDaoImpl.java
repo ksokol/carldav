@@ -34,15 +34,14 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -175,7 +174,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 throw new CosmoException("user already has root item", new CosmoException());
             }
 
-            HomeCollectionItem newItem = new HibHomeCollectionItem();
+            HomeCollectionItem newItem = new HomeCollectionItem();
 
             newItem.setOwner(user);
             newItem.setName(user.getEmail());

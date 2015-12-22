@@ -22,9 +22,9 @@ import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
@@ -81,19 +81,6 @@ public class MockItemDao implements ItemDao {
      */
     public Item findItemByPath(String path) {
         return storage.getItemByPath(decode(path));
-    }
-    
-    /**
-     * Find the parent item of the item with the specified path. 
-     * The return type will be one of CollectionItem, CalendarCollectionItem.
-     *
-     * @param path
-     *            path of item
-     * @return parent item of item represented by path
-     */
-    @SuppressWarnings("deprecation")
-    public Item findItemParentByPath(String path) {
-        return storage.getItemByPath(path).getParent();
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2007 Open Source Applications Foundation
+ * Copyright 2006 Open Source Applications Foundation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unitedinternet.cosmo.model;
+package org.unitedinternet.cosmo.model.hibernate;
 
-/**
- * Extends {@link CollectionItem} to represent a users home collection.
- */
-public interface HomeCollectionItem extends CollectionItem{
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
+@Entity
+@DiscriminatorValue("homecollection")
+public class HomeCollectionItem extends HibCollectionItem {
+
+    private static final long serialVersionUID = -4301319758731788800L;
+
+    public void setName(String name) {
+        // Prevent name changes to home collection
+        if(getName()==null) {
+            super.setName(name);
+        }
+    }
 }

@@ -28,6 +28,7 @@ import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.TextAttribute;
 
 /**
  * Extends {@link ICalendarItem} to represent a Note item.
@@ -60,7 +61,7 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
      * @return The body.
      */
     public String getBody() {
-        return MockTextAttribute.getValue(this, ATTR_NOTE_BODY);
+        return TextAttribute.getValue(this, ATTR_NOTE_BODY);
     }
 
     /* (non-Javadoc)
@@ -72,7 +73,7 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
      */
     public void setBody(String body) {
         // body stored as TextAttribute on Item
-        MockTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
+        TextAttribute.setValue(this, ATTR_NOTE_BODY, body);
     }
     
     /* (non-Javadoc)
@@ -84,7 +85,7 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
      */
     public void setBody(Reader body) {
         // body stored as TextAttribute on Item
-        MockTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
+        TextAttribute.setValue(this, ATTR_NOTE_BODY, body);
     }
     
     /* (non-Javadoc)

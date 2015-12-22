@@ -72,7 +72,7 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
      * @see org.unitedinternet.cosmo.model.NoteItem#getBody()
      */
     public String getBody() {
-        return HibTextAttribute.getValue(this, ATTR_NOTE_BODY);
+        return TextAttribute.getValue(this, ATTR_NOTE_BODY);
     }
 
     /* (non-Javadoc)
@@ -80,7 +80,7 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
      */
     public void setBody(String body) {
         // body stored as TextAttribute on Item
-        HibTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
+        TextAttribute.setValue(this, ATTR_NOTE_BODY, body);
     }
   
     /* (non-Javadoc)
@@ -88,7 +88,7 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
      */
     public void setBody(Reader body) {
         // body stored as TextAttribute on Item
-        HibTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
+        TextAttribute.setValue(this, ATTR_NOTE_BODY, body);
     }
    
     @Task

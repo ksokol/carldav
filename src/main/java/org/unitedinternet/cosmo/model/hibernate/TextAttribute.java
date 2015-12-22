@@ -22,7 +22,6 @@ import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TextAttribute;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -34,7 +33,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("text")
-public class HibTextAttribute extends HibAttribute implements TextAttribute {
+public class TextAttribute extends HibAttribute {
 
     private static final long serialVersionUID = 2417093506524504993L;
     
@@ -42,15 +41,15 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
     @Type(type="materialized_clob")
     private String value;
 
-    public HibTextAttribute() {
+    public TextAttribute() {
     }
 
-    public HibTextAttribute(QName qname, String value) {
+    public TextAttribute(QName qname, String value) {
         setQName(qname);
         this.value = value;
     }
 
-    public HibTextAttribute(QName qname, Reader reader) {
+    public TextAttribute(QName qname, Reader reader) {
         setQName(qname);
         this.value = read(reader);
     }
@@ -86,7 +85,7 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
     }
     
     public Attribute copy() {
-        TextAttribute attr = new HibTextAttribute();
+        TextAttribute attr = new TextAttribute();
         attr.setQName(getQName().copy());
         attr.setValue(getValue());
         return attr;
@@ -132,7 +131,7 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
     public static void setValue(Item item, QName qname, String value) {
         TextAttribute attr = (TextAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
-            attr = new HibTextAttribute(qname,value);
+            attr = new TextAttribute(qname,value);
             item.addAttribute(attr);
             return;
         }
@@ -154,7 +153,7 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
     public static void setValue(Item item, QName qname, Reader value) {
         TextAttribute attr = (TextAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
-            attr = new HibTextAttribute(qname,value);
+            attr = new TextAttribute(qname,value);
             item.addAttribute(attr);
             return;
         }

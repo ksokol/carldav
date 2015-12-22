@@ -16,21 +16,15 @@
 package org.unitedinternet.cosmo;
 
 import org.junit.Ignore;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
-
-import java.io.InputStream;
 
 /**
  */
 @Ignore
 public class TestHelper {
 
-    static int iseq = 0;
-    static int lseq = 0;
     static int useq = 0;
 
     private EntityFactory entityFactory = new MockEntityFactory();
@@ -67,65 +61,4 @@ public class TestHelper {
         String username = "dummy" + serial;
         return makeDummyUser(username, username);
     }
-
-    /**
-     * Makes dummy item.
-     * @param user The user.
-     * @param name The name.
-     * @return The note item.
-     */
-    public NoteItem makeDummyItem(User user,
-                                  String name) {
-        String serial =Integer.toString(++iseq);
-        if (name == null) {
-            name = "test item " + serial;
-        }
-
-        NoteItem note = entityFactory.createNote();
-
-        note.setUid(name);
-        note.setName(name);
-        note.setOwner(user);
-        note.setIcalUid(serial);
-        note.setBody("This is a note. I love notes.");
-       
-        return note;
-    }
-
-    /**
-     * Makes dummy calendar collection.
-     * @param user The user.
-     * @param name The name.
-     * @return The collection item.
-     */
-    public CollectionItem makeDummyCalendarCollection(User user, String name) {
-        String serial = Integer.toString(++lseq);
-        if (name == null) {
-            name = "test calendar collection " + serial;
-        }
-
-        CollectionItem collection = entityFactory.createCollection();
-        collection.setUid(serial);
-        collection.setName(name);
-        collection.setDisplayName(name);
-        collection.setOwner(user);
-       
-        collection.addStamp(entityFactory.createCalendarCollectionStamp(collection));
-
-        return collection;
-    }
-
-    /**
-     * Gets input stream.
-     * @param name The name.
-     * @return The input stream.
-     */
-    public InputStream getInputStream(String name){
-        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-        if (in == null) {
-            throw new IllegalStateException("resource " + name + " not found");
-        }
-        return in;
-    }
-
 }

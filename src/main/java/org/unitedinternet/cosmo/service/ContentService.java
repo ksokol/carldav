@@ -160,17 +160,7 @@ public interface ContentService {
      * @return updated content item
      */
     ContentItem updateContent(ContentItem content);
-    
-    
-    /**
-     * Remove content item
-     * 
-     * @param content
-     *            content item to remove
-     */
-    void removeContent(ContentItem content);
 
-    
     /**
      * find the set of collection items as children of the given collection item.
      * 

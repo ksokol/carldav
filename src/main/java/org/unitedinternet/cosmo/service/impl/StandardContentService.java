@@ -385,29 +385,6 @@ public class StandardContentService implements ContentService {
     }
 
     /**
-     * Remove content item
-     * 
-     * @param content
-     *            content item to remove
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked           
-     */
-    public void removeContent(ContentItem content) {
-        Set<CollectionItem> locks = acquireLocks(content);
-        
-        try {
-            contentDao.removeContent(content);
-            // update collections
-            for(CollectionItem parent : locks) {
-                contentDao.updateCollectionTimestamp(parent);
-            }
-        } finally {
-            releaseLocks(locks);
-        }
-    }
-
-    
-    /**
      * find the set of collection items as children of the given collection item.
      * 
      * @param collectionItem parent collection item

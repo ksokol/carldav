@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.calendar;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
@@ -25,7 +24,6 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Completed;
@@ -539,25 +537,5 @@ public class ICalendarUtils {
      */
     public static boolean equalsDate(Date test, Date date, TimeZone tz) {
         return compareDates(test, date, tz)==0;
-    }
-    
-    /**
-     * Return list of subcomponents for a component.  Ica4j doesn't have
-     * a generic way to do this.
-     * @param component The component.
-     * @return list of subcomponents
-     */
-    public static ComponentList getSubComponents(Component component) {
-        if(component instanceof VEvent) {
-            return ((VEvent) component).getAlarms();
-        }
-        else if(component instanceof VTimeZone) {
-            return ((VTimeZone) component).getObservances();
-        }
-        else if(component instanceof VToDo) {
-            return ((VToDo) component).getAlarms();
-        }
-        
-        return new ComponentList();
     }
 }

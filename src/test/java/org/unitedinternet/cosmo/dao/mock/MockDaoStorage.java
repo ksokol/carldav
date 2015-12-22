@@ -21,9 +21,9 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockHomeCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
@@ -151,13 +151,11 @@ public class MockDaoStorage {
      * @return Home collection item.
      */
     public HomeCollectionItem createRootItem(User user) {
-        MockHomeCollectionItem rootCollection = new MockHomeCollectionItem();
+        HibHomeCollectionItem rootCollection = new HibHomeCollectionItem();
         rootCollection.setName(user.getEmail());
         rootCollection.setOwner(user);
         rootCollection.setUid(calculateUid());
-        rootCollection.setCreationDate(new Date());
         rootCollection.setModifiedDate(rootCollection.getCreationDate());
-        rootCollection.setEntityTag(getMockItem(rootCollection).calculateEntityTag());
 
         itemsByUid.put(rootCollection.getUid(), rootCollection);
         itemsByPath.put("/" + rootCollection.getName(), rootCollection);

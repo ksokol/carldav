@@ -800,7 +800,7 @@ public class EntityConverter {
         exceptionStamp.setExceptionEvent(event);
         noteMod.addStamp(exceptionStamp);
 
-        noteMod.setUid(new ModificationUidImpl(masterNote, event.getRecurrenceId()
+        noteMod.setUid(new ModificationUid(masterNote, event.getRecurrenceId()
                 .getDate()).toString());
         noteMod.setOwner(masterNote.getOwner());
         noteMod.setName(noteMod.getUid());

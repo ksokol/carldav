@@ -21,7 +21,6 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ModificationUid;
 
 import java.text.ParseException;
 
@@ -39,17 +38,19 @@ import java.text.ParseException;
  * <code>f2953300-6fcb-4547-ad7b-22e193b6903f:20070101T100000Z<code>
  * </p>
  */
-public class ModificationUidImpl implements ModificationUid {
+public class ModificationUid {
+
+    public static final String RECURRENCEID_DELIMITER = ":";
     
-    String parentUid = null;
-    Date recurrenceId = null;
+    private String parentUid;
+    private Date recurrenceId;
     
     /**
      * Construct modification uid from parent Item and recurrenceId
      * @param parent parent item
      * @param recurrenceId recurrenceId of modification
      */
-    public ModificationUidImpl(Item parent, Date recurrenceId) {
+    public ModificationUid(Item parent, Date recurrenceId) {
         this.parentUid = parent.getUid();
         this.recurrenceId = recurrenceId;
     }
@@ -59,7 +60,7 @@ public class ModificationUidImpl implements ModificationUid {
      * @param modUid modification uid
      * @throws ModelValidationException
      */
-    public ModificationUidImpl(String modUid) {
+    public ModificationUid(String modUid) {
         String[] split = modUid.split(RECURRENCEID_DELIMITER);
         if(split.length!=2) {
             throw new ModelValidationException("invalid modification uid");
@@ -86,8 +87,8 @@ public class ModificationUidImpl implements ModificationUid {
     }
     
     public boolean equals(Object obj) {
-        if(obj instanceof ModificationUidImpl) {
-            ModificationUidImpl modUid = (ModificationUidImpl) obj;
+        if(obj instanceof ModificationUid) {
+            ModificationUid modUid = (ModificationUid) obj;
             return ObjectUtils.equals(parentUid, modUid.getParentUid()) &&
                    ObjectUtils.equals(recurrenceId, modUid.getRecurrenceId());
         }

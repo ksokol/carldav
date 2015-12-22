@@ -23,7 +23,7 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
+import org.unitedinternet.cosmo.model.hibernate.ModificationUid;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 
 /**
@@ -45,39 +45,39 @@ public class ModificationUidTest {
         parent.setUid("abc");
         Date date = new Date("20070101");
         
-        ModificationUidImpl modUid = new ModificationUidImpl(parent, date);
+        ModificationUid modUid = new ModificationUid(parent, date);
         Assert.assertEquals("abc:20070101", modUid.toString());
-        Assert.assertEquals(modUid, new ModificationUidImpl("abc:20070101"));
+        Assert.assertEquals(modUid, new ModificationUid("abc:20070101"));
         
         date = new DateTime("20070101T100000");
-        modUid = new ModificationUidImpl(parent, date);
+        modUid = new ModificationUid(parent, date);
         Assert.assertEquals("abc:20070101T100000", modUid.toString());
-        Assert.assertEquals(modUid, new ModificationUidImpl("abc:20070101T100000"));
+        Assert.assertEquals(modUid, new ModificationUid("abc:20070101T100000"));
         
         date = new DateTime("20070101T100000", TIMEZONE_REGISTRY.getTimeZone("America/Chicago"));
-        modUid = new ModificationUidImpl(parent, date);
+        modUid = new ModificationUid(parent, date);
         Assert.assertEquals("abc:20070101T160000Z", modUid.toString());
        
-        modUid = new ModificationUidImpl("abc:20070101T160000Z");
+        modUid = new ModificationUid("abc:20070101T160000Z");
         Assert.assertEquals(parent.getUid(), modUid.getParentUid());
         Assert.assertTrue(modUid.getRecurrenceId() instanceof DateTime);
         Assert.assertTrue(((DateTime) modUid.getRecurrenceId()).isUtc());
         Assert.assertEquals("20070101T160000Z", modUid.getRecurrenceId().toString());
         
         try {
-            new ModificationUidImpl("blah");
+            new ModificationUid("blah");
             Assert.fail("able to parse invalid date");
         } catch (ModelValidationException e) {
         }
         
         try {
-            new ModificationUidImpl("blah:blah");
+            new ModificationUid("blah:blah");
             Assert.fail("able to parse invalid date");
         } catch (ModelValidationException e) {
         }
         
         try {
-            new ModificationUidImpl("blah:blahT");
+            new ModificationUid("blah:blahT");
             Assert.fail("able to parse invalid date");
         } catch (ModelValidationException e) {
         }

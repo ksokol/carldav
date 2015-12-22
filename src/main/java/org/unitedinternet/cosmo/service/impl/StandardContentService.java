@@ -29,11 +29,10 @@ import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ModificationUid;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.hibernate.ModificationUid;
 import org.unitedinternet.cosmo.model.hibernate.User;
-import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
 
@@ -91,10 +90,10 @@ public class StandardContentService implements ContentService {
         // Handle case where uid represents an occurence of a
         // recurring item.
         if(uid.indexOf(ModificationUid.RECURRENCEID_DELIMITER)!=-1) {
-            ModificationUidImpl modUid;
+            ModificationUid modUid;
             
             try {
-                modUid = new ModificationUidImpl(uid);
+                modUid = new ModificationUid(uid);
             } catch (ModelValidationException e) {
                 // If ModificationUid is invalid, item isn't present
                 return null;

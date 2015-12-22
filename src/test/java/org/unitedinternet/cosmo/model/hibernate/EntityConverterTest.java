@@ -141,7 +141,7 @@ public class EntityConverterTest {
         // get mod
         NoteItem mod = it.next();
         
-        ModificationUidImpl uid = new ModificationUidImpl(mod.getUid());
+        ModificationUid uid = new ModificationUid(mod.getUid());
         
         Assert.assertEquals(master.getUid(), uid.getParentUid());
         Assert.assertEquals("20060104T190000Z", uid.getRecurrenceId().toString());

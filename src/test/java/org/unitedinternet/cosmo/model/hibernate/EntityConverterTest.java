@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
@@ -344,39 +343,6 @@ public class EntityConverterTest {
         Assert.assertNull(masterEvent.getStartDate().getParameter("X-OSAF-ANYTIME"));
         Assert.assertNotNull(modAnyTime);
         Assert.assertEquals("TRUE", modAnyTime.getValue());
-    }
-    
-    /**
-     * Finds item by Ical uid.
-     * @param items The items.
-     * @param icalUid The uid.
-     * @return The calendar item.
-     */
-    private ICalendarItem findItemByIcalUid(Set<ICalendarItem> items, String icalUid) {
-        for(ICalendarItem item: items) {
-            if(icalUid.equals(item.getIcalUid())) {
-                return item;
-            }
-        }
-        return null;
-    }
-    
-    /**
-     * Finds mod by recurrence id.
-     * @param items The items.
-     * @param rid The id.
-     * @return The calendar item.
-     */
-    private ICalendarItem findModByRecurrenceId(Set<ICalendarItem> items, String rid) {
-        for(ICalendarItem item: items) {
-            if(item instanceof NoteItem) {
-                NoteItem note = (NoteItem) item;
-                if(note.getModifies()!=null && note.getUid().contains(rid)) {
-                    return note;
-                }
-            }
-        }
-        return null;
     }
     
     /**

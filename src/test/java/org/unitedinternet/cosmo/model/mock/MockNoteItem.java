@@ -15,20 +15,18 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.io.Reader;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
-
 import org.unitedinternet.cosmo.hibernate.validator.Task;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.hibernate.TextAttribute;
+
+import java.io.Reader;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Extends {@link ICalendarItem} to represent a Note item.
@@ -37,10 +35,7 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
 
     public static final QName ATTR_NOTE_BODY = new MockQName(
             NoteItem.class, "body");
-    
-    public static final QName ATTR_REMINDER_TIME = new MockQName(
-            NoteItem.class, "reminderTime");
-    
+
     private static final Set<NoteItem> EMPTY_MODS = Collections
             .unmodifiableSet(new HashSet<NoteItem>(0));
 
@@ -87,30 +82,7 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
         // body stored as TextAttribute on Item
         TextAttribute.setValue(this, ATTR_NOTE_BODY, body);
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceNoteItem#getReminderTime()
-     */
-    /**
-     * Gets reminder time.
-     * @return The date.
-     */
-    public Date getReminderTime() {
-        return MockTimestampAttribute.getValue(this, ATTR_REMINDER_TIME);
-    }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceNoteItem#setReminderTime(java.util.Date)
-     */
-    /**
-     * Sets reminder time.
-     * @param reminderTime The reminder time.
-     */
-    public void setReminderTime(Date reminderTime) {
-        // reminderDate stored as TimestampAttribute on Item
-        MockTimestampAttribute.setValue(this, ATTR_REMINDER_TIME, reminderTime);
-    }
-    
     /**
      * Gets task calendar.
      * {@inheritDoc}

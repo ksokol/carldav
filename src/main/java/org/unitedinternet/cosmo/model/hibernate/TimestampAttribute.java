@@ -19,7 +19,6 @@ import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TimestampAttribute;
 
 import java.util.Date;
 
@@ -29,43 +28,28 @@ import javax.persistence.Entity;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-/**
- * Hibernate persistent TimestampAtttribute.
- */
 @Entity
 @DiscriminatorValue("timestamp")
-public class HibTimestampAttribute extends HibAttribute implements TimestampAttribute {
+public class TimestampAttribute extends HibAttribute {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 5263977785074085449L;
+    private static final long serialVersionUID = 5263977785074185449L;
     
     @Column(name = "intvalue")
     @Temporal(TemporalType.TIMESTAMP)
     private Date value;
 
-    /** default constructor */
-    public HibTimestampAttribute() {
+    public TimestampAttribute() {
     }
 
-    public HibTimestampAttribute(QName qname, Date value) {
+    public TimestampAttribute(QName qname, Date value) {
         setQName(qname);
         this.value = value;
     }
 
-    // Property accessors
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getValue()
-     */
     public Date getValue() {
         return this.value;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TimestampAttribute#setValue(java.util.Date)
-     */
     public void setValue(Date value) {
         this.value = value;
     }
@@ -105,7 +89,7 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
     public static void setValue(Item item, QName qname, Date value) {
         TimestampAttribute attr = (TimestampAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
-            attr = new HibTimestampAttribute(qname,value);
+            attr = new TimestampAttribute(qname,value);
             item.addAttribute(attr);
             return;
         }
@@ -118,7 +102,7 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
     }
     
     public Attribute copy() {
-        TimestampAttribute attr = new HibTimestampAttribute();
+        TimestampAttribute attr = new TimestampAttribute();
         attr.setQName(getQName().copy());
         attr.setValue(value.clone());
         return attr;
@@ -126,7 +110,6 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
 
     @Override
     public void validate() {
-        
     }
 
     @Override

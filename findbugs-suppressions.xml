@@ -44,11 +44,11 @@
         <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute"/>
+        <Class name="org.unitedinternet.cosmo.model.hibernate.TimestampAttribute"/>
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute"/>
+        <Class name="org.unitedinternet.cosmo.model.hibernate.TimestampAttribute"/>
         <Bug pattern="EI_EXPOSE_REP2" />
     <Match>
         <Class name="org.unitedinternet.cosmo.util.BufferedContent"/>

@@ -21,6 +21,7 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -48,7 +49,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return note item.
      */
     public NoteItem createNote() {
-        return new MockNoteItem();
+        return new HibNoteItem();
     }
 
     /**

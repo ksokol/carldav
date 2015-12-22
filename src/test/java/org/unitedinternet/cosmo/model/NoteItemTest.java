@@ -20,24 +20,17 @@ import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
-/**
- * Test NoteItem
- */
 public class NoteItemTest {
-   
-    /**
-     * Tests note item etag.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
+
     @Test
     public void testNoteItemEtag() throws Exception {
-        MockNoteItem master = new MockNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setUid("1");
         master.setModifiedDate(new Date());
-        
-        MockNoteItem mod = new MockNoteItem();
+
+        HibNoteItem mod = new HibNoteItem();
         mod.setUid("2");
         mod.setModifiedDate(new Date());
         mod.setModifies(master);

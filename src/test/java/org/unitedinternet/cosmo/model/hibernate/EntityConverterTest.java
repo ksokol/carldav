@@ -44,7 +44,6 @@ import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.model.mock.MockEventExceptionStamp;
 import org.unitedinternet.cosmo.model.mock.MockEventStamp;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 
 import java.io.FileInputStream;
 import java.util.Iterator;
@@ -279,7 +278,7 @@ public class EntityConverterTest {
     public void testConvertEvent() throws Exception {
         TimeZoneRegistry registry =
             TimeZoneRegistryFactory.getInstance().createRegistry();
-        NoteItem master = new MockNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
         master.setIcalUid("icaluid");
@@ -340,7 +339,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testEventModificationGetCalendar() throws Exception {
-        NoteItem master = new MockNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setIcalUid("icaluid");
         master.setDisplayName("master displayName");
         master.setBody("master body");
@@ -356,8 +355,8 @@ public class EntityConverterTest {
         master.addStamp(eventStamp);
         
         eventStamp.getEventCalendar().validate();
-       
-        NoteItem mod = new MockNoteItem();
+
+        HibNoteItem mod = new HibNoteItem();
         mod.setDisplayName("modDisplayName");
         mod.setBody("modBody");
         mod.setModifies(master);
@@ -408,7 +407,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testInheritedAnyTime() throws Exception {
-        NoteItem master = new MockNoteItem();
+        HibNoteItem master = new HibNoteItem();
         EventStamp eventStamp = new MockEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
@@ -418,8 +417,8 @@ public class EntityConverterTest {
         dates.add(new DateTime("20070213T074500"));
         eventStamp.setRecurrenceDates(dates);
         master.addStamp(eventStamp);
-        
-        NoteItem mod = new MockNoteItem();
+
+        HibNoteItem mod = new HibNoteItem();
         mod.setModifies(master);
         master.addModification(mod);
         EventExceptionStamp exceptionStamp = new MockEventExceptionStamp(mod);

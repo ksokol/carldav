@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.util;
 
+import org.springframework.util.Assert;
+
 /**
  * Provides utility methods for working with URL paths.
  */
@@ -26,9 +28,7 @@ public class PathUtil {
      * empty string.
      */
     public static String getBasename(String path) {
-        if (path == null) {
-            throw new IllegalArgumentException("null path");
-        }
+        Assert.notNull(path, "null path");
         int pos = path.lastIndexOf('/');
         return pos >= 0 ? path.substring(pos + 1) : "";
     }
@@ -39,9 +39,7 @@ public class PathUtil {
      * than one segment, returns "/".
      */
     public static String getParentPath(String path) {
-        if (path == null) {
-            throw new IllegalArgumentException("null path");
-        }
+        Assert.notNull(path, "null path");
         int idx = path.lastIndexOf('/', path.length() - 1);
         if (idx < 0) {
             return "/";

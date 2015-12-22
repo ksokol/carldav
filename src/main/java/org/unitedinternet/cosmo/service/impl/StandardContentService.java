@@ -22,7 +22,6 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
@@ -31,7 +30,6 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.hibernate.ModificationUid;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
@@ -71,45 +69,6 @@ public class StandardContentService implements ContentService {
     }
 
     /**
-     * Find an item with the specified uid.  If the uid is found, return
-     * the item found.  If the uid represents a recurring NoteItem occurrence
-     * (parentUid:recurrenceId), return a NoteOccurrence.
-     *
-     * @param uid
-     *            uid of item to find
-     * @return item represented by uid
-     */
-    public Item findItemByUid(String uid) {
-        Item item = contentDao.findItemByUid(uid);
-        
-        // return item if found
-        if(item!=null) {
-            return item;
-        }
-        
-        // Handle case where uid represents an occurence of a
-        // recurring item.
-        if(uid.indexOf(ModificationUid.RECURRENCEID_DELIMITER)!=-1) {
-            ModificationUid modUid;
-            
-            try {
-                modUid = new ModificationUid(uid);
-            } catch (ModelValidationException e) {
-                // If ModificationUid is invalid, item isn't present
-                return null;
-            }
-            // Find the parent, and then verify that the recurrenceId is a valid
-            // occurrence date for the recurring item.
-            NoteItem parent = (NoteItem) contentDao.findItemByUid(modUid.getParentUid());
-            if(parent==null) {
-                return null;
-            }
-        }
-        
-        return null;
-    }
-
-    /**
      * Find content item by path. Path is of the format:
      * /username/parent1/parent2/itemname.
      */
@@ -117,28 +76,6 @@ public class StandardContentService implements ContentService {
         return contentDao.findItemByPath(path);
     }
 
-    /**
-     * Remove an item.
-     * 
-     * @param item
-     *            item to remove
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if Item is a ContentItem and parent CollectionItem
-     *         is locked
-     */
-    public void removeItem(Item item) {
-        // Let service handle ContentItems (for sync purposes)
-        if(item instanceof ContentItem) {
-            removeContent((ContentItem) item);
-        }
-        else if(item instanceof CollectionItem) {
-            removeCollection((CollectionItem) item);
-        }
-        else {
-            contentDao.removeItem(item);
-        }
-    }
-    
     /**
      * Remove an item from a collection.  The item will be deleted if
      * it belongs to no more collections.
@@ -257,83 +194,6 @@ public class StandardContentService implements ContentService {
             return contentDao.updateCollection(collection);
         } finally {
             lockManager.unlockCollection(collection);
-        }
-    }
-
-    
-    /**
-     * Update a collection and set of children.  The set of
-     * children to be updated can include updates to existing
-     * children, new children, and removed children.  A removal
-     * of a child Item is accomplished by setting Item.isActive
-     * to false to an existing Item.
-     * 
-     * The collection is locked at the beginning of the update. Any
-     * other update that begins before this update has completed, and
-     * the collection unlocked, will fail immediately with a
-     * <code>CollectionLockedException</code>.
-     *
-     * @param collection
-     *             collection to update
-     * @return updated collection
-     * @throws CollectionLockedException if the collection is
-     *         currently locked for an update.
-     */
-    public CollectionItem updateCollection(CollectionItem collection,
-                                           Set<Item> updates) {
-        // Obtain locks to all collections involved.  A collection is involved
-        // if it is the parent of one of updated items.
-        Set<CollectionItem> locks = acquireLocks(collection, updates);
-        
-        try {
-            Set<ContentItem> childrenToUpdate = new LinkedHashSet<ContentItem>();
-            
-            // Keep track of NoteItem modifications that need to be processed
-            // after the master NoteItem.
-            ArrayList<NoteItem> modifications = new ArrayList<NoteItem>(); 
-            
-            // Either create or update each item
-            for (Item item : updates) {
-                if (item instanceof NoteItem) {
-                    
-                    NoteItem note = (NoteItem) item;
-                    
-                    // If item is a modification and the master note
-                    // hasn't been created, then we need to process
-                    // the master first.
-                    if(note.getModifies()!=null) {
-                        modifications.add(note);
-                    }
-                    else {
-                        childrenToUpdate.add(note);
-                    }
-                }
-            }
-            
-            for(NoteItem mod: modifications) {
-                // Only update modification if master has not been
-                // deleted because master deletion will take care
-                // of modification deletion.
-                if(mod.getModifies().getIsActive()==true) {
-                    childrenToUpdate.add(mod);
-                }
-            }
-            checkDatesForEvents(childrenToUpdate);
-            collection = contentDao.updateCollection(collection, childrenToUpdate);
-            
-            // update collections involved
-            for(CollectionItem lockedCollection : locks) {
-                lockedCollection = contentDao.updateCollectionTimestamp(lockedCollection);
-                if(lockedCollection.getUid().equals(collection.getUid())) {
-                    collection = lockedCollection;
-                }
-            }
-            
-            // get latest timestamp
-            return collection;
-            
-        } finally {
-            releaseLocks(locks);
         }
     }
 

@@ -17,6 +17,7 @@ import util.MockBeans;
 import util.TestData;
 
 import java.io.IOException;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,10 @@ import javax.servlet.http.HttpServletResponse;
 @WebIntegrationTest("server.port:0")
 @Transactional
 public abstract class IntegrationTestSupport {
+
+    static {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC")); // required by hsqldb
+    }
 
     protected MockMvc mockMvc;
 

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.unitedinternet.cosmo.servlet.SimpleDavDispatcherServlet;
 
+import java.util.TimeZone;
 import javax.servlet.Servlet;
 
 /**
@@ -21,6 +22,7 @@ import javax.servlet.Servlet;
 public class CarldavApplication {
 
     public static void main(String[] args) {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC")); // required by hsqldb
         SpringApplication.run(CarldavApplication.class, args);
     }
 

@@ -27,20 +27,14 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VToDo;
-import net.fortuna.ical4j.model.property.Status;
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.model.mock.MockCalendarCollectionStamp;
-import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.model.mock.MockEventExceptionStamp;
 import org.unitedinternet.cosmo.model.mock.MockEventStamp;
@@ -61,46 +55,7 @@ public class EntityConverterTest {
     
     protected EntityFactory entityFactory = new MockEntityFactory();
     protected EntityConverter converter = new EntityConverter(entityFactory);
-    
-    /**
-     * Tests entity convertor task.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEntityConverterTask() throws Exception {
-        Calendar calendar = getCalendar("vtodo.ics");
-        
-        NoteItem note = converter.convertTaskCalendar(calendar);
-        
-        Assert.assertTrue(TriageStatus.CODE_NOW==note.getTriageStatus().getCode());
-        
-        // add COMPLETED
-        DateTime completeDate = new DateTime("20080122T100000Z");
-        
-        VToDo vtodo = (VToDo) calendar.getComponents(Component.VTODO).get(0);
-        ICalendarUtils.setCompleted(completeDate, vtodo);
-        note = converter.convertTaskCalendar(calendar);
 
-        TriageStatus ts = note.getTriageStatus();
-        Assert.assertTrue(TriageStatus.CODE_DONE==ts.getCode());
-        Assert.assertTrue(TriageStatusUtil.getDateFromRank(ts.getRank()).getTime()==completeDate.getTime());
-    
-        note.setTriageStatus(null);
-        ICalendarUtils.setCompleted(null, vtodo);
-        Assert.assertNull(vtodo.getDateCompleted());
-        ICalendarUtils.setStatus(Status.VTODO_COMPLETED, vtodo);
-        
-        // verify that TriageStatus.rank is set ot current time when 
-        // STATUS:COMPLETED is present and COMPLETED is not present
-        long begin = (System.currentTimeMillis() / 1000) * 1000;
-        note = converter.convertTaskCalendar(calendar);
-        long end = (System.currentTimeMillis() / 1000) * 1000;
-        ts = note.getTriageStatus();
-        Assert.assertTrue(TriageStatus.CODE_DONE==ts.getCode());
-        long rankTime = TriageStatusUtil.getDateFromRank(ts.getRank()).getTime();
-        Assert.assertTrue(rankTime<=end && rankTime>=begin);
-    }
-    
     /**
      * Tests entity converter event.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -185,89 +140,6 @@ public class EntityConverterTest {
         Assert.assertNotNull(mod);
         Assert.assertEquals("event 6 mod 2 changed", mod.getDisplayName());
         
-    }
-    
-    /**
-     * Tests entity converter multi component calendar.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEntityConverterMultiComponentCalendar() throws Exception {
-       
-        // test converting calendar with many different components
-        // into ICalendarItems
-        
-        Calendar calendar = getCalendar("bigcalendar.ics");
-        Set<ICalendarItem> items = converter.convertCalendar(calendar);
-        
-        // should be 8
-        Assert.assertEquals(7, items.size());
-        
-        ICalendarItem item = findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
-        
-        
-        item = findItemByIcalUid(items, "e3i849b29kd3fbp48hmkmgjst0@google.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
-        
-        
-        item = findItemByIcalUid(items, "4csitoh29h1arc46bnchg19oc8@google.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
-        
-        
-        item = findItemByIcalUid(items, "f920n2rdb0qdd6grkjh4m4jrq0@google.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
-        
-        
-        item = findItemByIcalUid(items, "jev0phs8mnfkuvoscrra1fh8j0@google.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
-        
-        item = findModByRecurrenceId(items, "20071129T203000Z" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-        Assert.assertNotNull(StampUtils.getEventExceptionStamp(item));
-        
-        item = findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
-    }
-    
-    /**
-     * Tests get calendar from collection.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testGetCalendarFromCollection() throws Exception {
-        
-        Calendar c1 = getCalendar("eventwithtimezone1.ics");
-        Calendar c2 = getCalendar("vtodo.ics");
-        NoteItem note1 = converter.convertEventCalendar(c1).iterator().next();
-        NoteItem note2 = converter.convertTaskCalendar(c2);
-       
-        MockCollectionItem collection = new MockCollectionItem();
-        collection.addStamp(new MockCalendarCollectionStamp(collection));
-        collection.addChild(note1);
-        collection.addChild(note2);
-        
-        Calendar fullCal = converter.convertCollection(collection);
-        fullCal.validate();
-        Assert.assertNotNull(fullCal);
-        
-        // VTIMEZONE, VTODO, VEVENT
-        Assert.assertEquals(3,fullCal.getComponents().size());
-        Assert.assertEquals(1, fullCal.getComponents(Component.VTIMEZONE).size());
-        Assert.assertEquals(1, fullCal.getComponents(Component.VEVENT).size());
-        Assert.assertEquals(1, fullCal.getComponents(Component.VTODO).size());
     }
 
     /**

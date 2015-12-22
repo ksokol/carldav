@@ -89,7 +89,6 @@ public class TimeZoneExtractor {
             CalendarBuilder builder =
                 CalendarBuilderDispenser.getCalendarBuilder();
             calendar = builder.build(new StringReader(ical));
-            CalendarClientsAdapter.adaptTimezoneCalendarComponent(calendar);
             calendar.validate(true);
         } catch (IOException e) {
             throw new CosmoDavException(e);

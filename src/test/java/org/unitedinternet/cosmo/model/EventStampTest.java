@@ -15,39 +15,26 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.io.FileInputStream;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.mock.MockEventStamp;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
-/**
- * Test EventStamp
- */
+import java.io.FileInputStream;
+
 public class EventStampTest {
    
-    protected String baseDir = "src/test/resources/testdata/";
-    @SuppressWarnings("unused")
-    private static final TimeZoneRegistry TIMEZONE_REGISTRY =
-        TimeZoneRegistryFactory.getInstance().createRegistry();
-    
-    /**
-     * Tests ex dates.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
+    private static final String baseDir = "src/test/resources/testdata/";
+
     @Test
     public void testExDates() throws Exception {
-        NoteItem master = new MockNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
-        EventStamp eventStamp = new MockEventStamp(master);
+        HibEventStamp eventStamp = new HibEventStamp(master);
         
         eventStamp.setEventCalendar(getCalendar("recurring_with_exdates.ics"));
         
@@ -67,7 +54,6 @@ public class EventStampTest {
     protected Calendar getCalendar(String name) throws Exception {
         CalendarBuilder cb = new CalendarBuilder();
         FileInputStream fis = new FileInputStream(baseDir + name);
-        Calendar calendar = cb.build(fis);
-        return calendar;
+        return cb.build(fis);
     }
 }

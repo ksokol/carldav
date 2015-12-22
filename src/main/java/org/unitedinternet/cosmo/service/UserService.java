@@ -25,11 +25,6 @@ import java.util.Set;
 public interface UserService {
 
     /**
-     * Returns an unordered set of all user accounts in the repository.
-     */
-    Set<User> getUsers();
-
-    /**
      * Returns the user account identified by the given email address.
      *
      * @param email the email address of the account to return

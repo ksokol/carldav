@@ -24,8 +24,6 @@ import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
 import org.unitedinternet.cosmo.dao.mock.MockUserDao;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.Set;
-
 /**
  * Test Case for {@link StandardUserService}.
  */
@@ -44,27 +42,6 @@ public class StandardUserServiceTest {
         testHelper = new TestHelper();
         userDao = new MockUserDao();
         service = new StandardUserService(new MockContentDao(new MockDaoStorage()), userDao);
-    }
-
-    /**
-     * Tests get users.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testGetUsers() throws Exception {
-        User u1 = testHelper.makeDummyUser();
-        userDao.createUser(u1);
-        User u2 = testHelper.makeDummyUser();
-        userDao.createUser(u2);
-        User u3 = testHelper.makeDummyUser();
-        userDao.createUser(u3);
-
-        Set<User> users = service.getUsers();
-
-        Assert.assertTrue(users.size() == 4); // account for overlord
-        Assert.assertTrue("User 1 not found in users", users.contains(u1));
-        Assert.assertTrue("User 2 not found in users", users.contains(u2));
-        Assert.assertTrue("User 3 not found in users", users.contains(u3));
     }
 
     /**

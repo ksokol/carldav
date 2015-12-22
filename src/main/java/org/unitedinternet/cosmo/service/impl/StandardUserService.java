@@ -28,8 +28,6 @@ import org.unitedinternet.cosmo.model.hibernate.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.UserService;
 
-import java.util.Set;
-
 /**
  * Standard implementation of {@link UserService}.
  */
@@ -45,10 +43,6 @@ public class StandardUserService implements UserService {
         Assert.notNull(userDao, "userDao is null");
         this.contentDao = contentDao;
         this.userDao = userDao;
-    }
-
-    public Set<User> getUsers() {
-        return userDao.getUsers();
     }
 
     public User getUserByEmail(String email) {

@@ -29,6 +29,7 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TextAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 
 
 /**
@@ -36,7 +37,7 @@ import org.unitedinternet.cosmo.model.TextAttribute;
  * between StringAttribute and TextAttribute is that
  * TextAttribute can store much larger values than StringAttribute.
  */
-public class MockTextAttribute extends MockAttribute implements
+public class MockTextAttribute extends HibAttribute implements
         java.io.Serializable, TextAttribute {
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(TextAttribute.class);

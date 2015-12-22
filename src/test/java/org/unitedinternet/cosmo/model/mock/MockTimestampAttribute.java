@@ -22,13 +22,14 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TimestampAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 
 /**
  * Represents an attribute with a timestamp.  A timestamp
  * is a java.util.Date, containing the number of milliseconds
  * since the epoch (Jan 1, 1970 GMT).
  */
-public class MockTimestampAttribute extends MockAttribute implements
+public class MockTimestampAttribute extends HibAttribute implements
         java.io.Serializable, TimestampAttribute {
 
     /**

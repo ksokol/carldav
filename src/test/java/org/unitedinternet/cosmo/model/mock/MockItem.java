@@ -21,6 +21,7 @@ import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.ArrayList;
@@ -205,7 +206,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
             throw new IllegalArgumentException("attribute cannot be null");
         }
 
-        ((MockAttribute) attribute).validate();
+        ((HibAttribute) attribute).validate();
         attribute.setItem(this);
         attributes.put(attribute.getQName(), attribute);
     }
@@ -327,7 +328,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @param value The value.
      */
     public void setAttribute(QName key, Object value) {
-        MockAttribute attr = (MockAttribute) attributes.get(key);
+        HibAttribute attr = (HibAttribute) attributes.get(key);
     
         if(attr!=null) {
             attr.setValue(value);

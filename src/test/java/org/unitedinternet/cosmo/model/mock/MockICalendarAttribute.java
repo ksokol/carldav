@@ -28,11 +28,12 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 
 /**
  * Represents an attribute with a net.fortuna.ical4j.model.Calendar value.
  */
-public class MockICalendarAttribute extends MockAttribute implements
+public class MockICalendarAttribute extends HibAttribute implements
         java.io.Serializable, ICalendarAttribute {
 
     private Calendar value;
@@ -48,15 +49,6 @@ public class MockICalendarAttribute extends MockAttribute implements
     public MockICalendarAttribute(QName qname, Calendar value) {
         setQName(qname);
         this.value = value;
-    }
-    
-    /**
-     * @param qname qualified name
-     * @param value calendar
-     */
-    public MockICalendarAttribute(QName qname, String value) {
-        setQName(qname);
-        setValue(value);
     }
 
     /* (non-Javadoc)

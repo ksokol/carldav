@@ -25,8 +25,6 @@ import org.unitedinternet.cosmo.util.CosmoQName;
  */
 public interface CaldavConstants {
 
-    String VALUE_YES = "yes";
-    String VALUE_NO = "no";
     /** The iCalendar media type */
     String CT_ICALENDAR = "text/calendar";
     /** The media type for calendar collections */
@@ -53,16 +51,6 @@ public interface CaldavConstants {
     String ELEMENT_CALDAV_SUPPORTEDCOLLATION = "supported-collation";
     /** The CalDAV XML element name <CALDAV:calendar-data> */
     String ELEMENT_CALDAV_CALENDAR_DATA = "calendar-data";
-    /** The CalDAV XML element name <CALDAV:allcomp> */
-    String ELEMENT_CALDAV_ALLCOMP = "allcomp";
-    /** The CalDAV XML element name <CALDAV:allprop> */
-    String ELEMENT_CALDAV_ALLPROP = "allprop";
-    /** The CalDAV XML element name <CALDAV:prop> */
-    String ELEMENT_CALDAV_PROP = "prop";
-    /** The CalDAV XML element name <CALDAV:expand> */
-    String ELEMENT_CALDAV_EXPAND = "expand";
-    /** The CalDAV XML element name <CALDAV:limit-recurrence-set> */
-    String ELEMENT_CALDAV_LIMIT_RECURRENCE_SET = "limit-recurrence-set";
     /** The CalDAV XML element name <CALDAV:calendar-multiget> */
     String ELEMENT_CALDAV_CALENDAR_MULTIGET = "calendar-multiget";
     /** The CalDAV XML attribute name CALDAV:name */
@@ -71,17 +59,9 @@ public interface CaldavConstants {
     String ATTR_CALDAV_CONTENT_TYPE = "content-type";
     /** The CalDAV XML attribute name CALDAV:version */
     String ATTR_CALDAV_VERSION = "version";
-    /** The CalDAV XML attribute name CALDAV:novalue */
-    String ATTR_CALDAV_NOVALUE = "novalue";
-    /** The CalDAV XML attribute name CALDAV:start */
-    String ATTR_CALDAV_START = "start";
-    /** The CalDAV XML attribute name CALDAV:end */
-    String ATTR_CALDAV_END = "end";
 
     /** The CalDAV property name CALDAV:calendar-data */
     String PROPERTY_CALDAV_CALENDAR_DATA = "calendar-data";
-    /** The CalDAV property name CALDAV:calendar-description */
-    String PROPERTY_CALDAV_CALENDAR_DESCRIPTION = "calendar-description";
     /** The CalDAV property name CALDAV:calendar-timezone */
     String PROPERTY_CALDAV_CALENDAR_TIMEZONE = "calendar-timezone";
     /** The CalDAV property name CALDAV:supported-calendar-component-set */

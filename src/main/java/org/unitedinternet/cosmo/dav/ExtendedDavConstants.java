@@ -29,22 +29,12 @@ public interface ExtendedDavConstants extends DavConstants {
     String PRE_COSMO = "cosmo";
     String NS_COSMO = "http://osafoundation.org/cosmo/DAV";
     String XML_LANG = "lang";
-    String XML_PRIVILEGE = "privilege";
     Namespace NAMESPACE_XML =
             Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
     /** The Cosmo XML namespace  */
     Namespace NAMESPACE_COSMO =
         Namespace.getNamespace(PRE_COSMO, NS_COSMO);
-
-    /** The Cosmo property name <code>exclude-free-busy-rollup</code> */
-    String PROPERTY_EXCLUDE_FREE_BUSY_ROLLUP =
-        "exclude-free-busy-rollup";
-
-    /** The Cosmo property <code>cosmo:exclude-free-busy-rollup</code> */
-    DavPropertyName EXCLUDEFREEBUSYROLLUP =
-        DavPropertyName.create(PROPERTY_EXCLUDE_FREE_BUSY_ROLLUP,
-                               NAMESPACE_COSMO);
 
     /** The Cosmo property name <code>uuid</code> */
     String PROPERTY_UUID = "uuid";

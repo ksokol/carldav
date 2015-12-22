@@ -83,8 +83,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
     private List<org.apache.jackrabbit.webdav.DavResource> members;
 
     static {
-        registerLiveProperty(EXCLUDEFREEBUSYROLLUP);
-
         REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
 
         DEAD_PROPERTY_FILTER.add(CollectionItem.class.getName());

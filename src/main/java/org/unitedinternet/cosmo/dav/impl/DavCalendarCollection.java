@@ -298,31 +298,4 @@ public class DavCalendarCollection extends DavCollectionBase
 
         member.setItem(content);
     }
-
-    /** */
-    protected void removeContent(DavItemContent member)
-        throws CosmoDavException {
-        if (! (member instanceof DavCalendarResource)) {
-            throw new IllegalArgumentException("member not DavCalendarResource");
-        }
-
-        ContentItem content = (ContentItem) member.getItem();
-        CollectionItem parent = (CollectionItem) getItem();
-        
-        // XXX: what exceptions need to be caught?
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing event " + member.getResourcePath());
-        }
-
-        try {
-            if(content instanceof NoteItem) {
-                getContentService().removeItemFromCollection(content, parent);
-            }
-            else {
-                getContentService().removeContent(content);
-            }
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
-        }
-    }
 }

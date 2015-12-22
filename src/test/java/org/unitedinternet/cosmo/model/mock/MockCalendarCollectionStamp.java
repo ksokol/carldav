@@ -24,6 +24,7 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.QName;
 
 
@@ -81,7 +82,7 @@ public class MockCalendarCollectionStamp extends MockStamp implements
     @Timezone
     public Calendar getTimezoneCalendar() {
         // calendar stored as ICalendarAttribute on Item
-        return MockICalendarAttribute.getValue(getItem(), ATTR_CALENDAR_TIMEZONE);
+        return HibICalendarAttribute.getValue(getItem(), ATTR_CALENDAR_TIMEZONE);
     }
 
     /* (non-Javadoc)
@@ -109,7 +110,7 @@ public class MockCalendarCollectionStamp extends MockStamp implements
      */
     public void setTimezoneCalendar(Calendar timezone) {
         // timezone stored as ICalendarAttribute on Item
-        MockICalendarAttribute.setValue(getItem(), ATTR_CALENDAR_TIMEZONE, timezone);
+        HibICalendarAttribute.setValue(getItem(), ATTR_CALENDAR_TIMEZONE, timezone);
     }
 
     @Override

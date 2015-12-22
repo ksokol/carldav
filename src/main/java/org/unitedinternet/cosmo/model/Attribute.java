@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.QName;
+
 /**
  * Represents an attribute associated with an Item.
  * An attribute consists of a QName (qualified name)

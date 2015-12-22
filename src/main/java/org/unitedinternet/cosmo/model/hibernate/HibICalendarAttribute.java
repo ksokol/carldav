@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import java.io.IOException;
 import java.io.InputStream;

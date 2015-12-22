@@ -45,7 +45,7 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;

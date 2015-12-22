@@ -15,31 +15,27 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import javax.persistence.Embeddable;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.unitedinternet.cosmo.model.QName;
 
-/**
- * Hibernate persistent QName.
- */
+import javax.persistence.Embeddable;
+
 @Embeddable
-public class HibQName implements QName {
+public class QName {
     
     public static final String DEFAULT_NAMESPACE = "org.unitedinternet.cosmo.default";
     
     private String namespace = null;
     private String localName = null;
     
-    public HibQName() {}
+    public QName() {}
     
     /**
      * Create new QName with specified namespace and local name.
      * @param namespace namespace
      * @param localName local name
      */
-    public HibQName(String namespace, String localName) {
+    public QName(String namespace, String localName) {
         this.namespace = namespace;
         this.localName = localName;
     }
@@ -50,7 +46,7 @@ public class HibQName implements QName {
      * @param clazz class to generate namespace from
      * @param localName local name
      */
-    public HibQName(Class clazz, String localName) {
+    public QName(Class clazz, String localName) {
         this(clazz.getName(), localName);
     }
     
@@ -58,68 +54,39 @@ public class HibQName implements QName {
      * Create new QName with default namespace and specified local name.
      * @param localName local name
      */
-    public HibQName(String localName) {
+    public QName(String localName) {
         this(DEFAULT_NAMESPACE, localName);
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.QName#getLocalName()
-     */
+
     public String getLocalName() {
         return localName;
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.QName#setLocalName(java.lang.String)
-     */
-    public void setLocalName(String localName) {
-        this.localName = localName;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.QName#getNamespace()
-     */
+
     public String getNamespace() {
         return namespace;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.QName#setNamespace(java.lang.String)
-     */
+
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.QName#copy()
-     */
+
     public QName copy() {
-        return new HibQName(namespace, localName);
+        return new QName(namespace, localName);
     }
-   
+
     public int hashCode() {
         return new HashCodeBuilder(13, 27).
             append(namespace).append(localName).toHashCode();
     }
-  
+
     public boolean equals(Object o) {
-        if (! (o instanceof HibQName)) {
+        if (! (o instanceof QName)) {
             return false;
         }
-        HibQName it = (HibQName) o;
+        QName it = (QName) o;
         return new EqualsBuilder().
             append(namespace, it.namespace).
             append(localName, it.localName).
             isEquals();
-    }
-
-    /** */
-    public String toString() {
-        StringBuffer buf = new StringBuffer();
-        buf.append("{").
-            append(namespace).
-            append("}").
-            append(localName);
-        return buf.toString();
     }
 }

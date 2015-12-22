@@ -20,7 +20,7 @@ import org.unitedinternet.cosmo.hibernate.validator.Task;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.TextAttribute;
 
 import java.io.Reader;
@@ -33,7 +33,7 @@ import java.util.Set;
  */
 public class MockNoteItem extends MockICalendarItem implements NoteItem {
 
-    public static final QName ATTR_NOTE_BODY = new MockQName(
+    public static final QName ATTR_NOTE_BODY = new QName(
             NoteItem.class, "body");
 
     private static final Set<NoteItem> EMPTY_MODS = Collections

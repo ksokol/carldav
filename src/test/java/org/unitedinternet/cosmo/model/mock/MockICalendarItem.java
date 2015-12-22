@@ -16,10 +16,9 @@
 package org.unitedinternet.cosmo.model.mock;
 
 import net.fortuna.ical4j.model.Calendar;
-
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.QName;
 
 /**
  * Extends {@link Item} to represent an abstract
@@ -27,7 +26,7 @@ import org.unitedinternet.cosmo.model.QName;
  */
 public abstract class MockICalendarItem extends MockContentItem implements ICalendarItem {
 
-    public static final QName ATTR_ICALENDAR = new MockQName(
+    public static final QName ATTR_ICALENDAR = new QName(
             ICalendarItem.class, "icalendar");
     
     

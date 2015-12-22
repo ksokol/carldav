@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.Date;

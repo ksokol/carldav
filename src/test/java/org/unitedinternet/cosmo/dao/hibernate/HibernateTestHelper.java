@@ -15,6 +15,17 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import net.fortuna.ical4j.model.Calendar;
+import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
+import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
+import org.unitedinternet.cosmo.dao.ContentDao;
+import org.unitedinternet.cosmo.dao.UserDao;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.QName;
+import org.unitedinternet.cosmo.model.hibernate.User;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -23,18 +34,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import net.fortuna.ical4j.model.Calendar;
-
-import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
-import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.hibernate.User;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * Test Hibernate helper.

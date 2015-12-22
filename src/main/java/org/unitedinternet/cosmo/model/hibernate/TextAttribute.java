@@ -21,7 +21,6 @@ import org.unitedinternet.cosmo.CosmoIOException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import java.io.IOException;
 import java.io.Reader;

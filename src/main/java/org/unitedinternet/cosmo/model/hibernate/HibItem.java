@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 
 import java.nio.charset.Charset;
@@ -107,7 +106,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
 
     @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", 
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @MapKeyClass(HibQName.class)
+    @MapKeyClass(QName.class)
     // turns out this creates a query that is unoptimized for MySQL
     //@Fetch(FetchMode.SUBSELECT)
     @BatchSize(size=50)
@@ -234,7 +233,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      * @see org.unitedinternet.cosmo.model.Item#removeAttribute(java.lang.String)
      */
     public void removeAttribute(String name) {
-        removeAttribute(new HibQName(name));
+        removeAttribute(new QName(name));
     }
 
     /* (non-Javadoc)
@@ -250,7 +249,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      * @see org.unitedinternet.cosmo.model.Item#removeAttributes(java.lang.String)
      */
     public void removeAttributes(String namespace) {
-        ArrayList<QName> toRemove = new ArrayList<QName>();
+        ArrayList<QName> toRemove = new ArrayList<>();
         for (QName qname: attributes.keySet()) {
             if (qname.getNamespace().equals(namespace)) {
                 toRemove.add(qname);
@@ -266,7 +265,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      * @see org.unitedinternet.cosmo.model.Item#getAttribute(java.lang.String)
      */
     public Attribute getAttribute(String name) {
-        return getAttribute(new HibQName(name));
+        return getAttribute(new QName(name));
     }
 
     /* (non-Javadoc)
@@ -280,7 +279,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      * @see org.unitedinternet.cosmo.model.Item#getAttributeValue(java.lang.String)
      */
     public Object getAttributeValue(String name) {
-        return getAttributeValue(new HibQName(name));
+        return getAttributeValue(new QName(name));
     }
 
     /* (non-Javadoc)
@@ -298,7 +297,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      * @see org.unitedinternet.cosmo.model.Item#setAttribute(java.lang.String, java.lang.Object)
      */
     public void setAttribute(String name, Object value) {
-        setAttribute(new HibQName(name),value);
+        setAttribute(new QName(name),value);
     }
 
     /* (non-Javadoc)

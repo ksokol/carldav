@@ -15,20 +15,19 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
-
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
+import org.unitedinternet.cosmo.model.hibernate.QName;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Represents an attribute with a net.fortuna.ical4j.model.Calendar value.

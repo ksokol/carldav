@@ -15,12 +15,12 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.util.Date;
-
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.hibernate.QName;
+
+import java.util.Date;
 
 /**
  * Represents an abstract Stamp on an Item. A Stamp is a set of related

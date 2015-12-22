@@ -23,9 +23,8 @@ import org.unitedinternet.cosmo.hibernate.validator.Timezone;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
+import org.unitedinternet.cosmo.model.hibernate.QName;
 
 
 /**
@@ -35,7 +34,7 @@ public class MockCalendarCollectionStamp extends MockStamp implements
         java.io.Serializable, ICalendarConstants, CalendarCollectionStamp {
     
     // CalendarCollection specific attributes
-    public static final QName ATTR_CALENDAR_TIMEZONE = new MockQName(
+    public static final QName ATTR_CALENDAR_TIMEZONE = new QName(
             CalendarCollectionStamp.class, "timezone");
 
     /** default constructor */

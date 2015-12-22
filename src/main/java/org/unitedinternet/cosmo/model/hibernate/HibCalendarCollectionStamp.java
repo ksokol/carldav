@@ -26,7 +26,6 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 
 import javax.persistence.DiscriminatorValue;
@@ -44,7 +43,7 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     private static final long serialVersionUID = 4397868099410967516L;
 
     // CalendarCollection specific attributes
-    public static final QName ATTR_CALENDAR_TIMEZONE = new HibQName(
+    public static final QName ATTR_CALENDAR_TIMEZONE = new QName(
             CalendarCollectionStamp.class, "timezone");
 
     /** default constructor */

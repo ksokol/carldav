@@ -21,7 +21,7 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
@@ -89,7 +89,7 @@ public class MockEntityFactory implements EntityFactory {
      * {@inheritDoc}
      */
     public QName createQName(String namespace, String localname) {
-        return new MockQName(namespace, localname);
+        return new QName(namespace, localname);
     }
 
     /**

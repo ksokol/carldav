@@ -19,9 +19,9 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
+import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
     private transient Boolean isActive = Boolean.TRUE;
     
     
-    private Map<QName, Attribute> attributes = new HashMap<QName, Attribute>(0);
+    private Map<QName, Attribute> attributes = new HashMap<>(0);
 
     
     private Set<Stamp> stamps = new HashSet<Stamp>(0);
@@ -219,7 +219,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @param name The name.
      */
     public void removeAttribute(String name) {
-       removeAttribute(new MockQName(name));
+       removeAttribute(new QName(name));
     }
     
     /* (non-Javadoc)
@@ -243,7 +243,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @param namespace The namespace.
      */
     public void removeAttributes(String namespace) {
-        ArrayList<QName> toRemove = new ArrayList<QName>();
+        ArrayList<QName> toRemove = new ArrayList<>();
         for (QName qname: attributes.keySet()) {
             if (qname.getNamespace().equals(namespace)) {
                 toRemove.add(qname);
@@ -264,7 +264,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @return The attribute.
      */
     public Attribute getAttribute(String name) {
-        return getAttribute(new MockQName(name));
+        return getAttribute(new QName(name));
     }
     
     /* (non-Javadoc)
@@ -288,7 +288,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @return The attribute value.
      */
     public Object getAttributeValue(String name) {
-       return getAttributeValue(new MockQName(name));
+       return getAttributeValue(new QName(name));
     }
     
     /* (non-Javadoc)
@@ -316,7 +316,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @param value The value.
      */
     public void setAttribute(String name, Object value) {
-        setAttribute(new MockQName(name),value);
+        setAttribute(new QName(name),value);
     }
     
     /* (non-Javadoc)
@@ -348,7 +348,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @return The attributes.
      */
     public Map<String, Attribute> getAttributes(String namespace) {
-        HashMap<String, Attribute> attrs = new HashMap<String, Attribute>();
+        HashMap<String, Attribute> attrs = new HashMap<>();
         for(Entry<QName, Attribute> e: attributes.entrySet()) {
             if(e.getKey().getNamespace().equals(namespace)) {
                 attrs.put(e.getKey().getLocalName(), e.getValue());

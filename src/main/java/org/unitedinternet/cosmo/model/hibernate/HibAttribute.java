@@ -15,6 +15,12 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Target;
+import org.unitedinternet.cosmo.model.Attribute;
+import org.unitedinternet.cosmo.model.Item;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -30,12 +36,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Target;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * Hibernate persistent Attribute.
@@ -61,7 +61,7 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
 
     // Fields
     @Embedded
-    @Target(HibQName.class)
+    @Target(QName.class)
     @AttributeOverrides( {
             @AttributeOverride(name="namespace", column = @Column(name="namespace", nullable = false, length=255) ),
             @AttributeOverride(name="localName", column = @Column(name="localname", nullable = false, length=255) )

@@ -15,11 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
-
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
+
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 /**
  * An exception indicating that the data enclosed in a calendar resource
@@ -29,13 +29,6 @@ public class UnsupportedCalendarDataException
     extends ForbiddenException
     implements ICalendarConstants, CaldavConstants {
 
-    /**
-     * Constructor.
-     */
-    public UnsupportedCalendarDataException() {
-        super("Calendar data must be of media type " + ICALENDAR_MEDIA_TYPE + ", version " + ICALENDAR_VERSION);
-        getNamespaceContext().addNamespace(PRE_CALDAV, NS_CALDAV);
-    }
     /**
      * Constructor.
      * @param mediaType The media type.

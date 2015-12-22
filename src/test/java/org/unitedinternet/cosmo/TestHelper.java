@@ -21,22 +21,13 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
-import java.io.IOException;
 import java.io.InputStream;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  */
 @Ignore
 public class TestHelper {
-    protected static final DocumentBuilderFactory BUILDER_FACTORY =
-        DocumentBuilderFactory.newInstance();
 
     static int iseq = 0;
     static int lseq = 0;
@@ -75,22 +66,6 @@ public class TestHelper {
         String serial = Integer.toString(++useq);;
         String username = "dummy" + serial;
         return makeDummyUser(username, username);
-    }
-
-    /**
-     * Loads xml.
-     * @param name The name.
-     * @return The document xml loaded.
-     * @throws IOException - if something is wrong this exception is thrown.
-     * @throws SAXException - if something is wrong this exception is thrown.
-     * @throws ParserConfigurationException - if something is wrong this exception is thrown.
-     */
-    public Document loadXml(String name) throws SAXException,
-            ParserConfigurationException, IOException {
-        InputStream in = getInputStream(name);
-        BUILDER_FACTORY.setNamespaceAware(true);
-        DocumentBuilder docBuilder = BUILDER_FACTORY.newDocumentBuilder();
-        return docBuilder.parse(in);
     }
 
     /**
@@ -151,14 +126,6 @@ public class TestHelper {
             throw new IllegalStateException("resource " + name + " not found");
         }
         return in;
-    }
-
-    /**
-     * Gets entity factory.
-     * @return The entity factory.
-     */
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
     }
 
 }

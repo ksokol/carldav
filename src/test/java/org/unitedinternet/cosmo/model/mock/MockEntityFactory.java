@@ -21,6 +21,7 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.QName;
 import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
@@ -59,7 +60,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return calendar collection stamp.
      */
     public CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col) {
-        return new MockCalendarCollectionStamp(col);
+        return new HibCalendarCollectionStamp(col);
     }
 
     /**

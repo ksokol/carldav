@@ -45,7 +45,8 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
     public void unauthorized() throws Exception {
         mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
                 .header(AUTHORIZATION, user(USER02, USER02_PASSWORD)))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
     }
 
     @Test
@@ -85,7 +86,8 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
                 .contentType(TEXT_CALENDAR)
                 .header(AUTHORIZATION, user(USER02, USER02_PASSWORD))
                 .content(CALDAV_EVENT))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
     }
 
     private static String user(String username, String password) {

@@ -40,7 +40,7 @@ class DavAccessDecisionManagerTests {
 
     @Test
     void didNotMatchUri() {
-        expectedException.expect(DavAccessDeniedException.class)
+        expectedException.expect(InsufficientAuthenticationException.class)
         expectedException.expectMessage("access denied for /dav")
         uut.match("user1", "/dav")
     }
@@ -57,7 +57,7 @@ class DavAccessDecisionManagerTests {
 
     @Test
     void matchSpecificUnknownUser() {
-        expectedException.expect(DavAccessDeniedException.class)
+        expectedException.expect(InsufficientAuthenticationException.class)
         expectedException.expectMessage("access denied for /dav/user2")
         uut.match("user1", "/dav/user2")
     }
@@ -79,7 +79,7 @@ class DavAccessDecisionManagerTests {
         def request = new MockHttpServletRequest()
         request.setRequestURI("/test/")
         when(invocation.getHttpRequest()).thenReturn(request)
-        expectedException.expect(DavAccessDeniedException.class)
+        expectedException.expect(InsufficientAuthenticationException.class)
         expectedException.expectMessage("access denied for /test/")
 
         uut.decide(token, invocation, null)

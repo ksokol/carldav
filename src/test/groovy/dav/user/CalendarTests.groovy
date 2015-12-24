@@ -251,8 +251,9 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag}</D:getetag>
-                                         <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
+                                        <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
                                         <D:iscollection>0</D:iscollection>
+                                        <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
                                         <D:supported-report-set>
                                             <D:supported-report>
                                                 <D:report>
@@ -363,6 +364,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:getetag/>
                                         <D:getlastmodified/>
                                         <D:iscollection/>
+                                        <D:getcontenttype/>
                                         <D:supported-report-set/>
                                         <D:resourcetype/>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV"/>

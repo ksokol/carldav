@@ -22,6 +22,7 @@ import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -29,6 +30,7 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
+import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.ContentItem;
@@ -135,7 +137,11 @@ public abstract class DavCalendarResource extends DavContentBase
         return REPORT_TYPES;
     }
 
-    /** */
+    protected void loadLiveProperties(DavPropertySet properties) {
+        super.loadLiveProperties(properties);
+        properties.add(new ContentType(ICALENDAR_MEDIA_TYPE, "UTF-8"));
+    }
+
     protected void setLiveProperty(WebDavProperty property, boolean create)
         throws CosmoDavException {
         super.setLiveProperty(property, create);

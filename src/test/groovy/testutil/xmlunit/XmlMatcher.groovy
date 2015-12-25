@@ -32,7 +32,7 @@ public class XmlMatcher {
     }
 
     private static ElementSelector unorderedPrivilegeNodes() {
-        return unorderedNodes("privilege");
+        return selectorForElementNamed("propstat", new FirstChildElementNameSelector());
     }
 
     private static ElementSelector unorderedSupportedCalendarComponentSet() {

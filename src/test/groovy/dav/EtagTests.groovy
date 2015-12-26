@@ -1,9 +1,7 @@
 package dav
 
-import carldav.service.time.TimeService
 import org.junit.Before
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
@@ -11,7 +9,6 @@ import testutil.builder.GeneralData
 
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
-import static org.mockito.Mockito.when
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
@@ -30,15 +27,10 @@ class EtagTests extends IntegrationTestSupport {
     private static final String ETAG = '"1d21bc1d460b1085d53e3def7f7380f6"'
     private static final String uuid = GeneralData.UUID
 
-    @Autowired
-    private TimeService timeService;
-
     def etag;
 
     @Before
     public void before() {
-        when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-
         etag = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
                 .content(CALDAV_EVENT))

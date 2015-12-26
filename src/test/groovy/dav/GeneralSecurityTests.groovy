@@ -1,16 +1,12 @@
 package dav
 
-import carldav.service.time.TimeService
 import org.apache.commons.codec.binary.Base64
-import org.junit.Before
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralResponse
 
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
-import static org.mockito.Mockito.when
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE
 import static org.springframework.http.MediaType.TEXT_XML
@@ -27,14 +23,6 @@ import static testutil.mockmvc.CustomResultMatchers.*
  * @author Kamill Sokol
  */
 public class GeneralSecurityTests extends IntegrationTestSupport {
-
-    @Autowired
-    private TimeService timeService;
-
-    @Before
-    public void before() {
-        when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-    }
 
     @Test
     public void unauthorized() throws Exception {

@@ -11,9 +11,11 @@ import org.xmlunit.builder.Input
 import testutil.builder.GeneralData
 import testutil.xmlunit.XmlMatcher
 
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+
 import static org.hamcrest.Matchers.notNullValue
 import static org.junit.Assert.assertThat
-import static org.mockito.Mockito.when
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.HttpMethod.POST
@@ -44,7 +46,7 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Before
     public void before() {
-        when(timeService.getCurrentTime()).thenReturn(new Date(3600));
+     //   when(timeService.getCurrentTime()).thenReturn(new Date(3600));
     }
 
     @Test
@@ -250,6 +252,13 @@ public class CalendarTests extends IntegrationTestSupport {
 
         def xml = new XmlSlurper().parseText(result1)
         def cosmoUuid = xml.response.propstat.prop.uuid.text()
+        def lastModified = xml.response.propstat.prop.getlastmodified.text()
+
+        //assert date format - TODO hamcrest matcher
+        DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+        format.parse(lastModified);
+
+        assertThat(cosmoUuid, notNullValue())
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -258,7 +267,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag}</D:getetag>
-                                        <D:getlastmodified>Thu, 01 Jan 1970 00:00:03 GMT</D:getlastmodified>
+                                        <D:getlastmodified>${lastModified}</D:getlastmodified>
                                         <D:iscollection>0</D:iscollection>
                                         <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
                                         <D:supported-report-set>
@@ -409,6 +418,7 @@ public class CalendarTests extends IntegrationTestSupport {
                         <D:propfind xmlns:D="DAV:">
                             <D:prop>
                                 <C:uuid xmlns:C="http://osafoundation.org/cosmo/DAV" />
+                                <D:getlastmodified />
                             </D:prop>
                         </D:propfind>"""
 
@@ -420,6 +430,13 @@ public class CalendarTests extends IntegrationTestSupport {
         def xml = new XmlSlurper().parseText(response2)
         def uuid = result1.getResponse().getHeader(ETAG).replaceAll('"', '')
         def cosmoUuid = xml.response.propstat.prop.uuid.text()
+        def lastModified = xml.response.propstat.prop.getlastmodified.text()
+
+        //assert date format - TODO hamcrest matcher
+        DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
+        format.parse(lastModified);
+
+        assertThat(cosmoUuid, notNullValue())
 
         def response3 = """\
                         <html>
@@ -434,7 +451,7 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dl>
                         <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${uuid}</dd>
                         <dt>{DAV:}getetag</dt><dd>&quot;${uuid}&quot;</dd>
-                        <dt>{DAV:}getlastmodified</dt><dd>Thu, 01 Jan 1970 00:00:03 GMT</dd>
+                        <dt>{DAV:}getlastmodified</dt><dd>${lastModified}</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VEVENT, VTODO</dd>

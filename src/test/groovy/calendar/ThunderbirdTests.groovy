@@ -1,16 +1,15 @@
 package calendar
 
-import carldav.service.time.TimeService
-import org.junit.Before
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
+import org.xmlunit.builder.Input
+import testutil.xmlunit.XmlMatcher
 
-import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.not
 import static org.hamcrest.Matchers.notNullValue
-import static org.mockito.Mockito.when
+import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.TEXT_XML
@@ -139,14 +138,6 @@ class ThunderbirdTests extends IntegrationTestSupport {
                         """.stripIndent()
 
     def currentEtag;
-
-    @Autowired
-    private TimeService timeService;
-
-    @Before
-    public void before() {
-        when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-    }
 
     @Test
     public void fetchingEmptyCalendarFirstTime() {
@@ -346,13 +337,25 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML)
+                .content(request1))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def xml = new XmlSlurper().parseText(result1)
+        def ctag = xml.response[0].propstat.prop.getctag.text()
+
+        assertThat(ctag, notNullValue())
+
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/dav/test01@localhost.de/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">48a4258e4491f632a078122a360d9943</CS:getctag>
+                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">${ctag}</CS:getctag>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -368,12 +371,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response1))
+        assertThat(Input.fromString(result1).build(), XmlMatcher.equalXml(response1))
     }
 
     @Test
@@ -389,6 +387,18 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML)
+                .content(request1))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def xml = new XmlSlurper().parseText(result1)
+        def etag = xml.response[0].propstat.prop.getetag.text()
+
+        assertThat(etag, notNullValue())
+
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
@@ -401,7 +411,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:propstat>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:getetag>"48a4258e4491f632a078122a360d9943"</D:getetag>
+                                        <D:getetag>${etag}</D:getetag>
                                         <D:resourcetype>
                                             <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             <D:collection/>
@@ -423,12 +433,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response1))
+        assertThat(Input.fromString(result1).build(), XmlMatcher.equalXml(response1))
     }
 
     @Test
@@ -536,11 +541,12 @@ class ThunderbirdTests extends IntegrationTestSupport {
          addVEvent()
 
          mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                 .contentType(TEXT_CALENDAR)
-                 .content(VEVENT)
-                 .header("If-Match", "${currentEtag}"))
-                 .andExpect(status().isNoContent())
-                 .andExpect(etag(is(currentEtag)))
+                .contentType(TEXT_CALENDAR)
+                .content(VEVENT)
+                .header("If-Match", "${currentEtag}"))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(notNullValue()))
+                .andExpect(etag(not(currentEtag)))
     }
 
     @Test
@@ -552,7 +558,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .content(VTODO)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
-                .andExpect(etag(is(currentEtag)))
+                .andExpect(etag(notNullValue()))
+                .andExpect(etag(not(currentEtag)))
     }
 
     @Test
@@ -584,6 +591,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .content(vevent)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
-                .andExpect(etag(is(currentEtag))) //TODO same in test
+                .andExpect(etag(notNullValue()))
+                .andExpect(etag(not(currentEtag)))
     }
 }

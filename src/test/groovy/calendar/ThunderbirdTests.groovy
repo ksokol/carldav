@@ -1,16 +1,18 @@
 package calendar
 
-import carldav.service.generator.IdGenerator
 import carldav.service.time.TimeService
 import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithUserDetails
+import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static org.hamcrest.Matchers.is
+import static org.hamcrest.Matchers.notNullValue
 import static org.mockito.Mockito.when
 import static org.springframework.http.HttpHeaders.ALLOW
+import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
@@ -136,16 +138,14 @@ class ThunderbirdTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-    @Autowired
-    private TimeService timeService;
+    def currentEtag;
 
     @Autowired
-    private IdGenerator idGenerator;
+    private TimeService timeService;
 
     @Before
     public void before() {
         when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-        when(idGenerator.nextStringIdentifier()).thenReturn("1");
     }
 
     @Test
@@ -251,12 +251,15 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
     @Test
     public void addVEvent() {
-        mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+        MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(VEVENT)
                 .header("If-None-Match", "*"))
                 .andExpect(status().isCreated())
-                .andExpect(etag(is('"1d21bc1d460b1085d53e3def7f7380f6"')))
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = mvcResult.getResponse().getHeader(ETAG);
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -273,7 +276,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01%40localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:getetag>"1d21bc1d460b1085d53e3def7f7380f6"</D:getetag>
+                                        <D:getetag>${currentEtag}</D:getetag>
                                         <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
                                             PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
                                             VERSION:2.0&#13;
@@ -411,7 +414,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:getetag>"1d21bc1d460b1085d53e3def7f7380f6"</D:getetag>
+                                        <D:getetag>${currentEtag}</D:getetag>
                                         <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
                                         <D:resourcetype/>
                                     </D:prop>
@@ -430,12 +433,15 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
     @Test
     public void addVTodo() {
-        mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
+        MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(VTODO)
                 .header("If-None-Match", "*"))
                 .andExpect(status().isCreated())
-                .andExpect(etag(is('"1d21bc1d460b1085d53e3def7f7380f6"')))
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = mvcResult.getResponse().getHeader(ETAG);
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -452,7 +458,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01%40localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:getetag>"1d21bc1d460b1085d53e3def7f7380f6"</D:getetag>
+                                        <D:getetag>${currentEtag}</D:getetag>
                                         <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
                                             PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
                                             VERSION:2.0&#13;
@@ -532,10 +538,10 @@ class ThunderbirdTests extends IntegrationTestSupport {
          mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
                  .contentType(TEXT_CALENDAR)
                  .content(VEVENT)
-                 .header("If-Match", '"1d21bc1d460b1085d53e3def7f7380f6"'))
+                 .header("If-Match", "${currentEtag}"))
                  .andExpect(status().isNoContent())
-                 .andExpect(etag(is('"1d21bc1d460b1085d53e3def7f7380f6"')))
-     }
+                 .andExpect(etag(is(currentEtag)))
+    }
 
     @Test
     public void addSameVTodo() {
@@ -544,9 +550,9 @@ class ThunderbirdTests extends IntegrationTestSupport {
         mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(VTODO)
-                .header("If-Match", '"1d21bc1d460b1085d53e3def7f7380f6"'))
+                .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
-                .andExpect(etag(is('"1d21bc1d460b1085d53e3def7f7380f6"')))
+                .andExpect(etag(is(currentEtag)))
     }
 
     @Test
@@ -554,7 +560,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
         addVEvent()
 
         mockMvc.perform(delete("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                .header("If-Match", '"1d21bc1d460b1085d53e3def7f7380f6"'))
+                .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
     }
 
@@ -563,7 +569,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
         addVTodo()
 
         mockMvc.perform(delete("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
-                .header("If-Match", '"1d21bc1d460b1085d53e3def7f7380f6"'))
+                .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
     }
 
@@ -576,8 +582,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
         mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(vevent)
-                .header("If-Match", '"1d21bc1d460b1085d53e3def7f7380f6"'))
+                .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
-                .andExpect(etag(is('"1d21bc1d460b1085d53e3def7f7380f6"'))) //TODO same in test
+                .andExpect(etag(is(currentEtag))) //TODO same in test
     }
 }

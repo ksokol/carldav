@@ -1,6 +1,5 @@
 package dav
 
-import carldav.service.generator.IdGenerator
 import carldav.service.time.TimeService
 import org.apache.commons.codec.binary.Base64
 import org.junit.Before
@@ -32,13 +31,9 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
     @Autowired
     private TimeService timeService;
 
-    @Autowired
-    private IdGenerator idGenerator;
-
     @Before
     public void before() {
         when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-        when(idGenerator.nextStringIdentifier()).thenReturn("1");
     }
 
     @Test

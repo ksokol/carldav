@@ -1,17 +1,18 @@
 package dav.user
 
-import carldav.service.generator.IdGenerator
 import carldav.service.time.TimeService
 import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
+import org.xmlunit.builder.Input
 import testutil.builder.GeneralData
+import testutil.xmlunit.XmlMatcher
 
 import static org.hamcrest.Matchers.notNullValue
+import static org.junit.Assert.assertThat
 import static org.mockito.Mockito.when
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
@@ -41,13 +42,9 @@ public class CalendarTests extends IntegrationTestSupport {
     @Autowired
     private TimeService timeService;
 
-    @Autowired
-    private IdGenerator idGenerator;
-
     @Before
     public void before() {
         when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-        when(idGenerator.nextStringIdentifier()).thenReturn("1");
     }
 
     @Test
@@ -239,12 +236,22 @@ public class CalendarTests extends IntegrationTestSupport {
                             <D:prop>
                                 <D:getetag />
                                 <C:calendar-data />
+                                <C:uuid xmlns:C="http://osafoundation.org/cosmo/DAV" />
                             </D:prop>
                             <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                             <D:allprop />
                         </C:calendar-multiget>"""
 
-        def response = """\
+        def result1 = mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def xml = new XmlSlurper().parseText(result1)
+        def cosmoUuid = xml.response.propstat.prop.uuid.text()
+
+        def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
@@ -262,7 +269,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                             </D:supported-report>
                                         </D:supported-report-set>
                                         <D:resourcetype/>
-                                        <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">1</cosmo:uuid>
+                                        <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">${cosmoUuid}</cosmo:uuid>
                                         <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
                                             VERSION:2.0&#13;
                                             X-WR-CALNAME:Work&#13;
@@ -315,12 +322,7 @@ public class CalendarTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
-                .content(request)
-                .contentType(TEXT_XML))
-                .andExpect(textXmlContentType())
-        .andDo(MockMvcResultHandlers.print())
-                    .andExpect(xml(response));
+        assertThat(Input.fromString(result1).build(), XmlMatcher.equalXml(response1))
     }
 
     @Test
@@ -401,7 +403,25 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML))
                 .andExpect(status().isCreated());
 
-        def response = """\
+        def result1 = mockMvc.perform(head("/dav/{email}/newcalendar/", USER01)).andReturn()
+
+        def request1 = """\
+                        <D:propfind xmlns:D="DAV:">
+                            <D:prop>
+                                <C:uuid xmlns:C="http://osafoundation.org/cosmo/DAV" />
+                            </D:prop>
+                        </D:propfind>"""
+
+        def response2 = mockMvc.perform(propfind("/dav/{email}/newcalendar/", USER01)
+                .contentType(TEXT_XML)
+                .content(request1))
+                .andReturn().getResponse().getContentAsString()
+
+        def xml = new XmlSlurper().parseText(response2)
+        def uuid = result1.getResponse().getHeader(ETAG).replaceAll('"', '')
+        def cosmoUuid = xml.response.propstat.prop.uuid.text()
+
+        def response3 = """\
                         <html>
                         <head><title>newcalendar</title></head>
                         <body>
@@ -412,8 +432,8 @@ public class CalendarTests extends IntegrationTestSupport {
                         </ul>
                         <h2>Properties</h2>
                         <dl>
-                        <dt>{http://calendarserver.org/ns/}getctag</dt><dd>1d21bc1d460b1085d53e3def7f7380f6</dd>
-                        <dt>{DAV:}getetag</dt><dd>&quot;1d21bc1d460b1085d53e3def7f7380f6&quot;</dd>
+                        <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${uuid}</dd>
+                        <dt>{DAV:}getetag</dt><dd>&quot;${uuid}&quot;</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>Thu, 01 Jan 1970 00:00:03 GMT</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
@@ -421,7 +441,7 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
                         <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget</dd>
-                        <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>1</dd>
+                        <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>${cosmoUuid}</dd>
                         </dl>
                         </body></html>
                         """.stripIndent()
@@ -429,7 +449,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
                 .contentType(TEXT_XML))
                 .andExpect(textHtmlContentType())
-                .andExpect(html(response));
+                .andExpect(html(response3));
     }
 
     @Test

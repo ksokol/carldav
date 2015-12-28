@@ -10,17 +10,11 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.TestDispatcherServlet;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import util.TestData;
 
-import java.io.IOException;
 import java.util.TimeZone;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Kamill Sokol
@@ -43,15 +37,8 @@ public abstract class IntegrationTestSupport {
     @Before
     public void beforeAnyOther() throws Exception {
         this.mockMvc = webAppContextSetup(this.wac)
-				.dispatcherServlet(new CustomTestDispatcherServlet())
+                .dispatchOptions(true)
                 .apply(springSecurity()).build();
-    }
-
-    private static class CustomTestDispatcherServlet extends TestDispatcherServlet {
-        @Override
-        protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-            processRequest(request, response);
-        }
     }
 
 }

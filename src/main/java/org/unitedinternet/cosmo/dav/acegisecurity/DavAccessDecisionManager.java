@@ -67,19 +67,19 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
             uriComponentsBuilder = UriComponentsBuilder.fromPath(URLDecoder.decode(path, "UTF-8"));
         } catch (UnsupportedEncodingException e) {
             //TODO
-            throw new RuntimeException(e.getMessage(), e);
+            throw new InsufficientAuthenticationException(e.getMessage(), e);
         }
 
         final List<String> pathSegments = uriComponentsBuilder.build().getPathSegments();
 
         if(pathSegments.size() < 2) {
-            throw new DavAccessDeniedException(path);
+            throw new InsufficientAuthenticationException("access denied for " + path);
         }
 
         final String userIdFromUrl = pathSegments.get(1);
 
         if(!StringUtils.equalsIgnoreCase(userId, userIdFromUrl)) {
-            throw new DavAccessDeniedException(path);
+            throw new InsufficientAuthenticationException("access denied for " + path);
         }
     }
 

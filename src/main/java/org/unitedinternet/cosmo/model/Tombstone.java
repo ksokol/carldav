@@ -20,6 +20,7 @@ import java.util.Date;
 /**
  * Represents something that was removed from an item.
  */
+@Deprecated
 public interface Tombstone {
 
     /**

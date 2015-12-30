@@ -1,17 +1,12 @@
 package dav
 
-import carldav.service.generator.IdGenerator
-import carldav.service.time.TimeService
 import org.apache.commons.codec.binary.Base64
-import org.junit.Before
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralResponse
 
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
-import static org.mockito.Mockito.when
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE
 import static org.springframework.http.MediaType.TEXT_XML
@@ -29,23 +24,12 @@ import static testutil.mockmvc.CustomResultMatchers.*
  */
 public class GeneralSecurityTests extends IntegrationTestSupport {
 
-    @Autowired
-    private TimeService timeService;
-
-    @Autowired
-    private IdGenerator idGenerator;
-
-    @Before
-    public void before() {
-        when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-        when(idGenerator.nextStringIdentifier()).thenReturn("1");
-    }
-
     @Test
     public void unauthorized() throws Exception {
         mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
                 .header(AUTHORIZATION, user(USER02, USER02_PASSWORD)))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
     }
 
     @Test
@@ -85,7 +69,8 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
                 .contentType(TEXT_CALENDAR)
                 .header(AUTHORIZATION, user(USER02, USER02_PASSWORD))
                 .content(CALDAV_EVENT))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
     }
 
     private static String user(String username, String password) {

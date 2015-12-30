@@ -72,7 +72,7 @@ public class HibItemTombstone extends HibTombstone implements ItemTombstone {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 27).appendSuper(super.hashCode())
-                .append(itemUid.hashCode()).toHashCode();
+        return 0; //new HashCodeBuilder(17, 27).appendSuper(super.hashCode())
+                //.append(itemUid.hashCode()).toHashCode();
     }
 }

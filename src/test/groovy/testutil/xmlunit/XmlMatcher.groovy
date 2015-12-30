@@ -24,11 +24,15 @@ public class XmlMatcher {
     }
 
     private static DefaultNodeMatcher nodeMatcher() {
-        return new DefaultNodeMatcher(unorderedSupportedReportNodes(), unorderedPrivilegeNodes(), unorderedSupportedCalendarComponentSet(), byNameAndAllAttributes);
+        return new DefaultNodeMatcher(unorderedSupportedReportNodes(), unorderedPrivilegeNodes(), unorderedSupportedCalendarComponentSet(), unorderedPropstatNodes(), byNameAndAllAttributes);
     }
 
     private static ElementSelector unorderedSupportedReportNodes() {
         return selectorForElementNamed("supported-report", new FirstChildElementNameSelector());
+    }
+
+    private static ElementSelector unorderedPropstatNodes() {
+        return selectorForElementNamed("propstat", new FirstChildElementNameSelector());
     }
 
     private static ElementSelector unorderedPrivilegeNodes() {

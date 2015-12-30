@@ -3,20 +3,26 @@ package calendar
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
+import testutil.helper.XmlHelper
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION
+import static org.hamcrest.Matchers.notNullValue
+import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
+import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.TestUser.USER01_PASSWORD
 import static testutil.helper.Base64Helper.user
+import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
-import static testutil.mockmvc.CustomResultMatchers.xml
+import static testutil.mockmvc.CustomResultMatchers.*
+import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol
@@ -209,5 +215,98 @@ class DavDroidTests extends IntegrationTestSupport {
                 .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
                 .andExpect(status().isMultiStatus())
                 .andExpect(xml(response5))
+    }
+
+    @Test
+    void addVEvent() {
+        def veventRequest1 = new File('src/test/resources/calendar/davdroid/addvevent_request1.ics').getText('UTF-8')
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(veventRequest1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                        <propfind xmlns="DAV:">
+                            <prop>
+                                <displayname/>
+                                <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
+                                <n1:getctag xmlns:n1="http://calendarserver.org/ns/"/>
+                            </prop>
+                        </propfind>"""
+
+        def result2 = mockMvc.perform(propfind("/dav/{email}/calendar", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def getctag = XmlHelper.getctag(result2)
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:displayname>calendarDisplayName</D:displayname>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/">${getctag}</CS:getctag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result2, equalXml(response2))
+
+        def request3 = """\
+                        <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                            <prop>
+                                <getetag/>
+                            </prop>
+                            <CAL:filter>
+                                <CAL:comp-filter name="VCALENDAR">
+                                    <CAL:comp-filter name="VEVENT"/>
+                                </CAL:comp-filter>
+                            </CAL:filter>
+                        </CAL:calendar-query>"""
+
+        def result3 = mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request3)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def getetag = XmlHelper.getetag(result3)
+
+        def response3 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result3, equalXml(response3))
     }
 }

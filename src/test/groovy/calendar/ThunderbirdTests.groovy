@@ -203,7 +203,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request1))
+                .content(request1)
+                .header("Depth", "0"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
@@ -242,7 +243,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request2))
+                .content(request2)
+                .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
@@ -334,7 +336,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .content(request2)
-                .contentType(TEXT_XML))
+                .contentType(TEXT_XML)
+                .header("Depth", "1"))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
     }
@@ -352,7 +355,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request1))
+                .content(request1)
+                .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()
@@ -402,7 +406,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request1))
+                .content(request1)
+                .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()
@@ -544,7 +549,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .content(request2)
-                .contentType(TEXT_XML))
+                .contentType(TEXT_XML)
+                .header("Depth", "1"))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
     }
@@ -653,7 +659,8 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
-                .content(request1))
+                .content(request1)
+                .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()

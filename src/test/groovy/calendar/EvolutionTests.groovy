@@ -363,7 +363,7 @@ class EvolutionTests extends IntegrationTestSupport {
                 .content(request1)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
-                .andExpect(etag(notNullValue()))
+                .andExpect(etag(not(currentEtag)))
                 .andReturn()
 
         currentEtag = result1.getResponse().getHeader(ETAG)
@@ -394,6 +394,7 @@ class EvolutionTests extends IntegrationTestSupport {
                 .andExpect(textCalendarContentType())
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
                 .andExpect(header().string(CONTENT_LENGTH, is("398")))
+                .andExpect(etag(is(currentEtag)))
                 .andExpect(text(response1))
     }
 
@@ -700,7 +701,6 @@ class EvolutionTests extends IntegrationTestSupport {
                 .andExpect(textCalendarContentType())
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
                 .andExpect(header().string(CONTENT_LENGTH, is("435")))
-                .andExpect(header().string(ETAG, is(currentEtag)))
                 .andExpect(text(response2))
     }
 }

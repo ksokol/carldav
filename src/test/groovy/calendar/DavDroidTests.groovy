@@ -2,7 +2,6 @@ package calendar
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION
@@ -15,6 +14,7 @@ import static testutil.TestUser.USER01
 import static testutil.TestUser.USER01_PASSWORD
 import static testutil.helper.Base64Helper.user
 import static testutil.mockmvc.CustomRequestBuilders.propfind
+import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
 import static testutil.mockmvc.CustomResultMatchers.xml
 
@@ -147,8 +147,67 @@ class DavDroidTests extends IntegrationTestSupport {
                 .content(request3)
                 .header("Depth", "0")
                 .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isMultiStatus())
                 .andExpect(xml(response3))
+
+        def request4 = """\
+                        <propfind xmlns="DAV:">
+                            <prop>
+                                <displayname/>
+                                <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
+                                <n1:getctag xmlns:n1="http://calendarserver.org/ns/"/>
+                            </prop>
+                        </propfind>"""
+
+        def response4 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 404 Not Found</D:status>
+                                </D:propstat>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:displayname>calendarDisplayName</D:displayname>
+                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">NVy57RJot0LhdYELkMDJ9gQZjOM=</CS:getctag>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+
+        mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request4)
+                .header("Depth", "0")
+                .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
+                .andExpect(status().isMultiStatus())
+                .andExpect(xml(response4))
+
+        def request5 = """\
+                        <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                            <prop>
+                                <getetag/>
+                            </prop>
+                            <CAL:filter>
+                                <CAL:comp-filter name="VCALENDAR">
+                                    <CAL:comp-filter name="VEVENT"/>
+                                </CAL:comp-filter>
+                            </CAL:filter>
+                        </CAL:calendar-query>"""
+
+        def response5 = """<D:multistatus xmlns:D="DAV:"/>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request5)
+                .header("Depth", "1")
+                .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
+                .andExpect(status().isMultiStatus())
+                .andExpect(xml(response5))
     }
 }

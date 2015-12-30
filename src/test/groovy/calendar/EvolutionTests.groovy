@@ -410,4 +410,152 @@ class EvolutionTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
                 .andExpect(status().isNotFound())
     }
+
+    @Test
+    public void fetchingCalendarFirstTime() {
+        def veventResponse4 = new File('src/test/resources/calendar/evolution/addvevent_response4.txt').getText('UTF-8')
+
+        addVEvent()
+        def getetag1 = currentEtag
+
+        addVEventWithAttachment()
+        def getetag2 = currentEtag
+
+        def request1 = """\
+                        <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:prop>
+                                <CS:getctag/>
+                            </D:prop>
+                        </D:propfind>"""
+
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def response1 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">${getctag(result1)}</CS:getctag>
+                                    </D:prop>
+                                <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        assertThat(result1, equalXml(response1))
+
+        def request2 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:time-range start="20151125T121145Z" end="20160203T121145Z"/>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag1}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag2}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+
+        def request3 = """\
+                        <C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                            <C:calendar-data/>
+                          </D:prop>
+                          <D:href>/dav/test01@localhost.de/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics</D:href>
+                          <D:href>/dav/test01@localhost.de/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics</D:href>
+                        </C:calendar-multiget>"""
+
+        def response3 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${getetag1}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">${veventResponse4}
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${getetag2}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                            CALSCALE:GREGORIAN&#13;
+                                            PRODID:-//Ximian//NONSGML Evolution Calendar//EN&#13;
+                                            VERSION:2.0&#13;
+                                            BEGIN:VEVENT&#13;
+                                            UID:20151230T141828Z-27136-1000-3483-70@localhost&#13;
+                                            DTSTAMP:20151230T121137Z&#13;
+                                            DTSTART;VALUE=DATE:20151216&#13;
+                                            DTEND;VALUE=DATE:20151217&#13;
+                                            SEQUENCE:2&#13;
+                                            SUMMARY:attachment&#13;
+                                            CLASS:PUBLIC&#13;
+                                            TRANSP:TRANSPARENT&#13;
+                                            CREATED:20151230T141924Z&#13;
+                                            LAST-MODIFIED:20151230T141924Z&#13;
+                                            ATTACH;VALUE=BINARY;ENCODING=BASE64;X-EVOLUTION-CALDAV-ATTACHMENT-NAME=20151230T141828Z-27136-1000-3483-70@localhost-file.txt:ZW1wdHkgZmlsZQo=&#13;
+                                            ATTACH;VALUE=BINARY;ENCODING=BASE64;X-EVOLUTION-CALDAV-ATTACHMENT-NAME=20151230T141828Z-27136-1000-3483-70@localhost-file
+                                            2.txt:ZW1wdHkgZmlsZQo=&#13;
+                                            END:VEVENT&#13;
+                                            END:VCALENDAR&#13;
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request3)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response3))
+    }
 }

@@ -1,9 +1,6 @@
 package dav.user
 
-import carldav.service.time.TimeService
-import org.junit.Before
 import org.junit.Test
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
@@ -40,14 +37,6 @@ public class CalendarTests extends IntegrationTestSupport {
 
     private final String uuid = GeneralData.UUID;
     private final String uuid2 = GeneralData.UUID_EVENT2;
-
-    @Autowired
-    private TimeService timeService;
-
-    @Before
-    public void before() {
-        //   when(timeService.getCurrentTime()).thenReturn(new Date(3600));
-    }
 
     @Test
     public void shouldReturnHtmlForUser() throws Exception {

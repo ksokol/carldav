@@ -5,6 +5,7 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import org.xmlunit.builder.Input
+import testutil.xml.XmlHelper
 import testutil.xmlunit.XmlMatcher
 
 import static org.hamcrest.Matchers.not
@@ -361,10 +362,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()
 
-        def xml = new XmlSlurper().parseText(result1)
-        def ctag = xml.response[0].propstat.prop.getctag.text()
-
-        assertThat(ctag, notNullValue())
+        def ctag = XmlHelper.getctag(result1)
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -412,10 +410,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()
 
-        def xml = new XmlSlurper().parseText(result1)
-        def etag = xml.response[0].propstat.prop.getetag.text()
-
-        assertThat(etag, notNullValue())
+        def etag = XmlHelper.getetag(result1)
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -665,9 +660,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()
 
-        def etag = new XmlSlurper().parseText(result1).response[1].propstat.prop.getetag.text()
-
-        assertThat(etag, notNullValue())
+        def etag = XmlHelper.getetag(result1, 1)
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">

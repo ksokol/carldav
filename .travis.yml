@@ -1,10 +1,8 @@
 language: java
 jdk:
-  - oraclejdk7
-  - openjdk7
   - oraclejdk8
 
 sudo: false
 
 script:
-   - if [[ $TRAVIS_JDK_VERSION == "openjdk7" ]]; then mvn cobertura:cobertura coveralls:cobertura; else mvn test; fi
+   - if [[ $TRAVIS_JDK_VERSION == "oraclejdk8" ]]; then mvn cobertura:cobertura coveralls:cobertura; else mvn test; fi

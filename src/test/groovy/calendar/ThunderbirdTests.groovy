@@ -609,7 +609,39 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void calendarQueryVEventTimeRange() {
+    public void calendarQueryVEventWithTimeRange() {
+        calendarQueryVEvent("""\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:time-range start="20141120T181910Z" end="20990129T181910Z"/>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>""")
+    }
+
+    @Test
+    public void calendarQueryVEventWithoutTimeRange() {
+        calendarQueryVEvent("""\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>""")
+    }
+
+    void calendarQueryVEvent(String request2) {
         addVEvent();
 
         def request1 = """\
@@ -630,20 +662,6 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         assertThat(etag, notNullValue())
 
-        def request2 = """\
-                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
-                          <D:prop>
-                            <D:getetag/>
-                          </D:prop>
-                          <C:filter>
-                            <C:comp-filter name="VCALENDAR">
-                              <C:comp-filter name="VEVENT">
-                                <C:time-range start="20141120T181910Z" end="20990129T181910Z"/>
-                              </C:comp-filter>
-                            </C:comp-filter>
-                          </C:filter>
-                        </C:calendar-query>"""
-
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
@@ -656,7 +674,6 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:propstat>
                             </D:response>
                         </D:multistatus>"""
-
 
         mockMvc.perform(report("/dav/{email}/calendar", USER01)
                 .contentType(TEXT_XML)

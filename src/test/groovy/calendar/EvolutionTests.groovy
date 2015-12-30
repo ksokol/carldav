@@ -6,8 +6,7 @@ import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.xml.XmlHelper
 
-import static org.hamcrest.Matchers.is
-import static org.hamcrest.Matchers.notNullValue
+import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
@@ -557,5 +556,151 @@ class EvolutionTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response3))
+    }
+
+    @Test
+    void addVTodo() {
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                        VERSION:2.0
+                        BEGIN:VTODO
+                        UID:20151230T170626Z-21291-1000-3483-0@localhost
+                        DTSTAMP:20151224T092905Z
+                        SUMMARY:add VTodo
+                        DESCRIPTION:description
+                        DUE;VALUE=DATE:20161231
+                        DTSTART;VALUE=DATE:20161216
+                        CLASS:CONFIDENTIAL
+                        CATEGORIES:Business
+                        CATEGORIES:International
+                        PERCENT-COMPLETE:93
+                        STATUS:IN-PROCESS
+                        PRIORITY:7
+                        URL:http://www.google.de/
+                        SEQUENCE:1
+                        CREATED:20151230T170748Z
+                        LAST-MODIFIED:20151230T170748Z
+                        ATTACH;VALUE=BINARY;ENCODING=BASE64;
+                         X-EVOLUTION-CALDAV-ATTACHMENT-NAME=20151230T170626Z-21291-1000-3483-0@loca
+                         lhost-file.txt:ZW1wdHkgZmlsZQo=
+                        END:VTODO
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def response2 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                        VERSION:2.0
+                        BEGIN:VTODO
+                        UID:20151230T170626Z-21291-1000-3483-0@localhost
+                        DTSTAMP:20151224T092905Z
+                        SUMMARY:add VTodo
+                        DESCRIPTION:description
+                        DUE;VALUE=DATE:20161231
+                        DTSTART;VALUE=DATE:20161216
+                        CLASS:CONFIDENTIAL
+                        CATEGORIES:Business
+                        CATEGORIES:International
+                        PERCENT-COMPLETE:93
+                        STATUS:IN-PROCESS
+                        PRIORITY:7
+                        URL:http://www.google.de/
+                        SEQUENCE:1
+                        CREATED:20151230T170748Z
+                        LAST-MODIFIED:20151230T170748Z
+                        ATTACH;VALUE=BINARY;ENCODING=BASE64;X-EVOLUTION-CALDAV-ATTACHMENT-NAME=20151230T170626Z-21291-1000-3483-0@localhost-file.txt:ZW1wdHkgZmlsZQo=
+                        END:VTODO
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCalendarContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("672")))
+                .andExpect(text(response2))
+                .andReturn()
+    }
+
+    @Test
+    void addAndUpdateVTodo() {
+        addVTodo()
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                        VERSION:2.0
+                        BEGIN:VTODO
+                        UID:20151230T170626Z-21291-1000-3483-0@localhost
+                        DTSTAMP:20151224T092905Z
+                        SUMMARY:add VTodo
+                        DESCRIPTION:description
+                        DUE;VALUE=DATE:20161231
+                        DTSTART;VALUE=DATE:20161216
+                        PERCENT-COMPLETE:93
+                        STATUS:IN-PROCESS
+                        PRIORITY:7
+                        SEQUENCE:1
+                        CREATED:20151230T170748Z
+                        LAST-MODIFIED:20151230T170748Z
+                        END:VTODO
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def response2 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                        VERSION:2.0
+                        BEGIN:VTODO
+                        UID:20151230T170626Z-21291-1000-3483-0@localhost
+                        DTSTAMP:20151224T092905Z
+                        SUMMARY:add VTodo
+                        DESCRIPTION:description
+                        DUE;VALUE=DATE:20161231
+                        DTSTART;VALUE=DATE:20161216
+                        PERCENT-COMPLETE:93
+                        STATUS:IN-PROCESS
+                        PRIORITY:7
+                        SEQUENCE:1
+                        CREATED:20151230T170748Z
+                        LAST-MODIFIED:20151230T170748Z
+                        END:VTODO
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCalendarContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("435")))
+                .andExpect(header().string(ETAG, is(currentEtag)))
+                .andExpect(text(response2))
     }
 }

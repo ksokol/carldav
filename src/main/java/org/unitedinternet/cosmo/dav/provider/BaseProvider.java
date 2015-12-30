@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import carldav.jackrabbit.webdav.CustomMultiStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
@@ -122,7 +123,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new CosmoDavException(de);
         }
 
-        MultiStatus ms = new MultiStatus();
+        MultiStatus ms = new CustomMultiStatus();
         ms.addResourceProperties(resource, props, type, depth);
         
         response.sendMultiStatus(ms);
@@ -142,7 +143,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         DavPropertySet set = request.getProppatchSetProperties();
         DavPropertyNameSet remove = request.getProppatchRemoveProperties();
 
-        MultiStatus ms = new MultiStatus();
+        MultiStatus ms = new CustomMultiStatus();
         MultiStatusResponse msr = resource.updateProperties(set, remove);
         ms.addResponse(msr);
 

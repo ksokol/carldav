@@ -3,10 +3,8 @@ package calendar
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.xml.XmlHelper
-import testutil.xmlunit.XmlMatcher
 
 import static org.hamcrest.Matchers.not
 import static org.hamcrest.Matchers.notNullValue
@@ -707,7 +705,6 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
-                .andDo(MockMvcResultHandlers.print())
                 .andReturn().getResponse().getContentAsString()
 
         def getctag = XmlHelper.getctag(result1)
@@ -734,7 +731,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                     </D:propstat>
                                 </D:response>
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                                    <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
@@ -750,7 +747,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                     </D:propstat>
                                 </D:response>
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
+                                    <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>

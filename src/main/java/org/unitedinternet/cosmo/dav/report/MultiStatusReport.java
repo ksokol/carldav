@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
+import carldav.jackrabbit.webdav.CustomMultiStatus;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
@@ -29,7 +30,7 @@ import org.w3c.dom.Element;
  */
 public abstract class MultiStatusReport extends ReportBase {
 
-    private MultiStatus multistatus = new MultiStatus();
+    private MultiStatus multistatus = new CustomMultiStatus();
     private int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
 

@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.dav.provider;
 
 import java.io.IOException;
 
+import carldav.jackrabbit.webdav.CustomMultiStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.MultiStatus;
@@ -85,7 +86,7 @@ public class CalendarCollectionProvider extends CollectionProvider {
                 return;
             }
     
-            MultiStatus ms = new MultiStatus();
+            MultiStatus ms = new CustomMultiStatus();
             ms.addResponse(msr);
             response.sendMultiStatus(ms);
         

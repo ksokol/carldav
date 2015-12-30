@@ -4,7 +4,6 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import org.xmlunit.builder.Input
 import testutil.xml.XmlHelper
 import testutil.xmlunit.XmlMatcher
 
@@ -22,6 +21,7 @@ import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
+import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol
@@ -386,7 +386,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        assertThat(Input.fromString(result1).build(), XmlMatcher.equalXml(response1))
+        assertThat(result1, equalXml(response1))
     }
 
     @Test
@@ -446,7 +446,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        assertThat(Input.fromString(result1).build(), XmlMatcher.equalXml(response1))
+        assertThat(result1, equalXml(response1))
     }
 
     @Test

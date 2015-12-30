@@ -4,7 +4,6 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import org.xmlunit.builder.Input
 import testutil.builder.GeneralData
 import testutil.xmlunit.XmlMatcher
 
@@ -28,6 +27,7 @@ import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.*
 import static testutil.mockmvc.CustomResultMatchers.*
+import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol
@@ -337,7 +337,7 @@ public class CalendarTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        assertThat(Input.fromString(result1).build(), XmlMatcher.equalXml(response1))
+        assertThat(result1, equalXml(response1))
     }
 
     @Test

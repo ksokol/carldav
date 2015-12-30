@@ -607,4 +607,62 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(etag(notNullValue()))
                 .andExpect(etag(not(currentEtag)))
     }
+
+    @Test
+    public void calendarQueryVEventTimeRange() {
+        addVEvent();
+
+        def request1 = """\
+                        <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/">
+                            <D:prop>
+                                <D:getetag/>
+                            </D:prop>
+                        </D:propfind>"""
+
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML)
+                .content(request1))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def etag = new XmlSlurper().parseText(result1).response[1].propstat.prop.getetag.text()
+
+        assertThat(etag, notNullValue())
+
+        def request2 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:time-range start="20141120T181910Z" end="20990129T181910Z"/>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${etag}</D:getetag>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+
+        mockMvc.perform(report("/dav/{email}/calendar", USER01)
+                .contentType(TEXT_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
 }

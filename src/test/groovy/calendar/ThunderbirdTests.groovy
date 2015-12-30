@@ -3,6 +3,7 @@ package calendar
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.xml.XmlHelper
 import testutil.xmlunit.XmlMatcher
@@ -681,5 +682,288 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .header("Depth", "1"))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
+    }
+
+    @Test
+    public void fetchingCalendarFirstTime() {
+        addVEvent()
+        def getetag1 = currentEtag
+
+        addVTodo()
+        def getetag2 = currentEtag
+
+        def request1 = """\
+                        <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:prop>
+                                <D:resourcetype/>
+                                <D:getcontenttype />
+                                <CS:getctag/>
+                            </D:prop>
+                        </D:propfind>"""
+
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString()
+
+        def getctag = XmlHelper.getctag(result1)
+
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getcontenttype/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:resourcetype>
+                                                <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                                <D:collection/>
+                                            </D:resourcetype>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/">${getctag}</CS:getctag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
+                                            <D:resourcetype/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
+                                            <D:resourcetype/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result1, equalXml(response1))
+
+        def request2 = """\
+                        <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:prop>
+                                <D:getetag />
+                                <C:calendar-data />
+                            </D:prop>
+                            <D:href>/dav/test01%40localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
+                        </C:calendar-multiget>"""
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01%40localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag1}</D:getetag>
+                                            <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                                PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
+                                                VERSION:2.0&#13;
+                                                BEGIN:VTIMEZONE&#13;
+                                                TZID:Europe/Stockholm&#13;
+                                                BEGIN:DAYLIGHT&#13;
+                                                TZOFFSETFROM:+0100&#13;
+                                                TZOFFSETTO:+0200&#13;
+                                                TZNAME:CEST&#13;
+                                                DTSTART:19700329T020000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
+                                                END:DAYLIGHT&#13;
+                                                BEGIN:STANDARD&#13;
+                                                TZOFFSETFROM:+0200&#13;
+                                                TZOFFSETTO:+0100&#13;
+                                                TZNAME:CET&#13;
+                                                DTSTART:19701025T030000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
+                                                END:STANDARD&#13;
+                                                END:VTIMEZONE&#13;
+                                                BEGIN:VEVENT&#13;
+                                                CREATED:20151225T180011Z&#13;
+                                                LAST-MODIFIED:20151225T180151Z&#13;
+                                                DTSTAMP:20151225T180151Z&#13;
+                                                UID:0c3112fa-ba2b-4cb4-b495-1b842e3f3b77&#13;
+                                                SUMMARY:VEvent add&#13;
+                                                ORGANIZER;RSVP=TRUE;PARTSTAT=ACCEPTED;ROLE=CHAIR:mailto:kamill@test01@localhost.de&#13;
+                                                ATTENDEE;RSVP=TRUE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT:attendee1&#13;
+                                                RRULE:FREQ=DAILY;UNTIL=20160226T190000Z;INTERVAL=3&#13;
+                                                CATEGORIES:Business&#13;
+                                                DTSTART;TZID=Europe/Stockholm:20151209T200000&#13;
+                                                DTEND;TZID=Europe/Stockholm:20151209T215500&#13;
+                                                TRANSP:OPAQUE&#13;
+                                                LOCATION:location&#13;
+                                                DESCRIPTION:description&#13;
+                                                X-MOZ-SEND-INVITATIONS:TRUE&#13;
+                                                X-MOZ-SEND-INVITATIONS-UNDISCLOSED:FALSE&#13;
+                                                BEGIN:VALARM&#13;
+                                                ACTION:DISPLAY&#13;
+                                                TRIGGER;VALUE=DATE-TIME:20151225T190000Z&#13;
+                                                DESCRIPTION:Default Mozilla Description&#13;
+                                                END:VALARM&#13;
+                                                END:VEVENT&#13;
+                                                END:VCALENDAR&#13;
+                                            </C:calendar-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag2}</D:getetag>
+                                            <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                                PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
+                                                VERSION:2.0&#13;
+                                                BEGIN:VTIMEZONE&#13;
+                                                TZID:Europe/Berlin&#13;
+                                                BEGIN:DAYLIGHT&#13;
+                                                TZOFFSETFROM:+0100&#13;
+                                                TZOFFSETTO:+0200&#13;
+                                                TZNAME:CEST&#13;
+                                                DTSTART:19700329T020000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
+                                                END:DAYLIGHT&#13;
+                                                BEGIN:STANDARD&#13;
+                                                TZOFFSETFROM:+0200&#13;
+                                                TZOFFSETTO:+0100&#13;
+                                                TZNAME:CET&#13;
+                                                DTSTART:19701025T030000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
+                                                END:STANDARD&#13;
+                                                END:VTIMEZONE&#13;
+                                                BEGIN:VTIMEZONE&#13;
+                                                TZID:Europe/Stockholm&#13;
+                                                BEGIN:DAYLIGHT&#13;
+                                                TZOFFSETFROM:+0100&#13;
+                                                TZOFFSETTO:+0200&#13;
+                                                TZNAME:CEST&#13;
+                                                DTSTART:19700329T020000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
+                                                END:DAYLIGHT&#13;
+                                                BEGIN:STANDARD&#13;
+                                                TZOFFSETFROM:+0200&#13;
+                                                TZOFFSETTO:+0100&#13;
+                                                TZNAME:CET&#13;
+                                                DTSTART:19701025T030000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
+                                                END:STANDARD&#13;
+                                                END:VTIMEZONE&#13;
+                                                BEGIN:VTODO&#13;
+                                                CREATED:20151225T184045Z&#13;
+                                                LAST-MODIFIED:20151225T184131Z&#13;
+                                                DTSTAMP:20151225T184131Z&#13;
+                                                UID:00396957-a9f9-482e-8c51-96d20889ab56&#13;
+                                                SUMMARY:add task&#13;
+                                                STATUS:IN-PROCESS&#13;
+                                                RRULE:FREQ=WEEKLY;UNTIL=20151231T222500Z&#13;
+                                                CATEGORIES:Customer&#13;
+                                                DTSTART;TZID=Europe/Berlin:20151201T232500&#13;
+                                                DUE;TZID=Europe/Stockholm:20151224T232500&#13;
+                                                LOCATION:location&#13;
+                                                PERCENT-COMPLETE:25&#13;
+                                                DESCRIPTION:description&#13;
+                                                BEGIN:VALARM&#13;
+                                                ACTION:DISPLAY&#13;
+                                                TRIGGER;VALUE=DURATION:-PT30M&#13;
+                                                DESCRIPTION:Default Mozilla Description&#13;
+                                                END:VALARM&#13;
+                                                END:VTODO&#13;
+                                                END:VCALENDAR&#13;
+                                            </C:calendar-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request2)
+                .contentType(TEXT_XML)
+                .header("Depth", "1"))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+
+        def request3 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:time-range start="20151125T151138Z" end="20160203T151138Z"/>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response3 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag1}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar", USER01)
+                .contentType(TEXT_XML)
+                .content(request3)
+                .header("Depth", "1"))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response3))
+
+        def request4 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar", USER01)
+                .contentType(TEXT_XML)
+                .content(request4)
+                .header("Depth", "1"))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response3))
     }
 }

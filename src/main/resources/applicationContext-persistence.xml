@@ -32,7 +32,6 @@
                 <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</prop>
                 <prop key="hibernate.jdbc.batch_size">25</prop>
                 <prop key="hibernate.connection.release_mode">after_transaction</prop>
-                <prop key="hibernate.generate_statistics">true</prop>
                 <prop key="hibernate.hbm2ddl.auto">${spring.jpa.hibernate.ddl-auto:update}</prop>
             </props>
         </property>

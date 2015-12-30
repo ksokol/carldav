@@ -4,7 +4,7 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import testutil.xml.XmlHelper
+import testutil.helper.XmlHelper
 
 import static org.hamcrest.Matchers.not
 import static org.hamcrest.Matchers.notNullValue

@@ -1,4 +1,4 @@
-package testutil.xml
+package testutil.helper
 
 import static org.hamcrest.Matchers.notNullValue
 import static org.junit.Assert.assertThat

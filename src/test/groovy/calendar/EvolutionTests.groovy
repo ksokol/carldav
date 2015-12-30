@@ -4,13 +4,12 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import testutil.xml.XmlHelper
+import testutil.helper.XmlHelper
 
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
-import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
@@ -20,7 +19,7 @@ import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
-import static testutil.xml.XmlHelper.getctag
+import static XmlHelper.getctag
 import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**

@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64
 import org.junit.Test
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralResponse
+import testutil.helper.Base64Helper
 
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.*
 import static testutil.builder.GeneralData.CALDAV_EVENT
+import static testutil.helper.Base64Helper.user
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomResultMatchers.*
 
@@ -71,9 +73,5 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
                 .content(CALDAV_EVENT))
                 .andExpect(status().isUnauthorized())
                 .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
-    }
-
-    private static String user(String username, String password) {
-        return "Basic " + Base64.encodeBase64String((username + ":" + password).getBytes());
     }
 }

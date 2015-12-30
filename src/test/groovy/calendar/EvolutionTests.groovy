@@ -1,6 +1,5 @@
 package calendar
 
-import org.hamcrest.Matchers
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
@@ -332,7 +331,83 @@ class EvolutionTests extends IntegrationTestSupport {
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
-                .andExpect(header().string(CONTENT_LENGTH, Matchers.is("688")))
+                .andExpect(header().string(CONTENT_LENGTH, is("688")))
                 .andExpect(text(response1))
+    }
+
+    @Test
+    void addAndUpdateVEvent() {
+        addVEventWithAttachment()
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                        VERSION:2.0
+                        BEGIN:VEVENT
+                        UID:20151230T141828Z-27136-1000-3483-70@localhost
+                        DTSTAMP:20151230T121137Z
+                        DTSTART;VALUE=DATE:20151216
+                        DTEND;VALUE=DATE:20151217
+                        SEQUENCE:2
+                        SUMMARY:attachment
+                        CLASS:PUBLIC
+                        TRANSP:TRANSPARENT
+                        CREATED:20151230T141924Z
+                        LAST-MODIFIED:20151230T141924Z
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        MvcResult result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def response1 = """\
+                            BEGIN:VCALENDAR
+                            CALSCALE:GREGORIAN
+                            PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                            VERSION:2.0
+                            BEGIN:VEVENT
+                            UID:20151230T141828Z-27136-1000-3483-70@localhost
+                            DTSTAMP:20151230T121137Z
+                            DTSTART;VALUE=DATE:20151216
+                            DTEND;VALUE=DATE:20151217
+                            SEQUENCE:2
+                            SUMMARY:attachment
+                            CLASS:PUBLIC
+                            TRANSP:TRANSPARENT
+                            CREATED:20151230T141924Z
+                            LAST-MODIFIED:20151230T141924Z
+                            END:VEVENT
+                            END:VCALENDAR
+                            """.stripIndent()
+
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCalendarContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("398")))
+                .andExpect(text(response1))
+    }
+
+    @Test
+    void deleteVEvent() {
+        addVEventWithAttachment()
+
+        mockMvc.perform(delete("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andReturn()
+
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
+                .andExpect(status().isNotFound())
     }
 }

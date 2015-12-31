@@ -378,4 +378,310 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(header().string(CONTENT_LENGTH, is("5716")))
                 .andExpect(text(veventResponse4))
     }
+
+    @Test
+    void addVTodo() {
+        def request1 = """\
+                    BEGIN:VCALENDAR
+                    VERSION:2.0
+                    PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x
+                    BEGIN:VTODO
+                    DTSTAMP:20151231T115937Z
+                    UID:6f490b02-77d7-442e-abd3-1e0bb14c3259
+                    CREATED:20151231T115922Z
+                    LAST-MODIFIED:20151231T115922Z
+                    SUMMARY:add vtodo
+                    STATUS:NEEDS-ACTION
+                    END:VTODO
+                    END:VCALENDAR
+                    """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                        <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                            <prop>
+                                <getetag/>
+                            </prop>
+                            <CAL:filter>
+                                <CAL:comp-filter name="VCALENDAR">
+                                    <CAL:comp-filter name="VTODO"/>
+                                </CAL:comp-filter>
+                            </CAL:filter>
+                        </CAL:calendar-query>"""
+
+        def response2 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${currentEtag}</D:getetag>
+                                    </D:prop>
+                                <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(xml(response2))
+
+        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCalendarContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("303")))
+                .andExpect(text(request1))
+    }
+
+    @Test
+    void deleteVTodo() {
+        addVTodo()
+
+        mockMvc.perform(delete("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andReturn()
+
+        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
+                .andExpect(status().isNotFound())
+    }
+
+    @Test
+    void addAndUpdateVTodo() {
+        addVTodo()
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        VERSION:2.0
+                        PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x
+                        BEGIN:VTODO
+                        DTSTAMP:20151231T120107Z
+                        UID:6f490b02-77d7-442e-abd3-1e0bb14c3259
+                        SEQUENCE:1
+                        CREATED:20151231T115922Z
+                        LAST-MODIFIED:20151231T120035Z
+                        SUMMARY:add vtodo
+                        LOCATION:location
+                        DESCRIPTION:description\\n[ ] check1\\n[x] check2
+                        URL:http://google.de
+                        PRIORITY:5
+                        CLASS:PRIVATE
+                        STATUS:CANCELLED
+                        DUE;TZID=Africa/Windhoek:20160131T130000
+                        DTSTART;TZID=Africa/Windhoek:20151223T060000
+                        PERCENT-COMPLETE:50
+                        END:VTODO
+                        BEGIN:VTIMEZONE
+                        TZID:Africa/Windhoek
+                        TZURL:http://tzurl.org/zoneinfo/Africa/Windhoek
+                        X-LIC-LOCATION:Africa/Windhoek
+                        BEGIN:DAYLIGHT
+                        TZOFFSETFROM:+0100
+                        TZOFFSETTO:+0200
+                        TZNAME:WAST
+                        DTSTART:19940904T020000
+                        RRULE:FREQ=YEARLY;BYMONTH=9;BYDAY=1SU
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        TZNAME:WAT
+                        DTSTART:19950402T020000
+                        RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU
+                        END:STANDARD
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+010824
+                        TZOFFSETTO:+0130
+                        TZNAME:SWAT
+                        DTSTART:18920208T000000
+                        RDATE:18920208T000000
+                        END:STANDARD
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+0130
+                        TZOFFSETTO:+0200
+                        TZNAME:SAST
+                        DTSTART:19030301T000000
+                        RDATE:19030301T000000
+                        END:STANDARD
+                        BEGIN:DAYLIGHT
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0300
+                        TZNAME:SAST
+                        DTSTART:19420920T020000
+                        RDATE:19420920T020000
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+0300
+                        TZOFFSETTO:+0200
+                        TZNAME:SAST
+                        DTSTART:19430321T020000
+                        RDATE:19430321T020000
+                        END:STANDARD
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0200
+                        TZNAME:CAT
+                        DTSTART:19900321T000000
+                        RDATE:19900321T000000
+                        END:STANDARD
+                        BEGIN:STANDARD
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        TZNAME:WAT
+                        DTSTART:19940403T000000
+                        RDATE:19940403T000000
+                        END:STANDARD
+                        END:VTIMEZONE
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-Match", "*"))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                    <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                        <prop>
+                            <getetag/>
+                        </prop>
+                        <CAL:filter>
+                            <CAL:comp-filter name="VCALENDAR">
+                                <CAL:comp-filter name="VTODO"/>
+                            </CAL:comp-filter>
+                        </CAL:filter>
+                    </CAL:calendar-query>"""
+
+        def response3 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                          <D:response>
+                            <D:href>/dav/test01@localhost.de/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics</D:href>
+                            <D:propstat>
+                              <D:prop>
+                                <D:getetag>${currentEtag}</D:getetag>
+                              </D:prop>
+                              <D:status>HTTP/1.1 200 OK</D:status>
+                            </D:propstat>
+                          </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(xml(response3))
+
+        def response4 = """\
+                            BEGIN:VCALENDAR
+                            VERSION:2.0
+                            PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x
+                            BEGIN:VTODO
+                            DTSTAMP:20151231T120107Z
+                            UID:6f490b02-77d7-442e-abd3-1e0bb14c3259
+                            SEQUENCE:1
+                            CREATED:20151231T115922Z
+                            LAST-MODIFIED:20151231T120035Z
+                            SUMMARY:add vtodo
+                            LOCATION:location
+                            DESCRIPTION:description\\n[ ] check1\\n[x] check2
+                            URL:http://google.de
+                            PRIORITY:5
+                            CLASS:PRIVATE
+                            STATUS:CANCELLED
+                            DUE;TZID=Africa/Windhoek:20160131T130000
+                            DTSTART;TZID=Africa/Windhoek:20151223T060000
+                            PERCENT-COMPLETE:50
+                            END:VTODO
+                            BEGIN:VTIMEZONE
+                            TZID:Africa/Windhoek
+                            TZURL:http://tzurl.org/zoneinfo/Africa/Windhoek
+                            X-LIC-LOCATION:Africa/Windhoek
+                            BEGIN:DAYLIGHT
+                            TZOFFSETFROM:+0100
+                            TZOFFSETTO:+0200
+                            TZNAME:WAST
+                            DTSTART:19940904T020000
+                            RRULE:FREQ=YEARLY;BYMONTH=9;BYDAY=1SU
+                            END:DAYLIGHT
+                            BEGIN:STANDARD
+                            TZOFFSETFROM:+0200
+                            TZOFFSETTO:+0100
+                            TZNAME:WAT
+                            DTSTART:19950402T020000
+                            RRULE:FREQ=YEARLY;BYMONTH=4;BYDAY=1SU
+                            END:STANDARD
+                            BEGIN:STANDARD
+                            TZOFFSETFROM:+010824
+                            TZOFFSETTO:+0130
+                            TZNAME:SWAT
+                            DTSTART:18920208T000000
+                            RDATE:18920208T000000
+                            END:STANDARD
+                            BEGIN:STANDARD
+                            TZOFFSETFROM:+0130
+                            TZOFFSETTO:+0200
+                            TZNAME:SAST
+                            DTSTART:19030301T000000
+                            RDATE:19030301T000000
+                            END:STANDARD
+                            BEGIN:DAYLIGHT
+                            TZOFFSETFROM:+0200
+                            TZOFFSETTO:+0300
+                            TZNAME:SAST
+                            DTSTART:19420920T020000
+                            RDATE:19420920T020000
+                            END:DAYLIGHT
+                            BEGIN:STANDARD
+                            TZOFFSETFROM:+0300
+                            TZOFFSETTO:+0200
+                            TZNAME:SAST
+                            DTSTART:19430321T020000
+                            RDATE:19430321T020000
+                            END:STANDARD
+                            BEGIN:STANDARD
+                            TZOFFSETFROM:+0200
+                            TZOFFSETTO:+0200
+                            TZNAME:CAT
+                            DTSTART:19900321T000000
+                            RDATE:19900321T000000
+                            END:STANDARD
+                            BEGIN:STANDARD
+                            TZOFFSETFROM:+0200
+                            TZOFFSETTO:+0100
+                            TZNAME:WAT
+                            DTSTART:19940403T000000
+                            RDATE:19940403T000000
+                            END:STANDARD
+                            END:VTIMEZONE
+                            END:VCALENDAR
+                            """.stripIndent()
+
+        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCalendarContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("1736")))
+                .andExpect(text(response4))
+    }
 }

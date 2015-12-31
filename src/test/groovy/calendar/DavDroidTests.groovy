@@ -6,11 +6,9 @@ import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION
-import static org.hamcrest.Matchers.not
-import static org.hamcrest.Matchers.notNullValue
+import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
-import static org.springframework.http.HttpHeaders.ALLOW
-import static org.springframework.http.HttpHeaders.ETAG
+import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
@@ -325,9 +323,10 @@ class DavDroidTests extends IntegrationTestSupport {
 
     @Test
     void addAndUpdateVEvent() {
-        addVEvent()
-
         def veventRequest1 = new File('src/test/resources/calendar/davdroid/addvevent_request1.ics').getText('UTF-8').replace("DESCRIPTION:DESCRIPTION", "DESCRIPTION:DESCRIPTION update")
+        def veventResponse4 = new File('src/test/resources/calendar/davdroid/addandupdatevevent_response4.ics').getText('UTF-8')
+
+        addVEvent()
 
         def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
@@ -364,12 +363,19 @@ class DavDroidTests extends IntegrationTestSupport {
                           </D:response>
                         </D:multistatus>"""
 
-
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(xml(response3))
+
+        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCalendarContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("5716")))
+                .andExpect(text(veventResponse4))
     }
 }

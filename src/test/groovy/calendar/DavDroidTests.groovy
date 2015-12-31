@@ -6,13 +6,13 @@ import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
 import static com.google.common.net.HttpHeaders.AUTHORIZATION
+import static org.hamcrest.Matchers.not
 import static org.hamcrest.Matchers.notNullValue
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
@@ -308,5 +308,68 @@ class DavDroidTests extends IntegrationTestSupport {
                             </D:multistatus>"""
 
         assertThat(result3, equalXml(response3))
+    }
+
+    @Test
+    void deleteVEvent() {
+        addVEvent()
+
+        mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andReturn()
+
+        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
+                .andExpect(status().isNotFound())
+    }
+
+    @Test
+    void addAndUpdateVEvent() {
+        addVEvent()
+
+        def veventRequest1 = new File('src/test/resources/calendar/davdroid/addvevent_request1.ics').getText('UTF-8').replace("DESCRIPTION:DESCRIPTION", "DESCRIPTION:DESCRIPTION update")
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(veventRequest1)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                    <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                        <prop>
+                            <getetag/>
+                        </prop>
+                        <CAL:filter>
+                            <CAL:comp-filter name="VCALENDAR">
+                                <CAL:comp-filter name="VEVENT"/>
+                            </CAL:comp-filter>
+                        </CAL:filter>
+                    </CAL:calendar-query>"""
+
+        def response3 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                          <D:response>
+                            <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                            <D:propstat>
+                              <D:prop>
+                                <D:getetag>${currentEtag}</D:getetag>
+                              </D:prop>
+                              <D:status>HTTP/1.1 200 OK</D:status>
+                            </D:propstat>
+                          </D:response>
+                        </D:multistatus>"""
+
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(xml(response3))
     }
 }

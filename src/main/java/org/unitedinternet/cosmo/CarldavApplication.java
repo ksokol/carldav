@@ -9,7 +9,7 @@ import org.springframework.boot.context.embedded.DelegatingFilterProxyRegistrati
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
-import org.unitedinternet.cosmo.servlet.SimpleDavDispatcherServlet;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.Servlet;
 
@@ -32,7 +32,9 @@ public class CarldavApplication {
 
     @Bean
     public Servlet dispatcherServlet() {
-        return new SimpleDavDispatcherServlet();
+        final DispatcherServlet dispatcherServlet = new DispatcherServlet();
+        dispatcherServlet.setDispatchOptionsRequest(true);
+        return dispatcherServlet;
     }
 
 }

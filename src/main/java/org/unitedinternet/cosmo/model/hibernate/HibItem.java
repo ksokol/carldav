@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.StampTombstone;
 import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.User;
 
@@ -174,14 +173,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
             throw new IllegalArgumentException("stamp cannot be null");
         }
 
-        // remove old tombstone if exists
-        for(Iterator<Tombstone> it=tombstones.iterator();it.hasNext();) {
-            Tombstone ts = it.next();
-            if(ts instanceof StampTombstone && ((StampTombstone) ts).getStampType().equals(stamp.getType())) {
-                it.remove();
-            }
-        }
-
         stamp.setItem(this);
         stamps.add(stamp);
     }
@@ -196,9 +187,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
         }
 
         stamps.remove(stamp);
-
-        // add tombstone for tracking purposes
-        tombstones.add(new HibStampTombstone(this, stamp));
     }
 
     /* (non-Javadoc)
@@ -244,15 +232,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
             throw new IllegalArgumentException("attribute cannot be null");
         }
 
-        // remove old tombstone if exists
-        for(Iterator<Tombstone> it=tombstones.iterator();it.hasNext();) {
-            Tombstone ts = it.next();
-            if(ts instanceof AttributeTombstone && 
-               ((AttributeTombstone) ts).getQName().equals(attribute.getQName())) {
-                it.remove();
-            }
-        }
-        
         ((HibAttribute) attribute).validate();
         attribute.setItem(this);
         attributes.put(attribute.getQName(), attribute);
@@ -271,7 +250,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     public void removeAttribute(QName qname) {
         if(attributes.containsKey(qname)) {
             attributes.remove(qname);
-            tombstones.add(new HibAttributeTombstone(this, qname));
         }
     }
 
@@ -533,15 +511,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     public Set<Tombstone> getTombstones() {
         return Collections.unmodifiableSet(tombstones);
     }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#addTombstone(org.unitedinternet.cosmo.model.Tombstone)
-     */
-    public void addTombstone(Tombstone tombstone) {
-        tombstone.setItem(this);
-        tombstones.add(tombstone);
-    }
-
 
     /**
      * Item uid determines equality 

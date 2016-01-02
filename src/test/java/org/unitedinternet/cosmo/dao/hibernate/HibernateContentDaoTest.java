@@ -37,10 +37,8 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ItemTombstone;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TimestampAttribute;
-import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
@@ -691,13 +689,7 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertNull(queryItem);
         
         root = (CollectionItem) contentDao.getRootItem(user);
-        Assert.assertEquals(root.getTombstones().size(), 1);
-        
-        Tombstone ts = root.getTombstones().iterator().next();
-        
-        Assert.assertTrue(ts instanceof ItemTombstone);
-        Assert.assertEquals(((ItemTombstone) ts).getItemUid(), newItem.getUid());
-        
+
         item = generateTestContent();
         item.setUid(newItem.getUid());
         
@@ -708,9 +700,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
         
         Assert.assertNotNull(queryItem);
-        
-        root = (CollectionItem) contentDao.getRootItem(user);
-        Assert.assertEquals(root.getTombstones().size(), 0);
     }
 
     /**

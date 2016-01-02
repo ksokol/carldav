@@ -15,16 +15,14 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import javax.validation.ConstraintViolationException;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -43,7 +41,8 @@ import org.unitedinternet.cosmo.model.hibernate.HibMessageStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.validation.ConstraintViolationException;
 
 /**
  * Test for hibernate content dao stamping.
@@ -275,7 +274,6 @@ public class HibernateContentDaoStampingTest extends AbstractHibernateDaoTestCas
         queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
         Assert.assertNotNull(queryItem);
         Assert.assertEquals(queryItem.getStamps().size(),0);
-        Assert.assertEquals(1, queryItem.getTombstones().size());
         
         event = new HibEventStamp();
         event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));

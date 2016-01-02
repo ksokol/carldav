@@ -15,21 +15,13 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -41,8 +33,12 @@ import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItemTombstone;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
+import javax.validation.ConstraintViolationException;
 
 /**
  * Implementation of ContentDao using hibernate persistence objects
@@ -514,8 +510,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
 
     private void removeContentRecursive(ContentItem content) {
-        removeContentCommon(content);
-
         // Remove modifications
         if (content instanceof NoteItem) {
             NoteItem note = (NoteItem) content;
@@ -523,25 +517,10 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
                 // remove mod from master's collection
                 note.getModifies().removeModification(note);
                 note.getModifies().updateTimestamp();
-            } else {
-                // mods will be removed by Hibernate cascading rules, but we
-                // need to add tombstones for mods
-                for (NoteItem mod : note.getModifications()) {
-                    removeContentCommon(mod);
-                }
             }
         }
 
         getSession().delete(content);
-    }
-
-    private void removeContentCommon(ContentItem content) {
-        // Add a tombstone to each parent collection to track
-        // when the removal occurred.
-        for (CollectionItem parent : content.getParents()) {
-            getHibItem(parent).addTombstone(new HibItemTombstone(parent, content));
-            getSession().update(parent);
-        }
     }
 
     private void removeCollectionRecursive(CollectionItem collection) {
@@ -586,7 +565,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             return;
         }
 
-        getHibItem(collection).addTombstone(new HibItemTombstone(collection, note));
         ((HibItem) note).removeParent(collection);
 
         for (NoteItem mod : note.getModifications()) {

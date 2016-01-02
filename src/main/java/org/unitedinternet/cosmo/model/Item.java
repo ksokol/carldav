@@ -199,8 +199,6 @@ public interface Item extends AuditableObject{
      */
     void setIsActive(Boolean isActive);
 
-    Set<Tombstone> getTombstones();
-
     Item copy();
 
 }

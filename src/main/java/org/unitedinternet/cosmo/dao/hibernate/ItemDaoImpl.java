@@ -47,7 +47,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItemTombstone;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -351,7 +350,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 ((HibItem) item).addParent(parent);
 
                 // Remove item from old parent collection
-                getHibItem(oldParent).addTombstone(new HibItemTombstone(oldParent, item));
                 ((HibItem) item).removeParent(oldParent);
             }
 
@@ -390,7 +388,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             // lazy-loading of this data
             Hibernate.initialize(item.getAttributes());
             Hibernate.initialize(item.getStamps());
-            Hibernate.initialize(item.getTombstones());
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -667,7 +664,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             return;
         }
 
-        getHibItem(collection).addTombstone(new HibItemTombstone(collection, item));
         ((HibItem) item).removeParent(collection);
 
         // If the item belongs to no collection, then it should

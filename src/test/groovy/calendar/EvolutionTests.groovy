@@ -5,6 +5,7 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
+import testutil.mockmvc.CustomMediaTypes
 
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
@@ -16,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
@@ -789,6 +791,44 @@ class EvolutionTests extends IntegrationTestSupport {
                 .content(request2)
                 .header("Depth", "1"))
                 .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
+
+    @Test
+    void addVCard() {
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:3.0
+                        URL:
+                        TITLE:
+                        ROLE:
+                        X-EVOLUTION-MANAGER:
+                        X-EVOLUTION-ASSISTANT:
+                        NICKNAME:
+                        X-EVOLUTION-SPOUSE:
+                        NOTE:
+                        FN:test
+                        N:;test;;;
+                        X-EVOLUTION-FILE-AS:test
+                        X-EVOLUTION-BLOG-URL:
+                        CALURI:
+                        FBURL:
+                        X-EVOLUTION-VIDEO-URL:
+                        X-MOZILLA-HTML:FALSE
+                        UID:BA9B77D0-87105168-1311D5B6
+                        END:VCARD
+                        """.stripIndent()
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                            \t<C:supported-calendar-data>Calendar data of type text/vcard not allowed; only text/calendar</C:supported-calendar-data>
+                            </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/BA9B77D0-87105168-1311D5B6.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isForbidden())
                 .andExpect(xml(response1))
     }
 

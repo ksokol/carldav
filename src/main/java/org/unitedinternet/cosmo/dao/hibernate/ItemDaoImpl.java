@@ -43,7 +43,6 @@ import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -344,8 +343,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
             item.setName(moveName);
             if (!parent.getUid().equals(oldParent.getUid())) {
-                ((HibCollectionItem) parent).removeTombstone(item);
-
                 // Copy over existing CollectionItemDetails
                 ((HibItem) item).addParent(parent);
 
@@ -678,7 +675,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         verifyItemNameUnique(item, collection);
         getSession().update(item);
         getSession().update(collection);
-        ((HibCollectionItem) collection).removeTombstone(item);
         ((HibItem) item).addParent(collection);
     }
 

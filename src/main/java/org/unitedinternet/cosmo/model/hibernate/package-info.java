@@ -77,13 +77,6 @@
         // FIXME check on class == HibCollectionItem  or select from HibCollectionItem
         @NamedQuery(name = "item.by.ownerName.name.nullParent", query = "select i from "
                 + "HibCollectionItem i, HibUser u where i.owner=u and u.username=:username and" + " i.name=:name"),
-        @NamedQuery(name = "contentItem.by.parent.timestamp", query = "select item from HibContentItem "
-                + "item left join fetch item.stamps left join fetch item.attributes left join fetch"
-                + " item.tombstones join item.parentDetails pd where pd.primaryKey.collection=:parent and "
-                + "item.modifiedDate>:timestamp"),
-        @NamedQuery(name = "contentItem.by.parent", query = "select item from HibContentItem item left "
-                + "join fetch item.stamps left join fetch item.attributes left join fetch item.tombstones"
-                + " join item.parentDetails pd where pd.primaryKey.collection=:parent"),
         @NamedQuery(name = "noteItemId.by.parent.icaluid", query = "select item.id from HibNoteItem item"
                 + " join item.parentDetails pd where pd.primaryKey.collection.id=:parentid and "
                 + "item.icalUid=:icaluid and item.modifies is null"),

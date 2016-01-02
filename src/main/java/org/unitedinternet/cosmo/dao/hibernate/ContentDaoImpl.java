@@ -31,7 +31,6 @@ import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.HashMap;
@@ -627,19 +626,11 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
             // Add modification to all parents of master
             for (CollectionItem col : note.getModifies().getParents()) {
-                if (((HibCollectionItem) col).removeTombstone(content) == true) {
-                    getSession().update(col);
-                }
                 ((HibItem) note).addParent(col);
             }
         } else {
             // add parent to new content
             ((HibItem) content).addParent(parent);
-
-            // remove tombstone (if it exists) from parent
-            if (((HibCollectionItem) parent).removeTombstone(content) == true) {
-                getSession().update(parent);
-            }
         }
 
 
@@ -706,9 +697,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         for (CollectionItem parent : parents) {
             ((HibItem) content).addParent(parent);
-            if (((HibCollectionItem) parent).removeTombstone(content) == true) {
-                getSession().update(parent);
-            }
         }
 
 

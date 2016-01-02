@@ -16,13 +16,11 @@
 package org.unitedinternet.cosmo.model.mock;
 
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.AttributeTombstone;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.User;
 
 import java.util.ArrayList;
@@ -30,7 +28,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -66,10 +63,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
 
     
     private Set<Stamp> stamps = new HashSet<Stamp>(0);
-    
-    
-    private Set<Tombstone> tombstones = new HashSet<Tombstone>(0);
-    
+
     private transient Map<String, Stamp> stampMap = null;
     
     private Set<CollectionItemDetails> parentDetails = new HashSet<CollectionItemDetails>(0);
@@ -210,16 +204,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
             throw new IllegalArgumentException("attribute cannot be null");
         }
 
-        // remove old tombstone if exists
-        for(Iterator<Tombstone> it=tombstones.iterator();it.hasNext();) {
-            Tombstone ts = it.next();
-            if (ts instanceof AttributeTombstone) {
-                if(((AttributeTombstone) ts).getQName().equals(attribute.getQName())) {
-                    it.remove();
-                }
-            }
-        }
-        
         ((MockAttribute) attribute).validate();
         attribute.setItem(this);
         attributes.put(attribute.getQName(), attribute);
@@ -246,7 +230,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
     public void removeAttribute(QName qname) {
         if(attributes.containsKey(qname)) {
             attributes.remove(qname);
-            tombstones.add(new MockAttributeTombstone(this, qname));
         }
     }
 
@@ -608,30 +591,6 @@ public abstract class MockItem extends MockAuditableObject implements Item {
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceItem#getTombstones()
-     */
-    /**
-     * Gets tombstones.
-     * @return the tombstones.
-     */
-    public Set<Tombstone> getTombstones() {
-        return tombstones;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceItem#addTombstone(org.unitedinternet.cosmo.model.copy.Tombstone)
-     */
-    /**
-     * Adds tombstone.
-     * @param tombstone The tombstone.
-     */
-    public void addTombstone(Tombstone tombstone) {
-        tombstone.setItem(this);
-        tombstones.add(tombstone);
-    }
-    
     
     /**
      * Item uid determines equality

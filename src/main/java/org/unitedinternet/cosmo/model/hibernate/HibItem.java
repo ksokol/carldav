@@ -22,13 +22,11 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.AttributeTombstone;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.Tombstone;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
@@ -37,7 +35,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -124,10 +121,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @BatchSize(size=50)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Stamp> stamps = new HashSet<Stamp>(0);
-
-    @OneToMany(targetEntity=HibTombstone.class, mappedBy="item", 
-            fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    protected Set<Tombstone> tombstones = new HashSet<Tombstone>(0);
 
     private transient Map<String, Stamp> stampMap = null;
 
@@ -503,13 +496,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      */
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getTombstones()
-     */
-    public Set<Tombstone> getTombstones() {
-        return Collections.unmodifiableSet(tombstones);
     }
 
     /**

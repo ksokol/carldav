@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.BooleanAttribute;
-import org.unitedinternet.cosmo.model.CalendarAttribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.FileItem;
@@ -46,7 +45,6 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibAvailabilityItem;
 import org.unitedinternet.cosmo.model.hibernate.HibBooleanAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
@@ -64,7 +62,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -238,52 +235,7 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertNull(queryAttribute.getValue());
         Assert.assertNull(queryItem.getAttribute("intattribute"));
     }
-    
-    /**
-     * Test calendar attribute.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCalendarAttribute() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        ContentItem item = generateTestContent();
-        
-        CalendarAttribute calAttr = 
-            new HibCalendarAttribute(new HibQName("calendarattribute"), "2002-10-10T00:00:00+05:00"); 
-        item.addAttribute(calAttr);
-        
-        ContentItem newItem = contentDao.createContent(root, item);
-
-        clearSession();
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        Attribute attr = queryItem.getAttribute(new HibQName("calendarattribute"));
-        Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof CalendarAttribute);
-        
-        Calendar cal = (Calendar) attr.getValue();
-        Assert.assertEquals("GMT+05:00", cal.getTimeZone().getID());
-        Assert.assertEquals(calAttr.getValue(), cal);
-        
-        attr.setValue("2003-10-10T00:00:00+02:00");
-
-        contentDao.updateContent(queryItem);
-
-        clearSession();
-
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Attribute queryAttr = queryItem.getAttribute(new HibQName("calendarattribute"));
-        Assert.assertNotNull(queryAttr);
-        Assert.assertTrue(queryAttr instanceof CalendarAttribute);
-        
-        cal = (Calendar) queryAttr.getValue();
-        Assert.assertEquals("GMT+02:00", cal.getTimeZone().getID());
-        Assert.assertEquals(attr.getValue(), cal);
-    }
-    
     /**
      * Test timestamp attribute.
      * @throws Exception - if something is wrong this exception is thrown.

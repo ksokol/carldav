@@ -895,4 +895,43 @@ class EvolutionTests extends IntegrationTestSupport {
                 .andExpect(text(request1))
     }
 
+    @Test
+    void deleteVCard() {
+        addVCard()
+
+        mockMvc.perform(delete("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+
+        mockMvc.perform(get("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
+                .andExpect(status().isNotFound())
+    }
+
+    @Test
+    void updateVCard() {
+        addVCard()
+
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:3.0
+                        URL:home page
+                        UID:EE0F1E48-114E3062-76210FF9
+                        END:VCARD
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        mockMvc.perform(get("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
+                .andExpect(status().isOk())
+                .andExpect(text(request1))
+    }
+
 }

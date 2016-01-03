@@ -5,8 +5,8 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
-import testutil.mockmvc.CustomMediaTypes
 
+import static XmlHelper.getctag
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.*
@@ -16,12 +16,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.helper.XmlHelper.getetag
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
-import static XmlHelper.getctag
 import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
@@ -799,37 +799,100 @@ class EvolutionTests extends IntegrationTestSupport {
         def request1 = """\
                         BEGIN:VCARD
                         VERSION:3.0
-                        URL:
+                        URL:home page
                         TITLE:
                         ROLE:
-                        X-EVOLUTION-MANAGER:
-                        X-EVOLUTION-ASSISTANT:
-                        NICKNAME:
+                        X-EVOLUTION-MANAGER:manager
+                        X-EVOLUTION-ASSISTANT:assistant
+                        NICKNAME:Nickname
+                        BDAY:1992-05-13
+                        X-EVOLUTION-ANNIVERSARY:2016-01-14
                         X-EVOLUTION-SPOUSE:
-                        NOTE:
-                        FN:test
-                        N:;test;;;
-                        X-EVOLUTION-FILE-AS:test
-                        X-EVOLUTION-BLOG-URL:
-                        CALURI:
-                        FBURL:
-                        X-EVOLUTION-VIDEO-URL:
-                        X-MOZILLA-HTML:FALSE
-                        UID:BA9B77D0-87105168-1311D5B6
+                        NOTE:notes
+                        FN:Mr. First Middle Last II
+                        N:Last;First;Middle;Mr.;II
+                        X-EVOLUTION-FILE-AS:Last\\, First
+                        CATEGORIES:Birthday,Business
+                        X-EVOLUTION-BLOG-URL:blog
+                        CALURI:calendar
+                        FBURL:free/busy
+                        X-EVOLUTION-VIDEO-URL:video chat
+                        X-MOZILLA-HTML:TRUE
+                        EMAIL;TYPE=WORK:work@email
+                        EMAIL;TYPE=HOME:home@email
+                        EMAIL;TYPE=OTHER:other@email
+                        TEL;TYPE=WORK,VOICE:business pohne
+                        TEL;TYPE=HOME,VOICE:home phone
+                        TEL;TYPE=CAR:car phone
+                        TEL;TYPE=VOICE:other phone
+                        X-SIP;TYPE=WORK:work sip
+                        X-SIP;TYPE=HOME:home sip
+                        X-SIP;TYPE=OTHER:other sip
+                        X-AIM;X-EVOLUTION-UI-SLOT=1:aim
+                        X-SKYPE;X-EVOLUTION-UI-SLOT=2:skype
+                        ADR;TYPE=WORK:;;address work;;;;country
+                        LABEL;TYPE=WORK:address work\\ncountry
+                        ADR;TYPE=HOME:;;address home;city;;;
+                        LABEL;TYPE=HOME:address home\\ncity
+                        UID:EE0F1E48-114E3062-76210FF9
                         END:VCARD
                         """.stripIndent()
 
-        def response1 = """\
-                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            \t<C:supported-calendar-data>Calendar data of type text/vcard not allowed; only text/calendar</C:supported-calendar-data>
-                            </D:error>"""
-
-        mockMvc.perform(put("/dav/{email}/calendar/BA9B77D0-87105168-1311D5B6.vcf", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1)
                 .header("If-None-Match", "*"))
-                .andExpect(status().isForbidden())
-                .andExpect(xml(response1))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                        <propfind xmlns="DAV:">
+                            <prop>
+                                <getetag/>
+                            </prop>
+                        </propfind>"""
+
+        def result2 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(TEXT_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(textXmlContentType())
+                .andExpect(status().isMultiStatus())
+                .andReturn().getResponse().getContentAsString()
+
+        def response2 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${getetag(result2)}</D:getetag>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/contacts/BA9B77D0-87105168-1311D5B6.vcf</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${currentEtag}</D:getetag>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        assertThat(result2, equalXml(response2))
+
+        mockMvc.perform(get("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(ETAG, currentEtag))
+                .andExpect(textCardContentType())
+                .andExpect(status().isOk())
+                .andExpect(text(request1))
     }
 
 }

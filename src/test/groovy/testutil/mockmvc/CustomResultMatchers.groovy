@@ -55,4 +55,8 @@ public class CustomResultMatchers {
     public static ResultMatcher textCalendarContentType() {
         return contentType(is("text/calendar; charset=UTF-8"));
     }
+
+    public static ResultMatcher textCardContentType() {
+        return contentType(is("text/vcard"));
+    }
 }

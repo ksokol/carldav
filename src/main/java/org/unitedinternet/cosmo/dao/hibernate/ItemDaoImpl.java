@@ -361,20 +361,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#refreshItem(org.unitedinternet.cosmo.model.Item)
-     */
-    public void refreshItem(Item item) {
-        try {
-            getSession().refresh(item);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#initializeItem(org.unitedinternet.cosmo.model.Item)
      */
@@ -452,14 +438,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     /**
-     * Generates a unique ID. Provided for consumers that need to
-     * manipulate an item's UID before creating the item.
-     */
-    public String generateUid() {
-        return idGenerator.nextStringIdentifier();
-    }
-
-    /**
      * Set the unique ID generator for new items
      *
      * @param idGenerator
@@ -487,10 +465,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         this.itemPathTranslator = itemPathTranslator;
     }
 
-
-    public ItemFilterProcessor getItemFilterProcessor() {
-        return itemFilterProcessor;
-    }
 
     public void setItemFilterProcessor(ItemFilterProcessor itemFilterProcessor) {
         this.itemFilterProcessor = itemFilterProcessor;
@@ -684,9 +658,5 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
     protected BaseModelObject getBaseModelObject(Object obj) {
         return (BaseModelObject) obj;
-    }
-
-    protected HibItem getHibItem(Item item) {
-        return (HibItem) item;
     }
 }

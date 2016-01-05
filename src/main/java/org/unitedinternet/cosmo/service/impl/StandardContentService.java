@@ -23,7 +23,6 @@ import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
@@ -136,109 +135,6 @@ public class StandardContentService implements ContentService {
         return contentDao.findItemByPath(path, parentUid);
     }
 
-    /**
-     * Copy an item to the given path
-     * @param item item to copy
-     * @param targetParent existing destination collection
-     * @param path path to copy item to
-     * @param deepCopy true for deep copy, else shallow copy will
-     *                 be performed
-     * @throws org.unitedinternet.cosmo.dao.ItemNotFoundException
-     *         if parent item specified by path does not exist
-     * @throws org.unitedinternet.cosmo.dao.DuplicateItemNameException
-     *         if path points to an item with the same path
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if Item is a ContentItem and destination CollectionItem
-     *         is lockecd.
-     */
-    public void copyItem(Item item, CollectionItem targetParent, 
-            String path, boolean deepCopy) {
-
-        // prevent HomeCollection from being copied
-        if(item instanceof HomeCollectionItem) {
-            throw new IllegalArgumentException("cannot copy home collection");
-        }
-        
-        Item toItem = findItemByPath(path);
-        if(toItem!=null) {
-            throw new DuplicateItemNameException(null, path + " exists");
-        }
-        
-        // handle case of copying ContentItem (need to sync on dest collection)
-        if(item != null && item instanceof ContentItem) {
-            
-            // need to get exclusive lock to destination collection
-            CollectionItem parent = 
-                (CollectionItem) contentDao.findItemParentByPath(path);
-            
-            if(parent==null) {
-                throw new IllegalArgumentException("path must match parent collection");
-            }
-            
-            // Verify that destination parent in path matches newParent
-            if(!parent.equals(targetParent)) {
-                throw new IllegalArgumentException("targetParent must mach target path");
-            }
-           
-            // if we can't get lock, then throw exception
-            if (!lockManager.lockCollection(parent, lockTimeout)) {
-                throw new CollectionLockedException(
-                        "unable to obtain collection lock");
-            }
-
-            try {
-                contentDao.copyItem(item, path, deepCopy);
-            } finally {
-                lockManager.unlockCollection(parent);
-            }
-        }
-        else { 
-            // no need to synchronize if not ContentItem
-            contentDao.copyItem(item, path, deepCopy);
-        }
-    }
-  
-    /**
-     * Move item from one collection to another
-     * @param item item to move
-     * @param oldParent parent to remove item from
-     * @param newParent parent to add item to
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if Item is a ContentItem and source or destination 
-     *         CollectionItem is lockecd.
-     */
-    public void moveItem(Item item, CollectionItem oldParent, CollectionItem newParent) {
-        
-        // prevent HomeCollection from being moved
-        if(item instanceof HomeCollectionItem) {
-            throw new IllegalArgumentException("cannot move home collection");
-        }
-        
-        // Only need locking for ContentItem for now
-        if(item instanceof ContentItem) {
-            Set<CollectionItem> locks = acquireLocks(newParent, item);
-            try {
-                // add item to newParent
-                contentDao.addItemToCollection(item, newParent);
-                // remove item from oldParent
-                contentDao.removeItemFromCollection(item, oldParent);
-                
-                // update collections involved
-                for(CollectionItem parent : locks) {
-                    contentDao.updateCollectionTimestamp(parent);
-                }
-                
-            } finally {
-                releaseLocks(locks);
-            }
-        } else {
-            // add item to newParent
-            contentDao.addItemToCollection(item, newParent);
-            // remove item from oldParent
-            contentDao.removeItemFromCollection(item, oldParent);
-        }
-    }
-    
     /**
      * Remove an item.
      * 

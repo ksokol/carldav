@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
@@ -158,14 +157,7 @@ public interface ItemDao extends Dao {
      * @param collection the collection to remove from
      */
     void removeItemFromCollection(Item item, CollectionItem collection);
-    
-    /**
-     * Refresh item with persistent state.
-     *
-     * @param item the item
-     */
-    void refreshItem(Item item);
-    
+
     /**
      * Initialize item, ensuring any proxied associations will be loaded.
      * @param item The item initialized.
@@ -194,11 +186,4 @@ public interface ItemDao extends Dao {
      * @return set of items matching any of the filters
      */
     Set<Item> findItems(ItemFilter[] filters);
-
-    /**
-     * Generates a unique ID. Provided for consumers that need to
-     * manipulate an item's UID before creating the item.
-     * @return The id generated.
-     */
-    String generateUid();
 }

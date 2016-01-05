@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
 import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
@@ -44,15 +42,6 @@ import javax.validation.ConstraintViolationException;
  */
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(ContentDaoImpl.class);
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#createCollection(org.unitedinternet.cosmo.model.CollectionItem,
-     *      org.unitedinternet.cosmo.model.CollectionItem)
-     */
     public CollectionItem createCollection(CollectionItem parent,
                                            CollectionItem collection) {
 

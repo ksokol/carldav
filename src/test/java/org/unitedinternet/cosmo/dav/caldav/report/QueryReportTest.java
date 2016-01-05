@@ -19,12 +19,11 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
-import org.unitedinternet.cosmo.dav.impl.mock.MockCalendarResource;
 import org.unitedinternet.cosmo.dav.report.BaseReportTestCase;
 
 /**
@@ -46,25 +45,6 @@ public class QueryReportTest extends BaseReportTestCase {
             report.init(dcc, makeReportInfo("testdata/freebusy1.xml", DEPTH_1));
             Assert.fail("Non-query report info initalized");
         } catch (Exception e) {}
-    }
-
-    /**
-     * Tests query self calendar resource.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testQuerySelfCalendarResource() throws Exception {
-        MockCalendarResource test = (MockCalendarResource)
-            makeTarget(MockCalendarResource.class);
-        test.setMatchFilters(true);
-        QueryReport report = makeReport("testdata/query1.xml", DEPTH_0, test);
-        try {
-            report.doQuerySelf(test);
-        } catch (Exception e) {
-            Assert.fail("Self query failed for calendar resource");
-        }
-        Assert.assertTrue("Calendar resource not found in results",
-                   report.getResults().contains(test));
     }
 
     /**

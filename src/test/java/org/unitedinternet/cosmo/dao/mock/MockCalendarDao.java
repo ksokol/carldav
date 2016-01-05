@@ -15,42 +15,19 @@
  */
 package org.unitedinternet.cosmo.dao.mock;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Date;
-
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 
-/**
- * Mock implementation of <code>CalendarDao</code> useful for testing.
- *
- * @see CalendarDao
- * @see CalendarItem
- * @see CalendarEventItem
- * @see CalendarCollectionItem
- */
-@SuppressWarnings("unchecked")
-public class MockCalendarDao extends MockItemDao implements CalendarDao {
+import java.util.HashSet;
+import java.util.Set;
 
-    private CalendarFilter lastCalendarFilter;
-    
-    /** 
-     * Useful for unit tests.
-     * @return Calendar filer.
-     */
-    public CalendarFilter getLastCalendarFilter() {
-        return lastCalendarFilter;
-    }
+public class MockCalendarDao extends MockItemDao implements CalendarDao {
 
     /**
      * The constructor.
@@ -60,9 +37,6 @@ public class MockCalendarDao extends MockItemDao implements CalendarDao {
         super(storage);
     }
 
-    // CalendarDao methods
-
-  
     /**
      * Find calendar events by filter.
      * NOTE: This impl always returns an empty set, but has the side effect 
@@ -76,7 +50,6 @@ public class MockCalendarDao extends MockItemDao implements CalendarDao {
      */
     public Set<ICalendarItem> findCalendarItems(CollectionItem collection,
                                              CalendarFilter filter) {
-        lastCalendarFilter = filter;
         HashSet<ICalendarItem> results = new HashSet<ICalendarItem>();
         CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();
         
@@ -100,42 +73,4 @@ public class MockCalendarDao extends MockItemDao implements CalendarDao {
         return results;
 
     }
-
-    /**
-     * Finds event by Ical Uid.
-     * {@inheritDoc}
-     * @param uid The uid.
-     * @param calendar Collection item.
-     * @return content item.
-     */
-    public ContentItem findEventByIcalUid(String uid, CollectionItem calendar) {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Finds event.
-     * {@inheritDoc}
-     * @param collection The collection item.
-     * @param rangeStart DateTime.
-     * @param rangeEnd DateTime.
-     * @param expandRecurringEvents Expand recurring events.
-     * @throws UnsupportedOperationException - if something is wrong this exception is thrown.
-     */
-    public Set<ContentItem> findEvents(CollectionItem collection, Date rangeStart, Date rangeEnd,
-            boolean expandRecurringEvents) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<ICalendarItem> findCalendarEvents(Calendar calendar, User cosmoUser) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Set<ContentItem> findEvents(CollectionItem collection, Date rangeStart, Date rangeEnd, String timeZoneId,
-            boolean expandRecurringEvents) {
-        throw new UnsupportedOperationException();
-    }
-    
-    
 }

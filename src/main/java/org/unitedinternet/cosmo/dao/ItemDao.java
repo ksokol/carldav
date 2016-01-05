@@ -171,19 +171,4 @@ public interface ItemDao extends Dao {
      * @return set of children collection items or empty list of parent collection has no children
      */
     Set<CollectionItem> findCollectionItems(CollectionItem collectionItem);
-    
-    /**
-     * Find a set of items using an ItemFilter.
-     * @param filter criteria to filter items by
-     * @return set of items matching ItemFilter
-     */
-    Set<Item> findItems(ItemFilter filter);
-
-    /**
-     * Find a set of items using a set of ItemFilters.  The set of items
-     * returned includes all items that match any of the filters.
-     * @param filters criteria to filter items by
-     * @return set of items matching any of the filters
-     */
-    Set<Item> findItems(ItemFilter[] filters);
 }

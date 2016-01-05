@@ -15,12 +15,11 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import org.unitedinternet.cosmo.model.CollectionItem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * Represents a filter that matches a set of criteria to all items.
@@ -113,16 +112,6 @@ public class ItemFilter {
     }
     
     /**
-     * Set a filter property.  Filter properties can be used by the
-     * filter processor to further filter the results.
-     * @param key key 
-     * @param value value
-     */
-    public void setFilterProperty(String key, String value) {
-        filterProperties.put(key, value);
-    }
-    
-    /**
      * Get a filter property
      * @param key key
      * @return value of property
@@ -152,13 +141,4 @@ public class ItemFilter {
     public Integer getMaxResults() {
         return maxResults;
     }
-
-    /**
-     * Limit the number of results returned
-     * @param maxResults
-     */
-    public void setMaxResults(Integer maxResults) {
-        this.maxResults = maxResults;
-    }
-    
 }

@@ -401,41 +401,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
     }
-    
-    /**
-     * Find a set of items using an ItemFilter.
-     *
-     * @param filter criteria to filter items by
-     * @return set of items matching ItemFilter
-     */
-    public Set<Item> findItems(ItemFilter filter) {
-        try {
-            return itemFilterProcessor.processFilter(filter);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    /**
-     * Find a set of items using a set of ItemFilters.  The set of items
-     * returned includes all items that match any of the filters.
-     *
-     * @param filters criteria to filter items by
-     * @return set of items matching any of the filters
-     */
-    public Set<Item> findItems(ItemFilter[] filters) {
-        try {
-            HashSet<Item> returnSet = new HashSet<Item>();
-            for (ItemFilter filter : filters) {
-                returnSet.addAll(itemFilterProcessor.processFilter(filter));
-            }
-            return returnSet;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
 
     /**
      * Set the unique ID generator for new items

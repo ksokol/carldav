@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
@@ -42,7 +41,7 @@ import javax.validation.constraints.NotNull;
 @Table(name="subscription", uniqueConstraints = {
         @UniqueConstraint(columnNames={"ownerid", "displayname"})})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class HibCollectionSubscription extends HibAuditableObject implements CollectionSubscription {
+public class HibCollectionSubscription extends HibAuditableObject {
 
     private static final long serialVersionUID = 1376628118792909419L;
     

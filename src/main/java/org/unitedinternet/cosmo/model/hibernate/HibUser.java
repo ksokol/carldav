@@ -22,8 +22,6 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
 
@@ -133,12 +131,6 @@ public class HibUser extends HibAuditableObject implements User {
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Preference> preferences = new HashSet<Preference>(0);
-    
-    @OneToMany(targetEntity=HibCollectionSubscription.class, mappedBy = "owner", 
-            fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<CollectionSubscription> subscriptions =
-        new HashSet<CollectionSubscription>(0);
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HibItem> items;
@@ -445,44 +437,6 @@ public class HibUser extends HibAuditableObject implements User {
     public void removePreference(Preference preference) {
         if (preference != null) {
             preferences.remove(preference);
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getCollectionSubscriptions()
-     */
-    public Set<CollectionSubscription> getCollectionSubscriptions() {
-        return subscriptions;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#addSubscription(org.unitedinternet.cosmo.model.CollectionSubscription)
-     */
-    public void addSubscription(CollectionSubscription subscription) {
-        subscription.setOwner(this);
-        subscriptions.add(subscription);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getSubscription(java.lang.String)
-     */
-    public CollectionSubscription getSubscription(String displayname) {
-
-        for (CollectionSubscription sub : subscriptions) {
-            if (sub.getDisplayName().equals(displayname)) {
-                return sub;
-            }
-        }
-
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#removeSubscription(org.unitedinternet.cosmo.model.CollectionSubscription)
-     */
-    public void removeSubscription(CollectionSubscription sub) {
-        if (sub != null) {
-            subscriptions.remove(sub);
         }
     }
 

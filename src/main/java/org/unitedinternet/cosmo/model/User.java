@@ -134,20 +134,6 @@ public interface User extends AuditableObject{
 
     void removePreference(Preference preference);
 
-    Set<CollectionSubscription> getCollectionSubscriptions();
-
-    void addSubscription(CollectionSubscription subscription);
-
-    /**
-     * Get the CollectionSubscription with the specified displayName
-     * @param displayname display name of subscription to return
-     * @return subscription with specified display name
-     */
-    CollectionSubscription getSubscription(String displayname);
-
-    /** */
-    void removeSubscription(CollectionSubscription sub);
-
     String calculateEntityTag();
 
 }

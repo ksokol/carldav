@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dao.mock;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.CollectionSubscription;
 import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
@@ -152,14 +151,7 @@ public class MockUserDao implements UserDao {
         ((MockAuditableObject) user).setCreationDate(new Date());
         ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
                 .calculateEntityTag());
-        
-        for(CollectionSubscription cs: user.getCollectionSubscriptions()) {
-            ((MockAuditableObject) cs).setEntityTag(((MockAuditableObject) cs)
-                    .calculateEntityTag());
-            ((MockAuditableObject) cs).setModifiedDate(new Date());
-            ((MockAuditableObject) cs).setCreationDate(new Date());
-        }
-        
+
         for(Preference p: user.getPreferences()) {
             ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
                     .calculateEntityTag());
@@ -199,16 +191,7 @@ public class MockUserDao implements UserDao {
         ((MockAuditableObject) user).setModifiedDate(new Date());
         ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
                 .calculateEntityTag());
-        
-        for(CollectionSubscription cs: user.getCollectionSubscriptions()) {
-            ((MockAuditableObject) cs).setEntityTag(((MockAuditableObject) cs)
-                    .calculateEntityTag());
-            ((MockAuditableObject) cs).setModifiedDate(new Date());
-            if (cs.getCreationDate()==null) {
-                ((MockAuditableObject) cs).setCreationDate(new Date());
-            }
-        }
-        
+
         for(Preference p: user.getPreferences()) {
             ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
                     .calculateEntityTag());

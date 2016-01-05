@@ -6,8 +6,7 @@ import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
-import static org.hamcrest.Matchers.not
-import static org.hamcrest.Matchers.notNullValue
+import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
@@ -17,7 +16,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.helper.XmlHelper.getetag
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
@@ -410,7 +411,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()
 
-        def etag = XmlHelper.getetag(result1)
+        def etag = getetag(result1)
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -660,7 +661,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andReturn().getResponse().getContentAsString()
 
-        def etag = XmlHelper.getetag(result1, 1)
+        def etag = getetag(result1, 1)
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -1047,5 +1048,157 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
+    }
+
+    @Test
+    void addVCard() {
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:3.0
+                        PRODID:-//Inverse inc.//SOGo Connector 1.0//EN
+                        UID:C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf
+                        N:last;first1
+                        FN:first last
+                        ORG:organization;department
+                        NICKNAME:nickname
+                        CATEGORIES:Colleague,Family
+                        ADR;TYPE=work:;address 2;address 1;city;state;zip;country
+                        ADR;TYPE=home:;address 2;address 1;city;state;zip;country
+                        TEL;TYPE=work:work
+                        TEL;TYPE=home:home
+                        TEL;TYPE=cell:mobile
+                        TEL;TYPE=fax:fax
+                        TEL;TYPE=pager:pager
+                        X-MOZILLA-HTML:FALSE
+                        EMAIL;TYPE=work:email@localhost
+                        EMAIL;TYPE=home:additrional@localhost
+                        URL;TYPE=work:web page
+                        URL;TYPE=home:web page
+                        TITLE:title
+                        BDAY:1979-06-05
+                        CUSTOM1:custom 1
+                        CUSTOM2:custom 2
+                        CUSTOM3:custom 3
+                        CUSTOM4:custom 4
+                        NOTE:notes
+                        X-AIM:aim
+                        END:VCARD
+                        """.stripIndent()
+
+        MvcResult result1 = mockMvc.perform(put("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                        <D:propfind xmlns:D="DAV:">
+                            <D:prop>
+                                <D:getcontenttype/>
+                                <D:getetag/>
+                            </D:prop>
+                        </D:propfind>"""
+
+        def result2 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getcontenttype/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag(result2)}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                            <D:getcontenttype>text/vcard</D:getcontenttype>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result2, equalXml(response2))
+
+        mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(text(request1))
+    }
+
+    @Test
+    void deleteVCard() {
+        addVCard()
+
+        mockMvc.perform(delete("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+                .andExpect(status().isNoContent())
+
+        mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+                .andExpect(status().isNotFound())
+    }
+
+    @Test
+    void addAndUpdateVCard() {
+        addVCard()
+
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:3.0
+                        PRODID:-//Inverse inc.//SOGo Connector 1.0//EN
+                        UID:C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf
+                        N:last;first1
+                        FN:first last
+                        ORG:organization;department
+                        NICKNAME:nickname
+                        CATEGORIES:Colleague,Family
+                        ADR;TYPE=work:;address 2;address 1;city;state;zip;country
+                        ADR;TYPE=home:;address 2;address 1;city;state;zip;country
+                        X-MOZILLA-HTML:FALSE
+                        EMAIL;TYPE=work:email@localhost
+                        URL;TYPE=work:web page
+                        URL;TYPE=home:web page
+                        TITLE:title
+                        BDAY:1979-06-05
+                        NOTE:notes
+                        PHOTO;ENCODING=b;TYPE=PNG:iVBORw0KGgoAAAANSUhEUgAAAsAAAAGMAQMAAADuk4YmAAAAA
+                         1BMVEX///+nxBvIAAAAAXRSTlMAQObYZgAAADlJREFUeF7twDEBAAAAwiD7p7bGDlgYAAAAAAA
+                         AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwAGJrAABgPqdWQAAAABJRU5ErkJggg==
+                        END:VCARD
+                        """.stripIndent()
+
+        MvcResult result1 = mockMvc.perform(put("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(text(request1))
     }
 }

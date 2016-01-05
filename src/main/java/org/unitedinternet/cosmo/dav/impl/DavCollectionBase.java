@@ -60,6 +60,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -82,16 +83,12 @@ public class DavCollectionBase extends DavItemResourceBase implements
         DavItemCollection {
     private static final Log LOG = LogFactory.getLog(DavCollectionBase.class);
     private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<String>();
-    private static final Set<ReportType> REPORT_TYPES = new HashSet<ReportType>();
+    protected final Set<ReportType> REPORT_TYPES = new HashSet<ReportType>();
 
     private List<org.apache.jackrabbit.webdav.DavResource> members;
 
     static {
         registerLiveProperty(EXCLUDEFREEBUSYROLLUP);
-
-        REPORT_TYPES.add(FreeBusyReport.REPORT_TYPE_CALDAV_FREEBUSY);
-        REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
-        REPORT_TYPES.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
 
         DEAD_PROPERTY_FILTER.add(CollectionItem.class.getName());
     }
@@ -100,6 +97,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
             DavResourceLocator locator, DavResourceFactory factory,
             EntityFactory entityFactory) throws CosmoDavException {
         super(collection, locator, factory, entityFactory);
+
         members = new ArrayList<>();
     }
 
@@ -245,7 +243,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
     // our methods
 
     protected Set<QName> getResourceTypes() {
-        HashSet<QName> rt = new HashSet<QName>(1);
+        Set<QName> rt = new TreeSet<>();
         rt.add(RESOURCE_TYPE_COLLECTION);
         return rt;
     }

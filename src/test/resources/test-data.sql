@@ -15,6 +15,7 @@ INSERT INTO attribute (attributetype, id, createdate, etag, modifydate, localnam
 INSERT INTO attribute (attributetype, id, createdate, etag, modifydate, localname, namespace, booleanvalue, textvalue, intvalue, stringvalue, itemid) VALUES ('boolean', 2, 1448140260079, '', 1448140260079, 'visibility', 'org.unitedinternet.cosmo.model.CalendarCollectionStamp', true, null, null, null, 2);
 
 INSERT INTO stamp (stamptype, id, createdate, etag, modifydate, itemid) VALUES ('calendar', 1, 1448140260087, '', 1448140260087, 2);
+INSERT INTO stamp (stamptype, id, createdate, etag, modifydate, itemid) VALUES ('card', 2, 1448140260087, '', 1448140260087, 3);
 
 INSERT INTO collection_item (createdate, itemid, collectionid) VALUES (1448140260072, 2, 1);
 INSERT INTO collection_item (createdate, itemid, collectionid) VALUES (1448140260072, 3, 1);

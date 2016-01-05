@@ -15,10 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NAMESPACE_CARDDAV;
+
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
+import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.util.CosmoQName;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
@@ -30,7 +33,8 @@ public interface ExtendedDavConstants extends DavConstants {
     String PRE_COSMO = "cosmo";
     String NS_COSMO = "http://osafoundation.org/cosmo/DAV";
     String XML_LANG = "lang";
-    String XML_PRIVILEGE = "privilege";
+    String ADDRESSBOOK = "addressbook";
+
     Namespace NAMESPACE_XML =
             Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
@@ -73,10 +77,15 @@ public interface ExtendedDavConstants extends DavConstants {
     CosmoQName RESOURCE_TYPE_COLLECTION =
         new CosmoQName(NAMESPACE.getURI(), XML_COLLECTION, NAMESPACE.getPrefix());
 
+    CosmoQName RESOURCE_TYPE_ADDRESSBOOK =
+            new CosmoQName(NAMESPACE_CARDDAV.getURI(), ADDRESSBOOK, NAMESPACE_CARDDAV.getPrefix());
+
     UriTemplate TEMPLATE_COLLECTION =
         new UriTemplate("/collection/{uid}/*");
     UriTemplate TEMPLATE_ITEM =
         new UriTemplate("/item/{uid}/*");
     UriTemplate TEMPLATE_HOME =
         new UriTemplate("/{username}/*");
+    UriTemplate CARD_HOME =
+            new UriTemplate("/{username}/contacts");
 }

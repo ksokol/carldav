@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.notNullValue
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
+import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
@@ -962,5 +963,89 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .header("Depth", "1"))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response3))
+    }
+
+    @Test
+    void fetchingEmptyContactsCollectionFirstTime() {
+        def request1 = """\
+                        <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/">
+                            <D:prop>
+                                <D:resourcetype/>
+                                <D:supported-report-set/>
+                                <CS:getctag/>
+                            </D:prop>
+                        </D:propfind>"""
+
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:supported-report-set>
+                                                <D:supported-report>
+                                                    <D:report>
+                                                        <CARD:addressbook-multiget xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                                    </D:report>
+                                                </D:supported-report>
+                                            </D:supported-report-set>
+                                            <D:resourcetype>
+                                                <D:collection/>
+                                                <CARD:addressbook xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                            </D:resourcetype>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        <D:propfind xmlns:D="DAV:">
+                            <D:prop>
+                                <D:getcontenttype/>
+                                <D:getetag/>
+                            </D:prop>
+                        </D:propfind>"""
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getcontenttype/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>"njy57RJot0LhdYELkMDJ9gQZiOM="</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
     }
 }

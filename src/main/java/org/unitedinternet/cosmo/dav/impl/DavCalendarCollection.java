@@ -42,6 +42,7 @@ import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.XCaldavConstants;
+import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarColor;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarDescription;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarTimezone;
@@ -51,6 +52,9 @@ import org.unitedinternet.cosmo.dav.caldav.property.MaxResourceSize;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarData;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCollationSet;
+import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
+import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
+import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
@@ -73,32 +77,9 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-/**
- * Extends <code>DavCollection</code> to adapt the Cosmo
- * <code>CalendarCollectionItem</code> to the DAV resource model.
- *
- * This class defines the following live properties:
- *
- * <ul>
- * <li><code>CALDAV:calendar-description</code></li>
- * <li><code>CALDAV:calendar-timezone</code></li>
- * <li><code>CALDAV:calendar-supported-calendar-component-set</code>
- * (protected)</li>
- * <li><code>CALDAV:supported-calendar-data</code> (protected)</li>
- * <li><code>CALDAV:max-resource-size</code> (protected)</li>
- * <li><code>CS:getctag</code> (protected)</li>
- * <li><code>XC:calendar-color</code></li>
- * <li><code>XC:calendar-visible</code></li>
- * </ul>
- *
- * @see DavCollection
- * @see CalendarCollectionItem
- */
-public class DavCalendarCollection extends DavCollectionBase
-    implements CaldavConstants, ICalendarConstants {
+public class DavCalendarCollection extends DavCollectionBase implements CaldavConstants, ICalendarConstants {
     private static final Log LOG =  LogFactory.getLog(DavCalendarCollection.class);
-    private static final Set<String> DEAD_PROPERTY_FILTER =
-        new HashSet<String>();
+    private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<String>();
 
     static {
         registerLiveProperty(CALENDARDESCRIPTION);
@@ -113,13 +94,16 @@ public class DavCalendarCollection extends DavCollectionBase
         DEAD_PROPERTY_FILTER.add(CalendarCollectionStamp.class.getName());
     }
 
-    /** */
     public DavCalendarCollection(CollectionItem collection,
                                  DavResourceLocator locator,
                                  DavResourceFactory factory,
                                  EntityFactory entityFactory)
         throws CosmoDavException {
         super(collection, locator, factory, entityFactory);
+
+        REPORT_TYPES.add(FreeBusyReport.REPORT_TYPE_CALDAV_FREEBUSY);
+        REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
+        REPORT_TYPES.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
     }
 
     /** */
@@ -248,7 +232,8 @@ public class DavCalendarCollection extends DavCollectionBase
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());
         properties.add(new MaxResourceSize());
-        
+     //   properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
+
         if(cc.getVisibility() != null){
             properties.add(new CalendarVisibility(cc.getVisibility()));
         }

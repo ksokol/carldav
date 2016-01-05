@@ -21,6 +21,7 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.impl.DavAvailability;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
+import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
@@ -35,6 +36,7 @@ import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.UriTemplate;
@@ -172,8 +174,9 @@ public class StandardResourceFactory
             if (item.getStamp(CalendarCollectionStamp.class) != null) {
                 return new DavCalendarCollection((CollectionItem) item,
                                                  locator, this,entityFactory);
-            }
-            else {
+            } else if(item.getStamp(CardCollectionStamp.class) != null) {
+                return new DavCardCollection((CollectionItem) item, locator, this, entityFactory);
+            } else {
                 return new DavCollectionBase((CollectionItem) item, locator, this, entityFactory);
             }
         }

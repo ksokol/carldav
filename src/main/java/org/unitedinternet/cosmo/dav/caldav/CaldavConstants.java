@@ -34,8 +34,13 @@ public interface CaldavConstants {
 
     /** The CalDAV XML namespace */
     String PRE_CALDAV = "C";
+    String PRE_CARD = "CARD";
+
     String NS_CALDAV = "urn:ietf:params:xml:ns:caldav";
+    String NS_CARDDAV = "urn:ietf:params:xml:ns:carddav";
+
     Namespace NAMESPACE_CALDAV = Namespace.getNamespace(PRE_CALDAV, NS_CALDAV);
+    Namespace NAMESPACE_CARDDAV = Namespace.getNamespace(PRE_CARD, NS_CARDDAV);
 
     /** The Calendar Server XML namespace */
     String PRE_CS = "CS";
@@ -85,10 +90,14 @@ public interface CaldavConstants {
     String ELEMENT_CALDAV_TEXT_MATCH = "text-match";
     /** The CalDAV XML element name <CALDAV:calendar-multiget> */
     String ELEMENT_CALDAV_CALENDAR_MULTIGET = "calendar-multiget";
+    /** The CalDAV XML element name <CARDDAV:addressbook-multiget> */
+    String ELEMENT_CARDDAV_ADDRESSBOOK_MULTIGET = "addressbook-multiget";
     /** The CalDAV XML element name <CALDAV:calendar-query> */
     String ELEMENT_CALDAV_CALENDAR_QUERY = "calendar-query";
     /** The CalDAV XML element name <CALDAV:free-busy-query> */
     String ELEMENT_CALDAV_CALENDAR_FREEBUSY = "free-busy-query";
+
+
     /** The CalDAV XML attribute name CALDAV:name */
     String ATTR_CALDAV_NAME = "name";
     /** The CalDAV XML attribute name CALDAV:content-type */
@@ -120,15 +129,10 @@ public interface CaldavConstants {
     String PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA = "supported-calendar-data";
     /** The CalDAV property name CALDAV:calendar-home-set */
     String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
-    /** The CalDAV XML element name <CALDAV:calendar-user-address-set> */
-    String PROPERTY_CALDAV_CALENDAR_USER_ADDRESS_SET = "calendar-user-address-set";
-    /** The CalDAV XML element name <CALDAV:schedule-inbox-URL> */
-    String PROPERTY_CALDAV_SCHEDULE_INBOX_URL = "schedule-inbox-URL";
-    /** The CalDAV XML element name <CALDAV:schedule-outbox-URL> */
-    String PROPERTY_CALDAV_SCHEDULE_OUTBOX_URL = "schedule-outbox-URL";
+    /** The CardDAV property name CARDDAV:addressbook-home-set */
+    String PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET = "addressbook-home-set";
     /** The CalDAV property name CALDAV:max-resource-size */
     String PROPERTY_CALDAV_MAX_RESOURCE_SIZE = "max-resource-size";
-
     /** The Calendar Server property name CS:getctag */
     String PROPERTY_CS_GET_CTAG = "getctag";
 
@@ -147,12 +151,8 @@ public interface CaldavConstants {
     DavPropertyName SUPPORTEDCALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:calendar-home-set */
     DavPropertyName CALENDARHOMESET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:calendar-user-address-set */
-    DavPropertyName CALENDARUSERADDRESSSET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_USER_ADDRESS_SET, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:schedule-inbox-URL */
-    DavPropertyName SCHEDULEINBOXURL = DavPropertyName.create(PROPERTY_CALDAV_SCHEDULE_INBOX_URL, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:schedule-outbox-URL */
-    DavPropertyName SCHEDULEOUTBOXURL = DavPropertyName.create(PROPERTY_CALDAV_SCHEDULE_OUTBOX_URL, NAMESPACE_CALDAV);
+    /** The CardDAV property CARDDAV:addressbook-home-set */
+    DavPropertyName ADDRESSBOOKHOMESET = DavPropertyName.create(PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET, NAMESPACE_CARDDAV);
     /** The CalDAV property CALDAV:max-resource-size */
     DavPropertyName MAXRESOURCESIZE = DavPropertyName.create(PROPERTY_CALDAV_MAX_RESOURCE_SIZE, NAMESPACE_CALDAV);
 

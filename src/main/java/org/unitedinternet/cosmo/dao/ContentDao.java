@@ -15,12 +15,11 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.User;
+
+import java.util.Set;
 
 /**
  * Interface for DAO that provides base operations for content items.
@@ -76,31 +75,7 @@ public interface ContentDao extends ItemDao {
      * @return newly created content
      */
     public ContentItem createContent(CollectionItem parent, ContentItem content);
-    
-    /**
-     * creates a set of content items, used during events import from other calendar
-     * 
-     * @param parent
-     *            parent collection of content. If null, content is assumed to
-     *            live in the top-level user collection
-     * 
-     * @param contents
-     *           the set of contents to create
-     */
-    public void createBatchContent(CollectionItem parent, Set<ContentItem> contents);
-    
-    /**
-     * 
-     * @param contents Set<ContentItem>
-     */
-    public void updateBatchContent(Set<ContentItem> contents);
-    
-    /**
-     * 
-     * @param parent CollectionItem
-     * @param contents Set<ContentItem>
-     */
-    public void removeBatchContent(CollectionItem parent, Set<ContentItem> contents);    
+
     /**
      * Create new content item and associate with multiple parent collections.
      * 

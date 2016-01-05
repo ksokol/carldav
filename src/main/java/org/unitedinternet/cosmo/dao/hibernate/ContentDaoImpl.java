@@ -196,73 +196,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw cve;
         }
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#createBatchContent(org.unitedinternet.cosmo.model.CollectionItem,
-     *      java.util.Set)
-     */
-    public void createBatchContent(CollectionItem parent, Set<ContentItem> contents) {
-        
-        try {
-            for(ContentItem content : contents) {
-                createContentInternal(parent, content);
-            }
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            getSession().clear();
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
     
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#updateBatchContent(java.util.Set)
-     */
-    public void updateBatchContent(Set<ContentItem> contents) {
-        try {
-            for(ContentItem content : contents) {
-                updateContentInternal(content);
-            }
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#removeBatchContent(org.unitedinternet.cosmo.model.CollectionItem,
-     *      java.util.Set)
-     */
-    public void removeBatchContent(CollectionItem parent, Set<ContentItem> contents) {
-        try {
-            for(ContentItem content : contents) {
-                removeItemFromCollectionInternal(content, parent);
-            }
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-    
-    
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ContentDao#createContent(java.util.Set, org.unitedinternet.cosmo.model.ContentItem)
      */

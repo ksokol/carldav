@@ -15,17 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
@@ -37,27 +27,19 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * Test Hibernate helper.
  *
  */
 public class HibernateTestHelper {
-    /**
-     * Creates dummy user.
-     * @param userDao The userDao.
-     * @param index The index.
-     * @return The user.
-     */
-    public User createDummyUser(UserDao userDao, int index) {
-        User user = new HibUser();
-        user.setUsername("user" + index);
-        user.setPassword("password" + index);
-        user.setEmail("user" + index + "@test" + index);
-        user.setAdmin(Boolean.TRUE);
-        user.setFirstName("fristname" + index);
-        user.setLastName("lastname" + index);
-        return userDao.createUser(user);
-    }
 
     /**
      * Verify item.
@@ -85,24 +67,6 @@ public class HibernateTestHelper {
             verifyAttributeValue(val1, val2);
         }
 
-    }
-
-    /**
-     * Verify item in collection.
-     * @param items The items.
-     * @param item The item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public void verifyItemInCollection(@SuppressWarnings("rawtypes") Collection items, Item item)
-            throws Exception {
-        for (@SuppressWarnings("rawtypes")
-        Iterator it = items.iterator(); it.hasNext();) {
-            Item nextItem = (Item) it.next();
-            if (nextItem.getUid().equals(item.getUid())) {
-                return;
-            }
-        }
-        Assert.fail("Item not in collection");
     }
 
     /**

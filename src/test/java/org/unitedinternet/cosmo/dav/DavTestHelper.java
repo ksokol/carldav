@@ -62,8 +62,6 @@ public class DavTestHelper extends MockHelper implements ExtendedDavConstants {
      */
     @Before
     public void setUp() throws Exception {
-        super.setUp();
-
         String path = TEMPLATE_HOME.bind(false, getUser().getUsername());
         homeLocator =
             locatorFactory.createResourceLocatorByPath(baseUrl, path);

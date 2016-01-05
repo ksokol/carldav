@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo;
 
-import org.junit.After;
-import org.junit.Before;
 import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor;
@@ -31,10 +29,7 @@ import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
-import org.unitedinternet.cosmo.security.mock.MockSecurityManager;
-import org.unitedinternet.cosmo.security.mock.MockUserPrincipal;
 import org.unitedinternet.cosmo.service.ContentService;
-import org.unitedinternet.cosmo.service.UserService;
 import org.unitedinternet.cosmo.service.impl.StandardContentService;
 import org.unitedinternet.cosmo.service.impl.StandardUserService;
 import org.unitedinternet.cosmo.service.lock.SingleVMLockManager;
@@ -45,18 +40,12 @@ import java.security.SecureRandom;
  */
 public class MockHelper extends TestHelper {
     private MockEntityFactory entityFactory;
-    private MockSecurityManager securityManager;
     private StandardContentService contentService;
-    private StandardUserService userService;
     private StandardCalendarQueryProcessor calendarQueryProcessor;
     private User user;
     private HomeCollectionItem homeCollection;
     
     public MockHelper() {
-        super();
-
-        securityManager = new MockSecurityManager();
-
         MockDaoStorage storage = new MockDaoStorage();
         MockCalendarDao calendarDao = new MockCalendarDao(storage);
         MockContentDao contentDao = new MockContentDao(storage);
@@ -67,8 +56,8 @@ public class MockHelper extends TestHelper {
         contentService = new StandardContentService(contentDao, lockManager);
         calendarQueryProcessor = new StandardCalendarQueryProcessor();
         calendarQueryProcessor.setCalendarDao(calendarDao);
-        
-        userService = new StandardUserService(contentDao, userDao);
+
+        final StandardUserService userService = new StandardUserService(contentDao, userDao);
         KeyBasedPersistenceTokenService keyBasedPersistenceTokenService = new KeyBasedPersistenceTokenService();
         keyBasedPersistenceTokenService.setServerSecret("cosmossecret");
         keyBasedPersistenceTokenService.setServerInteger(123);
@@ -81,42 +70,13 @@ public class MockHelper extends TestHelper {
         }
         homeCollection = contentService.getRootItem(user);
     }
-    
-    /**
-     * Setup.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Before
-    public void setUp() throws Exception {}
-    
-    /**
-     * TearDown method.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @After
-    public void tearDown() throws Exception {}
-
-    /**
-     * Log in.
-     */
-    public void logIn() {
-        logInUser(user);
-    }
-
-    /**
-     * Log in user.
-     * @param u - the user.
-     */
-    public void logInUser(User u) {
-        securityManager.setUpMockSecurityContext(new MockUserPrincipal(u));
-    }
 
     /**
      * Returns the security manager.
      * @return The security manager.
      */
     public CosmoSecurityManager getSecurityManager() {
-        return securityManager;
+        return null; //securityManager;
     }
 
     /**
@@ -141,14 +101,6 @@ public class MockHelper extends TestHelper {
      */
     public CalendarQueryProcessor getCalendarQueryProcessor() {
         return calendarQueryProcessor;
-    }
-
-    /**
-     * Gets users service.
-     * @return The users service.
-     */
-    public UserService getUserService() {
-        return userService;
     }
 
     /**

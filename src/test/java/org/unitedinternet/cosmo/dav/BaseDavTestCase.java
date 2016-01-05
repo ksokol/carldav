@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.junit.After;
 import org.junit.Before;
 
 /**
@@ -32,14 +31,5 @@ public abstract class BaseDavTestCase implements ExtendedDavConstants {
     public void setUp() throws Exception {
         testHelper = new DavTestHelper();
         testHelper.setUp();
-    }
-
-    /**
-     * Tear down.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @After
-    public void tearDown() throws Exception {
-        testHelper.tearDown();
     }
 }

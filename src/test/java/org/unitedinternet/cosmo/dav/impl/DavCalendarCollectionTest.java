@@ -60,15 +60,4 @@ public class DavCalendarCollectionTest extends BaseDavTestCase
             Assert.assertTrue(CalendarUtils.isSupportedCollation(c));
         }
     }
-
-    /**
-     * SetUp
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-
-        testHelper.logIn();
-    }
 }

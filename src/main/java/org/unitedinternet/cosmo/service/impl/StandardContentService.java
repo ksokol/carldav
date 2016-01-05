@@ -136,28 +136,6 @@ public class StandardContentService implements ContentService {
     }
 
     /**
-     * Remove an item.
-     * 
-     * @param item
-     *            item to remove
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if Item is a ContentItem and parent CollectionItem
-     *         is locked
-     */
-    public void removeItem(Item item) {
-        // Let service handle ContentItems (for sync purposes)
-        if(item instanceof ContentItem) {
-            removeContent((ContentItem) item);
-        }
-        else if(item instanceof CollectionItem) {
-            removeCollection((CollectionItem) item);
-        }
-        else {
-            contentDao.removeItem(item);
-        }
-    }
-    
-    /**
      * Remove an item from a collection.  The item will be deleted if
      * it belongs to no more collections.
      * @param item item to remove from collection
@@ -275,83 +253,6 @@ public class StandardContentService implements ContentService {
             return contentDao.updateCollection(collection);
         } finally {
             lockManager.unlockCollection(collection);
-        }
-    }
-
-    
-    /**
-     * Update a collection and set of children.  The set of
-     * children to be updated can include updates to existing
-     * children, new children, and removed children.  A removal
-     * of a child Item is accomplished by setting Item.isActive
-     * to false to an existing Item.
-     * 
-     * The collection is locked at the beginning of the update. Any
-     * other update that begins before this update has completed, and
-     * the collection unlocked, will fail immediately with a
-     * <code>CollectionLockedException</code>.
-     *
-     * @param collection
-     *             collection to update
-     * @return updated collection
-     * @throws CollectionLockedException if the collection is
-     *         currently locked for an update.
-     */
-    public CollectionItem updateCollection(CollectionItem collection,
-                                           Set<Item> updates) {
-        // Obtain locks to all collections involved.  A collection is involved
-        // if it is the parent of one of updated items.
-        Set<CollectionItem> locks = acquireLocks(collection, updates);
-        
-        try {
-            Set<ContentItem> childrenToUpdate = new LinkedHashSet<ContentItem>();
-            
-            // Keep track of NoteItem modifications that need to be processed
-            // after the master NoteItem.
-            ArrayList<NoteItem> modifications = new ArrayList<NoteItem>(); 
-            
-            // Either create or update each item
-            for (Item item : updates) {
-                if (item instanceof NoteItem) {
-                    
-                    NoteItem note = (NoteItem) item;
-                    
-                    // If item is a modification and the master note
-                    // hasn't been created, then we need to process
-                    // the master first.
-                    if(note.getModifies()!=null) {
-                        modifications.add(note);
-                    }
-                    else {
-                        childrenToUpdate.add(note);
-                    }
-                }
-            }
-            
-            for(NoteItem mod: modifications) {
-                // Only update modification if master has not been
-                // deleted because master deletion will take care
-                // of modification deletion.
-                if(mod.getModifies().getIsActive()==true) {
-                    childrenToUpdate.add(mod);
-                }
-            }
-            checkDatesForEvents(childrenToUpdate);
-            collection = contentDao.updateCollection(collection, childrenToUpdate);
-            
-            // update collections involved
-            for(CollectionItem lockedCollection : locks) {
-                lockedCollection = contentDao.updateCollectionTimestamp(lockedCollection);
-                if(lockedCollection.getUid().equals(collection.getUid())) {
-                    collection = lockedCollection;
-                }
-            }
-            
-            // get latest timestamp
-            return collection;
-            
-        } finally {
-            releaseLocks(locks);
         }
     }
 

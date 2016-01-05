@@ -76,14 +76,6 @@ public interface ContentService {
                         String parentUid);
 
     /**
-     * Remove an item. Removes item from all collections.
-     * 
-     * @param item
-     *            item to remove
-     */
-    void removeItem(Item item);
-    
-    /**
      * Remove an item from a collection.  The item will be removed if
      * it belongs to no more collections.
      * @param item item to remove from collection
@@ -121,26 +113,7 @@ public interface ContentService {
     CollectionItem createCollection(CollectionItem parent,
                                     CollectionItem collection,
                                     Set<Item> children);
-    
-    /**
-     * Update a collection and set child items.  The set of
-     * child items to be updated can include updates to existing
-     * children, new children, and removed children.  A removal
-     * of a child Item is accomplished by setting Item.isActive
-     * to false for an existing Item.  When an item is marked
-     * for removal, it is removed from the collection and
-     * removed from the server only if the item has no parent
-     * collections.
-     * 
-     * @param collection
-     *             collection to update
-     * @param children
-     *             children to update
-     * @return updated collection
-     */
-    CollectionItem updateCollection(CollectionItem collection,
-                                    Set<Item> children);
-    
+
     /**
      * Remove collection item
      * 

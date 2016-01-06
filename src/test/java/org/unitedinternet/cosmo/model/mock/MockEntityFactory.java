@@ -29,6 +29,7 @@ import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
+import org.unitedinternet.cosmo.model.hibernate.HibXmlAttribute;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 import org.w3c.dom.Element;
 
@@ -84,7 +85,7 @@ public class MockEntityFactory implements EntityFactory {
      * {@inheritDoc}
      */
     public XmlAttribute createXMLAttribute(QName qname, Element e) {
-        return new MockXmlAttribute(qname, e);
+        return new HibXmlAttribute(qname, e);
     }
 
     /**

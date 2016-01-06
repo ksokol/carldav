@@ -15,19 +15,19 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.io.Reader;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
-
 import org.unitedinternet.cosmo.hibernate.validator.Task;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute;
+
+import java.io.Reader;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Extends {@link ICalendarItem} to represent a Note item.
@@ -95,7 +95,7 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
      * @return The date.
      */
     public Date getReminderTime() {
-        return MockTimestampAttribute.getValue(this, ATTR_REMINDER_TIME);
+        return HibTimestampAttribute.getValue(this, ATTR_REMINDER_TIME);
     }
 
     /* (non-Javadoc)
@@ -107,7 +107,7 @@ public class MockNoteItem extends MockICalendarItem implements NoteItem {
      */
     public void setReminderTime(Date reminderTime) {
         // reminderDate stored as TimestampAttribute on Item
-        MockTimestampAttribute.setValue(this, ATTR_REMINDER_TIME, reminderTime);
+        HibTimestampAttribute.setValue(this, ATTR_REMINDER_TIME, reminderTime);
     }
     
     /**

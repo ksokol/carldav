@@ -36,10 +36,6 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
-import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
-import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
-import org.unitedinternet.cosmo.dav.property.ExcludeFreeBusyRollup;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
@@ -73,7 +69,6 @@ import javax.xml.stream.XMLStreamException;
  *
  * <ul>
  * <li><code>DAV:supported-report-set</code> (protected)</li>
- * <li><code>cosmo:exclude-free-busy-rollup</code></li>
  * </ul>
  *
  * @see DavResourceBase
@@ -88,8 +83,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
     private List<org.apache.jackrabbit.webdav.DavResource> members;
 
     static {
-        registerLiveProperty(EXCLUDEFREEBUSYROLLUP);
-
         DEAD_PROPERTY_FILTER.add(CollectionItem.class.getName());
     }
 
@@ -236,10 +229,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
         return false;
     }
 
-    public boolean isExcludedFromFreeBusyRollups() {
-        return ((CollectionItem) getItem()).isExcludeFreeBusyRollup();
-    }
-
     // our methods
 
     protected Set<QName> getResourceTypes() {
@@ -255,13 +244,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
     /** */
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
-
-        CollectionItem cc = (CollectionItem) getItem();
-        if (cc == null) {
-            return;
-        }
-
-        properties.add(new ExcludeFreeBusyRollup(cc.isExcludeFreeBusyRollup()));
     }
 
     /** */
@@ -279,26 +261,12 @@ public class DavCollectionBase extends DavItemResourceBase implements
             throw new UnprocessableEntityException("Property " + name
                     + " requires a value");
         }
-
-        if (name.equals(EXCLUDEFREEBUSYROLLUP)) {
-            Boolean flag = Boolean.valueOf(property.getValueText());
-            cc.setExcludeFreeBusyRollup(flag);
-        }
     }
 
     /** */
     protected void removeLiveProperty(DavPropertyName name)
             throws CosmoDavException {
         super.removeLiveProperty(name);
-
-        CollectionItem cc = (CollectionItem) getItem();
-        if (cc == null) {
-            return;
-        }
-
-        if (name.equals(EXCLUDEFREEBUSYROLLUP)) {
-            cc.setExcludeFreeBusyRollup(false);
-        }
     }
 
     /** */

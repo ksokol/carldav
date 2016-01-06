@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 public class SupportedCalendarComponentSet extends StandardDavProperty
     implements CaldavConstants, ICalendarConstants {
     private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL, Component.VFREEBUSY,
+        Component.VTODO, Component.VJOURNAL,
         COMPONENT_VAVAILABLITY };
     /**
      * Constructor.

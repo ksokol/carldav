@@ -17,8 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +48,6 @@ import org.unitedinternet.cosmo.dav.caldav.property.MaxResourceSize;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarData;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCollationSet;
-import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
@@ -99,7 +96,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
         super(collection, locator, factory, entityFactory);
 
-        REPORT_TYPES.add(FreeBusyReport.REPORT_TYPE_CALDAV_FREEBUSY);
         REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         REPORT_TYPES.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
     }
@@ -146,22 +142,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
         
         return members;
-    }
-
-    /**
-     * Returns a VFREEBUSY component containing
-     * the freebusy periods for the calendar collection for the
-     * specified time range.
-     * @param period time range for freebusy information
-     * @return VFREEBUSY component containing FREEBUSY periods for
-     *         specified timerange
-     */
-    public VFreeBusy generateFreeBusy(Period period) {
-
-        VFreeBusy vfb = this.getCalendarQueryProcesor().freeBusyQuery(
-                (CollectionItem) getItem(), period);
-        
-        return vfb;
     }
 
     /**

@@ -33,10 +33,4 @@ public interface DavItemCollection extends DavItemResource, DavCollection {
      * @return true if this resource represents a home collection.
      */
     boolean isHomeCollection();
-
-    /**
-     * @return true if this collection does not participate in free-busy
-     * query rollups.
-     */
-    boolean isExcludedFromFreeBusyRollups();
 }

@@ -24,20 +24,16 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.PeriodList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VFreeBusy;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.InstanceList;
@@ -397,9 +393,6 @@ public class CalendarFilterEvaluater {
         if(comp instanceof VEvent) {
             return evaluateVEventTimeRange(comps, filter);
         }
-        else if(comp instanceof VFreeBusy) {
-            return evaulateVFreeBusyTimeRange((VFreeBusy) comp, filter);
-        }
         else if(comp instanceof VToDo) {
             return evaulateVToDoTimeRange(comps, filter);
         }
@@ -537,79 +530,7 @@ public class CalendarFilterEvaluater {
         
         return false;
     }
-    
-    /*
-        A VFREEBUSY component overlaps a given time range if the condition
-        for the corresponding component state specified in the table below
-        is satisfied.  The conditions depend on the presence in the
-        VFREEBUSY component of the DTSTART and DTEND properties, and any
-        FREEBUSY properties in the absence of DTSTART and DTEND.  Any
-        DURATION property is ignored, as it has a special meaning when
-        used in a VFREEBUSY component.
 
-        When only FREEBUSY properties are used, each period in each
-        FREEBUSY property is compared against the time range, irrespective
-        of the type of free busy information (free, busy, busy-tentative,
-        busy-unavailable) represented by the property.
-
-
-        +------------------------------------------------------+
-        | VFREEBUSY has both the DTSTART and DTEND properties? |
-        |   +--------------------------------------------------+
-        |   | VFREEBUSY has the FREEBUSY property?             |
-        |   |   +----------------------------------------------+
-        |   |   | Condition to evaluate                        |
-        +---+---+----------------------------------------------+
-        | Y | * | (start <= DTEND) AND (end > DTSTART)         |
-        +---+---+----------------------------------------------+
-        | N | Y | (start <  freebusy-period-end) AND           |
-        |   |   | (end   >  freebusy-period-start)             |
-        +---+---+----------------------------------------------+
-        | N | N | FALSE                                        |
-        +---+---+----------------------------------------------+
-     */
-    /**
-     * Evaluates VFreeBusy time range.
-     * @param freeBusy freebusy.
-     * @param filter The filter.
-     * @return The result.
-     */
-    private boolean evaulateVFreeBusyTimeRange(VFreeBusy freeBusy, TimeRangeFilter filter) {
-        DtStart start = freeBusy.getStartDate();
-        DtEnd end = freeBusy.getEndDate();
-         
-        if (start != null && end != null) {
-            InstanceList instances = new InstanceList();
-            if (filter.getTimezone() != null) {
-                instances.setTimezone(new TimeZone(filter.getTimezone()));
-            }
-            instances.addComponent(freeBusy, filter.getPeriod().getStart(),
-                    filter.getPeriod().getEnd());
-            return instances.size() > 0;
-        }
-        
-        PropertyList props = freeBusy.getProperties(Property.FREEBUSY);
-        if(props.size()==0) {
-            return false;
-        }
-        
-        Iterator<FreeBusy> it = props.iterator();
-        while(it.hasNext()) {
-            FreeBusy fb = it.next();
-            PeriodList periods = fb.getPeriods();
-            Iterator<Period> periodIt = periods.iterator();
-            while(periodIt.hasNext()) {
-                Period period = periodIt.next();
-                if(filter.getPeriod().getStart().before(period.getEnd()) &&
-                   filter.getPeriod().getEnd().after(period.getStart())) {
-                    return true;
-                }
-            }
-        }
-        
-        return false;
-    }
-    
     /*
       A VJOURNAL component overlaps a given time range if the condition
         for the corresponding component state specified in the table below

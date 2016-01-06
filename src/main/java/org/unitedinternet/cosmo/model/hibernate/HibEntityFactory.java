@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TaskStamp;
@@ -72,10 +71,6 @@ public class HibEntityFactory implements EntityFactory {
 
     public FileItem createFileItem() {
         return new HibFileItem();
-    }
-
-    public FreeBusyItem createFreeBusy() {
-        return new HibFreeBusyItem();
     }
 
     public XmlAttribute createXMLAttribute(QName qname, Element e) {

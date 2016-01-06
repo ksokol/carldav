@@ -15,13 +15,6 @@
  */
 package org.unitedinternet.cosmo.calendar.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
@@ -31,9 +24,15 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
-
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * Utility methods for working with icalendar data.
@@ -41,7 +40,7 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 public class CalendarUtils implements ICalendarConstants {
     
     private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL, Component.VFREEBUSY,
+        Component.VTODO, Component.VJOURNAL,
         COMPONENT_VAVAILABLITY };
     
     private static String[] SUPPORTED_COLLATIONS = {

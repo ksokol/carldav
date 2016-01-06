@@ -16,8 +16,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.component.VFreeBusy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
@@ -32,7 +30,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
-import org.unitedinternet.cosmo.dav.caldav.report.FreeBusyReport;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
@@ -42,7 +39,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 
 import java.io.ByteArrayInputStream;
@@ -63,7 +59,6 @@ public abstract class DavCalendarResource extends DavContentBase
         registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
         registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
 
-        REPORT_TYPES.add(FreeBusyReport.REPORT_TYPE_CALDAV_FREEBUSY);
         REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         REPORT_TYPES.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
     }
@@ -108,18 +103,6 @@ public abstract class DavCalendarResource extends DavContentBase
     public boolean matches(CalendarFilter filter)
         throws CosmoDavException {
         return getCalendarQueryProcesor().filterQuery((NoteItem)getItem(), filter);
-    }
-
-    /**
-     * Returns a VFREEBUSY component containing
-     * the freebusy periods for the resource for the specified time range.
-     * @param period time range for freebusy information
-     * @return VFREEBUSY component containing FREEBUSY periods for
-     *         specified timerange
-     */
-    public VFreeBusy generateFreeBusy(Period period) {
-        return getCalendarQueryProcesor().
-            freeBusyQuery((ICalendarItem)getItem(), period);
     }
 
     /**

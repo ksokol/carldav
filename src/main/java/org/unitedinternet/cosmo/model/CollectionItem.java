@@ -39,10 +39,6 @@ public interface CollectionItem extends Item{
 
     Item getChildByName(String name);
 
-    boolean isExcludeFreeBusyRollup();
-
-    void setExcludeFreeBusyRollup(boolean flag);
-
     /**
      * Generate alternative hash code for collection.
      * This hash code will return a different value if

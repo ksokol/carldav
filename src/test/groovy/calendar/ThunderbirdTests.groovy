@@ -179,11 +179,6 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                                   <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                                 </D:report>
                                               </D:supported-report>
-                                              <D:supported-report>
-                                                <D:report>
-                                                  <C:free-busy-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                </D:report>
-                                              </D:supported-report>
                                         </D:supported-report-set>
                                         <D:resourcetype>
                                             <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
@@ -192,7 +187,6 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                         <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                           <C:comp name="VEVENT"/>
                                           <C:comp name="VAVAILABILITY"/>
-                                          <C:comp name="VFREEBUSY"/>
                                           <C:comp name="VJOURNAL"/>
                                           <C:comp name="VTODO"/>
                                         </C:supported-calendar-component-set>

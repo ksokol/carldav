@@ -22,7 +22,6 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.FreeBusyItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TaskStamp;
@@ -114,15 +113,6 @@ public class MockEntityFactory implements EntityFactory {
      */
     public FileItem createFileItem() {
         return new MockFileItem();
-    }
-
-    /**
-     * Creates free busy.
-     * {@inheritDoc}
-     * @return The free busy item.
-     */
-    public FreeBusyItem createFreeBusy() {
-        return new MockFreeBusyItem();
     }
 
     /**

@@ -268,11 +268,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:supported-report-set>
                                             <D:supported-report>
                                               <D:report>
-                                                <C:free-busy-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                              </D:report>
-                                            </D:supported-report>
-                                            <D:supported-report>
-                                              <D:report>
                                                 <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                               </D:report>
                                             </D:supported-report>
@@ -467,17 +462,16 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{urn:ietf:params:xml:ns:xcaldavoneandone}calendar-visible</dt><dd>false</dd>
                         <dt>{DAV:}creationdate</dt><dd>${creationDate}</dd>
                         <dt>{DAV:}displayname</dt><dd>newcalendar</dd>
-                        <dt>{http://osafoundation.org/cosmo/DAV}exclude-free-busy-rollup</dt><dd>false</dd>
                         <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${uuid}</dd>
                         <dt>{DAV:}getetag</dt><dd>&quot;${uuid}&quot;</dd>
                         <dt>{DAV:}getlastmodified</dt><dd>${lastModified}</dd>
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}max-resource-size</dt><dd>10485760</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
-                        <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VFREEBUSY, VJOURNAL, VTODO</dd>
+                        <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VJOURNAL, VTODO</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
-                        <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query, {urn:ietf:params:xml:ns:caldav}free-busy-query</dd>
+                        <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query</dd>
                         <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>${cosmoUuid}</dd>
                         </dl>
                         <p>
@@ -525,11 +519,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:supported-report-set>
                                                 <D:supported-report>
                                                   <D:report>
-                                                    <C:free-busy-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                  </D:report>
-                                                </D:supported-report>
-                                                <D:supported-report>
-                                                  <D:report>
                                                     <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                                   </D:report>
                                                 </D:supported-report>
@@ -551,11 +540,9 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">a172ed34-0106-4616-bb40-a416a8305465</cosmo:uuid>
                                         <C:calendar-visible xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">true</C:calendar-visible>
                                         <D:displayname>calendarDisplayName</D:displayname>
-                                        <cosmo:exclude-free-busy-rollup xmlns:cosmo="http://osafoundation.org/cosmo/DAV">false</cosmo:exclude-free-busy-rollup>
                                         <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:comp name="VEVENT"/>
                                             <C:comp name="VAVAILABILITY"/>
-                                            <C:comp name="VFREEBUSY"/>
                                             <C:comp name="VJOURNAL"/>
                                             <C:comp name="VTODO"/>
                                         </C:supported-calendar-component-set>

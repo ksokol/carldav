@@ -489,76 +489,7 @@ public class CalendarFilterEvaluaterTest {
         timeRangeFilter.setPeriod(period);
         Assert.assertTrue(evaluater.evaluate(calendar2, filter));
     }
-    
-    /**
-     * Evaluates VFree busy filter.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testEvaluateVFreeBusyFilterFilter() throws Exception {
-        
-        CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();
-        Calendar calendar = getCalendar("vfreebusy.ics");
-        
-        CalendarFilter filter = new CalendarFilter();
-        ComponentFilter compFilter = new ComponentFilter("VCALENDAR");
-        ComponentFilter vfbFilter = new ComponentFilter("VFREEBUSY");
-        filter.setFilter(compFilter);
-        compFilter.getComponentFilters().add(vfbFilter);
-        
-        Assert.assertTrue(evaluater.evaluate(calendar, filter));
-        
-        PropertyFilter propFilter = new PropertyFilter("ORGANIZER");
-        TextMatchFilter textFilter = new TextMatchFilter("Joe");
-        propFilter.setTextMatchFilter(textFilter);
-        vfbFilter.getPropFilters().add(propFilter);
-        
-        Assert.assertTrue(evaluater.evaluate(calendar, filter));
-        
-        textFilter.setValue("bogus");
-        Assert.assertFalse(evaluater.evaluate(calendar, filter));
-    }
-    
-    /**
-     * Evaluates VFreeBusy filter time range.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testEvaluateVFreeBusyFilterFilterTimeRange() throws Exception {
-        
-        CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();
-        Calendar calendar1 = getCalendar("vfreebusy.ics");
-        Calendar calendar2 = getCalendar("vfreebusy_no_dtstart.ics");
-        
-        CalendarFilter filter = new CalendarFilter();
-        ComponentFilter compFilter = new ComponentFilter("VCALENDAR");
-        ComponentFilter vfbFilter = new ComponentFilter("VFREEBUSY");
-        filter.setFilter(compFilter);
-        compFilter.getComponentFilters().add(vfbFilter);
-        
-        DateTime start = new DateTime("20060102T115000Z");
-        DateTime end = new DateTime("20060109T115000Z");
-    
-        Period period = new Period(start, end);
-        TimeRangeFilter timeRangeFilter = new TimeRangeFilter(period);
-        vfbFilter.setTimeRangeFilter(timeRangeFilter);
-        
-        Assert.assertTrue(evaluater.evaluate(calendar1, filter));
-        Assert.assertTrue(evaluater.evaluate(calendar2, filter));
-        
-        start = new DateTime("20070102T115000Z");
-        end = new DateTime("20070109T115000Z");
-    
-        period = new Period(start, end);
-        timeRangeFilter.setPeriod(period);
-        
-        Assert.assertFalse(evaluater.evaluate(calendar1, filter));
-        Assert.assertFalse(evaluater.evaluate(calendar2, filter));
-        
-    }
-    
+
     /**
      * Evaluates VAvailability filter.
      * @throws Exception - if something is wrong this exception is thrown.

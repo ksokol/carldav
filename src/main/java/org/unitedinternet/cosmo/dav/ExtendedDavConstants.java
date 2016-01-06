@@ -21,7 +21,6 @@ import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
-import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.util.CosmoQName;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
@@ -41,15 +40,6 @@ public interface ExtendedDavConstants extends DavConstants {
     /** The Cosmo XML namespace  */
     Namespace NAMESPACE_COSMO =
         Namespace.getNamespace(PRE_COSMO, NS_COSMO);
-
-    /** The Cosmo property name <code>exclude-free-busy-rollup</code> */
-    String PROPERTY_EXCLUDE_FREE_BUSY_ROLLUP =
-        "exclude-free-busy-rollup";
-
-    /** The Cosmo property <code>cosmo:exclude-free-busy-rollup</code> */
-    DavPropertyName EXCLUDEFREEBUSYROLLUP =
-        DavPropertyName.create(PROPERTY_EXCLUDE_FREE_BUSY_ROLLUP,
-                               NAMESPACE_COSMO);
 
     /** The Cosmo property name <code>uuid</code> */
     String PROPERTY_UUID = "uuid";

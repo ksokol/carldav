@@ -94,9 +94,6 @@ public interface CaldavConstants {
     String ELEMENT_CARDDAV_ADDRESSBOOK_MULTIGET = "addressbook-multiget";
     /** The CalDAV XML element name <CALDAV:calendar-query> */
     String ELEMENT_CALDAV_CALENDAR_QUERY = "calendar-query";
-    /** The CalDAV XML element name <CALDAV:free-busy-query> */
-    String ELEMENT_CALDAV_CALENDAR_FREEBUSY = "free-busy-query";
-
 
     /** The CalDAV XML attribute name CALDAV:name */
     String ATTR_CALDAV_NAME = "name";

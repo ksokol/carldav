@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import net.fortuna.ical4j.model.Period;
-import net.fortuna.ical4j.model.component.VFreeBusy;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 
@@ -34,9 +32,6 @@ import java.util.Set;
  * and/or parameters. The items may be required to occur within a specified
  * time period. Query criteria are expressed using a
  * {@link CalendarFilter}.</dd>
- * <dt>Free-busy query</dt>
- * <dd>Returns a description of the free-busy periods for items that occur
- * within a specified time period.</dd>
  * </dl>
  * <p>
  * Calendar queries will only ever match instances of {@link ICalendarItem}.
@@ -65,29 +60,4 @@ public interface CalendarQueryProcessor {
      * @return True if the item matches the provided filter.
      */
     boolean filterQuery(ICalendarItem item, CalendarFilter filter);
-
-    /**
-     * <p>
-     * Executes a free-busy query against a collection. Returns a
-     * <code>VFREEBUSY</code> component containing the aggregate free-busy
-     * periods for every member of the collection that has an occurrence
-     * during the given period.
-     * </p>
-     * @param collection The collection item.
-     * @param period The period
-     * @return VFeeBusy.
-     */
-    VFreeBusy freeBusyQuery(CollectionItem collection, Period period);
-
-    /**
-     * <p>
-     * Executes a free-busy query against an item. Returns a
-     * <code>VFREEBUSY</code> component containing the free-busy periods for
-     * the item during the given period.
-     * </p>
-     * @param item The ICalendar item.
-     * @param period The period.
-     * @return VFreeBusy.
-     */
-    VFreeBusy freeBusyQuery(ICalendarItem item, Period period);
 }

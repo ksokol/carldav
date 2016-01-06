@@ -42,10 +42,10 @@ import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.model.mock.MockEventExceptionStamp;
 import org.unitedinternet.cosmo.model.mock.MockEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
+import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.io.FileInputStream;
 import java.util.Iterator;
@@ -61,7 +61,7 @@ public class EntityConverterTest {
         TimeZoneRegistryFactory.getInstance().createRegistry();
     
     
-    protected EntityFactory entityFactory = new MockEntityFactory();
+    protected EntityFactory entityFactory = new HibEntityFactory(new VersionFourGenerator());
     protected EntityConverter converter = new EntityConverter(entityFactory);
     
     /**
@@ -393,7 +393,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testEventModificationGetCalendar() throws Exception {
-        NoteItem master = new MockNoteItem();
+        NoteItem master = new HibNoteItem();
         master.setIcalUid("icaluid");
         master.setDisplayName("master displayName");
         master.setBody("master body");
@@ -410,12 +410,12 @@ public class EntityConverterTest {
         
         eventStamp.getEventCalendar().validate();
        
-        NoteItem mod = new MockNoteItem();
+        NoteItem mod = new HibNoteItem();
         mod.setDisplayName("modDisplayName");
         mod.setBody("modBody");
         mod.setModifies(master);
         master.addModification(mod);
-        EventExceptionStamp exceptionStamp = new MockEventExceptionStamp(mod);
+        EventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
         mod.addStamp(exceptionStamp);
         exceptionStamp.createCalendar();
         exceptionStamp.setStartDate(eventStamp.getStartDate());

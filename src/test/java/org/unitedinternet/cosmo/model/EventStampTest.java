@@ -15,18 +15,15 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.io.FileInputStream;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.mock.MockEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
+
+import java.io.FileInputStream;
 
 /**
  * Test EventStamp
@@ -34,10 +31,7 @@ import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 public class EventStampTest {
    
     protected String baseDir = "src/test/resources/testdata/";
-    @SuppressWarnings("unused")
-    private static final TimeZoneRegistry TIMEZONE_REGISTRY =
-        TimeZoneRegistryFactory.getInstance().createRegistry();
-    
+
     /**
      * Tests ex dates.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -47,7 +41,7 @@ public class EventStampTest {
         NoteItem master = new MockNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
-        EventStamp eventStamp = new MockEventStamp(master);
+        EventStamp eventStamp = new HibEventStamp(master);
         
         eventStamp.setEventCalendar(getCalendar("recurring_with_exdates.ics"));
         

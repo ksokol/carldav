@@ -42,7 +42,6 @@ import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
@@ -336,7 +335,7 @@ public class EntityConverterTest {
         master.setBody("body");
         master.setIcalUid("icaluid");
         master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        EventStamp eventStamp = new MockEventStamp(master);
+        EventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         master.addStamp(eventStamp);
@@ -396,7 +395,7 @@ public class EntityConverterTest {
         master.setIcalUid("icaluid");
         master.setDisplayName("master displayName");
         master.setBody("master body");
-        EventStamp eventStamp = new MockEventStamp(master);
+        EventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         eventStamp.setDuration(new Dur("PT1H"));
@@ -462,7 +461,7 @@ public class EntityConverterTest {
     @Test
     public void testInheritedAnyTime() throws Exception {
         NoteItem master = new MockNoteItem();
-        EventStamp eventStamp = new MockEventStamp(master);
+        EventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
 
@@ -475,7 +474,6 @@ public class EntityConverterTest {
         NoteItem mod = new MockNoteItem();
         mod.setModifies(master);
         master.addModification(mod);
-       // EventExceptionStamp exceptionStamp = new MockEventExceptionStamp(mod);
         EventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
         mod.addStamp(exceptionStamp);
         exceptionStamp.createCalendar();

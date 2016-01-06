@@ -29,6 +29,7 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibTaskStamp;
@@ -101,7 +102,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return The event stamp.
      */
     public EventStamp createEventStamp(NoteItem note) {
-        return new MockEventStamp(note);
+        return new HibEventStamp(note);
     }
 
     /**

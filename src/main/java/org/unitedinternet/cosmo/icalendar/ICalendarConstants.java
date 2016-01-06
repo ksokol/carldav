@@ -35,13 +35,6 @@ public interface ICalendarConstants {
     String ICALENDAR_MEDIA_TYPE = "text/calendar";
 
     /**
-     * The icalender parameter used on a DTSTART to indicate that the event
-     * which contains the DTSTART is an "anytime" event. This is a OSAF custom 
-     * parameter.
-     */
-    String PARAM_X_OSAF_ANYTIME = "X-OSAF-ANYTIME";
-
-    /**
      * iCalendar value for "TRUE"
      */
     String VALUE_TRUE = "TRUE";

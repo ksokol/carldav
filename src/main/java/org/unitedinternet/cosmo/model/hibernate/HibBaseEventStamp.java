@@ -15,18 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
-import javax.validation.constraints.NotNull;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
@@ -43,7 +31,6 @@ import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
@@ -60,13 +47,24 @@ import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
-
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SecondaryTable;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -808,62 +806,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
         }
         getEvent().getProperties().add(new Status(text));
     }
-    
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.BaseEventStamp#isAnyTime()
-     */
-    public Boolean isAnyTime() {
-        DtStart dtStart = getEvent().getStartDate();
-        if (dtStart == null) {
-            return Boolean.FALSE;
-        }
-        Parameter parameter = dtStart.getParameters()
-            .getParameter(PARAM_X_OSAF_ANYTIME);
-        if (parameter == null) {
-            return Boolean.FALSE;
-        }
-
-        return Boolean.valueOf(VALUE_TRUE.equals(parameter.getValue()));
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.BaseEventStamp#getAnyTime()
-     */
-    public Boolean getAnyTime() {
-        return isAnyTime();
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.BaseEventStamp#setAnyTime(java.lang.Boolean)
-     */
-    public void setAnyTime(Boolean isAnyTime) {
-        DtStart dtStart = getEvent().getStartDate();
-        if (dtStart == null) {
-            throw new IllegalStateException("event has no start date");
-        }
-        Parameter parameter = dtStart.getParameters().getParameter(
-                PARAM_X_OSAF_ANYTIME);
-
-        // add X-OSAF-ANYTIME if it doesn't exist
-        if (parameter == null && Boolean.TRUE.equals(isAnyTime)) {
-            dtStart.getParameters().add(getAnyTimeXParam());
-            return;
-        }
-
-        // if it exists, update based on isAnyTime
-        if (parameter != null) {
-            dtStart.getParameters().remove(parameter);
-            if (Boolean.TRUE.equals(isAnyTime)) {
-                dtStart.getParameters().add(getAnyTimeXParam());
-            }
-        }
-    }
-    
-    protected Parameter getAnyTimeXParam() {
-        return new XParameter(PARAM_X_OSAF_ANYTIME, VALUE_TRUE);
-    }
-    
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.BaseEventStamp#createCalendar()

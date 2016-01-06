@@ -288,24 +288,6 @@ public interface BaseEventStamp extends Stamp {
     public void setStatus(String text);
 
     /**
-     * Is the event marked as anytime.
-     * @return true if the event is an anytime event
-     */
-    public Boolean isAnyTime();
-
-    /**
-     * Same as isAnyTime()
-     * @return true if the event is an anytime event
-     */
-    public Boolean getAnyTime();
-
-    /**
-     * Toggle the event anytime parameter.
-     * @param isAnyTime true if the event occurs anytime
-     */
-    public void setAnyTime(Boolean isAnyTime);
-
-    /**
      * Initializes the Calendar with a default master event.
      * Initializes the master event using the underlying item's
      * icalUid (if NoteItem) or uid.

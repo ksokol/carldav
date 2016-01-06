@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
@@ -34,7 +30,6 @@ import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.parameter.XParameter;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
@@ -51,12 +46,15 @@ import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
-
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -937,78 +935,6 @@ public abstract class MockBaseEventStamp extends MockStamp
         }
         getEvent().getProperties().add(new Status(text));
     }
-    
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceBaseEventStamp#isAnyTime()
-     */
-    /**
-     * Is any time
-     * @return boolean.
-     */
-    public Boolean isAnyTime() {
-        DtStart dtStart = getEvent().getStartDate();
-        if (dtStart == null) {
-            return Boolean.FALSE;
-        }
-        Parameter parameter = dtStart.getParameters()
-            .getParameter(PARAM_X_OSAF_ANYTIME);
-        if (parameter == null) {
-            return Boolean.FALSE;
-        }
-
-        return Boolean.valueOf(VALUE_TRUE.equals(parameter.getValue()));
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceBaseEventStamp#getAnyTime()
-     */
-    /**
-     * Gets any time.
-     * @return the boolean.
-     */
-    public Boolean getAnyTime() {
-        return isAnyTime();
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceBaseEventStamp#setAnyTime(java.lang.Boolean)
-     */
-    /**
-     * Sets any time.
-     * @param isAnyTime isAnyTime.
-     */
-    public void setAnyTime(Boolean isAnyTime) {
-        DtStart dtStart = getEvent().getStartDate();
-        if (dtStart == null) {
-            throw new IllegalStateException("event has no start date");
-        }
-        Parameter parameter = dtStart.getParameters().getParameter(
-                PARAM_X_OSAF_ANYTIME);
-
-        // add X-OSAF-ANYTIME if it doesn't exist
-        if (parameter == null && Boolean.TRUE.equals(isAnyTime)) {
-            dtStart.getParameters().add(getAnyTimeXParam());
-            return;
-        }
-
-        // if it exists, update based on isAnyTime
-        if (parameter != null) {
-            dtStart.getParameters().remove(parameter);
-            if (Boolean.TRUE.equals(isAnyTime)) {   
-                dtStart.getParameters().add(getAnyTimeXParam());
-            }
-        }
-    }
-    
-    /**
-     * Gets any time param.
-     * @return The parameter.
-     */
-    protected Parameter getAnyTimeXParam() {
-        return new XParameter(PARAM_X_OSAF_ANYTIME, VALUE_TRUE);
-    }
-    
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceBaseEventStamp#createCalendar()

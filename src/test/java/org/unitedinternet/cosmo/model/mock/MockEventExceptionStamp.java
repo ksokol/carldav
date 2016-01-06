@@ -124,62 +124,6 @@ public class MockEventExceptionStamp extends MockBaseEventStamp implements
         // add event exception
         getEventCalendar().getComponents().add(event);
     }
- 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceEventExceptionStamp#setAnyTime(java.lang.Boolean)
-     */
-    /**
-     * Sets any time.
-     * @param isAnyTime Boolean.
-     */
-    @Override
-    public void setAnyTime(Boolean isAnyTime) {
-        // Interpret null as "missing" anyTime, meaning inherited from master
-        if(isAnyTime==null) {
-            DtStart dtStart = getEvent().getStartDate();
-            if (dtStart == null) {
-                throw new IllegalStateException("event has no start date");
-            }
-            Parameter parameter = dtStart.getParameters().getParameter(
-                    PARAM_X_OSAF_ANYTIME);
-            if (parameter != null) {
-                dtStart.getParameters().remove(parameter);
-            }
-            
-            // "missing" anyTime is represented as X-OSAF-ANYTIME=MISSING
-            dtStart.getParameters().add(getInheritedAnyTimeXParam());
-        } else {
-            super.setAnyTime(isAnyTime);
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.copy.InterfaceEventExceptionStamp#isAnyTime()
-     */
-    /**
-     * Is any time.
-     * @return boolean.
-     */
-    @Override
-    public Boolean isAnyTime() {
-        DtStart dtStart = getEvent().getStartDate();
-        if (dtStart == null) {
-            return Boolean.FALSE;
-        }
-        Parameter parameter = dtStart.getParameters()
-            .getParameter(PARAM_X_OSAF_ANYTIME);
-        if (parameter == null) {
-            return Boolean.FALSE;
-        }
-     
-        // return null for "missing" anyTime
-        if (VALUE_MISSING.equals(parameter.getValue())) {
-            return null;
-        }
-
-        return Boolean.valueOf(VALUE_TRUE.equals(parameter.getValue()));
-    }
-    
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceEventExceptionStamp#getDisplayAlarmTrigger()
@@ -238,11 +182,6 @@ public class MockEventExceptionStamp extends MockBaseEventStamp implements
             }
         }
     }
-    
-    private Parameter getInheritedAnyTimeXParam() {
-        return new XParameter(PARAM_X_OSAF_ANYTIME, VALUE_MISSING);
-    }
-
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.copy.InterfaceEventExceptionStamp#getMasterStamp()

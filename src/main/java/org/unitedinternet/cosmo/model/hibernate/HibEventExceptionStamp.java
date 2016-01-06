@@ -15,9 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Dur;
@@ -25,9 +22,7 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.XParameter;
-import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Trigger;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.CosmoException;
@@ -37,6 +32,9 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 /**
  * Hibernate persistent EventExceptionStamp.
@@ -104,62 +102,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
         // add event exception
         getEventCalendar().getComponents().add(event);
     }
- 
-    /**
-     * Toggle the event exception anytime parameter.
-     * @param isAnyTime True if the event occurs anytime<br/>
-     *                  False if the event does not occur anytime</br>
-     *                  null if the event should inherit the anyTime
-     *                  attribute of the master event.
-     */
-    @Override
-    public void setAnyTime(Boolean isAnyTime) {
-        // Interpret null as "missing" anyTime, meaning inherited from master
-        if(isAnyTime==null) {
-            DtStart dtStart = getEvent().getStartDate();
-            if (dtStart == null) {
-                throw new IllegalStateException("event has no start date");
-            }
-            Parameter parameter = dtStart.getParameters().getParameter(
-                    PARAM_X_OSAF_ANYTIME);
-            if(parameter!=null) {
-                dtStart.getParameters().remove(parameter);
-            }
-            
-            // "missing" anyTime is represented as X-OSAF-ANYTIME=MISSING
-            dtStart.getParameters().add(getInheritedAnyTimeXParam());
-        } else {
-            super.setAnyTime(isAnyTime);
-        }
-    }
-    
-    /**
-     * Is the event exception marked as anytime.
-     * @return True if the event is an anytime event<br/>
-     *         False if it is not an anytime event<br/>
-     *         null if the anyTime attribute is "missing", ie inherited
-     *         from the master event.
-     */
-    @Override
-    public Boolean isAnyTime() {
-        DtStart dtStart = getEvent().getStartDate();
-        if (dtStart == null) {
-            return Boolean.FALSE;
-        }
-        Parameter parameter = dtStart.getParameters()
-            .getParameter(PARAM_X_OSAF_ANYTIME);
-        if (parameter == null) {
-            return Boolean.FALSE;
-        }
-     
-        // return null for "missing" anyTime
-        if(!VALUE_MISSING.equals(parameter.getValue())) {
-            return Boolean.valueOf(VALUE_TRUE.equals(parameter.getValue()));
-        }
-        
-        return Boolean.FALSE;
-    }
-    
     
     /**
      * Override to handle "missing" trigger by searching for a
@@ -214,12 +156,7 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
             }
         }
     }
-    
-    private Parameter getInheritedAnyTimeXParam() {
-        return new XParameter(PARAM_X_OSAF_ANYTIME, VALUE_MISSING);
-    }
 
-   
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.EventExceptionStamp#getMasterStamp()
      */

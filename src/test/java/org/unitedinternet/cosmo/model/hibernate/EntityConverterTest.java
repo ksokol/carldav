@@ -466,7 +466,7 @@ public class EntityConverterTest {
         EventStamp eventStamp = new MockEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
-        eventStamp.setAnyTime(true);
+
         DateList dates = new DateList();
         dates.add(new DateTime("20070212T074500"));
         dates.add(new DateTime("20070213T074500"));
@@ -476,57 +476,28 @@ public class EntityConverterTest {
         NoteItem mod = new MockNoteItem();
         mod.setModifies(master);
         master.addModification(mod);
-        EventExceptionStamp exceptionStamp = new MockEventExceptionStamp(mod);
+       // EventExceptionStamp exceptionStamp = new MockEventExceptionStamp(mod);
+        EventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
         mod.addStamp(exceptionStamp);
         exceptionStamp.createCalendar();
         exceptionStamp.setRecurrenceId(new DateTime("20070212T074500"));
         exceptionStamp.setStartDate(new DateTime("20070212T074500"));
-        exceptionStamp.setAnyTime(null);
         mod.addStamp(exceptionStamp);
         
         Calendar cal = converter.convertNote(master);
         cal.validate();
         ComponentList comps = cal.getComponents(Component.VEVENT);
         Assert.assertEquals(2, comps.size());
-        VEvent masterEvent = (VEvent) comps.get(0);
-        VEvent modEvent = (VEvent) comps.get(1);
-        
-        Parameter masterAnyTime = masterEvent.getStartDate().getParameter("X-OSAF-ANYTIME");
-        Parameter modAnyTime = modEvent.getStartDate().getParameter("X-OSAF-ANYTIME");
-        
-        Assert.assertNotNull(masterAnyTime);
-        Assert.assertEquals("TRUE", masterAnyTime.getValue());
-        Assert.assertNotNull(modAnyTime);
-        Assert.assertEquals("TRUE", modAnyTime.getValue());
-        
-        // change master and verify attribute is inherited in modification
-        eventStamp.setAnyTime(false);
+
+        cal = converter.convertNote(master);
+        cal.validate();
+        comps = cal.getComponents(Component.VEVENT);
+        Assert.assertEquals(2, comps.size());
         
         cal = converter.convertNote(master);
         cal.validate();
         comps = cal.getComponents(Component.VEVENT);
         Assert.assertEquals(2, comps.size());
-        masterEvent = (VEvent) comps.get(0);
-        modEvent = (VEvent) comps.get(1);
-        
-        Assert.assertNull(masterEvent.getStartDate().getParameter("X-OSAF-ANYTIME"));
-        Assert.assertNull(modEvent.getStartDate().getParameter("X-OSAF-ANYTIME"));
-        
-        // change both and verify
-        exceptionStamp.setAnyTime(true);
-        
-        cal = converter.convertNote(master);
-        cal.validate();
-        comps = cal.getComponents(Component.VEVENT);
-        Assert.assertEquals(2, comps.size());
-        masterEvent = (VEvent) comps.get(0);
-        modEvent = (VEvent) comps.get(1);
-        
-        modAnyTime = modEvent.getStartDate().getParameter("X-OSAF-ANYTIME");
-        
-        Assert.assertNull(masterEvent.getStartDate().getParameter("X-OSAF-ANYTIME"));
-        Assert.assertNotNull(modAnyTime);
-        Assert.assertEquals("TRUE", modAnyTime.getValue());
     }
     
     /**

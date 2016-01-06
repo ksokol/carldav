@@ -20,8 +20,8 @@ import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibUser;
 import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
-import org.unitedinternet.cosmo.model.mock.MockUser;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.util.Collection;
@@ -63,15 +63,13 @@ public class MockUserDao implements UserDao {
         activationIdIdx = new HashMap();
 
         // add overlord user
-        MockUser overlord = new MockUser();
+        User overlord = new HibUser();
         overlord.setUsername(User.USERNAME_OVERLORD);
         overlord.setFirstName("Cosmo");
         overlord.setLastName("Administrator");
         overlord.setPassword("32a8bd4d676f4fef0920c7da8db2bad7");
         overlord.setEmail("root@localhost");
         overlord.setAdmin(true);
-        overlord.setCreationDate(new Date());
-        overlord.setModifiedDate(new Date());
         createUser(overlord);
     }
 
@@ -147,19 +145,13 @@ public class MockUserDao implements UserDao {
         
         // Set create/modified date, etag for User and associated subscriptions
         // and perferences.
-        ((MockAuditableObject) user).setModifiedDate(new Date());
-        ((MockAuditableObject) user).setCreationDate(new Date());
-        ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
-                .calculateEntityTag());
-
         for(Preference p: user.getPreferences()) {
             ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
                     .calculateEntityTag());
             ((MockAuditableObject) p).setModifiedDate(new Date());
             ((MockAuditableObject) p).setCreationDate(new Date());
         }
-            
-        ((MockUser) user).validate();
+
         if (usernameIdx.containsKey(user.getUsername())) {
             throw new DuplicateUsernameException(user.getUsername());
         }
@@ -188,10 +180,6 @@ public class MockUserDao implements UserDao {
         
         // Update modified date, etag for User and associated subscriptions
         // and preferences.
-        ((MockAuditableObject) user).setModifiedDate(new Date());
-        ((MockAuditableObject) user).setEntityTag(((MockAuditableObject) user)
-                .calculateEntityTag());
-
         for(Preference p: user.getPreferences()) {
             ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
                     .calculateEntityTag());
@@ -200,8 +188,7 @@ public class MockUserDao implements UserDao {
                 ((MockAuditableObject) p).setCreationDate(new Date());
             }
         }
-        
-        ((MockUser) user).validate();
+
         String key = user.isUsernameChanged() ?
             user.getOldUsername() :
             user.getUsername();

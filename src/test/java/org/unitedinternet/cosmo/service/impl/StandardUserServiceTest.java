@@ -136,8 +136,6 @@ public class StandardUserServiceTest {
         }
         Assert.assertFalse("Original and stored password are the same",
                     user.getPassword().equals(digestedPassword));
-        Assert.assertTrue("Created and modified dates are the same",
-                   ! user.getCreationDate().equals(user.getModifiedDate()));
 
         // leave password
         Thread.sleep(1000); // let modified date change
@@ -149,8 +147,6 @@ public class StandardUserServiceTest {
         }
         Assert.assertTrue("Original and stored password are not the same",
                     user2.getPassword().equals(user.getPassword()));
-        Assert.assertTrue("Created and modified dates are the same",
-                   ! user2.getCreationDate().equals(user2.getModifiedDate()));
     }
 
     /**

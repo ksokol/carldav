@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.Ignore;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
@@ -25,7 +24,6 @@ import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -183,22 +181,6 @@ public class TestHelper {
             throw new IllegalStateException("resource " + name + " not found");
         }
         return in;
-    }
-    
-    /**
-     * Gets bytes.
-     * @param name The name.
-     * @return The bytes.
-     * @throws IOException - if something is wrong this exception is thrown.
-     */
-    public byte[] getBytes(String name) throws IOException {
-        InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
-        if (in == null) {
-            throw new IllegalStateException("resource " + name + " not found");
-        }
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        IOUtils.copy(in, bos);
-        return bos.toByteArray();
     }
 
     /**

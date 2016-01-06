@@ -130,17 +130,7 @@ public class MockHelper extends TestHelper {
         CollectionItem c = makeDummyCollection(user);
         return contentService.createCollection(parent, c);
     }
-    
-    /**
-     * Makes and stores dummy calendar collection.
-     * @return The collection item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public CollectionItem makeAndStoreDummyCalendarCollection()
-        throws Exception {
-        return makeAndStoreDummyCalendarCollection(null);
-    }
-    
+
     /**
      * Makes and stores dummy calendar collection.
      * @param name The name.

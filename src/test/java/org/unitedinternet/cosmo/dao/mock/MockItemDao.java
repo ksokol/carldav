@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.util.PathUtil;
 
 import java.net.URI;
@@ -239,7 +238,8 @@ public class MockItemDao implements ItemDao {
     @SuppressWarnings("deprecation")
     public void removeItem(Item item) {
         if (item.getParent()!=null) {
-            ((MockCollectionItem) item.getParent()).removeChild(item);
+            ((HibItem) item).addParent((CollectionItem) item);
+          //  ((MockCollectionItem) item.getParent()).removeChild(item);
         }
         
         // update modifications
@@ -294,7 +294,8 @@ public class MockItemDao implements ItemDao {
      * @param collection The collection.
      */
     public void addItemToCollection(Item item, CollectionItem collection) {
-        ((MockCollectionItem) collection).addChild(item);
+        //((MockCollectionItem) collection).addChild(item);
+        ((HibItem) item).addParent((CollectionItem) item);
         ((HibItem) item).addParent(collection);
     }
     
@@ -306,7 +307,8 @@ public class MockItemDao implements ItemDao {
      */
     public void removeItemFromCollection(Item item, CollectionItem collection) {
         ((HibItem) item).removeParent(collection);
-        ((MockCollectionItem) collection).removeChild(item);
+        //((MockCollectionItem) collection).removeChild(item);
+        ((HibItem) item).removeParent((CollectionItem) item);
         if (item.getParents().size() == 0) {
             removeItem(item);
         }

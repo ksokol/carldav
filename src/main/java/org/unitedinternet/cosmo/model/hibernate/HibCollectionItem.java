@@ -60,6 +60,10 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
         return children;
     }
 
+    public void setChildren(final Set<Item> children) {
+        this.children = children;
+    }
+
     public CollectionItemDetails getChildDetails(Item item) {
         for(CollectionItemDetails cid: childDetails) {
             if(cid.getItem().getUid().equals(item.getUid()) && 

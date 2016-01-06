@@ -23,7 +23,6 @@ import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.util.Collection;
@@ -184,7 +183,8 @@ public class MockDaoStorage {
                 }
             }
             
-            ((MockCollectionItem) item.getParent()).addChild(item);
+            //((MockCollectionItem) item.getParent()).addChild(item);
+            ((HibItem) item).addParent((CollectionItem) item);
             itemsByPath.put(getItemPath(item.getParent()) + "/" + item.getName(),
                     item);
         }

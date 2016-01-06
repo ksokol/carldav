@@ -37,14 +37,15 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
+import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.io.FileInputStream;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -261,11 +262,14 @@ public class EntityConverterTest {
         NoteItem note1 = converter.convertEventCalendar(c1).iterator().next();
         NoteItem note2 = converter.convertTaskCalendar(c2);
        
-        MockCollectionItem collection = new MockCollectionItem();
+        HibCollectionItem collection = new HibCollectionItem();
         collection.addStamp(new HibCalendarCollectionStamp(collection));
-        collection.addChild(note1);
-        collection.addChild(note2);
-        
+
+        final Set<Item> items = new HashSet<>();
+        items.add(note1);
+        items.add(note2);
+
+        collection.setChildren(items);
         Calendar fullCal = converter.convertCollection(collection);
         fullCal.validate();
         Assert.assertNotNull(fullCal);

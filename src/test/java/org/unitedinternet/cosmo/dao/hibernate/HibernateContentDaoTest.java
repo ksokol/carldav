@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.property.ProdId;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,7 +25,6 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.BooleanAttribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
@@ -42,7 +40,6 @@ import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibAvailabilityItem;
 import org.unitedinternet.cosmo.model.hibernate.HibBooleanAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
@@ -1313,37 +1310,6 @@ public class HibernateContentDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertNull(triageStatus);
     }
 
-    /**
-     * Tests content dao create availability.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoCreateAvailability() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-
-        AvailabilityItem newItem = new HibAvailabilityItem();
-        newItem.setOwner(user);
-        newItem.setName("test");
-        newItem.setIcalUid("icaluid");
-        
-        CalendarBuilder cb = new CalendarBuilder();
-        net.fortuna.ical4j.model.Calendar calendar = cb.build(helper.getInputStream("testdata/vavailability.ics"));
-        
-        newItem.setAvailabilityCalendar(calendar);
-        
-        newItem = (AvailabilityItem) contentDao.createContent(root, newItem);
-
-        Assert.assertTrue(getHibItem(newItem).getId() > -1);
-        Assert.assertNotNull(newItem.getUid());
-
-        clearSession();
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        helper.verifyItem(newItem, queryItem);
-    }
-    
     /**
      * Tests content dao update collection2.
      * @throws Exception - if something is wrong this exception is thrown.

@@ -15,17 +15,16 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import java.io.InputStream;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.InputStream;
 
 /**
  * Test CalendarFilterEvaluater
@@ -490,26 +489,6 @@ public class CalendarFilterEvaluaterTest {
         Assert.assertTrue(evaluater.evaluate(calendar2, filter));
     }
 
-    /**
-     * Evaluates VAvailability filter.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @SuppressWarnings("unchecked")
-    @Test
-    public void testEvaluateVAvailabilityFilter() throws Exception {
-        
-        CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();
-        Calendar calendar = getCalendar("vavailability.ics");
-        
-        CalendarFilter filter = new CalendarFilter();
-        ComponentFilter compFilter = new ComponentFilter("VCALENDAR");
-        ComponentFilter vfbFilter = new ComponentFilter("VAVAILABILITY");
-        filter.setFilter(compFilter);
-        compFilter.getComponentFilters().add(vfbFilter);
-        
-        Assert.assertTrue(evaluater.evaluate(calendar, filter));
-    }
-    
     /**
      * Gets calendar.
      * @param name The name.

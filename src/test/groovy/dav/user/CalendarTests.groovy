@@ -468,7 +468,7 @@ public class CalendarTests extends IntegrationTestSupport {
                         <dt>{DAV:}iscollection</dt><dd>1</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}max-resource-size</dt><dd>10485760</dd>
                         <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
-                        <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VAVAILABILITY, VEVENT, VJOURNAL, VTODO</dd>
+                        <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VEVENT, VJOURNAL, VTODO</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
                         <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query</dd>
@@ -542,7 +542,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:displayname>calendarDisplayName</D:displayname>
                                         <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:comp name="VEVENT"/>
-                                            <C:comp name="VAVAILABILITY"/>
                                             <C:comp name="VJOURNAL"/>
                                             <C:comp name="VTODO"/>
                                         </C:supported-calendar-component-set>

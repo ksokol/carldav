@@ -135,7 +135,6 @@ class DavDroidTests extends IntegrationTestSupport {
                                             </D:resourcetype>
                                             <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                                 <C:comp name="VEVENT"/>
-                                                <C:comp name="VAVAILABILITY"/>
                                                 <C:comp name="VJOURNAL"/>
                                                 <C:comp name="VTODO"/>
                                             </C:supported-calendar-component-set>

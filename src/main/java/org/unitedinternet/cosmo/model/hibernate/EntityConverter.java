@@ -50,7 +50,6 @@ import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.AvailabilityItem;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
@@ -325,9 +324,7 @@ public class EntityConverter {
         if(item instanceof NoteItem) {
             return convertNote((NoteItem) item);
         }
-        else if(item instanceof AvailabilityItem) {
-            return convertAvailability((AvailabilityItem) item);
-        }
+
 
         return null;
     }
@@ -356,15 +353,6 @@ public class EntityConverter {
         }
 
         return getCalendarFromNote(note);
-    }
-
-    /**
-     * Converts availability.
-     * @param availability The availability item.
-     * @return The calendar.
-     */
-    public Calendar convertAvailability(AvailabilityItem availability) {
-        return availability.getAvailabilityCalendar();
     }
    
     /**

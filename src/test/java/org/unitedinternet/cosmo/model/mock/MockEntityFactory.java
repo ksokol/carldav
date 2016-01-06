@@ -29,6 +29,7 @@ import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 import org.unitedinternet.cosmo.model.hibernate.HibXmlAttribute;
@@ -116,7 +117,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return The file item.
      */
     public FileItem createFileItem() {
-        return new MockFileItem();
+        return new HibFileItem();
     }
 
     /**

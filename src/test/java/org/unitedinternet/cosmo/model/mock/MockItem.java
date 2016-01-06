@@ -23,6 +23,7 @@ import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItemDetails;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.util.ArrayList;
@@ -507,7 +508,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @param parent The collection item.
      */
     public void addParent(CollectionItem parent) {
-        MockCollectionItemDetails cid = new MockCollectionItemDetails(parent, this);
+        HibCollectionItemDetails cid = new HibCollectionItemDetails(parent, this);
         parentDetails.add(cid);
     }
 

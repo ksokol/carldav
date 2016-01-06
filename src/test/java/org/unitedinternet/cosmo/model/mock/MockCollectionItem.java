@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.model.mock;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItemDetails;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -36,7 +37,7 @@ public class MockCollectionItem extends MockItem implements CollectionItem {
      * @param item The item.
      */
     public void addChild(Item item) {
-        MockCollectionItemDetails cid = new MockCollectionItemDetails(this, item);
+        HibCollectionItemDetails cid = new HibCollectionItemDetails(this, item);
         childDetails.add(cid);
     }
     

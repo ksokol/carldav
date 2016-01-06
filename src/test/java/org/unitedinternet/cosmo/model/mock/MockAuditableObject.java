@@ -15,14 +15,13 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-
 import org.apache.commons.codec.binary.Base64;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.model.AuditableObject;
-import org.unitedinternet.cosmo.model.EntityFactory;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 
 /**
  * Extends BaseModelObject and adds creationDate, modifiedDate
@@ -31,8 +30,7 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 public abstract class MockAuditableObject implements AuditableObject {
 
     private static final ThreadLocal<MessageDigest> ETAG_DIGEST_LOCAL = new ThreadLocal<MessageDigest>();
-    private static final EntityFactory FACTORY = new MockEntityFactory();
-    
+
     private Date creationDate;
     private Date modifiedDate;
     private String etag = "";
@@ -153,14 +151,5 @@ public abstract class MockAuditableObject implements AuditableObject {
         }
         
         return Base64.encodeBase64String(md.digest(bytes));
-    }
-    
-    /**
-     * Gets factory.
-     * {@inheritDoc}
-     * @return entity factory.
-     */
-    public EntityFactory getFactory() {
-        return FACTORY;
     }
 }

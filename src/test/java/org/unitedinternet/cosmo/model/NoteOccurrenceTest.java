@@ -17,15 +17,16 @@ package org.unitedinternet.cosmo.model;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
+import org.unitedinternet.cosmo.model.hibernate.HibEntityFactory;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
+import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 /**
  * Test NoteOccurrenceItem
  */
 public class NoteOccurrenceTest {
    
-    private EntityFactory factory = new MockEntityFactory();
+    private EntityFactory factory = new HibEntityFactory(new VersionFourGenerator());
     
     /**
      * Tests generate note occurrence.

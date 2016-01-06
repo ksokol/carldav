@@ -15,17 +15,18 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.CosmoIOException;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibContentData;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Extends {@link Item} to represent an item containing binary content.
@@ -44,7 +45,7 @@ public class MockFileItem extends MockContentItem implements FileItem {
    
     private Long contentLength = null;
     
-    private MockContentData contentData = null;
+    private HibContentData contentData = null;
 
    
     /* (non-Javadoc)
@@ -105,7 +106,7 @@ public class MockFileItem extends MockContentItem implements FileItem {
      */
     public void setContent(InputStream is) throws IOException {
         if(contentData==null) {
-            contentData = new MockContentData(); 
+            contentData = new HibContentData();
         }
         
         contentData.setContentInputStream(is);

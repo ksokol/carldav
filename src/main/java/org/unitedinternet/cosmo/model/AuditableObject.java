@@ -21,6 +21,8 @@ public interface AuditableObject {
 
     Date getCreationDate();
 
+    void setCreationDate(Date date);
+
     Date getModifiedDate();
 
     void setModifiedDate(Date date);
@@ -38,4 +40,8 @@ public interface AuditableObject {
      * </p>
      */
     String getEntityTag();
+
+    String calculateEntityTag();
+
+    void setEntityTag(String tag);
 }

@@ -23,6 +23,7 @@ import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibAuditableObject;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItemDetails;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
@@ -40,7 +41,7 @@ import java.util.Set;
  * Abstract base class for an item on server.  All
  * content in cosmo extends from Item.
  */
-public abstract class MockItem extends MockAuditableObject implements Item {
+public abstract class MockItem extends HibAuditableObject implements Item {
 
    
     private String uid;

@@ -21,7 +21,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Preference;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
-import org.unitedinternet.cosmo.model.mock.MockAuditableObject;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.util.Collection;
@@ -31,11 +30,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-/**
- * Mock implementation of {@link UserDao} useful for testing.
- */
 public class MockUserDao implements UserDao {
-    static int idseq = 0;
 
     @SuppressWarnings("rawtypes")
     private HashMap usernameIdx;
@@ -146,10 +141,9 @@ public class MockUserDao implements UserDao {
         // Set create/modified date, etag for User and associated subscriptions
         // and perferences.
         for(Preference p: user.getPreferences()) {
-            ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
-                    .calculateEntityTag());
-            ((MockAuditableObject) p).setModifiedDate(new Date());
-            ((MockAuditableObject) p).setCreationDate(new Date());
+            p.setEntityTag(p.calculateEntityTag());
+            p.setModifiedDate(new Date());
+            p.setCreationDate(new Date());
         }
 
         if (usernameIdx.containsKey(user.getUsername())) {
@@ -181,11 +175,10 @@ public class MockUserDao implements UserDao {
         // Update modified date, etag for User and associated subscriptions
         // and preferences.
         for(Preference p: user.getPreferences()) {
-            ((MockAuditableObject) p).setEntityTag(((MockAuditableObject) p)
-                    .calculateEntityTag());
-            ((MockAuditableObject) p).setModifiedDate(new Date());
+            p.setEntityTag(p.calculateEntityTag());
+            p.setModifiedDate(new Date());
             if (p.getCreationDate()==null) {
-                ((MockAuditableObject) p).setCreationDate(new Date());
+                p.setCreationDate(new Date());
             }
         }
 

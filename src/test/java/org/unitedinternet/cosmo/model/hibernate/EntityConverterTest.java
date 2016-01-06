@@ -48,7 +48,6 @@ import org.unitedinternet.cosmo.model.mock.MockEventExceptionStamp;
 import org.unitedinternet.cosmo.model.mock.MockEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.model.mock.MockTaskStamp;
-import org.unitedinternet.cosmo.model.mock.MockTriageStatus;
 
 import java.io.FileInputStream;
 import java.util.Iterator;
@@ -297,7 +296,7 @@ public class EntityConverterTest {
         master.setBody("body");
         master.setIcalUid("icaluid");
         master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        master.setTriageStatus(TriageStatusUtil.initialize(new MockTriageStatus()));
+        master.setTriageStatus(TriageStatusUtil.initialize(new HibTriageStatus()));
         
         Calendar cal = converter.convertNote(master);
         cal.validate();

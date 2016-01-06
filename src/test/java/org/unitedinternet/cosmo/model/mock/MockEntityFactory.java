@@ -28,6 +28,7 @@ import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 import org.unitedinternet.cosmo.model.hibernate.HibXmlAttribute;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
@@ -143,7 +144,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return The triage status.
      */
     public TriageStatus createTriageStatus() {
-        return new MockTriageStatus();
+        return new HibTriageStatus();
     }
 
     /**

@@ -17,21 +17,31 @@ package org.unitedinternet.cosmo.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.orm.hibernate4.SessionHolder;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
-/**
- * Abstract Hibernate Dao Test Case. 
- *
- */
-public abstract class AbstractHibernateDaoTestCase extends AbstractSpringDaoTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={
+        "classpath:applicationContext-test.xml",
+        "classpath:applicationContext-services.xml",
+        "classpath:applicationContext-security-dav.xml",
+        "classpath:applicationContext-dao.xml"})
+@TransactionConfiguration
+@Transactional
+public abstract class AbstractHibernateDaoTestCase {
 
     protected HibernateTestHelper helper;
     protected Session session;
+
     @Autowired(required=true)
     protected SessionFactory sessionFactory ;
     
@@ -39,7 +49,6 @@ public abstract class AbstractHibernateDaoTestCase extends AbstractSpringDaoTest
      * Constructor.
      */
     public AbstractHibernateDaoTestCase() {
-        super();
         helper = new HibernateTestHelper();
     }
     

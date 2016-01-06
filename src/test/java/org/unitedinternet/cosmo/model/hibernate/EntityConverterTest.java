@@ -46,7 +46,6 @@ import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.model.mock.MockEventExceptionStamp;
 import org.unitedinternet.cosmo.model.mock.MockEventStamp;
 import org.unitedinternet.cosmo.model.mock.MockNoteItem;
-import org.unitedinternet.cosmo.model.mock.MockTaskStamp;
 
 import java.io.FileInputStream;
 import java.util.Iterator;
@@ -313,7 +312,7 @@ public class EntityConverterTest {
         
         master.getTriageStatus().setCode(TriageStatus.CODE_DONE);
         master.getTriageStatus().setRank(TriageStatusUtil.getRank(completeDate.getTime()));
-        master.addStamp(new MockTaskStamp());
+        master.addStamp(new HibTaskStamp());
         
         cal = converter.convertNote(master);
         task = (VToDo) cal.getComponents().get(0);

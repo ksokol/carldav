@@ -30,6 +30,7 @@ import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
+import org.unitedinternet.cosmo.model.hibernate.HibTaskStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 import org.unitedinternet.cosmo.model.hibernate.HibXmlAttribute;
@@ -128,7 +129,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return The task stamp.
      */
     public TaskStamp createTaskStamp() {
-        return new MockTaskStamp();
+        return new HibTaskStamp();
     }
 
     /**

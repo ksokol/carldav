@@ -15,20 +15,20 @@
  */
 package org.unitedinternet.cosmo.model.mock;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
-
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -87,7 +87,7 @@ public class MockEventStamp extends MockBaseEventStamp implements
         // add all exception events
         NoteItem note = (NoteItem) getItem();
         for(NoteItem exception : note.getModifications()) {
-            EventExceptionStamp exceptionStamp = MockEventExceptionStamp.getStamp(exception);
+            EventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
             if (exceptionStamp != null) {
                 exceptions.add(exceptionStamp.getEvent());
             }

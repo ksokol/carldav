@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
@@ -25,8 +24,6 @@ import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
@@ -420,8 +417,7 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
     }
 
     protected VAlarm getDisplayAlarm(VEvent event) {
-        for(@SuppressWarnings("rawtypes")
-            Iterator it = event.getAlarms().iterator();it.hasNext();) {
+        for(Iterator it = event.getAlarms().iterator();it.hasNext();) {
             VAlarm alarm = (VAlarm) it.next();
             if (alarm.getProperties().getProperty(Property.ACTION).equals(Action.DISPLAY)) {
                 return alarm;
@@ -437,8 +433,7 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
             return;
         }
 
-        for(@SuppressWarnings("rawtypes")
-            Iterator it = event.getAlarms().iterator();it.hasNext();) {
+        for(Iterator it = event.getAlarms().iterator();it.hasNext();) {
             VAlarm alarm = (VAlarm) it.next();
             if (alarm.getProperties().getProperty(Property.ACTION).equals(
                     Action.DISPLAY)) {

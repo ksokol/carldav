@@ -122,9 +122,10 @@ public class MockContentDao extends MockItemDao implements ContentDao {
         if (getStorage().getItemByUid(content.getUid()) != null) {
             throw new UidInUseException(content.getUid(), "Uid " + content.getUid() + " already in use");
         }
-        
-        ((MockItem) content).addParent(parent);
-        
+
+        if(content instanceof MockItem) {
+            ((MockItem) content).addParent(parent);
+        }
         getStorage().storeItem((Item)content);
 
         return content;

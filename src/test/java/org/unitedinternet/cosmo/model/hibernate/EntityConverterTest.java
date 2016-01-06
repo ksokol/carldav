@@ -42,7 +42,6 @@ import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.io.FileInputStream;
@@ -284,10 +283,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testConvertTask() throws Exception {
-        @SuppressWarnings("unused")
-		TimeZoneRegistry registry =
-            TimeZoneRegistryFactory.getInstance().createRegistry();
-        NoteItem master = new MockNoteItem();
+        NoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
         master.setIcalUid("icaluid");
@@ -330,7 +326,7 @@ public class EntityConverterTest {
     public void testConvertEvent() throws Exception {
         TimeZoneRegistry registry =
             TimeZoneRegistryFactory.getInstance().createRegistry();
-        NoteItem master = new MockNoteItem();
+        NoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
         master.setIcalUid("icaluid");
@@ -424,8 +420,6 @@ public class EntityConverterTest {
         Calendar cal = converter.convertNote(master);
         ComponentList comps = cal.getComponents(Component.VEVENT);
         Assert.assertEquals(2, comps.size());
-        @SuppressWarnings("unused")
-		VEvent masterEvent = (VEvent) comps.get(0);
         VEvent modEvent = (VEvent) comps.get(1);
         
         // test merged properties
@@ -445,7 +439,6 @@ public class EntityConverterTest {
         cal = converter.convertNote(master);
         comps = cal.getComponents(Component.VEVENT);
         Assert.assertEquals(2, comps.size());
-        masterEvent = (VEvent) comps.get(0);
         modEvent = (VEvent) comps.get(1);
         
         Assert.assertEquals("master displayName", modEvent.getSummary().getValue());
@@ -460,7 +453,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testInheritedAnyTime() throws Exception {
-        NoteItem master = new MockNoteItem();
+        NoteItem master = new HibNoteItem();
         EventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
@@ -471,7 +464,7 @@ public class EntityConverterTest {
         eventStamp.setRecurrenceDates(dates);
         master.addStamp(eventStamp);
         
-        NoteItem mod = new MockNoteItem();
+        NoteItem mod = new HibNoteItem();
         mod.setModifies(master);
         master.addModification(mod);
         EventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);

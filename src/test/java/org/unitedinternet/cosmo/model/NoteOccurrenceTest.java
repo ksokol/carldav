@@ -15,12 +15,9 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.Date;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 
 /**
@@ -37,10 +34,8 @@ public class NoteOccurrenceTest {
     @Test
     public void testGenerateNoteOccurrence() throws Exception {
         
-        MockNoteItem note = (MockNoteItem) factory.createNote();
+        NoteItem note = factory.createNote();
         note.setUid("1");
-        note.setCreationDate(new Date());
-        note.setModifiedDate(new Date());
         note.setDisplayName("dn");
         note.setBody("body");
         note.addStamp(factory.createEventStamp(note));

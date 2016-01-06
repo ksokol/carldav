@@ -182,10 +182,13 @@ public class MockDaoStorage {
         if (item.getName() == null) {
             item.setName(item.getUid());
         }
-        ((MockItem) item).setCreationDate(new Date());
-        ((MockItem) item).setModifiedDate(item.getCreationDate());
-        ((MockItem) item).setEntityTag(getMockItem(item).calculateEntityTag());
-        
+
+        if(item instanceof MockItem) {
+            ((MockItem) item).setCreationDate(new Date());
+            ((MockItem) item).setModifiedDate(item.getCreationDate());
+            ((MockItem) item).setEntityTag(getMockItem(item).calculateEntityTag());
+        }
+
         if(item.getParent()!=null) {
             for (Item sibling : item.getParent().getChildren()) {
                 if (sibling.getName().equals(item.getName())) {

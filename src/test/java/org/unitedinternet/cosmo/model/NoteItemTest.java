@@ -15,12 +15,11 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.Date;
-
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
+
+import java.util.Date;
 
 /**
  * Test NoteItem
@@ -33,11 +32,11 @@ public class NoteItemTest {
      */
     @Test
     public void testNoteItemEtag() throws Exception {
-        MockNoteItem master = new MockNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setUid("1");
         master.setModifiedDate(new Date());
         
-        MockNoteItem mod = new MockNoteItem();
+        NoteItem mod = new HibNoteItem();
         mod.setUid("2");
         mod.setModifiedDate(new Date());
         mod.setModifies(master);

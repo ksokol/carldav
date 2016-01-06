@@ -21,7 +21,7 @@ import net.fortuna.ical4j.model.DateList;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.FileInputStream;
 
@@ -38,7 +38,7 @@ public class EventStampTest {
      */
     @Test
     public void testExDates() throws Exception {
-        NoteItem master = new MockNoteItem();
+        NoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
         EventStamp eventStamp = new HibEventStamp(master);

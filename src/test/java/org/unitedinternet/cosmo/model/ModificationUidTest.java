@@ -19,12 +19,11 @@ import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
-import org.unitedinternet.cosmo.model.mock.MockNoteItem;
 
 /**
  * Test for ModificationUid class.
@@ -41,7 +40,7 @@ public class ModificationUidTest {
      */
     @Test
     public void testModificationUid() throws Exception {
-        Item parent = new MockNoteItem();
+        Item parent = new HibNoteItem();
         parent.setUid("abc");
         Date date = new Date("20070101");
         

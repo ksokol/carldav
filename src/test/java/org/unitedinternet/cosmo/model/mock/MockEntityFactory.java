@@ -31,6 +31,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibTaskStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
@@ -61,7 +62,7 @@ public class MockEntityFactory implements EntityFactory {
      * @return note item.
      */
     public NoteItem createNote() {
-        return new MockNoteItem();
+        return new HibNoteItem();
     }
 
     /**

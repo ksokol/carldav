@@ -17,25 +17,18 @@ package org.unitedinternet.cosmo.model;
 
 import java.util.Date;
 
-/**
- * Represents a model object.
- */
 public interface AuditableObject {
 
-    /**
-     * @return date object was created
-     */
-    public Date getCreationDate();
+    Date getCreationDate();
 
-    /**
-     * @return date object was last updated
-     */
-    public Date getModifiedDate();
+    Date getModifiedDate();
+
+    void setModifiedDate(Date date);
 
     /**
      * Update modifiedDate with current system time.
      */
-    public void updateTimestamp();
+    void updateTimestamp();
 
     /**
      * <p>
@@ -44,5 +37,5 @@ public interface AuditableObject {
      * equals method is not available.
      * </p>
      */
-    public String getEntityTag();
+    String getEntityTag();
 }

@@ -23,7 +23,6 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 
 import java.util.Date;
 import java.util.Set;
@@ -250,7 +249,7 @@ public class MockContentDao extends MockItemDao implements ContentDao {
      * @return CollectionItem.
      */
     public CollectionItem updateCollectionTimestamp(CollectionItem collection) {
-        ((MockCollectionItem) collection).setModifiedDate(new Date());
+        collection.setModifiedDate(new Date());
         getStorage().updateItem(collection);
         return collection;
     }

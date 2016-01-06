@@ -22,6 +22,7 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockHomeCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockItem;
@@ -55,15 +56,6 @@ public class MockDaoStorage {
         idGenerator = new VersionFourGenerator();
     }
 
-    /**
-     * Gets item by uid.
-     * @param uid The id. The item.
-     * @return The item.
-     */
-    public EventStamp getItemEventStampByUid(String uid) {
-        return (EventStamp)itemsByUid.get(uid).getStamp(EventStamp.class);
-    }
-    
     /**
      * Gets item by uid.
      * @param uid The id. The item.
@@ -157,7 +149,7 @@ public class MockDaoStorage {
         rootCollection.setUid(calculateUid());
         rootCollection.setCreationDate(new Date());
         rootCollection.setModifiedDate(rootCollection.getCreationDate());
-        rootCollection.setEntityTag(getMockItem(rootCollection).calculateEntityTag());
+        rootCollection.setEntityTag(getHibItem(rootCollection).calculateEntityTag());
 
         itemsByUid.put(rootCollection.getUid(), rootCollection);
         itemsByPath.put("/" + rootCollection.getName(), rootCollection);
@@ -184,9 +176,9 @@ public class MockDaoStorage {
         }
 
         if(item instanceof MockItem) {
-            ((MockItem) item).setCreationDate(new Date());
-            ((MockItem) item).setModifiedDate(item.getCreationDate());
-            ((MockItem) item).setEntityTag(getMockItem(item).calculateEntityTag());
+            item.setCreationDate(new Date());
+            item.setModifiedDate(item.getCreationDate());
+            item.setEntityTag(getHibItem(item).calculateEntityTag());
         }
 
         if(item.getParent()!=null) {
@@ -243,9 +235,9 @@ public class MockDaoStorage {
             }
         }
 
-        ((MockItem) item).setModifiedDate(new Date());
-        ((MockItem) item).setEntityTag(getMockItem(item).calculateEntityTag());
-        ((MockItem) item).setVersion(getMockItem(item).getVersion()+1);
+        item.setModifiedDate(new Date());
+        item.setEntityTag(getHibItem(item).calculateEntityTag());
+        ((MockItem) item).setVersion(getHibItem(item).getVersion()+1);
 
         String path = "";
         if (parentItem != null) {
@@ -323,7 +315,7 @@ public class MockDaoStorage {
      * @param item The item.
      * @return The mock item.
      */
-    private MockItem getMockItem(Item item) {
-        return (MockItem) item;
+    private HibItem getHibItem(Item item) {
+        return (HibItem) item;
     }
 }

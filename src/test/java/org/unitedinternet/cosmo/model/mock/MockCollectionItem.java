@@ -19,6 +19,7 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItemDetails;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -28,9 +29,9 @@ import java.util.Set;
  * Extends {@link Item} to represent a collection of items
  */
 
-public class MockCollectionItem extends MockItem implements CollectionItem {
+public class MockCollectionItem extends HibItem implements CollectionItem {
 
-    private Set<CollectionItemDetails> childDetails = new HashSet<CollectionItemDetails>(0);
+    private Set<CollectionItemDetails> childDetails = new HashSet<>();
 
     /**
      * Adds child.

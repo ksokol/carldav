@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dao.mock;
 
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
@@ -25,7 +24,6 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockHomeCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockItem;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.util.Collection;
@@ -175,11 +173,9 @@ public class MockDaoStorage {
             item.setName(item.getUid());
         }
 
-        if(item instanceof MockItem) {
-            item.setCreationDate(new Date());
-            item.setModifiedDate(item.getCreationDate());
-            item.setEntityTag(getHibItem(item).calculateEntityTag());
-        }
+        item.setCreationDate(new Date());
+        item.setModifiedDate(item.getCreationDate());
+        item.setEntityTag(getHibItem(item).calculateEntityTag());
 
         if(item.getParent()!=null) {
             for (Item sibling : item.getParent().getChildren()) {
@@ -194,11 +190,9 @@ public class MockDaoStorage {
         }
         
         // handle NoteItem modifications
-        if(item instanceof NoteItem) {
-            NoteItem note = (NoteItem) item;
-            if (note.getModifies() != null) {
-                note.getModifies().addModification(note);
-            }
+        NoteItem note = (NoteItem) item;
+        if (note.getModifies() != null) {
+            note.getModifies().addModification(note);
         }
 
         itemsByUid.put(item.getUid(), item);
@@ -237,7 +231,6 @@ public class MockDaoStorage {
 
         item.setModifiedDate(new Date());
         item.setEntityTag(getHibItem(item).calculateEntityTag());
-        ((MockItem) item).setVersion(getHibItem(item).getVersion()+1);
 
         String path = "";
         if (parentItem != null) {

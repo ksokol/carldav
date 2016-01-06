@@ -22,6 +22,7 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -217,7 +218,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @param name The name.
      */
     public void removeAttribute(String name) {
-       removeAttribute(new MockQName(name));
+       removeAttribute(new HibQName(name));
     }
     
     /* (non-Javadoc)
@@ -262,7 +263,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @return The attribute.
      */
     public Attribute getAttribute(String name) {
-        return getAttribute(new MockQName(name));
+        return getAttribute(new HibQName(name));
     }
     
     /* (non-Javadoc)
@@ -286,7 +287,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @return The attribute value.
      */
     public Object getAttributeValue(String name) {
-       return getAttributeValue(new MockQName(name));
+       return getAttributeValue(new HibQName(name));
     }
     
     /* (non-Javadoc)
@@ -314,7 +315,7 @@ public abstract class MockItem extends MockAuditableObject implements Item {
      * @param value The value.
      */
     public void setAttribute(String name, Object value) {
-        setAttribute(new MockQName(name),value);
+        setAttribute(new HibQName(name),value);
     }
     
     /* (non-Javadoc)

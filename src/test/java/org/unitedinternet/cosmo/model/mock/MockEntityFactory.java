@@ -29,6 +29,7 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 import org.unitedinternet.cosmo.model.hibernate.HibXmlAttribute;
@@ -118,7 +119,7 @@ public class MockEntityFactory implements EntityFactory {
      * {@inheritDoc}
      */
     public QName createQName(String namespace, String localname) {
-        return new MockQName(namespace, localname);
+        return new HibQName(namespace, localname);
     }
 
     /**

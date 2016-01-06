@@ -21,6 +21,7 @@ import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute;
 
 import java.io.Reader;
@@ -34,10 +35,10 @@ import java.util.Set;
  */
 public class MockNoteItem extends MockICalendarItem implements NoteItem {
 
-    public static final QName ATTR_NOTE_BODY = new MockQName(
+    public static final QName ATTR_NOTE_BODY = new HibQName(
             NoteItem.class, "body");
     
-    public static final QName ATTR_REMINDER_TIME = new MockQName(
+    public static final QName ATTR_REMINDER_TIME = new HibQName(
             NoteItem.class, "reminderTime");
     
     private static final Set<NoteItem> EMPTY_MODS = Collections

@@ -41,7 +41,6 @@ import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.model.mock.MockCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
 import org.unitedinternet.cosmo.model.mock.MockEntityFactory;
 import org.unitedinternet.cosmo.model.mock.MockEventExceptionStamp;
@@ -267,7 +266,7 @@ public class EntityConverterTest {
         NoteItem note2 = converter.convertTaskCalendar(c2);
        
         MockCollectionItem collection = new MockCollectionItem();
-        collection.addStamp(new MockCalendarCollectionStamp(collection));
+        collection.addStamp(new HibCalendarCollectionStamp(collection));
         collection.addChild(note1);
         collection.addChild(note2);
         

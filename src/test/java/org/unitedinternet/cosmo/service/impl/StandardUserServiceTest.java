@@ -15,14 +15,18 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.mock.MockContentDao;
-import org.unitedinternet.cosmo.dao.mock.MockDaoStorage;
-import org.unitedinternet.cosmo.dao.mock.MockUserDao;
+import org.unitedinternet.cosmo.dao.hibernate.AbstractHibernateDaoTestCase;
+import org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl;
+import org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl;
 import org.unitedinternet.cosmo.model.User;
 
 import java.util.Set;
@@ -30,10 +34,15 @@ import java.util.Set;
 /**
  * Test Case for {@link StandardUserService}.
  */
-public class StandardUserServiceTest {
+public class StandardUserServiceTest extends AbstractHibernateDaoTestCase {
+
+    @Autowired
+    private UserDaoImpl userDao;
+
+    @Autowired
+    private ContentDaoImpl contentDao;
 
     private StandardUserService service;
-    private MockUserDao userDao;
     private TestHelper testHelper;
 
     /**
@@ -43,8 +52,7 @@ public class StandardUserServiceTest {
     @Before
     public void setUp() throws Exception {
         testHelper = new TestHelper();
-        userDao = new MockUserDao(new MockDaoStorage());
-        service = new StandardUserService(new MockContentDao(new MockDaoStorage()), userDao);
+        service = new StandardUserService(contentDao, userDao);
     }
 
     /**
@@ -62,7 +70,7 @@ public class StandardUserServiceTest {
 
         Set<User> users = service.getUsers();
 
-        Assert.assertTrue(users.size() == 4); // account for overlord
+        assertThat(users, hasSize(3)); // account for overlord
         Assert.assertTrue("User 1 not found in users", users.contains(u1));
         Assert.assertTrue("User 2 not found in users", users.contains(u2));
         Assert.assertTrue("User 3 not found in users", users.contains(u3));

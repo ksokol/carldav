@@ -22,8 +22,8 @@ import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.mock.MockCollectionItem;
-import org.unitedinternet.cosmo.model.mock.MockItem;
 
 import java.util.Date;
 import java.util.Set;
@@ -71,9 +71,9 @@ public class MockContentDao extends MockItemDao implements ContentDao {
             throw new UidInUseException(collection.getUid(), collection.getUid());
         }
 
-        ((MockItem) collection).addParent(parent);
+        ((HibItem) collection).addParent(parent);
 
-        getStorage().storeItem((Item) collection);
+        getStorage().storeItem(collection);
 
         return collection;
     }
@@ -123,10 +123,8 @@ public class MockContentDao extends MockItemDao implements ContentDao {
             throw new UidInUseException(content.getUid(), "Uid " + content.getUid() + " already in use");
         }
 
-        if(content instanceof MockItem) {
-            ((MockItem) content).addParent(parent);
-        }
-        getStorage().storeItem((Item)content);
+        ((HibItem) content).addParent(parent);
+        getStorage().storeItem(content);
 
         return content;
     } 
@@ -211,10 +209,10 @@ public class MockContentDao extends MockItemDao implements ContentDao {
         }
         
         for (CollectionItem parent: parents) {
-            ((MockItem) content).addParent(parent);
+            ((HibItem) content).addParent(parent);
         }
           
-        getStorage().storeItem((Item)content);
+        getStorage().storeItem(content);
 
         return content;
     }

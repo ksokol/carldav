@@ -988,6 +988,11 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                                         <CARD:addressbook-multiget xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                                     </D:report>
                                                 </D:supported-report>
+                                                <D:supported-report>
+                                                    <D:report>
+                                                        <CARD:addressbook-query xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                                    </D:report>
+                                                </D:supported-report>
                                             </D:supported-report-set>
                                             <D:resourcetype>
                                                 <D:collection/>

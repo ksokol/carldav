@@ -78,25 +78,22 @@ import javax.xml.namespace.QName;
  * 
  * @see WebDavResource
  */
-public abstract class DavResourceBase
-    implements ExtendedDavConstants, DeltaVResource{
+public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVResource{
 
     @Override
     public void move(final DavResource destination) throws DavException {
         throw new UnsupportedOperationException();
     }
 
-    private static final HashSet<DavPropertyName> LIVE_PROPERTIES =
-        new HashSet<DavPropertyName>();
-    private static final Set<ReportType> REPORT_TYPES =
-        new HashSet<ReportType>(0);
+    private static final HashSet<DavPropertyName> LIVE_PROPERTIES = new HashSet<>(10);
+    private final Set<ReportType> reportTypes = new HashSet<>(10);
 
     static {
         registerLiveProperty(SUPPORTEDREPORTSET);
     }
 
     private DavResourceLocator locator;
-    DavResourceFactory factory;
+    private DavResourceFactory factory;
     private DavPropertySet properties;
     private boolean initialized;
 
@@ -366,7 +363,7 @@ public abstract class DavResourceBase
     }
 
     protected Set<ReportType> getReportTypes() {
-     return REPORT_TYPES;
+     return reportTypes;
     }
 
     /**

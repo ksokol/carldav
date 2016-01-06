@@ -52,7 +52,6 @@ class DavDroidTests extends IntegrationTestSupport {
                                         <D:prop>
                                             <D:current-user-privilege-set/>
                                             <D:current-user-principal/>
-                                            <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                             <CARD:addressbook-description xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
@@ -60,9 +59,12 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:propstat>
                                         <D:prop>
                                             <D:displayname>calendarDisplayName</D:displayname>
+                                            <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                                                <D:href>/dav/test01@localhost.de/contacts</D:href>
+                                            </CARD:addressbook-home-set>
                                             <D:resourcetype>
-                                                <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                                 <D:collection/>
+                                                <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             </D:resourcetype>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>

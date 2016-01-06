@@ -458,6 +458,7 @@ public class CalendarTests extends IntegrationTestSupport {
                         </ul>
                         <h2>Properties</h2>
                         <dl>
+                        <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd>/dav/test01@localhost.de/contacts</dd>
                         <dt>{urn:ietf:params:xml:ns:caldav}calendar-description</dt><dd>newcalendar</dd>
                         <dt>{urn:ietf:params:xml:ns:xcaldavoneandone}calendar-visible</dt><dd>false</dd>
                         <dt>{DAV:}creationdate</dt><dd>${creationDate}</dd>
@@ -540,6 +541,9 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">a172ed34-0106-4616-bb40-a416a8305465</cosmo:uuid>
                                         <C:calendar-visible xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">true</C:calendar-visible>
                                         <D:displayname>calendarDisplayName</D:displayname>
+                                        <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                                            <D:href>/dav/test01@localhost.de/contacts</D:href>
+                                        </CARD:addressbook-home-set>
                                         <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:comp name="VEVENT"/>
                                             <C:comp name="VJOURNAL"/>

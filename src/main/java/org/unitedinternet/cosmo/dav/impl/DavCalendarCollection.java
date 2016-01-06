@@ -39,6 +39,7 @@ import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.XCaldavConstants;
+import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarColor;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarDescription;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarTimezone;
@@ -210,7 +211,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());
         properties.add(new MaxResourceSize());
-     //   properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
+        properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
 
         if(cc.getVisibility() != null){
             properties.add(new CalendarVisibility(cc.getVisibility()));

@@ -60,16 +60,6 @@ public interface UserDao extends Dao {
      * @return The user account identified by the given email address.
      */
     User getUserByEmail(String email);
-    
-    /**
-     * Returns a set of users that contain a user preference that
-     * matches a specific key and value.
-     * @param key user preference key to match
-     * @param value user preference value to match
-     * @return set of users containing a user preference that matches
-     *         key and value
-     */
-    Set<User> findUsersByPreference(String key, String value);
 
     /**
      * Creates a user account in the repository. Returns a new

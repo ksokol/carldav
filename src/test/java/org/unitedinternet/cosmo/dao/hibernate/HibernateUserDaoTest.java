@@ -137,10 +137,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertNotNull(queryUser1);
         Assert.assertNotNull(queryUser1.getUid());
         verifyUser(user1, queryUser1);
-        
-        // attempt to find by pref
-        Assert.assertEquals(0, userDao.findUsersByPreference("prop1", "value1").size());
-        
+
         queryUser1.addPreference(new HibPreference("prop1", "value1"));
         queryUser1.addPreference(new HibPreference("prop2", "value2"));
 
@@ -156,10 +153,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
                             queryUser1.getPreference("prop1").getValue());
         Assert.assertEquals("value2",
                             queryUser1.getPreference("prop2").getValue());
-        
-        // find by preference
-        Assert.assertEquals(1, userDao.findUsersByPreference("prop1", "value1").size());
-        
+
         queryUser1.removePreference("prop2");
         queryUser1.getPreference("prop1").setValue("value1changed");
         userDao.updateUser(queryUser1);

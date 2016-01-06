@@ -57,7 +57,6 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.NoteOccurrence;
 import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
@@ -85,9 +84,7 @@ public class EntityConverter {
         TimeZoneRegistryFactory.getInstance().createRegistry();
 
     private EntityFactory entityFactory;
-    
-    public static final String X_OSAF_STARRED = "X-OSAF-STARRED";
-    
+
     /**
      * Constructor.
      * @param entityFactory The entity factory.
@@ -554,13 +551,6 @@ public class EntityConverter {
         else {
             ICalendarUtils.setDtStamp(note.getModifiedDate(), event);
         }
-        
-        if (StampUtils.getTaskStamp(note) != null) {
-            ICalendarUtils.setXProperty(X_OSAF_STARRED, "TRUE", event);
-        }
-        else {
-            ICalendarUtils.setXProperty(X_OSAF_STARRED, null, event);
-        }
     }
     
     /**
@@ -602,13 +592,6 @@ public class EntityConverter {
         }
         
         ICalendarUtils.setCompleted(completeDate, task);
-        
-        if (StampUtils.getTaskStamp(note) != null) {
-            ICalendarUtils.setXProperty(X_OSAF_STARRED, "TRUE", task);
-        }
-        else {
-            ICalendarUtils.setXProperty(X_OSAF_STARRED, null, task);
-        }
     }
     
     /**
@@ -930,14 +913,6 @@ public class EntityConverter {
         }
 
         triageStatus.setCode(code);
-        
-        // check for X-OSAF-STARRED
-        if ("TRUE".equals(ICalendarUtils.getXProperty(X_OSAF_STARRED, event))) {
-            TaskStamp ts = StampUtils.getTaskStamp(note);
-            if (ts == null) {
-                note.addStamp(entityFactory.createTaskStamp());
-            }
-        }
     }
     
     /**
@@ -1002,14 +977,6 @@ public class EntityConverter {
             else {
                 note.getTriageStatus().setRank(
                         TriageStatusUtil.getRank(System.currentTimeMillis()));
-            }
-        }
-        
-        // check for X-OSAF-STARRED
-        if ("TRUE".equals(ICalendarUtils.getXProperty(X_OSAF_STARRED, task))) {
-            TaskStamp taskStamp = StampUtils.getTaskStamp(note);
-            if (taskStamp == null) {
-                note.addStamp(entityFactory.createTaskStamp());
             }
         }
     }

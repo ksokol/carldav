@@ -304,7 +304,6 @@ public class EntityConverterTest {
         VToDo task = (VToDo) comps.get(0);
         
         Assert.assertNull(task.getDateCompleted());
-        Assert.assertNull(ICalendarUtils.getXProperty("X-OSAF-STARRED", task));
         
         DateTime completeDate = new DateTime("20080122T100000Z");
         
@@ -318,8 +317,6 @@ public class EntityConverterTest {
         Completed completed = task.getDateCompleted();
         Assert.assertNotNull(completed);
         Assert.assertEquals(completeDate.getTime(), completed.getDate().getTime());
-        Assert.assertEquals("TRUE", ICalendarUtils.getXProperty("X-OSAF-STARRED", task));
-        
     }
     
     /**

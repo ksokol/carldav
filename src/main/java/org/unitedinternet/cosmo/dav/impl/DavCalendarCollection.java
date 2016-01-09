@@ -33,7 +33,6 @@ import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarLocationException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
@@ -381,40 +380,5 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
 
         member.setItem(content);
-    }
-
-    /** */
-    protected void removeContent(DavItemContent member)
-        throws CosmoDavException {
-        if (! (member instanceof DavCalendarResource)) {
-            throw new IllegalArgumentException("member not DavCalendarResource");
-        }
-
-        ContentItem content = (ContentItem) member.getItem();
-        CollectionItem parent = (CollectionItem) getItem();
-        
-        // XXX: what exceptions need to be caught?
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing event " + member.getResourcePath());
-        }
-
-        try {
-            if(content instanceof NoteItem) {
-                getContentService().removeItemFromCollection(content, parent);
-            }
-            else {
-                getContentService().removeContent(content);
-            }
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
-        }
-    }
-
-    private void validateDestination(org.apache.jackrabbit.webdav.DavResource destination)
-        throws CosmoDavException {
-        if (destination instanceof WebDavResource 
-            && ((WebDavResource)destination).getParent() instanceof DavCalendarCollection) {
-            throw new InvalidCalendarLocationException("Parent collection of destination must not be a calendar collection");
-        }
     }
 }

@@ -196,26 +196,8 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
      * 
      * {@inheritDoc}
      */
-    public Date getIfModifiedSince() {
-        long value = getDateHeader("If-Modified-Since");
-        return value != -1 ? new Date(value) : null;
-    }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
     public EntityTag[] getIfNoneMatch() {
         return EntityTag.parseTags(getHeader("If-None-Match"));
-    }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public Date getIfUnmodifiedSince() {
-        long value = getDateHeader("If-Unmodified-Since");
-        return value != -1 ? new Date(value) : null;
     }
 
     /**
@@ -263,29 +245,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
         }
 
         return locator;
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public DavResourceLocator getDestinationResourceLocator()
-            throws CosmoDavException {
-        if (destinationLocator != null) {
-            return destinationLocator;
-        }
-
-        String destination = getHeader(HEADER_DESTINATION);
-        if (destination == null) {
-            return null;
-        }
-
-        URL context = ((DavResourceLocator) getResourceLocator()).getContext();
-
-        destinationLocator = locatorFactory.createResourceLocatorByUri(context,
-                destination);
-
-        return destinationLocator;
     }
 
     // CaldavRequest methods
@@ -495,14 +454,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
         }
 
         return is;
-    }
-
-    public boolean isRequestContentBuffered() {
-        return bufferRequestContent;
-    }
-
-    public long getBufferedContentLength() {
-        return bufferedContentLength;
     }
 
     @Override

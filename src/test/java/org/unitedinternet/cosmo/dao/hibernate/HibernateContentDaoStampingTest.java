@@ -66,11 +66,11 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Autowired
     private ContentDaoImpl contentDao;
     @Autowired
-    protected SessionFactory sessionFactory ;
+    protected SessionFactory sessionFactory;
 
     private HibernateTestHelper helper = new HibernateTestHelper();
 
-    protected Session session;
+    private Session session;
 
     @BeforeTransaction
     public void onSetUpBeforeTransaction() throws Exception {

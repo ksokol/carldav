@@ -31,7 +31,7 @@ import org.w3c.dom.Element;
 public abstract class MultiStatusReport extends ReportBase {
 
     private MultiStatus multistatus = new CustomMultiStatus();
-    private int propfindType = PROPFIND_ALL_PROP;
+    protected int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
 
     public final boolean isMultiStatusReport() {

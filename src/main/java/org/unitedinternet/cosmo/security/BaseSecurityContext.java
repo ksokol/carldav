@@ -36,12 +36,6 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
         processPrincipal();
     }
 
-    public BaseSecurityContext(Principal principal, User preAuthUser) {
-        this.anonymous = false;
-        this.principal = principal;
-        this.user = preAuthUser;
-    }
-    
     /* ----- CosmoSecurityContext methods ----- */
 
     /**

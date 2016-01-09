@@ -40,10 +40,6 @@ public class CosmoSecurityContextImpl extends BaseSecurityContext {
         super(authentication);
     }
 
-    public CosmoSecurityContextImpl(Authentication authentication, User preAuthUser) {
-        super(authentication, preAuthUser);
-    }
-    
     protected void processPrincipal() {  
         //anonymous principals do not have CosmoUserDetails and by
         //definition are not running as other principals

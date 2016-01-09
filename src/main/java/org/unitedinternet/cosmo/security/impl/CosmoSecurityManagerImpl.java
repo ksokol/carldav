@@ -46,12 +46,6 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
         if (authen == null) {
             throw new RuntimeException("no Authentication found in SecurityContext");
         }
-        
-        if (authen instanceof PreAuthenticatedAuthenticationToken) {
-            User user = userService.getUser((String) authen.getPrincipal());
-            return new CosmoSecurityContextImpl(authen, user);
-        }
-
 
         return createSecurityContext(authen);
     }

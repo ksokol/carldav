@@ -418,9 +418,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             // first check for existing attribute otherwise add
             if (attr != null) {
                 attr.setValue(value);
-            } else {
-                item.addAttribute(entityFactory
-                        .createXMLAttribute(qname, value));
             }
         } catch (DataSizeException e) {
             throw new ForbiddenException(e.getMessage());

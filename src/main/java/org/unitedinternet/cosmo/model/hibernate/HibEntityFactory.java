@@ -28,8 +28,6 @@ import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.XmlAttribute;
-import org.w3c.dom.Element;
 
 /**
  * EntityFactory implementation that uses Hibernate 
@@ -66,10 +64,6 @@ public class HibEntityFactory implements EntityFactory {
 
     public FileItem createFileItem() {
         return new HibFileItem();
-    }
-
-    public XmlAttribute createXMLAttribute(QName qname, Element e) {
-        return new HibXmlAttribute(qname, e);
     }
 
     public QName createQName(String namespace, String localname) {

@@ -47,7 +47,6 @@ import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.XmlAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibBooleanAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
@@ -59,8 +58,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
-import org.unitedinternet.cosmo.model.hibernate.HibXmlAttribute;
-import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -303,82 +300,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         val = (Date) queryAttr.getValue();
         Assert.assertTrue(dateVal.equals(val));
     }
-    
-    /**
-     * Test xml attribute.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testXmlAttribute() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        ContentItem item = generateTestContent();
-        
-        org.w3c.dom.Element testElement = createTestElement();
-        org.w3c.dom.Element testElement2 = createTestElement();
-        
-        testElement2.setAttribute("foo", "bar");
-        
-        Assert.assertFalse(testElement.isEqualNode(testElement2));
-        
-        XmlAttribute xmlAttr = 
-            new HibXmlAttribute(new HibQName("xmlattribute"), testElement ); 
-        item.addAttribute(xmlAttr);
-        
-        ContentItem newItem = contentDao.createContent(root, item);
-
-        
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        Attribute attr = queryItem.getAttribute(new HibQName("xmlattribute"));
-        Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof XmlAttribute);
-        
-        org.w3c.dom.Element element = (org.w3c.dom.Element) attr.getValue();
-        Assert.assertNotNull(element);
-        Assert.assertEquals(DomWriter.write(testElement),DomWriter.write(element));
-
-        Date modifyDate = attr.getModifiedDate();
-        
-        // Sleep a couple millis to make sure modifyDate doesn't change
-        Thread.sleep(2);
-        
-        contentDao.updateContent(queryItem);
-
-        
-        
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        attr = queryItem.getAttribute(new HibQName("xmlattribute"));
-        
-        // Attribute shouldn't have been updated
-        Assert.assertEquals(modifyDate, attr.getModifiedDate());
-        
-        attr.setValue(testElement2);
-
-        // Sleep a couple millis to make sure modifyDate doesn't change
-        Thread.sleep(2);
-        modifyDate = attr.getModifiedDate();
-        
-        contentDao.updateContent(queryItem);
-
-        
-        
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        attr = queryItem.getAttribute(new HibQName("xmlattribute"));
-        Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof XmlAttribute);
-        // Attribute should have been updated
-        Assert.assertTrue(modifyDate.before(attr.getModifiedDate()));
-        
-        element = (org.w3c.dom.Element) attr.getValue();
-        
-        Assert.assertEquals(DomWriter.write(testElement2),DomWriter.write(element));
-    }
-    
     /**
      * Test ICalendar attribute.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -410,7 +332,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
         net.fortuna.ical4j.model.Calendar expected = CalendarUtils.parseCalendar(helper.getInputStream("testdata/vjournal.ics"));
         
-        Assert.assertEquals(expected.toString(),calendar.toString());
+        Assert.assertEquals(expected.toString(), calendar.toString());
         
         calendar.getProperties().add(new ProdId("blah"));
         contentDao.updateContent(queryItem);
@@ -655,7 +577,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
         helper.verifyItem(newItem, queryItem);
         
-        Assert.assertTrue(((HibItem)queryItem).getVersion().equals(0));
+        Assert.assertTrue(((HibItem) queryItem).getVersion().equals(0));
 
         contentDao.removeContent(queryItem);
 
@@ -1118,7 +1040,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         b = (CollectionItem) contentDao.findItemByPath("/testuser2/a/b");
 
-        contentDao.copyItem(b,"/testuser2/a/e/bcopyshallow", false);
+        contentDao.copyItem(b, "/testuser2/a/e/bcopyshallow", false);
 
         
 
@@ -1132,7 +1054,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         
         d = (ContentItem) contentDao.findItemByUid(d.getUid());
-        contentDao.copyItem(d,"/testuser2/dcopy", true);
+        contentDao.copyItem(d, "/testuser2/dcopy", true);
 
         
 

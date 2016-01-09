@@ -5,6 +5,8 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
+import static calendar.DavDroidData.ADD_AND_UPDATE_VEVENT_REQUEST4
+import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
 import static com.google.common.net.HttpHeaders.AUTHORIZATION
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
@@ -218,11 +220,9 @@ class DavDroidTests extends IntegrationTestSupport {
 
     @Test
     void addVEvent() {
-        def veventRequest1 = new File('src/test/resources/calendar/davdroid/addvevent_request1.ics').getText('UTF-8')
-
         def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
-                .content(veventRequest1)
+                .content(ADD_VEVENT_REQUEST1)
                 .header("If-None-Match", "*"))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
@@ -324,8 +324,7 @@ class DavDroidTests extends IntegrationTestSupport {
 
     @Test
     void addAndUpdateVEvent() {
-        def veventRequest1 = new File('src/test/resources/calendar/davdroid/addvevent_request1.ics').getText('UTF-8').replace("DESCRIPTION:DESCRIPTION", "DESCRIPTION:DESCRIPTION update")
-        def veventResponse4 = new File('src/test/resources/calendar/davdroid/addandupdatevevent_response4.ics').getText('UTF-8')
+        def veventRequest1 = ADD_VEVENT_REQUEST1.replace("DESCRIPTION:DESCRIPTION", "DESCRIPTION:DESCRIPTION update")
 
         addVEvent()
 
@@ -377,7 +376,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(textCalendarContentType())
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
                 .andExpect(header().string(CONTENT_LENGTH, is("5716")))
-                .andExpect(text(veventResponse4))
+                .andExpect(text(ADD_AND_UPDATE_VEVENT_REQUEST4))
     }
 
     @Test

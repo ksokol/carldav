@@ -43,7 +43,6 @@ import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
 import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
 import org.unitedinternet.cosmo.dav.provider.FileProvider;
-import org.unitedinternet.cosmo.dav.provider.HomeCollectionProvider;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
@@ -188,7 +187,6 @@ public class StandardRequestHandler extends AbstractController implements Server
      * is chosen based on the type of resource:
      * </p>
      * <ul>
-     * <li> home collection: {@link HomeCollectionProvider}</li>
      * <li> calendar collection: {@link CollectionProvider}</li>
      * <li> collection: {@link CollectionProvider}</li>
      * <li> calendar resource: {@link CalendarResourceProvider}</li>
@@ -197,7 +195,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      */
     protected DavProvider createProvider(WebDavResource resource) {
         if (resource instanceof DavHomeCollection) {
-            return new HomeCollectionProvider(resourceFactory, entityFactory);
+            return new CollectionProvider(resourceFactory, entityFactory);
         }
         if (resource instanceof DavCalendarCollection) {
             return new CollectionProvider(resourceFactory, entityFactory);

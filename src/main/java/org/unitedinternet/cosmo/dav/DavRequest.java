@@ -17,12 +17,8 @@ package org.unitedinternet.cosmo.dav;
 
 import org.apache.abdera.util.EntityTag;
 import org.apache.jackrabbit.webdav.WebdavRequest;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dav.caldav.CaldavRequest;
 import org.unitedinternet.cosmo.dav.report.ReportRequest;
-
-import java.util.Date;
 
 /**
  * A marker interface that collects the functionality defined by
@@ -32,20 +28,7 @@ public interface DavRequest extends WebdavRequest, CaldavRequest, ReportRequest 
 
     EntityTag[] getIfMatch();
 
-    Date getIfModifiedSince();
-
     EntityTag[] getIfNoneMatch();
 
-    Date getIfUnmodifiedSince();
-
-    DavPropertySet getProppatchSetProperties()
-        throws CosmoDavException;
-
-    DavPropertyNameSet getProppatchRemoveProperties()
-        throws CosmoDavException;
-
     DavResourceLocator getResourceLocator();
-
-    DavResourceLocator getDestinationResourceLocator()
-        throws CosmoDavException;
 }

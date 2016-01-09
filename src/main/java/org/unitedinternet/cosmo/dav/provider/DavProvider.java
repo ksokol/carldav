@@ -45,11 +45,6 @@ public interface DavProvider {
                          DavResponse response,
                          WebDavResource resource)
         throws CosmoDavException, IOException;
-    
-    void proppatch(DavRequest request,
-                          DavResponse response,
-                          WebDavResource resource)
-        throws CosmoDavException, IOException;
 
     void put(DavRequest request,
                     DavResponse response,

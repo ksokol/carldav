@@ -164,9 +164,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         else if (request.getMethod().equals("PROPFIND")) {
             provider.propfind(request, response, resource);
         }
-        else if (request.getMethod().equals("PROPPATCH")) {
-            provider.proppatch(request, response, resource);
-        }
         else if (request.getMethod().equals("DELETE")) {
             provider.delete(request, response, resource);
         }

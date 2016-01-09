@@ -27,7 +27,6 @@ import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
@@ -128,28 +127,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         
         response.sendMultiStatus(ms);
     }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public void proppatch(DavRequest request,
-                          DavResponse response,
-                          WebDavResource resource)
-        throws CosmoDavException, IOException {
-        if (! resource.exists()){
-            throw new NotFoundException();
-        }
-        DavPropertySet set = request.getProppatchSetProperties();
-        DavPropertyNameSet remove = request.getProppatchRemoveProperties();
 
-        MultiStatus ms = new CustomMultiStatus();
-        MultiStatusResponse msr = resource.updateProperties(set, remove);
-        ms.addResponse(msr);
-
-        response.sendMultiStatus(ms);
-    }
-    
     /**
      * 
      * {@inheritDoc}

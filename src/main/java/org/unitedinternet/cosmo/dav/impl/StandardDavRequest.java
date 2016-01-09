@@ -82,8 +82,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
 
     private int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
-    private DavPropertySet proppatchSet;
-    private DavPropertyNameSet proppatchRemove;
     private DavPropertySet mkcalendarSet;
     private ReportInfo reportInfo;
     private boolean bufferRequestContent = false;
@@ -219,7 +217,7 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
         long value = getDateHeader("If-Unmodified-Since");
         return value != -1 ? new Date(value) : null;
     }
-    
+
     /**
      * 
      * {@inheritDoc}
@@ -240,29 +238,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
             parsePropFindRequest();
         }
         return propfindProps;
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public DavPropertySet getProppatchSetProperties() throws CosmoDavException {
-        if (proppatchSet == null) {
-            parsePropPatchRequest();
-        }
-        return proppatchSet;
-    }
-
-    /**
-     * 
-     * 
-     */
-    public DavPropertyNameSet getProppatchRemoveProperties()
-            throws CosmoDavException {
-        if (proppatchRemove == null) {
-            parsePropPatchRequest();
-        }
-        return proppatchRemove;
     }
 
     /**
@@ -443,66 +418,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
         throw new BadRequestException("Expected one of " + XML_PROP + ", "
                 + XML_PROPNAME + ", or " + XML_ALLPROP + " as child of "
                 + QN_PROPFIND);
-    }
-
-    /**
-     * 
-     * @throws CosmoDavException 
-     */
-    private void parsePropPatchRequest() throws CosmoDavException {
-        Document requestDocument = getSafeRequestDocument();
-        if (requestDocument == null) {
-            throw new BadRequestException("PROPPATCH requires entity body");
-        }
-
-        Element root = requestDocument.getDocumentElement();
-        if (!DomUtil.matches(root, XML_PROPERTYUPDATE, NAMESPACE)) {
-            throw new BadRequestException("Expected " + QN_PROPERTYUPDATE
-                    + " root element");
-        }
-
-        ElementIterator sets = DomUtil.getChildren(root, XML_SET, NAMESPACE);
-        ElementIterator removes = DomUtil.getChildren(root, XML_REMOVE,
-                NAMESPACE);
-        if (!(sets.hasNext() || removes.hasNext())) {
-            throw new BadRequestException("Expected at least one of "
-                    + QN_REMOVE + " and " + QN_SET + " as a child of "
-                    + QN_PROPERTYUPDATE);
-        }
-
-        Element prop = null;
-        ElementIterator i = null;
-
-        proppatchSet = new DavPropertySet();
-        while (sets.hasNext()) {
-            Element set = sets.nextElement();
-            prop = DomUtil.getChildElement(set, XML_PROP, NAMESPACE);
-            if (prop == null) {
-                throw new BadRequestException("Expected " + QN_PROP
-                        + " child of " + QN_SET);
-            }
-            i = DomUtil.getChildren(prop);
-            while (i.hasNext()) {
-                StandardDavProperty p = StandardDavProperty.createFromXml(i
-                        .nextElement());
-                proppatchSet.add(p);
-            }
-        }
-
-        proppatchRemove = new DavPropertyNameSet();
-        while (removes.hasNext()) {
-            Element remove = removes.nextElement();
-            prop = DomUtil.getChildElement(remove, XML_PROP, NAMESPACE);
-            if (prop == null) {
-                throw new BadRequestException("Expected " + QN_PROP
-                        + " child of " + QN_REMOVE);
-            }
-            i = DomUtil.getChildren(prop);
-            while (i.hasNext()){
-                proppatchRemove.add(DavPropertyName.createFromXml(i
-                        .nextElement()));
-            }
-        }
     }
 
     /**

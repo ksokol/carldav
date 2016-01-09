@@ -58,7 +58,7 @@ public class DavHomeCollection extends DavCollectionBase {
 
     /** */
     public String getSupportedMethods() {
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH";
+        return "OPTIONS, GET, HEAD, TRACE, PROPFIND";
     }
 
     // DavCollection

@@ -5,7 +5,6 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralData
-import testutil.xmlunit.XmlMatcher
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -491,7 +490,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
-                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, DELETE, REPORT"));
+                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT"));
     }
 
     @Test
@@ -570,45 +569,6 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(notAllowed(POST).onCollection()));
-    }
-
-    @Test
-    public void calendarPropPatch() throws Exception {
-        def request = """\
-                        <D:propertyupdate xmlns:D="DAV:" xmlns:Z="http://www.w3.com/standards/z39.50/">
-                            <D:set>
-                                <D:prop>
-                                    <Z:authors>
-                                        <Z:Author>Jim Whitehead</Z:Author>
-                                        <Z:Author>Roy Fielding</Z:Author>
-                                    </Z:authors>
-                                </D:prop>
-                            </D:set>
-                            <D:remove>
-                                <D:prop><Z:Copyright-Owner/></D:prop>
-                            </D:remove>
-                        </D:propertyupdate>"""
-
-        def response = """\
-                        <D:multistatus xmlns:D="DAV:">
-                            <D:response>
-                                <D:href>/dav/test01@localhost.de/calendar/</D:href>
-                                <D:propstat>
-                                    <D:prop>
-                                        <Z:Copyright-Owner xmlns:Z="http://www.w3.com/standards/z39.50/"/>
-                                        <Z:authors xmlns:Z="http://www.w3.com/standards/z39.50/"/>
-                                    </D:prop>
-                                    <D:status>HTTP/1.1 200 OK</D:status>
-                                </D:propstat>
-                            </D:response>
-                        </D:multistatus>"""
-
-        mockMvc.perform(proppatch("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response));
     }
 
     @Test

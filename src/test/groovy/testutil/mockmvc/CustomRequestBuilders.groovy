@@ -24,8 +24,4 @@ public class CustomRequestBuilders {
     public static MockHttpServletRequestBuilder propfind(String urlTemplate, Object... urlVariables) {
         return request(PROPFIND.name(), urlTemplate, urlVariables);
     }
-
-    public static MockHttpServletRequestBuilder proppatch(String urlTemplate, Object... urlVariables) {
-        return request(PROPPATCH.name(), urlTemplate, urlVariables);
-    }
 }

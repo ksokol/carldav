@@ -113,7 +113,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     /** */
     public String getSupportedMethods() {
         // calendar collections not allowed inside calendar collections
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, DELETE, REPORT";
+        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT";
     }
 
     public boolean isCalendarCollection() {

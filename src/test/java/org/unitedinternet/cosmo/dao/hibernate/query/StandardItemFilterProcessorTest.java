@@ -15,24 +15,27 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate.query;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-
 import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.dao.hibernate.AbstractHibernateDaoTestCase;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.orm.hibernate4.SessionFactoryUtils;
+import org.springframework.orm.hibernate4.SessionHolder;
+import org.springframework.test.context.transaction.AfterTransaction;
+import org.springframework.test.context.transaction.BeforeTransaction;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
-import org.unitedinternet.cosmo.model.filter.BetweenExpression;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
@@ -43,15 +46,37 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
+import java.util.Calendar;
+import java.util.Date;
+
 
 /**
  * Test StandardItemQueryBuilder.
  */
-public class StandardItemFilterProcessorTest extends AbstractHibernateDaoTestCase {
+public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
 
-    StandardItemFilterProcessor queryBuilder = new StandardItemFilterProcessor();
-    TimeZoneRegistry registry =
-        TimeZoneRegistryFactory.getInstance().createRegistry();
+    @Autowired
+    protected SessionFactory sessionFactory;
+
+    private StandardItemFilterProcessor queryBuilder = new StandardItemFilterProcessor();
+    private TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+
+    private Session session;
+
+    @BeforeTransaction
+    public void onSetUpBeforeTransaction() throws Exception {
+        // Unbind session from TransactionManager
+        session = sessionFactory.openSession();
+        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
+    }
+
+    @AfterTransaction
+    public void onTearDownAfterTransaction() throws Exception {
+        SessionHolder holder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
+        Session s = holder.getSession();
+        TransactionSynchronizationManager.unbindResource(sessionFactory);
+        SessionFactoryUtils.closeSession(s);
+    }
 
     /**
      * Tests uid query.

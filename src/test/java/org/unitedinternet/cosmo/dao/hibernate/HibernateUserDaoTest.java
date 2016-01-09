@@ -19,6 +19,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.model.User;
@@ -29,7 +30,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
+public class HibernateUserDaoTest extends IntegrationTestSupport {
     
     @Autowired
     private UserDaoImpl userDao;
@@ -70,14 +71,10 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertNotNull(queryUser1.getUid());
         verifyUser(user1, queryUser1);
 
-        clearSession();
-
         // find by uid
         queryUser1 = userDao.getUserByUid(user1.getUid());
         Assert.assertNotNull(queryUser1);
         verifyUser(user1, queryUser1);
-
-        clearSession();
 
         // Get all
         @SuppressWarnings("rawtypes")
@@ -86,8 +83,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         Assert.assertEquals(2, users.size());
         verifyUserInCollection(user1, users);
         verifyUserInCollection(user2, users);
-
-        clearSession();
 
         // try to create duplicate
         User user3 = new HibUser();
@@ -129,8 +124,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user1.setAdmin(Boolean.TRUE);
 
         user1 = userDao.createUser(user1);
-        
-        clearSession();
 
         // find by username
         User queryUser1 = userDao.getUser("user1");
@@ -142,8 +135,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         queryUser1.addPreference(new HibPreference("prop2", "value2"));
 
         userDao.updateUser(queryUser1);
-        
-        clearSession();
 
         // find by uid
         queryUser1 = userDao.getUserByUid(user1.getUid());
@@ -158,15 +149,12 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         queryUser1.getPreference("prop1").setValue("value1changed");
         userDao.updateUser(queryUser1);
 
-        clearSession();
-
         queryUser1 = userDao.getUserByUid(user1.getUid());
         Assert.assertNotNull(queryUser1);
         Assert.assertEquals(1, queryUser1.getPreferences().size());
         Assert.assertEquals("value1changed", queryUser1.getPreference("prop1").getValue());
         
         userDao.removeUser(queryUser1);
-        clearSession();
     }
     
     /**
@@ -183,7 +171,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user1.setAdmin(Boolean.TRUE);
 
         user1 = userDao.createUser(user1);
-        clearSession();
 
         User user2 = new HibUser();
         user2.setUsername("UsEr1");
@@ -195,7 +182,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
 
         try {
             user2 = userDao.createUser(user2);
-            clearSession();
             Assert.fail("able to create duplicate usernames!");
         } catch (DuplicateUsernameException e) {
         }
@@ -203,7 +189,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         user2.setUsername("user2");   
         user2 = userDao.createUser(user2);
-        clearSession();
         
         User user3 = new HibUser();
         user3.setUsername("user3");
@@ -215,7 +200,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         try {
             user3 = userDao.createUser(user3);
-            clearSession();
             Assert.fail("able to create duplicate email!");
         } catch (DuplicateEmailException e) {
         }
@@ -223,7 +207,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         user3.setEmail("user3@user2.com");
         user3 = userDao.createUser(user3);
-        clearSession();  
     }
     
     /**
@@ -241,9 +224,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user1.setAdmin(Boolean.TRUE);
 
         user1 = userDao.createUser(user1);
-        
-        clearSession();
-        
+
         // find by uid
         User queryUser1 = userDao.getUserByUid(user1.getUid());
         Assert.assertNotNull(queryUser1);
@@ -251,8 +232,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         queryUser1.setPassword("user2password");
         userDao.updateUser(queryUser1);
-        
-        clearSession();
+
         queryUser1 = userDao.getUserByUid(user1.getUid());
         Assert.assertEquals(queryUser1.getPassword(), "user2password");
     }
@@ -282,9 +262,7 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user2.setAdmin(Boolean.FALSE);
 
         user2 = userDao.createUser(user2);
-        
-        clearSession();
-        
+
         // find by uid
         User queryUser1 = userDao.getUserByUid(user1.getUid());
         queryUser1.setUsername("user2");
@@ -304,7 +282,6 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         
         queryUser1.setEmail("lsdfj@lsdfj.com");
         userDao.updateUser(queryUser1);
-        clearSession();
     }
 
     /**
@@ -322,14 +299,11 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user1.setAdmin(Boolean.TRUE);
 
         userDao.createUser(user1);
-        clearSession();
         
         User queryUser1 = userDao.getUser("user1");
         Assert.assertNotNull(queryUser1);
         userDao.removeUser(queryUser1);
-        
-        clearSession();
-        
+
         queryUser1 = userDao.getUser("user1");
         Assert.assertNull(queryUser1);
     }
@@ -349,15 +323,11 @@ public class HibernateUserDaoTest extends AbstractHibernateDaoTestCase {
         user1.setAdmin(Boolean.TRUE);
 
         userDao.createUser(user1);
-        
-        clearSession();
-        
+
         User queryUser1 = userDao.getUser("user1");
         Assert.assertNotNull(queryUser1);
         userDao.removeUser(user1.getUsername());
-        
-        clearSession();
-        
+
         queryUser1 = userDao.getUser("user1");
         Assert.assertNull(queryUser1);
     }

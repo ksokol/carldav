@@ -58,6 +58,8 @@ public interface CaldavConstants {
     String ELEMENT_CALDAV_SUPPORTEDCOLLATION = "supported-collation";
     /** The CalDAV XML element name <CALDAV:calendar-data> */
     String ELEMENT_CALDAV_CALENDAR_DATA = "calendar-data";
+    /** The CalDAV XML element name <CARDDAV:address-data-type> */
+    String ELEMENT_CARDDAV_ADDRESS_DATA_TYPE = "address-data-type";
     /** The CalDAV XML element name <CALDAV:timezone> */
     String ELEMENT_CALDAV_TIMEZONE = "timezone";
     String QN_CALDAV_TIMEZONE = DomUtil.getQualifiedName(ELEMENT_CALDAV_TIMEZONE, NAMESPACE_CALDAV);
@@ -75,13 +77,14 @@ public interface CaldavConstants {
     String ELEMENT_CALDAV_FILTER = "filter";
     /** The CalDAV XML element name <CALDAV:comp-filter> */
     String ELEMENT_CALDAV_COMP_FILTER = "comp-filter";
+    /** The CalDAV XML element name <CARDDAV:filter> */
+    String ELEMENT_CARDDAV_FILTER = "filter";
     /** The CalDAV XML element name <CALDAV:prop-filter> */
     String ELEMENT_CALDAV_PROP_FILTER = "prop-filter";
     /** The CalDAV XML element name <CALDAV:param-filter> */
     String ELEMENT_CALDAV_PARAM_FILTER = "param-filter";
     /** The CalDAV XML element name <CALDAV:time-range> */
     String ELEMENT_CALDAV_TIME_RANGE = "time-range";
-    String QN_CALDAV_TIME_RANGE = DomUtil.getQualifiedName(ELEMENT_CALDAV_TIME_RANGE, NAMESPACE_CALDAV);
     /** The CalDAV XML element name <CALDAV:is-not-defined> */
     String ELEMENT_CALDAV_IS_NOT_DEFINED = "is-not-defined";
     /** The (old) CalDAV XML element name <CALDAV:is-defined> */
@@ -126,6 +129,10 @@ public interface CaldavConstants {
     String PROPERTY_CALDAV_SUPPORTED_COLLATION_SET = "supported-collation-set";
     /** The CalDAV property name CALDAV:supported-calendar-data */
     String PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA = "supported-calendar-data";
+    /** The CalDAV property name CARDDAV:supported-address-data */
+    String PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA = "supported-address-data";
+
+    String PROPERTY_CARDDAV_ADDRESS_DATA = "address-data";
     /** The CalDAV property name CALDAV:calendar-home-set */
     String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
     /** The CardDAV property name CARDDAV:addressbook-home-set */
@@ -137,6 +144,9 @@ public interface CaldavConstants {
 
     /** The CalDAV property CALDAV:calendar-data */
     DavPropertyName CALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DATA, NAMESPACE_CALDAV);
+    /** The CalDAV property CALDAV:calendar-data */
+    DavPropertyName ADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_ADDRESS_DATA, NAMESPACE_CARDDAV);
+
     /** The CalDAV property CALDAV:calendar-description */
     DavPropertyName CALENDARDESCRIPTION = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DESCRIPTION, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:calendar-timezone */
@@ -148,6 +158,8 @@ public interface CaldavConstants {
     DavPropertyName SUPPORTEDCOLLATIONSET = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_COLLATION_SET, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:supported-calendar-data */
     DavPropertyName SUPPORTEDCALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
+    /** The CalDAV property CARDDAV:supported-address-data */
+    DavPropertyName SUPPORTEDADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA, NAMESPACE_CARDDAV);
     /** The CalDAV property CALDAV:calendar-home-set */
     DavPropertyName CALENDARHOMESET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
     /** The CardDAV property CARDDAV:addressbook-home-set */

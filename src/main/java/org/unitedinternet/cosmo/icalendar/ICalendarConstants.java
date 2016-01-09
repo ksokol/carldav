@@ -34,8 +34,7 @@ public interface ICalendarConstants {
      */
     String ICALENDAR_MEDIA_TYPE = "text/calendar";
 
-    /**
-     * iCalendar value for "TRUE"
-     */
-    String VALUE_TRUE = "TRUE";
+    String CARD_MEDIA_TYPE = "text/vcard";
+
+    String CARD_VERSION = "4.0";
 }

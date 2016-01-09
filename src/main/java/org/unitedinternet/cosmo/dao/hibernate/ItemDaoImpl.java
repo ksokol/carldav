@@ -402,6 +402,24 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
+    public Set<Item> findCollectionFileItems(CollectionItem collectionItem){
+        try {
+            HashSet<Item> children = new HashSet<Item>();
+            Query hibQuery = getSession().getNamedQuery("collections.files.by.parent")
+                    .setParameter("parent", collectionItem);
+
+            List<?> results = hibQuery.list();
+            for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
+                Item content = (Item) it.next();
+                children.add(content);
+            }
+            return children;
+        } catch (HibernateException e) {
+            getSession().clear();
+            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        }
+    }
+
     /**
      * Set the unique ID generator for new items
      *

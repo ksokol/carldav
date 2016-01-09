@@ -89,7 +89,7 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
     /**
      * Parses an output filter out of the given report info.
      */
-    protected static OutputFilter findOutputFilter(ReportInfo info)
+    protected OutputFilter findOutputFilter(ReportInfo info)
         throws CosmoDavException {
         Element propdata =
             DomUtil.getChildElement(getReportElementFrom(info),

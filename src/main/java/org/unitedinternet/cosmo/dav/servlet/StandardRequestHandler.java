@@ -35,6 +35,7 @@ import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
+import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.StandardDavRequest;
@@ -211,6 +212,9 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
         if (resource instanceof DavCalendarCollection) {
             return new CalendarCollectionProvider(resourceFactory, entityFactory);
+        }
+        if (resource instanceof DavCardCollection) {
+            return new CollectionProvider(resourceFactory, entityFactory);
         }
         if (resource instanceof DavCollectionBase) {
             return new CollectionProvider(resourceFactory, entityFactory);

@@ -17,6 +17,7 @@ import static testutil.TestUser.USER01
 import static testutil.TestUser.USER01_PASSWORD
 import static testutil.helper.Base64Helper.user
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
@@ -683,5 +684,299 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
                 .andExpect(header().string(CONTENT_LENGTH, is("1736")))
                 .andExpect(text(response4))
+    }
+
+
+    @Test
+    void fetchEmptyAddressbookFirstTime() {
+        def request1 = """\
+                        <propfind xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                            <prop>
+                                <CARD:supported-address-data/>
+                                <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                            </prop>
+                        </propfind>"""
+
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CARD:supported-address-data xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                                                <CARD:address-data-type CARD:content-type="text/vcard" CARD:version="4.0"/>
+                                            </CARD:supported-address-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        <CARD:addressbook-query xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                            <prop>
+                                <getetag/>
+                            </prop>
+                            <CARD:filter/>
+                        </CARD:addressbook-query>"""
+
+        def response2 = """<D:multistatus xmlns:D="DAV:"/>"""
+
+        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+    }
+
+    @Test
+    void addVCard() {
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:4.0
+                        UID:d0f1d24e-2f4b-4318-b38c-92c6a0130c6a
+                        PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 vcard4android ez-vcard/0.9.6
+                        FN:Name Prefix Name Middle Name Last Name\\, Name Suffix
+                        N:Suffix;Name Prefix Name Middle Name Last Name;Name;;
+                        X-PHONETIC-FIRST-NAME:name
+                        X-PHONETIC-LAST-NAME:phonetic
+                        TEL;TYPE=cell:746-63
+                        TEL;TYPE=work:1111-1
+                        EMAIL;TYPE=home:email@localhost
+                        ORG:Company
+                        TITLE:Title
+                        IMPP:sip:sip
+                        NICKNAME:Nickname
+                        NOTE:Notes
+                        REV:20160109T131938Z
+                        END:VCARD
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                            <CARD:addressbook-query xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                                <prop>
+                                    <getetag/>
+                                </prop>
+                                <CARD:filter/>
+                            </CARD:addressbook-query>"""
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+
+        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCardContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("476")))
+                .andExpect(text(request1))
+    }
+
+    @Test
+    void deleteVCard() {
+        addVCard()
+
+        mockMvc.perform(delete("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+
+        def request2 = """\
+                            <CARD:addressbook-query xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                                <prop>
+                                    <getetag/>
+                                </prop>
+                                <CARD:filter/>
+                            </CARD:addressbook-query>"""
+
+        def response2 = """<D:multistatus xmlns:D="DAV:"/>"""
+
+        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+
+        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+                .andExpect(status().isNotFound())
+    }
+
+    @Test
+    void addAndUpdateVCard() {
+        addVCard()
+
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:4.0
+                        UID:d0f1d24e-2f4b-4318-b38c-92c6a0130c6a
+                        PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 vcard4android ez-vcard/0.9.6
+                        FN:Name Prefix Name Middle Name Last Name\\, Name Suffix
+                        REV:20160109T131938Z
+                        END:VCARD
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1)
+                .header("If-Match", currentEtag))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                            <CARD:addressbook-query xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                                <prop>
+                                    <getetag/>
+                                </prop>
+                                <CARD:filter/>
+                            </CARD:addressbook-query>"""
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+
+        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(textCardContentType())
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, is("224")))
+                .andExpect(text(request1))
+    }
+
+    @Test
+    void fetchAddressbookFirstTime() {
+        addVCard()
+
+        def request1 = """\
+                        <propfind xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                            <prop>
+                                <CARD:supported-address-data/>
+                                <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                            </prop>
+                        </propfind>"""
+
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CARD:supported-address-data xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                                                <CARD:address-data-type CARD:content-type="text/vcard" CARD:version="4.0"/>
+                                            </CARD:supported-address-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        <CARD:addressbook-query xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
+                            <prop>
+                                <getetag/>
+                            </prop>
+                            <CARD:filter/>
+                        </CARD:addressbook-query>"""
+
+        def response2 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${currentEtag}</D:getetag>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
     }
 }

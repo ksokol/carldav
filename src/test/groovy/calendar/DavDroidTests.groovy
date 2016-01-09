@@ -13,6 +13,7 @@ import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
@@ -376,7 +377,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(textCalendarContentType())
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
                 .andExpect(header().string(CONTENT_LENGTH, is("5716")))
-                .andExpect(text(ADD_AND_UPDATE_VEVENT_REQUEST4))
+                .andExpect(content().string(containsString("DESCRIPTION:DESCRIPTION update")))
     }
 
     @Test

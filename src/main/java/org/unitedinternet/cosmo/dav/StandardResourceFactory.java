@@ -75,7 +75,6 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
      * <p>
      * The type of resource to create is chosen as such:
      * <ul>
-     * <li><code>MKCALENDAR</code>: {@link DavCalendarCollection}</li>
      * <li><code>PUT</code>, <code>COPY</code>, <code>MOVE</code></li>:
      * {@link DavFile}</li>
      * </ul>
@@ -88,12 +87,6 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             return resource;
         }
 
-        // we didn't find an item in storage for the resource, so either
-        // the request is creating a resource or the request is targeting a
-        // nonexistent item.
-        if (request.getMethod().equals("MKCALENDAR")) {
-            return new DavCalendarCollection(locator, this,entityFactory);
-        }
         if (request.getMethod().equals("PUT")) {
             // will be replaced by the provider if a different resource
             // type is required

@@ -21,7 +21,6 @@ import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.WebdavRequestImpl;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
@@ -33,7 +32,6 @@ import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.server.ServerConstants;
 import org.unitedinternet.cosmo.util.BufferedServletInputStream;
 import org.w3c.dom.Document;
@@ -43,7 +41,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
@@ -82,13 +79,11 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
 
     private int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
-    private DavPropertySet mkcalendarSet;
     private ReportInfo reportInfo;
     private boolean bufferRequestContent = false;
     private long bufferedContentLength = -1;
     private DavResourceLocatorFactory locatorFactory;
     private DavResourceLocator locator;
-    private DavResourceLocator destinationLocator;
     private HttpServletRequest originalHttpServletRequest;
     
     /**
@@ -247,18 +242,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
         return locator;
     }
 
-    // CaldavRequest methods
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public DavPropertySet getMkCalendarSetProperties() throws CosmoDavException {
-        if (mkcalendarSet == null) {
-            mkcalendarSet = parseMkCalendarRequest();
-        }
-        return mkcalendarSet;
-    }
-
     /**
      * 
      * {@inheritDoc}
@@ -377,42 +360,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
         throw new BadRequestException("Expected one of " + XML_PROP + ", "
                 + XML_PROPNAME + ", or " + XML_ALLPROP + " as child of "
                 + QN_PROPFIND);
-    }
-
-    /**
-     * 
-     * @return DavPropertySet
-     * @throws CosmoDavException 
-     */
-    private DavPropertySet parseMkCalendarRequest() throws CosmoDavException {
-        DavPropertySet propertySet = new DavPropertySet();
-
-        Document requestDocument = getSafeRequestDocument(false);
-        if (requestDocument == null) {
-            return propertySet;
-        }
-
-        Element root = requestDocument.getDocumentElement();
-        if (!DomUtil.matches(root, ELEMENT_CALDAV_MKCALENDAR, NAMESPACE_CALDAV)) {
-            throw new BadRequestException("Expected " + QN_MKCALENDAR
-                    + " root element");
-        }
-        Element set = DomUtil.getChildElement(root, XML_SET, NAMESPACE);
-        if (set == null) {
-            throw new BadRequestException("Expected " + QN_SET + " child of "
-                    + QN_MKCALENDAR);
-        }
-        Element prop = DomUtil.getChildElement(set, XML_PROP, NAMESPACE);
-        if (prop == null) {
-            throw new BadRequestException("Expected " + QN_PROP + " child of "
-                    + QN_SET);
-        }
-        ElementIterator i = DomUtil.getChildren(prop);
-        while (i.hasNext()){
-            propertySet.add(StandardDavProperty.createFromXml(i.nextElement()));
-        }
-
-        return propertySet;
     }
 
     /**

@@ -61,11 +61,4 @@ public class FileProvider extends BaseProvider {
         response.setStatus(status);
         response.setHeader("ETag", content.getETag());
     }
-
-    public void mkcalendar(DavRequest request,
-                           DavResponse response,
-                           DavCollection collection)
-        throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("MKCALENDAR not allowed for a file");
-    }
 }

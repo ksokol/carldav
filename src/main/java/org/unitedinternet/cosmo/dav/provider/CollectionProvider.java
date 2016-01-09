@@ -15,20 +15,16 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResponse;
-import org.unitedinternet.cosmo.dav.ExistsException;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.model.EntityFactory;
+
+import java.io.IOException;
 
 /**
  * <p>
@@ -53,13 +49,5 @@ public class CollectionProvider extends BaseProvider {
                     DavContent content)
         throws CosmoDavException, IOException {
         throw new MethodNotAllowedException("PUT not allowed for a collection");
-    }
-
-
-    public void mkcalendar(DavRequest request,
-                           DavResponse response,
-                           DavCollection collection)
-        throws CosmoDavException, IOException {  
-        throw new UnsupportedOperationException();
     }
 }

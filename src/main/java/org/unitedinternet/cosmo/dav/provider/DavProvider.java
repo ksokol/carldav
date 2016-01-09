@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dav.provider;
 
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResponse;
@@ -59,10 +58,5 @@ public interface DavProvider {
     void report(DavRequest request,
                        DavResponse response,
                        WebDavResource resource)
-        throws CosmoDavException, IOException;
-
-    void mkcalendar(DavRequest request,
-                           DavResponse response,
-                           DavCollection collection)
         throws CosmoDavException, IOException;
 }

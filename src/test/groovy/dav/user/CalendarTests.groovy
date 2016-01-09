@@ -21,10 +21,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static testutil.TestUser.USER01
 import static testutil.builder.GeneralData.*
 import static testutil.builder.GeneralResponse.NOT_FOUND
-import static testutil.builder.GeneralResponse.RESOURCE_MUST_BE_NULL
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomRequestBuilders.*
+import static testutil.mockmvc.CustomRequestBuilders.propfind
+import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
 import static testutil.xmlunit.XmlMatcher.equalXml
 
@@ -393,96 +393,6 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
-    }
-
-    @Test
-    public void shouldForbidSameCalendar() throws Exception {
-        mockMvc.perform(mkcalendar("/dav/{email}/calendar/", USER01))
-                .andExpect(status().isMethodNotAllowed())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(RESOURCE_MUST_BE_NULL));
-    }
-
-    @Test
-    public void shouldCreateCalendar() throws Exception {
-        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
-                .contentType(TEXT_XML))
-                .andExpect(textXmlContentType())
-                .andExpect(status().isNotFound())
-                .andExpect(xml(NOT_FOUND));
-
-        mockMvc.perform(mkcalendar("/dav/{email}/newcalendar/", USER01)
-                .contentType(TEXT_XML))
-                .andExpect(status().isCreated());
-
-        def result1 = mockMvc.perform(head("/dav/{email}/newcalendar/", USER01)).andReturn()
-
-        def request1 = """\
-                        <D:propfind xmlns:D="DAV:">
-                            <D:prop>
-                                <C:uuid xmlns:C="http://osafoundation.org/cosmo/DAV" />
-                                <D:getlastmodified />
-                                <D:creationdate />
-                            </D:prop>
-                        </D:propfind>"""
-
-        def response2 = mockMvc.perform(propfind("/dav/{email}/newcalendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1))
-                .andReturn().getResponse().getContentAsString()
-
-        def xml = new XmlSlurper().parseText(response2)
-        def uuid = result1.getResponse().getHeader(ETAG).replaceAll('"', '')
-        def cosmoUuid = xml.response.propstat.prop.uuid.text()
-        def lastModified = xml.response.propstat.prop.getlastmodified.text()
-        def creationDate = xml.response.propstat.prop.creationdate.text()
-
-        //assert date format - TODO hamcrest matcher
-        DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-        format.parse(lastModified);
-
-        DateFormat format1= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.ENGLISH);
-        format1.parse(creationDate);
-
-        assertThat(cosmoUuid, notNullValue())
-
-        def response3 = """\
-                        <html>
-                        <head><title>newcalendar</title></head>
-                        <body>
-                        <h1>newcalendar</h1>
-                        Parent: <a href="/dav/test01@localhost.de/">no name</a></li>
-                        <h2>Members</h2>
-                        <ul>
-                        </ul>
-                        <h2>Properties</h2>
-                        <dl>
-                        <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd>/dav/test01@localhost.de/contacts</dd>
-                        <dt>{urn:ietf:params:xml:ns:caldav}calendar-description</dt><dd>newcalendar</dd>
-                        <dt>{urn:ietf:params:xml:ns:xcaldavoneandone}calendar-visible</dt><dd>false</dd>
-                        <dt>{DAV:}creationdate</dt><dd>${creationDate}</dd>
-                        <dt>{DAV:}displayname</dt><dd>newcalendar</dd>
-                        <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${uuid}</dd>
-                        <dt>{DAV:}getetag</dt><dd>&quot;${uuid}&quot;</dd>
-                        <dt>{DAV:}getlastmodified</dt><dd>${lastModified}</dd>
-                        <dt>{DAV:}iscollection</dt><dd>1</dd>
-                        <dt>{urn:ietf:params:xml:ns:caldav}max-resource-size</dt><dd>10485760</dd>
-                        <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
-                        <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VEVENT, VJOURNAL, VTODO</dd>
-                        <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
-                        <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
-                        <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query</dd>
-                        <dt>{http://osafoundation.org/cosmo/DAV}uuid</dt><dd>${cosmoUuid}</dd>
-                        </dl>
-                        <p>
-                        <a href="/dav/test01@localhost.de/">Home collection</a><br>
-                        </body></html>
-                        """.stripIndent()
-
-        mockMvc.perform(get("/dav/{email}/newcalendar/", USER01)
-                .contentType(TEXT_XML))
-                .andExpect(textHtmlContentType())
-                .andExpect(html(response3));
     }
 
     @Test

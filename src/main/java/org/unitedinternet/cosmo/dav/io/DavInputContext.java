@@ -15,22 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.io;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.servlet.http.HttpServletRequest;
-
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.apache.jackrabbit.webdav.io.InputContextImpl;
 import org.apache.jackrabbit.server.io.IOUtil;
-
+import org.apache.jackrabbit.webdav.io.InputContextImpl;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -39,6 +31,11 @@ import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarDataException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * An <code>InputContext</code> that supports the semantics of DAV
@@ -53,16 +50,9 @@ public class DavInputContext extends InputContextImpl
     private String contentType;
     private Calendar calendar;
 
-    /**
-     * If the HTTP request method is MKCALENDAR, sets the context's
-     * content type to indicate calendar collection.
-     */
     public DavInputContext(HttpServletRequest request,
                            InputStream in) {
         super(request, in);
-        if (request.getMethod().equals("MKCALENDAR")) {
-            contentType = CONTENT_TYPE_CALENDAR_COLLECTION;
-        }
     }
     
     // InputContext methods

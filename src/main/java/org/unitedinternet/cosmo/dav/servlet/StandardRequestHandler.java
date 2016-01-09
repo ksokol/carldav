@@ -23,7 +23,6 @@ import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -172,13 +171,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
         else {
             if (resource.isCollection()) {
-                if (request.getMethod().equals("MKCALENDAR")) {
-                    provider.mkcalendar(request, response,
-                                        (DavCollection)resource);
-                }
-                else {
-                    throw new MethodNotAllowedException(request.getMethod() + " not allowed for a collection");
-                }
+                throw new MethodNotAllowedException(request.getMethod() + " not allowed for a collection");
             } else {
                 if (request.getMethod().equals("PUT")) {
                     provider.put(request, response, (DavContent)resource);

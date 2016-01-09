@@ -47,9 +47,6 @@ public interface CaldavConstants {
     String NS_CS = "http://calendarserver.org/ns/";
     Namespace NAMESPACE_CS = Namespace.getNamespace(PRE_CS, NS_CS);
 
-    /** The CalDAV XML element name <CALDAV:mkcalendar> */
-    String ELEMENT_CALDAV_MKCALENDAR = "mkcalendar";
-    String QN_MKCALENDAR = DomUtil.getQualifiedName(ELEMENT_CALDAV_MKCALENDAR, NAMESPACE_CALDAV);
     /** The CalDAV XML element name <CALDAV:calendar> */
     String ELEMENT_CALDAV_CALENDAR = "calendar";
     /** The CalDAV XML element name <CALDAV:comp> */

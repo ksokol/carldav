@@ -105,7 +105,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
     public String getSupportedMethods() {
         // If resource doesn't exist, then options are limited
         if (!exists()) {
-            return "OPTIONS, TRACE, PUT, MKCALENDAR";
+            return "OPTIONS, TRACE, PUT";
         } else {
             return "OPTIONS, GET, HEAD, PROPFIND, TRACE, DELETE, REPORT";
         }

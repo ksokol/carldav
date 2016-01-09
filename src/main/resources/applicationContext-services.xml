@@ -92,7 +92,6 @@
                 <value>POST</value>
                 <value>PUT</value>
                 <value>DELETE</value>
-                <value>MKCALENDAR</value>
             </list>
         </property>
         <property name="exceptions">

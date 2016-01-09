@@ -15,24 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import java.io.IOException;
-
-import carldav.jackrabbit.webdav.CustomMultiStatus;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.webdav.MultiStatus;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResponse;
-import org.unitedinternet.cosmo.dav.ExistsException;
-import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarLocationException;
-import org.unitedinternet.cosmo.dav.caldav.MissingParentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
-import org.unitedinternet.cosmo.dav.impl.DavItemCollection;
 import org.unitedinternet.cosmo.model.EntityFactory;
 
 /**
@@ -51,44 +37,5 @@ public class CalendarCollectionProvider extends CollectionProvider {
     public CalendarCollectionProvider(DavResourceFactory resourceFactory,
             EntityFactory entityFactory) {
         super(resourceFactory, entityFactory);
-    }
-
-    // DavProvider methods
-
-    public void mkcalendar(DavRequest request,
-                           DavResponse response,
-                           DavCollection collection)
-        throws CosmoDavException, IOException {
-        if (collection.exists()) {
-            throw new ExistsException();
-        }
-
-        DavItemCollection parent = (DavItemCollection) collection.getParent();
-        if (! parent.exists()) {
-            throw new MissingParentException("One or more intermediate collections must be created");
-        }
-        if (parent.isCalendarCollection()) {
-            throw new InvalidCalendarLocationException("A calendar collection may not be created within a calendar collection");
-        }
-        // XXX DAV:needs-privilege DAV:bind on parent collection
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("MKCALENDAR at " + collection.getResourcePath());
-        }
-            DavPropertySet properties = request.getMkCalendarSetProperties();
-            MultiStatusResponse msr =
-                collection.getParent().addCollection(collection, properties);
-    
-            if (properties.isEmpty() || ! hasNonOK(msr)) {
-                response.setStatus(201);
-                response.setHeader("Cache-control", "no-cache");
-                response.setHeader("Pragma", "no-cache");
-                return;
-            }
-    
-            MultiStatus ms = new CustomMultiStatus();
-            ms.addResponse(msr);
-            response.sendMultiStatus(ms);
-        
     }
 }

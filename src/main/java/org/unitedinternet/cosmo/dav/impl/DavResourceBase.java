@@ -82,6 +82,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
 
     @Override
     public void move(final DavResource destination) throws DavException {
+
         throw new UnsupportedOperationException();
     }
 

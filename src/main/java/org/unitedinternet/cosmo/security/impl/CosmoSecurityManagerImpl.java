@@ -18,11 +18,8 @@ package org.unitedinternet.cosmo.security.impl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
-import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
-import org.unitedinternet.cosmo.service.UserService;
 
 /**
  * The default implementation of the {@link CosmoSecurityManager}
@@ -30,10 +27,6 @@ import org.unitedinternet.cosmo.service.UserService;
  * security information contained in JAAS or Acegi Security.
  */
 public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
-
-    private UserService userService;
-
-    /* ----- CosmoSecurityManager methods ----- */
 
     /**
      * Provide a <code>CosmoSecurityContext</code> representing a
@@ -56,14 +49,6 @@ public class CosmoSecurityManagerImpl implements CosmoSecurityManager {
      */
     protected CosmoSecurityContext createSecurityContext(Authentication authen) {
         return new CosmoSecurityContextImpl(authen);
-    }
-
-    /**
-     * 
-     * @param userService UserService
-     */
-    public void setUserService(UserService userService) {
-        this.userService = userService;
     }
 
 }

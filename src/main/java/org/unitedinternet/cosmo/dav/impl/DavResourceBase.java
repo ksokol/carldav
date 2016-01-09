@@ -85,12 +85,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         throw new UnsupportedOperationException();
     }
 
-    private static final HashSet<DavPropertyName> LIVE_PROPERTIES = new HashSet<>(10);
+    private final HashSet<DavPropertyName> liveProperties = new HashSet<>(10);
     private final Set<ReportType> reportTypes = new HashSet<>(10);
-
-    static {
-        registerLiveProperty(SUPPORTEDREPORTSET);
-    }
 
     private DavResourceLocator locator;
     private DavResourceFactory factory;
@@ -100,6 +96,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
     public DavResourceBase(DavResourceLocator locator,
                            DavResourceFactory factory)
         throws CosmoDavException {
+        registerLiveProperty(SUPPORTEDREPORTSET);
         this.locator = locator;
         this.factory = factory;
         this.properties = new DavPropertySet();
@@ -375,8 +372,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
      * of live properties for the resource.
      * </p>
      */
-    protected static void registerLiveProperty(DavPropertyName name) {
-        LIVE_PROPERTIES.add(name);
+    protected void registerLiveProperty(DavPropertyName name) {
+        liveProperties.add(name);
     }
 
     /**
@@ -399,7 +396,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
      * client), then it is known as a "dead" property.
      */
     protected boolean isLiveProperty(DavPropertyName name) {
-        return LIVE_PROPERTIES.contains(name);
+        return liveProperties.contains(name);
     }
 
     /**

@@ -94,7 +94,11 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     private DavCollection parent;
     private EntityFactory entityFactory;
 
-    static {
+    public DavItemResourceBase(Item item, DavResourceLocator locator,
+            DavResourceFactory factory, EntityFactory entityFactory)
+            throws CosmoDavException {
+        super(locator, factory);
+
         registerLiveProperty(DavPropertyName.CREATIONDATE);
         registerLiveProperty(DavPropertyName.GETLASTMODIFIED);
         registerLiveProperty(DavPropertyName.GETETAG);
@@ -102,12 +106,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(DavPropertyName.ISCOLLECTION);
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
         registerLiveProperty(UUID);
-    }
 
-    public DavItemResourceBase(Item item, DavResourceLocator locator,
-            DavResourceFactory factory, EntityFactory entityFactory)
-            throws CosmoDavException {
-        super(locator, factory);
         this.item = item;
         this.entityFactory = entityFactory;
     }

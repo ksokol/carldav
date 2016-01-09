@@ -52,16 +52,7 @@ import java.util.Set;
 public abstract class DavCalendarResource extends DavContentBase
     implements ICalendarConstants {
     private static final Log LOG = LogFactory.getLog(DavCalendarResource.class);
-    private static final Set<ReportType> REPORT_TYPES =
-        new HashSet<ReportType>();
-    
-    static {
-        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
-        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
-
-        REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
-        REPORT_TYPES.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
-    }
+    private final Set<ReportType> reportTypes = new HashSet<>();
 
     public DavCalendarResource(ContentItem item,
                                DavResourceLocator locator,
@@ -69,6 +60,12 @@ public abstract class DavCalendarResource extends DavContentBase
                                EntityFactory entityFactory)
         throws CosmoDavException {
         super(item, locator, factory, entityFactory);
+
+        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
+        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
+
+        reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
+        reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
     }
        
     // WebDavResource methods
@@ -150,7 +147,7 @@ public abstract class DavCalendarResource extends DavContentBase
     }
 
     public Set<ReportType> getReportTypes() {
-        return REPORT_TYPES;
+        return reportTypes;
     }
 
     /** */

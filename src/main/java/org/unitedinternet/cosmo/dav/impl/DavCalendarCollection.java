@@ -75,20 +75,7 @@ import javax.xml.namespace.QName;
 
 public class DavCalendarCollection extends DavCollectionBase implements CaldavConstants, ICalendarConstants {
     private static final Log LOG =  LogFactory.getLog(DavCalendarCollection.class);
-    private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<String>();
-
-    static {
-        registerLiveProperty(CALENDARDESCRIPTION);
-        registerLiveProperty(CALENDARTIMEZONE);
-        registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
-        registerLiveProperty(SUPPORTEDCALENDARDATA);
-        registerLiveProperty(MAXRESOURCESIZE);
-        registerLiveProperty(GET_CTAG);
-        registerLiveProperty(XCaldavConstants.CALENDAR_COLOR);
-        registerLiveProperty(XCaldavConstants.CALENDAR_VISIBLE);
-        
-        DEAD_PROPERTY_FILTER.add(CalendarCollectionStamp.class.getName());
-    }
+    private final Set<String> deadPropertyFilter = new HashSet<>(10);
 
     public DavCalendarCollection(CollectionItem collection,
                                  DavResourceLocator locator,
@@ -97,8 +84,19 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
         super(collection, locator, factory, entityFactory);
 
-        REPORT_TYPES.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
-        REPORT_TYPES.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
+        registerLiveProperty(CALENDARDESCRIPTION);
+        registerLiveProperty(CALENDARTIMEZONE);
+        registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
+        registerLiveProperty(SUPPORTEDCALENDARDATA);
+        registerLiveProperty(MAXRESOURCESIZE);
+        registerLiveProperty(GET_CTAG);
+        registerLiveProperty(XCaldavConstants.CALENDAR_COLOR);
+        registerLiveProperty(XCaldavConstants.CALENDAR_VISIBLE);
+
+        reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
+        reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
+
+        deadPropertyFilter.add(CalendarCollectionStamp.class.getName());
     }
 
     /** */
@@ -316,7 +314,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     protected Set<String> getDeadPropertyFilter() {
         Set<String> copy = new HashSet<String>();
         copy.addAll(super.getDeadPropertyFilter());
-        copy.addAll(DEAD_PROPERTY_FILTER);
+        copy.addAll(deadPropertyFilter);
         return copy;
     }
 

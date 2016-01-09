@@ -78,7 +78,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
         DavItemCollection {
     private static final Log LOG = LogFactory.getLog(DavCollectionBase.class);
     private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<String>();
-    protected final Set<ReportType> REPORT_TYPES = new HashSet<ReportType>();
+    protected final Set<ReportType> reportTypes = new HashSet<>();
 
     private List<org.apache.jackrabbit.webdav.DavResource> members;
 
@@ -238,7 +238,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
     }
 
     public Set<ReportType> getReportTypes() {
-        return REPORT_TYPES;
+        return reportTypes;
     }
 
     /** */

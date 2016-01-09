@@ -15,9 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -27,8 +24,8 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dav.BadRequestException;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
@@ -39,6 +36,9 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.FileItem;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Extends <code>DavResourceBase</code> to adapt the Cosmo
@@ -58,19 +58,16 @@ import org.unitedinternet.cosmo.model.FileItem;
 public class DavFile extends DavContentBase {
     private static final Log LOG = LogFactory.getLog(DavFile.class);
 
-    static {
-        registerLiveProperty(DavPropertyName.GETCONTENTLANGUAGE);
-        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
-        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
-    }
-
-    /** */
     public DavFile(FileItem item,
                    DavResourceLocator locator,
                    DavResourceFactory factory,
                    EntityFactory entityFactory)
         throws CosmoDavException {
         super(item, locator, factory, entityFactory);
+
+        registerLiveProperty(DavPropertyName.GETCONTENTLANGUAGE);
+        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
+        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
     }
 
     /** */

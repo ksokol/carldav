@@ -15,45 +15,26 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
-
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataRetrievalFailureException;
+import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.hibernate.AbstractHibernateDaoTestCase;
-import org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl;
 import org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl;
 import org.unitedinternet.cosmo.model.User;
 
 import java.util.Set;
 
-/**
- * Test Case for {@link StandardUserService}.
- */
-public class StandardUserServiceTest extends AbstractHibernateDaoTestCase {
+public class StandardUserServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private UserDaoImpl userDao;
 
     @Autowired
-    private ContentDaoImpl contentDao;
-
     private StandardUserService service;
-    private TestHelper testHelper;
 
-    /**
-     * Setup.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Before
-    public void setUp() throws Exception {
-        testHelper = new TestHelper();
-        service = new StandardUserService(contentDao, userDao);
-    }
+    private TestHelper testHelper = new TestHelper();
 
     /**
      * Tests get users.
@@ -70,7 +51,6 @@ public class StandardUserServiceTest extends AbstractHibernateDaoTestCase {
 
         Set<User> users = service.getUsers();
 
-        assertThat(users, hasSize(3)); // account for overlord
         Assert.assertTrue("User 1 not found in users", users.contains(u1));
         Assert.assertTrue("User 2 not found in users", users.contains(u2));
         Assert.assertTrue("User 3 not found in users", users.contains(u3));

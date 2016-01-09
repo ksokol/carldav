@@ -30,11 +30,6 @@
     ),
 
     @TypeDef(
-            name="composite_calendar",
-            typeClass = org.unitedinternet.cosmo.hibernate.CalendarType.class
-    ),
-    
-    @TypeDef(
             name="long_timestamp",
             typeClass = org.unitedinternet.cosmo.hibernate.LongTimestampType.class
     )

@@ -5,4 +5,4 @@ jdk:
 sudo: false
 
 script:
-   - if [[ $TRAVIS_JDK_VERSION == "oraclejdk8" ]]; then mvn cobertura:cobertura coveralls:cobertura; else mvn test; fi
+   - if [[ $TRAVIS_JDK_VERSION == "oraclejdk8" ]]; then mvn test cobertura:cobertura coveralls:cobertura; else mvn test; fi

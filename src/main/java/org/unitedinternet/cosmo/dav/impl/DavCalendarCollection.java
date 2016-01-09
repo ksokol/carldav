@@ -40,8 +40,6 @@ import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.XCaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarColor;
-import org.unitedinternet.cosmo.dav.caldav.property.CalendarDescription;
-import org.unitedinternet.cosmo.dav.caldav.property.CalendarTimezone;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarVisibility;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.MaxResourceSize;
@@ -187,14 +185,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         CalendarCollectionStamp cc = getCalendarCollectionStamp();
         if (cc == null) {
             return;
-        }
-
-        if (cc.getDescription() != null) {
-            properties.add(new CalendarDescription(cc.getDescription(),
-                                                   cc.getLanguage()));
-        }
-        if (cc.getTimezoneCalendar() != null) {
-            properties.add(new CalendarTimezone(cc.getTimezoneCalendar().toString()));
         }
 
         // add CS:getctag property, which is the collection's entitytag

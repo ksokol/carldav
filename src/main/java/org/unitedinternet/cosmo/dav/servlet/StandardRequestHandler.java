@@ -39,7 +39,6 @@ import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.StandardDavRequest;
 import org.unitedinternet.cosmo.dav.impl.StandardDavResponse;
-import org.unitedinternet.cosmo.dav.provider.CalendarCollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
 import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
@@ -190,7 +189,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * </p>
      * <ul>
      * <li> home collection: {@link HomeCollectionProvider}</li>
-     * <li> calendar collection: {@link CalendarCollectionProvider}</li>
+     * <li> calendar collection: {@link CollectionProvider}</li>
      * <li> collection: {@link CollectionProvider}</li>
      * <li> calendar resource: {@link CalendarResourceProvider}</li>
      * <li> file resource: {@link FileProvider}</li>
@@ -201,7 +200,7 @@ public class StandardRequestHandler extends AbstractController implements Server
             return new HomeCollectionProvider(resourceFactory, entityFactory);
         }
         if (resource instanceof DavCalendarCollection) {
-            return new CalendarCollectionProvider(resourceFactory, entityFactory);
+            return new CollectionProvider(resourceFactory, entityFactory);
         }
         if (resource instanceof DavCardCollection) {
             return new CollectionProvider(resourceFactory, entityFactory);

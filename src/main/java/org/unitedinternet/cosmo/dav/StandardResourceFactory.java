@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import carldav.card.CardQueryProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
@@ -39,29 +40,25 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
-/**
- * Standard implementation of <code>DavResourceFactory</code>.
- *
- * @see WebDavResource
- * @see Item
- */
-public class StandardResourceFactory
-    implements DavResourceFactory, ExtendedDavConstants{
+public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
     private static final Log LOG =  LogFactory.getLog(StandardResourceFactory.class);
 
     private ContentService contentService;
     private CosmoSecurityManager securityManager;
     private EntityFactory entityFactory;
     private CalendarQueryProcessor calendarQueryProcessor;
+    private CardQueryProcessor cardQueryProcessor;
 
     public StandardResourceFactory(ContentService contentService,
                                    CosmoSecurityManager securityManager,
                                    EntityFactory entityFactory,
-                                   CalendarQueryProcessor calendarQueryProcessor) {
+                                   CalendarQueryProcessor calendarQueryProcessor,
+                                   CardQueryProcessor cardQueryProcessor) {
         this.contentService = contentService;
         this.securityManager = securityManager;
         this.entityFactory = entityFactory;
         this.calendarQueryProcessor = calendarQueryProcessor;
+        this.cardQueryProcessor = cardQueryProcessor;
     }
 
     /**
@@ -173,7 +170,7 @@ public class StandardResourceFactory
                 return new DavCalendarCollection((CollectionItem) item,
                                                  locator, this,entityFactory);
             } else if(item.getStamp(CardCollectionStamp.class) != null) {
-                return new DavCardCollection((CollectionItem) item, locator, this, entityFactory);
+                return new DavCardCollection((CollectionItem) item, locator, this, entityFactory, getCardQueryProcessor());
             } else {
                 return new DavCollectionBase((CollectionItem) item, locator, this, entityFactory);
             }
@@ -222,6 +219,10 @@ public class StandardResourceFactory
     
     public CalendarQueryProcessor getCalendarQueryProcessor() {
         return calendarQueryProcessor;
+    }
+
+    public CardQueryProcessor getCardQueryProcessor() {
+        return cardQueryProcessor;
     }
 
     public CosmoSecurityManager getSecurityManager() {

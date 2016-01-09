@@ -49,6 +49,13 @@
 		<constructor-arg>
 			<ref bean="calendarQueryProcessor" />
 		</constructor-arg>
+        <constructor-arg>
+            <bean class="carldav.card.CardQueryProcessorImpl">
+                <constructor-arg>
+                    <ref bean="contentDao" />
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
 	</bean>
 
 	<bean id="davResourceLocatorFactory"

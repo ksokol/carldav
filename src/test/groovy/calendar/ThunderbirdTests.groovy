@@ -246,7 +246,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
 
         mockMvc.perform(options("/dav/{email}/", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, calendar-access"))
+                .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH"))
     }
 

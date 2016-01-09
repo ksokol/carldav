@@ -36,7 +36,7 @@ class EvolutionTests extends IntegrationTestSupport {
     public void fetchingEmptyCalendarFirstTime() {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, calendar-access"))
+                .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, PUT, COPY, DELETE, MOVE, REPORT"))
 
         def request1 = """\

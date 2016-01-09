@@ -36,8 +36,7 @@ public interface WebDavResource
      * class as well as the Cosmo extended classes.
      */
     // see bug 5137 for why we don't include class 2
-    String COMPLIANCE_CLASS =
-        "1, 3, calendar-access";
+    String COMPLIANCE_CLASS = "1, 3, addressbook, calendar-access";
 
     /**
      * @return Returns the parent collection for this resource.
@@ -61,8 +60,6 @@ public interface WebDavResource
      */
     Report getReport(ReportInfo info)
         throws CosmoDavException;
-
-    DavResourceFactory getResourceFactory();
 
     DavResourceLocator getResourceLocator();
     

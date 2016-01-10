@@ -19,16 +19,7 @@ public interface User {
 
     Long getId();
 
-    /**
-     */
-    String getUid();
-
     String getRole();
-
-    /**
-     * @param uid
-     */
-    void setUid(String uid);
 
     /**
      */

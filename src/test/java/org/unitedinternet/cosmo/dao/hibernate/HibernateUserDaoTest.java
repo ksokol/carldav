@@ -58,12 +58,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         // find by username
         User queryUser1 = userDao.getUser("user1@user1.com");
         Assert.assertNotNull(queryUser1);
-        Assert.assertNotNull(queryUser1.getUid());
-        verifyUser(user1, queryUser1);
-
-        // find by uid
-        queryUser1 = userDao.getUserByUid(user1.getUid());
-        Assert.assertNotNull(queryUser1);
+        Assert.assertNotNull(queryUser1.getEmail());
         verifyUser(user1, queryUser1);
 
         // Get all
@@ -134,14 +129,14 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1 = userDao.createUser(user1);
 
         // find by uid
-        User queryUser1 = userDao.getUserByUid(user1.getUid());
+        User queryUser1 = userDao.getUserByEmail(user1.getEmail());
         Assert.assertNotNull(queryUser1);
         verifyUser(user1, queryUser1);
         
         queryUser1.setPassword("user2password");
         userDao.updateUser(queryUser1);
 
-        queryUser1 = userDao.getUserByUid(user1.getUid());
+        queryUser1 = userDao.getUserByEmail(user1.getEmail());
         Assert.assertEquals(queryUser1.getPassword(), "user2password");
     }
     
@@ -164,7 +159,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user2 = userDao.createUser(user2);
 
         // find by uid
-        User queryUser1 = userDao.getUserByUid(user1.getUid());
+        User queryUser1 = userDao.getUserByEmail(user1.getEmail());
         queryUser1.setEmail("user2@user2.com");
         try {
             userDao.updateUser(queryUser1);
@@ -219,7 +214,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      * @param user2 User2.
      */
     private void verifyUser(User user1, User user2) {
-        Assert.assertEquals(user1.getUid(), user2.getUid());
         Assert.assertEquals(user1.getEmail(), user2.getEmail());
         Assert.assertEquals(user1.getPassword(), user2.getPassword());
     }

@@ -78,14 +78,10 @@
         @NamedQuery(name = "contentItem.by.owner", query = "from HibContentItem i where i.owner=:owner"),
     
     // User Queries
-    @NamedQuery(name="user.byUsername", query="from HibUser where username=:username"),
-    @NamedQuery(name="user.byUsername.ignorecase", query="from HibUser where lower(username)=lower(:username)"),
     @NamedQuery(name="user.byEmail", query="from HibUser where email=:email"),
     @NamedQuery(name="user.byEmail.ignorecase", query="from HibUser where lower(email)=lower(:email)"),
         @NamedQuery(name = "user.byUsernameOrEmail.ignorecase.ingoreId", query = "from HibUser where"
                 + " id!=:userid and lower(email)=lower(:email))"),
-        @NamedQuery(name = "user.byUid", query = "from HibUser where uid=:uid"),
-        @NamedQuery(name = "user.byActivationId", query = "from HibUser where activationid=:activationId"),
         @NamedQuery(name = "user.all", query = "from HibUser"),
         @NamedQuery(name = "user.count", query = "select count(id) from HibUser"),
 

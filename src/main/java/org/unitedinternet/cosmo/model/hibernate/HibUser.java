@@ -48,11 +48,6 @@ public class HibUser implements User {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id = Long.valueOf(-1);
 
-    @Column(name = "uid", nullable=false, unique=true, length=255)
-    @NotNull
-    @Length(min=1, max=255)
-    private String uid;
-
     @NotNull
     private String password;
 
@@ -84,20 +79,6 @@ public class HibUser implements User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getUid()
-     */
-    public String getUid() {
-        return uid;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setUid(java.lang.String)
-     */
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     /* (non-Javadoc)

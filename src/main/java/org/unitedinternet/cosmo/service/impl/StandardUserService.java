@@ -81,7 +81,7 @@ public class StandardUserService implements UserService {
 
         try {
             userDao.createUser(user);
-            LOG.info("created new user:" + user.getUid());
+            LOG.info("created new user:" + user.getEmail());
         } catch (DataIntegrityViolationException e) {
             if (userDao.getUserByEmail(user.getEmail()) != null) {
                 throw new DuplicateEmailException(user.getEmail());

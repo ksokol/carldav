@@ -68,7 +68,7 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
         for(CollectionItemDetails cid: childDetails) {
             if(cid.getItem().getUid().equals(item.getUid()) && 
                     cid.getItem().getName().equals(item.getName())&& 
-                    cid.getItem().getOwner().getUid().equals(item.getOwner().getUid()) ) {
+                    cid.getItem().getOwner().getEmail().equals(item.getOwner().getEmail()) ) {
                 return cid;
             }
         }

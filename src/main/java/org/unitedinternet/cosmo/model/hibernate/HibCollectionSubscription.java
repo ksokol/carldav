@@ -109,7 +109,7 @@ public class HibCollectionSubscription extends HibAuditableObject {
 
     public String calculateEntityTag() {
         // subscription is unique by name for its owner
-        String uid = getOwner() != null && getOwner().getUid() != null ? getOwner().getUid() : "-";
+        String uid = getOwner() != null && getOwner().getEmail() != null ? getOwner().getEmail() : "-";
         String name = getDisplayName() != null ? getDisplayName() : "-";
         String modTime = getModifiedDate() != null ?
             Long.valueOf(getModifiedDate().getTime()).toString() : "-";

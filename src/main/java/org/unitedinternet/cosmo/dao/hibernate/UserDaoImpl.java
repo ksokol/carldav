@@ -24,7 +24,6 @@ import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -56,10 +55,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
                 throw new DuplicateEmailException(user.getEmail());
             }
 
-            if (user.getUid() == null || "".equals(user.getUid())) {
-                user.setUid(getIdGenerator().nextStringIdentifier());
-            }
-
             getSession().save(user);
             getSession().flush();
             return user;
@@ -76,19 +71,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
     public User getUser(String email) {
         try {
             return findUserByEmail(email);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public User getUserByUid(String uid) {
-        if (uid == null) {
-            throw new IllegalArgumentException("uid required");
-        }
-
-        try {
-            return findUserByUid(uid);
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -182,30 +164,8 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
-    }
-
     public void setIdGenerator(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
-    }
-
-    private User findUserByUsername(String username) {
-        return (User) getSession().byNaturalId(HibUser.class).using("username", username).load();
-    }
-
-    private User findUserByUsernameIgnoreCase(String username) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery("user.byUsername.ignorecase").setParameter(
-                "username", username);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        List users = hibQuery.list();
-        if (users.size() > 0) {
-            return (User) users.get(0);
-        } else {
-            return null;
-        }
     }
 
     private User findUserByEmailIgnoreCaseAndId(Long userId, String email) {
@@ -250,14 +210,5 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         } else {
             return null;
         }
-    }
-
-    private User findUserByUid(String uid) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery("user.byUid").setParameter(
-                "uid", uid);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        return (User) hibQuery.uniqueResult();
     }
 }

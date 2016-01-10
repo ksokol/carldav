@@ -23,6 +23,8 @@ public interface User {
      */
     String getUid();
 
+    String getRole();
+
     /**
      * @param uid
      */
@@ -51,14 +53,6 @@ public interface User {
     /**
      */
     void setEmail(String email);
-
-    /**
-     */
-    Boolean getAdmin();
-
-    /**
-     */
-    void setAdmin(Boolean admin);
 
     Boolean isLocked();
 }

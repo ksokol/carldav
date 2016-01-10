@@ -48,7 +48,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
         user1 = userDao.createUser(user1);
 
@@ -56,7 +55,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user2.setUsername("user2");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
-        user2.setAdmin(Boolean.FALSE);
 
         user2 = userDao.createUser(user2);
 
@@ -84,7 +82,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user3.setUsername("user2");
         user3.setEmail("user1@user1.com");
         user3.setPassword("user1password");
-        user3.setAdmin(Boolean.TRUE);
 
         try {
             userDao.createUser(user3);
@@ -112,7 +109,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setUsername("uSeR1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
         user1 = userDao.createUser(user1);
 
@@ -120,7 +116,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user2.setUsername("UsEr1");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
-        user2.setAdmin(Boolean.FALSE);
 
         try {
             user2 = userDao.createUser(user2);
@@ -136,7 +131,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user3.setUsername("user3");
         user3.setEmail("USER2@user2.com");
         user3.setPassword("user2password");
-        user3.setAdmin(Boolean.FALSE);
         
         try {
             user3 = userDao.createUser(user3);
@@ -159,7 +153,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
         user1 = userDao.createUser(user1);
 
@@ -185,7 +178,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
         user1 = userDao.createUser(user1);
         
@@ -193,7 +185,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user2.setUsername("user2");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
-        user2.setAdmin(Boolean.FALSE);
 
         user2 = userDao.createUser(user2);
 
@@ -228,7 +219,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
         userDao.createUser(user1);
         
@@ -250,7 +240,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
         userDao.createUser(user1);
 
@@ -270,7 +259,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     private void verifyUser(User user1, User user2) {
         Assert.assertEquals(user1.getUid(), user2.getUid());
         Assert.assertEquals(user1.getUsername(), user2.getUsername());
-        Assert.assertEquals(user1.getAdmin(), user2.getAdmin());
         Assert.assertEquals(user1.getEmail(), user2.getEmail());
         Assert.assertEquals(user1.getPassword(), user2.getPassword());
     }

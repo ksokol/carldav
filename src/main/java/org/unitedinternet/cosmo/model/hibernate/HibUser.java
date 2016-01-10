@@ -85,7 +85,6 @@ public class HibUser implements User {
     @javax.validation.constraints.Pattern(regexp="^[\\u0020-\\ud7ff\\ue000-\\ufffd&&[^\\u007f\\u003a;/\\\\]]+$")
     private String username;
 
-    @Column(name = "password")
     @NotNull
     private String password;
 
@@ -93,15 +92,21 @@ public class HibUser implements User {
     @Length(min=EMAIL_LEN_MIN, max=EMAIL_LEN_MAX)
     @Email
     private String email;
-    
-    @Column(name = "admin")
-    private Boolean admin;
 
-    @Column(name = "locked")
-    private Boolean locked;
+    private Boolean locked = Boolean.FALSE;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HibItem> items;
+
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(final String role) {
+        this.role = role;
+    }
 
     public Long getId() {
         return id;
@@ -109,13 +114,6 @@ public class HibUser implements User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    /**
-     */
-    public HibUser() {
-        admin = Boolean.FALSE;
-        locked = Boolean.FALSE;
     }
 
     /* (non-Javadoc)
@@ -172,20 +170,6 @@ public class HibUser implements User {
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getAdmin()
-     */
-    public Boolean getAdmin() {
-        return admin;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setAdmin(java.lang.Boolean)
-     */
-    public void setAdmin(Boolean admin) {
-        this.admin = admin;
     }
 
     /* (non-Javadoc)

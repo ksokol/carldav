@@ -36,11 +36,11 @@ class CosmoUserDetailsServiceTests {
 
     @Test
     void hasRootRole() {
-        when(user.getAdmin()).thenReturn(true)
+        when(user.getRole()).thenReturn("ROLE_ADMIN")
 
         UserDetails userDetails = uut.loadUserByUsername(USERNAME)
 
-        assertThat(userDetails.getAuthorities(), everyItem(hasProperty("authority", is("ROLE_ROOT"))))
+        assertThat(userDetails.getAuthorities(), everyItem(hasProperty("authority", is("ROLE_ADMIN"))))
     }
 
     @Test

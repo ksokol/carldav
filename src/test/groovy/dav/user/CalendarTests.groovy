@@ -11,12 +11,10 @@ import java.text.SimpleDateFormat
 
 import static org.hamcrest.Matchers.notNullValue
 import static org.junit.Assert.assertThat
-import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.HttpMethod.POST
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.builder.GeneralData.*
@@ -387,14 +385,6 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response));
-    }
-
-    @Test
-    public void calendarOptions() throws Exception {
-        mockMvc.perform(options("/dav/{email}/calendar/", USER01))
-                .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
-                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT"));
     }
 
     @Test

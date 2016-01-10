@@ -15,26 +15,23 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.hibernate.validator.Event;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Stamp;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 
 /**
@@ -119,22 +116,6 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
      */
     public static EventStamp getStamp(Item item) {
         return (EventStamp) item.getStamp(EventStamp.class);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Stamp#copy()
-     */
-    public Stamp copy() {
-        EventStamp stamp = new HibEventStamp();
-        
-        // Need to copy Calendar, and indexes
-        try {
-            stamp.setEventCalendar(new Calendar(getEventCalendar()));
-        } catch (Exception e) {
-            throw new CosmoException("Cannot copy calendar", e);
-        }
-        
-        return stamp;
     }
 
     @Override

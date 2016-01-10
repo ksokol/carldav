@@ -80,11 +80,6 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
         setItem(collection);
     }
 
-    public Stamp copy() {
-        CalendarCollectionStamp stamp = new HibCalendarCollectionStamp();
-        return stamp;
-    }
-        
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.CalendarCollectionStamp#getDescription()
      */

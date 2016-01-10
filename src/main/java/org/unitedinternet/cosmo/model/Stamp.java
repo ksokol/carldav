@@ -38,12 +38,6 @@ public interface Stamp extends AuditableObject {
     public String getType();
 
     /**
-     * Return a new instance of Stamp containing a copy of the Stamp
-     * @return copy of Stamp
-     */
-    public Stamp copy();
-
-    /**
      * Update stamp's timestamp
      */
     public void updateTimestamp();

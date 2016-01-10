@@ -20,7 +20,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.Stamp;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -138,11 +137,6 @@ public class HibMessageStamp extends HibStamp implements MessageStamp {
      */
     public static MessageStamp getStamp(Item item) {
         return (MessageStamp) item.getStamp(MessageStamp.class);
-    }
-    
-    public Stamp copy() {
-        MessageStamp stamp = new HibMessageStamp();
-        return stamp;
     }
 
     @Override

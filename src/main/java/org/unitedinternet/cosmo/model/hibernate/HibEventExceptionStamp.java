@@ -20,13 +20,11 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.hibernate.validator.EventException;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.Stamp;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -106,22 +104,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
      */
     public static EventExceptionStamp getStamp(Item item) {
         return (EventExceptionStamp) item.getStamp(EventExceptionStamp.class);
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Stamp#copy()
-     */
-    public Stamp copy() {
-        EventExceptionStamp stamp = new HibEventExceptionStamp();
-        
-        // Need to copy Calendar
-        try {
-            stamp.setEventCalendar(new Calendar(getEventCalendar()));
-        } catch (Exception e) {
-            throw new CosmoException("Cannot copy calendar", e);
-        }
-        
-        return stamp;
     }
 
     @Override

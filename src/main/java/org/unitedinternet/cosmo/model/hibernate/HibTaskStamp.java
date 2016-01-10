@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.TaskStamp;
 
 import javax.persistence.DiscriminatorValue;
@@ -49,11 +48,6 @@ public class HibTaskStamp extends HibStamp implements TaskStamp {
      */
     public static TaskStamp getStamp(Item item) {
         return (TaskStamp) item.getStamp(TaskStamp.class);
-    }
-    
-    public Stamp copy() {
-        TaskStamp stamp = new HibTaskStamp();
-        return stamp;
     }
 
     @Override

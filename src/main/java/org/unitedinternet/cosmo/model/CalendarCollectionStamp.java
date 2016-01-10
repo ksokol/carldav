@@ -71,13 +71,6 @@ public interface CalendarCollectionStamp extends Stamp{
 
     public void setColor(String color);
 
-
-    public Boolean getVisibility();
-
-
-    public void setVisibility(Boolean visibility);
-
-
     public String getDisplayName();
 
     public void setDisplayName(String displayName) ;

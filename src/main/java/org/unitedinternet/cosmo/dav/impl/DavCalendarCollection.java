@@ -40,7 +40,6 @@ import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.XCaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarColor;
-import org.unitedinternet.cosmo.dav.caldav.property.CalendarVisibility;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.MaxResourceSize;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
@@ -88,7 +87,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         registerLiveProperty(MAXRESOURCESIZE);
         registerLiveProperty(GET_CTAG);
         registerLiveProperty(XCaldavConstants.CALENDAR_COLOR);
-        registerLiveProperty(XCaldavConstants.CALENDAR_VISIBLE);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
@@ -200,10 +198,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new MaxResourceSize());
         properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
 
-        if(cc.getVisibility() != null){
-            properties.add(new CalendarVisibility(cc.getVisibility()));
-        }
-        
         if(cc.getColor() != null){
             properties.add(new CalendarColor(cc.getColor()));
         }
@@ -259,9 +253,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         if(name.equals(XCaldavConstants.CALENDAR_COLOR)){
             cc.setColor(property.getValueText());
         }
-        if(name.equals(XCaldavConstants.CALENDAR_VISIBLE)){
-            cc.setVisibility(Boolean.parseBoolean(property.getValueText()));
-        }
     }
 
     /** */
@@ -293,9 +284,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
         if(name.equals(XCaldavConstants.CALENDAR_COLOR)){
             cc.setColor(null);
-        }
-        if(name.equals(XCaldavConstants.CALENDAR_VISIBLE)){
-            cc.setVisibility(null);
         }
     }
 

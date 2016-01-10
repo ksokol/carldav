@@ -448,7 +448,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         </C:supported-collation-set>
                                         <C:max-resource-size xmlns:C="urn:ietf:params:xml:ns:caldav">10485760</C:max-resource-size>
                                         <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">a172ed34-0106-4616-bb40-a416a8305465</cosmo:uuid>
-                                        <C:calendar-visible xmlns:C="urn:ietf:params:xml:ns:xcaldavoneandone">true</C:calendar-visible>
                                         <D:displayname>calendarDisplayName</D:displayname>
                                         <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
                                             <D:href>/dav/test01@localhost.de/contacts</D:href>

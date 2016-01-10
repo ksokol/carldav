@@ -331,7 +331,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         calendarStamp.setTimezoneCalendar(testCal);
         calendarStamp.setLanguage("en");
         calendarStamp.setColor("#123123");
-        calendarStamp.setVisibility(true);
 
         root.addStamp(calendarStamp);
 
@@ -358,7 +357,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
         Assert.assertEquals("en", ccs.getLanguage());
         Assert.assertEquals("#123123", ccs.getColor());
-        Assert.assertEquals(true, ccs.getVisibility());
 
         Calendar cal = new EntityConverter(null).convertCollection(queryCol);
         Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());

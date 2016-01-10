@@ -33,7 +33,6 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.BooleanAttribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.FileItem;
@@ -47,7 +46,6 @@ import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibBooleanAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
@@ -214,8 +212,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         CollectionItem root = contentDao.getRootItem(user);
 
         ContentItem item = generateTestContent();
-        BooleanAttribute ba = new HibBooleanAttribute(new HibQName("booleanattribute"), Boolean.TRUE);
-        item.addAttribute(ba);
 
         // TODO: figure out db date type is handled because i'm seeing
         // issues with accuracy

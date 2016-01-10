@@ -15,19 +15,11 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VTimeZone;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.hibernate.validator.Color;
@@ -40,6 +32,13 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 
 /**
@@ -64,10 +63,7 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     
     public static final QName ATTR_CALENDAR_COLOR = new HibQName(
             CalendarCollectionStamp.class, "color");
-    
-    public static final QName ATTR_CALENDAR_VISIBILITY = new HibQName(
-            CalendarCollectionStamp.class, "visibility");
-   
+
     /** default constructor */
     public HibCalendarCollectionStamp() {
     }
@@ -203,19 +199,6 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     public void setColor(String color) {
         // color stored as StringAttribute on Item
         HibStringAttribute.setValue(getItem(), ATTR_CALENDAR_COLOR, color);
-        
-    }
-
-    @Override
-    public Boolean getVisibility() {
-        // color stored as BooleanAttribute on Item
-        return HibBooleanAttribute.getValue(getItem(), ATTR_CALENDAR_VISIBILITY);
-    }
-
-    @Override
-    public void setVisibility(Boolean visibility) {
-        // color stored as BooleanAttribute on Item
-        HibBooleanAttribute.setValue(getItem(), ATTR_CALENDAR_VISIBILITY, visibility);
         
     }
 

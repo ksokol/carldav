@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.StringAttribute;
@@ -34,12 +33,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue("string")
 public class HibStringAttribute extends HibAttribute implements  StringAttribute {
 
-    public static final int VALUE_LEN_MAX = 2048;
-    
     private static final long serialVersionUID = 2417093506524504993L;
     
-    @Column(name="stringvalue", length=VALUE_LEN_MAX)
-    @Length(min=0, max=VALUE_LEN_MAX)
+    @Column(name="stringvalue")
+    @Length(min=0)
     private String value;
 
     // Constructors
@@ -113,13 +110,6 @@ public class HibStringAttribute extends HibAttribute implements  StringAttribute
         }
         else {
             attr.setValue(value);
-        }
-    }
-    
-    @Override
-    public void validate() {
-        if (value!= null && value.length() > VALUE_LEN_MAX) {
-            throw new DataSizeException("String attribute " + getQName() + " too large");
         }
     }
 

@@ -209,7 +209,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
             throw new IllegalArgumentException("attribute cannot be null");
         }
 
-        ((HibAttribute) attribute).validate();
         attribute.setItem(this);
         attributes.put(attribute.getQName(), attribute);
     }
@@ -294,7 +293,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
 
         if(attr!=null) {
             attr.setValue(value);
-            attr.validate();
         }
         else {
             throw new IllegalArgumentException("attribute " + key + " not found");

@@ -167,11 +167,6 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
     }
 
     @Override
-    public void validate() {
-        
-    }
-
-    @Override
     public String calculateEntityTag() {
         return "";
     }

@@ -111,7 +111,4 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
     public void setItem(Item item) {
         this.item = item;
     }
-
-    public abstract void validate();
-
 }

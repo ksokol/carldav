@@ -198,11 +198,6 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
     }
 
     @Override
-    public void validate() {
-        
-    }
-
-    @Override
     public String calculateEntityTag() {
         return "";
     }

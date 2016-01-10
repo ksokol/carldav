@@ -116,11 +116,6 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
     }
 
     @Override
-    public void validate() {
-        
-    }
-
-    @Override
     public String calculateEntityTag() {
         return "";
     }

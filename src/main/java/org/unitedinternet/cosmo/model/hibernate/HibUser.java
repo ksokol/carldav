@@ -39,25 +39,6 @@ public class HibUser implements User {
 
     /**
      */
-    public static final int USERNAME_LEN_MIN = 3;
-    /**
-     */
-    public static final int USERNAME_LEN_MAX = 64;
-   
-    /**
-     */
-    public static final int FIRSTNAME_LEN_MIN = 1;
-    /**
-     */
-    public static final int FIRSTNAME_LEN_MAX = 128;
-    /**
-     */
-    public static final int LASTNAME_LEN_MIN = 1;
-    /**
-     */
-    public static final int LASTNAME_LEN_MAX = 128;
-    /**
-     */
     public static final int EMAIL_LEN_MIN = 1;
     /**
      */
@@ -71,23 +52,12 @@ public class HibUser implements User {
     @NotNull
     @Length(min=1, max=255)
     private String uid;
-    
-    @Column(name = "username", nullable=false)
-    @NotNull
-    @NaturalId
-    @Length(min=USERNAME_LEN_MIN, max=USERNAME_LEN_MAX)
-    //per bug 11599:
-    // Usernames must be between 3 and 64 characters; may contain any Unicode
-    //character in the following range of unicode code points: [#x20-#xD7FF] |
-    //[#xE000-#xFFFD] EXCEPT #x7F or #x3A
-    // Oh and don't allow ';' or '/' because there are problems with encoding
-    // them in urls (tomcat doesn't support it)
-    @javax.validation.constraints.Pattern(regexp="^[\\u0020-\\ud7ff\\ue000-\\ufffd&&[^\\u007f\\u003a;/\\\\]]+$")
-    private String username;
 
     @NotNull
     private String password;
 
+    @NotNull
+    @NaturalId
     @Column(name = "email", nullable=true, unique=true)
     @Length(min=EMAIL_LEN_MIN, max=EMAIL_LEN_MAX)
     @Email
@@ -128,20 +98,6 @@ public class HibUser implements User {
      */
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#getUsername()
-     */
-    public String getUsername() {
-        return username;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.User#setUsername(java.lang.String)
-     */
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     /* (non-Javadoc)

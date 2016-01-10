@@ -199,7 +199,7 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
     protected Item findRootItemByOwnerAndName(Session session,
                                               String username, String name) {
         Query hibQuery = session.getNamedQuery(
-                "item.by.ownerName.name.nullParent").setParameter("username",
+                "item.by.ownerName.name.nullParent").setParameter("email",
                 username).setParameter("name", name);
 
         List<?> results = hibQuery.list();

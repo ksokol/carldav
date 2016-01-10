@@ -46,6 +46,6 @@ public class CosmoUserDetailsService implements UserDetailsService {
         final boolean accountNonLocked = !user.isLocked();
         final List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(StringUtils.defaultIfBlank(user.getRole(), "ROLE_USER"));
 
-        return new CosmoUserDetails(user.getUsername(), user.getPassword(), true, true, true, accountNonLocked, authorities, user);
+        return new CosmoUserDetails(user.getEmail(), user.getPassword(), true, true, true, accountNonLocked, authorities, user);
     }
 }

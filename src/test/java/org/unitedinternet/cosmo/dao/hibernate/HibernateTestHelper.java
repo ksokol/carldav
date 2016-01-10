@@ -220,15 +220,15 @@ public class HibernateTestHelper {
      * @return The user.
      */
     public User getUser(UserDao userDao, ContentDao contentDao, String username) {
-        User user = userDao.getUser(username);
+        final String email = username + "@testem";
+        User user = userDao.getUser(email);
         if (user == null) {
             user = new HibUser();
-            user.setUsername(username);
             user.setPassword(username);
-            user.setEmail(username + "@testem");
+            user.setEmail(email);
             userDao.createUser(user);
 
-            user = userDao.getUser(username);
+            user = userDao.getUser(email);
 
             // create root item
             contentDao.createRootItem(user);

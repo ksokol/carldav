@@ -22,7 +22,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
@@ -84,16 +83,13 @@ public class StandardUserService implements UserService {
             userDao.createUser(user);
             LOG.info("created new user:" + user.getUid());
         } catch (DataIntegrityViolationException e) {
-            if (userDao.getUser(user.getUsername()) != null) {
-                throw new DuplicateUsernameException(user.getUsername());
-            }
             if (userDao.getUserByEmail(user.getEmail()) != null) {
                 throw new DuplicateEmailException(user.getEmail());
             }
             throw e;
         }
 
-        User newUser = userDao.getUser(user.getUsername());
+        User newUser = userDao.getUser(user.getEmail());
         contentDao.createRootItem(newUser);
 
         return newUser;
@@ -119,7 +115,7 @@ public class StandardUserService implements UserService {
        
         userDao.updateUser(user);
 
-        return userDao.getUser(user.getUsername());
+        return userDao.getUser(user.getEmail());
     }
 
     /**

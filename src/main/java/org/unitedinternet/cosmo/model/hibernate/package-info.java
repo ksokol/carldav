@@ -68,7 +68,7 @@
         // FIXME stfl .and.nullparent is not the correct name anymore!
         // FIXME check on class == HibCollectionItem  or select from HibCollectionItem
         @NamedQuery(name = "item.by.ownerName.name.nullParent", query = "select i from "
-                + "HibCollectionItem i, HibUser u where i.owner=u and u.username=:username and" + " i.name=:name"),
+                + "HibCollectionItem i, HibUser u where i.owner=u and u.email=:email and i.name=:name"),
         @NamedQuery(name = "noteItemId.by.parent.icaluid", query = "select item.id from HibNoteItem item"
                 + " join item.parentDetails pd where pd.primaryKey.collection.id=:parentid and "
                 + "item.icalUid=:icaluid and item.modifies is null"),
@@ -83,7 +83,7 @@
     @NamedQuery(name="user.byEmail", query="from HibUser where email=:email"),
     @NamedQuery(name="user.byEmail.ignorecase", query="from HibUser where lower(email)=lower(:email)"),
         @NamedQuery(name = "user.byUsernameOrEmail.ignorecase.ingoreId", query = "from HibUser where"
-                + " id!=:userid and (lower(username)=lower(:username) or lower(email)=lower(:email))"),
+                + " id!=:userid and lower(email)=lower(:email))"),
         @NamedQuery(name = "user.byUid", query = "from HibUser where uid=:uid"),
         @NamedQuery(name = "user.byActivationId", query = "from HibUser where activationid=:activationId"),
         @NamedQuery(name = "user.all", query = "from HibUser"),

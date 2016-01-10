@@ -98,7 +98,7 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
     public DavResourceLocator createHomeLocator(URL context,
                                                 User user)
         throws CosmoDavException {
-        String path = TEMPLATE_HOME.bind(user.getUsername());
+        String path = TEMPLATE_HOME.bind(user.getEmail());
         return new StandardResourceLocator(context, path, this);
     }
 

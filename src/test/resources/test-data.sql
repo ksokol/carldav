@@ -1,6 +1,6 @@
-INSERT INTO users(id,locked,email,password,uid,username,role) VALUES (1,0,'root@localhost','098f6bcd4621d373cade4e832627b4f6','6d755da8-0954-4902-8063-3a53c9fc46a6','root','ROLE_ADMIN');
-INSERT INTO users(id,locked,email,password,uid,username,role) VALUES (2,0,'test01@localhost.de','098f6bcd4621d373cade4e832627b4f6','39b8a610-3a5c-4554-8da9-b98c5113548f','test01@localhost.de','ROLE_USER');
-INSERT INTO users(id,locked,email,password,uid,username,role) VALUES (3,0,'test02@localhost.de','098f6bcd4621d373cade4e832627b4f6','19b8a610-3a5c-4554-8da9-b98c5113548f','test02@localhost.de','ROLE_USER');
+INSERT INTO users(id,locked,email,password,uid,role) VALUES (1,0,'root@localhost','098f6bcd4621d373cade4e832627b4f6','6d755da8-0954-4902-8063-3a53c9fc46a6','ROLE_ADMIN');
+INSERT INTO users(id,locked,email,password,uid,role) VALUES (2,0,'test01@localhost.de','098f6bcd4621d373cade4e832627b4f6','39b8a610-3a5c-4554-8da9-b98c5113548f','ROLE_USER');
+INSERT INTO users(id,locked,email,password,uid,role) VALUES (3,0,'test02@localhost.de','098f6bcd4621d373cade4e832627b4f6','19b8a610-3a5c-4554-8da9-b98c5113548f','ROLE_USER');
 
 INSERT INTO item (itemtype, id, createdate, etag, modifydate, clientcreatedate, clientmodifieddate, displayname, itemname, uid, version, lastmodification, lastmodifiedby, needsreply, sent, isautotriage, triagestatuscode, triagestatusrank, icaluid, contentEncoding, contentLanguage, contentLength, contentType, hasmodifications, ownerid, contentdataid, modifiesitemid)
 VALUES ('homecollection', 1, 1448140260056, 'ghFexXxxU+9KC/of1jmJ82wMFig=', 1448140260056, null, null, null, 'test01@localhost.de', 'de359448-1ee0-4151-872d-eea0ee462bc6', 0, null, null, null, null, null, null, null, null, null, null, null, null, null, 2, null, null);

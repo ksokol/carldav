@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when
  */
 class CosmoUserDetailsServiceTests {
 
-    private static String USERNAME = "username"
+    private static String EMAIL = "email"
 
     private UserDetailsService uut
     private User user
@@ -29,16 +29,16 @@ class CosmoUserDetailsServiceTests {
 
         user = mock(User.class)
 
-        when(user.getUsername()).thenReturn(USERNAME)
-        when(user.getPassword()).thenReturn(USERNAME)
-        when(userDao.getUser(USERNAME)).thenReturn(user)
+        when(user.getEmail()).thenReturn(EMAIL)
+        when(user.getPassword()).thenReturn(EMAIL)
+        when(userDao.getUser(EMAIL)).thenReturn(user)
     }
 
     @Test
     void hasRootRole() {
         when(user.getRole()).thenReturn("ROLE_ADMIN")
 
-        UserDetails userDetails = uut.loadUserByUsername(USERNAME)
+        UserDetails userDetails = uut.loadUserByUsername(EMAIL)
 
         assertThat(userDetails.getAuthorities(), everyItem(hasProperty("authority", is("ROLE_ADMIN"))))
     }
@@ -47,7 +47,7 @@ class CosmoUserDetailsServiceTests {
     void isLockedAccount() {
         when(user.isLocked()).thenReturn(true)
 
-        UserDetails userDetails = uut.loadUserByUsername(USERNAME)
+        UserDetails userDetails = uut.loadUserByUsername(EMAIL)
 
         assertThat(userDetails.isAccountNonLocked(), is(false));
     }

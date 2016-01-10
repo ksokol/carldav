@@ -381,7 +381,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertNotNull(queryItem);
         Assert.assertTrue(queryItem instanceof CollectionItem);
 
-        queryItem = contentDao.findItemByPath("/testuser2/a");
+        queryItem = contentDao.findItemByPath("/testuser2@testem/a");
         Assert.assertNotNull(queryItem);
         Assert.assertTrue(queryItem instanceof CollectionItem);
 
@@ -392,13 +392,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         
 
-        queryItem = contentDao.findItemByPath("/testuser2/a/test");
+        queryItem = contentDao.findItemByPath("/testuser2@testem/a/test");
         Assert.assertNotNull(queryItem);
         Assert.assertTrue(queryItem instanceof ContentItem);
 
         
 
-        queryItem = contentDao.findItemParentByPath("/testuser2/a/test");
+        queryItem = contentDao.findItemParentByPath("/testuser2@testem/a/test");
         Assert.assertNotNull(queryItem);
         Assert.assertEquals(a.getUid(), queryItem.getUid());
     }
@@ -525,7 +525,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
         helper.verifyItem(newItem, queryItem);
 
-        contentDao.removeItemByPath("/testuser/test");
+        contentDao.removeItemByPath("/testuser@testem/test");
 
         
 
@@ -765,7 +765,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         verifyContains(children, a);
 
         // test get by path
-        ContentItem queryC = (ContentItem) contentDao.findItemByPath("/testuser2/a/b/c");
+        ContentItem queryC = (ContentItem) contentDao.findItemByPath("/testuser2@testem/a/b/c");
         Assert.assertNotNull(queryC);
         helper.verifyInputStream(
                 helper.getInputStream("testdata/testdata1.txt"), ((FileItem) queryC)
@@ -773,7 +773,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertEquals("c", queryC.getName());
 
         // test get path/uid abstract
-        Item queryItem = contentDao.findItemByPath("/testuser2/a/b/c");
+        Item queryItem = contentDao.findItemByPath("/testuser2@testem/a/b/c");
         Assert.assertNotNull(queryItem);
         Assert.assertTrue(queryItem instanceof ContentItem);
 
@@ -852,7 +852,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         Assert.assertNotNull(root);
         root.setName("alsfjal;skfjasd");
-        Assert.assertEquals(root.getName(), "testuser2");
+        Assert.assertEquals(root.getName(), "testuser2@testem");
 
     }
 
@@ -902,21 +902,21 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         // verify can't move root collection
         try {
-            contentDao.moveItem("/testuser2", "/testuser2/a/blah");
+            contentDao.moveItem("/testuser2@testem", "/testuser2@testem/a/blah");
             Assert.fail("able to move root collection");
         } catch (IllegalArgumentException iae) {
         }
 
         // verify can't move to root collection
         try {
-            contentDao.moveItem("/testuser2/a/e", "/testuser2");
+            contentDao.moveItem("/testuser2@testem/a/e", "/testuser2@testem");
             Assert.fail("able to move to root collection");
         } catch (ItemNotFoundException infe) {
         }
 
         // verify can't create loop
         try {
-            contentDao.moveItem("/testuser2/a/b", "/testuser2/a/b/c/new");
+            contentDao.moveItem("/testuser2@testem/a/b", "/testuser2@testem/a/b/c/new");
             Assert.fail("able to create loop");
         } catch (ModelValidationException iae) {
         }
@@ -926,22 +926,22 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         // verify that move works
         b = (CollectionItem) contentDao.findItemByPath("/testuser2/a/b");
 
-        contentDao.moveItem("/testuser2/a/b", "/testuser2/a/e/b");
+        contentDao.moveItem("/testuser2@testem/a/b", "/testuser2@testem/a/e/b");
 
         
 
         CollectionItem queryCollection = (CollectionItem) contentDao
-                .findItemByPath("/testuser2/a/e/b");
+                .findItemByPath("/testuser2@testem/a/e/b");
         Assert.assertNotNull(queryCollection);
 
-        contentDao.moveItem("/testuser2/a/e/b", "/testuser2/a/e/bnew");
+        contentDao.moveItem("/testuser2@testem/a/e/b", "/testuser2@testem/a/e/bnew");
 
         
         queryCollection = (CollectionItem) contentDao
-                .findItemByPath("/testuser2/a/e/bnew");
+                .findItemByPath("/testuser2@testem/a/e/bnew");
         Assert.assertNotNull(queryCollection);
 
-        Item queryItem = contentDao.findItemByPath("/testuser2/a/e/bnew/c/d");
+        Item queryItem = contentDao.findItemByPath("/testuser2@testem/a/e/bnew/c/d");
         Assert.assertNotNull(queryItem);
         Assert.assertTrue(queryItem instanceof ContentItem);
     }
@@ -1006,7 +1006,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         // verify can't create loop
         try {
-            contentDao.copyItem(b, "/testuser2/a/b/c/new", true);
+            contentDao.copyItem(b, "/testuser2@testem/a/b/c/new", true);
             Assert.fail("able to create loop");
         } catch (ModelValidationException iae) {
         }
@@ -1014,23 +1014,23 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
 
         // verify that copy works
-        b = (CollectionItem) contentDao.findItemByPath("/testuser2/a/b");
+        b = (CollectionItem) contentDao.findItemByPath("/testuser2@testem/a/b");
 
-        contentDao.copyItem(b, "/testuser2/a/e/bcopy", true);
+        contentDao.copyItem(b, "/testuser2@testem/a/e/bcopy", true);
 
         
 
         CollectionItem queryCollection = (CollectionItem) contentDao
-                .findItemByPath("/testuser2/a/e/bcopy");
+                .findItemByPath("/testuser2@testem/a/e/bcopy");
         Assert.assertNotNull(queryCollection);
 
         queryCollection = (CollectionItem) contentDao
-                .findItemByPath("/testuser2/a/e/bcopy/c");
+                .findItemByPath("/testuser2@testem/a/e/bcopy/c");
         Assert.assertNotNull(queryCollection);
 
         d = (ContentItem) contentDao.findItemByUid(d.getUid());
         ContentItem dcopy = (ContentItem) contentDao
-                .findItemByPath("/testuser2/a/e/bcopy/c/d");
+                .findItemByPath("/testuser2@testem/a/e/bcopy/c/d");
         Assert.assertNotNull(dcopy);
         Assert.assertEquals(d.getName(), dcopy.getName());
         Assert.assertNotSame(d.getUid(), dcopy.getUid());
@@ -1038,27 +1038,27 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         
 
-        b = (CollectionItem) contentDao.findItemByPath("/testuser2/a/b");
+        b = (CollectionItem) contentDao.findItemByPath("/testuser2@testem/a/b");
 
-        contentDao.copyItem(b, "/testuser2/a/e/bcopyshallow", false);
+        contentDao.copyItem(b, "/testuser2@testem/a/e/bcopyshallow", false);
 
         
 
         queryCollection = (CollectionItem) contentDao
-                .findItemByPath("/testuser2/a/e/bcopyshallow");
+                .findItemByPath("/testuser2@testem/a/e/bcopyshallow");
         Assert.assertNotNull(queryCollection);
 
         queryCollection = (CollectionItem) contentDao
-                .findItemByPath("/testuser2/a/e/bcopyshallow/c");
+                .findItemByPath("/testuser2@testem/a/e/bcopyshallow/c");
         Assert.assertNull(queryCollection);
 
         
         d = (ContentItem) contentDao.findItemByUid(d.getUid());
-        contentDao.copyItem(d, "/testuser2/dcopy", true);
+        contentDao.copyItem(d, "/testuser2@testem/dcopy", true);
 
         
 
-        dcopy = (ContentItem) contentDao.findItemByPath("/testuser2/dcopy");
+        dcopy = (ContentItem) contentDao.findItemByPath("/testuser2@testem/dcopy");
         Assert.assertNotNull(dcopy);
     }
 

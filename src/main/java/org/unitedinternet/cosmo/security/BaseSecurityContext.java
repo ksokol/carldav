@@ -36,20 +36,6 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
         processPrincipal();
     }
 
-    /* ----- CosmoSecurityContext methods ----- */
-
-    /**
-     * @return a name describing the principal for this security
-     * context (the name of the Cosmo user or
-     * the string <code>anonymous</code>.
-     */
-    public String getName() {
-        if (isAnonymous()) {
-            return "anonymous";
-        }
-        return user.getUsername();
-    }
-
     /**
      * @return Determines whether or not the context represents an anonymous
      * Cosmo user.

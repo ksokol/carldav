@@ -21,7 +21,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
@@ -45,21 +44,19 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     @Test
     public void testCreateUser() {
         User user1 = new HibUser();
-        user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
 
         User user2 = new HibUser();
-        user2.setUsername("user2");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
 
         user2 = userDao.createUser(user2);
 
         // find by username
-        User queryUser1 = userDao.getUser("user1");
+        User queryUser1 = userDao.getUser("user1@user1.com");
         Assert.assertNotNull(queryUser1);
         Assert.assertNotNull(queryUser1.getUid());
         verifyUser(user1, queryUser1);
@@ -79,17 +76,15 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
 
         // try to create duplicate
         User user3 = new HibUser();
-        user3.setUsername("user2");
         user3.setEmail("user1@user1.com");
         user3.setPassword("user1password");
 
         try {
             userDao.createUser(user3);
             Assert.fail("able to create user with duplicate username");
-        } catch (DuplicateUsernameException due) {
+        } catch (DuplicateEmailException due) {
         }
 
-        user3.setUsername("user3");
         try {
             userDao.createUser(user3);
             Assert.fail("able to create user with duplicate email");
@@ -97,7 +92,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         }
 
         // delete user
-        userDao.removeUser("user2");
+        userDao.removeUser("user1@user1.com");
     }
 
     /**
@@ -106,41 +101,24 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     @Test
     public void testCreateDuplicateUserEmail() {
         User user1 = new HibUser();
-        user1.setUsername("uSeR1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
 
         User user2 = new HibUser();
-        user2.setUsername("UsEr1");
-        user2.setEmail("user2@user2.com");
+        user2.setEmail("user1@user1.com");
         user2.setPassword("user2password");
 
         try {
             user2 = userDao.createUser(user2);
-            Assert.fail("able to create duplicate usernames!");
-        } catch (DuplicateUsernameException e) {
-        }
-        
-        
-        user2.setUsername("user2");   
-        user2 = userDao.createUser(user2);
-        
-        User user3 = new HibUser();
-        user3.setUsername("user3");
-        user3.setEmail("USER2@user2.com");
-        user3.setPassword("user2password");
-        
-        try {
-            user3 = userDao.createUser(user3);
-            Assert.fail("able to create duplicate email!");
+            Assert.fail("able to create duplicate emails!");
         } catch (DuplicateEmailException e) {
         }
         
         
-        user3.setEmail("user3@user2.com");
-        user3 = userDao.createUser(user3);
+        user2.setEmail("user2@user1.com");
+        user2 = userDao.createUser(user2);
     }
     
     /**
@@ -150,7 +128,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     @Test
     public void testUpdateUser() throws Exception {
         User user1 = new HibUser();
-        user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
@@ -175,14 +152,12 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     @Test
     public void testUpdateUserDuplicate() throws Exception {
         User user1 = new HibUser();
-        user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
         
         User user2 = new HibUser();
-        user2.setUsername("user2");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
 
@@ -190,23 +165,12 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
 
         // find by uid
         User queryUser1 = userDao.getUserByUid(user1.getUid());
-        queryUser1.setUsername("user2");
-        try {
-            userDao.updateUser(queryUser1);
-            Assert.fail("able to update with duplicate username");
-        } catch (DuplicateUsernameException e) {
-        }
-        
-        queryUser1.setUsername("user1");
         queryUser1.setEmail("user2@user2.com");
         try {
             userDao.updateUser(queryUser1);
             Assert.fail("able to update with duplicate email");
         } catch (DuplicateEmailException e) {
         }
-        
-        queryUser1.setEmail("lsdfj@lsdfj.com");
-        userDao.updateUser(queryUser1);
     }
 
     /**
@@ -216,13 +180,12 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     @Test
     public void testDeleteUser() throws Exception {
         User user1 = new HibUser();
-        user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         userDao.createUser(user1);
         
-        User queryUser1 = userDao.getUser("user1");
+        User queryUser1 = userDao.getUser("user1@user1.com");
         Assert.assertNotNull(queryUser1);
         userDao.removeUser(queryUser1);
 
@@ -235,19 +198,18 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      * @throws Exception - if something is wrong this exception is thrown.
      */
     @Test
-    public void testDeleteUserByUsername() throws Exception {
+    public void testDeleteUserByEmail() throws Exception {
         User user1 = new HibUser();
-        user1.setUsername("user1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         userDao.createUser(user1);
 
-        User queryUser1 = userDao.getUser("user1");
+        User queryUser1 = userDao.getUser("user1@user1.com");
         Assert.assertNotNull(queryUser1);
-        userDao.removeUser(user1.getUsername());
+        userDao.removeUser(user1.getEmail());
 
-        queryUser1 = userDao.getUser("user1");
+        queryUser1 = userDao.getUser("user1@user1.com");
         Assert.assertNull(queryUser1);
     }
 
@@ -258,7 +220,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      */
     private void verifyUser(User user1, User user2) {
         Assert.assertEquals(user1.getUid(), user2.getUid());
-        Assert.assertEquals(user1.getUsername(), user2.getUsername());
         Assert.assertEquals(user1.getEmail(), user2.getEmail());
         Assert.assertEquals(user1.getPassword(), user2.getPassword());
     }
@@ -273,13 +234,13 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         Iterator it = users.iterator();
         while (it.hasNext()) {
             User nextUser = (User) it.next();
-            if (nextUser.getUsername().equals(user.getUsername())) {
+            if (nextUser.getEmail().equals(user.getEmail())) {
                 verifyUser(user, nextUser);
                 return;
             }
         }
         Assert.fail("specified User doesn't exist in Set: "
-                + user.getUsername());
+                + user.getEmail());
     }
 
 }

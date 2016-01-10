@@ -63,7 +63,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     @Test
     public void testGetUser() throws Exception {
         User u1 = testHelper.makeDummyUser();
-        String username1 = u1.getUsername();
+        String username1 = u1.getEmail();
         userDao.createUser(u1);
 
         User user = service.getUser(username1);
@@ -94,7 +94,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         String password = u1.getPassword();
 
         User user = service.createUser(u1);
-        Assert.assertNotNull("User not stored", userDao.getUser(u1.getUsername()));
+        Assert.assertNotNull("User not stored", userDao.getUser(u1.getEmail()));
         Assert.assertFalse("Original and stored password are the same", user.getPassword().equals(password));
     }
 
@@ -116,7 +116,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         Thread.sleep(1000); // let modified date change
         User user = service.updateUser(u1);
         try {
-            userDao.getUser(user.getUsername());
+            userDao.getUser(user.getEmail());
         } catch (DataRetrievalFailureException e) {
             Assert.fail("User not stored");
         }
@@ -127,7 +127,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         Thread.sleep(1000); // let modified date change
         User user2 = service.updateUser(u1);
         try {
-            userDao.getUser(user.getUsername());
+            userDao.getUser(user.getEmail());
         } catch (DataRetrievalFailureException e) {
             Assert.fail("User not stored");
         }
@@ -158,7 +158,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         User u1 = testHelper.makeDummyUser();
         service.createUser(u1);
 
-        service.removeUser(u1.getUsername());
+        service.removeUser(u1.getEmail());
 
         Assert.assertFalse("User not removed", userDao.getUsers().contains(u1));
     }

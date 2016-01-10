@@ -22,7 +22,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
@@ -53,10 +52,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
                 throw new IllegalArgumentException("new user is required");
             }
 
-            if (findUserByUsernameIgnoreCase(user.getUsername()) != null) {
-                throw new DuplicateUsernameException(user.getUsername());
-            }
-
             if (findUserByEmailIgnoreCase(user.getEmail()) != null) {
                 throw new DuplicateEmailException(user.getEmail());
             }
@@ -78,9 +73,9 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     }
 
-    public User getUser(String username) {
+    public User getUser(String email) {
         try {
-            return findUserByUsername(username);
+            return findUserByEmail(email);
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -127,9 +122,9 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public void removeUser(String username) {
+    public void removeUser(String email) {
         try {
-            User user = findUserByUsername(username);
+            User user = findUserByEmail(email);
             // delete user
             if (user != null) {
                 removeUser(user);
@@ -155,13 +150,11 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             // prevent auto flushing when querying for existing users
             getSession().setFlushMode(FlushMode.MANUAL);
 
-            User findUser = findUserByUsernameOrEmailIgnoreCaseAndId(user.getId(), user.getUsername(), user.getEmail());
+            User findUser = findUserByEmailIgnoreCaseAndId(user.getId(), user.getEmail());
 
             if (findUser != null) {
                 if (findUser.getEmail().equals(user.getEmail())) {
                     throw new DuplicateEmailException(user.getEmail());
-                } else {
-                    throw new DuplicateUsernameException(user.getUsername());
                 }
             }
 
@@ -215,12 +208,11 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    private User findUserByUsernameOrEmailIgnoreCaseAndId(Long userId,
-                                                          String username, String email) {
+    private User findUserByEmailIgnoreCaseAndId(Long userId, String email) {
         Session session = getSession();
         Query hibQuery = session.getNamedQuery(
-                "user.byUsernameOrEmail.ignorecase.ingoreId").setParameter(
-                "username", username).setParameter("email", email)
+                "user.byUsernameOrEmail.ignorecase.ingoreId")
+                .setParameter("email", email)
                 .setParameter("userid", userId);
         hibQuery.setCacheable(true);
         hibQuery.setFlushMode(FlushMode.MANUAL);

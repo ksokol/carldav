@@ -32,6 +32,6 @@ public class AddressbookHomeSet extends StandardDavProperty implements CaldavCon
     }
 
     private static String href(DavResourceLocator locator, User user) {
-        return CARD_HOME.bindAbsolute(locator.getBaseHref(), user.getUsername());
+        return CARD_HOME.bindAbsolute(locator.getBaseHref(), user.getEmail());
     }
 }

@@ -149,7 +149,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i join i.parentDetails pd where "
-                + "pd.primaryKey.collection=:parent", query.getQueryString());
+                + "pd.collection=:parent", query.getQueryString());
     }
     
     /**
@@ -164,7 +164,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setDisplayName(Restrictions.eq("test"));
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i join i.parentDetails pd where "
-                + "pd.primaryKey.collection=:parent and i.displayName=:param1", query.getQueryString());
+                + "pd.collection=:parent and i.displayName=:param1", query.getQueryString());
     }
     
     /**
@@ -179,20 +179,20 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
-                + "pd.primaryKey.collection=:parent and i.triageStatus.code=:param1", 
+                + "pd.collection=:parent and i.triageStatus.code=:param1", 
                    query.getQueryString());
     
         filter.setTriageStatusCode(Restrictions.isNull());
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
-                + "pd.primaryKey.collection=:parent and i.triageStatus.code is null", 
+                + "pd.collection=:parent and i.triageStatus.code is null", 
                    query.getQueryString());
         
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         filter.addOrderBy(ContentItemFilter.ORDER_BY_TRIAGE_STATUS_RANK_ASC);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
-                + "pd.primaryKey.collection=:parent and i.triageStatus.code=:param1 order by "
+                + "pd.collection=:parent and i.triageStatus.code=:param1 order by "
                 + "i.triageStatus.rank", query.getQueryString());
     }
     
@@ -212,7 +212,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibTextAttribute ta4 where pd.primaryKey.collection=:parent and "
+                + "HibTextAttribute ta4 where pd.collection=:parent and "
                 + "i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and "
                 + "ta4.item=i and ta4.qname=:ta4qname and ta4.value=:param5", query.getQueryString());
         
@@ -267,13 +267,13 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibBaseEventStamp es where pd.primaryKey.collection=:parent and "
+                + "HibBaseEventStamp es where pd.collection=:parent and "
                 + "i.displayName=:param1 and es.item=i and i.icalUid=:param2", query.getQueryString());
     
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, HibBaseEventStamp "
-                + "es where pd.primaryKey.collection=:parent and i.displayName=:param1 and"
+                + "es where pd.collection=:parent and i.displayName=:param1 and"
                 + " es.item=i and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
                 + "and i.icalUid=:param2", query.getQueryString());
     }
@@ -295,7 +295,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibBaseEventStamp es where pd.primaryKey.collection=:parent and es.item=i "
+                + "HibBaseEventStamp es where pd.collection=:parent and es.item=i "
                 + "and ( (es.timeRangeIndex.isFloating=true and "
                 + "es.timeRangeIndex.startDate < '20070201T040000' and "
                 + "es.timeRangeIndex.endDate > '20070101T040000') or "

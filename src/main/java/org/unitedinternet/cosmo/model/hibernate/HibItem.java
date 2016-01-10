@@ -122,7 +122,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Stamp> stamps = new HashSet<Stamp>(0);
 
-    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="primaryKey.item", 
+    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="item",
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<CollectionItemDetails> parentDetails = new HashSet<CollectionItemDetails>(0);

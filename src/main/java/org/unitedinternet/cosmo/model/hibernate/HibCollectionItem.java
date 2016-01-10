@@ -39,7 +39,7 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
 
     private static final long serialVersionUID = 2873251323314048223L;
 
-    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="primaryKey.collection", fetch=FetchType.LAZY)
+    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="collection", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE }) 
     private Set<CollectionItemDetails> childDetails = new HashSet<CollectionItemDetails>(0);
 

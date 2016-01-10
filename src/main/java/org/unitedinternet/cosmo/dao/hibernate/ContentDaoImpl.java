@@ -460,8 +460,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         // faster way to delete all calendar items but requires cascade delete on FK at DB
 /*        Long collectionId = ((HibCollectionItem)collection).getId();
         String deleteAllQuery = "delete from HibContentItem item where item.id in " +
-        		" (select collItem.primaryKey.item.id from HibCollectionItemDetails collItem "+
-                 " where collItem.primaryKey.collection.id=:collectionId)";
+        		" (select collItem.item.id from HibCollectionItemDetails collItem "+
+                 " where collItem.collection.id=:collectionId)";
         getSession().createQuery(deleteAllQuery).setLong("collectionId", collectionId).executeUpdate();
 */
        for (Item item : collection.getChildren()) {

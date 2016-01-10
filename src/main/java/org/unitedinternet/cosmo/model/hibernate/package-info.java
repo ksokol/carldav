@@ -68,7 +68,7 @@
         // FIXME stfl .and.nullparent is not the correct name anymore!
         // FIXME check on class == HibCollectionItem  or select from HibCollectionItem
         @NamedQuery(name = "item.by.ownerName.name.nullParent", query = "select i from "
-                + "HibCollectionItem i, HibUser u where i.owner=u and u.email=:email and i.name=:name"),
+                + "HibCollectionItem i, User u where i.owner=u and u.email=:email and i.name=:name"),
         @NamedQuery(name = "noteItemId.by.parent.icaluid", query = "select item.id from HibNoteItem item"
                 + " join item.parentDetails pd where pd.primaryKey.collection.id=:parentid and "
                 + "item.icalUid=:icaluid and item.modifies is null"),
@@ -78,12 +78,12 @@
         @NamedQuery(name = "contentItem.by.owner", query = "from HibContentItem i where i.owner=:owner"),
     
     // User Queries
-    @NamedQuery(name="user.byEmail", query="from HibUser where email=:email"),
-    @NamedQuery(name="user.byEmail.ignorecase", query="from HibUser where lower(email)=lower(:email)"),
-        @NamedQuery(name = "user.byUsernameOrEmail.ignorecase.ingoreId", query = "from HibUser where"
+    @NamedQuery(name="user.byEmail", query="from User where email=:email"),
+    @NamedQuery(name="user.byEmail.ignorecase", query="from User where lower(email)=lower(:email)"),
+        @NamedQuery(name = "user.byUsernameOrEmail.ignorecase.ingoreId", query = "from User where"
                 + " id!=:userid and lower(email)=lower(:email))"),
-        @NamedQuery(name = "user.all", query = "from HibUser"),
-        @NamedQuery(name = "user.count", query = "select count(id) from HibUser"),
+        @NamedQuery(name = "user.all", query = "from User"),
+        @NamedQuery(name = "user.count", query = "select count(id) from User"),
 
         // Event Queries
         @NamedQuery(name = "event.by.calendar.icaluid", query = "select i from HibNoteItem i join "

@@ -45,7 +45,7 @@ public class HibCollectionSubscription extends HibAuditableObject {
 
     private static final long serialVersionUID = 1376628118792909419L;
     
-    @ManyToOne(targetEntity=HibUser.class, fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity=User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "ownerid", nullable = false)
     @NotNull
     private User owner;

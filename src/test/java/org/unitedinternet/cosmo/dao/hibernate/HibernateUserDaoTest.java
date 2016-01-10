@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -43,13 +42,13 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
 
     @Test
     public void testCreateUser() {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
 
-        User user2 = new HibUser();
+        User user2 = new User();
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
 
@@ -70,7 +69,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         verifyUserInCollection(user2, users);
 
         // try to create duplicate
-        User user3 = new HibUser();
+        User user3 = new User();
         user3.setEmail("user1@user1.com");
         user3.setPassword("user1password");
 
@@ -95,13 +94,13 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      */
     @Test
     public void testCreateDuplicateUserEmail() {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
 
-        User user2 = new HibUser();
+        User user2 = new User();
         user2.setEmail("user1@user1.com");
         user2.setPassword("user2password");
 
@@ -122,7 +121,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      */
     @Test
     public void testUpdateUser() throws Exception {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
@@ -146,13 +145,13 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      */
     @Test
     public void testUpdateUserDuplicate() throws Exception {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
         user1 = userDao.createUser(user1);
         
-        User user2 = new HibUser();
+        User user2 = new User();
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
 
@@ -174,7 +173,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      */
     @Test
     public void testDeleteUser() throws Exception {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
@@ -194,7 +193,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
      */
     @Test
     public void testDeleteUserByEmail() throws Exception {
-        User user1 = new HibUser();
+        User user1 = new User();
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 

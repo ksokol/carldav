@@ -131,7 +131,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
 
     private transient Set<CollectionItem> parents = null;
 
-    @ManyToOne(targetEntity=HibUser.class, fetch=FetchType.LAZY)
+    @ManyToOne(targetEntity=User.class, fetch=FetchType.LAZY)
     @JoinColumn(name="ownerid", nullable = false)
     @NotNull
     private User owner;

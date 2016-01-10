@@ -79,7 +79,7 @@ public class HibEntityFactory implements EntityFactory {
     }
 
     public User createUser() {
-        return new HibUser();
+        return new User();
     }
 
     public String generateUid() {

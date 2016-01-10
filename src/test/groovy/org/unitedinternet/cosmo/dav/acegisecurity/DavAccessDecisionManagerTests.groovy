@@ -10,7 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.web.FilterInvocation
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails
-import org.unitedinternet.cosmo.model.hibernate.HibUser
+import org.unitedinternet.cosmo.model.User
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when
 class DavAccessDecisionManagerTests {
 
     def DavAccessDecisionManager uut = new DavAccessDecisionManager()
-    def token = new UsernamePasswordAuthenticationToken(new CosmoUserDetails("user", "password", new HibUser()), "password")
+    def token = new UsernamePasswordAuthenticationToken(new CosmoUserDetails("user", "password", new User()), "password")
     def invocation = mock(FilterInvocation.class)
 
     @Rule

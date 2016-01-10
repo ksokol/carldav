@@ -25,7 +25,6 @@ import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -223,7 +222,7 @@ public class HibernateTestHelper {
         final String email = username + "@testem";
         User user = userDao.getUser(email);
         if (user == null) {
-            user = new HibUser();
+            user = new User();
             user.setPassword(username);
             user.setEmail(email);
             userDao.createUser(user);

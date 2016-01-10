@@ -23,7 +23,7 @@
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="entityInterceptor" ref="cosmoHibernateInterceptor" />
         <property name="dataSource" ref="dataSource" />
-        <property name="packagesToScan" value="org.unitedinternet.cosmo.model.hibernate" />
+        <property name="packagesToScan" value="org.unitedinternet.cosmo.model" />
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.cache.use_query_cache">false</prop>

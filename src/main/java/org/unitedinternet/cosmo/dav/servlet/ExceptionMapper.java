@@ -4,18 +4,15 @@ import static org.unitedinternet.cosmo.server.ServerConstants.ATTR_SERVICE_EXCEP
 
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.caldav.CaldavExceptionForbidden;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ValidationException;
 
 public enum ExceptionMapper {
-    FORBIDDEN_EXCEPTION_MAPPER(CaldavExceptionForbidden.class),
     DAV_EXCEPTION_MAPPER (CosmoDavException.class){
         @Override
         protected CosmoDavException doMap(Throwable t, HttpServletRequest request) {
-            CosmoDavException de = (CosmoDavException)t;
-            return de;
+            return (CosmoDavException)t;
         }
     },
     VALIDATION_EXCEPTION_MAPPER (ValidationException.class);

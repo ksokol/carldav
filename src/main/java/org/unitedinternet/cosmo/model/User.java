@@ -15,23 +15,9 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.Set;
+public interface User {
 
-/**
- * Represents a user in the cosmo server.
- */
-public interface User extends AuditableObject{
-
-    /**
-     */
-    String USERNAME_OVERLORD = "root";
-
-    /**
-     */
-    int PASSWORD_LEN_MIN = 5;
-    /**
-     */
-    int PASSWORD_LEN_MAX = 16;
+    Long getId();
 
     /**
      */
@@ -52,35 +38,11 @@ public interface User extends AuditableObject{
 
     /**
      */
-    String getOldUsername();
-
-    /**
-     */
-    boolean isUsernameChanged();
-
-    /**
-     */
     String getPassword();
 
     /**
      */
     void setPassword(String password);
-
-    /**
-     */
-    String getFirstName();
-
-    /**
-     */
-    void setFirstName(String firstName);
-
-    /**
-     */
-    String getLastName();
-
-    /**
-     */
-    void setLastName(String lastName);
 
     /**
      */
@@ -92,48 +54,11 @@ public interface User extends AuditableObject{
 
     /**
      */
-    String getOldEmail();
-
-    /**
-     */
-    boolean isEmailChanged();
-
-    /**
-     */
     Boolean getAdmin();
 
     /**
      */
     void setAdmin(Boolean admin);
 
-    /**
-     */
-    String getActivationId();
-
-    /**
-     */
-    boolean isOverlord();
-
-    /**
-     */
-    boolean isActivated();
-
     Boolean isLocked();
-
-    /**
-     */
-    void validateRawPassword();
-
-    Set<Preference> getPreferences();
-
-    void addPreference(Preference preference);
-
-    Preference getPreference(String key);
-
-    void removePreference(String key);
-
-    void removePreference(Preference preference);
-
-    String calculateEntityTag();
-
 }

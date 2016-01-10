@@ -25,7 +25,6 @@ import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 import java.util.HashSet;
@@ -50,7 +49,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
                 throw new IllegalArgumentException("user is required");
             }
 
-            if (getBaseModelObject(user).getId() != -1) {
+            if (user.getId() != -1) {
                 throw new IllegalArgumentException("new user is required");
             }
 
@@ -156,8 +155,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
             // prevent auto flushing when querying for existing users
             getSession().setFlushMode(FlushMode.MANUAL);
 
-            User findUser = findUserByUsernameOrEmailIgnoreCaseAndId(getBaseModelObject(user)
-                    .getId(), user.getUsername(), user.getEmail());
+            User findUser = findUserByUsernameOrEmailIgnoreCaseAndId(user.getId(), user.getUsername(), user.getEmail());
 
             if (findUser != null) {
                 if (findUser.getEmail().equals(user.getEmail())) {
@@ -167,7 +165,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
                 }
             }
 
-            user.updateTimestamp();
             getSession().update(user);
             getSession().flush();
 
@@ -271,9 +268,4 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         hibQuery.setFlushMode(FlushMode.MANUAL);
         return (User) hibQuery.uniqueResult();
     }
-
-    protected BaseModelObject getBaseModelObject(Object obj) {
-        return (BaseModelObject) obj;
-    }
-
 }

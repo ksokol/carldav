@@ -95,9 +95,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
 
         User user = service.createUser(u1);
         Assert.assertNotNull("User not stored", userDao.getUser(u1.getUsername()));
-        Assert.assertFalse("Original and stored password are the same",
-                    user.getPassword().equals(password));
-        Assert.assertEquals(user.getCreationDate(), user.getModifiedDate());
+        Assert.assertFalse("Original and stored password are the same", user.getPassword().equals(password));
     }
 
     /**

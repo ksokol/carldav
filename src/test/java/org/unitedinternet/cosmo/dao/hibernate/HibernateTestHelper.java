@@ -227,8 +227,6 @@ public class HibernateTestHelper {
             user.setPassword(username);
             user.setEmail(username + "@testem");
             user.setAdmin(Boolean.TRUE);
-            user.setFirstName("testfn");
-            user.setLastName("testln");
             userDao.createUser(user);
 
             user = userDao.getUser(username);

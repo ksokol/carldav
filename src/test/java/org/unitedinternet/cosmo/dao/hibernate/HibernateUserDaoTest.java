@@ -23,7 +23,6 @@ import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibPreference;
 import org.unitedinternet.cosmo.model.hibernate.HibUser;
 
 import java.util.Collection;
@@ -47,8 +46,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     public void testCreateUser() {
         User user1 = new HibUser();
         user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
         user1.setAdmin(Boolean.TRUE);
@@ -57,8 +54,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
 
         User user2 = new HibUser();
         user2.setUsername("user2");
-        user2.setFirstName("User2");
-        user2.setLastName("2");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
         user2.setAdmin(Boolean.FALSE);
@@ -87,8 +82,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         // try to create duplicate
         User user3 = new HibUser();
         user3.setUsername("user2");
-        user3.setFirstName("User");
-        user3.setLastName("1");
         user3.setEmail("user1@user1.com");
         user3.setPassword("user1password");
         user3.setAdmin(Boolean.TRUE);
@@ -109,54 +102,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         // delete user
         userDao.removeUser("user2");
     }
-    
-    /**
-     * Tests user properties.
-     */
-    @Test
-    public void testUserProperties() {
-        User user1 = new HibUser();
-        user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
-        user1.setEmail("user1@user1.com");
-        user1.setPassword("user1password");
-        user1.setAdmin(Boolean.TRUE);
 
-        user1 = userDao.createUser(user1);
-
-        // find by username
-        User queryUser1 = userDao.getUser("user1");
-        Assert.assertNotNull(queryUser1);
-        Assert.assertNotNull(queryUser1.getUid());
-        verifyUser(user1, queryUser1);
-
-        queryUser1.addPreference(new HibPreference("prop1", "value1"));
-        queryUser1.addPreference(new HibPreference("prop2", "value2"));
-
-        userDao.updateUser(queryUser1);
-
-        // find by uid
-        queryUser1 = userDao.getUserByUid(user1.getUid());
-        Assert.assertNotNull(queryUser1);
-        Assert.assertEquals(2, queryUser1.getPreferences().size());
-        Assert.assertEquals("value1",
-                            queryUser1.getPreference("prop1").getValue());
-        Assert.assertEquals("value2",
-                            queryUser1.getPreference("prop2").getValue());
-
-        queryUser1.removePreference("prop2");
-        queryUser1.getPreference("prop1").setValue("value1changed");
-        userDao.updateUser(queryUser1);
-
-        queryUser1 = userDao.getUserByUid(user1.getUid());
-        Assert.assertNotNull(queryUser1);
-        Assert.assertEquals(1, queryUser1.getPreferences().size());
-        Assert.assertEquals("value1changed", queryUser1.getPreference("prop1").getValue());
-        
-        userDao.removeUser(queryUser1);
-    }
-    
     /**
      * Tests create duplicate user email.
      */
@@ -164,8 +110,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     public void testCreateDuplicateUserEmail() {
         User user1 = new HibUser();
         user1.setUsername("uSeR1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
         user1.setAdmin(Boolean.TRUE);
@@ -174,8 +118,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
 
         User user2 = new HibUser();
         user2.setUsername("UsEr1");
-        user2.setFirstName("User2");
-        user2.setLastName("2");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
         user2.setAdmin(Boolean.FALSE);
@@ -192,8 +134,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         
         User user3 = new HibUser();
         user3.setUsername("user3");
-        user3.setFirstName("User2");
-        user3.setLastName("2");
         user3.setEmail("USER2@user2.com");
         user3.setPassword("user2password");
         user3.setAdmin(Boolean.FALSE);
@@ -217,8 +157,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     public void testUpdateUser() throws Exception {
         User user1 = new HibUser();
         user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
         user1.setAdmin(Boolean.TRUE);
@@ -245,8 +183,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     public void testUpdateUserDuplicate() throws Exception {
         User user1 = new HibUser();
         user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
         user1.setAdmin(Boolean.TRUE);
@@ -255,8 +191,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         
         User user2 = new HibUser();
         user2.setUsername("user2");
-        user2.setFirstName("User2");
-        user2.setLastName("2");
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
         user2.setAdmin(Boolean.FALSE);
@@ -292,8 +226,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     public void testDeleteUser() throws Exception {
         User user1 = new HibUser();
         user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
         user1.setAdmin(Boolean.TRUE);
@@ -316,8 +248,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     public void testDeleteUserByUsername() throws Exception {
         User user1 = new HibUser();
         user1.setUsername("user1");
-        user1.setFirstName("User");
-        user1.setLastName("1");
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
         user1.setAdmin(Boolean.TRUE);
@@ -342,8 +272,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         Assert.assertEquals(user1.getUsername(), user2.getUsername());
         Assert.assertEquals(user1.getAdmin(), user2.getAdmin());
         Assert.assertEquals(user1.getEmail(), user2.getEmail());
-        Assert.assertEquals(user1.getFirstName(), user2.getFirstName());
-        Assert.assertEquals(user1.getLastName(), user2.getLastName());
         Assert.assertEquals(user1.getPassword(), user2.getPassword());
     }
 

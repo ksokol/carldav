@@ -23,6 +23,7 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.DuplicateUsernameException;
+import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.User;
@@ -34,6 +35,9 @@ import java.util.Set;
  * Standard implementation of {@link UserService}.
  */
 public class StandardUserService implements UserService {
+
+    private static int PASSWORD_LEN_MIN = 5;
+    private static int PASSWORD_LEN_MAX = 16;
 
     private static final Log LOG = LogFactory.getLog(StandardUserService.class);
 
@@ -72,7 +76,7 @@ public class StandardUserService implements UserService {
      */
     public User createUser(User user) {
 
-        user.validateRawPassword();
+        validateRawPassword(user);
 
         user.setPassword(digestPassword(user.getPassword()));
 
@@ -90,10 +94,7 @@ public class StandardUserService implements UserService {
         }
 
         User newUser = userDao.getUser(user.getUsername());
-
-        if (! newUser.isOverlord()) {
-            contentDao.createRootItem(newUser);
-        }
+        contentDao.createRootItem(newUser);
 
         return newUser;
     }
@@ -110,24 +111,15 @@ public class StandardUserService implements UserService {
      * email address is already in use
      */
     public User updateUser(User user) {
-        boolean isUsernameChanged = user.isUsernameChanged();
 
         if (user.getPassword().length() < 32) {
-            user.validateRawPassword();
+            validateRawPassword(user);
             user.setPassword(digestPassword(user.getPassword()));
         }
        
         userDao.updateUser(user);
 
-        User newUser = userDao.getUser(user.getUsername());
-
-        if (isUsernameChanged) {
-            HomeCollectionItem rootCollection = contentDao.getRootItem(newUser);
-            rootCollection.setName(newUser.getUsername());
-            contentDao.updateCollection(rootCollection);
-        }
-
-        return newUser;
+        return userDao.getUser(user.getUsername());
     }
 
     /**
@@ -178,5 +170,20 @@ public class StandardUserService implements UserService {
         // (items that only exist in other user's collections)
         contentDao.removeUserContent(user);
         userDao.removeUser(user);
+    }
+
+    private static void validateRawPassword(final User user) {
+        if (user.getPassword() == null) {
+            throw new ModelValidationException("email " + user.getEmail(),"Password not specified");
+        }
+        if (user.getPassword().length() < PASSWORD_LEN_MIN ||
+                user.getPassword().length() > PASSWORD_LEN_MAX) {
+
+            throw new ModelValidationException("email " + user.getEmail(),
+                    "Password must be " +
+                            PASSWORD_LEN_MIN + " to " +
+                            PASSWORD_LEN_MAX +
+                            " characters in length");
+        }
     }
 }

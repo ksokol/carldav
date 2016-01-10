@@ -15,17 +15,16 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.StringAttribute;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 
 /**
@@ -77,14 +76,7 @@ public class HibStringAttribute extends HibAttribute implements  StringAttribute
         }
         setValue((String) value);
     }
-    
-    public Attribute copy() {
-        StringAttribute attr = new HibStringAttribute();
-        attr.setQName(getQName().copy());
-        attr.setValue(getValue());
-        return attr;
-    }
-    
+
     /**
      * Convienence method for returning a String value on a StringAttribute
      * with a given QName stored on the given item.

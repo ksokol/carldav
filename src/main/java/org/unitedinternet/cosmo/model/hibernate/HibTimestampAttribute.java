@@ -15,18 +15,17 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Type;
+import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.TimestampAttribute;
+
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-
-import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TimestampAttribute;
 
 /**
  * Hibernate persistent TimestampAtttribute.
@@ -114,13 +113,6 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
         else {
             attr.setValue(value);
         }
-    }
-    
-    public Attribute copy() {
-        TimestampAttribute attr = new HibTimestampAttribute();
-        attr.setQName(getQName().copy());
-        attr.setValue(value.clone());
-        return attr;
     }
 
     @Override

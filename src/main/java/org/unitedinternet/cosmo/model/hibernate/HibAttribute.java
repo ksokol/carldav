@@ -15,6 +15,13 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Target;
+import org.unitedinternet.cosmo.model.Attribute;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.QName;
+
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -30,12 +37,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Target;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * Hibernate persistent Attribute.
@@ -110,23 +111,7 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
     public void setItem(Item item) {
         this.item = item;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#copy()
-     */
-    public abstract Attribute copy();
-    
-    /**
-     * Return string representation
-     */
-    public String toString() {
-        Object value = getValue();
-        if(value==null) {
-            return "null";
-        }
-        return value.toString();
-    }
-    
+
     public abstract void validate();
 
 }

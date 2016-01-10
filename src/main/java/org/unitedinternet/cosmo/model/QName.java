@@ -47,10 +47,4 @@ public interface QName {
      */
     public void setNamespace(String namespace);
 
-    /**
-     * Create copy of QName object.
-     * @return copy of current QName object
-     */
-    public QName copy();
-
 }

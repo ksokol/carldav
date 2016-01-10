@@ -15,24 +15,21 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.model.Calendar;
+import org.hibernate.annotations.Type;
+import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
+import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.model.ICalendarAttribute;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.QName;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-
-import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.model.Calendar;
-
-import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.ICalendarAttribute;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * Hibernate persistent ICalendarAtttribute.
@@ -129,19 +126,7 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
                     + ioe.getMessage());
         }
     }
-    
-    public Attribute copy() {
-        ICalendarAttribute attr = new HibICalendarAttribute();
-        attr.setQName(getQName().copy());
-        try {
-            attr.setValue(new Calendar(value));
-        } catch (Exception e) {
-            throw new CosmoException("Error copying ICalendar attribute", e);
-        }
-        
-        return attr;
-    }
-    
+
     /**
      * Convienence method for returning a Calendar value on 
      * a ICalendarAttribute with a given QName stored on the given item.

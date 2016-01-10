@@ -60,12 +60,4 @@ public interface Attribute extends AuditableObject {
      *            the attribute value
      */
     public void setValue(Object value);
-
-    /**
-     * Return a new instance of Attribute containing a copy of the Attribute
-     * 
-     * @return copy of Attribute
-     */
-    public Attribute copy();
-
 }

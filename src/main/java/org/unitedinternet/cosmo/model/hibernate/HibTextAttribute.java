@@ -15,6 +15,16 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.annotations.Type;
+import org.unitedinternet.cosmo.CosmoIOException;
+import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.TextAttribute;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -23,17 +33,6 @@ import java.io.StringWriter;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.CosmoIOException;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TextAttribute;
 
 
 /**
@@ -122,13 +121,6 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
         } else {
             setValue((String) value);
         }
-    }
-    
-    public Attribute copy() {
-        TextAttribute attr = new HibTextAttribute();
-        attr.setQName(getQName().copy());
-        attr.setValue(getValue());
-        return attr;
     }
 
     private String read(Reader reader) {

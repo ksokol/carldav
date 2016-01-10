@@ -15,11 +15,11 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import javax.persistence.Embeddable;
-
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.unitedinternet.cosmo.model.QName;
+
+import javax.persistence.Embeddable;
 
 /**
  * Hibernate persistent QName.
@@ -89,14 +89,7 @@ public class HibQName implements QName {
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.QName#copy()
-     */
-    public QName copy() {
-        return new HibQName(namespace, localName);
-    }
-   
+
     public int hashCode() {
         return new HashCodeBuilder(13, 27).
             append(namespace).append(localName).toHashCode();

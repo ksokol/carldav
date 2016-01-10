@@ -241,14 +241,10 @@ public class CalendarTests extends IntegrationTestSupport {
         def xml = new XmlSlurper().parseText(result1)
         def cosmoUuid = xml.response.propstat.prop.uuid.text()
         def lastModified = xml.response.propstat.prop.getlastmodified.text()
-        def creationDate = xml.response.propstat.prop.creationdate.text()
 
         //assert date format - TODO hamcrest matcher
         DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
         format.parse(lastModified);
-
-        DateFormat format1= new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX", Locale.ENGLISH);
-        format1.parse(creationDate);
 
         assertThat(cosmoUuid, notNullValue())
 
@@ -258,7 +254,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:creationdate>${creationDate}</D:creationdate>
                                         <D:getetag>${eTag}</D:getetag>
                                         <D:displayname>all entities meeting</D:displayname>
                                         <D:getlastmodified>${lastModified}</D:getlastmodified>
@@ -372,7 +367,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:creationdate/>
                                         <D:getetag/>
                                         <D:displayname/>
                                         <D:getlastmodified/>
@@ -418,7 +412,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:creationdate>2015-11-21T21:11:00Z</D:creationdate>
                                         <D:getetag>"NVy57RJot0LhdYELkMDJ9gQZjOM="</D:getetag>
                                         <C:supported-calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:calendar-data C:content-type="text/calendar" C:version="2.0"/>

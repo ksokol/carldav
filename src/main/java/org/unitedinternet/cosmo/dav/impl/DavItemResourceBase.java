@@ -36,7 +36,6 @@ import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.property.CreationDate;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
@@ -99,7 +98,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             throws CosmoDavException {
         super(locator, factory);
 
-        registerLiveProperty(DavPropertyName.CREATIONDATE);
         registerLiveProperty(DavPropertyName.GETLASTMODIFIED);
         registerLiveProperty(DavPropertyName.GETETAG);
         registerLiveProperty(DavPropertyName.DISPLAYNAME);
@@ -314,7 +312,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             return;
         }
 
-        properties.add(new CreationDate(item.getCreationDate()));
         properties.add(new LastModified(item.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));
@@ -335,8 +332,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                     + " requires a value");
         }
 
-        if (name.equals(DavPropertyName.CREATIONDATE)
-                || name.equals(DavPropertyName.GETLASTMODIFIED)
+        if (name.equals(DavPropertyName.GETLASTMODIFIED)
                 || name.equals(DavPropertyName.GETETAG)
                 || name.equals(DavPropertyName.RESOURCETYPE)
                 || name.equals(DavPropertyName.ISCOLLECTION)
@@ -355,8 +351,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             return;
         }
 
-        if (name.equals(DavPropertyName.CREATIONDATE)
-                || name.equals(DavPropertyName.GETLASTMODIFIED)
+        if (name.equals(DavPropertyName.GETLASTMODIFIED)
                 || name.equals(DavPropertyName.GETETAG)
                 || name.equals(DavPropertyName.DISPLAYNAME)
                 || name.equals(DavPropertyName.RESOURCETYPE)

@@ -584,7 +584,7 @@ public class EntityConverter {
         // Set COMPLETED/STATUS if triagestatus is DONE
         TriageStatus ts = note.getTriageStatus();
         DateTime completeDate = null;
-        if(ts!=null && ts.getCode()==TriageStatus.CODE_DONE) {
+        if(ts!=null && ts.getCode()==TriageStatusUtil.CODE_DONE) {
             ICalendarUtils.setStatus(Status.VTODO_COMPLETED, task);
             if (ts.getRank() != null) {
                 completeDate =  new DateTime(TriageStatusUtil.getDateFromRank(ts.getRank()));
@@ -901,7 +901,7 @@ public class EntityConverter {
         // calculate triage status based on start date
         java.util.Date now =java.util.Calendar.getInstance().getTime();
         boolean later = event.getStartDate().getDate().after(now);
-        int code = later ? TriageStatus.CODE_LATER : TriageStatus.CODE_DONE;
+        int code = later ? TriageStatusUtil.CODE_LATER : TriageStatusUtil.CODE_DONE;
         
         TriageStatus triageStatus = note.getTriageStatus();
         
@@ -966,7 +966,7 @@ public class EntityConverter {
             }
             
             // TriageStatus.code will be DONE
-            note.getTriageStatus().setCode(TriageStatus.CODE_DONE);
+            note.getTriageStatus().setCode(TriageStatusUtil.CODE_DONE);
             
             // TriageStatus.rank will be the COMPLETED date if present
             // or currentTime

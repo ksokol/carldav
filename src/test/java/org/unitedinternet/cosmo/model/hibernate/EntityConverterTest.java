@@ -72,7 +72,7 @@ public class EntityConverterTest {
         
         NoteItem note = converter.convertTaskCalendar(calendar);
         
-        Assert.assertTrue(TriageStatus.CODE_NOW==note.getTriageStatus().getCode());
+        Assert.assertTrue(TriageStatusUtil.CODE_NOW==note.getTriageStatus().getCode());
         
         // add COMPLETED
         DateTime completeDate = new DateTime("20080122T100000Z");
@@ -82,7 +82,7 @@ public class EntityConverterTest {
         note = converter.convertTaskCalendar(calendar);
         
         TriageStatus ts = note.getTriageStatus();
-        Assert.assertTrue(TriageStatus.CODE_DONE==ts.getCode());
+        Assert.assertTrue(TriageStatusUtil.CODE_DONE==ts.getCode());
         Assert.assertTrue(TriageStatusUtil.getDateFromRank(ts.getRank()).getTime()==completeDate.getTime());
     
         note.setTriageStatus(null);
@@ -96,7 +96,7 @@ public class EntityConverterTest {
         note = converter.convertTaskCalendar(calendar);
         long end = (System.currentTimeMillis() / 1000) * 1000;
         ts = note.getTriageStatus();
-        Assert.assertTrue(TriageStatus.CODE_DONE==ts.getCode());
+        Assert.assertTrue(TriageStatusUtil.CODE_DONE==ts.getCode());
         long rankTime = TriageStatusUtil.getDateFromRank(ts.getRank()).getTime();
         Assert.assertTrue(rankTime<=end && rankTime>=begin);
     }
@@ -129,7 +129,7 @@ public class EntityConverterTest {
         // Triage status
         TriageStatus ts = master.getTriageStatus();
         // the event is in the past, it should be DONE
-        Assert.assertTrue(TriageStatus.CODE_DONE==ts.getCode());
+        Assert.assertTrue(TriageStatusUtil.CODE_DONE==ts.getCode());
         // DTSTAMP
         Assert.assertEquals(master.getClientModifiedDate().getTime(), new DateTime("20051222T210507Z").getTime());
         // UID
@@ -292,7 +292,7 @@ public class EntityConverterTest {
         master.setBody("body");
         master.setIcalUid("icaluid");
         master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        master.setTriageStatus(TriageStatusUtil.initialize(new HibTriageStatus()));
+        master.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
         
         Calendar cal = converter.convertNote(master);
         cal.validate();
@@ -307,7 +307,7 @@ public class EntityConverterTest {
         
         DateTime completeDate = new DateTime("20080122T100000Z");
         
-        master.getTriageStatus().setCode(TriageStatus.CODE_DONE);
+        master.getTriageStatus().setCode(TriageStatusUtil.CODE_DONE);
         master.getTriageStatus().setRank(TriageStatusUtil.getRank(completeDate.getTime()));
         master.addStamp(new HibTaskStamp());
         

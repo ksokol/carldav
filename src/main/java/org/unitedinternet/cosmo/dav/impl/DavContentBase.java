@@ -15,12 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
@@ -39,9 +33,15 @@ import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 /**
  * Extends <code>DavItemResourceBase</code> to adapt the Cosmo
@@ -127,7 +127,7 @@ public abstract class DavContentBase extends DavItemResourceBase
         content.setLastModifiedBy(user != null ? user.getEmail() : "");
 
         if (content.getUid() == null) {
-            content.setTriageStatus(TriageStatusUtil.initialize(new HibTriageStatus()));
+            content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
             content.setLastModification(ContentItem.Action.CREATED);
             content.setSent(Boolean.FALSE);
             content.setNeedsReply(Boolean.FALSE);

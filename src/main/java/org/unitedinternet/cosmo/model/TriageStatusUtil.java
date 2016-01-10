@@ -18,29 +18,32 @@ package org.unitedinternet.cosmo.model;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * Contains static helper methods for dealing with TriageStatus
- * objects.
- */
 public class TriageStatusUtil {
 
+    private static String LABEL_NOW = "NOW";
+    private static String LABEL_LATER = "LATER";
+    private static String LABEL_DONE = "DONE";
+
+    public static int CODE_NOW = 100;
+    public static int CODE_LATER = 200;
+    public static int CODE_DONE = 300;
+
     public static Integer code(String label) {
-        if (label.equals(TriageStatus.LABEL_NOW)) {
-            return Integer.valueOf(TriageStatus.CODE_NOW);
+        if (label.equals(LABEL_NOW)) {
+            return Integer.valueOf(CODE_NOW);
         }
-        if (label.equals(TriageStatus.LABEL_LATER)) {
-            return Integer.valueOf(TriageStatus.CODE_LATER);
+        if (label.equals(LABEL_LATER)) {
+            return Integer.valueOf(CODE_LATER);
         }
-        if (label.equals(TriageStatus.LABEL_DONE)) {
-            return Integer.valueOf(TriageStatus.CODE_DONE);
+        if (label.equals(LABEL_DONE)) {
+            return Integer.valueOf(CODE_DONE);
         }
         throw new IllegalStateException("Unknown label " + label);
     }
     
     public static TriageStatus initialize(TriageStatus ts) {
-        ts.setCode(Integer.valueOf(TriageStatus.CODE_NOW));
+        ts.setCode(Integer.valueOf(CODE_NOW));
         ts.setRank(getRank(System.currentTimeMillis()));
-        ts.setAutoTriage(Boolean.TRUE);
         return ts;
     }
     

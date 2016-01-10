@@ -34,7 +34,7 @@ import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.TriageStatus;
+import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
@@ -176,7 +176,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         ContentItemFilter filter = new ContentItemFilter();
         CollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
-        filter.setTriageStatusCode(Restrictions.eq(TriageStatus.CODE_DONE));
+        filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
                 + "pd.primaryKey.collection=:parent and i.triageStatus.code=:param1", 
@@ -188,7 +188,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
                 + "pd.primaryKey.collection=:parent and i.triageStatus.code is null", 
                    query.getQueryString());
         
-        filter.setTriageStatusCode(Restrictions.eq(TriageStatus.CODE_DONE));
+        filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         filter.addOrderBy(ContentItemFilter.ORDER_BY_TRIAGE_STATUS_RANK_ASC);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
@@ -208,7 +208,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setDisplayName(Restrictions.eq("test"));
         filter.setIcalUid(Restrictions.eq("icaluid"));
         filter.setBody(Restrictions.eq("body"));
-        filter.setTriageStatusCode(Restrictions.eq(TriageStatus.CODE_DONE));
+        filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "

@@ -57,7 +57,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibTriageStatus;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -1222,7 +1221,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         ContentItem item = generateTestContent();
         item.setName("test");
-        TriageStatus initialTriageStatus = new HibTriageStatus();
+        TriageStatus initialTriageStatus = new TriageStatus();
         TriageStatusUtil.initialize(initialTriageStatus);
         item.setTriageStatus(initialTriageStatus);
 
@@ -1237,8 +1236,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         TriageStatus triageStatus = queryItem.getTriageStatus();
         Assert.assertEquals(initialTriageStatus, triageStatus);
 
-        triageStatus.setCode(TriageStatus.CODE_LATER);
-        triageStatus.setAutoTriage(false);
+        triageStatus.setCode(TriageStatusUtil.CODE_LATER);
         BigDecimal rank = new BigDecimal("-98765.43");
         triageStatus.setRank(rank);
         
@@ -1247,9 +1245,8 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
         queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
         triageStatus = queryItem.getTriageStatus();
-        Assert.assertEquals(triageStatus.getAutoTriage(), Boolean.FALSE);
         Assert.assertEquals(triageStatus.getCode(),
-                            Integer.valueOf(TriageStatus.CODE_LATER));
+                            Integer.valueOf(TriageStatusUtil.CODE_LATER));
         Assert.assertEquals(triageStatus.getRank(), rank);
         
         queryItem.setTriageStatus(null);

@@ -25,7 +25,6 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TaskStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.User;
 
@@ -70,12 +69,8 @@ public class HibEntityFactory implements EntityFactory {
         return new HibQName(namespace, localname);
     }
 
-    public TaskStamp createTaskStamp() {
-        return new HibTaskStamp();
-    }
-
     public TriageStatus createTriageStatus() {
-        return new HibTriageStatus();
+        return new TriageStatus();
     }
 
     public User createUser() {

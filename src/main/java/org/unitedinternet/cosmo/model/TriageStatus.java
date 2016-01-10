@@ -15,36 +15,34 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.hibernate.annotations.Type;
+
 import java.math.BigDecimal;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
-/**
- * Represents a compound triage status value.
- */
-public interface TriageStatus {
+@Embeddable
+public class TriageStatus {
 
-    /** */
-    String LABEL_NOW = "NOW";
-    /** */
-    String LABEL_LATER = "LATER";
-    /** */
-    String LABEL_DONE = "DONE";
-    /** */
-    int CODE_NOW = 100;
-    /** */
-    int CODE_LATER = 200;
-    /** */
-    int CODE_DONE = 300;
+    private Integer code;
+    private BigDecimal rank;
 
-    Integer getCode();
+    @Column(name = "triagestatuscode")
+    public Integer getCode() {
+        return code;
+    }
 
-    void setCode(Integer code);
+    @Column(name = "triagestatusrank", precision = 12, scale = 2)
+    @Type(type="org.hibernate.type.BigDecimalType")
+    public BigDecimal getRank() {
+        return rank;
+    }
 
-    BigDecimal getRank();
+    public void setCode(final Integer code) {
+        this.code = code;
+    }
 
-    void setRank(BigDecimal rank);
-
-    Boolean getAutoTriage();
-
-    void setAutoTriage(Boolean autoTriage);
-
+    public void setRank(final BigDecimal rank) {
+        this.rank = rank;
+    }
 }

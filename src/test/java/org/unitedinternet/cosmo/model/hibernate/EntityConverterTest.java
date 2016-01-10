@@ -309,8 +309,7 @@ public class EntityConverterTest {
         
         master.getTriageStatus().setCode(TriageStatusUtil.CODE_DONE);
         master.getTriageStatus().setRank(TriageStatusUtil.getRank(completeDate.getTime()));
-        master.addStamp(new HibTaskStamp());
-        
+
         cal = converter.convertNote(master);
         task = (VToDo) cal.getComponents().get(0);
         

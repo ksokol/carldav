@@ -31,7 +31,6 @@ import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.CollectionItem;
@@ -41,7 +40,6 @@ import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
@@ -270,97 +268,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-
-    public void copyItem(Item item, String destPath, boolean deepCopy) {
-        try {
-            String copyName = itemPathTranslator.getItemName(destPath);
-
-            if (copyName == null || "".equals(copyName)) {
-                throw new IllegalArgumentException("path must include name");
-            }
-
-            if (item instanceof HomeCollectionItem) {
-                throw new IllegalArgumentException("cannot copy root collection");
-            }
-
-            CollectionItem newParent = (CollectionItem) itemPathTranslator.findItemParent(destPath);
-
-            if (newParent == null) {
-                throw new ItemNotFoundException("parent collection not found");
-            }
-
-            verifyNotInLoop(item, newParent);
-
-            Item newItem = copyItemInternal(item, newParent, deepCopy);
-            newItem.setName(copyName);
-            getSession().flush();
-
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#moveItem(java.lang.String, java.lang.String)
-     */
-    public void moveItem(String fromPath, String toPath) {
-        try {
-
-            // Get current item
-            Item item = itemPathTranslator.findItemByPath(fromPath);
-
-            if (item == null) {
-                throw new ItemNotFoundException("item " + fromPath + " not found");
-            }
-
-            if (item instanceof HomeCollectionItem) {
-                throw new IllegalArgumentException("cannot move root collection");
-            }
-
-            // Name of moved item
-            String moveName = itemPathTranslator.getItemName(toPath);
-
-            if (moveName == null || "".equals(moveName)) {
-                throw new IllegalArgumentException("path must include name");
-            }
-
-            // Parent of moved item
-            CollectionItem parent = (CollectionItem) itemPathTranslator.findItemParent(toPath);
-
-            if (parent == null) {
-                throw new ItemNotFoundException("parent collecion not found");
-            }
-
-            // Current parent
-            CollectionItem oldParent = (CollectionItem) itemPathTranslator.findItemParent(fromPath);
-
-            verifyNotInLoop(item, parent);
-
-            item.setName(moveName);
-            if (!parent.getUid().equals(oldParent.getUid())) {
-                // Copy over existing CollectionItemDetails
-                ((HibItem) item).addParent(parent);
-
-                // Remove item from old parent collection
-                ((HibItem) item).removeParent(oldParent);
-            }
-
-            getSession().flush();
-
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
-        }
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#initializeItem(org.unitedinternet.cosmo.model.Item)
      */
@@ -483,60 +390,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             throw new IllegalStateException("itemFilterProcessor is required");
         }
 
-    }
-
-    protected Item copyItemInternal(Item item, CollectionItem newParent, boolean deepCopy) {
-
-        Item item2 = item.copy();
-        item2.setName(item.getName());
-
-        // copy base Item fields
-        setBaseItemProps(item2);
-
-        ((HibItem) item2).addParent(newParent);
-
-        // save Item before attempting deep copy
-        getSession().save(item2);
-        getSession().flush();
-
-        // copy children if collection and deepCopy = true
-        if (deepCopy == true && item instanceof CollectionItem) {
-            CollectionItem collection = (CollectionItem) item;
-            for (Item child : collection.getChildren()) {
-                copyItemInternal(child, (CollectionItem) item2, true);
-            }
-        }
-
-        return item2;
-    }
-
-    /**
-     * Checks to see if a parent Item is currently a child of a target item. If
-     * so, then this would put the hierarchy into a loop and is not allowed.
-     *
-     * @param item
-     * @param newParent
-     * @throws org.unitedinternet.cosmo.dao.ModelValidationException if newParent is child of item
-     */
-    protected void verifyNotInLoop(Item item, CollectionItem newParent) {
-        // need to verify that the new parent is not a child
-        // of the item, otherwise we get a loop
-        if (getBaseModelObject(item).getId().equals(getBaseModelObject(newParent).getId())) {
-            throw new ModelValidationException(newParent,
-                    "Invalid parent - will cause loop");
-        }
-
-        // If item is not a collection then all is good
-        if (!(item instanceof CollectionItem)) {
-            return;
-        }
-
-        CollectionItem collection = (CollectionItem) item;
-        getSession().refresh(collection);
-
-        for (Item nextItem : collection.getChildren()) {
-            verifyNotInLoop(nextItem, newParent);
-        }
     }
 
     /**

@@ -15,6 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import net.fortuna.ical4j.model.Calendar;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+import org.unitedinternet.cosmo.hibernate.validator.Task;
+import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.QName;
+
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -29,17 +38,6 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-
-import net.fortuna.ical4j.model.Calendar;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.unitedinternet.cosmo.hibernate.validator.Task;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * Hibernate persistent NoteItem.
@@ -120,13 +118,7 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
     public void setTaskCalendar(Calendar calendar) {
         setCalendar(calendar);
     }
-   
-    public Item copy() {
-        NoteItem copy = new HibNoteItem();
-        copyToItem(copy);
-        return copy;
-    }
-    
+
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.NoteItem#getModifications()
      */

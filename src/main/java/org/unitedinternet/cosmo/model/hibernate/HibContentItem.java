@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Target;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.TriageStatus;
 
 import javax.persistence.Column;
@@ -118,22 +117,5 @@ public abstract class HibContentItem extends HibItem implements ContentItem {
      */
     public void setNeedsReply(Boolean needsReply) {
         this.needsReply = needsReply;
-    }
-    
-    @Override
-    protected void copyToItem(Item item) {
-        if(!(item instanceof ContentItem)) {
-            return;
-        }
-        
-        super.copyToItem(item);
-        
-        ContentItem contentItem = (ContentItem) item;
-        
-        contentItem.setLastModifiedBy(getLastModifiedBy());
-        contentItem.setLastModification(getLastModification());
-        contentItem.setTriageStatus(getTriageStatus());
-        contentItem.setSent(getSent());
-        contentItem.setNeedsReply(getNeedsReply());
     }
 }

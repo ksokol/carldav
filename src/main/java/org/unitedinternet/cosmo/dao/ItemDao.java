@@ -19,7 +19,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
 
 import java.util.Set;
 
@@ -97,31 +96,6 @@ public interface ItemDao extends Dao {
      */
     HomeCollectionItem createRootItem(User user);
 
-    /**
-     * Copy an item to the given path
-     * @param item item to copy
-     * @param destPath destination path to copy item to
-     * @param deepCopy true for deep copy, else shallow copy will
-     *                 be performed
-     * @throws ItemNotFoundException
-     *         if parent item specified by path does not exist
-     * @throws DuplicateItemNameException
-     *         if path points to an item with the same path
-     */
-    void copyItem(Item item, String destPath, boolean deepCopy);
-    
-  
-    /**
-     * Move item to the given path
-     * @param fromPath path of item to move
-     * @param toPath path to move item to
-     * @throws ItemNotFoundException
-     *         if parent item specified by path does not exist
-     * @throws DuplicateItemNameException
-     *         if path points to an item with the same path
-     */
-    void moveItem(String fromPath, String toPath);
-    
     /**
      * Remove an item.
      *

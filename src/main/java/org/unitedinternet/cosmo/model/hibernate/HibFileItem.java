@@ -16,11 +16,9 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.CosmoIOException;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.FileItem;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -186,46 +184,5 @@ public class HibFileItem extends HibContentItem implements FileItem {
      */
     public void setContentType(String contentType) {
         this.contentType = contentType;
-    }
-    
-    public Item copy() {
-        FileItem copy = new HibFileItem();
-        copyToItem(copy);
-        return copy;
-    }
-    
-    @Override
-    protected void copyToItem(Item item) {
-        if(!(item instanceof FileItem)) {
-            return;
-        }
-        
-        super.copyToItem(item);
-        
-        FileItem contentItem = (FileItem) item;
-        
-        try {
-            InputStream contentStream = getContentInputStream();
-            if(contentStream!=null) {
-                contentItem.setContent(contentStream);
-                contentStream.close();
-            }
-            contentItem.setContentEncoding(getContentEncoding());
-            contentItem.setContentLanguage(getContentLanguage());
-            contentItem.setContentType(getContentType());
-            contentItem.setContentLength(getContentLength());
-        } catch (IOException e) {
-            throw new CosmoIOException("Error copying content", e);
-        }
-    }
-
-    /**
-     */
-    public String toString() {
-        return new ToStringBuilder(this).appendSuper(super.toString()).append(
-                "contentLength", getContentLength()).append("contentType",
-                getContentType()).append("contentEncoding",
-                getContentEncoding()).append("contentLanguage",
-                getContentLanguage()).toString();
     }
 }

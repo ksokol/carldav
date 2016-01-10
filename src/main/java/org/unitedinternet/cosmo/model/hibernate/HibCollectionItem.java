@@ -97,10 +97,4 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
     public int generateHash() {
         return getVersion();
     }
-
-    public Item copy() {
-        CollectionItem copy = new HibCollectionItem();
-        copyToItem(copy);
-        return copy;
-    }
 }

@@ -122,8 +122,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Stamp> stamps = new HashSet<Stamp>(0);
 
-    private transient Map<String, Stamp> stampMap = null;
-
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="primaryKey.item", 
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -142,20 +140,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      */
     public Set<Stamp> getStamps() {
         return Collections.unmodifiableSet(stamps);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getStampMap()
-     */
-    public Map<String, Stamp> getStampMap() {
-        if(stampMap==null) {
-            stampMap = new HashMap<String, Stamp>();
-            for(Stamp stamp : stamps) {
-                stampMap.put(stamp.getType(), stamp);
-            }
-        }
-
-        return stampMap;
     }
 
     /* (non-Javadoc)
@@ -530,20 +514,5 @@ public abstract class HibItem extends HibAuditableObject implements Item {
                 Long.valueOf(getModifiedDate().getTime()).toString() : "-";
                 String etag = uid + ":" + modTime;
                 return encodeEntityTag(etag.getBytes(Charset.forName("UTF-8")));
-    }
-
-    protected void copyToItem(Item item) {
-        item.setOwner(getOwner());
-        item.setDisplayName(getDisplayName());
-
-        // copy attributes
-        for(Entry<QName, Attribute> entry: attributes.entrySet()) {
-            item.addAttribute(entry.getValue().copy());
-        }
-
-        // copy stamps
-        for(Stamp stamp: stamps) {
-            item.addStamp(stamp.copy());
-        }
     }
 }

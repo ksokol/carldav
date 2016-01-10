@@ -33,11 +33,6 @@ public interface Item extends AuditableObject{
     Set<Stamp> getStamps();
 
     /**
-     * @return Map of Stamps indexed by Stamp type.
-     */
-    Map<String, Stamp> getStampMap();
-
-    /**
      * Add stamp to Item
      * @param stamp stamp to add
      */
@@ -198,7 +193,5 @@ public interface Item extends AuditableObject{
      * @param isActive true if item should be deleted
      */
     void setIsActive(Boolean isActive);
-
-    Item copy();
 
 }

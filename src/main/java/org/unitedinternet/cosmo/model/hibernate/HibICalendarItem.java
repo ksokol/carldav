@@ -15,15 +15,13 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import net.fortuna.ical4j.model.Calendar;
+import org.unitedinternet.cosmo.model.ICalendarItem;
+import org.unitedinternet.cosmo.model.QName;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-
-import org.unitedinternet.cosmo.model.ICalendarItem;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
-
-import net.fortuna.ical4j.model.Calendar;
 
 /**
  * Hibernate persistent ICalendarItem.
@@ -71,19 +69,5 @@ public abstract class HibICalendarItem extends HibContentItem implements ICalend
         // calendar stored as ICalendarAttribute on Item
         HibICalendarAttribute.setValue(this, ATTR_ICALENDAR, calendar);
     }
-    
-    @Override
-    protected void copyToItem(Item item) {
-        
-        if(!(item instanceof ICalendarItem)) {
-            return;
-        }
-        
-        super.copyToItem(item);
-        
-        // copy icalUid
-        ICalendarItem icalItem = (ICalendarItem) item;
-        icalItem.setIcalUid(getIcalUid());
-    }
-    
+
 }

@@ -37,5 +37,5 @@ public interface User {
      */
     void setEmail(String email);
 
-    Boolean isLocked();
+    boolean isLocked();
 }

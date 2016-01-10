@@ -37,13 +37,6 @@ import javax.validation.constraints.NotNull;
 @Table(name="users")
 public class HibUser implements User {
 
-    /**
-     */
-    public static final int EMAIL_LEN_MIN = 1;
-    /**
-     */
-    public static final int EMAIL_LEN_MAX = 128;
-
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id = Long.valueOf(-1);
@@ -53,12 +46,11 @@ public class HibUser implements User {
 
     @NotNull
     @NaturalId
-    @Column(name = "email", nullable=true, unique=true)
-    @Length(min=EMAIL_LEN_MIN, max=EMAIL_LEN_MAX)
+    @Column(name = "email", nullable=false, unique=true)
     @Email
     private String email;
 
-    private Boolean locked = Boolean.FALSE;
+    private boolean locked;
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private Set<HibItem> items;
@@ -112,7 +104,7 @@ public class HibUser implements User {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.User#isLocked()
      */
-    public Boolean isLocked() {
+    public boolean isLocked() {
         return locked;
     }
 }

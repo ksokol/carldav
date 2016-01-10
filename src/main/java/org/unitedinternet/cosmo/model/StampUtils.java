@@ -19,25 +19,7 @@ package org.unitedinternet.cosmo.model;
  * Contains static helper methods for dealing with Stamps.
  */
 public class StampUtils {
-    
-   /**
-    * Return MessageStamp from Item
-    * @param item
-    * @return MessageStamp from Item
-    */
-   public static MessageStamp getMessageStamp(Item item) {
-       return (MessageStamp) item.getStamp(MessageStamp.class);
-   }
-    
-    /**
-     * Return BaseEventStamp from Item
-     * @param item
-     * @return BaseEventStamp from Item
-     */
-    public static BaseEventStamp getBaseEventStamp(Item item) {
-        return (BaseEventStamp) item.getStamp(BaseEventStamp.class);
-    }
-    
+
     /**
      * Return EventStamp from Item
      * @param item
@@ -63,14 +45,5 @@ public class StampUtils {
      */
     public static CalendarCollectionStamp getCalendarCollectionStamp(Item item) {
         return (CalendarCollectionStamp) item.getStamp(CalendarCollectionStamp.class);
-    }
-    
-    /**
-     * Return TaskStamp from Item
-     * @param item
-     * @return TaskStamp from Item
-     */
-    public static TaskStamp getTaskStamp(Item item) {
-        return (TaskStamp) item.getStamp(TaskStamp.class);
     }
 }

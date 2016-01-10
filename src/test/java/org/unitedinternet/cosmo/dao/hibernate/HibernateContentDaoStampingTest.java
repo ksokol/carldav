@@ -37,7 +37,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
@@ -45,7 +44,6 @@ import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibMessageStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
@@ -101,23 +99,15 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
 
-        MessageStamp message = new HibMessageStamp(item);
-        message.setBcc("bcc");
-        message.setTo("to");
-        message.setFrom("from");
-        message.setCc("cc");
-
         EventStamp event = new HibEventStamp();
         event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
 
-        item.addStamp(message);
         item.addStamp(event);
 
         ContentItem newItem = contentDao.createContent(root, item);
 
-
         ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(2, queryItem.getStamps().size());
+        Assert.assertEquals(1, queryItem.getStamps().size());
 
         Stamp stamp = queryItem.getStamp(EventStamp.class);
         Assert.assertNotNull(stamp.getCreationDate());
@@ -131,15 +121,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
         Assert.assertEquals("icaluid", ((NoteItem) queryItem).getIcalUid());
         Assert.assertEquals("this is a body", ((NoteItem) queryItem).getBody());
-
-        stamp = queryItem.getStamp(MessageStamp.class);
-        Assert.assertTrue(stamp instanceof MessageStamp);
-        Assert.assertEquals("message", stamp.getType());
-        MessageStamp ms = (MessageStamp) stamp;
-        Assert.assertEquals(ms.getBcc(), message.getBcc());
-        Assert.assertEquals(ms.getCc(), message.getCc());
-        Assert.assertEquals(ms.getTo(), message.getTo());
-        Assert.assertEquals(ms.getFrom(), message.getFrom());
     }
 
     /**
@@ -186,66 +167,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals("20070101", event.getTimeRangeIndex().getStartDate());
         Assert.assertEquals("20070101",event.getTimeRangeIndex().getEndDate());
         Assert.assertTrue(event.getTimeRangeIndex().getIsFloating().booleanValue());
-    }
-
-    /**
-     * Test stamps update. 
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testStampsUpdate() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-
-        ContentItem item = generateTestContent();
-
-        ((NoteItem) item).setBody("this is a body");
-        ((NoteItem) item).setIcalUid("icaluid");
-
-        MessageStamp message = new HibMessageStamp(item);
-        message.setBcc("bcc");
-        message.setTo("to");
-        message.setFrom("from");
-        message.setCc("cc");
-
-        EventStamp event = new HibEventStamp();
-        event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
-
-        item.addStamp(message);
-        item.addStamp(event);
-
-        ContentItem newItem = contentDao.createContent(root, item);
-
-
-        ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(2, queryItem.getStamps().size());
-
-        Stamp stamp = queryItem.getStamp(MessageStamp.class);
-        queryItem.removeStamp(stamp);
-
-        stamp = queryItem.getStamp(EventStamp.class);
-        EventStamp es = (EventStamp) stamp;
-        queryItem.setClientModifiedDate(new Date());
-        es.setEventCalendar(helper.getCalendar("testdata/cal2.ics"));
-        Calendar newCal = es.getEventCalendar();
-        Thread.sleep(10);
-
-        contentDao.updateContent(queryItem);
-
-
-        queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(1, queryItem.getStamps().size());
-        Assert.assertNull(queryItem.getStamp(MessageStamp.class));
-        stamp = queryItem.getStamp(EventStamp.class);
-        es = (EventStamp) stamp;
-
-        Assert.assertTrue(stamp.getModifiedDate().after(stamp.getCreationDate()));
-
-        if(!es.getEventCalendar().toString().equals(newCal.toString())) {
-            LOG.error(es.getEventCalendar().toString());
-            LOG.error(newCal.toString());
-        }
-        Assert.assertEquals(es.getEventCalendar().toString(), newCal.toString());
     }
 
     /**

@@ -31,7 +31,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.MessageStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -68,7 +67,6 @@ public abstract class DavContentBase extends DavItemResourceBase
     static {
 
         DEAD_PROPERTY_FILTER.add(NoteItem.class.getName());
-        DEAD_PROPERTY_FILTER.add(MessageStamp.class.getName());
     }
 
     /** */

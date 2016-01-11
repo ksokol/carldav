@@ -34,7 +34,6 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.model.User;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,8 +58,7 @@ import javax.xml.namespace.QName;
  */
 public abstract class DavContentBase extends DavItemResourceBase
     implements DavItemContent {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(DavContentBase.class);
+
     private static final Set<String> DEAD_PROPERTY_FILTER =
         new HashSet<String>();
 
@@ -120,9 +118,6 @@ public abstract class DavContentBase extends DavItemResourceBase
         super.populateItem(inputContext);
 
         ContentItem content = (ContentItem) getItem();
-        
-        User user = getSecurityManager().getSecurityContext().getUser();
-        content.setLastModifiedBy(user != null ? user.getEmail() : "");
 
         if (content.getUid() == null) {
             content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));

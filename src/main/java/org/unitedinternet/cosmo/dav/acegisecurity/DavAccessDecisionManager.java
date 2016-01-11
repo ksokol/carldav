@@ -22,8 +22,8 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletRequest;
  * for all other resources.
  * </p>
  */
+//TODO refactor me
 public class DavAccessDecisionManager implements AccessDecisionManager, ExtendedDavConstants {
 
     @Override
@@ -50,17 +51,21 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
 
         if (authentication instanceof UsernamePasswordAuthenticationToken) {
             userId = ((CosmoUserDetails) authentication.getPrincipal()).getUsername();
-        } else if (authentication instanceof PreAuthenticatedAuthenticationToken) {
-            userId = authentication.getPrincipal().toString(); //userService.getUser((String)authentication.getPrincipal()).getEmail();
         } else {
             throw new InsufficientAuthenticationException("Unrecognized authentication token");
         }
 
-        HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
-        match(userId, request.getRequestURI());
+        final HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
+        final String result = match(userId, request.getRequestURI());
+        final CosmoUserDetails principal = (CosmoUserDetails) authentication.getPrincipal();
+
+        if(result == null || ("user".equalsIgnoreCase(result) && principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
+            return;
+        }
+        throw new InsufficientAuthenticationException(principal.getUsername() + " not allowed to call " + result);
     }
 
-    protected void match(String userId, String path) {
+    protected String match(String userId, String path) {
         UriComponentsBuilder uriComponentsBuilder;
 
         try {
@@ -72,15 +77,22 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
 
         final List<String> pathSegments = uriComponentsBuilder.build().getPathSegments();
 
+        if(!"dav".equals(pathSegments.get(0))) {
+            return pathSegments.get(0);
+        }
+
         if(pathSegments.size() < 2) {
             throw new InsufficientAuthenticationException("access denied for " + path);
         }
 
         final String userIdFromUrl = pathSegments.get(1);
 
+        System.out.println(userId + " <-> " + userIdFromUrl);
         if(!StringUtils.equalsIgnoreCase(userId, userIdFromUrl)) {
             throw new InsufficientAuthenticationException("access denied for " + path);
         }
+
+        return null;
     }
 
     /**

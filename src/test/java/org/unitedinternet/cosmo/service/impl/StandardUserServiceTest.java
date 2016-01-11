@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.service.impl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataRetrievalFailureException;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl;
@@ -99,43 +98,6 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     }
 
     /**
-     * Tests update user.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testUpdateUser() throws Exception {
-        User u1 = testHelper.makeDummyUser();
-        u1.setPassword(service.digestPassword(u1.getPassword()));
-        String digestedPassword = u1.getPassword();
-        
-        userDao.createUser(u1);
-
-        // change password
-        u1.setPassword("changedpwd");
-
-        Thread.sleep(1000); // let modified date change
-        User user = service.updateUser(u1);
-        try {
-            userDao.getUser(user.getEmail());
-        } catch (DataRetrievalFailureException e) {
-            Assert.fail("User not stored");
-        }
-        Assert.assertFalse("Original and stored password are the same",
-                    user.getPassword().equals(digestedPassword));
-
-        // leave password
-        Thread.sleep(1000); // let modified date change
-        User user2 = service.updateUser(u1);
-        try {
-            userDao.getUser(user.getEmail());
-        } catch (DataRetrievalFailureException e) {
-            Assert.fail("User not stored");
-        }
-        Assert.assertTrue("Original and stored password are not the same",
-                    user2.getPassword().equals(user.getPassword()));
-    }
-
-    /**
      * Tests remove user.
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -154,7 +116,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
      * @throws Exception - if something is wrong this exception is thrown.
      */
     @Test
-    public void testRemoveUserByUsername() throws Exception {
+    public void testRemoveUserByEmail() throws Exception {
         User u1 = testHelper.makeDummyUser();
         service.createUser(u1);
 

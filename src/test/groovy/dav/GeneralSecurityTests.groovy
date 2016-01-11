@@ -8,9 +8,9 @@ import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.AUTHORIZATION
 import static org.springframework.http.HttpHeaders.WWW_AUTHENTICATE
+import static org.springframework.http.MediaType.APPLICATION_JSON
 import static org.springframework.http.MediaType.TEXT_XML
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.*
@@ -69,6 +69,24 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
                 .contentType(TEXT_CALENDAR)
                 .header(AUTHORIZATION, user(USER02, USER02_PASSWORD))
                 .content(CALDAV_EVENT))
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
+    }
+
+    @Test
+    public void list() {
+        mockMvc.perform(get("/user")
+                .header(AUTHORIZATION, user(USER02, USER02_PASSWORD)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
+    }
+
+    @Test
+    public void createUser() {
+        mockMvc.perform(post("/user")
+                .contentType(APPLICATION_JSON)
+                .content("{}")
+                .header(AUTHORIZATION, user(USER02, USER02_PASSWORD)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(header().string(WWW_AUTHENTICATE, is('Basic realm="carldav"')))
     }

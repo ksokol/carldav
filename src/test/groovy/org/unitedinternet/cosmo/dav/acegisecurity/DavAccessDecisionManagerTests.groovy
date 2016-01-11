@@ -76,22 +76,12 @@ class DavAccessDecisionManagerTests {
     }
 
     @Test
-    void decideWithPreAuthenticatedAuthenticationToken() {
-        def request = new MockHttpServletRequest()
-        when(invocation.getHttpRequest()).thenReturn(request)
-        expectedException.expect(InsufficientAuthenticationException.class)
-        expectedException.expectMessage("access denied for ")
-
-        uut.decide(new PreAuthenticatedAuthenticationToken("user", "password"), invocation, null)
-    }
-
-    @Test
     void decideDifferentPathInfo() {
         def request = new MockHttpServletRequest()
         request.setRequestURI("/test/")
         when(invocation.getHttpRequest()).thenReturn(request)
         expectedException.expect(InsufficientAuthenticationException.class)
-        expectedException.expectMessage("access denied for /test/")
+        expectedException.expectMessage("user not allowed to call test")
 
         uut.decide(token, invocation, null)
     }

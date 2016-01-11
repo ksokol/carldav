@@ -24,8 +24,13 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
+import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 
 import java.util.Set;
@@ -35,17 +40,17 @@ import java.util.Set;
  */
 public class StandardUserService implements UserService {
 
-    private static int PASSWORD_LEN_MIN = 5;
-    private static int PASSWORD_LEN_MAX = 16;
-
     private static final Log LOG = LogFactory.getLog(StandardUserService.class);
 
     private final ContentDao contentDao;
+    private final ContentService contentService;
     private final UserDao userDao;
 
-    public StandardUserService(final ContentDao contentDao, final UserDao userDao) {
+    public StandardUserService(final ContentDao contentDao, final ContentService contentService, final UserDao userDao) {
+        Assert.notNull(contentDao, "contentDao is null");
         Assert.notNull(contentDao, "contentDao is null");
         Assert.notNull(userDao, "userDao is null");
+        this.contentService = contentService;
         this.contentDao = contentDao;
         this.userDao = userDao;
     }
@@ -89,33 +94,26 @@ public class StandardUserService implements UserService {
             throw e;
         }
 
-        User newUser = userDao.getUser(user.getEmail());
-        contentDao.createRootItem(newUser);
+        User newUser = userDao.getUserByEmail(user.getEmail());
+
+        CollectionItem calendar = new HibCollectionItem();
+        calendar.setOwner(user);
+        calendar.setName("calendar");
+        calendar.setDisplayName("calendarDisplayName");
+        calendar.addStamp(new HibCalendarCollectionStamp());
+
+        final HomeCollectionItem homeCollection = contentDao.createRootItem(newUser);
+        contentService.createCollection(homeCollection, calendar);
+
+        CollectionItem addressbook = new HibCollectionItem();
+        addressbook.setOwner(user);
+        addressbook.setName("contacts");
+        addressbook.setDisplayName("contactDisplayName");
+        addressbook.addStamp(new CardCollectionStamp());
+
+        contentService.createCollection(homeCollection, addressbook);
 
         return newUser;
-    }
-
-    /**
-     * Updates a user account that exists in the repository. If the
-     * password has been changed, digests the raw new password and
-     * uses the result to replace the stored password. Returns a new
-     * instance of <code>User</code>  after saving the original one.
-     *
-     * @param user the account to update
-     *
-     * @throws DataIntegrityViolationException if the username or
-     * email address is already in use
-     */
-    public User updateUser(User user) {
-
-        if (user.getPassword().length() < 32) {
-            validateRawPassword(user);
-            user.setPassword(digestPassword(user.getPassword()));
-        }
-       
-        userDao.updateUser(user);
-
-        return userDao.getUser(user.getEmail());
     }
 
     /**
@@ -170,16 +168,8 @@ public class StandardUserService implements UserService {
 
     private static void validateRawPassword(final User user) {
         if (user.getPassword() == null) {
-            throw new ModelValidationException("email " + user.getEmail(),"Password not specified");
-        }
-        if (user.getPassword().length() < PASSWORD_LEN_MIN ||
-                user.getPassword().length() > PASSWORD_LEN_MAX) {
-
-            throw new ModelValidationException("email " + user.getEmail(),
-                    "Password must be " +
-                            PASSWORD_LEN_MIN + " to " +
-                            PASSWORD_LEN_MAX +
-                            " characters in length");
+            throw new ModelValidationException(" EMAIL " + user.getEmail(),
+                    "Password not specified");
         }
     }
 }

@@ -93,19 +93,13 @@
 	<bean id="passwordEncoder"
 		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
 
-	<bean id="anonymousAuthenticationProvider"
-		class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
-		<constructor-arg value="badgerbadgerbadger" />
-	</bean>
-
 	<bean id="authenticationManager"
 		class="org.springframework.security.authentication.ProviderManager">
 		<constructor-arg index="0" ref="authenticationProviders"/>
 	</bean>
-	
+
 	<util:list id="authenticationProviders">
 		<ref bean="daoAuthenticationProvider" />
-		<ref bean="anonymousAuthenticationProvider" />
 	</util:list>
 	<!-- security facade resources -->
 

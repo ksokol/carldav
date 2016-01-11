@@ -12,4 +12,10 @@ class TestUser {
 
     static final String UNKNOWN = "unknown"
     static final String UNKNOWN_PASSWORD = "unknown"
+
+    static final String NEW_USER = "new_user01@localhost.de"
+    static final String NEW_USER_PASSWORD = "test"
+
+    static final String ADMIN = "root@localhost"
+    static final String ADMIN_PASSWORD = "test"
 }

@@ -17,7 +17,8 @@
 
 	<bean id="userService" class="org.unitedinternet.cosmo.service.impl.StandardUserService">
         <constructor-arg index="0" ref="contentDao" />
-        <constructor-arg index="1" ref="userDao" />
+        <constructor-arg index="1" ref="contentService" />
+        <constructor-arg index="2" ref="userDao" />
 	</bean>
 
 	<bean id="contentLockManager"
@@ -60,12 +61,11 @@
 
 	<bean id="davResourceLocatorFactory"
 		class="org.unitedinternet.cosmo.dav.StandardResourceLocatorFactory" />
-
     <bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+        <property name="order" value="1" />
         <property name="mappings">
             <value>
                 /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_DAV}/**=dav
-                /error=error
             </value>
         </property>
     </bean>
@@ -76,7 +76,6 @@
         <constructor-arg index="2" ref="cosmoEntityFactory" />
 	</bean>
 
-    <bean id="error" class="carldav.handler.ErrorHandler" />
 
 	<!-- authentication resources -->
 

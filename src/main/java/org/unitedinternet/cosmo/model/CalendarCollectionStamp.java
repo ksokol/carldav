@@ -15,10 +15,10 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.Set;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.TimeZone;
+
+import java.util.Set;
 
 
 /**
@@ -63,13 +63,6 @@ public interface CalendarCollectionStamp extends Stamp{
      * @return set of EventStamps contained in children
      */
     public Set<EventStamp> getEventStamps();
-    
-    
-
-    public String getColor();
-
-
-    public void setColor(String color);
 
     public String getDisplayName();
 

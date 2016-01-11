@@ -22,7 +22,6 @@ import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.unitedinternet.cosmo.hibernate.validator.Color;
 import org.unitedinternet.cosmo.hibernate.validator.DisplayName;
 import org.unitedinternet.cosmo.hibernate.validator.Timezone;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
@@ -181,20 +180,6 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     @Override
     public String calculateEntityTag() {
         return "";
-    }
-
-    @Override
-    @Color
-    public String getColor() {
-        // color stored as StringAttribute on Item
-        return HibStringAttribute.getValue(getItem(), ATTR_CALENDAR_COLOR);
-    }
-
-    @Override
-    public void setColor(String color) {
-        // color stored as StringAttribute on Item
-        HibStringAttribute.setValue(getItem(), ATTR_CALENDAR_COLOR, color);
-        
     }
 
     @Override

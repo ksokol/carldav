@@ -37,9 +37,7 @@ import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
-import org.unitedinternet.cosmo.dav.caldav.XCaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
-import org.unitedinternet.cosmo.dav.caldav.property.CalendarColor;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.MaxResourceSize;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
@@ -86,7 +84,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         registerLiveProperty(SUPPORTEDCALENDARDATA);
         registerLiveProperty(MAXRESOURCESIZE);
         registerLiveProperty(GET_CTAG);
-        registerLiveProperty(XCaldavConstants.CALENDAR_COLOR);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
@@ -198,10 +195,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new MaxResourceSize());
         properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
 
-        if(cc.getColor() != null){
-            properties.add(new CalendarColor(cc.getColor()));
-        }
-        
         if(cc.getDisplayName() != null){
             properties.add(new DisplayName(cc.getDisplayName()));
         }
@@ -250,9 +243,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         if (name.equals(CALENDARTIMEZONE)) {
             cc.setTimezoneCalendar(TimeZoneExtractor.extract(property));
         }
-        if(name.equals(XCaldavConstants.CALENDAR_COLOR)){
-            cc.setColor(property.getValueText());
-        }
     }
 
     /** */
@@ -281,9 +271,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         if (name.equals(CALENDARTIMEZONE)) {
             cc.setTimezoneCalendar(null);
             return;
-        }
-        if(name.equals(XCaldavConstants.CALENDAR_COLOR)){
-            cc.setColor(null);
         }
     }
 

@@ -251,7 +251,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         calendarStamp.setDescription("description");
         calendarStamp.setTimezoneCalendar(testCal);
         calendarStamp.setLanguage("en");
-        calendarStamp.setColor("#123123");
 
         root.addStamp(calendarStamp);
 
@@ -277,7 +276,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals("description", ccs.getDescription());
         Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
         Assert.assertEquals("en", ccs.getLanguage());
-        Assert.assertEquals("#123123", ccs.getColor());
 
         Calendar cal = new EntityConverter(null).convertCollection(queryCol);
         Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());
@@ -303,31 +301,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
             contentDao.updateCollection(root);
 
             Assert.fail("able to save invalid timezone, is TimezoneValidator active?");
-        } catch (ConstraintViolationException cve) {
-
-        }
-    }
-
-    /**
-     * Test calendar collection stamp validation.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCalendarCollectionStampColorValidation() throws Exception {
-        User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
-
-        helper.getCalendar("testdata/cal1.ics");
-
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setColor("red");
-
-        root.addStamp(calendarStamp);
-
-        try {
-            contentDao.updateCollection(root);
-
-            Assert.fail("able to save invalid color, is ColorValidator active?");
         } catch (ConstraintViolationException cve) {
 
         }

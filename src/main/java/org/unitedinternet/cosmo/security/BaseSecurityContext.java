@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 import org.unitedinternet.cosmo.model.User;
 
 import java.security.Principal;
@@ -26,22 +24,12 @@ import java.security.Principal;
  */
 public abstract class BaseSecurityContext implements CosmoSecurityContext {
 
-    private boolean anonymous;
     private Principal principal;
     private User user;
 
     public BaseSecurityContext(Principal principal) {
-        this.anonymous = false;
         this.principal = principal;
         processPrincipal();
-    }
-
-    /**
-     * @return Determines whether or not the context represents an anonymous
-     * Cosmo user.
-     */
-    public boolean isAnonymous() {
-        return anonymous;
     }
 
     /**
@@ -59,10 +47,6 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
         return principal;
     }
 
-    protected void setAnonymous(boolean anonymous) {
-        this.anonymous = anonymous;
-    }
-
     protected void setUser(User user) {
         this.user = user;
     }
@@ -73,10 +57,4 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
      * anonymous access.
      */
     protected abstract void processPrincipal();
-
-    public String toString() {
-        return ToStringBuilder.
-            reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
-    }
-
 }

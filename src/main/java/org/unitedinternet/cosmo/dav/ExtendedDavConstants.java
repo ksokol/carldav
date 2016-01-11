@@ -53,14 +53,6 @@ public interface ExtendedDavConstants extends DavConstants {
 
     String QN_PROPFIND =
         DomUtil.getQualifiedName(XML_PROPFIND, NAMESPACE);
-    String QN_PROPERTYUPDATE =
-        DomUtil.getQualifiedName(XML_PROPERTYUPDATE, NAMESPACE);
-    String QN_SET =
-        DomUtil.getQualifiedName(XML_SET, NAMESPACE);
-    String QN_REMOVE =
-        DomUtil.getQualifiedName(XML_REMOVE, NAMESPACE);
-    String QN_PROP =
-        DomUtil.getQualifiedName(XML_PROP, NAMESPACE);
     String QN_HREF =
         DomUtil.getQualifiedName(XML_HREF, NAMESPACE);
 

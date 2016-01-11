@@ -1,10 +1,8 @@
 package dav
 
-import org.apache.commons.codec.binary.Base64
 import org.junit.Test
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralResponse
-import testutil.helper.Base64Helper
 
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
@@ -27,7 +25,7 @@ import static testutil.mockmvc.CustomResultMatchers.*
 public class GeneralSecurityTests extends IntegrationTestSupport {
 
     @Test
-    public void unauthorized() throws Exception {
+    public void unauthorizedAccessResourceOfOtherUser() throws Exception {
         mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
                 .header(AUTHORIZATION, user(USER02, USER02_PASSWORD)))
                 .andExpect(status().isUnauthorized())
@@ -35,7 +33,7 @@ public class GeneralSecurityTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void authorizedShouldReturnInternalServerError() throws Exception {
+    public void unknownUserAccessResourceOfKnownUser() throws Exception {
         mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID)
                 .header(AUTHORIZATION, user(UNKNOWN, UNKNOWN_PASSWORD)))
                 .andExpect(status().isUnauthorized())

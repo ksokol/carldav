@@ -87,7 +87,6 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
 
         final String userIdFromUrl = pathSegments.get(1);
 
-        System.out.println(userId + " <-> " + userIdFromUrl);
         if(!StringUtils.equalsIgnoreCase(userId, userIdFromUrl)) {
             throw new InsufficientAuthenticationException("access denied for " + path);
         }

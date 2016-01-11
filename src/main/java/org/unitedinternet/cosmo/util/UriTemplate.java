@@ -15,17 +15,14 @@
  */
 package org.unitedinternet.cosmo.util;
 
+import org.apache.commons.lang.text.StrTokenizer;
+import org.unitedinternet.cosmo.CosmoException;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-
-import org.apache.commons.lang.text.StrTokenizer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.CosmoException;
 
 /**
  * <p>
@@ -46,14 +43,11 @@ import org.unitedinternet.cosmo.CosmoException;
  * </p>
  */
 public class UriTemplate {
-    private static final Log LOG = LogFactory.getLog(UriTemplate.class);
 
-    private String pattern;
     private ArrayList<Segment> segments;
 
     public UriTemplate(String pattern) {
-        this.pattern = pattern;
-        this.segments = new ArrayList<Segment>();
+        this.segments = new ArrayList<>();
 
         StrTokenizer tokenizer = new StrTokenizer(pattern, '/');
         while (tokenizer.hasNext()) {
@@ -182,118 +176,6 @@ public class UriTemplate {
         return buf.toString().replaceAll("/{2,}", "/");
     }
 
-    /**
-     * <p>
-     * Matches an escaped candidate uri-path against the template using the
-     * same algorithm as {@link match(boolean, String)}. Returns a
-     * <code>Match</code> instance containing the names and values of
-     * all variables found in the uri-path as specified by the
-     * template.
-     * </p>
-     *
-     * @param path the candidate uri-path
-     * @return a <code>Match</code>, or <code>null</code> if the path
-     * did not successfully match
-     */
-    public Match match(String path) {
-        return match(true, path);
-    }
-
-    /**
-     * <p>
-     * Matches a possibly-escaped candidate uri-path against the template.
-     * Returns a <code>Match</code> instance containing the names and values
-     * of all variables found in the uri-path as specified by the
-     * template.
-     * </p>
-     * <p>
-     * Each literal segment in the template must match the
-     * corresponding segment in the uri-path unless the segment is
-     * optional. For each variable segment in the template, an entry
-     * is added to the <code>Match</code> to be returned; the entry
-     * key is the variable name from the template, and the entry value
-     * is the corresponding (unescaped) token from the uri-path. If the
-     * template includes an "all" segment, a match entry with key
-     * <code>*</code> is also included containing the remainder of the
-     * uri-path after the last matching segment.
-     * </p>
-     *
-     * @param escaped whether or not the uri-path is escaped
-     * @param path the candidate uri-path
-     * @return a <code>Match</code>, or <code>null</code> if the path
-     * did not successfully match
-     */
-    public Match match(boolean escaped,
-                       String path) {
-        Match match = new Match(path);
-
-        //if (log.isDebugEnabled())
-            //log.debug("matching " + path + " to " + pattern);
-
-        StrTokenizer candidate = new StrTokenizer(path, '/');
-        Iterator<Segment> si = segments.iterator();
-
-        Segment segment = null;
-        while (si.hasNext() || (segment!=null && segment.isAll())) {
-            if (si.hasNext()) {
-                segment = si.next();
-            }
-            if (! candidate.hasNext()) {
-                // if the segment is consuming all remaining data, then we're
-                // done, since there is no more data
-                if (segment.isAll()) {
-                    break;
-                }
-                // if the segment is optional, the candidate doesn't
-                // have to have a matching segment
-                if (segment.isOptional()) { 
-                    continue;
-                }
-                // mandatory segment - not a match
-                return null;
-            }
-
-            String token = candidate.nextToken();
-
-            if (segment.isAll()) {
-                StringBuilder saved;
-                final String matched = match.get("*");
-
-                if(matched != null) {
-                    saved = new StringBuilder(match.get("*"));
-                } else {
-                    saved = new StringBuilder();
-                }
-
-                saved.append("/");
-                saved.append (escaped ? unescapeSegment(token) : token);
-                match.put("*", saved.toString());
-            } else if (segment.isVariable()) {
-                match.put(segment.getData(),
-                          escaped ? unescapeSegment(token) : token);
-            }
-            else if (! segment.getData().equals(token)) {
-                // literal segment doesn't match, so path is not a match
-                return null;
-            }
-        }
-
-        if (candidate.hasNext() && ! segment.isAll()) {
-            // candidate has more but our pattern is done
-            return null;
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("matched " + pattern);
-        }
-
-        return match;
-    }
-
-    public String getPattern() {
-        return pattern;
-    }
-
     public static final String escapeSegment(String raw) {
         try {
             return new URI(null, null, raw, null).toASCIIString();
@@ -354,23 +236,6 @@ public class UriTemplate {
 
         public boolean isAll() {
             return all;
-        }
-    }
-
-    public static class Match extends HashMap<String, String> {
-        private static final long serialVersionUID = 8091355783493490510L;
-        private String path;
-
-        public Match(String path) {
-            this.path = path;
-        }
-
-        public String getPath() {
-            return path;
-        }
-        
-        public String get(String key) {//NOPMD
-            return super.get(key);
         }
     }
 }

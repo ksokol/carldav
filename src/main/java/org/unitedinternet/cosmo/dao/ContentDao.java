@@ -41,17 +41,6 @@ public interface ContentDao extends ItemDao {
      */
     public CollectionItem createCollection(CollectionItem parent,
             CollectionItem collection);
-    
-    /**
-     * Update collection and children.  The set of children can contain
-     * new items, existing items, and item removals.  An item removal
-     * is recognized by Item.isActive==false.
-     * @param collection collection to update
-     * @param children children to updated
-     * @return updated collection
-     */
-    public CollectionItem updateCollection(CollectionItem collection,
-            Set<ContentItem> children);
 
     /**
      * Update an existing collection.

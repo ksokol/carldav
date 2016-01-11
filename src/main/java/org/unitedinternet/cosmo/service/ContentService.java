@@ -29,33 +29,6 @@ import java.util.Set;
 public interface ContentService {
 
     /**
-     * Get the root item for a user
-     *
-     * @param user The givern user.
-     * @return The root item for a user.
-     */
-    HomeCollectionItem getRootItem(User user);
-
-    /**
-     * Get the root item for a user
-     *
-     * @param user The givern user.
-     * @param forceReload if true, cleans hibernate session before loading.
-     * @return The root item for a user.
-     */
-    HomeCollectionItem getRootItem(User user, boolean forceReload);
-
-    /**
-     * Find an item with the specified uid. The return type will be one of
-     * ContentItem, CollectionItem, CalendarCollectionItem, CalendarItem.
-     *
-     * @param uid
-     *            uid of item to find
-     * @return item represented by uid
-     */
-    Item findItemByUid(String uid);
-
-    /**
      * Find content item by path. Path is of the format:
      * /username/parent1/parent2/itemname.
      * @param path The given path.
@@ -63,17 +36,6 @@ public interface ContentService {
      *
      */
     Item findItemByPath(String path);
-    
-    /**
-     * Find content item by path relative to the identified parent
-     * item.
-     * @param path The pathe relative.
-     * @param parentUid Identified parent item.
-     * @return The content item,.
-     *
-     */
-    Item findItemByPath(String path,
-                        String parentUid);
 
     /**
      * Remove an item from a collection.  The item will be removed if
@@ -94,25 +56,6 @@ public interface ContentService {
      */
     CollectionItem createCollection(CollectionItem parent,
                                     CollectionItem collection);
-
-    /**
-     * Create a new collection with an initial set of items.
-     * The initial set of items can include new items and
-     * existing items.  New items will be created and associated
-     * to the new collection and existing items will be updated
-     * and associated to the new collection.  
-     * 
-     * @param parent
-     *            parent of collection.
-     * @param collection
-     *            collection to create
-     * @param children
-     *            collection children
-     * @return newly created collection
-     */
-    CollectionItem createCollection(CollectionItem parent,
-                                    CollectionItem collection,
-                                    Set<Item> children);
 
     /**
      * Remove collection item
@@ -181,17 +124,17 @@ public interface ContentService {
      * @return updated content item
      */
     ContentItem updateContent(ContentItem content);
-    
-    
+
+
     /**
      * Remove content item
-     * 
+     *
      * @param content
      *            content item to remove
      */
     void removeContent(ContentItem content);
 
-    
+
     /**
      * find the set of collection items as children of the given collection item.
      * 

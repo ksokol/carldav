@@ -21,30 +21,20 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ModificationUid;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.NoteOccurrence;
 import org.unitedinternet.cosmo.model.Stamp;
-import org.unitedinternet.cosmo.model.StampUtils;
-import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
-import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -67,72 +57,12 @@ public class StandardContentService implements ContentService {
         this.lockManager = lockManager;
     }
 
-    public HomeCollectionItem getRootItem(User user, boolean forceReload) {
-        return contentDao.getRootItem(user, forceReload);
-    }
-
-    public HomeCollectionItem getRootItem(User user) {
-        return contentDao.getRootItem(user);
-    }
-
-    /**
-     * Find an item with the specified uid.  If the uid is found, return
-     * the item found.  If the uid represents a recurring NoteItem occurrence
-     * (parentUid:recurrenceId), return a NoteOccurrence.
-     *
-     * @param uid
-     *            uid of item to find
-     * @return item represented by uid
-     */
-    public Item findItemByUid(String uid) {
-        Item item = contentDao.findItemByUid(uid);
-        
-        // return item if found
-        if(item!=null) {
-            return item;
-        }
-        
-        // Handle case where uid represents an occurence of a
-        // recurring item.
-        if(uid.indexOf(ModificationUid.RECURRENCEID_DELIMITER)!=-1) {
-            ModificationUidImpl modUid;
-            
-            try {
-                modUid = new ModificationUidImpl(uid);
-            } catch (ModelValidationException e) {
-                // If ModificationUid is invalid, item isn't present
-                return null;
-            }
-            // Find the parent, and then verify that the recurrenceId is a valid
-            // occurrence date for the recurring item.
-            NoteItem parent = (NoteItem) contentDao.findItemByUid(modUid.getParentUid());
-            if(parent==null) {
-                return null;
-            }
-            else {
-                return getNoteOccurrence(parent, modUid.getRecurrenceId());
-            }
-        }
-        
-        return null;
-    }
-
     /**
      * Find content item by path. Path is of the format:
      * /username/parent1/parent2/itemname.
      */
     public Item findItemByPath(String path) {
         return contentDao.findItemByPath(path);
-    }
-    
-    /**
-     * Find content item by path relative to the identified parent
-     * item.
-     *
-     */
-    public Item findItemByPath(String path,
-                               String parentUid) {
-        return contentDao.findItemByPath(path, parentUid);
     }
 
     /**
@@ -160,76 +90,6 @@ public class StandardContentService implements ContentService {
         return contentDao.createCollection(parent, collection);
     }
 
-    /**
-     * Create a new collection.
-     * 
-     * @param parent
-     *            parent of collection.
-     * @param collection
-     *            collection to create
-     * @param children
-     *            collection children
-     * @return newly created collection
-     */
-    public CollectionItem createCollection(CollectionItem parent,
-            CollectionItem collection, Set<Item> children) {
-        // Obtain locks to all collections involved.  A collection is involved
-        // if it is the parent of one of the children.  If all children are new
-        // items, then no locks are obtained.
-        Set<CollectionItem> locks = acquireLocks(children);
-        
-        try {
-            // Create the new collection
-            collection = contentDao.createCollection(parent, collection);
-            
-            Set<ContentItem> childrenToUpdate = new LinkedHashSet<ContentItem>();
-            
-            // Keep track of NoteItem modifications that need to be processed
-            // after the master NoteItem.
-            ArrayList<NoteItem> modifications = new ArrayList<NoteItem>(); 
-            
-            // Either create or update each item
-            for (Item item : children) {
-                if (item instanceof NoteItem) {
-                    
-                    NoteItem note = (NoteItem) item;
-                    
-                    // If item is a modification and the master note
-                    // hasn't been created, then we need to process
-                    // the master first.
-                    if(note.getModifies()!=null) {
-                        modifications.add(note);
-                    }
-                    else {
-                        childrenToUpdate.add(note);
-                    }
-                }
-            }
-            
-            // add modifications to end of set
-            for(NoteItem mod: modifications) {
-                childrenToUpdate.add(mod);
-            }
-            
-            // update all children and collection
-            collection = contentDao.updateCollection(collection, childrenToUpdate);
-            
-            // update timestamps on all collections involved
-            for(CollectionItem lockedCollection : locks) {
-               contentDao.updateCollectionTimestamp(lockedCollection);
-            }
-            
-            // update timestamp on new collection
-            collection = contentDao.updateCollectionTimestamp(collection);
-            
-            // get latest timestamp
-            return collection;
-            
-        } finally {
-           releaseLocks(locks);
-        }
-    }
-    
     /**
      * Update collection item
      * 
@@ -572,22 +432,5 @@ public class StandardContentService implements ContentService {
         for(CollectionItem lock : locks) {
             lockManager.unlockCollection(lock);
         }
-    }
-    
-    private NoteOccurrence getNoteOccurrence(NoteItem parent, net.fortuna.ical4j.model.Date recurrenceId) {
-        EventStamp eventStamp = StampUtils.getEventStamp(parent);
-        
-        // parent must be a recurring event
-        if(eventStamp==null || !eventStamp.isRecurring()) {
-            return null;
-        }
-        
-        // verify that occurrence date is valid
-        RecurrenceExpander expander = new RecurrenceExpander();
-        if(expander.isOccurrence(eventStamp.getEventCalendar(), recurrenceId)) {
-            return NoteOccurrenceUtil.createNoteOccurrence(recurrenceId, parent);
-        }
-        
-        return null;
     }
 }

@@ -70,10 +70,6 @@ public interface ExtendedDavConstants extends DavConstants {
     CosmoQName RESOURCE_TYPE_ADDRESSBOOK =
             new CosmoQName(NAMESPACE_CARDDAV.getURI(), ADDRESSBOOK, NAMESPACE_CARDDAV.getPrefix());
 
-    UriTemplate TEMPLATE_COLLECTION =
-        new UriTemplate("/collection/{uid}/*");
-    UriTemplate TEMPLATE_ITEM =
-        new UriTemplate("/item/{uid}/*");
     UriTemplate TEMPLATE_HOME =
         new UriTemplate("/{username}/*");
     UriTemplate CARD_HOME =

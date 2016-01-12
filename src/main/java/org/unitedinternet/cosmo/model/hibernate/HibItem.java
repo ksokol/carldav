@@ -30,13 +30,11 @@ import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -79,13 +77,13 @@ public abstract class HibItem extends HibAuditableObject implements Item {
 
     @Column(name = "uid", nullable = false, length=255)
     @NotNull
-    @Length(min=1, max=255)
     @NaturalId
+    @Length(min = 1, max = 255)
     private String uid;
 
     @Column(name = "itemname", nullable = false, length=255)
     @NotNull
-    @Length(min=1, max=255)
+    @Length(min = 1, max = 255)
     private String name;
 
     @Column(name = "displayname", length=1024)
@@ -102,8 +100,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @Version
     @Column(name="version", nullable = false)
     private Integer version;
-
-    private transient Boolean isActive = Boolean.TRUE;
 
     @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", 
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
@@ -230,22 +226,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     }
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#removeAttributes(java.lang.String)
-     */
-    public void removeAttributes(String namespace) {
-        ArrayList<QName> toRemove = new ArrayList<QName>();
-        for (QName qname: attributes.keySet()) {
-            if (qname.getNamespace().equals(namespace)) {
-                toRemove.add(qname);
-            }
-        }
-
-        for(QName qname: toRemove) {
-            removeAttribute(qname);
-        }
-    }
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getAttribute(java.lang.String)
      */
     public Attribute getAttribute(String name) {
@@ -257,13 +237,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      */
     public Attribute getAttribute(QName qname) {
         return attributes.get(qname);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getAttributeValue(java.lang.String)
-     */
-    public Object getAttributeValue(String name) {
-        return getAttributeValue(new HibQName(name));
     }
 
     /* (non-Javadoc)
@@ -298,21 +271,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
             throw new IllegalArgumentException("attribute " + key + " not found");
         }
     }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getAttributes(java.lang.String)
-     */
-    public Map<String, Attribute> getAttributes(String namespace) {
-        HashMap<String, Attribute> attrs = new HashMap<String, Attribute>();
-        for(Entry<QName, Attribute> e: attributes.entrySet()) {
-            if(e.getKey().getNamespace().equals(namespace)) {
-                attrs.put(e.getKey().getLocalName(), e.getValue());
-            }
-        }
-
-        return attrs;
-    }
-
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getClientCreationDate()
@@ -464,20 +422,6 @@ public abstract class HibItem extends HibAuditableObject implements Item {
         }
         
         return null;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getIsActive()
-     */
-    public Boolean getIsActive() {
-        return isActive;
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setIsActive(java.lang.Boolean)
-     */
-    public void setIsActive(Boolean isActive) {
-        this.isActive = isActive;
     }
 
     /**

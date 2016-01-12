@@ -262,9 +262,6 @@ public class StandardContentService implements ContentService {
                if(content.getCreationDate()==null) {
                    contentDao.createContent(parents, content);
                }
-               else if(Boolean.FALSE.equals(content.getIsActive())) {
-                   contentDao.removeContent(content);
-               }
                else {
                    contentDao.updateContent(content);
                }

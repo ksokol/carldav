@@ -179,7 +179,6 @@ public class EntityConverterTest {
         
         mod = findModByRecurrenceIdForNoteItems(items, "20060104T190000Z");
         Assert.assertNotNull(mod);
-        Assert.assertFalse(mod.getIsActive().booleanValue());
         
         mod = findModByRecurrenceIdForNoteItems(items, "20060105T190000Z");
         Assert.assertNotNull(mod);

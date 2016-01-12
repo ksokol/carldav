@@ -80,12 +80,6 @@ public interface Item extends AuditableObject{
     void removeAttribute(QName qname);
 
     /**
-     * Remove all attributes in a namespace.
-     * @param namespace namespace of attributes to remove
-     */
-    void removeAttributes(String namespace);
-
-    /**
      * Get attribute in default namespace with local name.
      * @param name local name of attribute
      * @return attribute in default namespace with given name
@@ -98,13 +92,6 @@ public interface Item extends AuditableObject{
      * @return attribute with qualified name.
      */
     Attribute getAttribute(QName qname);
-
-    /**
-     * Get attribute value with local name in default namespace
-     * @param name local name of attribute
-     * @return attribute value
-     */
-    Object getAttributeValue(String name);
 
     /**
      * Get attribute value with qualified name
@@ -127,14 +114,6 @@ public interface Item extends AuditableObject{
      * @param value value to update attribute
      */
     void setAttribute(QName key, Object value);
-
-    /**
-     * Return Attributes for a given namespace.  Attributes are returned
-     * in a Map indexed by the name of the attribute.
-     * @param namespace namespace of the Attributes to return
-     * @return map of Attributes indexed by the name of the attribute
-     */
-    Map<String, Attribute> getAttributes(String namespace);
 
     Date getClientCreationDate();
 
@@ -181,17 +160,5 @@ public interface Item extends AuditableObject{
      * @deprecated
      */
     CollectionItem getParent();
-
-    /**
-     * Transient attribute used to mark item for deletion.
-     * @return true if item should be deleted
-     */
-    Boolean getIsActive();
-
-    /**
-     * Transient attribute used to mark item for deletion.
-     * @param isActive true if item should be deleted
-     */
-    void setIsActive(Boolean isActive);
 
 }

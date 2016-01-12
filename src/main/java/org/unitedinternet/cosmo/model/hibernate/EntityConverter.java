@@ -717,15 +717,6 @@ public class EntityConverter {
         for (Entry<Date, VEvent> entry : exceptions.entrySet()) {
             syncException(entry.getValue(), masterNote);
         }
-
-        // remove old exceptions
-        for (NoteItem noteItem : masterNote.getModifications()) {
-            EventExceptionStamp eventException =
-                StampUtils.getEventExceptionStamp(noteItem);
-            if (eventException==null || !exceptions.containsKey(eventException.getRecurrenceId())) {
-                noteItem.setIsActive(false);
-            }
-        }
     }
 
     /**

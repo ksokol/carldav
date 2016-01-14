@@ -61,6 +61,10 @@ public class HibEntityFactory implements EntityFactory {
         return new HibEventStamp(note);
     }
 
+    public EventStamp createJournalStamp(NoteItem note) {
+        return new HibJournalStamp(note);
+    }
+
     public FileItem createFileItem() {
         return new HibFileItem();
     }

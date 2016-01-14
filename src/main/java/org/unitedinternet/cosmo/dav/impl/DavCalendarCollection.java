@@ -1,28 +1,13 @@
-/*
- * Copyright 2006-2007 Open Source Applications Foundation
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.unitedinternet.cosmo.dav.impl;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -68,7 +53,9 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 public class DavCalendarCollection extends DavCollectionBase implements CaldavConstants, ICalendarConstants {
-    private static final Log LOG =  LogFactory.getLog(DavCalendarCollection.class);
+
+    private static final Logger LOG =  LoggerFactory.getLogger(DavCalendarCollection.class);
+
     private final Set<String> deadPropertyFilter = new HashSet<>(10);
 
     public DavCalendarCollection(CollectionItem collection,
@@ -92,17 +79,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     }
 
     /** */
-    public DavCalendarCollection(DavResourceLocator locator,
-                                 DavResourceFactory factory,
-                                 EntityFactory entityFactory)
-        throws CosmoDavException {
-        this(entityFactory.createCollection(), locator, factory, entityFactory);
-        getItem().addStamp(entityFactory.createCalendarCollectionStamp((CollectionItem) getItem()));
-    }
-
-    // Jackrabbit WebDavResource
-
-    /** */
     public String getSupportedMethods() {
         // calendar collections not allowed inside calendar collections
         return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT";
@@ -121,7 +97,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     public Set<DavCalendarResource> findMembers(CalendarFilter filter)
         throws CosmoDavException {
         Set<DavCalendarResource> members =
-            new HashSet<DavCalendarResource>();
+            new HashSet<>();
 
         CollectionItem collection = (CollectionItem) getItem();
         for (ContentItem memberItem :
@@ -131,7 +107,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 members.add((DavCalendarResource) resource);
             }
         }
-        
+
         return members;
     }
 
@@ -153,7 +129,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         rt.add(RESOURCE_TYPE_CALENDAR);
         return rt;
     }
-    
+
     public CalendarCollectionStamp getCalendarCollectionStamp() {
         return StampUtils.getCalendarCollectionStamp(getItem());
     }
@@ -188,7 +164,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         if(item!=null && item.getEntityTag()!=null) {
             properties.add(new GetCTag(item.getEntityTag()));
         }
-        
+
         properties.add(new SupportedCalendarComponentSet());
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());
@@ -200,7 +176,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
     }
 
-    /** 
+    /**
      * The CALDAV:supported-calendar-component-set property is
       used to specify restrictions on the calendar component types that
       calendar object resources may contain in a calendar collection.
@@ -224,7 +200,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         if (property.getValue() == null) {
             throw new UnprocessableEntityException("Property " + name + " requires a value");
         }
-        
+
         if(!(create && name.equals(SUPPORTEDCALENDARCOMPONENTSET)) &&
             (name.equals(SUPPORTEDCALENDARCOMPONENTSET) ||
                 name.equals(SUPPORTEDCALENDARDATA) ||
@@ -232,7 +208,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 name.equals(GET_CTAG))) {
                 throw new ProtectedPropertyModificationException(name);
         }
-        
+
 
         if (name.equals(CALENDARDESCRIPTION)) {
             cc.setDescription(property.getValueText());
@@ -270,13 +246,12 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         if (name.equals(CALENDARTIMEZONE)) {
             cc.setTimezoneCalendar(null);
-            return;
         }
     }
 
     /** */
     protected Set<String> getDeadPropertyFilter() {
-        Set<String> copy = new HashSet<String>();
+        Set<String> copy = new HashSet<>();
         copy.addAll(super.getDeadPropertyFilter());
         copy.addAll(deadPropertyFilter);
         return copy;
@@ -291,6 +266,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         if (member instanceof DavEvent) {
             saveEvent(member);
+        } else if(member instanceof DavJournal) {
+            saveJournal(member);
         } else {
             try {
                 super.saveContent(member);
@@ -302,12 +279,12 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private void saveEvent(DavItemContent member)
         throws CosmoDavException {
-        
+
         ContentItem content = (ContentItem) member.getItem();
         EventStamp event = StampUtils.getEventStamp(content);
         EntityConverter converter = new EntityConverter(getEntityFactory());
-        Set<ContentItem> toUpdate = new LinkedHashSet<ContentItem>();
-        
+        Set<ContentItem> toUpdate = new LinkedHashSet<>();
+
         try {
             // convert icalendar representation to cosmo data model
             toUpdate.addAll(converter.convertEventCalendar(
@@ -315,7 +292,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
-        
+
         if (event.getCreationDate()!=null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("updating event " + member.getResourcePath());
@@ -328,7 +305,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {
                 throw new LockedException();
-            } 
+            }
         } else {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("creating event " + member.getResourcePath());
@@ -337,6 +314,45 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             try {
                 getContentService().createContentItems(
                         (CollectionItem) getItem(), toUpdate);
+            } catch (IcalUidInUseException e) {
+                throw new UidConflictException(e);
+            } catch (CollectionLockedException e) {
+                throw new LockedException();
+            }
+        }
+
+        member.setItem(content);
+    }
+
+    private void saveJournal(DavItemContent member) throws CosmoDavException {
+        ContentItem content = (ContentItem) member.getItem();
+        EventStamp event = StampUtils.getEventStamp(content);
+        EntityConverter converter = new EntityConverter(getEntityFactory());
+        Set<ContentItem> toUpdate = new LinkedHashSet<>();
+
+        try {
+            // convert icalendar representation to cosmo data model
+            toUpdate.add(converter.convertJournalCalendar((NoteItem) content, event.getEventCalendar()));
+        } catch (ModelValidationException e) {
+            throw new InvalidCalendarResourceException(e.getMessage());
+        }
+
+        if (event.getCreationDate()!=null) {
+            LOG.debug("updating journal {}", member.getResourcePath());
+
+            try {
+                getContentService().updateContentItems(content.getParents(),
+                        toUpdate);
+            } catch (IcalUidInUseException e) {
+                throw new UidConflictException(e);
+            } catch (CollectionLockedException e) {
+                throw new LockedException();
+            }
+        } else {
+            LOG.debug("creating journal {}", member.getResourcePath());
+
+            try {
+                getContentService().createContentItems((CollectionItem) getItem(), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {

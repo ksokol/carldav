@@ -93,4 +93,6 @@ public interface EntityFactory {
      * @return new QName
      */
     QName createQName(String namespace, String localname);
+
+    EventStamp createJournalStamp(NoteItem note);
 }

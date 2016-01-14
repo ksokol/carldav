@@ -934,4 +934,168 @@ class EvolutionTests extends IntegrationTestSupport {
                 .andExpect(text(request1))
     }
 
+    @Test
+    void fetchingMemosFirstTime() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VJOURNAL">
+                                <C:time-range start="20151210T071757Z" end="20160218T071757Z"/>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """<D:multistatus xmlns:D="DAV:"/>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VJOURNAL">
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
+
+    @Test
+    void addVJournal() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                            <C:calendar-data/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VJOURNAL">
+                                <C:prop-filter name="UID">
+                                  <C:text-match collation="i;octet">20160114T072824Z-8357-1000-1795-3@localhost</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """<D:multistatus xmlns:D="DAV:"/>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                        VERSION:2.0
+                        BEGIN:VJOURNAL
+                        UID:20160114T072824Z-8357-1000-1795-3@localhost
+                        DTSTAMP:20160114T065614Z
+                        SUMMARY:summary
+                        DESCRIPTION:description
+                        DTSTART;VALUE=DATE:20160114
+                        CLASS:PUBLIC
+                        CATEGORIES:Favorites
+                        CATEGORIES:Gifts
+                        SEQUENCE:1
+                        CREATED:20160114T072907Z
+                        LAST-MODIFIED:20160114T072907Z
+                        ATTACH;VALUE=BINARY;ENCODING=BASE64;
+                         X-EVOLUTION-CALDAV-ATTACHMENT-NAME=20160114T072824Z-8357-1000-1795-3@local
+                         host-file.txt:ZGVtbwo=
+                        END:VJOURNAL
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result2 = mockMvc.perform(put("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request2)
+                .header(IF_NONE_MATCH, "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result2.getResponse().getHeader(ETAG)
+
+        def response3 = """\
+                            BEGIN:VCALENDAR
+                            CALSCALE:GREGORIAN
+                            PRODID:-//Ximian//NONSGML Evolution Calendar//EN
+                            VERSION:2.0
+                            BEGIN:VJOURNAL
+                            UID:20160114T072824Z-8357-1000-1795-3@localhost
+                            DTSTAMP:20160114T065614Z
+                            SUMMARY:summary
+                            DESCRIPTION:description
+                            DTSTART;VALUE=DATE:20160114
+                            CLASS:PUBLIC
+                            CATEGORIES:Favorites
+                            CATEGORIES:Gifts
+                            SEQUENCE:1
+                            CREATED:20160114T072907Z
+                            LAST-MODIFIED:20160114T072907Z
+                            ATTACH;VALUE=BINARY;ENCODING=BASE64;X-EVOLUTION-CALDAV-ATTACHMENT-NAME=20160114T072824Z-8357-1000-1795-3@localhost-file.txt:ZGVtbwo=
+                            END:VJOURNAL
+                            END:VCALENDAR
+                            """.stripIndent()
+
+        mockMvc.perform(get("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(header().string(CONTENT_TYPE, is("text/calendar; charset=UTF-8")))
+                .andExpect(header().string(LAST_MODIFIED, notNullValue()))
+                .andExpect(header().string(CONTENT_LENGTH, "549"))
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(text(response3))
+                .andReturn()
+
+        def response4 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/20160114T072824Z-8357-1000-1795-3%40localhost.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                            <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR CALSCALE:GREGORIAN PRODID:-//Ximian//NONSGML Evolution Calendar//EN VERSION:2.0 BEGIN:VJOURNAL UID:20160114T072824Z-8357-1000-1795-3@localhost DTSTAMP:20160114T065614Z SUMMARY:summary DESCRIPTION:description DTSTART;VALUE=DATE:20160114 CLASS:PUBLIC CATEGORIES:Favorites CATEGORIES:Gifts SEQUENCE:1 CREATED:20160114T072907Z LAST-MODIFIED:20160114T072907Z ATTACH;VALUE=BINARY;ENCODING=BASE64;X-EVOLUTION-CALDAV-ATTACHMENT-NAME=20160114T072824Z-8357-1000-1795-3@localhost-file.txt:ZGVtbwo= END:VJOURNAL END:VCALENDAR</C:calendar-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response4))
+    }
 }

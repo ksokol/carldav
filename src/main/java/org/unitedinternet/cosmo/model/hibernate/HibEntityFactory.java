@@ -20,7 +20,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.QName;
 
 /**
  * EntityFactory implementation that uses Hibernate 
@@ -37,10 +36,6 @@ public class HibEntityFactory implements EntityFactory {
 
     public EventStamp createJournalStamp(NoteItem note) {
         return new HibJournalStamp(note);
-    }
-
-    public QName createQName(String namespace, String localname) {
-        return new HibQName(namespace, localname);
     }
 
     public String generateUid() {

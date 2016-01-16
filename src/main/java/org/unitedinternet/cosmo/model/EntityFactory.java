@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
-
 /**
  * Factory api for creating model objects.
  */
@@ -28,14 +26,6 @@ public interface EntityFactory {
      * @return unique identifier
      */
     String generateUid();
-
-    /**
-     * Create new QName
-     * @param namespace 
-     * @param localname
-     * @return new QName
-     */
-    QName createQName(String namespace, String localname);
 
     EventStamp createJournalStamp(NoteItem note);
 }

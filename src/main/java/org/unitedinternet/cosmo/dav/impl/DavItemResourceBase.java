@@ -50,6 +50,7 @@ import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;
 import org.w3c.dom.Element;
@@ -439,7 +440,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         Namespace ns = name.getNamespace();
         String uri = ns != null ? ns.getURI() : "";
 
-        return entityFactory.createQName(uri, name.getName());
+        return new HibQName(uri, name.getName());
     }
 
     private DavPropertyName qNameToPropName(QName qname) {

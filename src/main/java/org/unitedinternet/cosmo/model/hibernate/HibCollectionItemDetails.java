@@ -15,15 +15,12 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.io.Serializable;
-import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -53,11 +50,7 @@ public class HibCollectionItemDetails implements CollectionItemDetails,Serializa
     @ManyToOne(targetEntity = HibItem.class)
     @JoinColumn(name = "itemid", nullable = false)
     public Item item;
-    
-    @Column(name = "createdate", nullable=false)
-    @Type(type="long_timestamp")
-    private Date creationDate = new Date();
- 
+
     public HibCollectionItemDetails() {}
     
     public HibCollectionItemDetails(CollectionItem collection,
@@ -80,9 +73,5 @@ public class HibCollectionItemDetails implements CollectionItemDetails,Serializa
     
     public Item getItem() {
         return item;
-    }
-
-    public Date getTimestamp() {
-        return creationDate;
     }
 }

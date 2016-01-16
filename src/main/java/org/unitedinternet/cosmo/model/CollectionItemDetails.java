@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.Date;
-
 /**
  * Represents the relationship between an item and a collection.
  * An item can belong to many collection.  This relationship
@@ -34,9 +32,4 @@ public interface CollectionItemDetails {
      * @return item
      */
     public Item getItem();
-    
-    /**
-     * @return date item was added to collection
-     */
-    public Date getTimestamp();
 }

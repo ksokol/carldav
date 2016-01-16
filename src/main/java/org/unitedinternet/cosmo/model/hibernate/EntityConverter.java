@@ -779,8 +779,7 @@ public class EntityConverter {
             }
         }
 
-        HibEventExceptionStamp exceptionStamp =
-            entityFactory.createEventExceptionStamp(noteMod);
+        HibEventExceptionStamp exceptionStamp =new HibEventExceptionStamp(noteMod);
         exceptionStamp.setEventCalendar(exceptionCal);
         exceptionStamp.setExceptionEvent(event);
         noteMod.addStamp(exceptionStamp);

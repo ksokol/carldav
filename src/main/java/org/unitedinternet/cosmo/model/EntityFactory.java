@@ -31,14 +31,6 @@ public interface EntityFactory {
     String generateUid();
     
     /**
-     * Create new EventExceptionStamp
-     * @param note associated NoteItem
-     * @return new EventExceptionStamp
-     */
-    HibEventExceptionStamp createEventExceptionStamp(NoteItem note);
-    
-    
-    /**
      * Create new FileItem
      * @return new FileItem
      */

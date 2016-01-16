@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.calendar.query.impl;
 import net.fortuna.ical4j.model.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
@@ -34,7 +35,12 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(StandardCalendarQueryProcessor.class);
 
     private CalendarDao calendarDao;
-    private EntityConverter entityConverter = new EntityConverter(null);
+    private final EntityConverter entityConverter;
+
+    public StandardCalendarQueryProcessor(final EntityConverter entityConverter) {
+        Assert.notNull(entityConverter, "entityConverter is null");
+        this.entityConverter = entityConverter;
+    }
 
     /**
      * Filter query.

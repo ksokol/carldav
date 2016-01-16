@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -87,18 +88,16 @@ public class DavCollectionBase extends DavItemResourceBase implements
         DEAD_PROPERTY_FILTER.add(CollectionItem.class.getName());
     }
 
-    public DavCollectionBase(CollectionItem collection,
-            DavResourceLocator locator, DavResourceFactory factory,
-            EntityFactory entityFactory) throws CosmoDavException {
-        super(collection, locator, factory, entityFactory);
+    public DavCollectionBase(CollectionItem collection, DavResourceLocator locator, DavResourceFactory factory, IdGenerator idGenerator) throws CosmoDavException {
+        super(collection, locator, factory, idGenerator);
 
         members = new ArrayList<>();
     }
 
     public DavCollectionBase(DavResourceLocator locator,
-            DavResourceFactory factory, EntityFactory entityFactory)
+            DavResourceFactory factory, IdGenerator idGenerator)
             throws CosmoDavException {
-        this(new HibCollectionItem(), locator, factory, entityFactory);
+        this(new HibCollectionItem(), locator, factory, idGenerator);
     }
 
     // Jackrabbit WebDavResource

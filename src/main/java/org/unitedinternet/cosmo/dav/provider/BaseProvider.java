@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav.provider;
 
 import carldav.jackrabbit.webdav.CustomMultiStatus;
+import carldav.service.generator.IdGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
@@ -39,7 +40,6 @@ import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
-import org.unitedinternet.cosmo.model.EntityFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,17 +57,12 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
     private static final Log LOG = LogFactory.getLog(BaseProvider.class);
 
     private DavResourceFactory resourceFactory;
-    private EntityFactory entityFactory;
-    
-    /**
-     * 
-     * @param resourceFactory 
-     * @param entityFactory 
-     */
+    private IdGenerator idGenerator;
+
     public BaseProvider(DavResourceFactory resourceFactory,
-            EntityFactory entityFactory) {
+            IdGenerator idGenerator) {
         this.resourceFactory = resourceFactory;
-        this.entityFactory = entityFactory;
+        this.idGenerator = idGenerator;
     }
 
     // DavProvider methods
@@ -288,8 +283,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         return resourceFactory;
     }
     
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
     }
 
     /**

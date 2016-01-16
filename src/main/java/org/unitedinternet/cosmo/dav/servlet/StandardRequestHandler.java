@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.servlet;
 
+import carldav.service.generator.IdGenerator;
 import org.apache.abdera.util.EntityTag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,7 +44,6 @@ import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
 import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
 import org.unitedinternet.cosmo.dav.provider.FileProvider;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import java.io.IOException;
@@ -66,16 +66,16 @@ public class StandardRequestHandler extends AbstractController implements Server
 
     private final DavResourceLocatorFactory locatorFactory;
     private final DavResourceFactory resourceFactory;
-    private final EntityFactory entityFactory;
+    private final IdGenerator idGenerator;
 
-    public StandardRequestHandler(final DavResourceLocatorFactory locatorFactory, final DavResourceFactory resourceFactory, final EntityFactory entityFactory) {
+    public StandardRequestHandler(final DavResourceLocatorFactory locatorFactory, final DavResourceFactory resourceFactory, final IdGenerator idGenerator) {
         super.setSupportedMethods(null);
         Assert.notNull(locatorFactory, "locatorFactory is null");
         Assert.notNull(resourceFactory, "resourceFactory is null");
-        Assert.notNull(entityFactory, "entityFactory is null");
+        Assert.notNull(idGenerator, "idGenerator is null");
         this.locatorFactory = locatorFactory;
         this.resourceFactory = resourceFactory;
-        this.entityFactory = entityFactory;
+        this.idGenerator = idGenerator;
     }
     /**
      * <p>
@@ -195,21 +195,21 @@ public class StandardRequestHandler extends AbstractController implements Server
      */
     protected DavProvider createProvider(WebDavResource resource) {
         if (resource instanceof DavHomeCollection) {
-            return new CollectionProvider(resourceFactory, entityFactory);
+            return new CollectionProvider(resourceFactory, idGenerator);
         }
         if (resource instanceof DavCalendarCollection) {
-            return new CollectionProvider(resourceFactory, entityFactory);
+            return new CollectionProvider(resourceFactory, idGenerator);
         }
         if (resource instanceof DavCardCollection) {
-            return new CollectionProvider(resourceFactory, entityFactory);
+            return new CollectionProvider(resourceFactory, idGenerator);
         }
         if (resource instanceof DavCollectionBase) {
-            return new CollectionProvider(resourceFactory, entityFactory);
+            return new CollectionProvider(resourceFactory, idGenerator);
         }
         if (resource instanceof DavCalendarResource) {
-            return new CalendarResourceProvider(resourceFactory, entityFactory);
+            return new CalendarResourceProvider(resourceFactory, idGenerator);
         }
-        return new FileProvider(resourceFactory, entityFactory);
+        return new FileProvider(resourceFactory, idGenerator);
     }
 
     /**

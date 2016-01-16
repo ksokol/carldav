@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -22,7 +23,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
@@ -43,9 +43,9 @@ public class DavEvent extends DavCalendarResource {
     /** */
     public DavEvent(DavResourceLocator locator,
                     DavResourceFactory factory,
-                    EntityFactory entityFactory)
+                    IdGenerator idGenerator)
         throws CosmoDavException {
-        this(new HibNoteItem(), locator, factory, entityFactory);
+        this(new HibNoteItem(), locator, factory, idGenerator);
         getItem().addStamp(new HibEventStamp(getItem()));
     }
     
@@ -53,9 +53,9 @@ public class DavEvent extends DavCalendarResource {
     public DavEvent(NoteItem item,
                     DavResourceLocator locator,
                     DavResourceFactory factory,
-                    EntityFactory entityFactory)
+                    IdGenerator idGenerator)
         throws CosmoDavException {
-        super(item, locator, factory, entityFactory);
+        super(item, locator, factory, idGenerator);
     }
 
     // our methods
@@ -64,7 +64,7 @@ public class DavEvent extends DavCalendarResource {
      * Returns the calendar object associated with this resource.
      */
     public Calendar getCalendar() {
-        return new EntityConverter(null).convertNote((NoteItem)getItem());
+        return new EntityConverter(getIdGenerator()).convertNote((NoteItem)getItem());
     }
     
     public EventStamp getEventStamp() {

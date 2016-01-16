@@ -1,5 +1,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -7,7 +8,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
@@ -19,23 +19,23 @@ public class DavJournal extends DavCalendarResource {
 
     public DavJournal(DavResourceLocator locator,
                       DavResourceFactory factory,
-                      EntityFactory entityFactory)
+                      IdGenerator idGenerator)
         throws CosmoDavException {
-        this(new HibNoteItem(), locator, factory, entityFactory);
+        this(new HibNoteItem(), locator, factory, idGenerator);
         getItem().addStamp(new HibJournalStamp(getItem()));
     }
 
     public DavJournal(NoteItem item,
                       DavResourceLocator locator,
                       DavResourceFactory factory,
-                      EntityFactory entityFactory)
+                      IdGenerator idGenerator)
         throws CosmoDavException {
-        super(item, locator, factory, entityFactory);
+        super(item, locator, factory, idGenerator);
     }
 
     public Calendar getCalendar() {
         NoteItem note = (NoteItem) getItem();
-        return new EntityConverter(null).convertNote(note);
+        return new EntityConverter(getIdGenerator()).convertNote(note);
     }
 
     public EventStamp getEventStamp() {

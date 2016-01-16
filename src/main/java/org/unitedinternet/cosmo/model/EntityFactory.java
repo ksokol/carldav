@@ -19,11 +19,4 @@ package org.unitedinternet.cosmo.model;
  * Factory api for creating model objects.
  */
 public interface EntityFactory {
-    
-    /**
-     * Generate a unique identifier that can be used as
-     * the uid of an entity.
-     * @return unique identifier
-     */
-    String generateUid();
 }

@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -43,12 +44,12 @@ import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
@@ -78,17 +79,13 @@ import java.util.Vector;
  * potentially also {@link NoteOccurrence}s.
  */
 public class EntityConverter { 
-    private static final TimeZoneRegistry TIMEZONE_REGISTRY =
-        TimeZoneRegistryFactory.getInstance().createRegistry();
+    private static final TimeZoneRegistry TIMEZONE_REGISTRY = TimeZoneRegistryFactory.getInstance().createRegistry();
 
-    private EntityFactory entityFactory;
+    private final IdGenerator idGenerator;
 
-    /**
-     * Constructor.
-     * @param entityFactory The entity factory.
-     */
-    public EntityConverter(EntityFactory entityFactory) {
-        this.entityFactory = entityFactory;
+    public EntityConverter(IdGenerator idGenerator) {
+        Assert.notNull(idGenerator, "idGenerator is null");
+        this.idGenerator = idGenerator;
     }
     
     /**
@@ -150,7 +147,7 @@ public class EntityConverter {
         }
 
         if (note.getUid() == null) {
-            note.setUid(entityFactory.generateUid());
+            note.setUid(idGenerator.nextStringIdentifier());
         }
 
         updateEventInternal(note, calendar);
@@ -175,7 +172,7 @@ public class EntityConverter {
      */
     public Set<NoteItem> convertEventCalendar(Calendar calendar) {
         NoteItem note = new HibNoteItem();
-        note.setUid(entityFactory.generateUid());
+        note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertEventCalendar(note, calendar);
     }
@@ -187,7 +184,7 @@ public class EntityConverter {
      */
     public NoteItem convertJournalCalendar(Calendar calendar) {
         NoteItem note = new HibNoteItem();
-        note.setUid(entityFactory.generateUid());
+        note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertJournalCalendar(note, calendar);
     }
@@ -214,7 +211,7 @@ public class EntityConverter {
      */
     public NoteItem convertTaskCalendar(Calendar calendar) {
         NoteItem note = new HibNoteItem();
-        note.setUid(entityFactory.generateUid());
+        note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertTaskCalendar(note, calendar);
     }
@@ -1110,16 +1107,7 @@ public class EntityConverter {
         
         return contexts.toArray(new CalendarContext[contexts.size()]);
     }
-    
 
-    /**
-     * Gets entity factory.
-     * @return The entity factory.
-     */
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
-    }
-    
     /**
      * Container for a calendar containing single component type (can
      * be multiple components if the component is recurring and has

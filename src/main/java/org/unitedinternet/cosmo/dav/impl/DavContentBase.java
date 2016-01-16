@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
@@ -71,9 +72,9 @@ public abstract class DavContentBase extends DavItemResourceBase
     public DavContentBase(ContentItem item,
                           DavResourceLocator locator,
                           DavResourceFactory factory,
-                          EntityFactory entityFactory)
+                          IdGenerator idGenerator)
         throws CosmoDavException {
-        super(item, locator, factory, entityFactory);
+        super(item, locator, factory, idGenerator);
     }
 
     // Jackrabbit WebDavResource

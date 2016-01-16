@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,7 +35,6 @@ import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 import java.io.IOException;
@@ -61,9 +61,9 @@ public class DavFile extends DavContentBase {
     public DavFile(HibFileItem item,
                    DavResourceLocator locator,
                    DavResourceFactory factory,
-                   EntityFactory entityFactory)
+                   IdGenerator idGenerator)
         throws CosmoDavException {
-        super(item, locator, factory, entityFactory);
+        super(item, locator, factory, idGenerator);
 
         registerLiveProperty(DavPropertyName.GETCONTENTLANGUAGE);
         registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
@@ -73,9 +73,9 @@ public class DavFile extends DavContentBase {
     /** */
     public DavFile(DavResourceLocator locator,
                    DavResourceFactory factory,
-                   EntityFactory entityFactory)
+                   IdGenerator idGenerator)
         throws CosmoDavException {
-        this(new HibFileItem(), locator, factory, entityFactory);
+        this(new HibFileItem(), locator, factory, idGenerator);
     }
 
     // WebDavResource

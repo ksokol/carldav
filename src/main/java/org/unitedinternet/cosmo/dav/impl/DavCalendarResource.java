@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,7 +39,6 @@ import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.NoteItem;
 
 import java.io.ByteArrayInputStream;
@@ -57,9 +57,9 @@ public abstract class DavCalendarResource extends DavContentBase
     public DavCalendarResource(ContentItem item,
                                DavResourceLocator locator,
                                DavResourceFactory factory,
-                               EntityFactory entityFactory)
+                               IdGenerator idGenerator)
         throws CosmoDavException {
-        super(item, locator, factory, entityFactory);
+        super(item, locator, factory, idGenerator);
 
         registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
         registerLiveProperty(DavPropertyName.GETCONTENTTYPE);

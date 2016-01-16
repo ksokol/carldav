@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.dav.ConflictException;
@@ -44,8 +45,8 @@ import java.io.IOException;
 public class CalendarResourceProvider extends FileProvider {
 
     public CalendarResourceProvider(DavResourceFactory resourceFactory,
-            EntityFactory entityFactory) {
-        super(resourceFactory, entityFactory);
+            IdGenerator idGenerator) {
+        super(resourceFactory, idGenerator);
     }
     
     // DavProvider methods
@@ -84,13 +85,13 @@ public class CalendarResourceProvider extends FileProvider {
                                                 Calendar calendar)
         throws CosmoDavException {
         if (!calendar.getComponents(Component.VEVENT).isEmpty()) {
-            return new DavEvent(locator, getResourceFactory(), getEntityFactory());
+            return new DavEvent(locator, getResourceFactory(), getIdGenerator());
         }
         if (!calendar.getComponents(Component.VTODO).isEmpty()) {
-            return new DavTask(locator, getResourceFactory(), getEntityFactory());
+            return new DavTask(locator, getResourceFactory(), getIdGenerator());
         }
         if (!calendar.getComponents(Component.VJOURNAL).isEmpty()) {
-            return new DavJournal(locator, getResourceFactory(), getEntityFactory());
+            return new DavJournal(locator, getResourceFactory(), getIdGenerator());
         }
         throw new SupportedCalendarComponentException();
   }

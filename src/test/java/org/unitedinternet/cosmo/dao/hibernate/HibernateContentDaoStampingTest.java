@@ -45,6 +45,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
+import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import javax.validation.ConstraintViolationException;
 
@@ -275,7 +276,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
         Assert.assertEquals("en", ccs.getLanguage());
 
-        Calendar cal = new EntityConverter(null).convertCollection(queryCol);
+        Calendar cal = new EntityConverter(new VersionFourGenerator()).convertCollection(queryCol);
         Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());
     }
 

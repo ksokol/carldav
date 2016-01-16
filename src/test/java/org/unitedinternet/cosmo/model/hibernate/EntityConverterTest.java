@@ -33,7 +33,6 @@ import net.fortuna.ical4j.model.property.Status;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
@@ -57,9 +56,7 @@ public class EntityConverterTest {
     private static final TimeZoneRegistry TIMEZONE_REGISTRY =
         TimeZoneRegistryFactory.getInstance().createRegistry();
     
-    
-    protected EntityFactory entityFactory = new HibEntityFactory(new VersionFourGenerator());
-    protected EntityConverter converter = new EntityConverter(entityFactory);
+    protected EntityConverter converter = new EntityConverter(new VersionFourGenerator());
     
     /**
      * Tests entity convertor task.

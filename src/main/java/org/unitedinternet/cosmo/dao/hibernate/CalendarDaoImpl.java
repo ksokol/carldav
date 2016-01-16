@@ -20,13 +20,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
@@ -39,9 +39,13 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
 
     private static final Log LOG = LogFactory.getLog(CalendarDaoImpl.class);
 
-    private EntityFactory entityFactory;
     private ItemFilterProcessor itemFilterProcessor;
-    private EntityConverter entityConverter = new EntityConverter(null);
+    private final EntityConverter entityConverter;
+
+    public CalendarDaoImpl(final EntityConverter entityConverter) {
+        Assert.notNull(entityConverter, "entityConverter is null");
+        this.entityConverter = entityConverter;
+    }
 
     public Set<ICalendarItem> findCalendarItems(CollectionItem collection,
                                                 CalendarFilter filter) {
@@ -111,19 +115,5 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
         if (itemFilterProcessor == null) {
             throw new IllegalStateException("itemFilterProcessor is required");
         }
-
-        if (entityFactory == null) {
-            throw new IllegalStateException("entityFactory is required");
-        }
-        
-        entityConverter = new EntityConverter(this.entityFactory);
     }
-
-    /**
-     * @param entityFactory the entityFactory to set
-     */
-    public void setEntityFactory(EntityFactory entityFactory) {
-        this.entityFactory = entityFactory;
-    }
-
 }

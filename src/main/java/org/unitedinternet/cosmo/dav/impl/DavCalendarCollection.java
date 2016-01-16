@@ -1,5 +1,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -37,7 +38,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
@@ -61,9 +61,9 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     public DavCalendarCollection(CollectionItem collection,
                                  DavResourceLocator locator,
                                  DavResourceFactory factory,
-                                 EntityFactory entityFactory)
+                                 IdGenerator idGenerator)
         throws CosmoDavException {
-        super(collection, locator, factory, entityFactory);
+        super(collection, locator, factory, idGenerator);
 
         registerLiveProperty(CALENDARDESCRIPTION);
         registerLiveProperty(CALENDARTIMEZONE);
@@ -282,7 +282,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         ContentItem content = (ContentItem) member.getItem();
         EventStamp event = StampUtils.getEventStamp(content);
-        EntityConverter converter = new EntityConverter(getEntityFactory());
+        EntityConverter converter = new EntityConverter(getIdGenerator());
         Set<ContentItem> toUpdate = new LinkedHashSet<>();
 
         try {
@@ -327,7 +327,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     private void saveJournal(DavItemContent member) throws CosmoDavException {
         ContentItem content = (ContentItem) member.getItem();
         EventStamp event = StampUtils.getEventStamp(content);
-        EntityConverter converter = new EntityConverter(getEntityFactory());
+        EntityConverter converter = new EntityConverter(getIdGenerator());
         Set<ContentItem> toUpdate = new LinkedHashSet<>();
 
         try {

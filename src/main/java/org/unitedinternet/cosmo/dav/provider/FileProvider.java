@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import carldav.service.generator.IdGenerator;
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -39,8 +40,8 @@ import java.io.IOException;
 public class FileProvider extends BaseProvider {
 
     public FileProvider(DavResourceFactory resourceFactory,
-            EntityFactory entityFactory) {
-        super(resourceFactory, entityFactory);
+            IdGenerator idGenerator) {
+        super(resourceFactory, idGenerator);
     }
 
     // DavProvider methods

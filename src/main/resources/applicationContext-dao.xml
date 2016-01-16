@@ -56,11 +56,15 @@
     <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" init-method="init" destroy-method="destroy" />
 
     <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" init-method="init">
+        <constructor-arg>
+            <ref bean="entityConverter" />
+        </constructor-arg>
         <property name="itemFilterProcessor">
             <ref bean="itemFilterProcessor" />
         </property>
-        <property name="entityFactory" ref="cosmoEntityFactory" />
     </bean>
-    <!--  Transaction Definitions -->
 
+    <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter">
+        <constructor-arg index="0" ref="idGenerator" />
+    </bean>
 </beans>

@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -46,7 +47,6 @@ import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.User;
@@ -92,10 +92,10 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     private Item item;
     private DavCollection parent;
-    private EntityFactory entityFactory;
+    private IdGenerator idGenerator;
 
     public DavItemResourceBase(Item item, DavResourceLocator locator,
-            DavResourceFactory factory, EntityFactory entityFactory)
+            DavResourceFactory factory, IdGenerator idGenerator)
             throws CosmoDavException {
         super(locator, factory);
 
@@ -107,7 +107,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(UUID);
 
         this.item = item;
-        this.entityFactory = entityFactory;
+        this.idGenerator = idGenerator;
     }
 
     // WebDavResource methods
@@ -174,7 +174,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             }
             if (parent == null)
                 parent = new DavCollectionBase(parentLocator,
-                        getResourceFactory(), entityFactory);
+                        getResourceFactory(), idGenerator);
         }
 
         return parent;
@@ -204,8 +204,8 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         loadProperties();
     }
 
-    public EntityFactory getEntityFactory() {
-        return entityFactory;
+    public IdGenerator getIdGenerator() {
+        return idGenerator;
     }
 
     // our methods

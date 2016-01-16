@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.service.generator.IdGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
@@ -26,7 +27,6 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
@@ -49,9 +49,9 @@ public class DavHomeCollection extends DavCollectionBase {
     public DavHomeCollection(HomeCollectionItem collection,
                              DavResourceLocator locator,
                              DavResourceFactory factory,
-                             EntityFactory entityFactory)
+                             IdGenerator idGenerator)
             throws CosmoDavException {
-        super(collection, locator, factory, entityFactory);
+        super(collection, locator, factory, idGenerator);
     }
 
     // WebDavResource

@@ -32,8 +32,4 @@ public class HibEntityFactory implements EntityFactory {
         this.idGenerator = idGenerator;
     }
 
-    public String generateUid() {
-        return idGenerator.nextStringIdentifier();
-    }
-
 }

@@ -30,6 +30,7 @@
 	</bean>
 
 	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
+        <constructor-arg index="0" ref="entityConverter" />
 		<property name="calendarDao" ref="calendarDao" />
 	</bean>
 
@@ -45,7 +46,7 @@
 			<ref bean="securityManager" />
 		</constructor-arg>
 		<constructor-arg>
-			<ref bean="cosmoEntityFactory" />
+			<ref bean="idGenerator" />
 		</constructor-arg>
 		<constructor-arg>
 			<ref bean="calendarQueryProcessor" />
@@ -73,7 +74,7 @@
 	<bean id="dav" class="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler">
         <constructor-arg index="0" ref="davResourceLocatorFactory" />
         <constructor-arg index="1" ref="davResourceFactory" />
-        <constructor-arg index="2" ref="cosmoEntityFactory" />
+        <constructor-arg index="2" ref="idGenerator" />
 	</bean>
 
 

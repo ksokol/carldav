@@ -75,7 +75,7 @@ public class DavFile extends DavContentBase {
                    DavResourceFactory factory,
                    EntityFactory entityFactory)
         throws CosmoDavException {
-        this(entityFactory.createFileItem(), locator, factory, entityFactory);
+        this(new HibFileItem(), locator, factory, entityFactory);
     }
 
     // WebDavResource

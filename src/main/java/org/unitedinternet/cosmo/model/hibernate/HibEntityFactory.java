@@ -39,10 +39,6 @@ public class HibEntityFactory implements EntityFactory {
         return new HibJournalStamp(note);
     }
 
-    public HibFileItem createFileItem() {
-        return new HibFileItem();
-    }
-
     public QName createQName(String namespace, String localname) {
         return new HibQName(namespace, localname);
     }

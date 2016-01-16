@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 /**
@@ -29,13 +28,7 @@ public interface EntityFactory {
      * @return unique identifier
      */
     String generateUid();
-    
-    /**
-     * Create new FileItem
-     * @return new FileItem
-     */
-    HibFileItem createFileItem();
-    
+
     /**
      * Create new QName
      * @param namespace 

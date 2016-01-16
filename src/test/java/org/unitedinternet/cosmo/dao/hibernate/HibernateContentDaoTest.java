@@ -33,7 +33,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
@@ -300,8 +299,8 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
         ContentItem item = generateTestContent();
-       
-        ICalendarAttribute icalAttr = new HibICalendarAttribute(); 
+
+        HibICalendarAttribute icalAttr = new HibICalendarAttribute();
         icalAttr.setQName(new HibQName("icalattribute"));
         icalAttr.setValue(helper.getInputStream("testdata/vjournal.ics"));
         item.addAttribute(icalAttr);
@@ -314,7 +313,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         Attribute attr = queryItem.getAttribute(new HibQName("icalattribute"));
         Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof ICalendarAttribute);
+        Assert.assertTrue(attr instanceof HibICalendarAttribute);
         
         net.fortuna.ical4j.model.Calendar calendar = (net.fortuna.ical4j.model.Calendar) attr.getValue();
         Assert.assertNotNull(calendar);
@@ -329,7 +328,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
         
         queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
-        ICalendarAttribute ica = (ICalendarAttribute) queryItem.getAttribute(new HibQName("icalattribute"));
+        HibICalendarAttribute ica = (HibICalendarAttribute) queryItem.getAttribute(new HibQName("icalattribute"));
         Assert.assertEquals(calendar, ica.getValue());
     }
 

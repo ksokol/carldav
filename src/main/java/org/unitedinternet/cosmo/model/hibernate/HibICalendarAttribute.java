@@ -20,7 +20,6 @@ import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.io.IOException;
@@ -35,7 +34,7 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("icalendar")
-public class HibICalendarAttribute extends HibAttribute implements ICalendarAttribute {
+public class HibICalendarAttribute extends HibAttribute {
 
     private static final long serialVersionUID = -4714651259305593990L;
     
@@ -134,7 +133,7 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
      * @return Date value of ICalendarAttribute
      */
     public static Calendar getValue(Item item, HibQName qname) {
-        ICalendarAttribute attr = (ICalendarAttribute) item.getAttribute(qname);
+        HibICalendarAttribute attr = (HibICalendarAttribute) item.getAttribute(qname);
         if(attr==null) {
             return null;
         }
@@ -151,7 +150,7 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
      * @param value value to set on ICalendarpAttribute
      */
     public static void setValue(Item item, HibQName qname, Calendar value) {
-        ICalendarAttribute attr = (ICalendarAttribute) item.getAttribute(qname);
+        HibICalendarAttribute attr = (HibICalendarAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibICalendarAttribute(qname,value);
             item.addAttribute(attr);

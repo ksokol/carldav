@@ -16,42 +16,30 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.CosmoIOException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TextAttribute;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-
-/**
- * Hibernate persistent TextAttribute.
- */
 @Entity
 @DiscriminatorValue("text")
-public class HibTextAttribute extends HibAttribute implements TextAttribute {
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(TextAttribute.class);
-    private static final long serialVersionUID = 2417093506524504993L;
+public class HibTextAttribute extends HibAttribute {
+
+    private static final long serialVersionUID = 1L;
     
     @Column(name="textvalue", length= 2147483647)
     @Type(type="materialized_clob")
     private String value;
 
-    // Constructors
-
-    /** default constructor */
     public HibTextAttribute() {
     }
 
@@ -59,48 +47,20 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
         setQName(qname);
         this.value = value;
     }
-    
-    /**
-     * Construct TextAttribute from Reader
-     * @param qname
-     * @param reader
-     */
+
     public HibTextAttribute(QName qname, Reader reader) {
         setQName(qname);
         this.value = read(reader);
     }
 
-    // Property accessors
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getValue()
-     */
     public String getValue() {
         return this.value;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TextAttribute#setValue(java.lang.String)
-     */
     public void setValue(String value) {
         this.value = value;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TextAttribute#getReader()
-     */
-    public Reader getReader() {
-        if(value!=null) {
-            return new StringReader(value);
-        }
-        else {
-            return null;
-        }
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TextAttribute#getLength()
-     */
+
     public int getLength() {
         if(value!=null) {
             return value.length();
@@ -144,7 +104,7 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
      * @return String value of TextAttribute
      */
     public static String getValue(Item item, QName qname) {
-        TextAttribute ta = (TextAttribute) item.getAttribute(qname);
+        HibTextAttribute ta = (HibTextAttribute) item.getAttribute(qname);
         if(ta==null) {
             return null;
         }
@@ -161,7 +121,7 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
      * @param value value to set on TextAttribute
      */
     public static void setValue(Item item, QName qname, String value) {
-        TextAttribute attr = (TextAttribute) item.getAttribute(qname);
+        HibTextAttribute attr = (HibTextAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTextAttribute(qname,value);
             item.addAttribute(attr);
@@ -183,7 +143,7 @@ public class HibTextAttribute extends HibAttribute implements TextAttribute {
      * @param value value to set on TextAttribute
      */
     public static void setValue(Item item, QName qname, Reader value) {
-        TextAttribute attr = (TextAttribute) item.getAttribute(qname);
+        HibTextAttribute attr = (HibTextAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTextAttribute(qname,value);
             item.addAttribute(attr);

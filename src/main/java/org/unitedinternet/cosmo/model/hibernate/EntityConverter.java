@@ -838,7 +838,7 @@ public class EntityConverter {
      */
     private void setBaseContentAttributes(ContentItem item) {
         
-        TriageStatus ts = entityFactory.createTriageStatus();
+        TriageStatus ts = new TriageStatus();
         TriageStatusUtil.initialize(ts);
 
         item.setClientCreationDate(new Date());
@@ -896,8 +896,7 @@ public class EntityConverter {
         
         // initialize TriageStatus if not present
         if (triageStatus == null) {
-            triageStatus = TriageStatusUtil.initialize(entityFactory
-                    .createTriageStatus());
+            triageStatus = TriageStatusUtil.initialize(new TriageStatus());
             note.setTriageStatus(triageStatus);
         }
 
@@ -949,8 +948,7 @@ public class EntityConverter {
         // Initialize TriageStatus if necessary
         if(completed!=null || Status.VTODO_COMPLETED.equals(status)) {
             if (ts == null) {
-                ts = TriageStatusUtil.initialize(entityFactory
-                        .createTriageStatus());
+                ts = TriageStatusUtil.initialize(new TriageStatus());
                 note.setTriageStatus(ts);
             }
             

@@ -29,13 +29,6 @@ public interface EntityFactory {
      * @return unique identifier
      */
     String generateUid();
-
-    /**
-     * Create new TriageStatus
-     * @return new TriageStatus
-     */
-    TriageStatus createTriageStatus();
-    
     
     /**
      * Create new EventStamp

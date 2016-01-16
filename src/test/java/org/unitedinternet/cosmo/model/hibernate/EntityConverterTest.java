@@ -108,7 +108,7 @@ public class EntityConverterTest {
     public void testEntityConverterEvent() throws Exception {
         
         Calendar calendar = getCalendar("event_with_exception.ics");
-        NoteItem master = entityFactory.createNote();
+        NoteItem master = new HibNoteItem();
         Set<NoteItem> items = converter.convertEventCalendar(master, calendar);
         
         // should be master and mod
@@ -197,7 +197,7 @@ public class EntityConverterTest {
         
         Calendar calendar = getCalendar("bigcalendar.ics");
         @SuppressWarnings("unused")
-		NoteItem master = entityFactory.createNote();
+		NoteItem master = new HibNoteItem();
         Set<ICalendarItem> items = converter.convertCalendar(calendar);
         
         // should be 8

@@ -174,7 +174,7 @@ public class EntityConverter {
      * @return The convertion.
      */
     public Set<NoteItem> convertEventCalendar(Calendar calendar) {
-        NoteItem note = entityFactory.createNote();
+        NoteItem note = new HibNoteItem();
         note.setUid(entityFactory.generateUid());
         setBaseContentAttributes(note);
         return convertEventCalendar(note, calendar);
@@ -186,7 +186,7 @@ public class EntityConverter {
      * @return NoteItem representation of VJOURNAL
      */
     public NoteItem convertJournalCalendar(Calendar calendar) {
-        NoteItem note = entityFactory.createNote();
+        NoteItem note = new HibNoteItem();
         note.setUid(entityFactory.generateUid());
         setBaseContentAttributes(note);
         return convertJournalCalendar(note, calendar);
@@ -213,7 +213,7 @@ public class EntityConverter {
      * @return NoteItem representation of VTODO
      */
     public NoteItem convertTaskCalendar(Calendar calendar) {
-        NoteItem note = entityFactory.createNote();
+        NoteItem note = new HibNoteItem();
         note.setUid(entityFactory.generateUid());
         setBaseContentAttributes(note);
         return convertTaskCalendar(note, calendar);
@@ -764,7 +764,7 @@ public class EntityConverter {
      * @event The event.
      */
     private void createNoteModification(NoteItem masterNote, VEvent event) {
-        NoteItem noteMod = entityFactory.createNote();
+        NoteItem noteMod = new HibNoteItem();
         Calendar exceptionCal = null;
         // a note modification should inherit the calendar product info as its master component.
         if(masterNote.getStamp(EventStamp.class) != null) {

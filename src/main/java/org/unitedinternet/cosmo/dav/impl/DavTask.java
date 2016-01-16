@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dav.impl;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -26,6 +25,7 @@ import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 /**
  * Extends <code>DavCalendarResource</code> to adapt the Cosmo
@@ -44,7 +44,7 @@ public class DavTask extends DavCalendarResource {
                   DavResourceFactory factory,
                   EntityFactory entityFactory)
         throws CosmoDavException {
-        this(entityFactory.createNote(), locator, factory, entityFactory);
+        this(new HibNoteItem(), locator, factory, entityFactory);
     }
 
     /** */

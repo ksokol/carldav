@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.model;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.model.hibernate.HibEntityFactory;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
@@ -35,7 +36,7 @@ public class NoteOccurrenceTest {
     @Test
     public void testGenerateNoteOccurrence() throws Exception {
         
-        NoteItem note = factory.createNote();
+        NoteItem note = new HibNoteItem();
         note.setUid("1");
         note.setDisplayName("dn");
         note.setBody("body");

@@ -37,10 +37,6 @@ public class HibEntityFactory implements EntityFactory {
         this.idGenerator = idGenerator;
     }
 
-    public NoteItem createNote() {
-        return new HibNoteItem();
-    }
-
     public HibEventExceptionStamp createEventExceptionStamp(NoteItem note) {
         return new HibEventExceptionStamp(note);
     }

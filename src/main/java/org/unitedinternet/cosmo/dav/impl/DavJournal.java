@@ -12,6 +12,7 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 public class DavJournal extends DavCalendarResource {
 
@@ -19,7 +20,7 @@ public class DavJournal extends DavCalendarResource {
                       DavResourceFactory factory,
                       EntityFactory entityFactory)
         throws CosmoDavException {
-        this(entityFactory.createNote(), locator, factory, entityFactory);
+        this(new HibNoteItem(), locator, factory, entityFactory);
         getItem().addStamp(entityFactory.createJournalStamp((NoteItem) getItem()));
     }
 

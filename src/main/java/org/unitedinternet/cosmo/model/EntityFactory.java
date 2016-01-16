@@ -30,14 +30,6 @@ public interface EntityFactory {
      */
     String generateUid();
 
-    
-    /**
-     * Create new NoteItem
-     * @return new NoteItem
-     */
-    NoteItem createNote();
-
-    
     /**
      * Create new User
      * @return new User

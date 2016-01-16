@@ -30,7 +30,6 @@ import org.unitedinternet.cosmo.dav.impl.DavEvent;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
-import org.unitedinternet.cosmo.model.EntityFactory;
 
 import java.io.IOException;
 

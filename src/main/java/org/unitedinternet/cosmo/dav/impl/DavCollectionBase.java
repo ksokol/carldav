@@ -41,7 +41,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;

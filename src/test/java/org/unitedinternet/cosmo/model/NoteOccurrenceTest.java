@@ -17,19 +17,15 @@ package org.unitedinternet.cosmo.model;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.hibernate.HibEntityFactory;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 /**
  * Test NoteOccurrenceItem
  */
 public class NoteOccurrenceTest {
-   
-    private EntityFactory factory = new HibEntityFactory(new VersionFourGenerator());
-    
+
     /**
      * Tests generate note occurrence.
      * @throws Exception - if something is wrong this exception is thrown.

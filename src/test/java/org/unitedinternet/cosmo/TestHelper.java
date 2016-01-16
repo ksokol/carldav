@@ -16,17 +16,12 @@
 package org.unitedinternet.cosmo;
 
 import org.junit.Ignore;
-import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.User;
-import org.unitedinternet.cosmo.model.hibernate.HibEntityFactory;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 @Ignore
 public class TestHelper {
 
-    static int useq = 0;
-
-    private EntityFactory entityFactory = new HibEntityFactory(new VersionFourGenerator());
+    private static int useq = 0;
 
     /**
      * Makes dummy user.

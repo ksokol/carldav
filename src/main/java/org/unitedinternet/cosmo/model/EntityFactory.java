@@ -26,6 +26,4 @@ public interface EntityFactory {
      * @return unique identifier
      */
     String generateUid();
-
-    EventStamp createJournalStamp(NoteItem note);
 }

@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -37,8 +36,6 @@ import javax.validation.ConstraintViolationException;
  * Implemtation of UserDao using Hibernate persistence objects.
  */
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
-
-    private IdGenerator idGenerator;
 
     public User createUser(User user) {
 
@@ -153,20 +150,9 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public void destroy() {
-        // TODO Auto-generated method stub
+    public void destroy() {}
 
-    }
-
-    public void init() {
-        if (idGenerator == null) {
-            throw new IllegalStateException("idGenerator is required");
-        }
-    }
-
-    public void setIdGenerator(IdGenerator idGenerator) {
-        this.idGenerator = idGenerator;
-    }
+    public void init() {}
 
     private User findUserByEmailIgnoreCaseAndId(Long userId, String email) {
         Session session = getSession();

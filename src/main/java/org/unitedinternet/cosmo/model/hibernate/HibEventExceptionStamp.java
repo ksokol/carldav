@@ -18,10 +18,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.hibernate.validator.EventException;
-import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
@@ -29,15 +26,11 @@ import org.unitedinternet.cosmo.model.NoteItem;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-/**
- * Hibernate persistent EventExceptionStamp.
- */
 @Entity
 @DiscriminatorValue("eventexception")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class HibEventExceptionStamp extends HibBaseEventStamp implements EventExceptionStamp {
+public class HibEventExceptionStamp extends HibBaseEventStamp {
 
-    private static final long serialVersionUID = 3992468809776186156L;
+    private static final long serialVersionUID = 1L;
 
     public HibEventExceptionStamp() {
     }
@@ -45,15 +38,11 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
     public HibEventExceptionStamp(Item item) {
         setItem(item);
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Stamp#getType()
-     */
+
     public String getType() {
         return "eventexception";
     }
 
-    /** Used by the hibernate validator **/
     @EventException
     private Calendar getValidationCalendar() {//NOPMD
         return getEventCalendar();
@@ -63,19 +52,12 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
     public VEvent getEvent() {
         return getExceptionEvent();
     }
-    
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.EventExceptionStamp#getExceptionEvent()
-     */
+
     public VEvent getExceptionEvent() {
         return (VEvent) getEventCalendar().getComponents().getComponents(
                 Component.VEVENT).get(0);
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.EventExceptionStamp#setExceptionEvent(net.fortuna.ical4j.model.component.VEvent)
-     */
+
     public void setExceptionEvent(VEvent event) {
         if(getEventCalendar()==null) {
             createCalendar();
@@ -89,9 +71,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
         getEventCalendar().getComponents().add(event);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.EventExceptionStamp#getMasterStamp()
-     */
     public EventStamp getMasterStamp() {
         NoteItem note = (NoteItem) getItem();
         return HibEventStamp.getStamp(note.getModifies());
@@ -102,8 +81,8 @@ public class HibEventExceptionStamp extends HibBaseEventStamp implements EventEx
      * @param item
      * @return EventExceptionStamp from Item
      */
-    public static EventExceptionStamp getStamp(Item item) {
-        return (EventExceptionStamp) item.getStamp(EventExceptionStamp.class);
+    public static HibEventExceptionStamp getStamp(Item item) {
+        return (HibEventExceptionStamp) item.getStamp(HibEventExceptionStamp.class);
     }
 
     @Override

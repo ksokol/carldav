@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
+
 /**
  * Contains static helper methods for dealing with Stamps.
  */
@@ -34,8 +36,8 @@ public class StampUtils {
      * @param item
      * @return EventExceptionStamp from Item
      */
-    public static EventExceptionStamp getEventExceptionStamp(Item item) {
-        return (EventExceptionStamp) item.getStamp(EventExceptionStamp.class);
+    public static HibEventExceptionStamp getEventExceptionStamp(Item item) {
+        return (HibEventExceptionStamp) item.getStamp(HibEventExceptionStamp.class);
     }
     
     /**

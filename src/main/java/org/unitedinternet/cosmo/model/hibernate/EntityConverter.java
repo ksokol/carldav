@@ -50,7 +50,6 @@ import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
@@ -443,7 +442,7 @@ public class EntityConverter {
         NoteItem note = (NoteItem) stamp.getItem();
         TreeMap<String, VEvent> sortedMap = new TreeMap<String, VEvent>();
         for(NoteItem exception : note.getModifications()) {
-            EventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
+            HibEventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
             
             // if modification isn't stamped as an event then ignore
             if (exceptionStamp==null) {
@@ -746,7 +745,7 @@ public class EntityConverter {
     private NoteItem getModification(NoteItem masterNote,
                                      Date recurrenceId) {
         for (NoteItem mod : masterNote.getModifications()) {
-            EventExceptionStamp exceptionStamp =
+            HibEventExceptionStamp exceptionStamp =
                 StampUtils.getEventExceptionStamp(mod);
             // only interested in mods with event stamp
             if (exceptionStamp == null) {
@@ -781,7 +780,7 @@ public class EntityConverter {
             }
         }
 
-        EventExceptionStamp exceptionStamp =
+        HibEventExceptionStamp exceptionStamp =
             entityFactory.createEventExceptionStamp(noteMod);
         exceptionStamp.setEventCalendar(exceptionCal);
         exceptionStamp.setExceptionEvent(event);
@@ -815,7 +814,7 @@ public class EntityConverter {
      */
     private void updateNoteModification(NoteItem noteMod,
                                         VEvent event) {
-        EventExceptionStamp exceptionStamp =
+        HibEventExceptionStamp exceptionStamp =
             StampUtils.getEventExceptionStamp(noteMod);
         exceptionStamp.setExceptionEvent(event);
         

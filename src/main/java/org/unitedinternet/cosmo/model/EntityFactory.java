@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 /**
@@ -79,7 +80,7 @@ public interface EntityFactory {
      * @param note associated NoteItem
      * @return new EventExceptionStamp
      */
-    EventExceptionStamp createEventExceptionStamp(NoteItem note);
+    HibEventExceptionStamp createEventExceptionStamp(NoteItem note);
     
     
     /**

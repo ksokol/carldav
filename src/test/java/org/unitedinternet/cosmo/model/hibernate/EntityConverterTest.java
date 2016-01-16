@@ -34,7 +34,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
@@ -146,7 +145,7 @@ public class EntityConverterTest {
         Assert.assertEquals("20060104T190000Z", uid.getRecurrenceId().toString());
         
         Assert.assertTrue(mod.getModifies()==master);
-        EventExceptionStamp ees = StampUtils.getEventExceptionStamp(mod);
+        HibEventExceptionStamp ees = StampUtils.getEventExceptionStamp(mod);
         Assert.assertNotNull(ees);
         
         // mod should include VTIMEZONES
@@ -408,7 +407,7 @@ public class EntityConverterTest {
         mod.setBody("modBody");
         mod.setModifies(master);
         master.addModification(mod);
-        EventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
+        HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
         mod.addStamp(exceptionStamp);
         exceptionStamp.createCalendar();
         exceptionStamp.setStartDate(eventStamp.getStartDate());
@@ -466,7 +465,7 @@ public class EntityConverterTest {
         NoteItem mod = new HibNoteItem();
         mod.setModifies(master);
         master.addModification(mod);
-        EventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
+        HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
         mod.addStamp(exceptionStamp);
         exceptionStamp.createCalendar();
         exceptionStamp.setRecurrenceId(new DateTime("20070212T074500"));

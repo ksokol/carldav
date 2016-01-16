@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
@@ -361,7 +360,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
 
-        EventExceptionStamp eventex = new HibEventExceptionStamp();
+        HibEventExceptionStamp eventex = new HibEventExceptionStamp();
         eventex.setEventCalendar(helper.getCalendar("testdata/exception.ics"));
 
         item.addStamp(eventex);
@@ -372,13 +371,13 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         ContentItem queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
         Assert.assertEquals(1, queryItem.getStamps().size());
 
-        Stamp stamp = queryItem.getStamp(EventExceptionStamp.class);
+        Stamp stamp = queryItem.getStamp(HibEventExceptionStamp.class);
         Assert.assertNotNull(stamp.getCreationDate());
         Assert.assertNotNull(stamp.getModifiedDate());
         Assert.assertTrue(stamp.getCreationDate().equals(stamp.getModifiedDate()));
-        Assert.assertTrue(stamp instanceof EventExceptionStamp);
+        Assert.assertTrue(stamp instanceof HibEventExceptionStamp);
         Assert.assertEquals("eventexception", stamp.getType());
-        EventExceptionStamp ees = (EventExceptionStamp) stamp;
+        HibEventExceptionStamp ees = (HibEventExceptionStamp) stamp;
         Assert.assertEquals(ees.getEventCalendar().toString(), eventex.getEventCalendar()
                 .toString());
     }
@@ -397,7 +396,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
 
-        EventExceptionStamp eventex = new HibEventExceptionStamp();
+        HibEventExceptionStamp eventex = new HibEventExceptionStamp();
         eventex.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
 
         item.addStamp(eventex);

@@ -43,6 +43,7 @@ import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
 
@@ -97,7 +98,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
     public DavCollectionBase(DavResourceLocator locator,
             DavResourceFactory factory, EntityFactory entityFactory)
             throws CosmoDavException {
-        this(entityFactory.createCollection(), locator, factory, entityFactory);
+        this(new HibCollectionItem(), locator, factory, entityFactory);
     }
 
     // Jackrabbit WebDavResource

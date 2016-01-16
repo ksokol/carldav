@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import carldav.service.generator.IdGenerator;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.NoteItem;
@@ -36,10 +35,6 @@ public class HibEntityFactory implements EntityFactory {
     public HibEntityFactory(final IdGenerator idGenerator) {
         Assert.notNull(idGenerator, "idGenerator is null");
         this.idGenerator = idGenerator;
-    }
-
-    public CollectionItem createCollection() {
-        return new HibCollectionItem();
     }
 
     public NoteItem createNote() {

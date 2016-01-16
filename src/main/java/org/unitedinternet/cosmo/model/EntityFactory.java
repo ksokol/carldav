@@ -32,13 +32,6 @@ public interface EntityFactory {
 
     
     /**
-     * Create new CollectionItem
-     * @return new ColletionItem
-     */
-    CollectionItem createCollection();
-    
-    
-    /**
      * Create new NoteItem
      * @return new NoteItem
      */

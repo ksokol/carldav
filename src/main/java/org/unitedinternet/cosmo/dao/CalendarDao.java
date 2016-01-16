@@ -15,16 +15,11 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import java.util.Set;
-
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Date;
-
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.ICalendarItem;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+
+import java.util.Set;
 
 /**
  * Interface for DAO that provides query apis for finding 
@@ -44,6 +39,6 @@ public interface CalendarDao {
      * @return set ICalendar objects that match specified
      *         filter.
      */
-    public Set<ICalendarItem> findCalendarItems(CollectionItem collection,
+    public Set<HibICalendarItem> findCalendarItems(CollectionItem collection,
                                              CalendarFilter filter);
 }

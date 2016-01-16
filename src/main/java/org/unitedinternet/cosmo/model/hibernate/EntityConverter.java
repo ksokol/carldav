@@ -51,7 +51,6 @@ import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
@@ -88,14 +87,14 @@ public class EntityConverter {
     /**
      * Converts a single calendar containing many different
      * components and component types into a set of
-     * {@link ICalendarItem}.
+     * {@link HibICalendarItem}.
      * 
      * @param calendar calendar containing any number and type
      *        of calendar components
      * @return set of ICalendarItems
      */
-    public Set<ICalendarItem> convertCalendar(Calendar calendar) {
-        Set<ICalendarItem> items = new LinkedHashSet<ICalendarItem>();
+    public Set<HibICalendarItem> convertCalendar(Calendar calendar) {
+        Set<HibICalendarItem> items = new LinkedHashSet<>();
         for(CalendarContext cc: splitCalendar(calendar)) {
             if(cc.type.equals(Component.VEVENT)) {
                 items.addAll(convertEventCalendar(cc.calendar));
@@ -297,8 +296,8 @@ public class EntityConverter {
      * Returns a calendar representing the item.
      * <p>
      * If the item is a {@link HibNoteItem}, delegates to
-     * {@link #convertNote(HibNoteItem)}. If the item is a {@link ICalendarItem},
-     * delegates to {@link ICalendarItem#getFullCalendar()}. Otherwise,
+     * {@link #convertNote(HibNoteItem)}. If the item is a {@link HibICalendarItem},
+     * delegates to {@link HibICalendarItem#getFullCalendar()}. Otherwise,
      * returns null.
      * @param item The content item.
      * @return The calendar.

@@ -27,10 +27,10 @@ import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -47,7 +47,7 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
         this.entityConverter = entityConverter;
     }
 
-    public Set<ICalendarItem> findCalendarItems(CollectionItem collection,
+    public Set<HibICalendarItem> findCalendarItems(CollectionItem collection,
                                                 CalendarFilter filter) {
 
         try {
@@ -56,14 +56,14 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
                 // translate CalendarFilter to ItemFilter and execute filter
                 ItemFilter itemFilter = filterConverter.translateToItemFilter(collection, filter);
                 Set results = itemFilterProcessor.processFilter(itemFilter);
-                return (Set<ICalendarItem>) results;
+                return (Set<HibICalendarItem>) results;
             } catch (IllegalArgumentException e) {
                 LOG.warn("", e);
             }
 
             // Use brute-force method if CalendarFilter can't be translated
             // to an ItemFilter (slower but at least gets the job done).
-            HashSet<ICalendarItem> results = new HashSet<ICalendarItem>();
+            HashSet<HibICalendarItem> results = new HashSet<HibICalendarItem>();
             Set<Item> itemsToProcess = null;
 
             // Optimization:
@@ -83,9 +83,9 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
             for (Item child : itemsToProcess) {
 
                 // only care about calendar items
-                if (child instanceof ICalendarItem) {
+                if (child instanceof HibICalendarItem) {
 
-                    ICalendarItem content = (ICalendarItem) child;
+                    HibICalendarItem content = (HibICalendarItem) child;
                     Calendar calendar = entityConverter.convertContent(content);
 
                     if (calendar != null && evaluater.evaluate(calendar, filter)) {

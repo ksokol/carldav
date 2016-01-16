@@ -24,10 +24,10 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
@@ -429,8 +429,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         checkForDuplicateUid(content);
 
         // verify icaluid not in use for collection
-        if (content instanceof ICalendarItem) {
-            checkForDuplicateICalUid((ICalendarItem) content, parent);
+        if (content instanceof HibICalendarItem) {
+            checkForDuplicateICalUid((HibICalendarItem) content, parent);
         }
 
         setBaseItemProps(content);
@@ -491,8 +491,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         checkForDuplicateUid(content);
 
         // verify icaluid not in use for collections
-        if (content instanceof ICalendarItem) {
-            checkForDuplicateICalUid((ICalendarItem) content, content.getParents());
+        if (content instanceof HibICalendarItem) {
+            checkForDuplicateICalUid((HibICalendarItem) content, content.getParents());
         }
 
         setBaseItemProps(content);
@@ -581,9 +581,9 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
                     + ", only master");
         }
 
-        if (item instanceof ICalendarItem) {
+        if (item instanceof HibICalendarItem) {
             // verify icaluid is unique within collection
-            checkForDuplicateICalUid((ICalendarItem) item, collection);
+            checkForDuplicateICalUid((HibICalendarItem) item, collection);
         }
 
         super.addItemToCollectionInternal(item, collection);
@@ -615,7 +615,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
     }
 
-    protected void checkForDuplicateICalUid(ICalendarItem item, CollectionItem parent) {
+    protected void checkForDuplicateICalUid(HibICalendarItem item, CollectionItem parent) {
 
         // TODO: should icalUid be required?  Currrently its not and all
         // items created by the webui dont' have it.
@@ -663,7 +663,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
     }
 
-    protected void checkForDuplicateICalUid(ICalendarItem item,
+    protected void checkForDuplicateICalUid(HibICalendarItem item,
                                             Set<CollectionItem> parents) {
 
         if (item.getIcalUid() == null) {

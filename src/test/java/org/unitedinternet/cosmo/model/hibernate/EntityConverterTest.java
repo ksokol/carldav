@@ -34,7 +34,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
@@ -194,12 +193,12 @@ public class EntityConverterTest {
         Calendar calendar = getCalendar("bigcalendar.ics");
         @SuppressWarnings("unused")
         HibNoteItem master = new HibNoteItem();
-        Set<ICalendarItem> items = converter.convertCalendar(calendar);
+        Set<HibICalendarItem> items = converter.convertCalendar(calendar);
         
         // should be 8
         Assert.assertEquals(8, items.size());
-        
-        ICalendarItem item = findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
+
+        HibICalendarItem item = findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertNotNull(StampUtils.getEventStamp(item));
@@ -490,8 +489,8 @@ public class EntityConverterTest {
      * @param icalUid The uid.
      * @return The calendar item.
      */
-    private ICalendarItem findItemByIcalUid(Set<ICalendarItem> items, String icalUid) {
-        for(ICalendarItem item: items) {
+    private HibICalendarItem findItemByIcalUid(Set<HibICalendarItem> items, String icalUid) {
+        for(HibICalendarItem item: items) {
             if(icalUid.equals(item.getIcalUid())) {
                 return item;
             }
@@ -505,8 +504,8 @@ public class EntityConverterTest {
      * @param rid The id.
      * @return The calendar item.
      */
-    private ICalendarItem findModByRecurrenceId(Set<ICalendarItem> items, String rid) {
-        for(ICalendarItem item: items) {
+    private HibICalendarItem findModByRecurrenceId(Set<HibICalendarItem> items, String rid) {
+        for(HibICalendarItem item: items) {
             if(item instanceof HibNoteItem) {
                 HibNoteItem note = (HibNoteItem) item;
                 if(note.getModifies()!=null && note.getUid().contains(rid)) {

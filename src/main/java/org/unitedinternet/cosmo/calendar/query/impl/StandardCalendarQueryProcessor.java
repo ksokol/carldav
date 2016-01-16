@@ -24,8 +24,8 @@ import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +48,7 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
      * @param filter The calendar filter.
      * @return The calendar items.
      */
-    public Set<ICalendarItem> filterQuery(CollectionItem collection, CalendarFilter filter) {
+    public Set<HibICalendarItem> filterQuery(CollectionItem collection, CalendarFilter filter) {
         LOG.debug("finding events in collection {} by filter {}", collection.getUid(),filter);
         return new HashSet<>(calendarDao.findCalendarItems(collection, filter));
     }
@@ -59,7 +59,7 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
      * @param filter The calendar filter.
      * @return The calendar filter evaluater.
      */
-    public boolean filterQuery(ICalendarItem item, CalendarFilter filter) {
+    public boolean filterQuery(HibICalendarItem item, CalendarFilter filter) {
         LOG.debug("matching item {} to filter {}", item.getUid(), filter);
         Calendar calendar = entityConverter.convertContent(item);
         if(calendar != null) {

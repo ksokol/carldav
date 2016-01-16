@@ -31,13 +31,6 @@ public interface EntityFactory {
     String generateUid();
 
     /**
-     * Create new User
-     * @return new User
-     */
-    User createUser();
-
-    
-    /**
      * Create new TriageStatus
      * @return new TriageStatus
      */

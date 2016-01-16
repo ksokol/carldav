@@ -44,7 +44,7 @@ public class TestHelper {
             throw new IllegalArgumentException("password required");
         }
 
-        User user = entityFactory.createUser();
+        User user = new User();
         user.setEmail(username + "@localhost");
         user.setPassword(password);
 

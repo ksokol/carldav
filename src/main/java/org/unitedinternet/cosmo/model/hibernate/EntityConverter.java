@@ -46,7 +46,6 @@ import org.apache.commons.lang.StringUtils;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
@@ -247,7 +246,7 @@ public class EntityConverter {
     public Calendar convertCollection(CollectionItem collection) {
         
         // verify collection is a calendar
-        CalendarCollectionStamp ccs = StampUtils
+        HibCalendarCollectionStamp ccs = StampUtils
                 .getCalendarCollectionStamp(collection);
 
         if (ccs == null) {

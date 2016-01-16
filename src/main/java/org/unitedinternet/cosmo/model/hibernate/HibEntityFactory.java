@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import carldav.service.generator.IdGenerator;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
@@ -45,10 +44,6 @@ public class HibEntityFactory implements EntityFactory {
 
     public NoteItem createNote() {
         return new HibNoteItem();
-    }
-
-    public CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col) {
-        return new HibCalendarCollectionStamp(col);
     }
 
     public HibEventExceptionStamp createEventExceptionStamp(NoteItem note) {

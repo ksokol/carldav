@@ -53,14 +53,6 @@ public interface EntityFactory {
 
     
     /**
-     * Create new CalendarCollectionStamp
-     * @param col associated CollectionItem
-     * @return new CalendarCollectionStamp
-     */
-    CalendarCollectionStamp createCalendarCollectionStamp(CollectionItem col);
-    
-    
-    /**
      * Create new TriageStatus
      * @return new TriageStatus
      */

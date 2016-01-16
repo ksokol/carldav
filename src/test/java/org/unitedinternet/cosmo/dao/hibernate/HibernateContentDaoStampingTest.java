@@ -32,7 +32,6 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
@@ -246,7 +245,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
         Calendar testCal = helper.getCalendar("testdata/timezone.ics");
 
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
+        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setDescription("description");
         calendarStamp.setTimezoneCalendar(testCal);
         calendarStamp.setLanguage("en");
@@ -268,10 +267,10 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
         CollectionItem queryCol = (CollectionItem) contentDao.findItemByUid(root.getUid());
         Assert.assertEquals(1, queryCol.getStamps().size());
-        Stamp stamp = queryCol.getStamp(CalendarCollectionStamp.class);
-        Assert.assertTrue(stamp instanceof CalendarCollectionStamp);
+        Stamp stamp = queryCol.getStamp(HibCalendarCollectionStamp.class);
+        Assert.assertTrue(stamp instanceof HibCalendarCollectionStamp);
         Assert.assertEquals("calendar", stamp.getType());
-        CalendarCollectionStamp ccs = (CalendarCollectionStamp) stamp;
+        HibCalendarCollectionStamp ccs = (HibCalendarCollectionStamp) stamp;
         Assert.assertEquals("description", ccs.getDescription());
         Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
         Assert.assertEquals("en", ccs.getLanguage());
@@ -291,7 +290,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
         Calendar testCal = helper.getCalendar("testdata/cal1.ics");
 
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
+        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setTimezoneCalendar(testCal);
 
         root.addStamp(calendarStamp);
@@ -310,7 +309,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
+        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setDisplayName("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         root.addStamp(calendarStamp);
 
@@ -323,7 +322,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
+        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setDisplayName("");
         root.addStamp(calendarStamp);
 
@@ -336,7 +335,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
 
-        CalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
+        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setDisplayName("Valid display name");
         root.addStamp(calendarStamp);
         try{

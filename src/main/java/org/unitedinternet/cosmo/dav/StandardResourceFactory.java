@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
-import org.unitedinternet.cosmo.model.CalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventStamp;
@@ -36,6 +35,7 @@ import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
@@ -149,7 +149,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         }
 
         if (item instanceof CollectionItem) {
-            if (item.getStamp(CalendarCollectionStamp.class) != null) {
+            if (item.getStamp(HibCalendarCollectionStamp.class) != null) {
                 return new DavCalendarCollection((CollectionItem) item,
                                                  locator, this,entityFactory);
             } else if(item.getStamp(CardCollectionStamp.class) != null) {

@@ -16,9 +16,9 @@
 package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 
 import java.util.Set;
 
@@ -79,7 +79,7 @@ public interface ItemDao extends Dao {
      * @param forceReload cleans the session before loading the item
      * @return home collection item.
      */
-    HomeCollectionItem getRootItem(User user, boolean forceReload);
+    HibHomeCollectionItem getRootItem(User user, boolean forceReload);
 
     /**
      * Get the root item for a user
@@ -87,14 +87,14 @@ public interface ItemDao extends Dao {
      * @param user The user for get the root item.
      * @return home collection item.
      */
-    HomeCollectionItem getRootItem(User user);
+    HibHomeCollectionItem getRootItem(User user);
 
     /**
      * Create the root item for a user.
      * @param user The user for create the root item.
      * @return Home collection item.
      */
-    HomeCollectionItem createRootItem(User user);
+    HibHomeCollectionItem createRootItem(User user);
 
     /**
      * Remove an item.

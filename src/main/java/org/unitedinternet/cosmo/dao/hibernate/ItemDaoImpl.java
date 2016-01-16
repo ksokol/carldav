@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.UidInUseException;
@@ -140,7 +139,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 throw new IllegalArgumentException("item cannot be null");
             }
 
-            if (item instanceof HomeCollectionItem) {
+            if (item instanceof HibHomeCollectionItem) {
                 throw new IllegalArgumentException("cannot remove root item");
             }
 
@@ -159,7 +158,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    public HomeCollectionItem getRootItem(User user, boolean forceReload) {
+    public HibHomeCollectionItem getRootItem(User user, boolean forceReload) {
         if(forceReload){
             getSession().clear();
         }
@@ -171,7 +170,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      *
      * @see org.unitedinternet.cosmo.dao.ItemDao#getRootItem(org.unitedinternet.cosmo.model.User)
      */
-    public HomeCollectionItem getRootItem(User user) {
+    public HibHomeCollectionItem getRootItem(User user) {
         try {
             return findRootItem(user.getId());
         } catch (HibernateException e) {
@@ -183,7 +182,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#createRootItem(org.unitedinternet.cosmo.model.User)
      */
-    public HomeCollectionItem createRootItem(User user) {
+    public HibHomeCollectionItem createRootItem(User user) {
         try {
 
             if (user == null) {
@@ -194,7 +193,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 throw new CosmoException("user already has root item", new CosmoException());
             }
 
-            HomeCollectionItem newItem = new HibHomeCollectionItem();
+            HibHomeCollectionItem newItem = new HibHomeCollectionItem();
 
             newItem.setOwner(user);
             newItem.setName(user.getEmail());
@@ -432,14 +431,14 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    protected HomeCollectionItem findRootItem(Long dbUserId) {
+    protected HibHomeCollectionItem findRootItem(Long dbUserId) {
         Query hibQuery = getSession().getNamedQuery(
                 "homeCollection.by.ownerId").setParameter("ownerid",
                 dbUserId);
         hibQuery.setCacheable(true);
         hibQuery.setFlushMode(FlushMode.MANUAL);
 
-        return (HomeCollectionItem) hibQuery.uniqueResult();
+        return (HibHomeCollectionItem) hibQuery.uniqueResult();
     }
 
     protected void checkForDuplicateUid(Item item) {

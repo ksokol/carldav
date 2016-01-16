@@ -26,10 +26,10 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
 
@@ -125,7 +125,7 @@ public class StandardContentService implements ContentService {
     public void removeCollection(CollectionItem collection) {
         // prevent HomeCollection from being removed (should only be removed
         // when user is removed)
-        if(collection instanceof HomeCollectionItem) {
+        if(collection instanceof HibHomeCollectionItem) {
             throw new IllegalArgumentException("cannot remove home collection");
         }
         contentDao.removeCollection(collection);

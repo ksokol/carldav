@@ -33,7 +33,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
@@ -45,6 +44,7 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -837,7 +837,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void testHomeCollection() throws Exception {
         User testuser2 = getUser(userDao, "testuser2");
-        HomeCollectionItem root = contentDao.getRootItem(testuser2);
+        HibHomeCollectionItem root = contentDao.getRootItem(testuser2);
 
         Assert.assertNotNull(root);
         root.setName("alsfjal;skfjasd");

@@ -18,20 +18,11 @@ package org.unitedinternet.cosmo.model.hibernate;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
-
-
-/**
- * Hibernate persistent HomeCollectionItem.
- */
 @Entity
 @DiscriminatorValue("homecollection")
-public class HibHomeCollectionItem extends HibCollectionItem implements HomeCollectionItem {
+public class HibHomeCollectionItem extends HibCollectionItem {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -4301319758735788800L;
+    private static final long serialVersionUID = -1L;
 
     public void setName(String name) {
         // Prevent name changes to home collection

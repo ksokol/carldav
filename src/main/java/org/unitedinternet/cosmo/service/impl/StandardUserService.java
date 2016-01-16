@@ -25,11 +25,11 @@ import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 
@@ -102,7 +102,7 @@ public class StandardUserService implements UserService {
         calendar.setDisplayName("calendarDisplayName");
         calendar.addStamp(new HibCalendarCollectionStamp());
 
-        final HomeCollectionItem homeCollection = contentDao.createRootItem(newUser);
+        final HibHomeCollectionItem homeCollection = contentDao.createRootItem(newUser);
         contentService.createCollection(homeCollection, calendar);
 
         CollectionItem addressbook = new HibCollectionItem();
@@ -157,7 +157,7 @@ public class StandardUserService implements UserService {
         if(user==null) {
             return;
         }
-        HomeCollectionItem home = contentDao.getRootItem(user);
+        HibHomeCollectionItem home = contentDao.getRootItem(user);
         // remove collections/subcollections
         contentDao.removeCollection(home);
         // remove dangling items 

@@ -31,13 +31,13 @@ import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -143,8 +143,8 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     public WebDavResource createResource(DavResourceLocator locator, Item item)  throws CosmoDavException {
         Assert.notNull(item, "item cannot be null");
 
-        if (item instanceof HomeCollectionItem) {
-            return new DavHomeCollection((HomeCollectionItem) item, locator,
+        if (item instanceof HibHomeCollectionItem) {
+            return new DavHomeCollection((HibHomeCollectionItem) item, locator,
                                          this, idGenerator);
         }
 

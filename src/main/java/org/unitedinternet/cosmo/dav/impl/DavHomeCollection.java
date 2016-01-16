@@ -27,8 +27,8 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,14 +39,14 @@ import java.util.Set;
  * <code>HomeCollectionItem</code> to the DAV resource model.
  *
  * @see DavCollection
- * @see HomeCollectionItem
+ * @see HibHomeCollectionItem
  */
 public class DavHomeCollection extends DavCollectionBase {
     private static final Log LOG =
             LogFactory.getLog(DavHomeCollection.class);
 
     /** */
-    public DavHomeCollection(HomeCollectionItem collection,
+    public DavHomeCollection(HibHomeCollectionItem collection,
                              DavResourceLocator locator,
                              DavResourceFactory factory,
                              IdGenerator idGenerator)

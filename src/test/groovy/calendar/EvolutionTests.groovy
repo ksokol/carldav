@@ -1310,4 +1310,16 @@ class EvolutionTests extends IntegrationTestSupport {
         addVJournal()
         fetchingCalendarFirstTime()
     }
+
+    @Test
+    void calendarQueryForVTodo() {
+        addVTodo()
+        fetchingCalendarFirstTime()
+    }
+
+    @Test
+    void calendarQueryForVCard() {
+        addVCard()
+        fetchingCalendarFirstTime()
+    }
 }

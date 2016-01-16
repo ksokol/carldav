@@ -24,7 +24,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.hibernate.validator.Event;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,8 +78,8 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
         ArrayList<Component> exceptions = new ArrayList<Component>();
         
         // add all exception events
-        NoteItem note = (NoteItem) getItem();
-        for(NoteItem exception : note.getModifications()) {
+        HibNoteItem note = (HibNoteItem) getItem();
+        for(HibNoteItem exception : note.getModifications()) {
             HibEventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
             if(exceptionStamp!=null) {
                 exceptions.add(exceptionStamp.getEvent());

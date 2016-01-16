@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
@@ -420,12 +419,12 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         for (Item item : results) {
 
             // If item is not a note, then nothing to do
-            if (!(item instanceof NoteItem)) {
+            if (!(item instanceof HibNoteItem)) {
                 processedResults.add(item);
                 continue;
             }
 
-            NoteItem note = (NoteItem) item;
+            HibNoteItem note = (HibNoteItem) item;
 
             // If note is a modification then add both the modification and the 
             // master.
@@ -447,7 +446,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         return processedResults;
     }
 
-    private Collection<ContentItem> processMasterNote(NoteItem note,
+    private Collection<ContentItem> processMasterNote(HibNoteItem note,
                                                       EventStampFilter filter, boolean includeMasterInResults,
                                                       boolean doTimeRangeSecondPass) {
         EventStamp eventStamp = (EventStamp) note.getStamp(EventStamp.class);

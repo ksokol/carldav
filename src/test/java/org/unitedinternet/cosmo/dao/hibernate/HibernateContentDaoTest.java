@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
@@ -155,12 +154,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem note1 = generateTestNote("note1", "testuser");
+        HibNoteItem note1 = generateTestNote("note1", "testuser");
         note1.setIcalUid("icaluid");
 
         contentDao.createContent(root, note1);
-        
-        NoteItem note2 = generateTestNote("note2", "testuser");
+
+        HibNoteItem note2 = generateTestNote("note2", "testuser");
         note2.setIcalUid("icaluid");
          
 
@@ -1086,9 +1085,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         return content;
     }
     
-    private NoteItem generateTestNote(String name, String owner)
+    private HibNoteItem generateTestNote(String name, String owner)
             throws Exception {
-        NoteItem content = new HibNoteItem();
+        HibNoteItem content = new HibNoteItem();
         content.setName(name);
         content.setDisplayName(name);
         content.setOwner(getUser(userDao, owner));

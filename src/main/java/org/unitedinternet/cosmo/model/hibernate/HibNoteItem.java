@@ -21,7 +21,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.unitedinternet.cosmo.hibernate.validator.Task;
-import org.unitedinternet.cosmo.model.NoteItem;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -38,69 +37,44 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-/**
- * Hibernate persistent NoteItem.
- */
 @Entity
 @DiscriminatorValue("note")
-public class HibNoteItem extends HibICalendarItem implements NoteItem {
+public class HibNoteItem extends HibICalendarItem {
 
-    public static final HibQName ATTR_NOTE_BODY = new HibQName(NoteItem.class, "body");
+    public static final HibQName ATTR_NOTE_BODY = new HibQName(HibNoteItem.class, "body");
     
-    public static final HibQName ATTR_REMINDER_TIME = new HibQName(NoteItem.class, "reminderTime");
+    public static final HibQName ATTR_REMINDER_TIME = new HibQName(HibNoteItem.class, "reminderTime");
     
     private static final long serialVersionUID = -6100568628972081120L;
     
-    private static final Set<NoteItem> EMPTY_MODS = Collections
-            .unmodifiableSet(new HashSet<NoteItem>(0));
+    private static final Set<HibNoteItem> EMPTY_MODS = Collections.unmodifiableSet(new HashSet<>());
 
     @OneToMany(targetEntity=HibNoteItem.class, mappedBy = "modifies", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE} )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<NoteItem> modifications = new HashSet<NoteItem>(0);
+    private Set<HibNoteItem> modifications = new HashSet<>();
     
     @ManyToOne(targetEntity=HibNoteItem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "modifiesitemid")
-    private NoteItem modifies = null;
+    private HibNoteItem modifies = null;
     
     @Column(name= "hasmodifications")
     private boolean hasModifications = false;
 
-    // Property accessors
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#getBody()
-     */
     public String getBody() {
         return HibTextAttribute.getValue(this, ATTR_NOTE_BODY);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#setBody(java.lang.String)
-     */
     public void setBody(String body) {
         // body stored as TextAttribute on Item
         HibTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
     }
-  
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#setBody(java.io.Reader)
-     */
+
     public void setBody(Reader body) {
         // body stored as TextAttribute on Item
         HibTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#getReminderTime()
-     */
-    public Date getReminderTime() {
-        return HibTimestampAttribute.getValue(this, ATTR_REMINDER_TIME);
-    }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#setReminderTime(java.util.Date)
-     */
     public void setReminderTime(Date reminderTime) {
         // reminderDate stored as TimestampAttribute on Item
         HibTimestampAttribute.setValue(this, ATTR_REMINDER_TIME, reminderTime);
@@ -116,10 +90,7 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
         setCalendar(calendar);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#getModifications()
-     */
-    public Set<NoteItem> getModifications() {
+    public Set<HibNoteItem> getModifications() {
         if(hasModifications) {
             return Collections.unmodifiableSet(modifications);
         }
@@ -127,50 +98,31 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
             return EMPTY_MODS;
         }
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#addModification(org.unitedinternet.cosmo.model.NoteItem)
-     */
-    public void addModification(NoteItem mod) {
+
+    public void addModification(HibNoteItem mod) {
         modifications.add(mod);
         hasModifications = true;
     }
-  
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#removeModification(org.unitedinternet.cosmo.model.NoteItem)
-     */
-    public boolean removeModification(NoteItem mod) {
+
+    public boolean removeModification(HibNoteItem mod) {
         boolean removed = modifications.remove(mod);
         hasModifications = modifications.size()!=0;
         return removed;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#removeAllModifications()
-     */
+
     public void removeAllModifications() {
         modifications.clear();
         hasModifications = false;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#getModifies()
-     */
-    public NoteItem getModifies() {
+    public HibNoteItem getModifies() {
         return modifies;
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.NoteItem#setModifies(org.unitedinternet.cosmo.model.NoteItem)
-     */
-    public void setModifies(NoteItem modifies) {
+
+    public void setModifies(HibNoteItem modifies) {
         this.modifies = modifies;
     }
-    
-    public boolean hasModifications() {
-        return hasModifications;
-    }
-    
+        
     @Override
     public String calculateEntityTag() {
         String uid = getUid() != null ? getUid() : "-";
@@ -181,7 +133,7 @@ public class HibNoteItem extends HibICalendarItem implements NoteItem {
         
         // etag is constructed from self plus modifications
         if(modifies==null) {
-            for(NoteItem mod: getModifications()) {
+            for(HibNoteItem mod: getModifications()) {
                 uid = mod.getUid() != null ? mod.getUid() : "-";
                 modTime = mod.getModifiedDate() != null ?
                         Long.valueOf(mod.getModifiedDate().getTime()).toString() : "-";

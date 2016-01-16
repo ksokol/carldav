@@ -41,10 +41,10 @@ import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -288,7 +288,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         try {
             // convert icalendar representation to cosmo data model
             toUpdate.addAll(converter.convertEventCalendar(
-                    (NoteItem) content, event.getEventCalendar()));
+                    (HibNoteItem) content, event.getEventCalendar()));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
@@ -332,7 +332,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convertJournalCalendar((NoteItem) content, event.getEventCalendar()));
+            toUpdate.add(converter.convertJournalCalendar((HibNoteItem) content, event.getEventCalendar()));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }

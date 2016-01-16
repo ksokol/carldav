@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
@@ -50,7 +49,7 @@ public class DavEvent extends DavCalendarResource {
     }
     
     /** */
-    public DavEvent(NoteItem item,
+    public DavEvent(HibNoteItem item,
                     DavResourceLocator locator,
                     DavResourceFactory factory,
                     IdGenerator idGenerator)
@@ -64,7 +63,7 @@ public class DavEvent extends DavCalendarResource {
      * Returns the calendar object associated with this resource.
      */
     public Calendar getCalendar() {
-        return new EntityConverter(getIdGenerator()).convertNote((NoteItem)getItem());
+        return new EntityConverter(getIdGenerator()).convertNote((HibNoteItem)getItem());
     }
     
     public EventStamp getEventStamp() {

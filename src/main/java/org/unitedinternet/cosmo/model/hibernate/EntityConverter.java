@@ -53,7 +53,6 @@ import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -74,7 +73,7 @@ import java.util.Vector;
  * Often this is not a straight one-to-one mapping, because recurring
  * iCalendar events are modeled as multiple events in a single
  * {@link Calendar}, whereas recurring items are modeled as a master
- * {@link NoteItem} with zero or more {@link NoteItem} modifications
+ * {@link HibNoteItem} with zero or more {@link HibNoteItem} modifications
  */
 public class EntityConverter { 
     private static final TimeZoneRegistry TIMEZONE_REGISTRY = TimeZoneRegistryFactory.getInstance().createRegistry();
@@ -136,7 +135,7 @@ public class EntityConverter {
      * @param calendar The calendar.
      * @return set note item.
      */
-    public Set<NoteItem> convertEventCalendar(NoteItem note, Calendar calendar) {
+    public Set<HibNoteItem> convertEventCalendar(HibNoteItem note, Calendar calendar) {
         EventStamp eventStamp = (EventStamp) note.getStamp(EventStamp.class);
         
         if (eventStamp == null) {
@@ -150,12 +149,12 @@ public class EntityConverter {
 
         updateEventInternal(note, calendar);
 
-        LinkedHashSet<NoteItem> items = new LinkedHashSet<NoteItem>();
+        LinkedHashSet<HibNoteItem> items = new LinkedHashSet<>();
         items.add(note);
 
         // add modifications to set of items
-        for(Iterator<NoteItem> it = note.getModifications().iterator(); it.hasNext();) {
-            NoteItem mod = it.next();
+        for(Iterator<HibNoteItem> it = note.getModifications().iterator(); it.hasNext();) {
+            HibNoteItem mod = it.next();
             items.add(mod);
         }
 
@@ -168,8 +167,8 @@ public class EntityConverter {
      * @param calendar The calendar.
      * @return The convertion.
      */
-    public Set<NoteItem> convertEventCalendar(Calendar calendar) {
-        NoteItem note = new HibNoteItem();
+    public Set<HibNoteItem> convertEventCalendar(Calendar calendar) {
+        HibNoteItem note = new HibNoteItem();
         note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertEventCalendar(note, calendar);
@@ -180,8 +179,8 @@ public class EntityConverter {
      * @param calendar calendar containing VJOURNAL
      * @return NoteItem representation of VJOURNAL
      */
-    public NoteItem convertJournalCalendar(Calendar calendar) {
-        NoteItem note = new HibNoteItem();
+    public HibNoteItem convertJournalCalendar(Calendar calendar) {
+        HibNoteItem note = new HibNoteItem();
         note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertJournalCalendar(note, calendar);
@@ -193,7 +192,7 @@ public class EntityConverter {
      * @param calendar calendar containing VJOURNAL
      * @return NoteItem representation of VJOURNAL
      */
-    public NoteItem convertJournalCalendar(NoteItem  note, Calendar calendar) {
+    public HibNoteItem convertJournalCalendar(HibNoteItem  note, Calendar calendar) {
         
         VJournal vj = (VJournal) getMasterComponent(calendar.getComponents(Component.VJOURNAL));
         setCalendarAttributes(note, vj);
@@ -207,8 +206,8 @@ public class EntityConverter {
      *            calendar containing VTODO
      * @return NoteItem representation of VTODO
      */
-    public NoteItem convertTaskCalendar(Calendar calendar) {
-        NoteItem note = new HibNoteItem();
+    public HibNoteItem convertTaskCalendar(Calendar calendar) {
+        HibNoteItem note = new HibNoteItem();
         note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertTaskCalendar(note, calendar);
@@ -223,7 +222,7 @@ public class EntityConverter {
      *            calendar containing VTODO
      * @return NoteItem representation of VTODO
      */
-    public NoteItem convertTaskCalendar(NoteItem  note, Calendar calendar) {
+    public HibNoteItem convertTaskCalendar(HibNoteItem  note, Calendar calendar) {
         
         note.setTaskCalendar(calendar);
         VToDo todo = (VToDo) getMasterComponent(calendar.getComponents(Component.VTODO));
@@ -297,8 +296,8 @@ public class EntityConverter {
     /**
      * Returns a calendar representing the item.
      * <p>
-     * If the item is a {@link NoteItem}, delegates to
-     * {@link #convertNote(NoteItem)}. If the item is a {@link ICalendarItem},
+     * If the item is a {@link HibNoteItem}, delegates to
+     * {@link #convertNote(HibNoteItem)}. If the item is a {@link ICalendarItem},
      * delegates to {@link ICalendarItem#getFullCalendar()}. Otherwise,
      * returns null.
      * @param item The content item.
@@ -307,8 +306,8 @@ public class EntityConverter {
      */
     public Calendar convertContent(ContentItem item) {
 
-        if(item instanceof NoteItem) {
-            return convertNote((NoteItem) item);
+        if(item instanceof HibNoteItem) {
+            return convertNote((HibNoteItem) item);
         }
 
 
@@ -326,7 +325,7 @@ public class EntityConverter {
      * @param note The note item.
      * @return calendar The calendar.
      */
-    public Calendar convertNote(NoteItem note) {
+    public Calendar convertNote(HibNoteItem note) {
 
         // must be a master note
         if (note.getModifies()!=null) {
@@ -346,7 +345,7 @@ public class EntityConverter {
      * @param note The note item.
      * @return The calendar.
      */
-    protected Calendar getCalendarFromNote(NoteItem note) {
+    protected Calendar getCalendarFromNote(HibNoteItem note) {
         // Start with existing calendar if present
         Calendar calendar = note.getTaskCalendar();
         
@@ -417,7 +416,7 @@ public class EntityConverter {
         }
         
         // merge item properties to icalendar props
-        mergeCalendarProperties(masterEvent, (NoteItem) stamp.getItem());
+        mergeCalendarProperties(masterEvent, (HibNoteItem) stamp.getItem());
         
         // bug 9606: handle displayAlarm with no trigger by not including
         // in exported icalendar
@@ -433,9 +432,9 @@ public class EntityConverter {
         }
         
         // add all exception events
-        NoteItem note = (NoteItem) stamp.getItem();
+        HibNoteItem note = (HibNoteItem) stamp.getItem();
         TreeMap<String, VEvent> sortedMap = new TreeMap<String, VEvent>();
-        for(NoteItem exception : note.getModifications()) {
+        for(HibNoteItem exception : note.getModifications()) {
             HibEventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
             
             // if modification isn't stamped as an event then ignore
@@ -506,7 +505,7 @@ public class EntityConverter {
      * @param event The event.
      * @param note The note item.
      */
-    private void mergeCalendarProperties(VEvent event, NoteItem note) {
+    private void mergeCalendarProperties(VEvent event, HibNoteItem note) {
         //summary = displayName
         //description = body
         //uid = icalUid
@@ -551,7 +550,7 @@ public class EntityConverter {
      * @param task The task.
      * @param note The note item.
      */
-    private void mergeCalendarProperties(VToDo task, NoteItem note) {
+    private void mergeCalendarProperties(VToDo task, HibNoteItem note) {
         //uid = icaluid or uid
         //summary = displayName
         //description = body
@@ -624,7 +623,7 @@ public class EntityConverter {
      * @param masterNote The master note.
      * @param calendar The calendar.
      */
-    private void updateEventInternal(NoteItem masterNote, Calendar calendar) {
+    private void updateEventInternal(HibNoteItem masterNote, Calendar calendar) {
         HashMap<Date, VEvent> exceptions = new HashMap<Date, VEvent>();
         
         Calendar masterCalendar = calendar;
@@ -706,7 +705,7 @@ public class EntityConverter {
      * @param masterNote The master note.
      */
     private void syncExceptions(Map<Date, VEvent> exceptions,
-                                NoteItem masterNote) {
+                                HibNoteItem masterNote) {
         for (Entry<Date, VEvent> entry : exceptions.entrySet()) {
             syncException(entry.getValue(), masterNote);
         }
@@ -717,8 +716,8 @@ public class EntityConverter {
      * @param event The event.
      * @param masterNote The master note.
      */
-    private void syncException(VEvent event, NoteItem masterNote) {
-        NoteItem mod =
+    private void syncException(VEvent event, HibNoteItem masterNote) {
+        HibNoteItem mod =
             getModification(masterNote, event.getRecurrenceId().getDate());
 
         if (mod == null) {
@@ -736,9 +735,9 @@ public class EntityConverter {
      * @param recurrenceId The reccurence id.
      * @return The note item.
      */
-    private NoteItem getModification(NoteItem masterNote,
+    private HibNoteItem getModification(HibNoteItem masterNote,
                                      Date recurrenceId) {
-        for (NoteItem mod : masterNote.getModifications()) {
+        for (HibNoteItem mod : masterNote.getModifications()) {
             HibEventExceptionStamp exceptionStamp =
                 StampUtils.getEventExceptionStamp(mod);
             // only interested in mods with event stamp
@@ -758,8 +757,8 @@ public class EntityConverter {
      * @param masterNote masterNote.
      * @event The event.
      */
-    private void createNoteModification(NoteItem masterNote, VEvent event) {
-        NoteItem noteMod = new HibNoteItem();
+    private void createNoteModification(HibNoteItem masterNote, VEvent event) {
+        HibNoteItem noteMod = new HibNoteItem();
         Calendar exceptionCal = null;
         // a note modification should inherit the calendar product info as its master component.
         if(masterNote.getStamp(EventStamp.class) != null) {
@@ -805,7 +804,7 @@ public class EntityConverter {
      * @param noteMod The note item modified.
      * @param event The event.
      */
-    private void updateNoteModification(NoteItem noteMod,
+    private void updateNoteModification(HibNoteItem noteMod,
                                         VEvent event) {
         HibEventExceptionStamp exceptionStamp =
             StampUtils.getEventExceptionStamp(noteMod);
@@ -849,7 +848,7 @@ public class EntityConverter {
      * @param note The note item.
      * @param event The event.
      */
-    private void setCalendarAttributes(NoteItem note, VEvent event) {
+    private void setCalendarAttributes(HibNoteItem note, VEvent event) {
         
         // UID (only set if master)
         if(event.getUid()!=null && note.getModifies()==null) {
@@ -902,7 +901,7 @@ public class EntityConverter {
      * @param note The note item.
      * @param task The task vToDo.
      */
-    private void setCalendarAttributes(NoteItem note, VToDo task) {
+    private void setCalendarAttributes(HibNoteItem note, VToDo task) {
         
         // UID
         if(task.getUid()!=null) {
@@ -967,7 +966,7 @@ public class EntityConverter {
      * @param note The note item.
      * @param journal The VJournal.
      */
-    private void setCalendarAttributes(NoteItem note, VJournal journal) {
+    private void setCalendarAttributes(HibNoteItem note, VJournal journal) {
         // UID
         if(journal.getUid()!=null) {
             note.setIcalUid(journal.getUid().getValue());

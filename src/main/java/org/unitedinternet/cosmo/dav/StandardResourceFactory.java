@@ -32,13 +32,13 @@ import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 
@@ -159,8 +159,8 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             }
         }
 
-        if (item instanceof NoteItem) {
-            NoteItem note = (NoteItem) item;
+        if (item instanceof HibNoteItem) {
+            HibNoteItem note = (HibNoteItem) item;
             // don't expose modifications
             if(note.getModifies()!=null) {
                 return null;

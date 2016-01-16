@@ -35,8 +35,8 @@ public class NoteItemTest {
         HibNoteItem master = new HibNoteItem();
         master.setUid("1");
         master.setModifiedDate(new Date());
-        
-        NoteItem mod = new HibNoteItem();
+
+        HibNoteItem mod = new HibNoteItem();
         mod.setUid("2");
         mod.setModifiedDate(new Date());
         mod.setModifies(master);

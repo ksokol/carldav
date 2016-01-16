@@ -39,7 +39,7 @@ import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -99,7 +99,7 @@ public abstract class DavCalendarResource extends DavContentBase
      */
     public boolean matches(CalendarFilter filter)
         throws CosmoDavException {
-        return getCalendarQueryProcesor().filterQuery((NoteItem)getItem(), filter);
+        return getCalendarQueryProcesor().filterQuery((HibNoteItem)getItem(), filter);
     }
 
     /**

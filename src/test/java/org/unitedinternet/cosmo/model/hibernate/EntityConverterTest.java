@@ -36,7 +36,6 @@ import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -65,8 +64,8 @@ public class EntityConverterTest {
     @Test
     public void testEntityConverterTask() throws Exception {
         Calendar calendar = getCalendar("vtodo.ics");
-        
-        NoteItem note = converter.convertTaskCalendar(calendar);
+
+        HibNoteItem note = converter.convertTaskCalendar(calendar);
         
         Assert.assertTrue(TriageStatusUtil.CODE_NOW==note.getTriageStatus().getCode());
         
@@ -105,14 +104,14 @@ public class EntityConverterTest {
     public void testEntityConverterEvent() throws Exception {
         
         Calendar calendar = getCalendar("event_with_exception.ics");
-        NoteItem master = new HibNoteItem();
-        Set<NoteItem> items = converter.convertEventCalendar(master, calendar);
+        HibNoteItem master = new HibNoteItem();
+        Set<HibNoteItem> items = converter.convertEventCalendar(master, calendar);
         
         // should be master and mod
         Assert.assertEquals(2, items.size());
         
         // get master
-        Iterator<NoteItem> it = items.iterator();
+        Iterator<HibNoteItem> it = items.iterator();
         master = it.next();
         
         // check ical props
@@ -134,7 +133,7 @@ public class EntityConverterTest {
         Assert.assertEquals(master.getDisplayName(), "event 6");
         
         // get mod
-        NoteItem mod = it.next();
+        HibNoteItem mod = it.next();
         
         ModificationUidImpl uid = new ModificationUidImpl(mod.getUid());
         
@@ -194,7 +193,7 @@ public class EntityConverterTest {
         
         Calendar calendar = getCalendar("bigcalendar.ics");
         @SuppressWarnings("unused")
-		NoteItem master = new HibNoteItem();
+        HibNoteItem master = new HibNoteItem();
         Set<ICalendarItem> items = converter.convertCalendar(calendar);
         
         // should be 8
@@ -202,45 +201,45 @@ public class EntityConverterTest {
         
         ICalendarItem item = findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertNotNull(StampUtils.getEventStamp(item));
         
         
         item = findItemByIcalUid(items, "e3i849b29kd3fbp48hmkmgjst0@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertNotNull(StampUtils.getEventStamp(item));
         
         
         item = findItemByIcalUid(items, "4csitoh29h1arc46bnchg19oc8@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertNotNull(StampUtils.getEventStamp(item));
         
         
         item = findItemByIcalUid(items, "f920n2rdb0qdd6grkjh4m4jrq0@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertNotNull(StampUtils.getEventStamp(item));
         
         
         item = findItemByIcalUid(items, "jev0phs8mnfkuvoscrra1fh8j0@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertNotNull(StampUtils.getEventStamp(item));
         
         item = findModByRecurrenceId(items, "20071129T203000Z" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertNotNull(StampUtils.getEventExceptionStamp(item));
         
         item = findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
        
         item = findItemByIcalUid(items, "19970901T130000Z-123405@host.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof NoteItem);
+        Assert.assertTrue(item instanceof HibNoteItem);
         Assert.assertEquals(0, item.getStamps().size());
         
     }
@@ -254,8 +253,8 @@ public class EntityConverterTest {
         
         Calendar c1 = getCalendar("eventwithtimezone1.ics");
         Calendar c2 = getCalendar("vtodo.ics");
-        NoteItem note1 = converter.convertEventCalendar(c1).iterator().next();
-        NoteItem note2 = converter.convertTaskCalendar(c2);
+        HibNoteItem note1 = converter.convertEventCalendar(c1).iterator().next();
+        HibNoteItem note2 = converter.convertTaskCalendar(c2);
        
         HibCollectionItem collection = new HibCollectionItem();
         collection.addStamp(new HibCalendarCollectionStamp(collection));
@@ -282,7 +281,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testConvertTask() throws Exception {
-        NoteItem master = new HibNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
         master.setIcalUid("icaluid");
@@ -321,7 +320,7 @@ public class EntityConverterTest {
     public void testConvertEvent() throws Exception {
         TimeZoneRegistry registry =
             TimeZoneRegistryFactory.getInstance().createRegistry();
-        NoteItem master = new HibNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
         master.setIcalUid("icaluid");
@@ -382,7 +381,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testEventModificationGetCalendar() throws Exception {
-        NoteItem master = new HibNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setIcalUid("icaluid");
         master.setDisplayName("master displayName");
         master.setBody("master body");
@@ -398,8 +397,8 @@ public class EntityConverterTest {
         master.addStamp(eventStamp);
         
         eventStamp.getEventCalendar().validate();
-       
-        NoteItem mod = new HibNoteItem();
+
+        HibNoteItem mod = new HibNoteItem();
         mod.setDisplayName("modDisplayName");
         mod.setBody("modBody");
         mod.setModifies(master);
@@ -448,7 +447,7 @@ public class EntityConverterTest {
      */
     @Test
     public void testInheritedAnyTime() throws Exception {
-        NoteItem master = new HibNoteItem();
+        HibNoteItem master = new HibNoteItem();
         EventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
@@ -458,8 +457,8 @@ public class EntityConverterTest {
         dates.add(new DateTime("20070213T074500"));
         eventStamp.setRecurrenceDates(dates);
         master.addStamp(eventStamp);
-        
-        NoteItem mod = new HibNoteItem();
+
+        HibNoteItem mod = new HibNoteItem();
         mod.setModifies(master);
         master.addModification(mod);
         HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
@@ -508,8 +507,8 @@ public class EntityConverterTest {
      */
     private ICalendarItem findModByRecurrenceId(Set<ICalendarItem> items, String rid) {
         for(ICalendarItem item: items) {
-            if(item instanceof NoteItem) {
-                NoteItem note = (NoteItem) item;
+            if(item instanceof HibNoteItem) {
+                HibNoteItem note = (HibNoteItem) item;
                 if(note.getModifies()!=null && note.getUid().contains(rid)) {
                     return note;
                 }
@@ -524,8 +523,8 @@ public class EntityConverterTest {
      * @param rid The id.
      * @return The note item.
      */
-    private NoteItem findModByRecurrenceIdForNoteItems(Set<NoteItem> items, String rid) {
-        for(NoteItem note: items) {
+    private HibNoteItem findModByRecurrenceIdForNoteItems(Set<HibNoteItem> items, String rid) {
+        for(HibNoteItem note: items) {
             if(note.getModifies()!=null && note.getUid().contains(rid)) {
                 return note;
             }

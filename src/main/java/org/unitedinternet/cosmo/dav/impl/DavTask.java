@@ -23,7 +23,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
@@ -48,7 +47,7 @@ public class DavTask extends DavCalendarResource {
     }
 
     /** */
-    public DavTask(NoteItem item,
+    public DavTask(HibNoteItem item,
                    DavResourceLocator locator,
                    DavResourceFactory factory,
                    IdGenerator idGenerator)
@@ -71,7 +70,7 @@ public class DavTask extends DavCalendarResource {
      * @return The calendar exported.
      */
     public Calendar getCalendar() {
-        return new EntityConverter(getIdGenerator()).convertNote((NoteItem)getItem());
+        return new EntityConverter(getIdGenerator()).convertNote((HibNoteItem)getItem());
     }
 
     /**
@@ -92,7 +91,7 @@ public class DavTask extends DavCalendarResource {
      */
     public void setCalendar(Calendar cal)
         throws CosmoDavException {
-        NoteItem note = (NoteItem) getItem();
+        HibNoteItem note = (HibNoteItem) getItem();
         
         ComponentList vtodos = cal.getComponents(Component.VTODO);
         if (vtodos.isEmpty()) {

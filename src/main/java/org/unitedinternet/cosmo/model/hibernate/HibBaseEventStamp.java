@@ -49,7 +49,6 @@ import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -659,8 +658,8 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
     }
 
     public void createCalendar() {
-        
-        NoteItem note = (NoteItem) getItem();
+
+        HibNoteItem note = (HibNoteItem) getItem();
        
         String icalUid = note.getIcalUid();
         if(icalUid==null) {

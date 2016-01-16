@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
@@ -93,7 +92,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem item = generateTestContent();
+        HibNoteItem item = generateTestContent();
 
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
@@ -118,8 +117,8 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals(es.getEventCalendar().toString(), event.getEventCalendar()
                 .toString());
 
-        Assert.assertEquals("icaluid", ((NoteItem) queryItem).getIcalUid());
-        Assert.assertEquals("this is a body", ((NoteItem) queryItem).getBody());
+        Assert.assertEquals("icaluid", ((HibNoteItem) queryItem).getIcalUid());
+        Assert.assertEquals("this is a body", ((HibNoteItem) queryItem).getBody());
     }
 
     /**
@@ -131,7 +130,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem item = generateTestContent();
+        HibNoteItem item = generateTestContent();
 
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
@@ -199,7 +198,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem item = generateTestContent();
+        HibNoteItem item = generateTestContent();
 
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
@@ -355,7 +354,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem item = generateTestContent();
+        HibNoteItem item = generateTestContent();
 
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
@@ -391,7 +390,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        NoteItem item = generateTestContent();
+        HibNoteItem item = generateTestContent();
 
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
@@ -424,7 +423,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
      * @return The note item.
      * @throws Exception - if something is wrong this exception is thrown.
      */
-    private NoteItem generateTestContent() throws Exception {
+    private HibNoteItem generateTestContent() throws Exception {
         return generateTestContent("test", "testuser");
     }
 
@@ -435,9 +434,9 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
      * @return The note item.
      * @throws Exception - if something is wrong this exception is thrown.
      */
-    private NoteItem generateTestContent(String name, String owner)
+    private HibNoteItem generateTestContent(String name, String owner)
             throws Exception {
-        NoteItem content = new HibNoteItem();
+        HibNoteItem content = new HibNoteItem();
         content.setName(name);
         content.setDisplayName(name);
         content.setOwner(getUser(userDao, owner));

@@ -27,11 +27,10 @@ import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -286,8 +285,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         // Initialize master NoteItem if applicable
         try {
-            if (item instanceof NoteItem) {
-                NoteItem note = (NoteItem) item;
+            if (item instanceof HibNoteItem) {
+                HibNoteItem note = (HibNoteItem) item;
                 if (note.getModifies() != null) {
                     Hibernate.initialize(note.getModifies());
                     initializeItem(note.getModifies());
@@ -339,8 +338,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     private void removeContentRecursive(ContentItem content) {
         // Remove modifications
-        if (content instanceof NoteItem) {
-            NoteItem note = (NoteItem) content;
+        if (content instanceof HibNoteItem) {
+            HibNoteItem note = (HibNoteItem) content;
             if (note.getModifies() != null) {
                 // remove mod from master's collection
                 note.getModifies().removeModification(note);
@@ -384,7 +383,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
     }
 
-    private void removeNoteItemFromCollectionInternal(NoteItem note, CollectionItem collection) {
+    private void removeNoteItemFromCollectionInternal(HibNoteItem note, CollectionItem collection) {
         getSession().update(collection);
         getSession().update(note);
 
@@ -395,7 +394,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         ((HibItem) note).removeParent(collection);
 
-        for (NoteItem mod : note.getModifications()) {
+        for (HibNoteItem mod : note.getModifications()) {
             removeNoteItemFromCollectionInternal(mod, collection);
         }
 
@@ -441,7 +440,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         // collections that the parent note is in, because a note modification's
         // parents are tied to the parent note.
         if (isNoteModification(content)) {
-            NoteItem note = (NoteItem) content;
+            HibNoteItem note = (HibNoteItem) content;
 
             // ensure master is dirty so that etag gets updated
             note.getModifies().updateTimestamp();
@@ -501,7 +500,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         // Ensure NoteItem modifications have the same parents as the 
         // master note.
         if (isNoteModification(content)) {
-            NoteItem note = (NoteItem) content;
+            HibNoteItem note = (HibNoteItem) content;
 
             // ensure master is dirty so that etag gets updated
             note.getModifies().updateTimestamp();
@@ -548,7 +547,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         if (isNoteModification(content)) {
             // ensure master is dirty so that etag gets updated
-            ((NoteItem) content).getModifies().updateTimestamp();
+            ((HibNoteItem) content).getModifies().updateTimestamp();
         }
 
     }
@@ -590,8 +589,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         super.addItemToCollectionInternal(item, collection);
 
         // Add all modifications
-        if (item instanceof NoteItem) {
-            for (NoteItem mod : ((NoteItem) item).getModifications()) {
+        if (item instanceof HibNoteItem) {
+            for (HibNoteItem mod : ((HibNoteItem) item).getModifications()) {
                 super.addItemToCollectionInternal(mod, collection);
             }
         }
@@ -599,17 +598,17 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     @Override
     protected void removeItemFromCollectionInternal(Item item, CollectionItem collection) {
-        if (item instanceof NoteItem) {
+        if (item instanceof HibNoteItem) {
             // When a note modification is removed, it is really removed from
             // all collections because a modification can't live in one collection
             // and not another.  It is tied to the collections that the master
             // note is in.  Therefore you can't just remove a modification from
             // a single collection when the master note is in multiple collections.
-            NoteItem note = (NoteItem) item;
+            HibNoteItem note = (HibNoteItem) item;
             if (note.getModifies() != null) {
                 removeContentRecursive((ContentItem) item);
             } else {
-                removeNoteItemFromCollectionInternal((NoteItem) item, collection);
+                removeNoteItemFromCollectionInternal((HibNoteItem) item, collection);
             }
         } else {
             super.removeItemFromCollectionInternal(item, collection);
@@ -625,13 +624,13 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         // ignore modifications
-        if (item instanceof NoteItem && ((NoteItem) item).getModifies() != null) {
+        if (item instanceof HibNoteItem && ((HibNoteItem) item).getModifies() != null) {
             return;
         }
 
         // Lookup item by parent/icaluid
         Query hibQuery = null;
-        if (item instanceof NoteItem) {
+        if (item instanceof HibNoteItem) {
             hibQuery = getSession().getNamedQuery(
                     "noteItemId.by.parent.icaluid").setParameter("parentid",
                     getBaseModelObject(parent).getId()).setParameter("icaluid", item.getIcalUid());
@@ -672,7 +671,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         // ignore modifications
-        if (item instanceof NoteItem && ((NoteItem) item).getModifies() != null) {
+        if (item instanceof HibNoteItem && ((HibNoteItem) item).getModifies() != null) {
             return;
         }
 
@@ -682,11 +681,11 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     private boolean isNoteModification(Item item) {
-        if (!(item instanceof NoteItem)) {
+        if (!(item instanceof HibNoteItem)) {
             return false;
         }
 
-        return ((NoteItem) item).getModifies() != null;
+        return ((HibNoteItem) item).getModifies() != null;
     }
 
 

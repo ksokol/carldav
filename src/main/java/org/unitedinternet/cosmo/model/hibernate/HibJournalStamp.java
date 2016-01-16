@@ -13,7 +13,6 @@ import net.fortuna.ical4j.model.property.DtStart;
 import org.unitedinternet.cosmo.hibernate.validator.Journal;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +55,8 @@ public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
         List<Component> exceptions = new ArrayList<>();
         
         // add all exception events
-        NoteItem note = (NoteItem) getItem();
-        for(NoteItem exception : note.getModifications()) {
+        HibNoteItem note = (HibNoteItem) getItem();
+        for(HibNoteItem exception : note.getModifications()) {
             HibEventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
             if(exceptionStamp!=null) {
                 exceptions.add(exceptionStamp.getEvent());

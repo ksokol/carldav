@@ -38,7 +38,7 @@ public class EventStampTest {
      */
     @Test
     public void testExDates() throws Exception {
-        NoteItem master = new HibNoteItem();
+        HibNoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
         EventStamp eventStamp = new HibEventStamp(master);

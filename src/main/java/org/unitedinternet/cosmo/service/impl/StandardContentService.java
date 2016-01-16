@@ -27,9 +27,9 @@ import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
 
@@ -172,11 +172,11 @@ public class StandardContentService implements ContentService {
         }
     }
     private void checkDatesForEvent(ContentItem item){
-        if(!(item instanceof NoteItem)){
+        if(!(item instanceof HibNoteItem)){
             return;
         }
-        
-        NoteItem noteItem = (NoteItem)item;
+
+        HibNoteItem noteItem = (HibNoteItem)item;
         Stamp stamp = noteItem.getStamp("event");
         
         if(!(stamp instanceof EventStamp)){
@@ -417,8 +417,8 @@ public class StandardContentService implements ContentService {
         
         // Acquire locks on master item's parents, as an addition/deletion
         // of a modifications item affects all the parents of the master item.
-        if(item instanceof NoteItem) {
-            NoteItem note = (NoteItem) item;
+        if(item instanceof HibNoteItem) {
+            HibNoteItem note = (HibNoteItem) item;
             if(note.getModifies()!=null) {
                 acquireLocks(locks, note.getModifies());
             }

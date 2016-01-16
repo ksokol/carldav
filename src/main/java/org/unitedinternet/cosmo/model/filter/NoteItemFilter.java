@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.NoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 /**
  * Adds NoteItem specific criteria to ItemFilter.
@@ -30,7 +30,7 @@ public class NoteItemFilter extends ContentItemFilter {
     private Boolean hasModifications = null;
     private Boolean isModification = null;
     
-    private NoteItem masterNoteItem = null;
+    private HibNoteItem masterNoteItem = null;
 
     /**
      * Match notes with a body that matches a given String.
@@ -82,7 +82,7 @@ public class NoteItemFilter extends ContentItemFilter {
         this.isModification = isModification;
     }
 
-    public NoteItem getMasterNoteItem() {
+    public HibNoteItem getMasterNoteItem() {
         return masterNoteItem;
     }
 
@@ -90,7 +90,7 @@ public class NoteItemFilter extends ContentItemFilter {
      * Matches the specified NoteItem and any modifications to that NoteItem
      * @param masterNoteItem
      */
-    public void setMasterNoteItem(NoteItem masterNoteItem) {
+    public void setMasterNoteItem(HibNoteItem masterNoteItem) {
         this.masterNoteItem = masterNoteItem;
     }
 

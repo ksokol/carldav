@@ -19,7 +19,6 @@ import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.TimestampAttribute;
 
 import java.util.Date;
 
@@ -27,23 +26,16 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-/**
- * Hibernate persistent TimestampAtttribute.
- */
 @Entity
 @DiscriminatorValue("timestamp")
-public class HibTimestampAttribute extends HibAttribute implements TimestampAttribute {
+public class HibTimestampAttribute extends HibAttribute {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = 5263977785074085449L;
     
     @Column(name = "intvalue")
     @Type(type="long_timestamp")
     private Date value;
 
-    /** default constructor */
     public HibTimestampAttribute() {
     }
 
@@ -52,18 +44,10 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
         this.value = value;
     }
 
-    // Property accessors
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getValue()
-     */
     public Date getValue() {
         return this.value;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.TimestampAttribute#setValue(java.util.Date)
-     */
     public void setValue(Date value) {
         this.value = value;
     }
@@ -75,7 +59,7 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
         }
         setValue((Date) value);
     }
-    
+
     /**
      * Convienence method for returning a Date value on a TimestampAttribute
      * with a given QName stored on the given item.
@@ -84,7 +68,7 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
      * @return Date value of TextAttribute
      */
     public static Date getValue(Item item, QName qname) {
-        TimestampAttribute ta = (TimestampAttribute) item.getAttribute(qname);
+        HibTimestampAttribute ta = (HibTimestampAttribute) item.getAttribute(qname);
         if(ta==null) {
             return null;
         }
@@ -101,7 +85,7 @@ public class HibTimestampAttribute extends HibAttribute implements TimestampAttr
      * @param value value to set on TextAttribute
      */
     public static void setValue(Item item, QName qname, Date value) {
-        TimestampAttribute attr = (TimestampAttribute) item.getAttribute(qname);
+        HibTimestampAttribute attr = (HibTimestampAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTimestampAttribute(qname,value);
             item.addAttribute(attr);

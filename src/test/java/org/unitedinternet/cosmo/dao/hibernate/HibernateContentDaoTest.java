@@ -38,7 +38,6 @@ import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.TimestampAttribute;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
@@ -258,7 +257,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         ContentItem item = generateTestContent();
         Date dateVal = new Date();
-        TimestampAttribute tsAttr = 
+        HibTimestampAttribute tsAttr =
             new HibTimestampAttribute(new HibQName("timestampattribute"), dateVal); 
         item.addAttribute(tsAttr);
         
@@ -270,7 +269,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         Attribute attr = queryItem.getAttribute(new HibQName("timestampattribute"));
         Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof TimestampAttribute);
+        Assert.assertTrue(attr instanceof HibTimestampAttribute);
         
         Date val = (Date) attr.getValue();
         Assert.assertTrue(dateVal.equals(val));
@@ -285,7 +284,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         queryItem = (ContentItem) contentDao.findItemByUid(newItem.getUid());
         Attribute queryAttr = queryItem.getAttribute(new HibQName("timestampattribute"));
         Assert.assertNotNull(queryAttr);
-        Assert.assertTrue(queryAttr instanceof TimestampAttribute);
+        Assert.assertTrue(queryAttr instanceof HibTimestampAttribute);
         
         val = (Date) queryAttr.getValue();
         Assert.assertTrue(dateVal.equals(val));

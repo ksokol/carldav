@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItemDetails;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.util.Date;
@@ -155,7 +156,7 @@ public interface Item extends AuditableObject{
      * @param parent parent collection
      * @return details about parent<-->child relationship
      */
-    CollectionItemDetails getParentDetails(CollectionItem parent);
+    HibCollectionItemDetails getParentDetails(CollectionItem parent);
 
     /**
      * Return a single parent.

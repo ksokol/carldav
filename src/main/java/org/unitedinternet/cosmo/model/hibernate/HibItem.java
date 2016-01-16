@@ -23,7 +23,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
@@ -120,7 +119,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="item",
             fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<CollectionItemDetails> parentDetails = new HashSet<CollectionItemDetails>(0);
+    private Set<HibCollectionItemDetails> parentDetails = new HashSet<>();
 
     private transient Set<CollectionItem> parents = null;
 
@@ -373,7 +372,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     }
 
     public void removeParent(CollectionItem parent) {
-        CollectionItemDetails cid = getParentDetails(parent);
+        HibCollectionItemDetails cid = getParentDetails(parent);
         if(cid!=null) {
             parentDetails.remove(cid);
             // clear cached parents
@@ -389,8 +388,8 @@ public abstract class HibItem extends HibAuditableObject implements Item {
             return parents;
         }
 
-        parents = new HashSet<CollectionItem>();
-        for(CollectionItemDetails cid: parentDetails) {
+        parents = new HashSet<>();
+        for(HibCollectionItemDetails cid: parentDetails) {
             parents.add(cid.getCollection());
         }
 
@@ -413,8 +412,8 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getParentDetails(org.unitedinternet.cosmo.model.CollectionItem)
      */
-    public CollectionItemDetails getParentDetails(CollectionItem parent) {
-        for(CollectionItemDetails cid: parentDetails) {
+    public HibCollectionItemDetails getParentDetails(CollectionItem parent) {
+        for(HibCollectionItemDetails cid: parentDetails) {
             if(cid.getCollection().equals(parent)) {
                 return cid;
             }

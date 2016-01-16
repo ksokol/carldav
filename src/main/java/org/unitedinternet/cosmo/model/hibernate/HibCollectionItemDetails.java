@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.io.Serializable;
@@ -37,7 +36,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="collection_item")
-public class HibCollectionItemDetails implements CollectionItemDetails,Serializable {
+public class HibCollectionItemDetails implements Serializable {
 
     private static final long serialVersionUID = -1L;
 

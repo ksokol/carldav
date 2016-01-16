@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.unitedinternet.cosmo.model.CollectionItem;
-import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.util.Collections;
@@ -41,7 +40,7 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
 
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="collection", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE }) 
-    private Set<CollectionItemDetails> childDetails = new HashSet<CollectionItemDetails>(0);
+    private Set<HibCollectionItemDetails> childDetails = new HashSet<>();
 
     private transient Set<Item> children = null;
 
@@ -51,7 +50,7 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
         }
 
         children = new HashSet<>();
-        for(CollectionItemDetails cid: childDetails) {
+        for(HibCollectionItemDetails cid: childDetails) {
             children.add(cid.getItem());
         }
 

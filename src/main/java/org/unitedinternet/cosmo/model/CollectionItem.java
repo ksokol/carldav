@@ -27,25 +27,5 @@ public interface CollectionItem extends Item{
      * @return active children items
      */
     Set<Item> getChildren();
-    
-    CollectionItemDetails getChildDetails(Item item);
-
-    /**
-     * Return child item with matching uid
-     * @return identified child item, or null if no child with that
-     * uid exists
-     */
-    Item getChild(String uid);
-
-    Item getChildByName(String name);
-
-    /**
-     * Generate alternative hash code for collection.
-     * This hash code will return a different value if
-     * collection or any child items in the collection
-     * has changed since the last hash code was generated.
-     * @return
-     */
-    int generateHash();
 
 }

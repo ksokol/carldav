@@ -63,38 +63,4 @@ public class HibCollectionItem extends HibItem implements CollectionItem {
     public void setChildren(final Set<Item> children) {
         this.children = children;
     }
-
-    public CollectionItemDetails getChildDetails(Item item) {
-        for(CollectionItemDetails cid: childDetails) {
-            if(cid.getItem().getUid().equals(item.getUid()) && 
-                    cid.getItem().getName().equals(item.getName())&& 
-                    cid.getItem().getOwner().getEmail().equals(item.getOwner().getEmail()) ) {
-                return cid;
-            }
-        }
-
-        return null;
-    }
-
-    public Item getChild(String uid) {
-        for (Item child : getChildren()) {
-            if (child.getUid().equals(uid)) {
-                return child;
-            }
-        }
-        return null;
-    }
-
-    public Item getChildByName(String name) {
-        for (Item child : getChildren()) {
-            if (child.getName().equals(name)) {
-                return child;
-            }
-        }
-        return null;
-    }
-
-    public int generateHash() {
-        return getVersion();
-    }
 }

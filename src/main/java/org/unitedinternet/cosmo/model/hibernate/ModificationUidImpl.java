@@ -15,16 +15,14 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.text.ParseException;
-
+import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateTime;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.ModificationUid;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
+import java.text.ParseException;
 
 /**
  * Represents a uid for a NoteItem modification.
@@ -40,10 +38,12 @@ import net.fortuna.ical4j.model.DateTime;
  * <code>f2953300-6fcb-4547-ad7b-22e193b6903f:20070101T100000Z<code>
  * </p>
  */
-public class ModificationUidImpl implements ModificationUid {
+public class ModificationUidImpl {
+
+    public static final String RECURRENCEID_DELIMITER = ":";
     
-    String parentUid = null;
-    Date recurrenceId = null;
+    private String parentUid = null;
+    private Date recurrenceId = null;
     
     /**
      * Construct modification uid from parent Item and recurrenceId
@@ -53,11 +53,6 @@ public class ModificationUidImpl implements ModificationUid {
     public ModificationUidImpl(Item parent, Date recurrenceId) {
         this.parentUid = parent.getUid();
         this.recurrenceId = recurrenceId;
-    }
-
-    public ModificationUidImpl(Item parent, String recurrenceId)
-        throws ParseException {
-        this(parent, fromStringToDate(recurrenceId));
     }
 
     /**
@@ -87,18 +82,10 @@ public class ModificationUidImpl implements ModificationUid {
         return parentUid;
     }
 
-    public void setParentUid(String parentUid) {
-        this.parentUid = parentUid;
-    }
-
     public Date getRecurrenceId() {
         return recurrenceId;
     }
 
-    public void setRecurrenceId(Date recurrenceId) {
-        this.recurrenceId = recurrenceId;
-    }
-    
     public boolean equals(Object obj) {
         if(obj instanceof ModificationUidImpl) {
             ModificationUidImpl modUid = (ModificationUidImpl) obj;

@@ -31,14 +31,6 @@ public interface EntityFactory {
     String generateUid();
     
     /**
-     * Create new EventStamp
-     * @param note associated NoteItem
-     * @return new EventStamp
-     */
-    EventStamp createEventStamp(NoteItem note);
-    
-    
-    /**
      * Create new EventExceptionStamp
      * @param note associated NoteItem
      * @return new EventExceptionStamp

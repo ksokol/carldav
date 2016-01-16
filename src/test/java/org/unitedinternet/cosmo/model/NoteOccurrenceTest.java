@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.model;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.model.hibernate.HibEntityFactory;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
@@ -35,12 +36,12 @@ public class NoteOccurrenceTest {
      */
     @Test
     public void testGenerateNoteOccurrence() throws Exception {
-        
+
         NoteItem note = new HibNoteItem();
         note.setUid("1");
         note.setDisplayName("dn");
         note.setBody("body");
-        note.addStamp(factory.createEventStamp(note));
+        note.addStamp(new HibEventStamp(note));
         
         NoteOccurrence no = NoteOccurrenceUtil.createNoteOccurrence(new net.fortuna.ical4j.model.Date("20070101"), note);
         NoteOccurrence no2 = NoteOccurrenceUtil.createNoteOccurrence(new net.fortuna.ical4j.model.Date("20070102"), note);

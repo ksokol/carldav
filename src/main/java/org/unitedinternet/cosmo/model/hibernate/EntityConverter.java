@@ -145,7 +145,7 @@ public class EntityConverter {
         EventStamp eventStamp = (EventStamp) note.getStamp(EventStamp.class);
         
         if (eventStamp == null) {
-            eventStamp = entityFactory.createEventStamp(note);
+            eventStamp = new HibEventStamp(note);
             note.addStamp(eventStamp);
         }
 

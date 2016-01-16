@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+
 /**
  * Factory api for creating model objects.
  */
@@ -84,7 +86,7 @@ public interface EntityFactory {
      * Create new FileItem
      * @return new FileItem
      */
-    FileItem createFileItem();
+    HibFileItem createFileItem();
     
     /**
      * Create new QName

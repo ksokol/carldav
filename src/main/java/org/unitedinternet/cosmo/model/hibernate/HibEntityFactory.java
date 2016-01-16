@@ -22,7 +22,6 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EntityFactory;
 import org.unitedinternet.cosmo.model.EventExceptionStamp;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.NoteItem;
 import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.TriageStatus;
@@ -65,7 +64,7 @@ public class HibEntityFactory implements EntityFactory {
         return new HibJournalStamp(note);
     }
 
-    public FileItem createFileItem() {
+    public HibFileItem createFileItem() {
         return new HibFileItem();
     }
 

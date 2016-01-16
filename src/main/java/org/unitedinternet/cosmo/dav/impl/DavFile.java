@@ -35,14 +35,14 @@ import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EntityFactory;
-import org.unitedinternet.cosmo.model.FileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * Extends <code>DavResourceBase</code> to adapt the Cosmo
- * <code>FileItem</code> to the DAV resource model.
+ * <code>HibFileItem</code> to the DAV resource model.
  *
  * This class defines the following live properties:
  *
@@ -53,12 +53,12 @@ import java.io.InputStream;
  * </ul>
  *
  * @see DavContent
- * @see FileItem
+ * @see HibFileItem
  */
 public class DavFile extends DavContentBase {
     private static final Log LOG = LogFactory.getLog(DavFile.class);
 
-    public DavFile(FileItem item,
+    public DavFile(HibFileItem item,
                    DavResourceLocator locator,
                    DavResourceFactory factory,
                    EntityFactory entityFactory)
@@ -90,7 +90,7 @@ public class DavFile extends DavContentBase {
             LOG.debug("spooling file " + getResourcePath());
         }
 
-        FileItem content = (FileItem) getItem();
+        HibFileItem content = (HibFileItem) getItem();
 
         String contentType =
             IOUtil.buildContentType(content.getContentType(),
@@ -124,7 +124,7 @@ public class DavFile extends DavContentBase {
         throws CosmoDavException {
         super.populateItem(inputContext);
 
-        FileItem file = (FileItem) getItem();
+        HibFileItem file = (HibFileItem) getItem();
 
         try {
             InputStream content = inputContext.getInputStream();
@@ -158,7 +158,7 @@ public class DavFile extends DavContentBase {
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
 
-        FileItem content = (FileItem) getItem();
+        HibFileItem content = (HibFileItem) getItem();
         if (content == null) {
             return;
         }
@@ -176,7 +176,7 @@ public class DavFile extends DavContentBase {
         throws CosmoDavException {
         super.setLiveProperty(property, create);
 
-        FileItem content = (FileItem) getItem();
+        HibFileItem content = (HibFileItem) getItem();
         if (content == null) {
             return;
         }
@@ -204,7 +204,7 @@ public class DavFile extends DavContentBase {
         throws CosmoDavException {
         super.removeLiveProperty(name);
 
-        FileItem content = (FileItem) getItem();
+        HibFileItem content = (HibFileItem) getItem();
         if (content == null) {
             return;
         }

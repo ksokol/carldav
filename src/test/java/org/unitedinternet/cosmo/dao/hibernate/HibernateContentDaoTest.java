@@ -29,12 +29,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
-import org.unitedinternet.cosmo.model.FileItem;
 import org.unitedinternet.cosmo.model.HomeCollectionItem;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
@@ -62,8 +60,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 import javax.xml.parsers.DocumentBuilder;
@@ -406,7 +402,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
 
-        FileItem item = generateTestContent();
+        HibFileItem item = generateTestContent();
 
         ContentItem newItem = contentDao.createContent(root, item);
         Date newItemModifyDate = newItem.getModifiedDate();
@@ -762,7 +758,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         ContentItem queryC = (ContentItem) contentDao.findItemByPath("/testuser2@testem/a/b/c");
         Assert.assertNotNull(queryC);
         helper.verifyInputStream(
-                helper.getInputStream("testdata/testdata1.txt"), ((FileItem) queryC)
+                helper.getInputStream("testdata/testdata1.txt"), ((HibFileItem) queryC)
                         .getContent());
         Assert.assertEquals("c", queryC.getName());
 
@@ -1073,13 +1069,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         return helper.getUser(userDao, contentDao, username);
     }
 
-    private FileItem generateTestContent() throws Exception {
+    private HibFileItem generateTestContent() throws Exception {
         return generateTestContent("test", "testuser");
     }
 
-    private FileItem generateTestContent(String name, String owner)
+    private HibFileItem generateTestContent(String name, String owner)
             throws Exception {
-        FileItem content = new HibFileItem();
+        HibFileItem content = new HibFileItem();
         content.setName(name);
         content.setDisplayName(name);
         content.setContent(helper.getBytes("testdata/testdata1.txt"));

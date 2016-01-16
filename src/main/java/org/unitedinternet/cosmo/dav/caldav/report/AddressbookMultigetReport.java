@@ -11,7 +11,7 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
-import org.unitedinternet.cosmo.model.FileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 import java.io.IOException;
 
@@ -70,7 +70,7 @@ public class AddressbookMultigetReport extends MultigetReport {
             return null;
         }
 
-        final FileItem item = (FileItem) resource.getItem();
+        final HibFileItem item = (HibFileItem) resource.getItem();
         final StringBuilder builder = new StringBuilder();
 
         try {

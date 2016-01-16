@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav.caldav.property;
 
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
-import org.unitedinternet.cosmo.model.FileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 /**
  * Represents the CalDAV max-resource-size property.
@@ -28,6 +28,6 @@ public class MaxResourceSize extends StandardDavProperty
     /**
      */
     public MaxResourceSize() {
-        super(MAXRESOURCESIZE, Long.valueOf(FileItem.MAX_CONTENT_SIZE), true);
+        super(MAXRESOURCESIZE, Long.valueOf(HibFileItem.MAX_CONTENT_SIZE), true);
     }
 }

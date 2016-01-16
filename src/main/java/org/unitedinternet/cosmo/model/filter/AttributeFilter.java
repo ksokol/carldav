@@ -15,17 +15,17 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.QName;
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 /**
  * A filter that matches an Item with a given Attribute.
  */
 public class AttributeFilter {
     
-    private QName qname;
+    private HibQName qname;
     private boolean isMissing = false;
 
-    public QName getQname() {
+    public HibQName getQname() {
         return qname;
     }
 
@@ -33,7 +33,7 @@ public class AttributeFilter {
      * Match attribute with given qualified name.
      * @param qname qualified name to match
      */
-    public void setQname(QName qname) {
+    public void setQname(HibQName qname) {
         this.qname = qname;
     }
     

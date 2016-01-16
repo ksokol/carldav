@@ -48,7 +48,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -371,9 +370,9 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     protected abstract Set<String> getDeadPropertyFilter();
 
     protected void loadDeadProperties(DavPropertySet properties) {
-        for (Iterator<Map.Entry<QName, Attribute>> i = item.getAttributes()
+        for (Iterator<Map.Entry<HibQName, Attribute>> i = item.getAttributes()
                 .entrySet().iterator(); i.hasNext();) {
-            Map.Entry<QName, Attribute> entry = i.next();
+            Map.Entry<HibQName, Attribute> entry = i.next();
 
             // skip attributes that are not meant to be shown as dead
             // properties
@@ -407,7 +406,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         }
 
         try {
-            QName qname = propNameToQName(property.getName());
+            HibQName qname = propNameToQName(property.getName());
             Element value = (Element) property.getValue();
             Attribute attr = item.getAttribute(qname);
 
@@ -431,7 +430,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     abstract protected void updateItem() throws CosmoDavException;
 
-    private QName propNameToQName(DavPropertyName name) {
+    private HibQName propNameToQName(DavPropertyName name) {
         if (name == null) {
             final String msg = "name cannot be null";
             throw new IllegalArgumentException(msg);
@@ -443,7 +442,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return new HibQName(uri, name.getName());
     }
 
-    private DavPropertyName qNameToPropName(QName qname) {
+    private DavPropertyName qNameToPropName(HibQName qname) {
         // no namespace at all
         if ("".equals(qname.getNamespace())) {
             return DavPropertyName.create(qname.getLocalName());

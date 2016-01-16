@@ -22,9 +22,9 @@ import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -60,7 +60,7 @@ public class HibernateTestHelper {
         for (@SuppressWarnings("rawtypes")
         Iterator it = item1.getAttributes().keySet().iterator(); it
                 .hasNext();) {
-            QName key = (QName) it.next();
+            HibQName key = (HibQName) it.next();
             Object val1 = item1.getAttributeValue(key);
             Object val2 = item2.getAttributeValue(key);
             verifyAttributeValue(val1, val2);

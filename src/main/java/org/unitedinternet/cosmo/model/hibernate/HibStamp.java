@@ -15,28 +15,27 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.unitedinternet.cosmo.model.Attribute;
+import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.Stamp;
+
 import java.util.Date;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import javax.persistence.Index;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.Stamp;
 
 /**
  * Hibernate persistent Stamp.
@@ -82,7 +81,7 @@ public abstract class HibStamp extends HibAuditableObject implements Stamp {
      * @param qname QName of attribute
      * @return attribute value
      */
-    protected Attribute getAttribute(QName qname) {
+    protected Attribute getAttribute(HibQName qname) {
         return getItem().getAttribute(qname);
     }
     
@@ -98,7 +97,7 @@ public abstract class HibStamp extends HibAuditableObject implements Stamp {
      * Convenience method for removing an attribute to the underlying item
      * @param qname QName of attribute to remove
      */
-    protected void removeAttribute(QName qname) {
+    protected void removeAttribute(HibQName qname) {
         getItem().removeAttribute(qname);
     }
     

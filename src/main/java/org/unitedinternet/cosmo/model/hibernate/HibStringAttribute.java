@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -37,7 +36,7 @@ public class HibStringAttribute extends HibAttribute {
     public HibStringAttribute() {
     }
 
-    public HibStringAttribute(QName qname, String value) {
+    public HibStringAttribute(HibQName qname, String value) {
         setQName(qname);
         this.value = value;
     }
@@ -65,7 +64,7 @@ public class HibStringAttribute extends HibAttribute {
      * @param qname QName of attribute
      * @return String value of StringAttribute
      */
-    public static String getValue(Item item, QName qname) {
+    public static String getValue(Item item, HibQName qname) {
         HibStringAttribute ta = (HibStringAttribute) item.getAttribute(qname);
         if(ta==null) {
             return null;
@@ -82,7 +81,7 @@ public class HibStringAttribute extends HibAttribute {
      * @param qname QName of attribute
      * @param value value to set on StringAttribute
      */
-    public static void setValue(Item item, QName qname, String value) {
+    public static void setValue(Item item, HibQName qname, String value) {
         HibStringAttribute attr = (HibStringAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibStringAttribute(qname,value);

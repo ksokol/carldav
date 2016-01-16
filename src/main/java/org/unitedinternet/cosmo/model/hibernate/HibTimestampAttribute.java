@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import java.util.Date;
 
@@ -39,7 +38,7 @@ public class HibTimestampAttribute extends HibAttribute {
     public HibTimestampAttribute() {
     }
 
-    public HibTimestampAttribute(QName qname, Date value) {
+    public HibTimestampAttribute(HibQName qname, Date value) {
         setQName(qname);
         this.value = value;
     }
@@ -67,7 +66,7 @@ public class HibTimestampAttribute extends HibAttribute {
      * @param qname QName of attribute
      * @return Date value of TextAttribute
      */
-    public static Date getValue(Item item, QName qname) {
+    public static Date getValue(Item item, HibQName qname) {
         HibTimestampAttribute ta = (HibTimestampAttribute) item.getAttribute(qname);
         if(ta==null) {
             return null;
@@ -84,7 +83,7 @@ public class HibTimestampAttribute extends HibAttribute {
      * @param qname QName of attribute
      * @param value value to set on TextAttribute
      */
-    public static void setValue(Item item, QName qname, Date value) {
+    public static void setValue(Item item, HibQName qname, Date value) {
         HibTimestampAttribute attr = (HibTimestampAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTimestampAttribute(qname,value);

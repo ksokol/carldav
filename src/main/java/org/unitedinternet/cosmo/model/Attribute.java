@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
+
 /**
  * Represents an attribute associated with an Item.
  * An attribute consists of a QName (qualified name)
@@ -29,9 +31,9 @@ package org.unitedinternet.cosmo.model;
  */
 public interface Attribute extends AuditableObject {
 
-    public QName getQName();
+    public HibQName getQName();
 
-    public void setQName(QName qname);
+    public void setQName(HibQName qname);
 
     /**
      * For backwards compatability.  Return the local name.

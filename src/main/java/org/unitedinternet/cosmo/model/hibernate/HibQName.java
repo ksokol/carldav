@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
-import org.unitedinternet.cosmo.model.QName;
 
 import javax.persistence.Embeddable;
 
@@ -25,7 +24,7 @@ import javax.persistence.Embeddable;
  * Hibernate persistent QName.
  */
 @Embeddable
-public class HibQName implements QName {
+public class HibQName {
     
     public static final String DEFAULT_NAMESPACE = "org.unitedinternet.cosmo.default";
     

@@ -20,7 +20,6 @@ import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.CosmoIOException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -43,12 +42,12 @@ public class HibTextAttribute extends HibAttribute {
     public HibTextAttribute() {
     }
 
-    public HibTextAttribute(QName qname, String value) {
+    public HibTextAttribute(HibQName qname, String value) {
         setQName(qname);
         this.value = value;
     }
 
-    public HibTextAttribute(QName qname, Reader reader) {
+    public HibTextAttribute(HibQName qname, Reader reader) {
         setQName(qname);
         this.value = read(reader);
     }
@@ -103,7 +102,7 @@ public class HibTextAttribute extends HibAttribute {
      * @param qname QName of attribute
      * @return String value of TextAttribute
      */
-    public static String getValue(Item item, QName qname) {
+    public static String getValue(Item item, HibQName qname) {
         HibTextAttribute ta = (HibTextAttribute) item.getAttribute(qname);
         if(ta==null) {
             return null;
@@ -120,7 +119,7 @@ public class HibTextAttribute extends HibAttribute {
      * @param qname QName of attribute
      * @param value value to set on TextAttribute
      */
-    public static void setValue(Item item, QName qname, String value) {
+    public static void setValue(Item item, HibQName qname, String value) {
         HibTextAttribute attr = (HibTextAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTextAttribute(qname,value);
@@ -142,7 +141,7 @@ public class HibTextAttribute extends HibAttribute {
      * @param qname QName of attribute
      * @param value value to set on TextAttribute
      */
-    public static void setValue(Item item, QName qname, Reader value) {
+    public static void setValue(Item item, HibQName qname, Reader value) {
         HibTextAttribute attr = (HibTextAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTextAttribute(qname,value);

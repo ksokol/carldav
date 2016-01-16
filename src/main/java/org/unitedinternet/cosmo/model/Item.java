@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibQName;
+
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
@@ -63,7 +65,7 @@ public interface Item extends AuditableObject{
      * removeAttribute() to manipulate map.
      * @return
      */
-    Map<QName, Attribute> getAttributes();
+    Map<HibQName, Attribute> getAttributes();
 
     void addAttribute(Attribute attribute);
 
@@ -77,7 +79,7 @@ public interface Item extends AuditableObject{
      * Remove attribute.
      * @param qname qualifed name of attribute to remove.
      */
-    void removeAttribute(QName qname);
+    void removeAttribute(HibQName qname);
 
     /**
      * Get attribute in default namespace with local name.
@@ -91,14 +93,14 @@ public interface Item extends AuditableObject{
      * @param qname qualified name of attribute to retrieve
      * @return attribute with qualified name.
      */
-    Attribute getAttribute(QName qname);
+    Attribute getAttribute(HibQName qname);
 
     /**
      * Get attribute value with qualified name
      * @param qname qualified name of attribute
      * @return attribute value
      */
-    Object getAttributeValue(QName qname);
+    Object getAttributeValue(HibQName qname);
 
     /**
      * Set attribute value of attribute with local name in default
@@ -113,7 +115,7 @@ public interface Item extends AuditableObject{
      * @param key qualified name of attribute
      * @param value value to update attribute
      */
-    void setAttribute(QName key, Object value);
+    void setAttribute(HibQName key, Object value);
 
     Date getClientCreationDate();
 

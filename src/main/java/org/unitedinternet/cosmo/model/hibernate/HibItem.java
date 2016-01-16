@@ -25,7 +25,6 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.CollectionItemDetails;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 
@@ -108,7 +107,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     //@Fetch(FetchMode.SUBSELECT)
     @BatchSize(size=50)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Map<QName, Attribute> attributes = new HashMap<QName, Attribute>(0);
+    private Map<HibQName, Attribute> attributes = new HashMap<>();
 
     // turns out this creates a query that is unoptimized for MySQL
     //@Fetch(FetchMode.SUBSELECT)
@@ -193,7 +192,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getAttributes()
      */
-    public Map<QName, Attribute> getAttributes() {
+    public Map<HibQName, Attribute> getAttributes() {
         return Collections.unmodifiableMap(attributes);
     }
 
@@ -219,7 +218,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#removeAttribute(org.unitedinternet.cosmo.model.QName)
      */
-    public void removeAttribute(QName qname) {
+    public void removeAttribute(HibQName qname) {
         if(attributes.containsKey(qname)) {
             attributes.remove(qname);
         }
@@ -235,14 +234,14 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getAttribute(org.unitedinternet.cosmo.model.QName)
      */
-    public Attribute getAttribute(QName qname) {
+    public Attribute getAttribute(HibQName qname) {
         return attributes.get(qname);
     }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getAttributeValue(org.unitedinternet.cosmo.model.QName)
      */
-    public Object getAttributeValue(QName qname) {
+    public Object getAttributeValue(HibQName qname) {
         Attribute attr = attributes.get(qname);
         if (attr == null) {
             return attr;
@@ -261,7 +260,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
      * @see org.unitedinternet.cosmo.model.Item#setAttribute(org.unitedinternet.cosmo.model.QName, java.lang.Object)
      */
     @SuppressWarnings("unchecked")
-    public void setAttribute(QName key, Object value) {
+    public void setAttribute(HibQName key, Object value) {
         HibAttribute attr = (HibAttribute) attributes.get(key);
 
         if(attr!=null) {

@@ -20,7 +20,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Target;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -67,7 +66,7 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
             @AttributeOverride(name="namespace", column = @Column(name="namespace", nullable = false, length=255) ),
             @AttributeOverride(name="localName", column = @Column(name="localname", nullable = false, length=255) )
     } )
-    private QName qname;
+    private HibQName qname;
     
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "itemid", nullable = false)
@@ -76,14 +75,14 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Attribute#getQName()
      */
-    public QName getQName() {
+    public HibQName getQName() {
         return qname;
     }
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Attribute#setQName(org.unitedinternet.cosmo.model.QName)
      */
-    public void setQName(QName qname) {
+    public void setQName(HibQName qname) {
         this.qname = qname;
     }
         

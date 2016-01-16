@@ -22,7 +22,6 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.unitedinternet.cosmo.hibernate.validator.Task;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.QName;
 
 import java.io.Reader;
 import java.nio.charset.Charset;
@@ -46,11 +45,9 @@ import javax.persistence.OneToMany;
 @DiscriminatorValue("note")
 public class HibNoteItem extends HibICalendarItem implements NoteItem {
 
-    public static final QName ATTR_NOTE_BODY = new HibQName(
-            NoteItem.class, "body");
+    public static final HibQName ATTR_NOTE_BODY = new HibQName(NoteItem.class, "body");
     
-    public static final QName ATTR_REMINDER_TIME = new HibQName(
-            NoteItem.class, "reminderTime");
+    public static final HibQName ATTR_REMINDER_TIME = new HibQName(NoteItem.class, "reminderTime");
     
     private static final long serialVersionUID = -6100568628972081120L;
     

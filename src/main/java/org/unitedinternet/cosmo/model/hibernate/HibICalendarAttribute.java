@@ -22,7 +22,6 @@ import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.ICalendarAttribute;
 import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.QName;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +51,7 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
      * @param qname qualified name
      * @param value initial value
      */
-    public HibICalendarAttribute(QName qname, Calendar value) {
+    public HibICalendarAttribute(HibQName qname, Calendar value) {
         setQName(qname);
         this.value = value;
     }
@@ -61,7 +60,7 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
      * @param qname qualified name
      * @param value calendar
      */
-    public HibICalendarAttribute(QName qname, String value) {
+    public HibICalendarAttribute(HibQName qname, String value) {
         setQName(qname);
         setValue(value);
     }
@@ -134,7 +133,7 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
      * @param qname QName of attribute
      * @return Date value of ICalendarAttribute
      */
-    public static Calendar getValue(Item item, QName qname) {
+    public static Calendar getValue(Item item, HibQName qname) {
         ICalendarAttribute attr = (ICalendarAttribute) item.getAttribute(qname);
         if(attr==null) {
             return null;
@@ -151,7 +150,7 @@ public class HibICalendarAttribute extends HibAttribute implements ICalendarAttr
      * @param qname QName of attribute
      * @param value value to set on ICalendarpAttribute
      */
-    public static void setValue(Item item, QName qname, Calendar value) {
+    public static void setValue(Item item, HibQName qname, Calendar value) {
         ICalendarAttribute attr = (ICalendarAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibICalendarAttribute(qname,value);

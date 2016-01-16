@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
 import org.unitedinternet.cosmo.model.ICalendarItem;
-import org.unitedinternet.cosmo.model.QName;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -30,7 +29,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue("icalendar")
 public abstract class HibICalendarItem extends HibContentItem implements ICalendarItem {
 
-    public static final QName ATTR_ICALENDAR = new HibQName(
+    public static final HibQName ATTR_ICALENDAR = new HibQName(
             ICalendarItem.class, "icalendar");
     
     @Column(name="icaluid", length=255)

@@ -54,7 +54,6 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.ICalendarItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.NoteItem;
-import org.unitedinternet.cosmo.model.NoteOccurrence;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -75,8 +74,7 @@ import java.util.Vector;
  * Often this is not a straight one-to-one mapping, because recurring
  * iCalendar events are modeled as multiple events in a single
  * {@link Calendar}, whereas recurring items are modeled as a master
- * {@link NoteItem} with zero or more {@link NoteItem} modifications and
- * potentially also {@link NoteOccurrence}s.
+ * {@link NoteItem} with zero or more {@link NoteItem} modifications
  */
 public class EntityConverter { 
     private static final TimeZoneRegistry TIMEZONE_REGISTRY = TimeZoneRegistryFactory.getInstance().createRegistry();

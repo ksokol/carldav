@@ -21,7 +21,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.unitedinternet.cosmo.calendar.Instance;
 import org.unitedinternet.cosmo.calendar.InstanceList;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
@@ -48,13 +47,11 @@ import org.unitedinternet.cosmo.model.filter.NullExpression;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.filter.TextAttributeFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.util.NoteOccurrenceUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -479,18 +476,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         // If were aren't expanding, then return
         if (filter.isExpandRecurringEvents() == false) {
             return results;
-        }
-
-        // Otherwise, add an occurence item for each occurrence
-        for (Iterator<Entry<String, Instance>> it = instances.entrySet()
-                .iterator(); it.hasNext(); ) {
-            Entry<String, Instance> entry = it.next();
-
-            // Ignore overrides as they are separate items that should have
-            // already been added
-            if (entry.getValue().isOverridden() == false) {
-                results.add(NoteOccurrenceUtil.createNoteOccurrence(entry.getValue().getRid(), note));
-            }
         }
 
         return results;

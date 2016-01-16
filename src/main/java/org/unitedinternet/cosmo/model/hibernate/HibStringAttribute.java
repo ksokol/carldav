@@ -19,29 +19,21 @@ import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.QName;
-import org.unitedinternet.cosmo.model.StringAttribute;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-
-/**
- * Hibernate persistent StringAttribute.
- */
 @Entity
 @DiscriminatorValue("string")
-public class HibStringAttribute extends HibAttribute implements  StringAttribute {
+public class HibStringAttribute extends HibAttribute {
 
-    private static final long serialVersionUID = 2417093506524504993L;
+    private static final long serialVersionUID = 1L;
     
     @Column(name="stringvalue")
     @Length(min=0)
     private String value;
 
-    // Constructors
-
-    /** default constructor */
     public HibStringAttribute() {
     }
 
@@ -50,18 +42,10 @@ public class HibStringAttribute extends HibAttribute implements  StringAttribute
         this.value = value;
     }
 
-    // Property accessors
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getValue()
-     */
     public String getValue() {
         return this.value;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.StringAttribute#setValue(java.lang.String)
-     */
     public void setValue(String value) {
         this.value = value;
     }
@@ -82,7 +66,7 @@ public class HibStringAttribute extends HibAttribute implements  StringAttribute
      * @return String value of StringAttribute
      */
     public static String getValue(Item item, QName qname) {
-        StringAttribute ta = (StringAttribute) item.getAttribute(qname);
+        HibStringAttribute ta = (HibStringAttribute) item.getAttribute(qname);
         if(ta==null) {
             return null;
         }
@@ -99,7 +83,7 @@ public class HibStringAttribute extends HibAttribute implements  StringAttribute
      * @param value value to set on StringAttribute
      */
     public static void setValue(Item item, QName qname, String value) {
-        StringAttribute attr = (StringAttribute) item.getAttribute(qname);
+        HibStringAttribute attr = (HibStringAttribute) item.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibStringAttribute(qname,value);
             item.addAttribute(attr);

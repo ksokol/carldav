@@ -73,8 +73,9 @@ public class DavEvent extends DavCalendarResource {
         throws CosmoDavException {
         
         ComponentList vevents = calendar.getComponents(Component.VEVENT);
-        if (vevents.isEmpty()) {
-            throw new UnprocessableEntityException("VCALENDAR does not contain any VEVENTs");
+        ComponentList vjournal = calendar.getComponents(Component.VJOURNAL);
+        if (vevents.isEmpty() && vjournal.isEmpty()) {
+            throw new UnprocessableEntityException("VCALENDAR does not contain any VEVENTs or VJOURNAL");
         }
 
         getEventStamp().setEventCalendar(calendar);

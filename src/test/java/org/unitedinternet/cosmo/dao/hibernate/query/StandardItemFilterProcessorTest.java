@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate.query;
 
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import org.hibernate.Query;
@@ -37,7 +35,6 @@ import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
-import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
@@ -250,67 +247,11 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
                 + "tsa0.item=i and tsa0.qname=:tsa0qname and tsa0.value between :param1 and :param2", query.getQueryString());
     
     }
-    
-    /**
-     * Tests event stamp query.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEventStampQuery() throws Exception {
-        NoteItemFilter filter = new NoteItemFilter();
-        EventStampFilter eventFilter = new EventStampFilter();
-        CollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
-        filter.setDisplayName(Restrictions.eq("test"));
-        filter.setIcalUid(Restrictions.eq("icaluid"));
-        //filter.setBody("body");
-        filter.getStampFilters().add(eventFilter);
-        Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibBaseEventStamp es where pd.collection=:parent and "
-                + "i.displayName=:param1 and es.item=i and i.icalUid=:param2", query.getQueryString());
-    
-        eventFilter.setIsRecurring(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, HibBaseEventStamp "
-                + "es where pd.collection=:parent and i.displayName=:param1 and"
-                + " es.item=i and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
-                + "and i.icalUid=:param2", query.getQueryString());
-    }
-    
-    /**
-     * Tests event stamp time range query.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEventStampTimeRangeQuery() throws Exception {
-        NoteItemFilter filter = new NoteItemFilter();
-        EventStampFilter eventFilter = new EventStampFilter();
-        Period period = new Period(new DateTime("20070101T100000Z"), new DateTime("20070201T100000Z"));
-        eventFilter.setPeriod(period);
-        eventFilter.setTimezone(registry.getTimeZone("America/Chicago"));
-        
-        CollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
-        filter.getStampFilters().add(eventFilter);
-        Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibBaseEventStamp es where pd.collection=:parent and es.item=i "
-                + "and ( (es.timeRangeIndex.isFloating=true and "
-                + "es.timeRangeIndex.startDate < '20070201T040000' and "
-                + "es.timeRangeIndex.endDate > '20070101T040000') or "
-                + "(es.timeRangeIndex.isFloating=false and "
-                + "es.timeRangeIndex.startDate < '20070201T100000Z' and "
-                + "es.timeRangeIndex.endDate > '20070101T100000Z') or "
-                + "(es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and "
-                + "(es.timeRangeIndex.startDate='20070101T040000' or "
-                + "es.timeRangeIndex.startDate='20070101T100000Z')))", query.getQueryString());
-    }
-    
+
     /**
      * Tests basic stamp query.
      * @throws Exception - if something is wrong this exception is thrown.
-     */ 
+     */
     @Test
     public void testBasicStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
@@ -326,7 +267,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
                 + "(select s.id from HibStamp s where s.item=i and s.class=HibEventStamp)",
                 query.getQueryString());
     }
-    
+
     /**
      * Tests basic attribute query.
      * @throws Exception - if something is wrong this exception is thrown.

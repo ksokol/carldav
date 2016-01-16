@@ -41,6 +41,7 @@ import org.unitedinternet.cosmo.model.filter.FilterOrder;
 import org.unitedinternet.cosmo.model.filter.FilterOrder.Order;
 import org.unitedinternet.cosmo.model.filter.ILikeExpression;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
+import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
 import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.NullExpression;
@@ -200,6 +201,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         for (StampFilter stampFilter : filter.getStampFilters()) {
             if (stampFilter instanceof EventStampFilter) {
                 handleEventStampFilter(selectBuf, whereBuf, (EventStampFilter) stampFilter);
+            } else if(stampFilter instanceof JournalStampFilter) {
+                handleJournalStampFilter(selectBuf, whereBuf, (JournalStampFilter) stampFilter);
             } else {
                 handleStampFilter(whereBuf, stampFilter);
             }
@@ -239,6 +242,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
         selectBuf.append(", HibBaseEventStamp es");
         appendWhere(whereBuf, "es.item=i");
+        //TODO
+        appendWhere(whereBuf, "es.class = 'event'");
 
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {
@@ -248,6 +253,31 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                 appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=false and i.modifies is null)");
             }
         }
+
+        // handle time range
+        if (filter.getPeriod() != null) {
+            whereBuf.append(" and ( ");
+            whereBuf.append("(es.timeRangeIndex.isFloating=true and es.timeRangeIndex.startDate < '" + filter.getFloatEnd() + "'");
+            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getFloatStart() + "')");
+
+            whereBuf.append(" or (es.timeRangeIndex.isFloating=false and " +
+                    "es.timeRangeIndex.startDate < '" + filter.getUTCEnd() + "'");
+            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getUTCStart() + "')");
+
+            // edge case where start==end
+            whereBuf.append(" or (es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and " +
+                    "(es.timeRangeIndex.startDate='" + filter.getFloatStart() + "' or es.timeRangeIndex.startDate='" + filter.getUTCStart() + "'))");
+
+            whereBuf.append(")");
+        }
+    }
+
+    private void handleJournalStampFilter(StringBuffer selectBuf, StringBuffer whereBuf, JournalStampFilter filter) {
+
+        selectBuf.append(", HibBaseEventStamp es");
+        appendWhere(whereBuf, "es.item=i");
+        //TODO
+        appendWhere(whereBuf, "es.class = 'journal'");
 
         // handle time range
         if (filter.getPeriod() != null) {

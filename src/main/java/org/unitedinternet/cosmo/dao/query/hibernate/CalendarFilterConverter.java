@@ -29,6 +29,7 @@ import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
+import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
@@ -151,7 +152,7 @@ public class CalendarFilterConverter {
     }
 
     private void handleJournalCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter) {
-        EventStampFilter eventFilter = new EventStampFilter();
+        JournalStampFilter eventFilter = new JournalStampFilter();
         itemFilter.getStampFilters().add(eventFilter);
 
         TimeRangeFilter trf = compFilter.getTimeRangeFilter();

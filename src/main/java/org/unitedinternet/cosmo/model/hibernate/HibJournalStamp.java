@@ -11,7 +11,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.unitedinternet.cosmo.hibernate.validator.Journal;
-import org.unitedinternet.cosmo.model.EventStamp;
+import org.unitedinternet.cosmo.model.BaseEventStamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("journal")
-public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
+public class HibJournalStamp extends HibBaseEventStamp implements BaseEventStamp {
 
     private static final long serialVersionUID = 2L;
 

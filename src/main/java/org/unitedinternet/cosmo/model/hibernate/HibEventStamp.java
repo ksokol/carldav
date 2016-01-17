@@ -19,10 +19,8 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.hibernate.validator.Event;
-import org.unitedinternet.cosmo.model.EventStamp;
+import org.unitedinternet.cosmo.model.BaseEventStamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,22 +28,12 @@ import java.util.List;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-
-/**
- * Hibernate persistent EventStamp.
- */
 @Entity
 @DiscriminatorValue("event")
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
-    
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 3992468809776886156L;
-    
-    
-    /** default constructor */
+public class HibEventStamp extends HibBaseEventStamp implements BaseEventStamp {
+
+    private static final long serialVersionUID = 1L;
+
     public HibEventStamp() {
     }
     
@@ -68,11 +56,7 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
     private Calendar getValidationCalendar() {//NOPMD
         return getEventCalendar();
     }
-    
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.EventStamp#getExceptions()
-     */
+
     public List<Component> getExceptions() {
         ArrayList<Component> exceptions = new ArrayList<Component>();
         
@@ -87,10 +71,7 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
         
         return exceptions;
     }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.EventStamp#getMaster()
-     */
+
     public Component getMaster() {
         if(getEventCalendar()==null) {
             return null;
@@ -106,11 +87,6 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
         return (VEvent) events.get(0);
     }
 
-    /**
-     * Return EventStamp from Item
-     * @param hibItem
-     * @return EventStamp from Item
-     */
     public static HibEventStamp getStamp(HibItem hibItem) {
         return (HibEventStamp) hibItem.getStamp(HibEventStamp.class);
     }

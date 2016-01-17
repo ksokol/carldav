@@ -33,15 +33,14 @@ import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -422,7 +421,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             HibICalendarItem ical = (HibICalendarItem) hibItem;
             if (ical.getIcalUid() == null) {
                 ical.setIcalUid(hibItem.getUid());
-                EventStamp es = HibEventStamp.getStamp(ical);
+                HibEventStamp es = HibEventStamp.getStamp(ical);
                 if (es != null) {
                     es.setIcalUid(ical.getIcalUid());
                 }

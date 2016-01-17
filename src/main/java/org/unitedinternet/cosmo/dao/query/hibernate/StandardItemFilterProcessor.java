@@ -25,7 +25,6 @@ import org.unitedinternet.cosmo.calendar.InstanceList;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
@@ -44,6 +43,7 @@ import org.unitedinternet.cosmo.model.filter.NullExpression;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.filter.TextAttributeFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
@@ -454,8 +454,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     private Collection<HibContentItem> processMasterNote(HibNoteItem note,
                                                       EventStampFilter filter, boolean includeMasterInResults,
                                                       boolean doTimeRangeSecondPass) {
-        EventStamp eventStamp = (EventStamp) note.getStamp(EventStamp.class);
-        ArrayList<HibContentItem> results = new ArrayList<HibContentItem>();
+        HibEventStamp eventStamp = (HibEventStamp) note.getStamp(HibEventStamp.class);
+        ArrayList<HibContentItem> results = new ArrayList<>();
 
         // If the event is not recurring or the filter is configured
         // to not do a second pass then just return the note

@@ -15,24 +15,23 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
-import java.util.Iterator;
-
 import net.fortuna.ical4j.model.TimeZone;
-
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.ComponentFilter;
 import org.unitedinternet.cosmo.calendar.query.ParamFilter;
 import org.unitedinternet.cosmo.calendar.query.PropertyFilter;
 import org.unitedinternet.cosmo.calendar.query.TextMatchFilter;
 import org.unitedinternet.cosmo.calendar.query.TimeRangeFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+
+import java.util.Iterator;
 
 /**
  * Translates <code>CalendarFilter</code> into <code>ItemFilter</code>
@@ -110,7 +109,7 @@ public class CalendarFilterConverter {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
         filter.setIsModification(false);
-        filter.getStampFilters().add(new StampFilter(EventStamp.class, true));
+        filter.getStampFilters().add(new StampFilter(HibEventStamp.class, true));
         return filter;
     }
 

@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dao.hibernate.query;
 
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
@@ -26,8 +25,6 @@ import org.unitedinternet.cosmo.calendar.query.PropertyFilter;
 import org.unitedinternet.cosmo.calendar.query.TextMatchFilter;
 import org.unitedinternet.cosmo.calendar.query.TimeRangeFilter;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.FilterCriteria;
 import org.unitedinternet.cosmo.model.filter.FilterExpression;
@@ -36,6 +33,8 @@ import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 
 
 /**
@@ -141,7 +140,7 @@ public class CalendarFilterConverterTest {
         Assert.assertEquals(1, noteFilter.getStampFilters().size());
         
         StampFilter sf = noteFilter.getStampFilters().get(0);
-        Assert.assertEquals(EventStamp.class, sf.getStampClass());
+        Assert.assertEquals(HibEventStamp.class, sf.getStampClass());
         Assert.assertEquals(true, sf.isMissing());
     }
     

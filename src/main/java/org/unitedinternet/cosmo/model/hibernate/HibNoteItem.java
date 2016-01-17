@@ -20,9 +20,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.hibernate.validator.Task;
 
-import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
@@ -45,7 +45,7 @@ public class HibNoteItem extends HibICalendarItem {
     
     public static final HibQName ATTR_REMINDER_TIME = new HibQName(HibNoteItem.class, "reminderTime");
     
-    private static final long serialVersionUID = -6100568628972081120L;
+    private static final long serialVersionUID = -1L;
     
     private static final Set<HibNoteItem> EMPTY_MODS = Collections.unmodifiableSet(new HashSet<>());
 
@@ -61,18 +61,16 @@ public class HibNoteItem extends HibICalendarItem {
     @Column(name= "hasmodifications")
     private boolean hasModifications = false;
 
+    @Type(type="materialized_clob")
+    @Column(name= "body", length= 214748364)
+    private String body;
+
     public String getBody() {
-        return HibTextAttribute.getValue(this, ATTR_NOTE_BODY);
+        return body;
     }
 
     public void setBody(String body) {
-        // body stored as TextAttribute on Item
-        HibTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
-    }
-
-    public void setBody(Reader body) {
-        // body stored as TextAttribute on Item
-        HibTextAttribute.setValue(this, ATTR_NOTE_BODY, body);
+        this.body = body;
     }
 
     public void setReminderTime(Date reminderTime) {

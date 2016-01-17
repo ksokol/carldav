@@ -24,11 +24,10 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -96,7 +95,7 @@ public class StandardUserService implements UserService {
 
         User newUser = userDao.getUserByEmail(user.getEmail());
 
-        CollectionItem calendar = new HibCollectionItem();
+        HibCollectionItem calendar = new HibCollectionItem();
         calendar.setOwner(user);
         calendar.setName("calendar");
         calendar.setDisplayName("calendarDisplayName");
@@ -105,7 +104,7 @@ public class StandardUserService implements UserService {
         final HibHomeCollectionItem homeCollection = contentDao.createRootItem(newUser);
         contentService.createCollection(homeCollection, calendar);
 
-        CollectionItem addressbook = new HibCollectionItem();
+        HibCollectionItem addressbook = new HibCollectionItem();
         addressbook.setOwner(user);
         addressbook.setName("contacts");
         addressbook.setDisplayName("contactDisplayName");

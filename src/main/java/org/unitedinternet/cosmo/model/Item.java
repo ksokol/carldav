@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItemDetails;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
@@ -148,7 +149,7 @@ public interface Item extends AuditableObject{
 
     void setUid(String uid);
 
-    Set<CollectionItem> getParents();
+    Set<HibCollectionItem> getParents();
     
     /**
      * Each collection an item belongs to contains additional
@@ -156,12 +157,12 @@ public interface Item extends AuditableObject{
      * @param parent parent collection
      * @return details about parent<-->child relationship
      */
-    HibCollectionItemDetails getParentDetails(CollectionItem parent);
+    HibCollectionItemDetails getParentDetails(HibCollectionItem parent);
 
     /**
      * Return a single parent.
      * @deprecated
      */
-    CollectionItem getParent();
+    HibCollectionItem getParent();
 
 }

@@ -23,7 +23,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
 /**
@@ -65,7 +65,7 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
      * @param root The collection item.
      * @return The expected item.
      */
-    public Item findItemByPath(final String path, final CollectionItem root) {
+    public Item findItemByPath(final String path, final HibCollectionItem root) {
         return (Item) findItemByPath(getSession(), path, root);
     }
 
@@ -166,7 +166,7 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
      * @param root    The collection root.
      * @return The expected item.
      */
-    protected Item findItemByPath(Session session, String path, CollectionItem root) {
+    protected Item findItemByPath(Session session, String path, HibCollectionItem root) {
 
         if (path == null || "".equals(path)) {
             return null;

@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.service;
 
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.Item;
 
@@ -41,7 +41,7 @@ public interface ContentService {
      * @param item item to remove from collection
      * @param collection item to remove item from
      */
-    void removeItemFromCollection(Item item, CollectionItem collection);
+    void removeItemFromCollection(Item item, HibCollectionItem collection);
 
     /**
      * Create a new collection.
@@ -52,8 +52,8 @@ public interface ContentService {
      *            collection to create
      * @return newly created collection
      */
-    CollectionItem createCollection(CollectionItem parent,
-                                    CollectionItem collection);
+    HibCollectionItem createCollection(HibCollectionItem parent,
+                                    HibCollectionItem collection);
 
     /**
      * Remove collection item
@@ -61,7 +61,7 @@ public interface ContentService {
      * @param collection
      *            collection item to remove
      */
-    void removeCollection(CollectionItem collection);
+    void removeCollection(HibCollectionItem collection);
 
     /**
      * Update collection item
@@ -70,7 +70,7 @@ public interface ContentService {
      *            collection item to update
      * @return updated collection
      */
-    CollectionItem updateCollection(CollectionItem collection);
+    HibCollectionItem updateCollection(HibCollectionItem collection);
     
     /**
      * Create new content item. A content item represents a piece of content or
@@ -83,7 +83,7 @@ public interface ContentService {
      *            content to create
      * @return newly created content
      */
-    ContentItem createContent(CollectionItem parent,
+    ContentItem createContent(HibCollectionItem parent,
                               ContentItem content);
 
     /**
@@ -96,7 +96,7 @@ public interface ContentService {
      * @throws org.osaf.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    void createContentItems(CollectionItem parent,
+    void createContentItems(HibCollectionItem parent,
                             Set<ContentItem> contentItems);
 
     /**
@@ -112,7 +112,7 @@ public interface ContentService {
      * @throws org.osaf.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    void updateContentItems(Set<CollectionItem> parents, Set<ContentItem> contentItems);
+    void updateContentItems(Set<HibCollectionItem> parents, Set<ContentItem> contentItems);
     
     /**
      * Update an existing content item.
@@ -136,8 +136,8 @@ public interface ContentService {
     /**
      * find the set of collection items as children of the given collection item.
      * 
-     * @param collectionItem parent collection item
+     * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    Set<CollectionItem> findCollectionItems(CollectionItem collectionItem);
+    Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
 }

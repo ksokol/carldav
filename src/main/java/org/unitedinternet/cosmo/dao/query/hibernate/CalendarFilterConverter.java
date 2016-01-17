@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.calendar.query.ParamFilter;
 import org.unitedinternet.cosmo.calendar.query.PropertyFilter;
 import org.unitedinternet.cosmo.calendar.query.TextMatchFilter;
 import org.unitedinternet.cosmo.calendar.query.TimeRangeFilter;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
@@ -58,7 +58,7 @@ public class CalendarFilterConverter {
      * @param calendarFilter filter to translate
      * @return equivalent ItemFilter
      */
-    public ItemFilter translateToItemFilter(CollectionItem calendar, CalendarFilter calendarFilter) {
+    public ItemFilter translateToItemFilter(HibCollectionItem calendar, CalendarFilter calendarFilter) {
         NoteItemFilter itemFilter = new NoteItemFilter();
         itemFilter.setParent(calendar);
         ComponentFilter rootFilter = calendarFilter.getFilter();
@@ -85,7 +85,7 @@ public class CalendarFilterConverter {
      *         not all items are guaranteed to match the CalendarFilter.
      *         Further processing is required.
      */
-    public ItemFilter getFirstPassFilter(CollectionItem calendar, CalendarFilter calendarFilter) {
+    public ItemFilter getFirstPassFilter(HibCollectionItem calendar, CalendarFilter calendarFilter) {
         ComponentFilter rootFilter = calendarFilter.getFilter();
         if (!COMP_VCALENDAR.equalsIgnoreCase(rootFilter.getName())) {
             return null;
@@ -106,7 +106,7 @@ public class CalendarFilterConverter {
         return null;
     }
 
-    private ItemFilter createFirstPassTaskFilter(CollectionItem collection) {
+    private ItemFilter createFirstPassTaskFilter(HibCollectionItem collection) {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
         filter.setIsModification(false);

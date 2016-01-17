@@ -1,7 +1,7 @@
 package carldav.card;
 
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.util.Set;
@@ -11,5 +11,5 @@ import java.util.Set;
  */
 public interface CardQueryProcessor {
 
-    Set<Item> filterQuery(CollectionItem collection, AddressbookFilter filter);
+    Set<Item> filterQuery(HibCollectionItem collection, AddressbookFilter filter);
 }

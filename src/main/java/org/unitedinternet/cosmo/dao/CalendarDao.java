@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Set;
@@ -39,6 +39,6 @@ public interface CalendarDao {
      * @return set ICalendar objects that match specified
      *         filter.
      */
-    public Set<HibICalendarItem> findCalendarItems(CollectionItem collection,
+    public Set<HibICalendarItem> findCalendarItems(HibCollectionItem collection,
                                              CalendarFilter filter);
 }

@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.util.Collections;
@@ -29,14 +28,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 
-/**
- * Hibernate persistent CollectionItem.
- */
 @Entity
 @DiscriminatorValue("collection")
-public class HibCollectionItem extends HibItem implements CollectionItem {
+public class HibCollectionItem extends HibItem {
 
-    private static final long serialVersionUID = 2873251323314048223L;
+    private static final long serialVersionUID = 1L;
 
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="collection", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE }) 

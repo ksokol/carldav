@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.service.lock;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 
 /**
@@ -75,7 +74,7 @@ public class SingleVMLockManagerTest {
         // t4 should be waiting
         Assert.assertFalse(t4.hasLock);
         
-        CollectionItem col = new HibCollectionItem();
+        HibCollectionItem col = new HibCollectionItem();
         col.setUid("3");
         
         Assert.assertEquals(1, lockManager.getNumWaitingThreads(col));
@@ -140,7 +139,7 @@ public class SingleVMLockManagerTest {
          * Run.
          */
         public void run() {
-            CollectionItem collection = new HibCollectionItem();
+            HibCollectionItem collection = new HibCollectionItem();
             collection.setUid(uid);
             lockManager.lockCollection(collection);
             hasLock = true;

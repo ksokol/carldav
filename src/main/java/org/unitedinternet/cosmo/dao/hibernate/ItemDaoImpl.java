@@ -33,7 +33,7 @@ import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.UidInUseException;
@@ -89,7 +89,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             if (parent == null) {
                 return null;
             }
-            Item item = itemPathTranslator.findItemByPath(path, (CollectionItem) parent);
+            Item item = itemPathTranslator.findItemByPath(path, (HibCollectionItem) parent);
             return item;
         } catch (HibernateException e) {
             getSession().clear();
@@ -212,7 +212,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    public void addItemToCollection(Item item, CollectionItem collection) {
+    public void addItemToCollection(Item item, HibCollectionItem collection) {
         try {
             addItemToCollectionInternal(item, collection);
             getSession().flush();
@@ -222,7 +222,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    public void removeItemFromCollection(Item item, CollectionItem collection) {
+    public void removeItemFromCollection(Item item, HibCollectionItem collection) {
         try {
             removeItemFromCollectionInternal(item, collection);
             getSession().flush();
@@ -287,18 +287,18 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     /**
      * find the set of collection items as children of the given collection item.
      * 
-     * @param collectionItem parent collection item
+     * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    public Set<CollectionItem> findCollectionItems(CollectionItem collectionItem){
+    public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem){
         try {
-            HashSet<CollectionItem> children = new HashSet<CollectionItem>();
+            HashSet<HibCollectionItem> children = new HashSet<HibCollectionItem>();
             Query hibQuery = getSession().getNamedQuery("collections.children.by.parent")
-                    .setParameter("parent", collectionItem);
+                    .setParameter("parent", hibCollectionItem);
 
             List<?> results = hibQuery.list();
             for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
-                CollectionItem content = (CollectionItem) it.next();
+                HibCollectionItem content = (HibCollectionItem) it.next();
                 children.add(content);
             }
             return children;
@@ -308,11 +308,11 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    public Set<Item> findCollectionFileItems(CollectionItem collectionItem){
+    public Set<Item> findCollectionFileItems(HibCollectionItem hibCollectionItem){
         try {
             HashSet<Item> children = new HashSet<Item>();
             Query hibQuery = getSession().getNamedQuery("collections.files.by.parent")
-                    .setParameter("parent", collectionItem);
+                    .setParameter("parent", hibCollectionItem);
 
             List<?> results = hibQuery.list();
             for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
@@ -400,7 +400,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      * @throws org.unitedinternet.cosmo.dao.DuplicateItemNameException if item with same name exists
      *                                    in collection
      */
-    protected void verifyItemNameUnique(Item item, CollectionItem collection) {
+    protected void verifyItemNameUnique(Item item, HibCollectionItem collection) {
         Query hibQuery = getSession().getNamedQuery("itemId.by.parentId.name");
         hibQuery.setParameter("name", item.getName()).setParameter("parentid",
                 ((HibItem) collection).getId());
@@ -460,7 +460,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    protected void removeItemFromCollectionInternal(Item item, CollectionItem collection) {
+    protected void removeItemFromCollectionInternal(Item item, HibCollectionItem collection) {
 
         getSession().update(collection);
         getSession().update(item);
@@ -480,7 +480,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     protected void addItemToCollectionInternal(Item item,
-                                               CollectionItem collection) {
+                                               HibCollectionItem collection) {
         verifyItemNameUnique(item, collection);
         getSession().update(item);
         getSession().update(collection);

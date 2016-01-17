@@ -26,7 +26,7 @@ import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
@@ -47,7 +47,7 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
         this.entityConverter = entityConverter;
     }
 
-    public Set<HibICalendarItem> findCalendarItems(CollectionItem collection,
+    public Set<HibICalendarItem> findCalendarItems(HibCollectionItem collection,
                                                 CalendarFilter filter) {
 
         try {

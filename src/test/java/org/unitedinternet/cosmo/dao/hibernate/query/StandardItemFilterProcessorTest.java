@@ -30,7 +30,7 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
@@ -39,7 +39,6 @@ import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
@@ -142,7 +141,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testParentQuery() throws Exception {
         ItemFilter filter = new ItemFilter();
-        CollectionItem parent = new HibCollectionItem();
+        HibCollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i join i.parentDetails pd where "
@@ -156,7 +155,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testDisplayNameAndParentQuery() throws Exception {
         ItemFilter filter = new ItemFilter();
-        CollectionItem parent = new HibCollectionItem();
+        HibCollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
         filter.setDisplayName(Restrictions.eq("test"));
         Query query =  queryBuilder.buildQuery(session, filter);
@@ -171,7 +170,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testContentItemQuery() throws Exception {
         ContentItemFilter filter = new ContentItemFilter();
-        CollectionItem parent = new HibCollectionItem();
+        HibCollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         Query query =  queryBuilder.buildQuery(session, filter);
@@ -200,7 +199,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testNoteItemQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
-        CollectionItem parent = new HibCollectionItem();
+        HibCollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
         filter.setDisplayName(Restrictions.eq("test"));
         filter.setIcalUid(Restrictions.eq("icaluid"));

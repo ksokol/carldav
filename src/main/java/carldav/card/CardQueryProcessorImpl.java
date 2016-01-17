@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.util.Set;
@@ -25,7 +25,7 @@ class CardQueryProcessorImpl implements CardQueryProcessor {
     }
 
     @Override
-    public Set<Item> filterQuery(final CollectionItem collection, final AddressbookFilter filter) {
+    public Set<Item> filterQuery(final HibCollectionItem collection, final AddressbookFilter filter) {
         LOG.debug("finding vacards in collection {} by filter {}", collection.getUid(), filter);
         //TODO filter is not in use yet
         return contentDao.findCollectionFileItems(collection);

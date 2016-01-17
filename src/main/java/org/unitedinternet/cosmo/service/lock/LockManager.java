@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.service.lock;
 
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 
 /**
  * It is recommended practice to always immediately follow a call 
@@ -43,7 +43,7 @@ public interface LockManager {
      * will block until lock has been acquired.
      * @param collection collection to lock
      */
-    void lockCollection(CollectionItem collection);
+    void lockCollection(HibCollectionItem collection);
     
   
     /**
@@ -58,7 +58,7 @@ public interface LockManager {
      * @return true if lock has been acquired, false if lock could
      *         not be obtained within a specified ammount of time
      */
-    boolean lockCollection(CollectionItem collection, long timeout);
+    boolean lockCollection(HibCollectionItem collection, long timeout);
 
     /**
      * Release lock for a collection.  The thread calling this method
@@ -67,5 +67,5 @@ public interface LockManager {
      * @param collection
      *            collection to unlock
      */
-    void unlockCollection(CollectionItem collection);
+    void unlockCollection(HibCollectionItem collection);
 }

@@ -22,7 +22,7 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
@@ -71,7 +71,7 @@ public class StandardContentService implements ContentService {
      * @param item item to remove from collection
      * @param collection item to remove item from
      */
-    public void removeItemFromCollection(Item item, CollectionItem collection) {
+    public void removeItemFromCollection(Item item, HibCollectionItem collection) {
         contentDao.removeItemFromCollection(item, collection);
         contentDao.updateCollectionTimestamp(collection);
     }
@@ -85,8 +85,8 @@ public class StandardContentService implements ContentService {
      *            collection to create
      * @return newly created collection
      */
-    public CollectionItem createCollection(CollectionItem parent,
-                                           CollectionItem collection) {
+    public HibCollectionItem createCollection(HibCollectionItem parent,
+                                           HibCollectionItem collection) {
         return contentDao.createCollection(parent, collection);
     }
 
@@ -99,7 +99,7 @@ public class StandardContentService implements ContentService {
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if CollectionItem is locked
      */
-    public CollectionItem updateCollection(CollectionItem collection) {
+    public HibCollectionItem updateCollection(HibCollectionItem collection) {
 
        /* if(collection instanceof HomeCollectionItem) {
             throw new IllegalArgumentException("cannot update home collection");
@@ -122,7 +122,7 @@ public class StandardContentService implements ContentService {
      * @param collection
      *            collection item to remove
      */
-    public void removeCollection(CollectionItem collection) {
+    public void removeCollection(HibCollectionItem collection) {
         // prevent HomeCollection from being removed (should only be removed
         // when user is removed)
         if(collection instanceof HibHomeCollectionItem) {
@@ -144,17 +144,17 @@ public class StandardContentService implements ContentService {
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    public ContentItem createContent(CollectionItem parent,
+    public ContentItem createContent(HibCollectionItem parent,
                                      ContentItem content) {
         checkDatesForEvent(content);
         // Obtain locks to all collections involved.
-        Set<CollectionItem> locks = acquireLocks(parent, content);
+        Set<HibCollectionItem> locks = acquireLocks(parent, content);
         
         try {
             content = contentDao.createContent(parent, content);
             
             // update collections
-            for(CollectionItem col : locks) {
+            for(HibCollectionItem col : locks) {
                 contentDao.updateCollectionTimestamp(col);
             }
             
@@ -220,7 +220,7 @@ public class StandardContentService implements ContentService {
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    public void createContentItems(CollectionItem parent,
+    public void createContentItems(HibCollectionItem parent,
                                      Set<ContentItem> contentItems) {
         checkDatesForEvents(contentItems);
         if (! lockManager.lockCollection(parent, lockTimeout)) {
@@ -250,11 +250,11 @@ public class StandardContentService implements ContentService {
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    public void updateContentItems(Set<CollectionItem> parents, Set<ContentItem> contentItems) {
+    public void updateContentItems(Set<HibCollectionItem> parents, Set<ContentItem> contentItems) {
         checkDatesForEvents(contentItems);
         // Obtain locks to all collections involved.  A collection is involved
         // if it is the parent of one of updated items.
-        Set<CollectionItem> locks = acquireLocks(contentItems);
+        Set<HibCollectionItem> locks = acquireLocks(contentItems);
         
         try {
             
@@ -268,7 +268,7 @@ public class StandardContentService implements ContentService {
            }
            
            // update collections
-           for(CollectionItem parent : locks) {
+           for(HibCollectionItem parent : locks) {
                contentDao.updateCollectionTimestamp(parent);
            }
         } finally {
@@ -288,13 +288,13 @@ public class StandardContentService implements ContentService {
      */
     public ContentItem updateContent(ContentItem content) {
         checkDatesForEvent(content);
-        Set<CollectionItem> locks = acquireLocks(content);
+        Set<HibCollectionItem> locks = acquireLocks(content);
         
         try {
             content = contentDao.updateContent(content);
             
             // update collections
-            for(CollectionItem parent : locks) {
+            for(HibCollectionItem parent : locks) {
                 contentDao.updateCollectionTimestamp(parent);
             }
             
@@ -313,12 +313,12 @@ public class StandardContentService implements ContentService {
      *         if parent CollectionItem is locked           
      */
     public void removeContent(ContentItem content) {
-        Set<CollectionItem> locks = acquireLocks(content);
+        Set<HibCollectionItem> locks = acquireLocks(content);
         
         try {
             contentDao.removeContent(content);
             // update collections
-            for(CollectionItem parent : locks) {
+            for(HibCollectionItem parent : locks) {
                 contentDao.updateCollectionTimestamp(parent);
             }
         } finally {
@@ -330,19 +330,19 @@ public class StandardContentService implements ContentService {
     /**
      * find the set of collection items as children of the given collection item.
      * 
-     * @param collectionItem parent collection item
+     * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    public Set<CollectionItem> findCollectionItems(CollectionItem collectionItem) {
-        return contentDao.findCollectionItems(collectionItem);
+    public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem) {
+        return contentDao.findCollectionItems(hibCollectionItem);
     }
 
     /**
      * Given a set of items, aquire a lock on all parents
      */
-    private Set<CollectionItem> acquireLocks(Set<? extends Item> children) {
+    private Set<HibCollectionItem> acquireLocks(Set<? extends Item> children) {
         
-        HashSet<CollectionItem> locks = new HashSet<CollectionItem>();
+        HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
         
         // Get locks for all collections involved
         try {
@@ -362,9 +362,9 @@ public class StandardContentService implements ContentService {
      * Given a collection and a set of items, aquire a lock on the collection and
      * all 
      */
-    private Set<CollectionItem> acquireLocks(CollectionItem collection, Set<Item> children) {
+    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, Set<Item> children) {
         
-        HashSet<CollectionItem> locks = new HashSet<CollectionItem>();
+        HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
         
         // Get locks for all collections involved
         try {
@@ -386,15 +386,15 @@ public class StandardContentService implements ContentService {
         }
     }
     
-    private Set<CollectionItem> acquireLocks(CollectionItem collection, Item item) {
+    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, Item item) {
         HashSet<Item> items = new HashSet<Item>();
         items.add(item);
         
         return acquireLocks(collection, items);
     }
     
-    private Set<CollectionItem> acquireLocks(Item item) {
-        HashSet<CollectionItem> locks = new HashSet<CollectionItem>();
+    private Set<HibCollectionItem> acquireLocks(Item item) {
+        HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
         try {
             acquireLocks(locks,item);
             return locks;
@@ -404,8 +404,8 @@ public class StandardContentService implements ContentService {
         }
     }
     
-    private void acquireLocks(Set<CollectionItem> locks, Item item) {
-        for(CollectionItem parent: item.getParents()) {
+    private void acquireLocks(Set<HibCollectionItem> locks, Item item) {
+        for(HibCollectionItem parent: item.getParents()) {
             if(locks.contains(parent)) {
                 continue;
             }
@@ -425,8 +425,8 @@ public class StandardContentService implements ContentService {
         }
     }
     
-    private void releaseLocks(Set<CollectionItem> locks) {
-        for(CollectionItem lock : locks) {
+    private void releaseLocks(Set<HibCollectionItem> locks) {
+        for(HibCollectionItem lock : locks) {
             lockManager.unlockCollection(lock);
         }
     }

@@ -26,7 +26,7 @@ import org.unitedinternet.cosmo.calendar.query.PropertyFilter;
 import org.unitedinternet.cosmo.calendar.query.TextMatchFilter;
 import org.unitedinternet.cosmo.calendar.query.TimeRangeFilter;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.FilterCriteria;
@@ -36,7 +36,6 @@ import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 
 
 /**
@@ -53,7 +52,7 @@ public class CalendarFilterConverterTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testTranslateItemToFilter() throws Exception {
-        CollectionItem calendar = new HibCollectionItem();
+        HibCollectionItem calendar = new HibCollectionItem();
         calendar.setUid("calendar");
         CalendarFilter calFilter = new CalendarFilter();
         ComponentFilter rootComp = new ComponentFilter();
@@ -117,7 +116,7 @@ public class CalendarFilterConverterTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testGetFirstPassFilter() throws Exception {
-        CollectionItem calendar = new HibCollectionItem();
+        HibCollectionItem calendar = new HibCollectionItem();
         calendar.setUid("calendar");
         CalendarFilter calFilter = new CalendarFilter();
         ComponentFilter rootComp = new ComponentFilter();

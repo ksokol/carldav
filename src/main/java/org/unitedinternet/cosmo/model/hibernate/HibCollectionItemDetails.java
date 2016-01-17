@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.io.Serializable;
@@ -43,7 +42,7 @@ public class HibCollectionItemDetails implements Serializable {
     @Id
     @ManyToOne(targetEntity = HibCollectionItem.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "collectionid", nullable = false)
-    public CollectionItem collection;
+    public HibCollectionItem collection;
 
     @Id
     @ManyToOne(targetEntity = HibItem.class)
@@ -52,17 +51,17 @@ public class HibCollectionItemDetails implements Serializable {
 
     public HibCollectionItemDetails() {}
     
-    public HibCollectionItemDetails(CollectionItem collection,
+    public HibCollectionItemDetails(HibCollectionItem collection,
             Item item) {
         this.collection = collection;
         this.item = item;
     }
     
-    public void setCollection(CollectionItem collection) {
+    public void setCollection(HibCollectionItem collection) {
         this.collection = collection;
     }
     
-    public CollectionItem getCollection() {
+    public HibCollectionItem getCollection() {
         return collection;
     }
 

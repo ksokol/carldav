@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.User;
 
@@ -39,8 +39,8 @@ public interface ContentDao extends ItemDao {
      *            collection to create
      * @return newly created collection
      */
-    public CollectionItem createCollection(CollectionItem parent,
-            CollectionItem collection);
+    public HibCollectionItem createCollection(HibCollectionItem parent,
+            HibCollectionItem collection);
 
     /**
      * Update an existing collection.
@@ -49,7 +49,7 @@ public interface ContentDao extends ItemDao {
      *            collection to update
      * @return updated collection
      */
-    public CollectionItem updateCollection(CollectionItem collection);
+    public HibCollectionItem updateCollection(HibCollectionItem collection);
 
 
     /**
@@ -63,7 +63,7 @@ public interface ContentDao extends ItemDao {
      *            content to create
      * @return newly created content
      */
-    public ContentItem createContent(CollectionItem parent, ContentItem content);
+    public ContentItem createContent(HibCollectionItem parent, ContentItem content);
 
     /**
      * Create new content item and associate with multiple parent collections.
@@ -74,7 +74,7 @@ public interface ContentDao extends ItemDao {
      *            content to create
      * @return newly created content
      */
-    public ContentItem createContent(Set<CollectionItem> parents, ContentItem content);
+    public ContentItem createContent(Set<HibCollectionItem> parents, ContentItem content);
 
     /**
      * Update an existing content item.
@@ -108,18 +108,18 @@ public interface ContentDao extends ItemDao {
      * @param collection
      *            collection item to remove
      */
-    public void removeCollection(CollectionItem collection);
+    public void removeCollection(HibCollectionItem collection);
     
     /**
      * Update timestamp on collection.
      * @param collection collection to update
      * @return updated collection
      */
-    public CollectionItem updateCollectionTimestamp(CollectionItem collection);
+    public HibCollectionItem updateCollectionTimestamp(HibCollectionItem collection);
 
     /**
      * Removes all items from a given collection.
      * @param collection The collection which contains all items which will be deleted.
      */
-    public void removeItemsFromCollection(CollectionItem collection);
+    public void removeItemsFromCollection(HibCollectionItem collection);
 }

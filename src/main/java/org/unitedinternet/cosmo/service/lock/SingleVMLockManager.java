@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.service.lock;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,7 +65,7 @@ public class SingleVMLockManager implements LockManager {
      * @param collection The collection.
      * @return true if collection is locked
      */
-    public boolean isLocked(CollectionItem collection) {
+    public boolean isLocked(HibCollectionItem collection) {
         CollectionLock lock = locks.get(collection.getUid());
         if(lock==null) {
             return false;
@@ -80,7 +80,7 @@ public class SingleVMLockManager implements LockManager {
      * @param collection The collection.
      * @return number of threads waiting on collection lock
      */
-    public int getNumWaitingThreads(CollectionItem collection) {
+    public int getNumWaitingThreads(HibCollectionItem collection) {
         CollectionLock lock = locks.get(collection.getUid());
         if(lock==null) {
             return 0;
@@ -102,14 +102,14 @@ public class SingleVMLockManager implements LockManager {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.service.LockService#lockCollection(org.unitedinternet.cosmo.model.CollectionItem)
      */
-    public void lockCollection(CollectionItem collection) {
+    public void lockCollection(HibCollectionItem collection) {
         lockCollection(collection, -1);
     }
     
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.service.LockService#lockCollection(org.unitedinternet.cosmo.model.CollectionItem, long)
      */
-    public boolean lockCollection(CollectionItem collection, long timeout) {
+    public boolean lockCollection(HibCollectionItem collection, long timeout) {
         
         CollectionLock lock;
         
@@ -159,7 +159,7 @@ public class SingleVMLockManager implements LockManager {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.mc.LockManager#unnlockCollection(org.unitedinternet.cosmo.model.CollectionItem)
      */
-    public void unlockCollection(CollectionItem collection) {
+    public void unlockCollection(HibCollectionItem collection) {
         
         synchronized(this) {
             CollectionLock lock = locks.get(collection.getUid());

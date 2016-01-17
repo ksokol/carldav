@@ -34,7 +34,7 @@ import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.DataSizeException;
@@ -58,7 +58,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private final Set<String> deadPropertyFilter = new HashSet<>(10);
 
-    public DavCalendarCollection(CollectionItem collection,
+    public DavCalendarCollection(HibCollectionItem collection,
                                  DavResourceLocator locator,
                                  DavResourceFactory factory,
                                  IdGenerator idGenerator)
@@ -99,7 +99,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         Set<DavCalendarResource> members =
             new HashSet<>();
 
-        CollectionItem collection = (CollectionItem) getItem();
+        HibCollectionItem collection = (HibCollectionItem) getItem();
         for (ContentItem memberItem :
              getCalendarQueryProcesor().filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberItem);
@@ -313,7 +313,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
             try {
                 getContentService().createContentItems(
-                        (CollectionItem) getItem(), toUpdate);
+                        (HibCollectionItem) getItem(), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {
@@ -352,7 +352,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             LOG.debug("creating journal {}", member.getResourcePath());
 
             try {
-                getContentService().createContentItems((CollectionItem) getItem(), toUpdate);
+                getContentService().createContentItems((HibCollectionItem) getItem(), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {

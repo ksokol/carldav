@@ -22,7 +22,6 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
@@ -121,7 +120,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<HibCollectionItemDetails> parentDetails = new HashSet<>();
 
-    private transient Set<CollectionItem> parents = null;
+    private transient Set<HibCollectionItem> parents = null;
 
     @ManyToOne(targetEntity=User.class, fetch=FetchType.LAZY)
     @JoinColumn(name="ownerid", nullable = false)
@@ -364,14 +363,14 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /**
      * @param parent collection to add item to
      */
-    public void addParent(CollectionItem parent) {
+    public void addParent(HibCollectionItem parent) {
         parentDetails.add(new HibCollectionItemDetails(parent,this));
 
         // clear cached parents
         parents = null;
     }
 
-    public void removeParent(CollectionItem parent) {
+    public void removeParent(HibCollectionItem parent) {
         HibCollectionItemDetails cid = getParentDetails(parent);
         if(cid!=null) {
             parentDetails.remove(cid);
@@ -383,7 +382,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getParents()
      */
-    public Set<CollectionItem> getParents() {
+    public Set<HibCollectionItem> getParents() {
         if(parents!=null) {
             return parents;
         }
@@ -401,7 +400,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getParent()
      */
-    public CollectionItem getParent() {
+    public HibCollectionItem getParent() {
         if(getParents().size()==0) {
             return null;
         }
@@ -412,7 +411,7 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getParentDetails(org.unitedinternet.cosmo.model.CollectionItem)
      */
-    public HibCollectionItemDetails getParentDetails(CollectionItem parent) {
+    public HibCollectionItemDetails getParentDetails(HibCollectionItem parent) {
         for(HibCollectionItemDetails cid: parentDetails) {
             if(cid.getCollection().equals(parent)) {
                 return cid;

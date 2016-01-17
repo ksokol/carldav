@@ -32,7 +32,7 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Stamp;
@@ -90,7 +90,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testStampsCreate() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         HibNoteItem item = generateTestContent();
 
@@ -128,7 +128,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testStampHandlers() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         HibNoteItem item = generateTestContent();
 
@@ -174,7 +174,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testEventStampValidation() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         ContentItem item = generateTestContent();
 
@@ -196,7 +196,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testRemoveStamp() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         HibNoteItem item = generateTestContent();
 
@@ -241,7 +241,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testCalendarCollectionStamp() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         Calendar testCal = helper.getCalendar("testdata/timezone.ics");
 
@@ -255,7 +255,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         contentDao.updateCollection(root);
 
 
-        root = (CollectionItem) contentDao.findItemByUid(root.getUid());
+        root = (HibCollectionItem) contentDao.findItemByUid(root.getUid());
 
         ContentItem item = generateTestContent();
         EventStamp event = new HibEventStamp();
@@ -265,7 +265,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         contentDao.createContent(root, item);
         session.clear();
 
-        CollectionItem queryCol = (CollectionItem) contentDao.findItemByUid(root.getUid());
+        HibCollectionItem queryCol = (HibCollectionItem) contentDao.findItemByUid(root.getUid());
         Assert.assertEquals(1, queryCol.getStamps().size());
         Stamp stamp = queryCol.getStamp(HibCalendarCollectionStamp.class);
         Assert.assertTrue(stamp instanceof HibCalendarCollectionStamp);
@@ -286,7 +286,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testCalendarCollectionStampValidation() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         Calendar testCal = helper.getCalendar("testdata/cal1.ics");
 
@@ -307,7 +307,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test(expected=ConstraintViolationException.class)
     public void shouldNotAllowDisplayNamesWithLengthGreaterThan64() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setDisplayName("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -320,7 +320,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test(expected=ConstraintViolationException.class)
     public void shouldNotAllowEmptyDisplayNames() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
         calendarStamp.setDisplayName("");
@@ -332,7 +332,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
     public void shouldAllowLegalDisplayNames() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
 
         HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
@@ -352,7 +352,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testEventExceptionStamp() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         HibNoteItem item = generateTestContent();
 
@@ -388,7 +388,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
     @Test
     public void testEventExceptionStampValidation() throws Exception {
         User user = getUser(userDao, "testuser");
-        CollectionItem root = (CollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
         HibNoteItem item = generateTestContent();
 

@@ -48,7 +48,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.CollectionItem;
 import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
@@ -236,7 +235,7 @@ public class EntityConverter {
      * @param collection calendar collection
      * @return icalendar representation of collection
      */
-    public Calendar convertCollection(CollectionItem collection) {
+    public Calendar convertCollection(HibCollectionItem collection) {
         
         // verify collection is a calendar
         HibCalendarCollectionStamp ccs = StampUtils

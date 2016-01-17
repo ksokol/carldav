@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.CollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
@@ -122,7 +122,7 @@ public interface ItemDao extends Dao {
      * @param item the item
      * @param collection the collection to add to
      */
-    void addItemToCollection(Item item, CollectionItem collection);
+    void addItemToCollection(Item item, HibCollectionItem collection);
 
     /**
      * Remove item from a collection.
@@ -130,7 +130,7 @@ public interface ItemDao extends Dao {
      * @param item the item
      * @param collection the collection to remove from
      */
-    void removeItemFromCollection(Item item, CollectionItem collection);
+    void removeItemFromCollection(Item item, HibCollectionItem collection);
 
     /**
      * Initialize item, ensuring any proxied associations will be loaded.
@@ -141,8 +141,8 @@ public interface ItemDao extends Dao {
     /**
      * find the set of collection items as children of the given collection item.
      * 
-     * @param collectionItem parent collection item
+     * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    Set<CollectionItem> findCollectionItems(CollectionItem collectionItem);
+    Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
 }

@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
@@ -30,14 +29,5 @@ public class StampUtils {
      */
     public static EventStamp getEventStamp(HibItem hibItem) {
         return (EventStamp) hibItem.getStamp(EventStamp.class);
-    }
-    
-    /**
-     * Return EventExceptionStamp from Item
-     * @param hibItem
-     * @return EventExceptionStamp from Item
-     */
-    public static HibEventExceptionStamp getEventExceptionStamp(HibItem hibItem) {
-        return (HibEventExceptionStamp) hibItem.getStamp(HibEventExceptionStamp.class);
     }
 }

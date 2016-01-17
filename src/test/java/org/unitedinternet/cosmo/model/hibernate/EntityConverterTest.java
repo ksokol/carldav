@@ -139,7 +139,7 @@ public class EntityConverterTest {
         Assert.assertEquals("20060104T190000Z", uid.getRecurrenceId().toString());
         
         Assert.assertTrue(mod.getModifies()==master);
-        HibEventExceptionStamp ees = StampUtils.getEventExceptionStamp(mod);
+        HibEventExceptionStamp ees = (HibEventExceptionStamp) mod.getStamp(HibEventExceptionStamp.class);;
         Assert.assertNotNull(ees);
         
         // mod should include VTIMEZONES
@@ -229,7 +229,7 @@ public class EntityConverterTest {
         item = findModByRecurrenceId(items, "20071129T203000Z" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(StampUtils.getEventExceptionStamp(item));
+        Assert.assertNotNull(item.getStamp(HibEventExceptionStamp.class));
         
         item = findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
         Assert.assertNotNull(item);

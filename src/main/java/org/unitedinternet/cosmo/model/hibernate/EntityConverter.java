@@ -733,8 +733,7 @@ public class EntityConverter {
     private HibNoteItem getModification(HibNoteItem masterNote,
                                      Date recurrenceId) {
         for (HibNoteItem mod : masterNote.getModifications()) {
-            HibEventExceptionStamp exceptionStamp =
-                StampUtils.getEventExceptionStamp(mod);
+            HibEventExceptionStamp exceptionStamp = (HibEventExceptionStamp) mod.getStamp(HibEventExceptionStamp.class);
             // only interested in mods with event stamp
             if (exceptionStamp == null) {
                 continue;
@@ -801,9 +800,7 @@ public class EntityConverter {
      */
     private void updateNoteModification(HibNoteItem noteMod,
                                         VEvent event) {
-        HibEventExceptionStamp exceptionStamp =
-            StampUtils.getEventExceptionStamp(noteMod);
-        exceptionStamp.setExceptionEvent(event);
+        HibEventExceptionStamp exceptionStamp =(HibEventExceptionStamp) noteMod.getStamp(HibEventExceptionStamp.class);
         
         // copy VTIMEZONEs to front if present
         ComponentList vtimezones = exceptionStamp.getMasterStamp()

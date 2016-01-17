@@ -29,14 +29,13 @@ import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -165,10 +164,10 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             if(note.getModifies()!=null) {
                 return null;
             }
-            else if (hibItem.getStamp(EventStamp.class) instanceof HibEventStamp) {
+            else if (hibItem.getStamp(HibEventStamp.class) != null) {
                 return new DavEvent(note, locator, this, idGenerator);
             }
-            else if (hibItem.getStamp(EventStamp.class) instanceof HibJournalStamp) {
+            else if (hibItem.getStamp(HibJournalStamp.class) != null) {
                 return new DavJournal(note, locator, this, idGenerator);
             }
             else {

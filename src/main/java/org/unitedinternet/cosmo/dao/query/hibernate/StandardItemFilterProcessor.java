@@ -25,9 +25,7 @@ import org.unitedinternet.cosmo.calendar.InstanceList;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
@@ -45,6 +43,8 @@ import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.NullExpression;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.filter.TextAttributeFilter;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.ArrayList;
@@ -212,8 +212,13 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         if (filter.isMissing()) {
             toAppend += "not ";
         }
-        toAppend += "exists (select s.id from HibStamp s where s.item=i and s.class=Hib"
-                + filter.getStampClass().getSimpleName() + ")";
+        toAppend += "exists (select s.id from HibStamp s where s.item=i and s.class=";
+
+        //TODO
+        String simpleName = filter.getStampClass().getSimpleName();
+        simpleName = simpleName.startsWith("Hib") ? simpleName : "Hib" + simpleName;
+
+        toAppend += simpleName + ")";
         appendWhere(whereBuf, toAppend);
     }
 

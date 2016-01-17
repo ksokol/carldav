@@ -25,23 +25,16 @@ import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.FileInputStream;
 
-/**
- * Test EventStamp
- */
 public class EventStampTest {
    
     protected String baseDir = "src/test/resources/testdata/";
 
-    /**
-     * Tests ex dates.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
     @Test
     public void testExDates() throws Exception {
         HibNoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
-        EventStamp eventStamp = new HibEventStamp(master);
+        HibEventStamp eventStamp = new HibEventStamp(master);
         
         eventStamp.setEventCalendar(getCalendar("recurring_with_exdates.ics"));
         
@@ -51,13 +44,7 @@ public class EventStampTest {
         Assert.assertTrue(2==exdates.size());
         Assert.assertNotNull(exdates.getTimeZone());
     }
-    
-    /**
-     * Gets calendar.
-     * @param name The name.
-     * @return The calendar.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
+
     protected Calendar getCalendar(String name) throws Exception {
         CalendarBuilder cb = new CalendarBuilder();
         FileInputStream fis = new FileInputStream(baseDir + name);

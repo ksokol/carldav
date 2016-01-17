@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate.query;
 
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -30,8 +28,6 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
@@ -39,23 +35,20 @@ import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.util.Calendar;
 import java.util.Date;
 
-
-/**
- * Test StandardItemQueryBuilder.
- */
 public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
 
     @Autowired
-    protected SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     private StandardItemFilterProcessor queryBuilder = new StandardItemFilterProcessor();
-    private TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     private Session session;
 
@@ -255,7 +248,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     public void testBasicStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
         StampFilter missingFilter = new StampFilter();
-        missingFilter.setStampClass(EventStamp.class);
+        missingFilter.setStampClass(HibEventStamp.class);
         filter.getStampFilters().add(missingFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where exists (select s.id from HibStamp s "

@@ -33,7 +33,6 @@ import net.fortuna.ical4j.model.property.Status;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
@@ -322,7 +321,7 @@ public class EntityConverterTest {
         master.setBody("body");
         master.setIcalUid("icaluid");
         master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        EventStamp eventStamp = new HibEventStamp(master);
+        HibEventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         master.addStamp(eventStamp);
@@ -382,7 +381,7 @@ public class EntityConverterTest {
         master.setIcalUid("icaluid");
         master.setDisplayName("master displayName");
         master.setBody("master body");
-        EventStamp eventStamp = new HibEventStamp(master);
+        HibEventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         eventStamp.setDuration(new Dur("PT1H"));
@@ -445,7 +444,7 @@ public class EntityConverterTest {
     @Test
     public void testInheritedAnyTime() throws Exception {
         HibNoteItem master = new HibNoteItem();
-        EventStamp eventStamp = new HibEventStamp(master);
+        HibEventStamp eventStamp = new HibEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
 

@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 
@@ -37,7 +37,7 @@ public interface ItemDao extends Dao {
      *            uid of item to find
      * @return item represented by uid
      */
-    Item findItemByUid(String uid);
+    HibItem findItemByUid(String uid);
 
     /**
      * Find an item with the specified path. The return type will be one of
@@ -47,7 +47,7 @@ public interface ItemDao extends Dao {
      *            path of item to find
      * @return item represented by path
      */
-    Item findItemByPath(String path);
+    HibItem findItemByPath(String path);
     
     /**
      * Find an item with the specified path, relative to a parent collection.
@@ -60,7 +60,7 @@ public interface ItemDao extends Dao {
      *            uid of parent that path is relative to
      * @return item represented by path
      */
-    Item findItemByPath(String path, String parentUid);
+    HibItem findItemByPath(String path, String parentUid);
     
     /**
      * Find the parent item of the item with the specified path. 
@@ -70,7 +70,7 @@ public interface ItemDao extends Dao {
      *            path of item
      * @return parent item of item represented by path
      */
-    Item findItemParentByPath(String path);
+    HibItem findItemParentByPath(String path);
 
     /**
      * Get the root item for a user
@@ -99,10 +99,10 @@ public interface ItemDao extends Dao {
     /**
      * Remove an item.
      *
-     * @param item
+     * @param hibItem
      *            item to remove
      */
-    void removeItem(Item item);
+    void removeItem(HibItem hibItem);
 
     /**
      * Remove an item give the item's path
@@ -119,24 +119,24 @@ public interface ItemDao extends Dao {
     /**
      * Adds item to a collection.
      *
-     * @param item the item
+     * @param hibItem the item
      * @param collection the collection to add to
      */
-    void addItemToCollection(Item item, HibCollectionItem collection);
+    void addItemToCollection(HibItem hibItem, HibCollectionItem collection);
 
     /**
      * Remove item from a collection.
      *
-     * @param item the item
+     * @param hibItem the item
      * @param collection the collection to remove from
      */
-    void removeItemFromCollection(Item item, HibCollectionItem collection);
+    void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection);
 
     /**
      * Initialize item, ensuring any proxied associations will be loaded.
-     * @param item The item initialized.
+     * @param hibItem The item initialized.
      */
-    void initializeItem(Item item);
+    void initializeItem(HibItem hibItem);
 
     /**
      * find the set of collection items as children of the given collection item.

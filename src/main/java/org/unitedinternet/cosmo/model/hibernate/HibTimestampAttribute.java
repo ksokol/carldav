@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.util.Date;
 
@@ -62,12 +61,12 @@ public class HibTimestampAttribute extends HibAttribute {
     /**
      * Convienence method for returning a Date value on a TimestampAttribute
      * with a given QName stored on the given item.
-     * @param item item to fetch TextAttribute from
+     * @param hibItem item to fetch TextAttribute from
      * @param qname QName of attribute
      * @return Date value of TextAttribute
      */
-    public static Date getValue(Item item, HibQName qname) {
-        HibTimestampAttribute ta = (HibTimestampAttribute) item.getAttribute(qname);
+    public static Date getValue(HibItem hibItem, HibQName qname) {
+        HibTimestampAttribute ta = (HibTimestampAttribute) hibItem.getAttribute(qname);
         if(ta==null) {
             return null;
         }
@@ -79,19 +78,19 @@ public class HibTimestampAttribute extends HibAttribute {
     /**
      * Convienence method for setting a Date value on a TimestampAttribute
      * with a given QName stored on the given item.
-     * @param item item to fetch TimestampAttribute from
+     * @param hibItem item to fetch TimestampAttribute from
      * @param qname QName of attribute
      * @param value value to set on TextAttribute
      */
-    public static void setValue(Item item, HibQName qname, Date value) {
-        HibTimestampAttribute attr = (HibTimestampAttribute) item.getAttribute(qname);
+    public static void setValue(HibItem hibItem, HibQName qname, Date value) {
+        HibTimestampAttribute attr = (HibTimestampAttribute) hibItem.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTimestampAttribute(qname,value);
-            item.addAttribute(attr);
+            hibItem.addAttribute(attr);
             return;
         }
         if(value==null) {
-            item.removeAttribute(qname);
+            hibItem.removeAttribute(qname);
         }
         else {
             attr.setValue(value);

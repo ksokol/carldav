@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * An exception indicating that an item with the same parent item
@@ -25,19 +25,19 @@ public class DuplicateItemNameException extends ModelValidationException {
 
     /**
      */
-    public DuplicateItemNameException(Item item) {
-        super(item, "duplicate item name: " + item.getName());
+    public DuplicateItemNameException(HibItem hibItem) {
+        super(hibItem, "duplicate item name: " + hibItem.getName());
     }
 
     /**
      */
-    public DuplicateItemNameException(Item item, String message) {
-        super(item, message);
+    public DuplicateItemNameException(HibItem hibItem, String message) {
+        super(hibItem, message);
     }
 
     /**
      */
-    public DuplicateItemNameException(Item item, String message, Throwable cause) {
-        super(item, message, cause);
+    public DuplicateItemNameException(HibItem hibItem, String message, Throwable cause) {
+        super(hibItem, message, cause);
     }
 }

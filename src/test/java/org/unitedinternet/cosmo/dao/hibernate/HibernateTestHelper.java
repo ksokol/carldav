@@ -21,9 +21,8 @@ import org.junit.Assert;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.Item;
-import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.io.ByteArrayInputStream;
@@ -42,27 +41,27 @@ public class HibernateTestHelper {
 
     /**
      * Verify item.
-     * @param item1 Item1.
-     * @param item2 Item2.
+     * @param hibItem1 Item1.
+     * @param hibItem2 Item2.
      * @throws Exception - if something is wrong this exception is thrown.
      */
-    public void verifyItem(Item item1, Item item2) throws Exception {
-        Assert.assertEquals(item1.getName(), item2.getName());
-        Assert.assertEquals(item1.getCreationDate(), item2.getCreationDate());
-        Assert.assertEquals(item1.getClientCreationDate(), item2.getClientCreationDate());
-        Assert.assertEquals(item1.getClientModifiedDate(), item2.getClientModifiedDate());
-        Assert.assertEquals(item1.getModifiedDate(), item2.getModifiedDate());
-        Assert.assertEquals(item1.getDisplayName(), item2.getDisplayName());
-        Assert.assertEquals(getHibItem(item1).getId(), getHibItem(item2).getId());
-        Assert.assertEquals(item1.getUid(), item2.getUid());
-        Assert.assertEquals(item1.getAttributes().size(), item2.getAttributes()
+    public void verifyItem(HibItem hibItem1, HibItem hibItem2) throws Exception {
+        Assert.assertEquals(hibItem1.getName(), hibItem2.getName());
+        Assert.assertEquals(hibItem1.getCreationDate(), hibItem2.getCreationDate());
+        Assert.assertEquals(hibItem1.getClientCreationDate(), hibItem2.getClientCreationDate());
+        Assert.assertEquals(hibItem1.getClientModifiedDate(), hibItem2.getClientModifiedDate());
+        Assert.assertEquals(hibItem1.getModifiedDate(), hibItem2.getModifiedDate());
+        Assert.assertEquals(hibItem1.getDisplayName(), hibItem2.getDisplayName());
+        Assert.assertEquals(getHibItem(hibItem1).getId(), getHibItem(hibItem2).getId());
+        Assert.assertEquals(hibItem1.getUid(), hibItem2.getUid());
+        Assert.assertEquals(hibItem1.getAttributes().size(), hibItem2.getAttributes()
                 .size());
         for (@SuppressWarnings("rawtypes")
-        Iterator it = item1.getAttributes().keySet().iterator(); it
+        Iterator it = hibItem1.getAttributes().keySet().iterator(); it
                 .hasNext();) {
             HibQName key = (HibQName) it.next();
-            Object val1 = item1.getAttributeValue(key);
-            Object val2 = item2.getAttributeValue(key);
+            Object val1 = hibItem1.getAttributeValue(key);
+            Object val2 = hibItem2.getAttributeValue(key);
             verifyAttributeValue(val1, val2);
         }
 
@@ -237,10 +236,10 @@ public class HibernateTestHelper {
     
     /**
      * Gets Hib Item.
-     * @param item The item.
+     * @param hibItem The item.
      * @return HibItem.
      */
-    private HibItem getHibItem(Item item) {
-        return (HibItem) item;
+    private HibItem getHibItem(HibItem hibItem) {
+        return (HibItem) hibItem;
     }
 }

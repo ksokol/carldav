@@ -19,7 +19,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Target;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -70,7 +69,7 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
     
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "itemid", nullable = false)
-    private Item item;
+    private HibItem item;
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Attribute#getQName()
@@ -100,14 +99,14 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Attribute#getItem()
      */
-    public Item getItem() {
+    public HibItem getItem() {
         return item;
     }
    
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Attribute#setItem(org.unitedinternet.cosmo.model.Item)
      */
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItem(HibItem hibItem) {
+        this.item = hibItem;
     }
 }

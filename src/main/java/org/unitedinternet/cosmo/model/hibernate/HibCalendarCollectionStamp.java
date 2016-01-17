@@ -22,7 +22,6 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.hibernate.validator.DisplayName;
 import org.unitedinternet.cosmo.hibernate.validator.Timezone;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.Item;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -85,11 +84,11 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
 
     /**
      * Return CalendarCollectionStamp from Item
-     * @param item
+     * @param hibItem
      * @return CalendarCollectionStamp from Item
      */
-    public static HibCalendarCollectionStamp getStamp(Item item) {
-        return (HibCalendarCollectionStamp) item.getStamp(HibCalendarCollectionStamp.class);
+    public static HibCalendarCollectionStamp getStamp(HibItem hibItem) {
+        return (HibCalendarCollectionStamp) hibItem.getStamp(HibCalendarCollectionStamp.class);
     }
 
     @Override

@@ -25,10 +25,9 @@ import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.List;
@@ -280,13 +279,13 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     @Override
-    public void initializeItem(Item item) {
-        super.initializeItem(item);
+    public void initializeItem(HibItem hibItem) {
+        super.initializeItem(hibItem);
 
         // Initialize master NoteItem if applicable
         try {
-            if (item instanceof HibNoteItem) {
-                HibNoteItem note = (HibNoteItem) item;
+            if (hibItem instanceof HibNoteItem) {
+                HibNoteItem note = (HibNoteItem) hibItem;
                 if (note.getModifies() != null) {
                     Hibernate.initialize(note.getModifies());
                     initializeItem(note.getModifies());
@@ -300,38 +299,38 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     @Override
-    public void removeItem(Item item) {
-        if (item instanceof HibContentItem) {
-            removeContent((HibContentItem) item);
-        } else if (item instanceof HibCollectionItem) {
-            removeCollection((HibCollectionItem) item);
+    public void removeItem(HibItem hibItem) {
+        if (hibItem instanceof HibContentItem) {
+            removeContent((HibContentItem) hibItem);
+        } else if (hibItem instanceof HibCollectionItem) {
+            removeCollection((HibCollectionItem) hibItem);
         } else {
-            super.removeItem(item);
+            super.removeItem(hibItem);
         }
     }
 
 
     @Override
     public void removeItemByPath(String path) {
-        Item item = this.findItemByPath(path);
-        if (item instanceof HibContentItem) {
-            removeContent((HibContentItem) item);
-        } else if (item instanceof HibCollectionItem) {
-            removeCollection((HibCollectionItem) item);
+        HibItem hibItem = this.findItemByPath(path);
+        if (hibItem instanceof HibContentItem) {
+            removeContent((HibContentItem) hibItem);
+        } else if (hibItem instanceof HibCollectionItem) {
+            removeCollection((HibCollectionItem) hibItem);
         } else {
-            super.removeItem(item);
+            super.removeItem(hibItem);
         }
     }
 
     @Override
     public void removeItemByUid(String uid) {
-        Item item = this.findItemByUid(uid);
-        if (item instanceof HibContentItem) {
-            removeContent((HibContentItem) item);
-        } else if (item instanceof HibCollectionItem) {
-            removeCollection((HibCollectionItem) item);
+        HibItem hibItem = this.findItemByUid(uid);
+        if (hibItem instanceof HibContentItem) {
+            removeContent((HibContentItem) hibItem);
+        } else if (hibItem instanceof HibCollectionItem) {
+            removeCollection((HibCollectionItem) hibItem);
         } else {
-            super.removeItem(item);
+            super.removeItem(hibItem);
         }
     }
 
@@ -369,16 +368,16 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
                  " where collItem.collection.id=:collectionId)";
         getSession().createQuery(deleteAllQuery).setLong("collectionId", collectionId).executeUpdate();
 */
-       for (Item item : collection.getChildren()) {
-            if (item instanceof HibCollectionItem) {
-                removeCollectionRecursive((HibCollectionItem) item);
-            } else if (item instanceof HibContentItem) {
-                ((HibItem) item).removeParent(collection);
-                if (item.getParents().size() == 0) {
-                    getSession().delete(item);
+       for (HibItem hibItem : collection.getChildren()) {
+            if (hibItem instanceof HibCollectionItem) {
+                removeCollectionRecursive((HibCollectionItem) hibItem);
+            } else if (hibItem instanceof HibContentItem) {
+                ((HibItem) hibItem).removeParent(collection);
+                if (hibItem.getParents().size() == 0) {
+                    getSession().delete(hibItem);
                 }
             } else {
-                getSession().delete(item);
+                getSession().delete(hibItem);
             }
         }
     }
@@ -570,48 +569,48 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
      * requires verifying that the icaluid is unique within the collection.
      */
     @Override
-    protected void addItemToCollectionInternal(Item item,
+    protected void addItemToCollectionInternal(HibItem hibItem,
                                                HibCollectionItem collection) {
 
         // Don't allow note modifications to be added to a collection
         // When a master is added, all the modifications are added
-        if (isNoteModification(item)) {
-            throw new ModelValidationException(item, "cannot add modification "
-                    + item.getUid() + " to collection " + collection.getUid()
+        if (isNoteModification(hibItem)) {
+            throw new ModelValidationException(hibItem, "cannot add modification "
+                    + hibItem.getUid() + " to collection " + collection.getUid()
                     + ", only master");
         }
 
-        if (item instanceof HibICalendarItem) {
+        if (hibItem instanceof HibICalendarItem) {
             // verify icaluid is unique within collection
-            checkForDuplicateICalUid((HibICalendarItem) item, collection);
+            checkForDuplicateICalUid((HibICalendarItem) hibItem, collection);
         }
 
-        super.addItemToCollectionInternal(item, collection);
+        super.addItemToCollectionInternal(hibItem, collection);
 
         // Add all modifications
-        if (item instanceof HibNoteItem) {
-            for (HibNoteItem mod : ((HibNoteItem) item).getModifications()) {
+        if (hibItem instanceof HibNoteItem) {
+            for (HibNoteItem mod : ((HibNoteItem) hibItem).getModifications()) {
                 super.addItemToCollectionInternal(mod, collection);
             }
         }
     }
 
     @Override
-    protected void removeItemFromCollectionInternal(Item item, HibCollectionItem collection) {
-        if (item instanceof HibNoteItem) {
+    protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
+        if (hibItem instanceof HibNoteItem) {
             // When a note modification is removed, it is really removed from
             // all collections because a modification can't live in one collection
             // and not another.  It is tied to the collections that the master
             // note is in.  Therefore you can't just remove a modification from
             // a single collection when the master note is in multiple collections.
-            HibNoteItem note = (HibNoteItem) item;
+            HibNoteItem note = (HibNoteItem) hibItem;
             if (note.getModifies() != null) {
-                removeContentRecursive((HibContentItem) item);
+                removeContentRecursive((HibContentItem) hibItem);
             } else {
-                removeNoteItemFromCollectionInternal((HibNoteItem) item, collection);
+                removeNoteItemFromCollectionInternal((HibNoteItem) hibItem, collection);
             }
         } else {
-            super.removeItemFromCollectionInternal(item, collection);
+            super.removeItemFromCollectionInternal(hibItem, collection);
         }
     }
 
@@ -647,7 +646,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         if (itemId != null) {
             // If the note is new, then its a duplicate icaluid
             if (getBaseModelObject(item).getId() == -1) {
-                Item dup = (Item) getSession().load(HibItem.class, itemId);
+                HibItem dup = (HibItem) getSession().load(HibItem.class, itemId);
                 throw new IcalUidInUseException("iCal uid" + item.getIcalUid()
                         + " already in use for collection " + parent.getUid(),
                         item.getUid(), dup.getUid());
@@ -655,7 +654,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             // If the note exists and there is another note with the same
             // icaluid, then its a duplicate icaluid
             if (getBaseModelObject(item).getId().equals(itemId)) {
-                Item dup = (Item) getSession().load(HibItem.class, itemId);
+                HibItem dup = (HibItem) getSession().load(HibItem.class, itemId);
                 throw new IcalUidInUseException("iCal uid" + item.getIcalUid()
                         + " already in use for collection " + parent.getUid(),
                         item.getUid(), dup.getUid());
@@ -680,12 +679,12 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
     }
 
-    private boolean isNoteModification(Item item) {
-        if (!(item instanceof HibNoteItem)) {
+    private boolean isNoteModification(HibItem hibItem) {
+        if (!(hibItem instanceof HibNoteItem)) {
             return false;
         }
 
-        return ((HibNoteItem) item).getModifies() != null;
+        return ((HibNoteItem) hibItem).getModifies() != null;
     }
 
 

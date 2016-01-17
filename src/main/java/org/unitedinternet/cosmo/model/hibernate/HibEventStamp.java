@@ -23,7 +23,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.unitedinternet.cosmo.hibernate.validator.Event;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +49,9 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
     public HibEventStamp() {
     }
     
-    public HibEventStamp(Item item) {
+    public HibEventStamp(HibItem hibItem) {
         this();
-        setItem(item);
+        setItem(hibItem);
     }
     
     public String getType() {
@@ -109,11 +108,11 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
 
     /**
      * Return EventStamp from Item
-     * @param item
+     * @param hibItem
      * @return EventStamp from Item
      */
-    public static EventStamp getStamp(Item item) {
-        return (EventStamp) item.getStamp(EventStamp.class);
+    public static EventStamp getStamp(HibItem hibItem) {
+        return (EventStamp) hibItem.getStamp(EventStamp.class);
     }
 
     @Override

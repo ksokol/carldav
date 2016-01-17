@@ -20,7 +20,6 @@ import net.fortuna.ical4j.model.DateTime;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.text.ParseException;
 
@@ -50,7 +49,7 @@ public class ModificationUidImpl {
      * @param parent parent item
      * @param recurrenceId recurrenceId of modification
      */
-    public ModificationUidImpl(Item parent, Date recurrenceId) {
+    public ModificationUidImpl(HibItem parent, Date recurrenceId) {
         this.parentUid = parent.getUid();
         this.recurrenceId = recurrenceId;
     }

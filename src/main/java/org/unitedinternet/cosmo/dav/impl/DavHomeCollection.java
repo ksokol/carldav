@@ -27,7 +27,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 
 import java.util.ArrayList;
@@ -71,8 +71,8 @@ public class DavHomeCollection extends DavCollectionBase {
     public DavResourceIterator getMembers() {
         List<org.apache.jackrabbit.webdav.DavResource> members = new ArrayList<>();
         try {
-            for (Item memberItem : ((HibCollectionItem) getItem()).getChildren()) {
-                WebDavResource resource = memberToResource(memberItem);
+            for (HibItem memberHibItem : ((HibCollectionItem) getItem()).getChildren()) {
+                WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
                     members.add(resource);
                 }
@@ -95,8 +95,8 @@ public class DavHomeCollection extends DavCollectionBase {
         List<org.apache.jackrabbit.webdav.DavResource> members = new ArrayList<org.apache.jackrabbit.webdav.DavResource>();
         try {
             Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems((HibCollectionItem) getItem());
-            for (Item memberItem : hibCollectionItems) {
-                WebDavResource resource = memberToResource(memberItem);
+            for (HibItem memberHibItem : hibCollectionItems) {
+                WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
                     members.add(resource);
                 }

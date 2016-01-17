@@ -47,7 +47,7 @@ import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -83,17 +83,17 @@ import java.util.Set;
  * <p>
  * This class does not define any resource types.
  * </p>
- * @see Item
+ * @see HibItem
  */
 public abstract class DavItemResourceBase extends DavResourceBase implements DavItemResource {
 
     private static final Log log = LogFactory.getLog(DavItemResourceBase.class);
 
-    private Item item;
+    private HibItem hibItem;
     private DavCollection parent;
     private IdGenerator idGenerator;
 
-    public DavItemResourceBase(Item item, DavResourceLocator locator,
+    public DavItemResourceBase(HibItem hibItem, DavResourceLocator locator,
             DavResourceFactory factory, IdGenerator idGenerator)
             throws CosmoDavException {
         super(locator, factory);
@@ -105,18 +105,18 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
         registerLiveProperty(UUID);
 
-        this.item = item;
+        this.hibItem = hibItem;
         this.idGenerator = idGenerator;
     }
 
     // WebDavResource methods
 
     public boolean exists() {
-        return item != null && item.getUid() != null;
+        return hibItem != null && hibItem.getUid() != null;
     }
 
     public String getDisplayName() {
-        return item.getDisplayName();
+        return hibItem.getDisplayName();
     }
 
     public String getETag() {
@@ -194,12 +194,12 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     // DavItemResource methods
 
-    public Item getItem() {
-        return item;
+    public HibItem getItem() {
+        return hibItem;
     }
 
-    public void setItem(Item item) throws CosmoDavException {
-        this.item = item;
+    public void setItem(HibItem hibItem) throws CosmoDavException {
+        this.hibItem = hibItem;
         loadProperties();
     }
 
@@ -227,14 +227,14 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             log.debug("populating item for " + getResourcePath());
         }
 
-        if (item.getUid() == null) {
+        if (hibItem.getUid() == null) {
             try {
-                item.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));
+                hibItem.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 throw new CosmoDavException(e);
             }
-            if (item.getDisplayName() == null){
-                item.setDisplayName(item.getName());
+            if (hibItem.getDisplayName() == null){
+                hibItem.setDisplayName(hibItem.getName());
             }
         }
 
@@ -243,14 +243,14 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         // ticket
 
         // Only initialize owner once
-        if (item.getOwner() == null) {
+        if (hibItem.getOwner() == null) {
             User owner = getSecurityManager().getSecurityContext().getUser();
-            item.setOwner(owner);
+            hibItem.setOwner(owner);
         }
 
-        if (item.getUid() == null) {
-            item.setClientCreationDate(Calendar.getInstance().getTime());
-            item.setClientModifiedDate(item.getClientCreationDate());
+        if (hibItem.getUid() == null) {
+            hibItem.setClientCreationDate(Calendar.getInstance().getTime());
+            hibItem.setClientModifiedDate(hibItem.getClientCreationDate());
         }
     }
 
@@ -308,21 +308,21 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     }
 
     protected void loadLiveProperties(DavPropertySet properties) {
-        if (item == null) {
+        if (hibItem == null) {
             return;
         }
 
-        properties.add(new LastModified(item.getModifiedDate()));
+        properties.add(new LastModified(hibItem.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
-        properties.add(new Uuid(item.getUid()));
+        properties.add(new Uuid(hibItem.getUid()));
     }
 
     protected void setLiveProperty(WebDavProperty property, boolean create)
             throws CosmoDavException {
-        if (item == null) {
+        if (hibItem == null) {
             return;
         }
 
@@ -341,13 +341,13 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         }
 
         if (name.equals(DavPropertyName.DISPLAYNAME)) {
-            item.setDisplayName(property.getValueText());
+            hibItem.setDisplayName(property.getValueText());
         }
     }
 
     protected void removeLiveProperty(DavPropertyName name)
             throws CosmoDavException {
-        if (item == null) {
+        if (hibItem == null) {
             return;
         }
 
@@ -370,7 +370,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     protected abstract Set<String> getDeadPropertyFilter();
 
     protected void loadDeadProperties(DavPropertySet properties) {
-        for (Iterator<Map.Entry<HibQName, Attribute>> i = item.getAttributes()
+        for (Iterator<Map.Entry<HibQName, Attribute>> i = hibItem.getAttributes()
                 .entrySet().iterator(); i.hasNext();) {
             Map.Entry<HibQName, Attribute> entry = i.next();
 
@@ -408,7 +408,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         try {
             HibQName qname = propNameToQName(property.getName());
             Element value = (Element) property.getValue();
-            Attribute attr = item.getAttribute(qname);
+            Attribute attr = hibItem.getAttribute(qname);
 
             // first check for existing attribute otherwise add
             if (attr != null) {
@@ -425,7 +425,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             log.debug("removing property " + name + " on " + getResourcePath());
         }
 
-        item.removeAttribute(propNameToQName(name));
+        hibItem.removeAttribute(propNameToQName(name));
     }
 
     abstract protected void updateItem() throws CosmoDavException;

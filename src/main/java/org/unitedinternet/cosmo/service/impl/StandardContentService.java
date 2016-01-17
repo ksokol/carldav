@@ -26,7 +26,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -61,18 +61,18 @@ public class StandardContentService implements ContentService {
      * Find content item by path. Path is of the format:
      * /username/parent1/parent2/itemname.
      */
-    public Item findItemByPath(String path) {
+    public HibItem findItemByPath(String path) {
         return contentDao.findItemByPath(path);
     }
 
     /**
      * Remove an item from a collection.  The item will be deleted if
      * it belongs to no more collections.
-     * @param item item to remove from collection
+     * @param hibItem item to remove from collection
      * @param collection item to remove item from
      */
-    public void removeItemFromCollection(Item item, HibCollectionItem collection) {
-        contentDao.removeItemFromCollection(item, collection);
+    public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
+        contentDao.removeItemFromCollection(hibItem, collection);
         contentDao.updateCollectionTimestamp(collection);
     }
 
@@ -340,14 +340,14 @@ public class StandardContentService implements ContentService {
     /**
      * Given a set of items, aquire a lock on all parents
      */
-    private Set<HibCollectionItem> acquireLocks(Set<? extends Item> children) {
+    private Set<HibCollectionItem> acquireLocks(Set<? extends HibItem> children) {
         
         HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
         
         // Get locks for all collections involved
         try {
             
-            for(Item child : children) {
+            for(HibItem child : children) {
                 acquireLocks(locks, child);
             }
            
@@ -362,7 +362,7 @@ public class StandardContentService implements ContentService {
      * Given a collection and a set of items, aquire a lock on the collection and
      * all 
      */
-    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, Set<Item> children) {
+    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, Set<HibItem> children) {
         
         HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
         
@@ -375,7 +375,7 @@ public class StandardContentService implements ContentService {
             
             locks.add(collection);
             
-            for(Item child : children) {
+            for(HibItem child : children) {
                 acquireLocks(locks, child);
             }
            
@@ -386,17 +386,17 @@ public class StandardContentService implements ContentService {
         }
     }
     
-    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, Item item) {
-        HashSet<Item> items = new HashSet<Item>();
-        items.add(item);
+    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, HibItem hibItem) {
+        HashSet<HibItem> hibItems = new HashSet<HibItem>();
+        hibItems.add(hibItem);
         
-        return acquireLocks(collection, items);
+        return acquireLocks(collection, hibItems);
     }
     
-    private Set<HibCollectionItem> acquireLocks(Item item) {
+    private Set<HibCollectionItem> acquireLocks(HibItem hibItem) {
         HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
         try {
-            acquireLocks(locks,item);
+            acquireLocks(locks, hibItem);
             return locks;
         } catch (RuntimeException e) {
             releaseLocks(locks);
@@ -404,8 +404,8 @@ public class StandardContentService implements ContentService {
         }
     }
     
-    private void acquireLocks(Set<HibCollectionItem> locks, Item item) {
-        for(HibCollectionItem parent: item.getParents()) {
+    private void acquireLocks(Set<HibCollectionItem> locks, HibItem hibItem) {
+        for(HibCollectionItem parent: hibItem.getParents()) {
             if(locks.contains(parent)) {
                 continue;
             }
@@ -417,8 +417,8 @@ public class StandardContentService implements ContentService {
         
         // Acquire locks on master item's parents, as an addition/deletion
         // of a modifications item affects all the parents of the master item.
-        if(item instanceof HibNoteItem) {
-            HibNoteItem note = (HibNoteItem) item;
+        if(hibItem instanceof HibNoteItem) {
+            HibNoteItem note = (HibNoteItem) hibItem;
             if(note.getModifies()!=null) {
                 acquireLocks(locks, note.getModifies());
             }

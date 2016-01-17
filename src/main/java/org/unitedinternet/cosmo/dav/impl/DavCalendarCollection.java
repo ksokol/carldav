@@ -40,7 +40,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
@@ -160,9 +160,9 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         // add CS:getctag property, which is the collection's entitytag
         // if it exists
-        Item item = getItem();
-        if(item!=null && item.getEntityTag()!=null) {
-            properties.add(new GetCTag(item.getEntityTag()));
+        HibItem hibItem = getItem();
+        if(hibItem !=null && hibItem.getEntityTag()!=null) {
+            properties.add(new GetCTag(hibItem.getEntityTag()));
         }
 
         properties.add(new SupportedCalendarComponentSet());

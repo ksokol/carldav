@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.model;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * Contains static helper methods for dealing with Stamps.
@@ -25,28 +26,28 @@ public class StampUtils {
 
     /**
      * Return EventStamp from Item
-     * @param item
+     * @param hibItem
      * @return EventStamp from Item
      */
-    public static EventStamp getEventStamp(Item item) {
-        return (EventStamp) item.getStamp(EventStamp.class);
+    public static EventStamp getEventStamp(HibItem hibItem) {
+        return (EventStamp) hibItem.getStamp(EventStamp.class);
     }
     
     /**
      * Return EventExceptionStamp from Item
-     * @param item
+     * @param hibItem
      * @return EventExceptionStamp from Item
      */
-    public static HibEventExceptionStamp getEventExceptionStamp(Item item) {
-        return (HibEventExceptionStamp) item.getStamp(HibEventExceptionStamp.class);
+    public static HibEventExceptionStamp getEventExceptionStamp(HibItem hibItem) {
+        return (HibEventExceptionStamp) hibItem.getStamp(HibEventExceptionStamp.class);
     }
     
     /**
      * Return CalendarCollectionStamp from Item
-     * @param item
+     * @param hibItem
      * @return CalendarCollectionStamp from Item
      */
-    public static HibCalendarCollectionStamp getCalendarCollectionStamp(Item item) {
-        return (HibCalendarCollectionStamp) item.getStamp(HibCalendarCollectionStamp.class);
+    public static HibCalendarCollectionStamp getCalendarCollectionStamp(HibItem hibItem) {
+        return (HibCalendarCollectionStamp) hibItem.getStamp(HibCalendarCollectionStamp.class);
     }
 }

@@ -27,7 +27,7 @@ import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
@@ -68,9 +68,9 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
      * @see org.unitedinternet.cosmo.dao.query.ItemFilterProcessor#processFilter
      * (org.hibernate.Session, org.unitedinternet.cosmo.model.filter.ItemFilter)
      */
-    public Set<Item> processFilter(ItemFilter filter) {
+    public Set<HibItem> processFilter(ItemFilter filter) {
         Query hibQuery = buildQuery(getSession(), filter);
-        List<Item> queryResults = hibQuery.list();
+        List<HibItem> queryResults = hibQuery.list();
         return processResults(queryResults, filter);
     }
 
@@ -387,12 +387,12 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
      * for the entire recurrence series, and expansion is required to determine
      * if the event actually occurs, and to return individual occurences.
      */
-    private HashSet<Item> processResults(List<Item> results, ItemFilter itemFilter) {
+    private HashSet<HibItem> processResults(List<HibItem> results, ItemFilter itemFilter) {
         boolean hasTimeRangeFilter = false;
         boolean includeMasterInResults = true;
         boolean doTimeRangeSecondPass = true;
 
-        HashSet<Item> processedResults = new HashSet<Item>();
+        HashSet<HibItem> processedResults = new HashSet<HibItem>();
         EventStampFilter eventFilter = (EventStampFilter) itemFilter.getStampFilter(EventStampFilter.class);
 
 
@@ -416,15 +416,15 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             doTimeRangeSecondPass = false;
         }
 
-        for (Item item : results) {
+        for (HibItem hibItem : results) {
 
             // If item is not a note, then nothing to do
-            if (!(item instanceof HibNoteItem)) {
-                processedResults.add(item);
+            if (!(hibItem instanceof HibNoteItem)) {
+                processedResults.add(hibItem);
                 continue;
             }
 
-            HibNoteItem note = (HibNoteItem) item;
+            HibNoteItem note = (HibNoteItem) hibItem;
 
             // If note is a modification then add both the modification and the 
             // master.

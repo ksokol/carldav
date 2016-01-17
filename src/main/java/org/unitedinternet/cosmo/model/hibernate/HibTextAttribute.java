@@ -19,7 +19,6 @@ import org.apache.commons.io.IOUtils;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.CosmoIOException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -98,12 +97,12 @@ public class HibTextAttribute extends HibAttribute {
     /**
      * Convienence method for returning a String value on a TextAttribute
      * with a given QName stored on the given item.
-     * @param item item to fetch TextAttribute from
+     * @param hibItem item to fetch TextAttribute from
      * @param qname QName of attribute
      * @return String value of TextAttribute
      */
-    public static String getValue(Item item, HibQName qname) {
-        HibTextAttribute ta = (HibTextAttribute) item.getAttribute(qname);
+    public static String getValue(HibItem hibItem, HibQName qname) {
+        HibTextAttribute ta = (HibTextAttribute) hibItem.getAttribute(qname);
         if(ta==null) {
             return null;
         }
@@ -115,19 +114,19 @@ public class HibTextAttribute extends HibAttribute {
     /**
      * Convienence method for setting a String value on a TextAttribute
      * with a given QName stored on the given item.
-     * @param item item to fetch TextAttribute from
+     * @param hibItem item to fetch TextAttribute from
      * @param qname QName of attribute
      * @param value value to set on TextAttribute
      */
-    public static void setValue(Item item, HibQName qname, String value) {
-        HibTextAttribute attr = (HibTextAttribute) item.getAttribute(qname);
+    public static void setValue(HibItem hibItem, HibQName qname, String value) {
+        HibTextAttribute attr = (HibTextAttribute) hibItem.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTextAttribute(qname,value);
-            item.addAttribute(attr);
+            hibItem.addAttribute(attr);
             return;
         }
         if(value==null) {
-            item.removeAttribute(qname);
+            hibItem.removeAttribute(qname);
         }
         else {
             attr.setValue(value);
@@ -137,19 +136,19 @@ public class HibTextAttribute extends HibAttribute {
     /**
      * Convienence method for setting a Reader value on a TextAttribute
      * with a given QName stored on the given item.
-     * @param item item to fetch TextAttribute from
+     * @param hibItem item to fetch TextAttribute from
      * @param qname QName of attribute
      * @param value value to set on TextAttribute
      */
-    public static void setValue(Item item, HibQName qname, Reader value) {
-        HibTextAttribute attr = (HibTextAttribute) item.getAttribute(qname);
+    public static void setValue(HibItem hibItem, HibQName qname, Reader value) {
+        HibTextAttribute attr = (HibTextAttribute) hibItem.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibTextAttribute(qname,value);
-            item.addAttribute(attr);
+            hibItem.addAttribute(attr);
             return;
         }
         if(value==null) {
-            item.removeAttribute(qname);
+            hibItem.removeAttribute(qname);
         }
         else {
             attr.setValue(value);

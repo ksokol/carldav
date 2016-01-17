@@ -24,7 +24,7 @@ import org.hibernate.Session;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * Default implementation for ItempPathTranslator. This implementation expects
@@ -48,9 +48,9 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
      * @param path The given path.
      * @return item The expected item.
      */
-    public Item findItemByPath(final String path) {
+    public HibItem findItemByPath(final String path) {
 
-        return (Item) findItemByPath(getSession(), path);
+        return (HibItem) findItemByPath(getSession(), path);
 
     }
     
@@ -65,14 +65,14 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
      * @param root The collection item.
      * @return The expected item.
      */
-    public Item findItemByPath(final String path, final HibCollectionItem root) {
-        return (Item) findItemByPath(getSession(), path, root);
+    public HibItem findItemByPath(final String path, final HibCollectionItem root) {
+        return (HibItem) findItemByPath(getSession(), path, root);
     }
 
     /**
      * {@inheritDoc}
      */
-    public Item findItemParent(String path) {
+    public HibItem findItemParent(String path) {
         if (path == null) {
             return null;
         }
@@ -118,7 +118,7 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
      * @param path    The given path.
      * @return The expected item.
      */
-    protected Item findItemByPath(Session session, String path) {
+    protected HibItem findItemByPath(Session session, String path) {
 
         if (path == null || "".equals(path)) {
             return null;
@@ -136,26 +136,26 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
         String username = decode(segments[0]);
 
         String rootName = username;
-        Item rootItem = findRootItemByOwnerAndName(session, username,
+        HibItem rootHibItem = findRootItemByOwnerAndName(session, username,
                 rootName);
 
         // If parent item doesn't exist don't go any further
-        if (rootItem == null) {
+        if (rootHibItem == null) {
             return null;
         }
 
-        Item parentItem = rootItem;
+        HibItem parentHibItem = rootHibItem;
         for (int i = 1; i < segments.length; i++) {
-            Item nextItem = findItemByParentAndName(session, parentItem,
+            HibItem nextHibItem = findItemByParentAndName(session, parentHibItem,
                     decode(segments[i]));
-            parentItem = nextItem;
+            parentHibItem = nextHibItem;
             // if any parent item doesn't exist then bail now
-            if (parentItem == null) {
+            if (parentHibItem == null) {
                 return null;
             }
         }
 
-        return parentItem;
+        return parentHibItem;
     }
 
     /**
@@ -166,7 +166,7 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
      * @param root    The collection root.
      * @return The expected item.
      */
-    protected Item findItemByPath(Session session, String path, HibCollectionItem root) {
+    protected HibItem findItemByPath(Session session, String path, HibCollectionItem root) {
 
         if (path == null || "".equals(path)) {
             return null;
@@ -182,21 +182,21 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
             return null;
         }
 
-        Item parentItem = root;
+        HibItem parentHibItem = root;
         for (int i = 0; i < segments.length; i++) {
-            Item nextItem = findItemByParentAndName(session, parentItem,
+            HibItem nextHibItem = findItemByParentAndName(session, parentHibItem,
                     decode(segments[i]));
-            parentItem = nextItem;
+            parentHibItem = nextHibItem;
             // if any parent item doesn't exist then bail now
-            if (parentItem == null) {
+            if (parentHibItem == null) {
                 return null;
             }
         }
 
-        return parentItem;
+        return parentHibItem;
     }
 
-    protected Item findRootItemByOwnerAndName(Session session,
+    protected HibItem findRootItemByOwnerAndName(Session session,
                                               String username, String name) {
         Query hibQuery = session.getNamedQuery(
                 "item.by.ownerName.name.nullParent").setParameter("email",
@@ -204,20 +204,20 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
 
         List<?> results = hibQuery.list();
         if (results.size() > 0) {
-            return (Item) results.get(0);
+            return (HibItem) results.get(0);
         } else {
             return null;
         }
     }
 
-    protected Item findItemByParentAndName(Session session, Item parent,
+    protected HibItem findItemByParentAndName(Session session, HibItem parent,
                                            String name) {
         Query hibQuery = session.getNamedQuery("item.by.parent.name")
                 .setParameter("parent", parent).setParameter("name", name);
 
         List<?> results = hibQuery.list();
         if (results.size() > 0) {
-            return (Item) results.get(0);
+            return (HibItem) results.get(0);
         } else {
             return null;
         }

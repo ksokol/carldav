@@ -34,7 +34,7 @@ import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
@@ -42,7 +42,6 @@ import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
@@ -362,13 +361,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         
 
-        Item queryItem = contentDao.findItemByUid(a.getUid());
-        Assert.assertNotNull(queryItem);
-        Assert.assertTrue(queryItem instanceof HibCollectionItem);
+        HibItem queryHibItem = contentDao.findItemByUid(a.getUid());
+        Assert.assertNotNull(queryHibItem);
+        Assert.assertTrue(queryHibItem instanceof HibCollectionItem);
 
-        queryItem = contentDao.findItemByPath("/testuser2@testem/a");
-        Assert.assertNotNull(queryItem);
-        Assert.assertTrue(queryItem instanceof HibCollectionItem);
+        queryHibItem = contentDao.findItemByPath("/testuser2@testem/a");
+        Assert.assertNotNull(queryHibItem);
+        Assert.assertTrue(queryHibItem instanceof HibCollectionItem);
 
         HibContentItem item = generateTestContent();
         
@@ -377,15 +376,15 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         
 
-        queryItem = contentDao.findItemByPath("/testuser2@testem/a/test");
-        Assert.assertNotNull(queryItem);
-        Assert.assertTrue(queryItem instanceof HibContentItem);
+        queryHibItem = contentDao.findItemByPath("/testuser2@testem/a/test");
+        Assert.assertNotNull(queryHibItem);
+        Assert.assertTrue(queryHibItem instanceof HibContentItem);
 
         
 
-        queryItem = contentDao.findItemParentByPath("/testuser2@testem/a/test");
-        Assert.assertNotNull(queryItem);
-        Assert.assertEquals(a.getUid(), queryItem.getUid());
+        queryHibItem = contentDao.findItemParentByPath("/testuser2@testem/a/test");
+        Assert.assertNotNull(queryHibItem);
+        Assert.assertEquals(a.getUid(), queryHibItem.getUid());
     }
 
     /**
@@ -758,13 +757,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertEquals("c", queryC.getName());
 
         // test get path/uid abstract
-        Item queryItem = contentDao.findItemByPath("/testuser2@testem/a/b/c");
-        Assert.assertNotNull(queryItem);
-        Assert.assertTrue(queryItem instanceof HibContentItem);
+        HibItem queryHibItem = contentDao.findItemByPath("/testuser2@testem/a/b/c");
+        Assert.assertNotNull(queryHibItem);
+        Assert.assertTrue(queryHibItem instanceof HibContentItem);
 
-        queryItem = contentDao.findItemByUid(a.getUid());
-        Assert.assertNotNull(queryItem);
-        Assert.assertTrue(queryItem instanceof HibCollectionItem);
+        queryHibItem = contentDao.findItemByUid(a.getUid());
+        Assert.assertNotNull(queryHibItem);
+        Assert.assertTrue(queryHibItem instanceof HibCollectionItem);
 
         // test delete
         contentDao.removeContent(c);
@@ -1041,9 +1040,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     private void verifyContains(@SuppressWarnings("rawtypes") Collection items, HibCollectionItem collection) {
         for (@SuppressWarnings("rawtypes")
         Iterator it = items.iterator(); it.hasNext();) {
-            Item item = (Item) it.next();
-            if (item instanceof HibCollectionItem
-                    && item.getName().equals(collection.getName()))
+            HibItem hibItem = (HibItem) it.next();
+            if (hibItem instanceof HibCollectionItem
+                    && hibItem.getName().equals(collection.getName()))
                 return;
         }
         Assert.fail("collection not found");
@@ -1052,9 +1051,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     private void verifyContains(@SuppressWarnings("rawtypes") Collection items, HibContentItem content) {
         for (@SuppressWarnings("rawtypes")
         Iterator it = items.iterator(); it.hasNext();) {
-            Item item = (Item) it.next();
-            if (item instanceof HibContentItem
-                    && item.getName().equals(content.getName()))
+            HibItem hibItem = (HibItem) it.next();
+            if (hibItem instanceof HibContentItem
+                    && hibItem.getName().equals(content.getName()))
                 return;
         }
         Assert.fail("content not found");
@@ -1117,8 +1116,8 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         return root;
     }
     
-    private HibItem getHibItem(Item item) {
-        return (HibItem) item;
+    private HibItem getHibItem(HibItem hibItem) {
+        return (HibItem) hibItem;
     }
 
 }

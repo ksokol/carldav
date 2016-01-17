@@ -16,17 +16,17 @@
 package org.unitedinternet.cosmo.dao.query;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * Iterface for translating a path to an item
  */
 public interface ItemPathTranslator {
-    Item findItemByPath(String path);
+    HibItem findItemByPath(String path);
 
-    Item findItemByPath(String path, HibCollectionItem root);
+    HibItem findItemByPath(String path, HibCollectionItem root);
 
     String getItemName(String path);
 
-    Item findItemParent(String path);
+    HibItem findItemParent(String path);
 }

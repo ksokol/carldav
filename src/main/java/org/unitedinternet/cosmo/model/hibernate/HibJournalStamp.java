@@ -12,7 +12,6 @@ import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.unitedinternet.cosmo.hibernate.validator.Journal;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +28,9 @@ public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
     public HibJournalStamp() {
     }
 
-    public HibJournalStamp(Item item) {
+    public HibJournalStamp(HibItem hibItem) {
         this();
-        setItem(item);
+        setItem(hibItem);
     }
     
     public String getType() {
@@ -127,8 +126,8 @@ public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
         return (VJournal) journal.get(0);
     }
 
-    public static EventStamp getStamp(Item item) {
-        return (EventStamp) item.getStamp(EventStamp.class);
+    public static EventStamp getStamp(HibItem hibItem) {
+        return (EventStamp) hibItem.getStamp(EventStamp.class);
     }
 
     @Override

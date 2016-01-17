@@ -35,14 +35,13 @@ import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -69,10 +68,10 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      *
      * @see org.unitedinternet.cosmo.dao.ItemDao#findItemByPath(java.lang.String)
      */
-    public Item findItemByPath(String path) {
+    public HibItem findItemByPath(String path) {
         try {
-            Item dbItem = itemPathTranslator.findItemByPath(path);
-            return dbItem;
+            HibItem dbHibItem = itemPathTranslator.findItemByPath(path);
+            return dbHibItem;
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -83,14 +82,14 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#findItemByPath(java.lang.String, java.lang.String)
      */
-    public Item findItemByPath(String path, String parentUid) {
+    public HibItem findItemByPath(String path, String parentUid) {
         try {
-            Item parent = findItemByUid(parentUid);
+            HibItem parent = findItemByUid(parentUid);
             if (parent == null) {
                 return null;
             }
-            Item item = itemPathTranslator.findItemByPath(path, (HibCollectionItem) parent);
-            return item;
+            HibItem hibItem = itemPathTranslator.findItemByPath(path, (HibCollectionItem) parent);
+            return hibItem;
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -101,10 +100,10 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#findItemParentByPath(java.lang.String)
      */
-    public Item findItemParentByPath(String path) {
+    public HibItem findItemParentByPath(String path) {
         try {
-            Item dbItem = itemPathTranslator.findItemParent(path);
-            return dbItem;
+            HibItem dbHibItem = itemPathTranslator.findItemParent(path);
+            return dbHibItem;
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -116,11 +115,11 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      *
      * @see org.unitedinternet.cosmo.dao.ItemDao#findItemByUid(java.lang.String)
      */
-    public Item findItemByUid(String uid) {
+    public HibItem findItemByUid(String uid) {
         try {
             // prevent auto flushing when looking up item by uid
             getSession().setFlushMode(FlushMode.MANUAL);
-            return (Item) getSession().byNaturalId(HibItem.class).using("uid", uid).load();
+            return (HibItem) getSession().byNaturalId(HibItem.class).using("uid", uid).load();
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -132,18 +131,18 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      *
      * @see org.unitedinternet.cosmo.dao.ItemDao#removeItem(org.unitedinternet.cosmo.model.Item)
      */
-    public void removeItem(Item item) {
+    public void removeItem(HibItem hibItem) {
         try {
 
-            if (item == null) {
+            if (hibItem == null) {
                 throw new IllegalArgumentException("item cannot be null");
             }
 
-            if (item instanceof HibHomeCollectionItem) {
+            if (hibItem instanceof HibHomeCollectionItem) {
                 throw new IllegalArgumentException("cannot remove root item");
             }
 
-            removeItemInternal(item);
+            removeItemInternal(hibItem);
             getSession().flush();
 
         } catch (ObjectNotFoundException onfe) {
@@ -212,9 +211,9 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    public void addItemToCollection(Item item, HibCollectionItem collection) {
+    public void addItemToCollection(HibItem hibItem, HibCollectionItem collection) {
         try {
-            addItemToCollectionInternal(item, collection);
+            addItemToCollectionInternal(hibItem, collection);
             getSession().flush();
         } catch (HibernateException e) {
             getSession().clear();
@@ -222,9 +221,9 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    public void removeItemFromCollection(Item item, HibCollectionItem collection) {
+    public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
         try {
-            removeItemFromCollectionInternal(item, collection);
+            removeItemFromCollectionInternal(hibItem, collection);
             getSession().flush();
         } catch (HibernateException e) {
             getSession().clear();
@@ -237,12 +236,12 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      */
     public void removeItemByPath(String path) {
         try {
-            Item item = itemPathTranslator.findItemByPath(path);
-            if (item == null) {
+            HibItem hibItem = itemPathTranslator.findItemByPath(path);
+            if (hibItem == null) {
                 throw new ItemNotFoundException("item at " + path
                         + " not found");
             }
-            removeItem(item);
+            removeItem(hibItem);
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -255,12 +254,12 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      */
     public void removeItemByUid(String uid) {
         try {
-            Item item = findItemByUid(uid);
-            if (item == null) {
+            HibItem hibItem = findItemByUid(uid);
+            if (hibItem == null) {
                 throw new ItemNotFoundException("item with uid " + uid
                         + " not found");
             }
-            removeItem(item);
+            removeItem(hibItem);
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -270,13 +269,13 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#initializeItem(org.unitedinternet.cosmo.model.Item)
      */
-    public void initializeItem(Item item) {
+    public void initializeItem(HibItem hibItem) {
         try {
-            LOG.info("initialize Item : "+item.getUid());
+            LOG.info("initialize Item : "+ hibItem.getUid());
             // initialize all the proxied-associations, to prevent
             // lazy-loading of this data
-            Hibernate.initialize(item.getAttributes());
-            Hibernate.initialize(item.getStamps());
+            Hibernate.initialize(hibItem.getAttributes());
+            Hibernate.initialize(hibItem.getStamps());
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -308,15 +307,15 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    public Set<Item> findCollectionFileItems(HibCollectionItem hibCollectionItem){
+    public Set<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem){
         try {
-            HashSet<Item> children = new HashSet<Item>();
+            HashSet<HibItem> children = new HashSet<HibItem>();
             Query hibQuery = getSession().getNamedQuery("collections.files.by.parent")
                     .setParameter("parent", hibCollectionItem);
 
             List<?> results = hibQuery.list();
             for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
-                Item content = (Item) it.next();
+                HibItem content = (HibItem) it.next();
                 children.add(content);
             }
             return children;
@@ -395,34 +394,34 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      * Verifies that name is unique in collection, meaning no item exists
      * in collection with the same item name.
      *
-     * @param item       item name to check
+     * @param hibItem       item name to check
      * @param collection collection to check against
      * @throws org.unitedinternet.cosmo.dao.DuplicateItemNameException if item with same name exists
      *                                    in collection
      */
-    protected void verifyItemNameUnique(Item item, HibCollectionItem collection) {
+    protected void verifyItemNameUnique(HibItem hibItem, HibCollectionItem collection) {
         Query hibQuery = getSession().getNamedQuery("itemId.by.parentId.name");
-        hibQuery.setParameter("name", item.getName()).setParameter("parentid",
+        hibQuery.setParameter("name", hibItem.getName()).setParameter("parentid",
                 ((HibItem) collection).getId());
         List<Long> results = hibQuery.list();
         if (results.size() > 0) {
-            throw new DuplicateItemNameException(item, "item name " + item.getName() +
+            throw new DuplicateItemNameException(hibItem, "item name " + hibItem.getName() +
                     " already exists in collection " + collection.getUid());
         }
     }
 
     // Set server generated item properties
-    protected void setBaseItemProps(Item item) {
-        if (item.getUid() == null) {
-            item.setUid(idGenerator.nextStringIdentifier());
+    protected void setBaseItemProps(HibItem hibItem) {
+        if (hibItem.getUid() == null) {
+            hibItem.setUid(idGenerator.nextStringIdentifier());
         }
-        if (item.getName() == null) {
-            item.setName(item.getUid());
+        if (hibItem.getName() == null) {
+            hibItem.setName(hibItem.getUid());
         }
-        if (item instanceof HibICalendarItem) {
-            HibICalendarItem ical = (HibICalendarItem) item;
+        if (hibItem instanceof HibICalendarItem) {
+            HibICalendarItem ical = (HibICalendarItem) hibItem;
             if (ical.getIcalUid() == null) {
-                ical.setIcalUid(item.getUid());
+                ical.setIcalUid(hibItem.getUid());
                 EventStamp es = HibEventStamp.getStamp(ical);
                 if (es != null) {
                     es.setIcalUid(ical.getIcalUid());
@@ -441,54 +440,54 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         return (HibHomeCollectionItem) hibQuery.uniqueResult();
     }
 
-    protected void checkForDuplicateUid(Item item) {
+    protected void checkForDuplicateUid(HibItem hibItem) {
         // verify uid not in use
-        if (item.getUid() != null) {
+        if (hibItem.getUid() != null) {
 
             // Lookup item by uid
             Query hibQuery = getSession().getNamedQuery("itemid.by.uid")
-                    .setParameter("uid", item.getUid());
+                    .setParameter("uid", hibItem.getUid());
             hibQuery.setFlushMode(FlushMode.MANUAL);
 
             Long itemId = (Long) hibQuery.uniqueResult();
 
             // if uid is in use throw exception
             if (itemId != null) {
-                throw new UidInUseException(item.getUid(), "uid " + item.getUid()
+                throw new UidInUseException(hibItem.getUid(), "uid " + hibItem.getUid()
                         + " already in use");
             }
         }
     }
 
-    protected void removeItemFromCollectionInternal(Item item, HibCollectionItem collection) {
+    protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
 
         getSession().update(collection);
-        getSession().update(item);
+        getSession().update(hibItem);
 
         // do nothing if item doesn't belong to collection
-        if (!item.getParents().contains(collection)) {
+        if (!hibItem.getParents().contains(collection)) {
             return;
         }
 
-        ((HibItem) item).removeParent(collection);
+        ((HibItem) hibItem).removeParent(collection);
 
         // If the item belongs to no collection, then it should
         // be purged.
-        if (item.getParents().size() == 0) {
-            removeItemInternal(item);
+        if (hibItem.getParents().size() == 0) {
+            removeItemInternal(hibItem);
         }
     }
 
-    protected void addItemToCollectionInternal(Item item,
+    protected void addItemToCollectionInternal(HibItem hibItem,
                                                HibCollectionItem collection) {
-        verifyItemNameUnique(item, collection);
-        getSession().update(item);
+        verifyItemNameUnique(hibItem, collection);
+        getSession().update(hibItem);
         getSession().update(collection);
-        ((HibItem) item).addParent(collection);
+        ((HibItem) hibItem).addParent(collection);
     }
 
-    protected void removeItemInternal(Item item) {
-        getSession().delete(item);
+    protected void removeItemInternal(HibItem hibItem) {
+        getSession().delete(hibItem);
     }
 
     protected BaseModelObject getBaseModelObject(Object obj) {

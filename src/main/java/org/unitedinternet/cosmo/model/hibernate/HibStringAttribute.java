@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Item;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -60,12 +59,12 @@ public class HibStringAttribute extends HibAttribute {
     /**
      * Convienence method for returning a String value on a StringAttribute
      * with a given QName stored on the given item.
-     * @param item item to fetch StringAttribute from
+     * @param hibItem item to fetch StringAttribute from
      * @param qname QName of attribute
      * @return String value of StringAttribute
      */
-    public static String getValue(Item item, HibQName qname) {
-        HibStringAttribute ta = (HibStringAttribute) item.getAttribute(qname);
+    public static String getValue(HibItem hibItem, HibQName qname) {
+        HibStringAttribute ta = (HibStringAttribute) hibItem.getAttribute(qname);
         if(ta==null) {
             return null;
         }
@@ -77,19 +76,19 @@ public class HibStringAttribute extends HibAttribute {
     /**
      * Convienence method for setting a String value on a StringAttribute
      * with a given QName stored on the given item.
-     * @param item item to fetch StringAttribute from
+     * @param hibItem item to fetch StringAttribute from
      * @param qname QName of attribute
      * @param value value to set on StringAttribute
      */
-    public static void setValue(Item item, HibQName qname, String value) {
-        HibStringAttribute attr = (HibStringAttribute) item.getAttribute(qname);
+    public static void setValue(HibItem hibItem, HibQName qname, String value) {
+        HibStringAttribute attr = (HibStringAttribute) hibItem.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibStringAttribute(qname,value);
-            item.addAttribute(attr);
+            hibItem.addAttribute(attr);
             return;
         }
         if(value==null) {
-            item.removeAttribute(qname);
+            hibItem.removeAttribute(qname);
         }
         else {
             attr.setValue(value);

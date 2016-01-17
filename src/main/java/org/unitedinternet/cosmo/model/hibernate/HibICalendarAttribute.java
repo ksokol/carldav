@@ -20,7 +20,6 @@ import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -128,12 +127,12 @@ public class HibICalendarAttribute extends HibAttribute {
     /**
      * Convienence method for returning a Calendar value on 
      * a ICalendarAttribute with a given QName stored on the given item.
-     * @param item item to fetch ICalendarAttribute from
+     * @param hibItem item to fetch ICalendarAttribute from
      * @param qname QName of attribute
      * @return Date value of ICalendarAttribute
      */
-    public static Calendar getValue(Item item, HibQName qname) {
-        HibICalendarAttribute attr = (HibICalendarAttribute) item.getAttribute(qname);
+    public static Calendar getValue(HibItem hibItem, HibQName qname) {
+        HibICalendarAttribute attr = (HibICalendarAttribute) hibItem.getAttribute(qname);
         if(attr==null) {
             return null;
         }
@@ -145,19 +144,19 @@ public class HibICalendarAttribute extends HibAttribute {
     /**
      * Convienence method for setting a Calendar value on a 
      * ICalendarpAttribute with a given QName stored on the given item.
-     * @param item item to fetch ICalendarpAttribute from
+     * @param hibItem item to fetch ICalendarpAttribute from
      * @param qname QName of attribute
      * @param value value to set on ICalendarpAttribute
      */
-    public static void setValue(Item item, HibQName qname, Calendar value) {
-        HibICalendarAttribute attr = (HibICalendarAttribute) item.getAttribute(qname);
+    public static void setValue(HibItem hibItem, HibQName qname, Calendar value) {
+        HibICalendarAttribute attr = (HibICalendarAttribute) hibItem.getAttribute(qname);
         if(attr==null && value!=null) {
             attr = new HibICalendarAttribute(qname,value);
-            item.addAttribute(attr);
+            hibItem.addAttribute(attr);
             return;
         }
         if(value==null) {
-            item.removeAttribute(qname);
+            hibItem.removeAttribute(qname);
         }
         else {
             attr.setValue(value);

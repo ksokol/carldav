@@ -20,7 +20,6 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.unitedinternet.cosmo.hibernate.validator.EventException;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -34,8 +33,8 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
     public HibEventExceptionStamp() {
     }
     
-    public HibEventExceptionStamp(Item item) {
-        setItem(item);
+    public HibEventExceptionStamp(HibItem hibItem) {
+        setItem(hibItem);
     }
 
     public String getType() {
@@ -77,11 +76,11 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
     
     /**
      * Return EventExceptionStamp from Item
-     * @param item
+     * @param hibItem
      * @return EventExceptionStamp from Item
      */
-    public static HibEventExceptionStamp getStamp(Item item) {
-        return (HibEventExceptionStamp) item.getStamp(HibEventExceptionStamp.class);
+    public static HibEventExceptionStamp getStamp(HibItem hibItem) {
+        return (HibEventExceptionStamp) hibItem.getStamp(HibEventExceptionStamp.class);
     }
 
     @Override

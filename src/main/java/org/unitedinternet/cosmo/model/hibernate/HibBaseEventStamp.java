@@ -48,7 +48,6 @@ import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.BaseEventStamp;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -103,8 +102,8 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
         return timeRangeIndex;
     }
 
-    public static BaseEventStamp getStamp(Item item) {
-        return (BaseEventStamp) item.getStamp(BaseEventStamp.class);
+    public static BaseEventStamp getStamp(HibItem hibItem) {
+        return (BaseEventStamp) hibItem.getStamp(BaseEventStamp.class);
     }
 
     public String getIcalUid() {

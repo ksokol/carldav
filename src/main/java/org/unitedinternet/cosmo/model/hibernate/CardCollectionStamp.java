@@ -1,7 +1,5 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.unitedinternet.cosmo.model.Item;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -18,8 +16,8 @@ public class CardCollectionStamp extends HibStamp {
         return "card";
     }
 
-    public static CardCollectionStamp getStamp(Item item) {
-        return (CardCollectionStamp) item.getStamp(CardCollectionStamp.class);
+    public static CardCollectionStamp getStamp(HibItem hibItem) {
+        return (CardCollectionStamp) hibItem.getStamp(CardCollectionStamp.class);
     }
 
     @Override

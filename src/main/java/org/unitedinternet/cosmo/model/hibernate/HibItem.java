@@ -22,7 +22,6 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 
@@ -51,10 +50,6 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
-
-/**
- * Hibernate persistent Item.
- */
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 
@@ -70,7 +65,7 @@ import javax.validation.constraints.NotNull;
         discriminatorType=DiscriminatorType.STRING,
         length=16)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public abstract class HibItem extends HibAuditableObject implements Item {
+public abstract class HibItem extends HibAuditableObject {
 
     @Column(name = "uid", nullable = false, length=255)
     @NotNull
@@ -98,26 +93,16 @@ public abstract class HibItem extends HibAuditableObject implements Item {
     @Column(name="version", nullable = false)
     private Integer version;
 
-    @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", 
-            fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @MapKeyClass(HibQName.class)
-    // turns out this creates a query that is unoptimized for MySQL
-    //@Fetch(FetchMode.SUBSELECT)
     @BatchSize(size=50)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Map<HibQName, Attribute> attributes = new HashMap<>();
 
-    // turns out this creates a query that is unoptimized for MySQL
-    //@Fetch(FetchMode.SUBSELECT)
-    @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", 
-            fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @BatchSize(size=50)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Stamp> stamps = new HashSet<Stamp>(0);
+    private Set<Stamp> stamps = new HashSet<>();
 
-    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="item",
-            fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     private Set<HibCollectionItemDetails> parentDetails = new HashSet<>();
 
     private transient Set<HibCollectionItem> parents = null;
@@ -429,11 +414,11 @@ public abstract class HibItem extends HibAuditableObject implements Item {
         if(obj==null || uid==null) {
             return false;
         }
-        if( ! (obj instanceof Item)) {
+        if( ! (obj instanceof HibItem)) {
             return false;
         }
 
-        return uid.equals(((Item) obj).getUid());
+        return uid.equals(((HibItem) obj).getUid());
     }
 
     @Override

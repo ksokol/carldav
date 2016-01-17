@@ -31,7 +31,7 @@ import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
@@ -140,35 +140,35 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
      * <code>Item</code> located by the given <code>DavResourceLocator</code>.
      * </p>
      */
-    public WebDavResource createResource(DavResourceLocator locator, Item item)  throws CosmoDavException {
-        Assert.notNull(item, "item cannot be null");
+    public WebDavResource createResource(DavResourceLocator locator, HibItem hibItem)  throws CosmoDavException {
+        Assert.notNull(hibItem, "item cannot be null");
 
-        if (item instanceof HibHomeCollectionItem) {
-            return new DavHomeCollection((HibHomeCollectionItem) item, locator,
+        if (hibItem instanceof HibHomeCollectionItem) {
+            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator,
                                          this, idGenerator);
         }
 
-        if (item instanceof HibCollectionItem) {
-            if (item.getStamp(HibCalendarCollectionStamp.class) != null) {
-                return new DavCalendarCollection((HibCollectionItem) item,
+        if (hibItem instanceof HibCollectionItem) {
+            if (hibItem.getStamp(HibCalendarCollectionStamp.class) != null) {
+                return new DavCalendarCollection((HibCollectionItem) hibItem,
                                                  locator, this,idGenerator);
-            } else if(item.getStamp(CardCollectionStamp.class) != null) {
-                return new DavCardCollection((HibCollectionItem) item, locator, this, idGenerator, getCardQueryProcessor());
+            } else if(hibItem.getStamp(CardCollectionStamp.class) != null) {
+                return new DavCardCollection((HibCollectionItem) hibItem, locator, this, idGenerator, getCardQueryProcessor());
             } else {
-                return new DavCollectionBase((HibCollectionItem) item, locator, this, idGenerator);
+                return new DavCollectionBase((HibCollectionItem) hibItem, locator, this, idGenerator);
             }
         }
 
-        if (item instanceof HibNoteItem) {
-            HibNoteItem note = (HibNoteItem) item;
+        if (hibItem instanceof HibNoteItem) {
+            HibNoteItem note = (HibNoteItem) hibItem;
             // don't expose modifications
             if(note.getModifies()!=null) {
                 return null;
             }
-            else if (item.getStamp(EventStamp.class) instanceof HibEventStamp) {
+            else if (hibItem.getStamp(EventStamp.class) instanceof HibEventStamp) {
                 return new DavEvent(note, locator, this, idGenerator);
             }
-            else if (item.getStamp(EventStamp.class) instanceof HibJournalStamp) {
+            else if (hibItem.getStamp(EventStamp.class) instanceof HibJournalStamp) {
                 return new DavJournal(note, locator, this, idGenerator);
             }
             else {
@@ -176,14 +176,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             }
         }
 
-        return new DavFile((HibFileItem) item, locator, this, idGenerator);
+        return new DavFile((HibFileItem) hibItem, locator, this, idGenerator);
     }
 
     protected WebDavResource createUnknownResource(DavResourceLocator locator,
                                                 String uri)
         throws CosmoDavException {
-        Item item = contentService.findItemByPath(uri);
-        return item != null ? createResource(locator, item) : null;
+        HibItem hibItem = contentService.findItemByPath(uri);
+        return hibItem != null ? createResource(locator, hibItem) : null;
     }
 
     public ContentService getContentService() {

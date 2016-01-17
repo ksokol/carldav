@@ -20,7 +20,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.Stamp;
 
 import java.util.Date;
@@ -58,20 +57,20 @@ public abstract class HibStamp extends HibAuditableObject implements Stamp {
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "itemid", nullable = false)
-    private Item item;
+    private HibItem item;
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Stamp#getItem()
      */
-    public Item getItem() {
+    public HibItem getItem() {
         return item;
     }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Stamp#setItem(org.unitedinternet.cosmo.model.Item)
      */
-    public void setItem(Item item) {
-        this.item = item;
+    public void setItem(HibItem hibItem) {
+        this.item = hibItem;
     }
 
     

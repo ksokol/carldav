@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.service;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.Set;
 
@@ -33,15 +33,15 @@ public interface ContentService {
      * @return The content item.
      *
      */
-    Item findItemByPath(String path);
+    HibItem findItemByPath(String path);
 
     /**
      * Remove an item from a collection.  The item will be removed if
      * it belongs to no more collections.
-     * @param item item to remove from collection
+     * @param hibItem item to remove from collection
      * @param collection item to remove item from
      */
-    void removeItemFromCollection(Item item, HibCollectionItem collection);
+    void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection);
 
     /**
      * Create a new collection.

@@ -41,7 +41,7 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
@@ -125,8 +125,8 @@ public class DavCollectionBase extends DavItemResourceBase implements
 
     public DavResourceIterator getMembers() {
         try {
-            for (Item memberItem : ((HibCollectionItem) getItem()).getChildren()) {
-                WebDavResource resource = memberToResource(memberItem);
+            for (HibItem memberHibItem : ((HibCollectionItem) getItem()).getChildren()) {
+                WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
                     members.add(resource);
                 }
@@ -141,8 +141,8 @@ public class DavCollectionBase extends DavItemResourceBase implements
     public DavResourceIterator getCollectionMembers() {
         try {
             Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems((HibCollectionItem) getItem());
-            for (Item memberItem : hibCollectionItems) {
-                WebDavResource resource = memberToResource(memberItem);
+            for (HibItem memberHibItem : hibCollectionItems) {
+                WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
                     members.add(resource);
                 }
@@ -163,13 +163,13 @@ public class DavCollectionBase extends DavItemResourceBase implements
             throw new IllegalArgumentException("Expected 'member' as instance of: [" + DavItemResource.class.getName() +"]");
         }
         HibCollectionItem collection = (HibCollectionItem) getItem();
-        Item item = ((DavItemResource) member).getItem();
+        HibItem hibItem = ((DavItemResource) member).getItem();
 
         try {
-            if (item instanceof HibCollectionItem) {
-                getContentService().removeCollection((HibCollectionItem) item);
+            if (hibItem instanceof HibCollectionItem) {
+                getContentService().removeCollection((HibCollectionItem) hibItem);
             } else {
-                getContentService().removeItemFromCollection(item, collection);
+                getContentService().removeItemFromCollection(hibItem, collection);
             }
         } catch (CollectionLockedException e) {
             throw new LockedException();
@@ -322,17 +322,17 @@ public class DavCollectionBase extends DavItemResourceBase implements
         member.setItem(content);
     }
 
-    protected WebDavResource memberToResource(Item item) throws CosmoDavException {
+    protected WebDavResource memberToResource(HibItem hibItem) throws CosmoDavException {
         String path;
         try {
-            path = getResourcePath() + "/" + URLEncoder.encode(item.getName(), "UTF-8");
+            path = getResourcePath() + "/" + URLEncoder.encode(hibItem.getName(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new CosmoDavException(e);
         }
         DavResourceLocator locator = getResourceLocator().getFactory()
                 .createResourceLocatorByPath(getResourceLocator().getContext(),
                         path);
-        return getResourceFactory().createResource(locator, item);
+        return getResourceFactory().createResource(locator, hibItem);
     }
 
     protected WebDavResource memberToResource(String uri) throws CosmoDavException {

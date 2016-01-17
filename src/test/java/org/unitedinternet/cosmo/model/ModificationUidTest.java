@@ -23,6 +23,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 
 /**
@@ -40,7 +41,7 @@ public class ModificationUidTest {
      */
     @Test
     public void testModificationUid() throws Exception {
-        Item parent = new HibNoteItem();
+        HibItem parent = new HibNoteItem();
         parent.setUid("abc");
         Date date = new Date("20070101");
         

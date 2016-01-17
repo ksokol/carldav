@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.unitedinternet.cosmo.model.Item;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,9 +37,9 @@ public class HibCollectionItem extends HibItem {
     @Cascade( {CascadeType.DELETE }) 
     private Set<HibCollectionItemDetails> childDetails = new HashSet<>();
 
-    private transient Set<Item> children = null;
+    private transient Set<HibItem> children = null;
 
-    public Set<Item> getChildren() {
+    public Set<HibItem> getChildren() {
         if(children!=null) {
             return children;
         }
@@ -55,7 +54,7 @@ public class HibCollectionItem extends HibItem {
         return children;
     }
 
-    public void setChildren(final Set<Item> children) {
+    public void setChildren(final Set<HibItem> children) {
         this.children = children;
     }
 }

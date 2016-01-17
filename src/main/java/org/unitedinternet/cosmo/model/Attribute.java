@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model;
 
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * Represents an attribute associated with an Item.
@@ -44,13 +45,13 @@ public interface Attribute extends AuditableObject {
     /**
      * @return Item attribute belongs to
      */
-    public Item getItem();
+    public HibItem getItem();
 
     /**
-     * @param item
+     * @param hibItem
      *            Item attribute belongs to
      */
-    public void setItem(Item item);
+    public void setItem(HibItem hibItem);
 
     /**
      * @return the attribute value

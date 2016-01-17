@@ -49,7 +49,6 @@ import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -255,12 +254,12 @@ public class EntityConverter {
         // zone registry.
         Map<String, CalendarComponent> tzIdx = new HashMap<>();
         
-        for (Item item: collection.getChildren()) {
-           if (!(item instanceof HibContentItem)) {
+        for (HibItem hibItem : collection.getChildren()) {
+           if (!(hibItem instanceof HibContentItem)) {
                continue;
            }
            
-           HibContentItem hibContentItem = (HibContentItem) item;
+           HibContentItem hibContentItem = (HibContentItem) hibItem;
            Calendar childCalendar = convertContent(hibContentItem);
            
            // ignore items that can't be converted

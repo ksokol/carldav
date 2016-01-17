@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dav;
 
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 
@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.service.ContentService;
  * persisted items.
  *
  * @see WebDavResource
- * @see Item
+ * @see HibItem
  */
 public interface DavResourceFactory {
 
@@ -63,7 +63,7 @@ public interface DavResourceFactory {
      * </p>
      */
     WebDavResource createResource(DavResourceLocator locator,
-                                      Item item)
+                                      HibItem hibItem)
         throws CosmoDavException;
 
     ContentService getContentService();

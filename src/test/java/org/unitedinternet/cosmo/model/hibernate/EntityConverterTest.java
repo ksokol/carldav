@@ -34,7 +34,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -258,11 +257,11 @@ public class EntityConverterTest {
         HibCollectionItem collection = new HibCollectionItem();
         collection.addStamp(new HibCalendarCollectionStamp(collection));
 
-        final Set<Item> items = new HashSet<>();
-        items.add(note1);
-        items.add(note2);
+        final Set<HibItem> hibItems = new HashSet<>();
+        hibItems.add(note1);
+        hibItems.add(note2);
 
-        collection.setChildren(items);
+        collection.setChildren(hibItems);
         Calendar fullCal = converter.convertCollection(collection);
         fullCal.validate();
         Assert.assertNotNull(fullCal);

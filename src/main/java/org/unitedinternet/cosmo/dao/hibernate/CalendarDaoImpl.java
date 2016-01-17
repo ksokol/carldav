@@ -27,7 +27,7 @@ import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -64,7 +64,7 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
             // Use brute-force method if CalendarFilter can't be translated
             // to an ItemFilter (slower but at least gets the job done).
             HashSet<HibICalendarItem> results = new HashSet<HibICalendarItem>();
-            Set<Item> itemsToProcess = null;
+            Set<HibItem> itemsToProces = null;
 
             // Optimization:
             // Do a first pass query if possible to reduce the number
@@ -72,15 +72,15 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
             // all items.
             ItemFilter firstPassItemFilter = filterConverter.getFirstPassFilter(collection, filter);
             if (firstPassItemFilter != null) {
-                itemsToProcess = itemFilterProcessor.processFilter(firstPassItemFilter);
+                itemsToProces = itemFilterProcessor.processFilter(firstPassItemFilter);
             } else {
-                itemsToProcess = collection.getChildren();
+                itemsToProces = collection.getChildren();
             }
 
             CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();
 
             // Evaluate filter against all calendar items
-            for (Item child : itemsToProcess) {
+            for (HibItem child : itemsToProces) {
 
                 // only care about calendar items
                 if (child instanceof HibICalendarItem) {

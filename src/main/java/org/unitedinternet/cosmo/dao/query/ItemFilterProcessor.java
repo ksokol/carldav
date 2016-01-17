@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dao.query;
 
 import java.util.Set;
 
-import org.unitedinternet.cosmo.model.Item;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 
 /**
@@ -30,5 +30,5 @@ public interface ItemFilterProcessor {
      * @param filter  item filter
      * @return set of items that match filter
      */
-    Set<Item> processFilter(ItemFilter filter);
+    Set<HibItem> processFilter(ItemFilter filter);
 }

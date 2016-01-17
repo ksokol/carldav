@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
+
 /**
  * Represents a Stamp on an Item. A Stamp is a set of related
  * properties and apis that is associated to an item.
@@ -24,13 +26,13 @@ public interface Stamp extends AuditableObject {
     /**
      * @return Item attribute belongs to
      */
-    public Item getItem();
+    public HibItem getItem();
 
     /**
-     * @param item
+     * @param hibItem
      *            attribute belongs to
      */
-    public void setItem(Item item);
+    public void setItem(HibItem hibItem);
 
     /**
      * @return Stamp type

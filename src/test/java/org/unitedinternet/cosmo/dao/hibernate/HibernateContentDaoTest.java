@@ -30,18 +30,18 @@ import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
@@ -219,7 +219,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
 
-        Attribute custom = queryItem.getAttribute("customattribute");
+        HibAttribute custom = queryItem.getAttribute("customattribute");
         Assert.assertEquals("customattributevalue", custom.getValue());
 
         helper.verifyItem(newItem, queryItem);
@@ -234,7 +234,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
 
         queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Attribute queryAttribute = queryItem.getAttribute("customattribute");
+        HibAttribute queryAttribute = queryItem.getAttribute("customattribute");
 
         Assert.assertNotNull(queryAttribute);
         Assert.assertNull(queryAttribute.getValue());
@@ -262,7 +262,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
 
-        Attribute attr = queryItem.getAttribute(new HibQName("timestampattribute"));
+        HibAttribute attr = queryItem.getAttribute(new HibQName("timestampattribute"));
         Assert.assertNotNull(attr);
         Assert.assertTrue(attr instanceof HibTimestampAttribute);
         
@@ -277,7 +277,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
 
         queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Attribute queryAttr = queryItem.getAttribute(new HibQName("timestampattribute"));
+        HibAttribute queryAttr = queryItem.getAttribute(new HibQName("timestampattribute"));
         Assert.assertNotNull(queryAttr);
         Assert.assertTrue(queryAttr instanceof HibTimestampAttribute);
         
@@ -307,7 +307,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
 
-        Attribute attr = queryItem.getAttribute(new HibQName("icalattribute"));
+        HibAttribute attr = queryItem.getAttribute(new HibQName("icalattribute"));
         Assert.assertNotNull(attr);
         Assert.assertTrue(attr instanceof HibICalendarAttribute);
         

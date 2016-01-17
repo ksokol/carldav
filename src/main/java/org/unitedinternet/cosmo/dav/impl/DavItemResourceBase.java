@@ -45,10 +45,10 @@ import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;
@@ -370,9 +370,9 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     protected abstract Set<String> getDeadPropertyFilter();
 
     protected void loadDeadProperties(DavPropertySet properties) {
-        for (Iterator<Map.Entry<HibQName, Attribute>> i = hibItem.getAttributes()
+        for (Iterator<Map.Entry<HibQName, HibAttribute>> i = hibItem.getAttributes()
                 .entrySet().iterator(); i.hasNext();) {
-            Map.Entry<HibQName, Attribute> entry = i.next();
+            Map.Entry<HibQName, HibAttribute> entry = i.next();
 
             // skip attributes that are not meant to be shown as dead
             // properties
@@ -408,7 +408,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         try {
             HibQName qname = propNameToQName(property.getName());
             Element value = (Element) property.getValue();
-            Attribute attr = hibItem.getAttribute(qname);
+            HibAttribute attr = hibItem.getAttribute(qname);
 
             // first check for existing attribute otherwise add
             if (attr != null) {

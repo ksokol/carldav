@@ -37,7 +37,6 @@ public class HibEventStamp extends HibBaseEventStamp {
     }
     
     public HibEventStamp(HibItem hibItem) {
-        this();
         setItem(hibItem);
     }
     

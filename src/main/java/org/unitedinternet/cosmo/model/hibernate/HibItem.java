@@ -21,7 +21,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
-import org.unitedinternet.cosmo.model.Attribute;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
@@ -95,7 +94,7 @@ public abstract class HibItem extends HibAuditableObject {
     @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @MapKeyClass(HibQName.class)
     @BatchSize(size=50)
-    private Map<HibQName, Attribute> attributes = new HashMap<>();
+    private Map<HibQName, HibAttribute> attributes = new HashMap<>();
 
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @BatchSize(size=50)
@@ -174,14 +173,14 @@ public abstract class HibItem extends HibAuditableObject {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getAttributes()
      */
-    public Map<HibQName, Attribute> getAttributes() {
+    public Map<HibQName, HibAttribute> getAttributes() {
         return Collections.unmodifiableMap(attributes);
     }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#addAttribute(org.unitedinternet.cosmo.model.Attribute)
      */
-    public void addAttribute(Attribute attribute) {
+    public void addAttribute(HibAttribute attribute) {
         if (attribute == null) {
             throw new IllegalArgumentException("attribute cannot be null");
         }
@@ -209,14 +208,14 @@ public abstract class HibItem extends HibAuditableObject {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getAttribute(java.lang.String)
      */
-    public Attribute getAttribute(String name) {
+    public HibAttribute getAttribute(String name) {
         return getAttribute(new HibQName(name));
     }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getAttribute(org.unitedinternet.cosmo.model.QName)
      */
-    public Attribute getAttribute(HibQName qname) {
+    public HibAttribute getAttribute(HibQName qname) {
         return attributes.get(qname);
     }
 
@@ -224,7 +223,7 @@ public abstract class HibItem extends HibAuditableObject {
      * @see org.unitedinternet.cosmo.model.Item#getAttributeValue(org.unitedinternet.cosmo.model.QName)
      */
     public Object getAttributeValue(HibQName qname) {
-        Attribute attr = attributes.get(qname);
+        HibAttribute attr = attributes.get(qname);
         if (attr == null) {
             return attr;
         }

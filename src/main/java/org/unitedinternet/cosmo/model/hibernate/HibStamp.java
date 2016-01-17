@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.unitedinternet.cosmo.model.Attribute;
 
 import java.util.Date;
 
@@ -61,16 +60,8 @@ public abstract class HibStamp extends HibAuditableObject {
         this.item = hibItem;
     }
 
-    protected Attribute getAttribute(HibQName qname) {
+    protected HibAttribute getAttribute(HibQName qname) {
         return getItem().getAttribute(qname);
-    }
- 
-    protected void addAttribute(Attribute attribute) {
-        getItem().addAttribute(attribute);
-    }
-
-    protected void removeAttribute(HibQName qname) {
-        getItem().removeAttribute(qname);
     }
 
     public void updateTimestamp() {

@@ -15,10 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Target;
-import org.unitedinternet.cosmo.model.Attribute;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -36,9 +33,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-/**
- * Hibernate persistent Attribute.
- */
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 // Define indexes on discriminator and key fields
@@ -53,10 +47,9 @@ import javax.persistence.UniqueConstraint;
         name="attributetype",
         discriminatorType=DiscriminatorType.STRING,
         length=16)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public abstract class HibAttribute extends HibAuditableObject implements Attribute {
+public abstract class HibAttribute extends HibAuditableObject {
 
-    private static final long serialVersionUID = 3927093659569283339L;
+    private static final long serialVersionUID = 1L;
 
     // Fields
     @Embedded
@@ -70,6 +63,10 @@ public abstract class HibAttribute extends HibAuditableObject implements Attribu
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;
+
+    public abstract Object getValue();
+
+    public abstract void setValue(Object value);
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Attribute#getQName()

@@ -239,7 +239,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Calendar testCal = helper.getCalendar("testdata/timezone.ics");
 
         HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setTimezoneCalendar(testCal);
 
         root.addStamp(calendarStamp);
 
@@ -259,38 +258,11 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         HibCollectionItem queryCol = (HibCollectionItem) contentDao.findItemByUid(root.getUid());
         Assert.assertEquals(1, queryCol.getStamps().size());
         HibCalendarCollectionStamp stamp = (HibCalendarCollectionStamp) queryCol.getStamp(HibCalendarCollectionStamp.class);
-        Assert.assertTrue(stamp instanceof HibCalendarCollectionStamp);
+
         Assert.assertEquals("calendar", stamp.getType());
-        HibCalendarCollectionStamp ccs = stamp;
-        Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
 
         Calendar cal = new EntityConverter(new VersionFourGenerator()).convertCollection(queryCol);
         Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());
-    }
-
-    /**
-     * Test calendar collection stamp validation.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCalendarCollectionStampValidation() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        Calendar testCal = helper.getCalendar("testdata/cal1.ics");
-
-        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setTimezoneCalendar(testCal);
-
-        root.addStamp(calendarStamp);
-
-        try {
-            contentDao.updateCollection(root);
-
-            Assert.fail("able to save invalid timezone, is TimezoneValidator active?");
-        } catch (ConstraintViolationException cve) {
-
-        }
     }
 
     @Test(expected=ConstraintViolationException.class)

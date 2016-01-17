@@ -16,55 +16,37 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-/**
- * Hibernate persistent ICalendarItem.
- */
 @Entity
 @DiscriminatorValue("icalendar")
 public abstract class HibICalendarItem extends HibContentItem {
 
-    public static final HibQName ATTR_ICALENDAR = new HibQName(HibICalendarItem.class, "icalendar");
-    
     @Column(name="icaluid", length=255)
     private String icalUid = null;
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.ICalendarItem#getIcalUid()
-     */
+    @Column(name = "calendar", length= 2147483647)
+    @Type(type="calendar_clob")
+    private Calendar calendar;
+
     public String getIcalUid() {
         return icalUid;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.ICalendarItem#setIcalUid(java.lang.String)
-     */
     public void setIcalUid(String icalUid) {
         this.icalUid = icalUid;
     }
-    
-    /**
-     * Return the Calendar object containing a calendar component.
-     * Used by sublcasses to store specific components.
-     * @return calendar
-     */
+
     protected Calendar getCalendar() {
-        // calendar stored as ICalendarAttribute on Item
-        return HibICalendarAttribute.getValue(this, ATTR_ICALENDAR);
+        return calendar;
     }
-    
-    /**
-     * Set the Calendar object containing a calendar component.
-     * Used by sublcasses to store specific components.
-     * @param calendar
-     */
+
     protected void setCalendar(Calendar calendar) {
-        // calendar stored as ICalendarAttribute on Item
-        HibICalendarAttribute.setValue(this, ATTR_ICALENDAR, calendar);
+        this.calendar = calendar;
     }
 
 }

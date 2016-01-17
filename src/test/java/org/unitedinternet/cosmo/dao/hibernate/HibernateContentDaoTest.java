@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import net.fortuna.ical4j.model.property.ProdId;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
@@ -27,28 +26,23 @@ import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.validation.ConstraintViolationException;
@@ -182,49 +176,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
             // before migration to Hibernate 4, does any code depend on the old Exception?
             Assert.assertEquals("name", e.getConstraintViolations().iterator().next().getPropertyPath().toString());
        }
-    }
-
-    /**
-     * Test ICalendar attribute.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testICalendarAttribute() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibContentItem item = generateTestContent();
-
-        HibICalendarAttribute icalAttr = new HibICalendarAttribute();
-        icalAttr.setQName(new HibQName("icalattribute"));
-        icalAttr.setValue(helper.getInputStream("testdata/vjournal.ics"));
-        item.addAttribute(icalAttr);
-        
-        HibContentItem newItem = contentDao.createContent(root, item);
-
-        
-
-        HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        HibAttribute attr = queryItem.getAttribute(new HibQName("icalattribute"));
-        Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof HibICalendarAttribute);
-        
-        net.fortuna.ical4j.model.Calendar calendar = (net.fortuna.ical4j.model.Calendar) attr.getValue();
-        Assert.assertNotNull(calendar);
-        
-        net.fortuna.ical4j.model.Calendar expected = CalendarUtils.parseCalendar(helper.getInputStream("testdata/vjournal.ics"));
-        
-        Assert.assertEquals(expected.toString(), calendar.toString());
-        
-        calendar.getProperties().add(new ProdId("blah"));
-        contentDao.updateContent(queryItem);
-        
-        
-        
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        HibICalendarAttribute ica = (HibICalendarAttribute) queryItem.getAttribute(new HibQName("icalattribute"));
-        Assert.assertEquals(calendar, ica.getValue());
     }
 
     /**

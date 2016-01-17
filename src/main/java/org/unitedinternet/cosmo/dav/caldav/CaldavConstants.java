@@ -116,8 +116,6 @@ public interface CaldavConstants {
 
     /** The CalDAV property name CALDAV:calendar-data */
     String PROPERTY_CALDAV_CALENDAR_DATA = "calendar-data";
-    /** The CalDAV property name CALDAV:calendar-timezone */
-    String PROPERTY_CALDAV_CALENDAR_TIMEZONE = "calendar-timezone";
     /** The CalDAV property name CALDAV:supported-calendar-component-set */
     String PROPERTY_CALDAV_SUPPORTED_CALENDAR_COMPONENT_SET = "supported-calendar-component-set";
     /** The CalDAV property name CALDAV:supported-collation-set */
@@ -140,8 +138,6 @@ public interface CaldavConstants {
     /** The CalDAV property CALDAV:calendar-data */
     DavPropertyName ADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_ADDRESS_DATA, NAMESPACE_CARDDAV);
 
-    /** The CalDAV property CALDAV:calendar-timezone */
-    DavPropertyName CALENDARTIMEZONE = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_TIMEZONE, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:supported-calendar-component-set */
     DavPropertyName SUPPORTEDCALENDARCOMPONENTSET = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_COMPONENT_SET,
             NAMESPACE_CALDAV);

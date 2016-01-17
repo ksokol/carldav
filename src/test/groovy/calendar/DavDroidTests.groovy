@@ -128,7 +128,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                             <CAL:calendar-home-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <D:current-user-principal/>
                                             <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
-                                            <C:calendar-timezone xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>

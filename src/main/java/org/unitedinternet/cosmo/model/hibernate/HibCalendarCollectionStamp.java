@@ -15,12 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.hibernate.validator.DisplayName;
-import org.unitedinternet.cosmo.hibernate.validator.Timezone;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import javax.persistence.DiscriminatorValue;
@@ -30,9 +25,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue("calendar")
 public class HibCalendarCollectionStamp extends HibStamp implements ICalendarConstants {
     
-    private static final long serialVersionUID = 2L;
-
-    public static final HibQName ATTR_CALENDAR_TIMEZONE = new HibQName(HibCalendarCollectionStamp.class, "timezone");
+    private static final long serialVersionUID = 3L;
 
     public HibCalendarCollectionStamp() {
     }
@@ -42,35 +35,7 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     }
     
     public HibCalendarCollectionStamp(HibCollectionItem collection) {
-        this();
         setItem(collection);
-    }
-
-    @Timezone
-    public Calendar getTimezoneCalendar() {
-        return HibICalendarAttribute.getValue(getItem(), ATTR_CALENDAR_TIMEZONE);
-    }
-
-    public TimeZone getTimezone() {
-        Calendar timezone = getTimezoneCalendar();
-        if (timezone == null) {
-            return null;
-        }
-        VTimeZone vtz = (VTimeZone) timezone.getComponents().getComponent(Component.VTIMEZONE);
-        return new TimeZone(vtz);
-    }
-
-    public void setTimezoneCalendar(Calendar timezone) {
-        HibICalendarAttribute.setValue(getItem(), ATTR_CALENDAR_TIMEZONE, timezone);
-    }
-
-    /**
-     * Return CalendarCollectionStamp from Item
-     * @param hibItem
-     * @return CalendarCollectionStamp from Item
-     */
-    public static HibCalendarCollectionStamp getStamp(HibItem hibItem) {
-        return (HibCalendarCollectionStamp) hibItem.getStamp(HibCalendarCollectionStamp.class);
     }
 
     @Override

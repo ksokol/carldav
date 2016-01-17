@@ -78,10 +78,6 @@ public class QueryReport extends CaldavMultiStatusReport {
         }
 
         VTimeZone tz = findTimeZone(info);
-        if ( tz == null && getResource() instanceof DavCalendarCollection) {
-            tz = ((DavCalendarCollection) getResource()).getTimeZone();
-        }
-
         queryFilter = findQueryFilter(info, tz);
     }
 

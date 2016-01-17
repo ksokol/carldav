@@ -1,9 +1,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -19,7 +16,6 @@ import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
-import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
@@ -62,7 +58,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
         super(collection, locator, factory, idGenerator);
 
-        registerLiveProperty(CALENDARTIMEZONE);
         registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
         registerLiveProperty(SUPPORTEDCALENDARDATA);
         registerLiveProperty(MAXRESOURCESIZE);
@@ -105,19 +100,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
 
         return members;
-    }
-
-    /**
-     * @return The default timezone for this calendar collection, if
-     * one has been set.
-     */
-    public VTimeZone getTimeZone() {
-        Calendar obj = getCalendarCollectionStamp().getTimezoneCalendar();
-        if (obj == null) {
-            return null;
-        }
-        return (VTimeZone)
-            obj.getComponents().getComponent(Component.VTIMEZONE);
     }
 
     protected Set<QName> getResourceTypes() {
@@ -189,10 +171,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 name.equals(GET_CTAG))) {
                 throw new ProtectedPropertyModificationException(name);
         }
-
-        if (name.equals(CALENDARTIMEZONE)) {
-            cc.setTimezoneCalendar(TimeZoneExtractor.extract(property));
-        }
     }
 
     /** */
@@ -210,10 +188,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             name.equals(MAXRESOURCESIZE) ||
             name.equals(GET_CTAG)) {
             throw new ProtectedPropertyModificationException(name);
-        }
-
-        if (name.equals(CALENDARTIMEZONE)) {
-            cc.setTimezoneCalendar(null);
         }
     }
 

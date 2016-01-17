@@ -47,7 +47,6 @@ import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -76,7 +75,7 @@ import javax.validation.constraints.NotNull;
                 @Index(name = "idx_recurring",columnList = "isrecurring")}
 )
 @DiscriminatorValue("baseevent")
-public abstract class HibBaseEventStamp extends HibStamp implements ICalendarConstants, BaseEventStamp {
+public abstract class HibBaseEventStamp extends HibStamp implements ICalendarConstants {
 
     public static final String TIME_INFINITY = "Z-TIME-INFINITY";
 
@@ -100,10 +99,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
     
     public HibEventTimeRangeIndex getTimeRangeIndex() {
         return timeRangeIndex;
-    }
-
-    public static BaseEventStamp getStamp(HibItem hibItem) {
-        return (BaseEventStamp) hibItem.getStamp(BaseEventStamp.class);
     }
 
     public String getIcalUid() {

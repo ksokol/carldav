@@ -15,21 +15,20 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.model.BaseEventStamp;
-
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
 import net.fortuna.ical4j.util.TimeZones;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Adds EventStamp specific criteria to StampFilter.
@@ -151,7 +150,7 @@ public class EventStampFilter extends StampFilter {
     }
 
     public EventStampFilter() {
-        setStampClass(BaseEventStamp.class);
+        setStampClass(HibBaseEventStamp.class);
     }
 
     public TimeZone getTimezone() {

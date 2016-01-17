@@ -60,7 +60,7 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
 
     @Override
     public VEvent getEvent() {
-        return getMasterEvent();
+        return (VEvent) getMaster();
     }
 
     /** Used by the hibernate validator **/
@@ -89,9 +89,9 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
     }
    
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.EventStamp#getMasterEvent()
+     * @see org.unitedinternet.cosmo.model.EventStamp#getMaster()
      */
-    public VEvent getMasterEvent() {
+    public Component getMaster() {
         if(getEventCalendar()==null) {
             return null;
         }

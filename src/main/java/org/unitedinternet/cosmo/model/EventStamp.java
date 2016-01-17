@@ -15,10 +15,9 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.List;
-
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.component.VEvent;
+
+import java.util.List;
 
 /**
  * Represents a calendar event, recurring or non-recurring.
@@ -33,10 +32,10 @@ public interface EventStamp extends BaseEventStamp{
     public List<Component> getExceptions();
 
     /**
-     * Returns the master event extracted from the underlying
+     * Returns the master extracted from the underlying
      * icalendar object. Changes to the master event will be persisted
      * when the stamp is saved.
      */
-    public VEvent getMasterEvent();
+    public Component getMaster();
 
 }

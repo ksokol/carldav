@@ -23,13 +23,12 @@ import javax.persistence.Entity;
 @DiscriminatorValue("journal")
 public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     public HibJournalStamp() {
     }
 
     public HibJournalStamp(HibItem hibItem) {
-        this();
         setItem(hibItem);
     }
     
@@ -41,7 +40,7 @@ public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
     @Deprecated
     @Override
     public VEvent getEvent() {
-        return getMasterEvent();
+        return (VEvent) getMaster();
     }
 
     /** Used by the hibernate validator **/
@@ -67,7 +66,7 @@ public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
 
     @Override
     public Date getStartDate() {
-        VJournal journal = getMasterJournal();
+        VJournal journal = (VJournal) getMaster();
         if(journal==null) {
             return null;
         }
@@ -94,25 +93,7 @@ public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
         return null;
     }
 
-    //TODO
-    @Deprecated
-    public VEvent getMasterEvent() {
-        if(getEventCalendar()==null) {
-            return null;
-        }
-        
-        ComponentList events = getEventCalendar().getComponents().getComponents(Component.VJOURNAL);
-        
-        if(events.size()==0) {
-            return null;
-        }
-        
-        return (VEvent) events.get(0);
-    }
-
-    //TODO
-    @Deprecated
-    public VJournal getMasterJournal() {
+    public Component getMaster() {
         if(getEventCalendar()==null) {
             return null;
         }
@@ -124,10 +105,6 @@ public class HibJournalStamp extends HibBaseEventStamp implements EventStamp {
         }
 
         return (VJournal) journal.get(0);
-    }
-
-    public static EventStamp getStamp(HibItem hibItem) {
-        return (EventStamp) hibItem.getStamp(EventStamp.class);
     }
 
     @Override

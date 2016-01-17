@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.service.impl;
 
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
@@ -185,7 +184,7 @@ public class StandardContentService implements ContentService {
         
         EventStamp eventStamp = (EventStamp) stamp;
         
-        VEvent masterEvent = eventStamp.getMasterEvent();
+        Component masterEvent = eventStamp.getMaster();
         
         checkDatesForComponent(masterEvent);
         

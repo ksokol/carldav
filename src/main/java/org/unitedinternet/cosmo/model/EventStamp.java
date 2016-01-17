@@ -15,27 +15,9 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import net.fortuna.ical4j.model.Component;
-
-import java.util.List;
-
 /**
  * Represents a calendar event, recurring or non-recurring.
  */
 public interface EventStamp extends BaseEventStamp{
-
-    
-    /**
-     * Returns a list of exception components for a recurring event.
-     * If the event is not recurring, the list will be empty.
-     */
-    public List<Component> getExceptions();
-
-    /**
-     * Returns the master extracted from the underlying
-     * icalendar object. Changes to the master event will be persisted
-     * when the stamp is saved.
-     */
-    public Component getMaster();
 
 }

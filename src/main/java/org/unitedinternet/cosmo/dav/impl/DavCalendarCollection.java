@@ -4,7 +4,6 @@ import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -20,7 +19,6 @@ import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
-import org.unitedinternet.cosmo.dav.caldav.MaxResourceSizeException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
@@ -35,7 +33,6 @@ import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
-import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
@@ -65,7 +62,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
         super(collection, locator, factory, idGenerator);
 
-        registerLiveProperty(CALENDARDESCRIPTION);
         registerLiveProperty(CALENDARTIMEZONE);
         registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
         registerLiveProperty(SUPPORTEDCALENDARDATA);
@@ -134,21 +130,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         return (HibCalendarCollectionStamp) getItem().getStamp(HibCalendarCollectionStamp.class);
     }
 
-
-    /** */
-    protected void populateItem(InputContext inputContext) throws CosmoDavException {
-        super.populateItem(inputContext);
-
-        HibCalendarCollectionStamp cc = getCalendarCollectionStamp();
-
-        try {
-            cc.setDescription(getItem().getName());
-            // XXX: language should come from the input context
-        } catch (DataSizeException e) {
-            throw new MaxResourceSizeException(e.getMessage());
-        }
-    }
-
     /** */
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
@@ -209,13 +190,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 throw new ProtectedPropertyModificationException(name);
         }
 
-
-        if (name.equals(CALENDARDESCRIPTION)) {
-            cc.setDescription(property.getValueText());
-            cc.setLanguage(property.getLanguage());
-            return;
-        }
-
         if (name.equals(CALENDARTIMEZONE)) {
             cc.setTimezoneCalendar(TimeZoneExtractor.extract(property));
         }
@@ -236,12 +210,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             name.equals(MAXRESOURCESIZE) ||
             name.equals(GET_CTAG)) {
             throw new ProtectedPropertyModificationException(name);
-        }
-
-        if (name.equals(CALENDARDESCRIPTION)) {
-            cc.setDescription(null);
-            cc.setLanguage(null);
-            return;
         }
 
         if (name.equals(CALENDARTIMEZONE)) {

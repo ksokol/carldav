@@ -42,11 +42,8 @@ import org.unitedinternet.cosmo.model.hibernate.HibICalendarAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
-import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
 import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.hibernate.User;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -55,8 +52,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.validation.ConstraintViolationException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Test for HibernateContentDao
@@ -190,64 +185,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     /**
-     * Test content attributes.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    @Test
-    public void testContentAttributes() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibContentItem item = generateTestContent();
-
-        // TODO: figure out db date type is handled because i'm seeing
-        // issues with accuracy
-        // item.addAttribute(new DateAttribute("dateattribute", new Date()));
-
-        HashSet<String> values = new HashSet<String>();
-        values.add("value1");
-        values.add("value2");
-
-        HibContentItem newItem = contentDao.createContent(root, item);
-
-        Assert.assertTrue(getHibItem(newItem).getId() > -1);
-        Assert.assertNotNull(newItem.getUid());
-
-        
-
-        HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        HibAttribute custom = queryItem.getAttribute("customattribute");
-        Assert.assertEquals("customattributevalue", custom.getValue());
-
-        helper.verifyItem(newItem, queryItem);
-
-        // set attribute value to null
-        custom.setValue(null);
-
-        queryItem.removeAttribute("intattribute");
-
-        contentDao.updateContent(queryItem);
-
-        
-
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        HibAttribute queryAttribute = queryItem.getAttribute("customattribute");
-
-        Assert.assertNotNull(queryAttribute);
-        Assert.assertNull(queryAttribute.getValue());
-        Assert.assertNull(queryItem.getAttribute("intattribute"));
-    }
-
-    /**
      * Test ICalendar attribute.
      * @throws Exception - if something is wrong this exception is thrown.
      */
     @Test
     public void testICalendarAttribute() throws Exception {
         User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = contentDao.getRootItem(user);
 
         HibContentItem item = generateTestContent();
 
@@ -1032,8 +976,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setContentEncoding("UTF8");
         content.setContentType("text/text");
         content.setOwner(getUser(userDao, owner));
-        content.addAttribute(new HibStringAttribute(new HibQName("customattribute"),
-                "customattributevalue"));
         return content;
     }
     
@@ -1045,34 +987,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setOwner(getUser(userDao, owner));
         return content;
     }
-    
-    private org.w3c.dom.Element createTestElement() throws Exception {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = dbf.newDocumentBuilder();
-        Document doc = builder.newDocument();
 
-        Element root = doc.createElement( "root" );
-        doc.appendChild(root);
-        
-        Element author1 = doc.createElement("author");
-        author1.setAttribute("name", "James");
-        author1.setAttribute("location", "UK");
-        author1.setTextContent("James Strachan");
-        
-        root.appendChild(author1);
-        
-        Element author2 = doc.createElement("author");
-        author2.setAttribute("name", "Bob");
-        author2.setAttribute("location", "US");
-        author2.setTextContent("Bob McWhirter");
-
-        root.appendChild(author2);
-        
-        return root;
-    }
-    
     private HibItem getHibItem(HibItem hibItem) {
-        return (HibItem) hibItem;
+        return hibItem;
     }
 
 }

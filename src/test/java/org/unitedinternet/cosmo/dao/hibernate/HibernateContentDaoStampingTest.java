@@ -32,7 +32,6 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -40,8 +39,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
-import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import javax.validation.ConstraintViolationException;
@@ -241,9 +239,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Calendar testCal = helper.getCalendar("testdata/timezone.ics");
 
         HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setDescription("description");
         calendarStamp.setTimezoneCalendar(testCal);
-        calendarStamp.setLanguage("en");
 
         root.addStamp(calendarStamp);
 
@@ -266,9 +262,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertTrue(stamp instanceof HibCalendarCollectionStamp);
         Assert.assertEquals("calendar", stamp.getType());
         HibCalendarCollectionStamp ccs = stamp;
-        Assert.assertEquals("description", ccs.getDescription());
         Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
-        Assert.assertEquals("en", ccs.getLanguage());
 
         Calendar cal = new EntityConverter(new VersionFourGenerator()).convertCollection(queryCol);
         Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());
@@ -435,8 +429,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         content.setName(name);
         content.setDisplayName(name);
         content.setOwner(getUser(userDao, owner));
-        content.addAttribute(new HibStringAttribute(new HibQName("customattribute"),
-                "customattributevalue"));
         return content;
     }
 

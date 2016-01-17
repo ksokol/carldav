@@ -30,11 +30,9 @@ import javax.persistence.Entity;
 @DiscriminatorValue("calendar")
 public class HibCalendarCollectionStamp extends HibStamp implements ICalendarConstants {
     
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     public static final HibQName ATTR_CALENDAR_TIMEZONE = new HibQName(HibCalendarCollectionStamp.class, "timezone");
-    public static final HibQName ATTR_CALENDAR_DESCRIPTION = new HibQName(HibCalendarCollectionStamp.class, "description");
-    public static final HibQName ATTR_CALENDAR_LANGUAGE = new HibQName(HibCalendarCollectionStamp.class, "language");
 
     public HibCalendarCollectionStamp() {
     }
@@ -46,22 +44,6 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     public HibCalendarCollectionStamp(HibCollectionItem collection) {
         this();
         setItem(collection);
-    }
-
-    public String getDescription() {
-        return HibStringAttribute.getValue(getItem(), ATTR_CALENDAR_DESCRIPTION);
-    }
-
-    public void setDescription(String description) {
-        HibStringAttribute.setValue(getItem(), ATTR_CALENDAR_DESCRIPTION, description);
-    }
-
-    public String getLanguage() {
-        return HibStringAttribute.getValue(getItem(), ATTR_CALENDAR_LANGUAGE);
-    }
-
-    public void setLanguage(String language) {
-        HibStringAttribute.setValue(getItem(), ATTR_CALENDAR_LANGUAGE, language);
     }
 
     @Timezone

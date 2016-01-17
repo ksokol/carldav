@@ -116,8 +116,6 @@ public interface CaldavConstants {
 
     /** The CalDAV property name CALDAV:calendar-data */
     String PROPERTY_CALDAV_CALENDAR_DATA = "calendar-data";
-    /** The CalDAV property name CALDAV:calendar-description */
-    String PROPERTY_CALDAV_CALENDAR_DESCRIPTION = "calendar-description";
     /** The CalDAV property name CALDAV:calendar-timezone */
     String PROPERTY_CALDAV_CALENDAR_TIMEZONE = "calendar-timezone";
     /** The CalDAV property name CALDAV:supported-calendar-component-set */
@@ -130,8 +128,6 @@ public interface CaldavConstants {
     String PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA = "supported-address-data";
 
     String PROPERTY_CARDDAV_ADDRESS_DATA = "address-data";
-    /** The CalDAV property name CALDAV:calendar-home-set */
-    String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
     /** The CardDAV property name CARDDAV:addressbook-home-set */
     String PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET = "addressbook-home-set";
     /** The CalDAV property name CALDAV:max-resource-size */
@@ -144,8 +140,6 @@ public interface CaldavConstants {
     /** The CalDAV property CALDAV:calendar-data */
     DavPropertyName ADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_ADDRESS_DATA, NAMESPACE_CARDDAV);
 
-    /** The CalDAV property CALDAV:calendar-description */
-    DavPropertyName CALENDARDESCRIPTION = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DESCRIPTION, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:calendar-timezone */
     DavPropertyName CALENDARTIMEZONE = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_TIMEZONE, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:supported-calendar-component-set */
@@ -157,8 +151,6 @@ public interface CaldavConstants {
     DavPropertyName SUPPORTEDCALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
     /** The CalDAV property CARDDAV:supported-address-data */
     DavPropertyName SUPPORTEDADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA, NAMESPACE_CARDDAV);
-    /** The CalDAV property CALDAV:calendar-home-set */
-    DavPropertyName CALENDARHOMESET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
     /** The CardDAV property CARDDAV:addressbook-home-set */
     DavPropertyName ADDRESSBOOKHOMESET = DavPropertyName.create(PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET, NAMESPACE_CARDDAV);
     /** The CalDAV property CALDAV:max-resource-size */

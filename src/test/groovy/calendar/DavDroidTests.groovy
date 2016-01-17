@@ -2,6 +2,7 @@ package calendar
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
@@ -124,11 +125,11 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:propstat>
                                         <D:prop>
                                             <D:current-user-privilege-set/>
-                                            <C:calendar-home-set xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:calendar-home-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <D:current-user-principal/>
                                             <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                             <C:calendar-timezone xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            <C:calendar-description xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -156,6 +157,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .header("Depth", "0")
                 .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
                 .andExpect(status().isMultiStatus())
+                .andDo(MockMvcResultHandlers.print())
                 .andExpect(xml(response3))
 
         def request4 = """\

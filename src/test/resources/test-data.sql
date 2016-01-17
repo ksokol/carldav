@@ -11,8 +11,6 @@ VALUES ('collection', 2, 1448140260072, 'NVy57RJot0LhdYELkMDJ9gQZjOM=', 14481402
 INSERT INTO item (itemtype, id, createdate, etag, modifydate, clientcreatedate, clientmodifieddate, displayname, itemname, uid, version, lastmodifiedby, icaluid, contentEncoding, contentLanguage, contentLength, contentType, hasmodifications, ownerid, contentdataid, modifiesitemid)
 VALUES ('collection', 3, 1448140260072, 'njy57RJot0LhdYELkMDJ9gQZiOM=', 1448140260072, null, null, 'contactDisplayName', 'contacts', 'a112ed14-0106-4616-bb40-a416a8305465', 0, null, null, null, null, null, null, null, 2, null, null);
 
-INSERT INTO attribute (attributetype, id, createdate, etag, modifydate, localname, namespace, textvalue, stringvalue, itemid) VALUES ('string', 1, 1448140260077, '', 1448140260077, 'color', 'org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp', null, '#f0f0f0', 2);
-
 INSERT INTO stamp (stamptype, id, createdate, etag, modifydate, itemid) VALUES ('calendar', 1, 1448140260087, '', 1448140260087, 2);
 INSERT INTO stamp (stamptype, id, createdate, etag, modifydate, itemid) VALUES ('card', 2, 1448140260087, '', 1448140260087, 3);
 

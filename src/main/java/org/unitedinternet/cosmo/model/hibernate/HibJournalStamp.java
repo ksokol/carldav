@@ -11,9 +11,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.unitedinternet.cosmo.hibernate.validator.Journal;
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
@@ -21,7 +19,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("journal")
-public class HibJournalStamp extends HibBaseEventStamp implements BaseEventStamp {
+public class HibJournalStamp extends HibBaseEventStamp {
 
     private static final long serialVersionUID = 2L;
 
@@ -47,21 +45,6 @@ public class HibJournalStamp extends HibBaseEventStamp implements BaseEventStamp
     @Journal
     private Calendar getValidationCalendar() {//NOPMD
         return getEventCalendar();
-    }
-
-    public List<Component> getExceptions() {
-        List<Component> exceptions = new ArrayList<>();
-        
-        // add all exception events
-        HibNoteItem note = (HibNoteItem) getItem();
-        for(HibNoteItem exception : note.getModifications()) {
-            HibEventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
-            if(exceptionStamp!=null) {
-                exceptions.add(exceptionStamp.getEvent());
-            }
-        }
-        
-        return exceptions;
     }
 
     @Override

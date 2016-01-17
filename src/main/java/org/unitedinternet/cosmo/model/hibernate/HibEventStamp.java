@@ -20,7 +20,6 @@ import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
 import org.unitedinternet.cosmo.hibernate.validator.Event;
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("event")
-public class HibEventStamp extends HibBaseEventStamp implements BaseEventStamp {
+public class HibEventStamp extends HibBaseEventStamp {
 
     private static final long serialVersionUID = 1L;
 
@@ -58,7 +57,7 @@ public class HibEventStamp extends HibBaseEventStamp implements BaseEventStamp {
     }
 
     public List<Component> getExceptions() {
-        ArrayList<Component> exceptions = new ArrayList<Component>();
+        ArrayList<Component> exceptions = new ArrayList<>();
         
         // add all exception events
         HibNoteItem note = (HibNoteItem) getItem();

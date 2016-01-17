@@ -21,13 +21,12 @@ import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.Stamp;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
@@ -176,14 +175,12 @@ public class StandardContentService implements ContentService {
         }
 
         HibNoteItem noteItem = (HibNoteItem)item;
-        Stamp stamp = noteItem.getStamp("event");
+        HibEventStamp eventStamp = (HibEventStamp) noteItem.getStamp(HibEventStamp.class);
         
-        if(!(stamp instanceof EventStamp)){
+        if(eventStamp == null){
             return;
         }
-        
-        EventStamp eventStamp = (EventStamp) stamp;
-        
+
         Component masterEvent = eventStamp.getMaster();
         
         checkDatesForComponent(masterEvent);

@@ -111,8 +111,8 @@ public class HibEventStamp extends HibBaseEventStamp implements EventStamp {
      * @param hibItem
      * @return EventStamp from Item
      */
-    public static EventStamp getStamp(HibItem hibItem) {
-        return (EventStamp) hibItem.getStamp(EventStamp.class);
+    public static HibEventStamp getStamp(HibItem hibItem) {
+        return (HibEventStamp) hibItem.getStamp(HibEventStamp.class);
     }
 
     @Override

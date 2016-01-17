@@ -15,17 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.io.Serializable;
-
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
-
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.calendar.util.Dates;
-import org.unitedinternet.cosmo.model.EventStamp;
+
+import java.io.Serializable;
 
 /**
  * Hibernate Interceptor that updates BaseEventStamp timeRangeIndexes.
@@ -101,7 +99,7 @@ public class EventStampInterceptor extends EmptyInterceptor {
             // and use with the startDate of the modification to calculate
             // the endDate of the modification
             HibEventExceptionStamp exceptionStamp = (HibEventExceptionStamp) eventStamp;
-            EventStamp masterStamp = exceptionStamp.getMasterStamp();
+            HibEventStamp masterStamp = exceptionStamp.getMasterStamp();
             
             // Make sure master EventStamp exists
             if(masterStamp!=null) {

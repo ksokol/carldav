@@ -31,10 +31,8 @@ import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
@@ -45,7 +43,8 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.HibStringAttribute;
-import org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute;
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -239,50 +238,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertNotNull(queryAttribute);
         Assert.assertNull(queryAttribute.getValue());
         Assert.assertNull(queryItem.getAttribute("intattribute"));
-    }
-
-    /**
-     * Test timestamp attribute.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testTimestampAttribute() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibContentItem item = generateTestContent();
-        Date dateVal = new Date();
-        HibTimestampAttribute tsAttr =
-            new HibTimestampAttribute(new HibQName("timestampattribute"), dateVal); 
-        item.addAttribute(tsAttr);
-        
-        HibContentItem newItem = contentDao.createContent(root, item);
-
-        
-
-        HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-
-        HibAttribute attr = queryItem.getAttribute(new HibQName("timestampattribute"));
-        Assert.assertNotNull(attr);
-        Assert.assertTrue(attr instanceof HibTimestampAttribute);
-        
-        Date val = (Date) attr.getValue();
-        Assert.assertTrue(dateVal.equals(val));
-        
-        dateVal.setTime(dateVal.getTime() + 101);
-        attr.setValue(dateVal);
-
-        contentDao.updateContent(queryItem);
-
-        
-
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        HibAttribute queryAttr = queryItem.getAttribute(new HibQName("timestampattribute"));
-        Assert.assertNotNull(queryAttr);
-        Assert.assertTrue(queryAttr instanceof HibTimestampAttribute);
-        
-        val = (Date) queryAttr.getValue();
-        Assert.assertTrue(dateVal.equals(val));
     }
 
     /**

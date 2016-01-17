@@ -15,6 +15,10 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate.query;
 
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Period;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,6 +35,7 @@ import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
+import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
@@ -51,6 +56,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     private StandardItemFilterProcessor queryBuilder = new StandardItemFilterProcessor();
 
     private Session session;
+
+    private TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
 
     @BeforeTransaction
     public void onSetUpBeforeTransaction() throws Exception {
@@ -200,10 +207,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibTextAttribute ta4 where pd.collection=:parent and "
-                + "i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and "
-                + "ta4.item=i and ta4.qname=:ta4qname and ta4.value=:param5", query.getQueryString());
+        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd where pd.collection=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and i.body=:param4", query.getQueryString());
         
         filter = new NoteItemFilter();
         filter.setIsModification(true);
@@ -235,8 +239,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Date date2 = new Date(2000);
         filter.setReminderTime(Restrictions.between(date1,date2));
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i, HibTimestampAttribute tsa0 where "
-                + "tsa0.item=i and tsa0.qname=:tsa0qname and tsa0.value between :param1 and :param2", query.getQueryString());
+        Assert.assertEquals("select i from HibNoteItem i where i.remindertime between :param0 and :param1", query.getQueryString());
     
     }
 
@@ -281,4 +284,59 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
                 query.getQueryString());
     }
 
+    /**
+     * Tests event stamp query.
+     * @throws Exception - if something is wrong this exception is thrown.
+     */
+    @Test
+    public void testEventStampQuery() throws Exception {
+        NoteItemFilter filter = new NoteItemFilter();
+        EventStampFilter eventFilter = new EventStampFilter();
+        HibCollectionItem parent = new HibCollectionItem();
+        filter.setParent(parent);
+        filter.setDisplayName(Restrictions.eq("test"));
+        filter.setIcalUid(Restrictions.eq("icaluid"));
+        //filter.setBody("body");
+        filter.getStampFilters().add(eventFilter);
+        Query query =  queryBuilder.buildQuery(session, filter);
+        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
+                + "HibBaseEventStamp es where pd.collection=:parent and "
+                + "i.displayName=:param1 and es.item=i and es.class = 'event' and i.icalUid=:param2", query.getQueryString());
+
+        eventFilter.setIsRecurring(true);
+        query =  queryBuilder.buildQuery(session, filter);
+        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, HibBaseEventStamp "
+                + "es where pd.collection=:parent and i.displayName=:param1 and "
+                + "es.item=i and es.class = 'event' and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
+                + "and i.icalUid=:param2", query.getQueryString());
+    }
+
+    /**
+     * Tests event stamp time range query.
+     * @throws Exception - if something is wrong this exception is thrown.
+     */
+    @Test
+    public void testEventStampTimeRangeQuery() throws Exception {
+        NoteItemFilter filter = new NoteItemFilter();
+        EventStampFilter eventFilter = new EventStampFilter();
+        Period period = new Period(new DateTime("20070101T100000Z"), new DateTime("20070201T100000Z"));
+        eventFilter.setPeriod(period);
+        eventFilter.setTimezone(registry.getTimeZone("America/Chicago"));
+
+        HibCollectionItem parent = new HibCollectionItem();
+        filter.setParent(parent);
+        filter.getStampFilters().add(eventFilter);
+        Query query =  queryBuilder.buildQuery(session, filter);
+        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
+                + "HibBaseEventStamp es where pd.collection=:parent and es.item=i "
+                + "and es.class = 'event' and ( (es.timeRangeIndex.isFloating=true and "
+                + "es.timeRangeIndex.startDate < '20070201T040000' and "
+                + "es.timeRangeIndex.endDate > '20070101T040000') or "
+                + "(es.timeRangeIndex.isFloating=false and "
+                + "es.timeRangeIndex.startDate < '20070201T100000Z' and "
+                + "es.timeRangeIndex.endDate > '20070101T100000Z') or "
+                + "(es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and "
+                + "(es.timeRangeIndex.startDate='20070101T040000' or "
+                + "es.timeRangeIndex.startDate='20070101T100000Z')))", query.getQueryString());
+    }
 }

@@ -860,7 +860,7 @@ public class EntityConverter {
             Trigger trigger = va.getTrigger();
             Date reminderTime = trigger.getDateTime();
             if (reminderTime != null) {
-                note.setReminderTime(reminderTime);
+                note.setRemindertime(reminderTime);
             }
         }
 
@@ -913,7 +913,7 @@ public class EntityConverter {
             Trigger trigger = va.getTrigger();
             Date reminderTime = trigger.getDateTime();
            if (reminderTime != null) {
-                note.setReminderTime(reminderTime);
+                note.setRemindertime(reminderTime);
            }
         }
         

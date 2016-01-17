@@ -1,21 +1,5 @@
 <FindBugsFilter>
     <Match>
-        <Class name="org.unitedinternet.cosmo.acegisecurity.providers.save.ExternalAuthenticationProvider" />
-        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService" />
-        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.cmp.CmpServlet" />
-        <Bug pattern="MSF_MUTABLE_SERVLET_FIELD" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.cmp.CmpServlet" />
-        <Bug pattern="MTIA_SUSPECT_SERVLET_INSTANCE_FIELD" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.filters.RetryFilter" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
@@ -63,22 +47,6 @@
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibItem" />
         <Bug pattern="SE_TRANSIENT_FIELD_NOT_RESTORED" />
     </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibPasswordRecovery"/>
-        <Bug pattern="EI_EXPOSE_REP" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibPasswordRecovery"/>
-        <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute"/>
-        <Bug pattern="EI_EXPOSE_REP" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibTimestampAttribute"/>
-        <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>      
     <Match>
         <Class name="org.unitedinternet.cosmo.util.BufferedContent"/>
         <Bug pattern="RV_RETURN_VALUE_IGNORED_BAD_PRACTICE" />

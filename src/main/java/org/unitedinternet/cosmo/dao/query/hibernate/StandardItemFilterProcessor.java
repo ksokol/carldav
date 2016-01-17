@@ -49,11 +49,12 @@ import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Standard Implementation of <code>ItemFilterProcessor</code>.
@@ -92,7 +93,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         StringBuffer whereBuf = new StringBuffer();
         StringBuffer orderBuf = new StringBuffer();
 
-        HashMap<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new TreeMap<>();
 
         if (filter instanceof NoteItemFilter) {
             handleNoteItemFilter(selectBuf, whereBuf, params, (NoteItemFilter) filter);
@@ -138,7 +139,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     }
 
     private void handleItemFilter(StringBuffer selectBuf,
-                                  StringBuffer whereBuf, HashMap<String, Object> params,
+                                  StringBuffer whereBuf, Map<String, Object> params,
                                   ItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
@@ -169,7 +170,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     }
 
     private void handleAttributeFilters(StringBuffer selectBuf,
-                                        StringBuffer whereBuf, HashMap<String, Object> params,
+                                        StringBuffer whereBuf, Map<String, Object> params,
                                         ItemFilter filter) {
         for (AttributeFilter attrFilter : filter.getAttributeFilters()) {
             if (attrFilter instanceof TextAttributeFilter) {
@@ -181,14 +182,15 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     }
 
     private void handleTextAttributeFilter(StringBuffer selectBuf,
-                                           StringBuffer whereBuf, HashMap<String, Object> params,
+                                           StringBuffer whereBuf, Map<String, Object> params,
                                            TextAttributeFilter filter) {
 
-        String alias = "ta" + params.size();
-        selectBuf.append(", HibTextAttribute " + alias);
-        appendWhere(whereBuf, alias + ".item=i and " + alias + ".qname=:" + alias + "qname");
-        params.put(alias + "qname", filter.getQname());
-        formatExpression(whereBuf, params, alias + ".value", filter.getValue());
+        throw new UnsupportedOperationException();
+//        String alias = "ta" + params.size();
+//        selectBuf.append(", HibTextAttribute " + alias);
+//        appendWhere(whereBuf, alias + ".item=i and " + alias + ".qname=:" + alias + "qname");
+//        params.put(alias + "qname", filter.getQname());
+//        formatExpression(whereBuf, params, alias + ".value", filter.getValue());
     }
 
     private void handleStampFilters(StringBuffer selectBuf,
@@ -222,7 +224,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         appendWhere(whereBuf, toAppend);
     }
 
-    private void handleAttributeFilter(StringBuffer whereBuf, HashMap<String, Object> params,
+    private void handleAttributeFilter(StringBuffer whereBuf, Map<String, Object> params,
                                        AttributeFilter filter) {
 
         String param = "param" + params.size();
@@ -299,7 +301,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     }
 
     private void handleNoteItemFilter(StringBuffer selectBuf,
-                                      StringBuffer whereBuf, HashMap<String, Object> params,
+                                      StringBuffer whereBuf, Map<String, Object> params,
                                       NoteItemFilter filter) {
         selectBuf.append("select i from HibNoteItem i");
         handleItemFilter(selectBuf, whereBuf, params, filter);
@@ -312,20 +314,12 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
         // filter by body
         if (filter.getBody() != null) {
-            String alias = "ta" + params.size();
-            selectBuf.append(", HibTextAttribute " + alias);
-            appendWhere(whereBuf, alias + ".item=i and " + alias + ".qname=:" + alias + "qname");
-            params.put(alias + "qname", HibNoteItem.ATTR_NOTE_BODY);
-            formatExpression(whereBuf, params, alias + ".value", filter.getBody());
+            formatExpression(whereBuf, params, "i.body", filter.getBody());
         }
 
         // filter by reminderTime
         if (filter.getReminderTime() != null) {
-            String alias = "tsa" + params.size();
-            selectBuf.append(", HibTimestampAttribute " + alias);
-            appendWhere(whereBuf, alias + ".item=i and " + alias + ".qname=:" + alias + "qname");
-            params.put(alias + "qname", HibNoteItem.ATTR_REMINDER_TIME);
-            formatExpression(whereBuf, params, alias + ".value", filter.getReminderTime());
+            formatExpression(whereBuf, params, "i.remindertime", filter.getReminderTime());
         }
 
         //filter by master NoteItem
@@ -357,7 +351,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     }
 
     private void handleContentItemFilter(StringBuffer selectBuf,
-                                         StringBuffer whereBuf, HashMap<String, Object> params,
+                                         StringBuffer whereBuf, Map<String, Object> params,
                                          ContentItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
@@ -486,7 +480,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     }
 
     private void formatExpression(StringBuffer whereBuf,
-                                  HashMap<String, Object> params, String propName,
+                                  Map<String, Object> params, String propName,
                                   FilterCriteria fc) {
 
         StringBuffer expBuf = new StringBuffer();

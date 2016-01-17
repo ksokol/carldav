@@ -16,8 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Type;
@@ -41,17 +39,10 @@ import javax.persistence.OneToMany;
 @DiscriminatorValue("note")
 public class HibNoteItem extends HibICalendarItem {
 
-    public static final HibQName ATTR_NOTE_BODY = new HibQName(HibNoteItem.class, "body");
-    
-    public static final HibQName ATTR_REMINDER_TIME = new HibQName(HibNoteItem.class, "reminderTime");
-    
-    private static final long serialVersionUID = -1L;
-    
-    private static final Set<HibNoteItem> EMPTY_MODS = Collections.unmodifiableSet(new HashSet<>());
+    private static final long serialVersionUID = 2L;
 
     @OneToMany(targetEntity=HibNoteItem.class, mappedBy = "modifies", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE} )
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<HibNoteItem> modifications = new HashSet<>();
     
     @ManyToOne(targetEntity=HibNoteItem.class, fetch = FetchType.LAZY)
@@ -65,6 +56,10 @@ public class HibNoteItem extends HibICalendarItem {
     @Column(name= "body", length= 214748364)
     private String body;
 
+    @Column(name = "remindertime")
+    @Type(type="long_timestamp")
+    private Date remindertime;
+
     public String getBody() {
         return body;
     }
@@ -73,11 +68,14 @@ public class HibNoteItem extends HibICalendarItem {
         this.body = body;
     }
 
-    public void setReminderTime(Date reminderTime) {
-        // reminderDate stored as TimestampAttribute on Item
-        HibTimestampAttribute.setValue(this, ATTR_REMINDER_TIME, reminderTime);
+    public void setRemindertime(Date remindertime) {
+        this.remindertime = new Date(remindertime.getTime());
     }
-   
+
+    public Date getRemindertime() {
+        return new Date(remindertime.getTime());
+    }
+
     @Task
     public Calendar getTaskCalendar() {
         // calendar stored as ICalendarAttribute on Item
@@ -92,9 +90,8 @@ public class HibNoteItem extends HibICalendarItem {
         if(hasModifications) {
             return Collections.unmodifiableSet(modifications);
         }
-        else {
-            return EMPTY_MODS;
-        }
+
+        return Collections.emptySet();
     }
 
     public void addModification(HibNoteItem mod) {

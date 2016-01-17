@@ -32,7 +32,6 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
@@ -263,10 +262,10 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
         HibCollectionItem queryCol = (HibCollectionItem) contentDao.findItemByUid(root.getUid());
         Assert.assertEquals(1, queryCol.getStamps().size());
-        Stamp stamp = queryCol.getStamp(HibCalendarCollectionStamp.class);
+        HibCalendarCollectionStamp stamp = (HibCalendarCollectionStamp) queryCol.getStamp(HibCalendarCollectionStamp.class);
         Assert.assertTrue(stamp instanceof HibCalendarCollectionStamp);
         Assert.assertEquals("calendar", stamp.getType());
-        HibCalendarCollectionStamp ccs = (HibCalendarCollectionStamp) stamp;
+        HibCalendarCollectionStamp ccs = stamp;
         Assert.assertEquals("description", ccs.getDescription());
         Assert.assertEquals(testCal.toString(), ccs.getTimezoneCalendar().toString());
         Assert.assertEquals("en", ccs.getLanguage());
@@ -366,7 +365,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
         Assert.assertEquals(1, queryItem.getStamps().size());
 
-        Stamp stamp = queryItem.getStamp(HibEventExceptionStamp.class);
+        HibEventExceptionStamp stamp = (HibEventExceptionStamp) queryItem.getStamp(HibEventExceptionStamp.class);
         Assert.assertNotNull(stamp.getCreationDate());
         Assert.assertNotNull(stamp.getModifiedDate());
         Assert.assertTrue(stamp.getCreationDate().equals(stamp.getModifiedDate()));

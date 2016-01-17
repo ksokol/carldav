@@ -412,7 +412,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         properties.add(new SupportedReportSet(getReportTypes()));
 
         loadLiveProperties(properties);
-        loadDeadProperties(properties);
 
         initialized = true;
     }    
@@ -496,10 +495,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
      */
     protected abstract void removeLiveProperty(DavPropertyName name)
         throws CosmoDavException;
-
-    /**
-     */
-    protected abstract void loadDeadProperties(DavPropertySet properties);
 
     /**
      * Sets a dead DAV property on the resource.

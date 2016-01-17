@@ -42,25 +42,19 @@ import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
 import org.unitedinternet.cosmo.dav.property.LastModified;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.hibernate.User;
-import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;
-import org.w3c.dom.Element;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -369,30 +363,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
      */
     protected abstract Set<String> getDeadPropertyFilter();
 
-    protected void loadDeadProperties(DavPropertySet properties) {
-        for (Iterator<Map.Entry<HibQName, HibAttribute>> i = hibItem.getAttributes()
-                .entrySet().iterator(); i.hasNext();) {
-            Map.Entry<HibQName, HibAttribute> entry = i.next();
-
-            // skip attributes that are not meant to be shown as dead
-            // properties
-            if (getDeadPropertyFilter().contains(entry.getKey().getNamespace())) {
-                continue;
-            }
-
-            DavPropertyName propName = qNameToPropName(entry.getKey());
-
-            // ignore live properties, as they'll be loaded separately
-            if (isLiveProperty(propName)) {
-                continue;
-            }
-
-            // XXX: language
-            Object propValue = entry.getValue().getValue();
-            properties.add(new StandardDavProperty(propName, propValue, false));
-        }
-    }
-
     protected void setDeadProperty(WebDavProperty property)
             throws CosmoDavException {
         if (log.isDebugEnabled()) {
@@ -403,19 +373,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         if (property.getValue() == null) {
             throw new UnprocessableEntityException("Property "
                     + property.getName() + " requires a value");
-        }
-
-        try {
-            HibQName qname = propNameToQName(property.getName());
-            Element value = (Element) property.getValue();
-            HibAttribute attr = hibItem.getAttribute(qname);
-
-            // first check for existing attribute otherwise add
-            if (attr != null) {
-                attr.setValue(value);
-            }
-        } catch (DataSizeException e) {
-            throw new ForbiddenException(e.getMessage());
         }
     }
 
@@ -440,17 +397,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         String uri = ns != null ? ns.getURI() : "";
 
         return new HibQName(uri, name.getName());
-    }
-
-    private DavPropertyName qNameToPropName(HibQName qname) {
-        // no namespace at all
-        if ("".equals(qname.getNamespace())) {
-            return DavPropertyName.create(qname.getLocalName());
-        }
-
-        Namespace ns = Namespace.getNamespace(qname.getNamespace());
-
-        return DavPropertyName.create(qname.getLocalName(), ns);
     }
 
     public static boolean hasNonOK(MultiStatusResponse msr) {

@@ -49,7 +49,6 @@ import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
@@ -327,7 +326,7 @@ public class EntityConverter {
             return null;
         }
 
-        EventStamp event = StampUtils.getEventStamp(note);
+        EventStamp event = (EventStamp) note.getStamp(EventStamp.class);
         if (event!=null) {
             return getCalendarFromEventStamp(event);
         }
@@ -625,7 +624,7 @@ public class EntityConverter {
         
         ComponentList vevents = masterCalendar.getComponents().getComponents(
                 Component.VEVENT);
-        EventStamp eventStamp = StampUtils.getEventStamp(masterNote);
+        EventStamp eventStamp = (EventStamp) masterNote.getStamp(HibEventStamp.class);;
 
         // get list of exceptions (VEVENT with RECURRENCEID)
         for (Iterator<VEvent> i = vevents.iterator(); i.hasNext();) {
@@ -778,7 +777,7 @@ public class EntityConverter {
         noteMod.setName(noteMod.getUid());
         
         // copy VTIMEZONEs to front if present
-        EventStamp es = StampUtils.getEventStamp(masterNote);
+        EventStamp es = (EventStamp) masterNote.getStamp(EventStamp.class);;
         ComponentList vtimezones = es.getEventCalendar().getComponents(Component.VTIMEZONE);
         for(Object obj : vtimezones) {
             VTimeZone vtimezone = (VTimeZone)obj;

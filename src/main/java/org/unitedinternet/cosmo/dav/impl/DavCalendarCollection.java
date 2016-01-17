@@ -38,7 +38,6 @@ import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -282,7 +281,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
 
         HibContentItem content = (HibContentItem) member.getItem();
-        EventStamp event = StampUtils.getEventStamp(content);
+        EventStamp event = (EventStamp) content.getStamp(EventStamp.class);
         EntityConverter converter = new EntityConverter(getIdGenerator());
         Set<HibContentItem> toUpdate = new LinkedHashSet<>();
 

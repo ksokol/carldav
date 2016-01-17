@@ -34,7 +34,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
@@ -200,31 +199,31 @@ public class EntityConverterTest {
         HibICalendarItem item = findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
         
         
         item = findItemByIcalUid(items, "e3i849b29kd3fbp48hmkmgjst0@google.com" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
         
         
         item = findItemByIcalUid(items, "4csitoh29h1arc46bnchg19oc8@google.com" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
         
         
         item = findItemByIcalUid(items, "f920n2rdb0qdd6grkjh4m4jrq0@google.com" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
         
         
         item = findItemByIcalUid(items, "jev0phs8mnfkuvoscrra1fh8j0@google.com" );
         Assert.assertNotNull(item);
         Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(StampUtils.getEventStamp(item));
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
         
         item = findModByRecurrenceId(items, "20071129T203000Z" );
         Assert.assertNotNull(item);

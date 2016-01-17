@@ -4,7 +4,7 @@ import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

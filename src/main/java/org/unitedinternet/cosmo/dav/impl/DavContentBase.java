@@ -29,7 +29,7 @@ import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.TriageStatus;
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 

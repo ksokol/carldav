@@ -48,7 +48,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
 import java.util.ArrayList;

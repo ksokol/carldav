@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo;
 
 import org.junit.Ignore;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 @Ignore
 public class TestHelper {

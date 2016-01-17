@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.Collection;
 import java.util.Iterator;

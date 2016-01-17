@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model;
 
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
+
 import java.math.BigDecimal;
 import java.util.Date;
 

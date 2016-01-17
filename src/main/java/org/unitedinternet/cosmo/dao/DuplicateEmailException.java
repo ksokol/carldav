@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 /**
  * An exception indicating that an existing user is already using the

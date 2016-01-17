@@ -21,7 +21,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
-import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
 import java.util.Collections;

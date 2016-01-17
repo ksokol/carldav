@@ -32,7 +32,7 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;

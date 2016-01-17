@@ -33,7 +33,6 @@ import net.fortuna.ical4j.model.property.Status;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
-import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 

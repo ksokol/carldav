@@ -46,7 +46,7 @@ import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.HibAttribute;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibQName;

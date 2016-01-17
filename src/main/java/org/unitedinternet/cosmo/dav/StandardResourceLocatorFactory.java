@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.net.MalformedURLException;
 import java.net.URI;

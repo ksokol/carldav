@@ -5,7 +5,7 @@ import org.junit.Test
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.unitedinternet.cosmo.dao.UserDao
-import org.unitedinternet.cosmo.model.User
+import org.unitedinternet.cosmo.model.hibernate.User
 
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat

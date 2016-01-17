@@ -8,9 +8,8 @@ import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.authentication.InsufficientAuthenticationException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.FilterInvocation
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails
-import org.unitedinternet.cosmo.model.User
+import org.unitedinternet.cosmo.model.hibernate.User
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is

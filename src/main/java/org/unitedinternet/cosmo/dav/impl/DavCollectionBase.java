@@ -42,7 +42,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
 

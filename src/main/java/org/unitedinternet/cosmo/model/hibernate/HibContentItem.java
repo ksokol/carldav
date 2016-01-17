@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Target;
-import org.unitedinternet.cosmo.model.TriageStatus;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;

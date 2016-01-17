@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 
 import java.util.Set;

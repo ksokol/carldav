@@ -22,7 +22,7 @@ import org.hibernate.Session;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.HashSet;
 import java.util.Iterator;

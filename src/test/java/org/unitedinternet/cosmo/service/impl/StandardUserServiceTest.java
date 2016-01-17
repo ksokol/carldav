@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl;
-import org.unitedinternet.cosmo.model.User;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.Set;
 

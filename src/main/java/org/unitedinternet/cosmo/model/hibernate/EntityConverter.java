@@ -777,7 +777,7 @@ public class EntityConverter {
         noteMod.setName(noteMod.getUid());
         
         // copy VTIMEZONEs to front if present
-        EventStamp es = (EventStamp) masterNote.getStamp(EventStamp.class);
+        HibEventStamp es = (HibEventStamp) masterNote.getStamp(HibEventStamp.class);
         ComponentList vtimezones = es.getEventCalendar().getComponents(Component.VTIMEZONE);
         for(Object obj : vtimezones) {
             VTimeZone vtimezone = (VTimeZone)obj;

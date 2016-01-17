@@ -8,8 +8,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.model.EventStamp;
-import org.unitedinternet.cosmo.model.StampUtils;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -37,17 +35,14 @@ public class DavJournal extends DavCalendarResource {
         return new EntityConverter(getIdGenerator()).convertNote(note);
     }
 
-    public EventStamp getEventStamp() {
-        return StampUtils.getEventStamp(getItem());
-    }
-
     public void setCalendar(Calendar cal) throws CosmoDavException {
         ComponentList vjournals = cal.getComponents(Component.VJOURNAL);
         if (vjournals.isEmpty()) {
             throw new UnprocessableEntityException("VCALENDAR does not contain VJOURNAL");
         }
 
-        getEventStamp().setEventCalendar(cal);
+        final HibJournalStamp stamp = (HibJournalStamp) getItem().getStamp(HibJournalStamp.class);
+        stamp.setEventCalendar(cal);
     }
 
     @Override

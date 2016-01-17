@@ -17,12 +17,8 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Target;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Index;
@@ -37,12 +33,7 @@ import javax.persistence.UniqueConstraint;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 // Define indexes on discriminator and key fields
 @Table(
-        name="attribute",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames={"itemid", "namespace", "localname"})},
-        indexes={@Index(name="idx_attrtype", columnList="attributetype"),
-                 @Index(name="idx_attrname", columnList="localname"),
-                 @Index(name="idx_attrns", columnList="namespace")})
+        name="attribute")
 @DiscriminatorColumn(
         name="attributetype",
         discriminatorType=DiscriminatorType.STRING,
@@ -51,59 +42,10 @@ public abstract class HibAttribute extends HibAuditableObject {
 
     private static final long serialVersionUID = 1L;
 
-    // Fields
-    @Embedded
-    @Target(HibQName.class)
-    @AttributeOverrides( {
-            @AttributeOverride(name="namespace", column = @Column(name="namespace", nullable = false, length=255) ),
-            @AttributeOverride(name="localName", column = @Column(name="localname", nullable = false, length=255) )
-    } )
-    private HibQName qname;
+    @Target(String.class)
+    private String qname;
     
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;
-
-    public abstract Object getValue();
-
-    public abstract void setValue(Object value);
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getQName()
-     */
-    public HibQName getQName() {
-        return qname;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#setQName(org.unitedinternet.cosmo.model.QName)
-     */
-    public void setQName(HibQName qname) {
-        this.qname = qname;
-    }
-        
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getName()
-     */
-    public String getName() {
-        if(qname==null) {
-            return null;
-        }
-        
-        return qname.getLocalName();
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#getItem()
-     */
-    public HibItem getItem() {
-        return item;
-    }
-   
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Attribute#setItem(org.unitedinternet.cosmo.model.Item)
-     */
-    public void setItem(HibItem hibItem) {
-        this.item = hibItem;
-    }
 }

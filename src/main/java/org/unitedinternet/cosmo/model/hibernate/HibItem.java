@@ -88,9 +88,9 @@ public abstract class HibItem extends HibAuditableObject {
     private Integer version;
 
     @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @MapKeyClass(HibQName.class)
+    @MapKeyClass(String.class)
     @BatchSize(size=50)
-    private Map<HibQName, HibAttribute> attributes = new HashMap<>();
+    private Map<String, HibAttribute> attributes = new HashMap<>();
 
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @BatchSize(size=50)

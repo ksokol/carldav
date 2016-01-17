@@ -754,8 +754,8 @@ public class EntityConverter {
         HibNoteItem noteMod = new HibNoteItem();
         Calendar exceptionCal = null;
         // a note modification should inherit the calendar product info as its master component.
-        if(masterNote.getStamp(EventStamp.class) != null) {
-            EventStamp masterStamp = (EventStamp) masterNote.getStamp(EventStamp.class);
+        if(masterNote.getStamp(HibEventStamp.class) != null) {
+            HibEventStamp masterStamp = (HibEventStamp) masterNote.getStamp(HibEventStamp.class);
             Calendar masterCal = masterStamp.getEventCalendar();
             if(masterCal != null && masterCal.getProductId() != null) {
                 exceptionCal = new Calendar();

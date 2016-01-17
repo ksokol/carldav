@@ -260,7 +260,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         queryItem.setName("test2");
         queryItem.setDisplayName("this is a test item2");
-        queryItem.removeAttribute("customattribute");
+
         queryItem.setContentLanguage("es");
         queryItem.setContent(helper.getBytes("testdata/testdata2.txt"));
 

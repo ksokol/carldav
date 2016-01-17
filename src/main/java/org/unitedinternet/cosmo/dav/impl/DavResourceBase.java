@@ -450,10 +450,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         if (isLiveProperty(name)) {
             removeLiveProperty(name);
         }
-        else {         
-            removeDeadProperty(name);
-        }
-        
+
         properties.remove(name);
     }
 
@@ -507,14 +504,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
     protected abstract void setDeadProperty(WebDavProperty property)
         throws CosmoDavException;
 
-    /**
-     * Removes a dead DAV property from the resource.
-     *
-     * @param name the name of the property to remove
-     */
-    protected abstract void removeDeadProperty(DavPropertyName name)
-        throws CosmoDavException;
-    
     public OptionsResponse getOptionResponse(OptionsInfo optionsInfo){
     	return null;
     }

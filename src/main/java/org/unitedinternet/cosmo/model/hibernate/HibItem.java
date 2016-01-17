@@ -166,16 +166,6 @@ public abstract class HibItem extends HibAuditableObject {
         return null;
     }
 
-    public void removeAttribute(String name) {
-        removeAttribute(new HibQName(name));
-    }
-
-    public void removeAttribute(HibQName qname) {
-        if(attributes.containsKey(qname)) {
-            attributes.remove(qname);
-        }
-    }
-
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getClientCreationDate()
      */

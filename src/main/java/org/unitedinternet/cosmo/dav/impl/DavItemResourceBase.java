@@ -27,7 +27,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -45,7 +44,6 @@ import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;
@@ -376,28 +374,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         }
     }
 
-    protected void removeDeadProperty(DavPropertyName name)
-            throws CosmoDavException {
-        if (log.isDebugEnabled()) {
-            log.debug("removing property " + name + " on " + getResourcePath());
-        }
-
-        hibItem.removeAttribute(propNameToQName(name));
-    }
-
     abstract protected void updateItem() throws CosmoDavException;
-
-    private HibQName propNameToQName(DavPropertyName name) {
-        if (name == null) {
-            final String msg = "name cannot be null";
-            throw new IllegalArgumentException(msg);
-        }
-
-        Namespace ns = name.getNamespace();
-        String uri = ns != null ? ns.getURI() : "";
-
-        return new HibQName(uri, name.getName());
-    }
 
     public static boolean hasNonOK(MultiStatusResponse msr) {
         if (msr == null || msr.getStatus() == null) {

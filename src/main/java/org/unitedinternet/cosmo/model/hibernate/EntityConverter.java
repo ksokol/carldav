@@ -236,8 +236,7 @@ public class EntityConverter {
     public Calendar convertCollection(HibCollectionItem collection) {
         
         // verify collection is a calendar
-        HibCalendarCollectionStamp ccs = StampUtils
-                .getCalendarCollectionStamp(collection);
+        HibCalendarCollectionStamp ccs = (HibCalendarCollectionStamp) collection.getStamp(HibCalendarCollectionStamp.class);
 
         if (ccs == null) {
             return null;

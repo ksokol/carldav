@@ -132,7 +132,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     }
 
     public HibCalendarCollectionStamp getCalendarCollectionStamp() {
-        return StampUtils.getCalendarCollectionStamp(getItem());
+        return (HibCalendarCollectionStamp) getItem().getStamp(HibCalendarCollectionStamp.class);
     }
 
 

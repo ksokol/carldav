@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
@@ -40,14 +39,5 @@ public class StampUtils {
      */
     public static HibEventExceptionStamp getEventExceptionStamp(HibItem hibItem) {
         return (HibEventExceptionStamp) hibItem.getStamp(HibEventExceptionStamp.class);
-    }
-    
-    /**
-     * Return CalendarCollectionStamp from Item
-     * @param hibItem
-     * @return CalendarCollectionStamp from Item
-     */
-    public static HibCalendarCollectionStamp getCalendarCollectionStamp(HibItem hibItem) {
-        return (HibCalendarCollectionStamp) hibItem.getStamp(HibCalendarCollectionStamp.class);
     }
 }

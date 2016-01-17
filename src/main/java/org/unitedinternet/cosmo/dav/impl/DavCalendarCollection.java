@@ -36,12 +36,12 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.DataSizeException;
-import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -281,7 +281,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
 
         HibContentItem content = (HibContentItem) member.getItem();
-        EventStamp event = (EventStamp) content.getStamp(EventStamp.class);
+        HibEventStamp event = (HibEventStamp) content.getStamp(HibEventStamp.class);
         EntityConverter converter = new EntityConverter(getIdGenerator());
         Set<HibContentItem> toUpdate = new LinkedHashSet<>();
 

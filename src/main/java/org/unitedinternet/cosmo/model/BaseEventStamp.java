@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model;
 
-import java.util.List;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
@@ -27,17 +25,22 @@ import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Trigger;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
+
+import java.util.List;
 
 /**
  * Represents a stamp that contains event specific information.
  */
-public interface BaseEventStamp extends Stamp {
+public interface BaseEventStamp extends AuditableObject {
 
     /**
      * Get the underlying VEvent
      * @return VEvent
      */
     public VEvent getEvent();
+
+    HibItem getItem();
     
     /**
      * Get the Calendar that contains the VEvent

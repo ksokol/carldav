@@ -15,12 +15,9 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Stamp;
 
 import java.util.Date;
 
@@ -36,73 +33,46 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-/**
- * Hibernate persistent Stamp.
- */
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "stamptype", 
-                     discriminatorType = DiscriminatorType.STRING, length = 16)
+@DiscriminatorColumn(name = "stamptype", discriminatorType = DiscriminatorType.STRING, length = 16)
 // Unique constraint for stamptype and itemid to prevent items
 // having more than one of the same stamp
 @Table(name = "stamp",
         uniqueConstraints = {@UniqueConstraint(columnNames = { "itemid", "stamptype" })} ,
         indexes={@Index(name = "idx_stamptype",columnList = "stamptype" )}
 )
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public abstract class HibStamp extends HibAuditableObject implements Stamp {
+public abstract class HibStamp extends HibAuditableObject {
 
-    private static final long serialVersionUID = 3717468937415626702L;
-    // Fields
+    private static final long serialVersionUID = 1L;
+
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Stamp#getItem()
-     */
+    public abstract String getType();
+
     public HibItem getItem() {
         return item;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Stamp#setItem(org.unitedinternet.cosmo.model.Item)
-     */
     public void setItem(HibItem hibItem) {
         this.item = hibItem;
     }
 
-    
-    /**
-     * Convenience method for retrieving an attribute on the underlying
-     * item.
-     * @param qname QName of attribute
-     * @return attribute value
-     */
     protected Attribute getAttribute(HibQName qname) {
         return getItem().getAttribute(qname);
     }
-    
-    /**
-     * Convenience method for adding an attribute to the underlying item
-     * @param attribute attribute to add
-     */
+ 
     protected void addAttribute(Attribute attribute) {
         getItem().addAttribute(attribute);
     }
-    
-    /**
-     * Convenience method for removing an attribute to the underlying item
-     * @param qname QName of attribute to remove
-     */
+
     protected void removeAttribute(HibQName qname) {
         getItem().removeAttribute(qname);
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.hibernate.HibAuditableObject#updateTimestamp()
-     */
+
     public void updateTimestamp() {
         setModifiedDate(new Date());
     }

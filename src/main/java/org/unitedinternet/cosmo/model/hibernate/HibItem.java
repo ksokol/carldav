@@ -166,13 +166,6 @@ public abstract class HibItem extends HibAuditableObject {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getAttributes()
-     */
-    public Map<HibQName, HibAttribute> getAttributes() {
-        return Collections.unmodifiableMap(attributes);
-    }
-
     public void removeAttribute(String name) {
         removeAttribute(new HibQName(name));
     }
@@ -181,14 +174,6 @@ public abstract class HibItem extends HibAuditableObject {
         if(attributes.containsKey(qname)) {
             attributes.remove(qname);
         }
-    }
-
-    public Object getAttributeValue(HibQName qname) {
-        HibAttribute attr = attributes.get(qname);
-        if (attr == null) {
-            return attr;
-        }
-        return attr.getValue();
     }
 
     /* (non-Javadoc)

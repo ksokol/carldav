@@ -34,13 +34,13 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -273,7 +273,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             LOG.info("initialize Item : "+ hibItem.getUid());
             // initialize all the proxied-associations, to prevent
             // lazy-loading of this data
-            Hibernate.initialize(hibItem.getAttributes());
             Hibernate.initialize(hibItem.getStamps());
         } catch (HibernateException e) {
             getSession().clear();

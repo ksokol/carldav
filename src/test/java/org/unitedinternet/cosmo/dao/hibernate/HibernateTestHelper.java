@@ -23,7 +23,6 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -54,17 +53,6 @@ public class HibernateTestHelper {
         Assert.assertEquals(hibItem1.getDisplayName(), hibItem2.getDisplayName());
         Assert.assertEquals(getHibItem(hibItem1).getId(), getHibItem(hibItem2).getId());
         Assert.assertEquals(hibItem1.getUid(), hibItem2.getUid());
-        Assert.assertEquals(hibItem1.getAttributes().size(), hibItem2.getAttributes()
-                .size());
-        for (@SuppressWarnings("rawtypes")
-        Iterator it = hibItem1.getAttributes().keySet().iterator(); it
-                .hasNext();) {
-            HibQName key = (HibQName) it.next();
-            Object val1 = hibItem1.getAttributeValue(key);
-            Object val2 = hibItem2.getAttributeValue(key);
-            verifyAttributeValue(val1, val2);
-        }
-
     }
 
     /**

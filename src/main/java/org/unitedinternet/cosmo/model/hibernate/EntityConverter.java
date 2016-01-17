@@ -48,7 +48,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.BaseEventStamp;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
@@ -326,7 +325,7 @@ public class EntityConverter {
             return null;
         }
 
-        BaseEventStamp event = (BaseEventStamp) note.getStamp(BaseEventStamp.class);
+        HibBaseEventStamp event = (HibBaseEventStamp) note.getStamp(HibBaseEventStamp.class);
         if (event!=null) {
             return getCalendarFromEventStamp(event);
         }
@@ -364,7 +363,7 @@ public class EntityConverter {
      * @param stamp The event stamp.
      * @return The calendar.
      */
-    protected Calendar getCalendarFromEventStamp(BaseEventStamp stamp) {
+    protected Calendar getCalendarFromEventStamp(HibBaseEventStamp stamp) {
         Calendar masterCal = CalendarUtils.copyCalendar(stamp.getEventCalendar());
         if (masterCal == null) {
             return null;

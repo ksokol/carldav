@@ -16,8 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
@@ -61,7 +59,6 @@ import javax.validation.constraints.NotNull;
         name="itemtype",
         discriminatorType=DiscriminatorType.STRING,
         length=16)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public abstract class HibItem extends HibAuditableObject {
 
     @Column(name = "uid", nullable = false, length=255)
@@ -176,79 +173,22 @@ public abstract class HibItem extends HibAuditableObject {
         return Collections.unmodifiableMap(attributes);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#addAttribute(org.unitedinternet.cosmo.model.Attribute)
-     */
-    public void addAttribute(HibAttribute attribute) {
-        if (attribute == null) {
-            throw new IllegalArgumentException("attribute cannot be null");
-        }
-
-        attribute.setItem(this);
-        attributes.put(attribute.getQName(), attribute);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#removeAttribute(java.lang.String)
-     */
     public void removeAttribute(String name) {
         removeAttribute(new HibQName(name));
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#removeAttribute(org.unitedinternet.cosmo.model.QName)
-     */
     public void removeAttribute(HibQName qname) {
         if(attributes.containsKey(qname)) {
             attributes.remove(qname);
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getAttribute(java.lang.String)
-     */
-    public HibAttribute getAttribute(String name) {
-        return getAttribute(new HibQName(name));
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getAttribute(org.unitedinternet.cosmo.model.QName)
-     */
-    public HibAttribute getAttribute(HibQName qname) {
-        return attributes.get(qname);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getAttributeValue(org.unitedinternet.cosmo.model.QName)
-     */
     public Object getAttributeValue(HibQName qname) {
         HibAttribute attr = attributes.get(qname);
         if (attr == null) {
             return attr;
         }
         return attr.getValue();
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setAttribute(java.lang.String, java.lang.Object)
-     */
-    public void setAttribute(String name, Object value) {
-        setAttribute(new HibQName(name),value);
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setAttribute(org.unitedinternet.cosmo.model.QName, java.lang.Object)
-     */
-    @SuppressWarnings("unchecked")
-    public void setAttribute(HibQName key, Object value) {
-        HibAttribute attr = (HibAttribute) attributes.get(key);
-
-        if(attr!=null) {
-            attr.setValue(value);
-        }
-        else {
-            throw new IllegalArgumentException("attribute " + key + " not found");
-        }
     }
 
     /* (non-Javadoc)

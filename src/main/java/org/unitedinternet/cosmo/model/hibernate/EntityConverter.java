@@ -131,7 +131,7 @@ public class EntityConverter {
      * @return set note item.
      */
     public Set<HibNoteItem> convertEventCalendar(HibNoteItem note, Calendar calendar) {
-        EventStamp eventStamp = (EventStamp) note.getStamp(EventStamp.class);
+        HibEventStamp eventStamp = (HibEventStamp) note.getStamp(HibEventStamp.class);
         
         if (eventStamp == null) {
             eventStamp = new HibEventStamp(note);
@@ -624,7 +624,7 @@ public class EntityConverter {
         
         ComponentList vevents = masterCalendar.getComponents().getComponents(
                 Component.VEVENT);
-        EventStamp eventStamp = (EventStamp) masterNote.getStamp(HibEventStamp.class);;
+        HibEventStamp eventStamp = (HibEventStamp) masterNote.getStamp(HibEventStamp.class);
 
         // get list of exceptions (VEVENT with RECURRENCEID)
         for (Iterator<VEvent> i = vevents.iterator(); i.hasNext();) {
@@ -777,7 +777,7 @@ public class EntityConverter {
         noteMod.setName(noteMod.getUid());
         
         // copy VTIMEZONEs to front if present
-        EventStamp es = (EventStamp) masterNote.getStamp(EventStamp.class);;
+        EventStamp es = (EventStamp) masterNote.getStamp(EventStamp.class);
         ComponentList vtimezones = es.getEventCalendar().getComponents(Component.VTIMEZONE);
         for(Object obj : vtimezones) {
             VTimeZone vtimezone = (VTimeZone)obj;

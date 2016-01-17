@@ -22,7 +22,6 @@ import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
 import org.unitedinternet.cosmo.model.Attribute;
-import org.unitedinternet.cosmo.model.Stamp;
 import org.unitedinternet.cosmo.model.User;
 
 import java.nio.charset.Charset;
@@ -100,7 +99,7 @@ public abstract class HibItem extends HibAuditableObject {
 
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @BatchSize(size=50)
-    private Set<Stamp> stamps = new HashSet<>();
+    private Set<HibStamp> stamps = new HashSet<>();
 
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     private Set<HibCollectionItemDetails> parentDetails = new HashSet<>();
@@ -116,14 +115,14 @@ public abstract class HibItem extends HibAuditableObject {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getStamps()
      */
-    public Set<Stamp> getStamps() {
+    public Set<HibStamp> getStamps() {
         return Collections.unmodifiableSet(stamps);
     }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#addStamp(org.unitedinternet.cosmo.model.Stamp)
      */
-    public void addStamp(Stamp stamp) {
+    public void addStamp(HibStamp stamp) {
         if (stamp == null) {
             throw new IllegalArgumentException("stamp cannot be null");
         }
@@ -135,7 +134,7 @@ public abstract class HibItem extends HibAuditableObject {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#removeStamp(org.unitedinternet.cosmo.model.Stamp)
      */
-    public void removeStamp(Stamp stamp) {
+    public void removeStamp(HibStamp stamp) {
         // only remove stamps that belong to item
         if(!stamps.contains(stamp)) {
             return;
@@ -147,8 +146,8 @@ public abstract class HibItem extends HibAuditableObject {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getStamp(java.lang.String)
      */
-    public Stamp getStamp(String type) {
-        for(Stamp stamp : stamps) {
+    public HibStamp getStamp(String type) {
+        for(HibStamp stamp : stamps) {
             // only return stamp if it matches class and is active
             if(stamp.getType().equals(type)) {
                 return stamp;
@@ -161,8 +160,8 @@ public abstract class HibItem extends HibAuditableObject {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.Item#getStamp(java.lang.Class)
      */
-    public Stamp getStamp(Class clazz) {
-        for(Stamp stamp : stamps) {
+    public HibStamp getStamp(Class clazz) {
+        for(HibStamp stamp : stamps) {
             // only return stamp if it is an instance of the specified class
             if(clazz.isInstance(stamp)) {
                 return stamp;

@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,13 +91,13 @@ public abstract class HibItem extends HibAuditableObject {
     @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     @MapKeyClass(String.class)
     @BatchSize(size=50)
-    private Map<String, HibAttribute> attributes = new HashMap<>();
+    private List<HibAttribute> attributes;
 
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @BatchSize(size=50)
     private Set<HibStamp> stamps = new HashSet<>();
 
     @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+    @BatchSize(size=50)
     private Set<HibCollectionItemDetails> parentDetails = new HashSet<>();
 
     private transient Set<HibCollectionItem> parents = null;
@@ -314,12 +315,12 @@ public abstract class HibItem extends HibAuditableObject {
                 return cid;
             }
         }
-        
+
         return null;
     }
 
     /**
-     * Item uid determines equality 
+     * Item uid determines equality
      */
     @Override
     public boolean equals(Object obj) {

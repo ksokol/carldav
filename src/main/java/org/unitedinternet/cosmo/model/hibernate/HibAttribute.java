@@ -15,23 +15,18 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.Target;
-
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-// Define indexes on discriminator and key fields
 @Table(
         name="attribute")
 @DiscriminatorColumn(
@@ -40,11 +35,8 @@ import javax.persistence.UniqueConstraint;
         length=16)
 public abstract class HibAttribute extends HibAuditableObject {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
-    @Target(String.class)
-    private String qname;
-    
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;

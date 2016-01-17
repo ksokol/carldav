@@ -15,17 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Type;
+import org.unitedinternet.cosmo.util.BufferedContent;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.util.BufferedContent;
 
 
 
@@ -46,14 +44,6 @@ public class HibContentData extends BaseModelObject {
     @Column(name = "content", length=102400000)
     @Type(type="bufferedcontent_blob")
     private BufferedContent content = null;
-   
-    /**
-     */
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this,
-                ToStringStyle.MULTI_LINE_STYLE);
-    }
-
 
     /**
      * Get an InputStream to the content data.  Repeated

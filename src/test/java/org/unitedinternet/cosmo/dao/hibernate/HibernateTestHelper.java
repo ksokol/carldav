@@ -56,70 +56,6 @@ public class HibernateTestHelper {
     }
 
     /**
-     * Verify map.
-     * @param val1 Val1.
-     * @param val2 Val2.
-     */
-    public void verifyMap(@SuppressWarnings("rawtypes") Map val1, @SuppressWarnings("rawtypes") Map val2) {
-        Assert.assertEquals(val1.size(), val2.size());
-        for (@SuppressWarnings("rawtypes")
-        Iterator keys = val1.keySet().iterator(); keys.hasNext();) {
-            String key = (String) keys.next();
-            Assert.assertEquals(val1.get(key), val2.get(key));
-        }
-    }
-
-    /**
-     * Verify set.
-     * @param val1 Val1.
-     * @param val2 Val2.
-     */
-    public void verifySet(@SuppressWarnings("rawtypes") Set val1, @SuppressWarnings("rawtypes") Set val2) {
-        Assert.assertEquals(val1.size(), val2.size());
-        for (@SuppressWarnings("rawtypes")
-        Iterator elems = val1.iterator(); elems.hasNext();) {
-            Assert.assertTrue(val2.contains(elems.next()));
-        }
-    }
-
-    /**
-     * verify date.
-     * @param val1 Val1.
-     * @param val2 Val2.
-     */
-    public void verifyDate(Date val1, Date val2) {
-        Assert.assertEquals(val1.getTime(), val2.getTime());
-    }
-
-    /**
-     * Verify attribute value.
-     * @param val1 Val1.
-     * @param val2 Val2.
-     * @throws Exception - if something is wrong this exception is thrown. 
-     */
-    @SuppressWarnings("rawtypes")
-    public void verifyAttributeValue(Object val1, Object val2) throws Exception {
-        if (val1 instanceof String) {
-            Assert.assertEquals(val1, val2);
-        }
-        else if (val1 instanceof byte[]) {
-            verifyBytes((byte[]) val1, (byte[]) val2);
-        }
-        else if (val1 instanceof Set) {
-            verifySet((Set) val1, (Set) val2);
-        }
-        else if (val1 instanceof Map) {
-            verifyMap((Map) val1, (Map) val2);
-        }
-        else if (val1 instanceof Date) {
-            verifyDate((Date) val1, (Date) val2);
-        }
-        else if (!val1.equals(val2)) {
-            Assert.fail("attributes not equal");
-        }
-    }
-
-    /**
      * Gets bytes.
      * @param name The name.
      * @return byte[].
@@ -188,17 +124,6 @@ public class HibernateTestHelper {
     }
 
     /**
-     * Verify bytes.
-     * @param content1 Content1.
-     * @param content2 Content2
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public void verifyBytes(byte[] content1, byte[] content2) throws Exception {
-        ByteArrayInputStream is = new ByteArrayInputStream(content1);
-        verifyInputStream(is, content2);
-    }
-
-    /**
      * Gets user.
      * @param userDao UserDao.
      * @param contentDao ContentDao.
@@ -228,6 +153,6 @@ public class HibernateTestHelper {
      * @return HibItem.
      */
     private HibItem getHibItem(HibItem hibItem) {
-        return (HibItem) hibItem;
+        return hibItem;
     }
 }

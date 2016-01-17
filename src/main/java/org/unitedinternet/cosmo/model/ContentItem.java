@@ -21,44 +21,12 @@ package org.unitedinternet.cosmo.model;
  */
 public interface ContentItem extends Item{
 
-    public static class Action {
-
-        public static final int EDITED = 100;
-        public static final int QUEUED = 200;
-        public static final int SENT = 300;
-        public static final int UPDATED = 400;
-        public static final int CREATED = 500;
-
-        public static boolean validate(Integer action) {
-            if (action == null) {
-                return false;
-            }
-            return (action.intValue() == EDITED ||
-                    action.intValue() == QUEUED ||
-                    action.intValue() == SENT ||
-                    action.intValue() == UPDATED ||
-                    action.intValue() == CREATED);
-        }
-    }
-    
     public String getLastModifiedBy();
 
     public void setLastModifiedBy(String lastModifiedBy);
 
-    public Integer getLastModification();
-
-    public void setLastModification(Integer lastModification);
-
     public TriageStatus getTriageStatus();
 
     public void setTriageStatus(TriageStatus ts);
-
-    public Boolean getSent();
-
-    public void setSent(Boolean sent);
-
-    public Boolean getNeedsReply();
-
-    public void setNeedsReply(Boolean needsReply);
 
 }

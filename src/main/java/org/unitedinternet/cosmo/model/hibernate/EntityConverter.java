@@ -818,7 +818,6 @@ public class EntityConverter {
         
         noteMod.setClientModifiedDate(new Date());
         noteMod.setLastModifiedBy(noteMod.getModifies().getLastModifiedBy());
-        noteMod.setLastModification(ContentItem.Action.EDITED);
         
         setCalendarAttributes(noteMod, event);
     }
@@ -835,10 +834,6 @@ public class EntityConverter {
         item.setClientCreationDate(new Date());
         item.setClientModifiedDate(item.getClientCreationDate());
         item.setTriageStatus(ts);
-        item.setLastModification(ContentItem.Action.CREATED);
-        
-        item.setSent(Boolean.FALSE);
-        item.setNeedsReply(Boolean.FALSE);
     }    
 
     /**

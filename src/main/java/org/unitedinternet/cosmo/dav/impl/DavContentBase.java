@@ -119,11 +119,6 @@ public abstract class DavContentBase extends DavItemResourceBase
 
         if (content.getUid() == null) {
             content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
-            content.setLastModification(ContentItem.Action.CREATED);
-            content.setSent(Boolean.FALSE);
-            content.setNeedsReply(Boolean.FALSE);
-        } else {
-            content.setLastModification(ContentItem.Action.EDITED);
         }
     }
 

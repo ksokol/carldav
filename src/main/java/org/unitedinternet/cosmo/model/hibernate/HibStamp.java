@@ -60,10 +60,6 @@ public abstract class HibStamp extends HibAuditableObject {
         this.item = hibItem;
     }
 
-    protected HibAttribute getAttribute(HibQName qname) {
-        return getItem().getAttribute(qname);
-    }
-
     public void updateTimestamp() {
         setModifiedDate(new Date());
     }

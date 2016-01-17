@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Target;
-import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.TriageStatus;
 
 import javax.persistence.Column;
@@ -26,7 +25,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("content")
-public abstract class HibContentItem extends HibItem implements ContentItem {
+public abstract class HibContentItem extends HibItem {
 
     private static final long serialVersionUID = 1L;
 

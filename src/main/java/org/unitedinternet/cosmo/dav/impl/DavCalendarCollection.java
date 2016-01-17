@@ -36,7 +36,7 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
-import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
@@ -100,7 +100,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             new HashSet<>();
 
         HibCollectionItem collection = (HibCollectionItem) getItem();
-        for (ContentItem memberItem :
+        for (HibContentItem memberItem :
              getCalendarQueryProcesor().filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberItem);
             if(resource!=null) {
@@ -280,10 +280,10 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     private void saveEvent(DavItemContent member)
         throws CosmoDavException {
 
-        ContentItem content = (ContentItem) member.getItem();
+        HibContentItem content = (HibContentItem) member.getItem();
         EventStamp event = StampUtils.getEventStamp(content);
         EntityConverter converter = new EntityConverter(getIdGenerator());
-        Set<ContentItem> toUpdate = new LinkedHashSet<>();
+        Set<HibContentItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model
@@ -325,10 +325,10 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     }
 
     private void saveJournal(DavItemContent member) throws CosmoDavException {
-        ContentItem content = (ContentItem) member.getItem();
+        HibContentItem content = (HibContentItem) member.getItem();
         EventStamp event = StampUtils.getEventStamp(content);
         EntityConverter converter = new EntityConverter(getIdGenerator());
-        Set<ContentItem> toUpdate = new LinkedHashSet<>();
+        Set<HibContentItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model

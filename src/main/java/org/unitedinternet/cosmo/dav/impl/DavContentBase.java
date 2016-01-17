@@ -28,7 +28,7 @@ import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
-import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -52,7 +52,7 @@ import javax.xml.namespace.QName;
  *
  * @see DavContent
  * @see DavResourceBase
- * @see ContentItem
+ * @see HibContentItem
  */
 public abstract class DavContentBase extends DavItemResourceBase
     implements DavItemContent {
@@ -66,7 +66,7 @@ public abstract class DavContentBase extends DavItemResourceBase
     }
 
     /** */
-    public DavContentBase(ContentItem item,
+    public DavContentBase(HibContentItem item,
                           DavResourceLocator locator,
                           DavResourceFactory factory,
                           IdGenerator idGenerator)
@@ -115,7 +115,7 @@ public abstract class DavContentBase extends DavItemResourceBase
         throws CosmoDavException {
         super.populateItem(inputContext);
 
-        ContentItem content = (ContentItem) getItem();
+        HibContentItem content = (HibContentItem) getItem();
 
         if (content.getUid() == null) {
             content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
@@ -127,7 +127,7 @@ public abstract class DavContentBase extends DavItemResourceBase
         throws CosmoDavException {
         super.setLiveProperty(property, create);
 
-        ContentItem content = (ContentItem) getItem();
+        HibContentItem content = (HibContentItem) getItem();
         if (content == null) {
             return;
         }
@@ -145,7 +145,7 @@ public abstract class DavContentBase extends DavItemResourceBase
         throws CosmoDavException {
         super.removeLiveProperty(name);
 
-        ContentItem content = (ContentItem) getItem();
+        HibContentItem content = (HibContentItem) getItem();
         if (content == null) {
             return;
         }
@@ -164,7 +164,7 @@ public abstract class DavContentBase extends DavItemResourceBase
     @Override
     protected void updateItem() throws CosmoDavException {
         try {
-            getContentService().updateContent((ContentItem) getItem());
+            getContentService().updateContent((HibContentItem) getItem());
         } catch (CollectionLockedException e) {
             throw new LockedException();
         }

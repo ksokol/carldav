@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.User;
 
 import java.util.Set;
@@ -63,7 +63,7 @@ public interface ContentDao extends ItemDao {
      *            content to create
      * @return newly created content
      */
-    public ContentItem createContent(HibCollectionItem parent, ContentItem content);
+    public HibContentItem createContent(HibCollectionItem parent, HibContentItem content);
 
     /**
      * Create new content item and associate with multiple parent collections.
@@ -74,7 +74,7 @@ public interface ContentDao extends ItemDao {
      *            content to create
      * @return newly created content
      */
-    public ContentItem createContent(Set<HibCollectionItem> parents, ContentItem content);
+    public HibContentItem createContent(Set<HibCollectionItem> parents, HibContentItem content);
 
     /**
      * Update an existing content item.
@@ -83,7 +83,7 @@ public interface ContentDao extends ItemDao {
      *            content item to update
      * @return updated content item
      */
-    public ContentItem updateContent(ContentItem content);
+    public HibContentItem updateContent(HibContentItem content);
 
    
     /**
@@ -92,7 +92,7 @@ public interface ContentDao extends ItemDao {
      * @param content
      *            content item to remove
      */
-    public void removeContent(ContentItem content);
+    public void removeContent(HibContentItem content);
     
     /**
      * Remove all content owned by a user

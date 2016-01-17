@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.service;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.Item;
 
 import java.util.Set;
@@ -83,21 +83,21 @@ public interface ContentService {
      *            content to create
      * @return newly created content
      */
-    ContentItem createContent(HibCollectionItem parent,
-                              ContentItem content);
+    HibContentItem createContent(HibCollectionItem parent,
+                              HibContentItem content);
 
     /**
      * Create new content items in a parent collection.
      * 
      * @param parent
      *            parent collection of content items.
-     * @param contentItems
+     * @param hibContentItems
      *            content items to create
      * @throws org.osaf.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
     void createContentItems(HibCollectionItem parent,
-                            Set<ContentItem> contentItems);
+                            Set<HibContentItem> hibContentItems);
 
     /**
      * Update content items.  This includes creating new items, removing
@@ -108,11 +108,11 @@ public interface ContentService {
      * 
      * @param parents
      *            parents that new content items will be added to.
-     * @param contentItems to update
+     * @param hibContentItems to update
      * @throws org.osaf.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    void updateContentItems(Set<HibCollectionItem> parents, Set<ContentItem> contentItems);
+    void updateContentItems(Set<HibCollectionItem> parents, Set<HibContentItem> hibContentItems);
     
     /**
      * Update an existing content item.
@@ -121,7 +121,7 @@ public interface ContentService {
      *            content item to update
      * @return updated content item
      */
-    ContentItem updateContent(ContentItem content);
+    HibContentItem updateContent(HibContentItem content);
 
 
     /**
@@ -130,7 +130,7 @@ public interface ContentService {
      * @param content
      *            content item to remove
      */
-    void removeContent(ContentItem content);
+    void removeContent(HibContentItem content);
 
 
     /**

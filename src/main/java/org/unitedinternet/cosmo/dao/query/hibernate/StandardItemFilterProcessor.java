@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.calendar.InstanceList;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.filter.AttributeFilter;
@@ -446,11 +446,11 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         return processedResults;
     }
 
-    private Collection<ContentItem> processMasterNote(HibNoteItem note,
+    private Collection<HibContentItem> processMasterNote(HibNoteItem note,
                                                       EventStampFilter filter, boolean includeMasterInResults,
                                                       boolean doTimeRangeSecondPass) {
         EventStamp eventStamp = (EventStamp) note.getStamp(EventStamp.class);
-        ArrayList<ContentItem> results = new ArrayList<ContentItem>();
+        ArrayList<HibContentItem> results = new ArrayList<HibContentItem>();
 
         // If the event is not recurring or the filter is configured
         // to not do a second pass then just return the note

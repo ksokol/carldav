@@ -48,7 +48,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.ContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.StampUtils;
@@ -257,12 +256,12 @@ public class EntityConverter {
         Map<String, CalendarComponent> tzIdx = new HashMap<>();
         
         for (Item item: collection.getChildren()) {
-           if (!(item instanceof ContentItem)) {
+           if (!(item instanceof HibContentItem)) {
                continue;
            }
            
-           ContentItem contentItem = (ContentItem) item;
-           Calendar childCalendar = convertContent(contentItem);
+           HibContentItem hibContentItem = (HibContentItem) item;
+           Calendar childCalendar = convertContent(hibContentItem);
            
            // ignore items that can't be converted
            if (childCalendar == null) {
@@ -302,7 +301,7 @@ public class EntityConverter {
      * @return The calendar.
      * </p>
      */
-    public Calendar convertContent(ContentItem item) {
+    public Calendar convertContent(HibContentItem item) {
 
         if(item instanceof HibNoteItem) {
             return convertNote((HibNoteItem) item);
@@ -826,7 +825,7 @@ public class EntityConverter {
      * Sets base content attributes.
      * @param item The content item.
      */
-    private void setBaseContentAttributes(ContentItem item) {
+    private void setBaseContentAttributes(HibContentItem item) {
         
         TriageStatus ts = new TriageStatus();
         TriageStatusUtil.initialize(ts);

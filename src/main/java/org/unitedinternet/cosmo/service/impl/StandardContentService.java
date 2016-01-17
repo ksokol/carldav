@@ -24,7 +24,7 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
-import org.unitedinternet.cosmo.model.ContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.EventStamp;
 import org.unitedinternet.cosmo.model.Item;
 import org.unitedinternet.cosmo.model.Stamp;
@@ -144,8 +144,8 @@ public class StandardContentService implements ContentService {
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    public ContentItem createContent(HibCollectionItem parent,
-                                     ContentItem content) {
+    public HibContentItem createContent(HibCollectionItem parent,
+                                     HibContentItem content) {
         checkDatesForEvent(content);
         // Obtain locks to all collections involved.
         Set<HibCollectionItem> locks = acquireLocks(parent, content);
@@ -163,15 +163,15 @@ public class StandardContentService implements ContentService {
             releaseLocks(locks);
         }   
     }
-    private void checkDatesForEvents(Collection<ContentItem> items){
+    private void checkDatesForEvents(Collection<HibContentItem> items){
         if(items == null){
             return;
         }
-        for(ContentItem item : items){
+        for(HibContentItem item : items){
             checkDatesForEvent(item);
         }
     }
-    private void checkDatesForEvent(ContentItem item){
+    private void checkDatesForEvent(HibContentItem item){
         if(!(item instanceof HibNoteItem)){
             return;
         }
@@ -215,19 +215,19 @@ public class StandardContentService implements ContentService {
      * 
      * @param parent
      *            parent collection of content items.
-     * @param contentItems
+     * @param hibContentItems
      *            content items to create
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
     public void createContentItems(HibCollectionItem parent,
-                                     Set<ContentItem> contentItems) {
-        checkDatesForEvents(contentItems);
+                                     Set<HibContentItem> hibContentItems) {
+        checkDatesForEvents(hibContentItems);
         if (! lockManager.lockCollection(parent, lockTimeout)) {
             throw new CollectionLockedException("unable to obtain collection lock");
         }
         try {
-            for(ContentItem content : contentItems) {
+            for(HibContentItem content : hibContentItems) {
                 contentDao.createContent(parent, content);
             }
             
@@ -246,19 +246,19 @@ public class StandardContentService implements ContentService {
      * 
      * @param parents
      *            parents that new content items will be added to.
-     * @param contentItems to update
+     * @param hibContentItems to update
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    public void updateContentItems(Set<HibCollectionItem> parents, Set<ContentItem> contentItems) {
-        checkDatesForEvents(contentItems);
+    public void updateContentItems(Set<HibCollectionItem> parents, Set<HibContentItem> hibContentItems) {
+        checkDatesForEvents(hibContentItems);
         // Obtain locks to all collections involved.  A collection is involved
         // if it is the parent of one of updated items.
-        Set<HibCollectionItem> locks = acquireLocks(contentItems);
+        Set<HibCollectionItem> locks = acquireLocks(hibContentItems);
         
         try {
             
-           for(ContentItem content: contentItems) {
+           for(HibContentItem content: hibContentItems) {
                if(content.getCreationDate()==null) {
                    contentDao.createContent(parents, content);
                }
@@ -286,7 +286,7 @@ public class StandardContentService implements ContentService {
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    public ContentItem updateContent(ContentItem content) {
+    public HibContentItem updateContent(HibContentItem content) {
         checkDatesForEvent(content);
         Set<HibCollectionItem> locks = acquireLocks(content);
         
@@ -312,7 +312,7 @@ public class StandardContentService implements ContentService {
      * @throws org.unitedinternet.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked           
      */
-    public void removeContent(ContentItem content) {
+    public void removeContent(HibContentItem content) {
         Set<HibCollectionItem> locks = acquireLocks(content);
         
         try {

@@ -17,18 +17,14 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.model.AuditableObject;
 
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-/**
- * Hibernate persistent AuditableObject.
- */
 @MappedSuperclass
-public abstract class HibAuditableObject extends BaseModelObject implements AuditableObject {
+public abstract class HibAuditableObject extends BaseModelObject {
 
     @Column(name = "createdate")
     @Type(type="long_timestamp")
@@ -77,11 +73,7 @@ public abstract class HibAuditableObject extends BaseModelObject implements Audi
     public String getEntityTag() {
         return etag;
     }
-    
-    public void setEntityTag(String etag) {
-        this.etag = etag;
-    }
-    
+
     /**
      * Calculates object's entity tag. Returns the empty string. Subclasses should override this.
      */

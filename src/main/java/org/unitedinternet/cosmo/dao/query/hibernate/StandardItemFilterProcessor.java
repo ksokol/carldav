@@ -25,7 +25,6 @@ import org.unitedinternet.cosmo.calendar.InstanceList;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
 import org.unitedinternet.cosmo.model.filter.EqualsExpression;
@@ -41,7 +40,6 @@ import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.NullExpression;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.filter.TextAttributeFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -163,34 +161,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             formatExpression(whereBuf, params, "i.displayName", filter.getDisplayName());
         }
 
-
-        handleAttributeFilters(selectBuf, whereBuf, params, filter);
         handleStampFilters(selectBuf, whereBuf, filter);
 
-    }
-
-    private void handleAttributeFilters(StringBuffer selectBuf,
-                                        StringBuffer whereBuf, Map<String, Object> params,
-                                        ItemFilter filter) {
-        for (AttributeFilter attrFilter : filter.getAttributeFilters()) {
-            if (attrFilter instanceof TextAttributeFilter) {
-                handleTextAttributeFilter(selectBuf, whereBuf, params, (TextAttributeFilter) attrFilter);
-            } else {
-                handleAttributeFilter(whereBuf, params, attrFilter);
-            }
-        }
-    }
-
-    private void handleTextAttributeFilter(StringBuffer selectBuf,
-                                           StringBuffer whereBuf, Map<String, Object> params,
-                                           TextAttributeFilter filter) {
-
-        throw new UnsupportedOperationException();
-//        String alias = "ta" + params.size();
-//        selectBuf.append(", HibTextAttribute " + alias);
-//        appendWhere(whereBuf, alias + ".item=i and " + alias + ".qname=:" + alias + "qname");
-//        params.put(alias + "qname", filter.getQname());
-//        formatExpression(whereBuf, params, alias + ".value", filter.getValue());
     }
 
     private void handleStampFilters(StringBuffer selectBuf,
@@ -222,21 +194,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
         toAppend += simpleName + ")";
         appendWhere(whereBuf, toAppend);
-    }
-
-    private void handleAttributeFilter(StringBuffer whereBuf, Map<String, Object> params,
-                                       AttributeFilter filter) {
-
-        String param = "param" + params.size();
-        String toAppend = "";
-        if (filter.isMissing()) {
-            toAppend += "not ";
-        }
-
-        toAppend += "exists (select a.id from HibAttribute a where a.item=i and a.qname=:"
-                + param + ")";
-        appendWhere(whereBuf, toAppend);
-        params.put(param, filter.getQname());
     }
 
     private void handleEventStampFilter(StringBuffer selectBuf,

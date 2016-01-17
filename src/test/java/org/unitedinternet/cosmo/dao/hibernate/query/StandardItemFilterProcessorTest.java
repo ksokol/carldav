@@ -33,7 +33,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.model.filter.AttributeFilter;
 import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
@@ -43,7 +42,6 @@ import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.model.hibernate.HibQName;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -260,27 +258,6 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where not exists "
                 + "(select s.id from HibStamp s where s.item=i and s.class=HibEventStamp)",
-                query.getQueryString());
-    }
-
-    /**
-     * Tests basic attribute query.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testBasicAttributeQuery() throws Exception {
-        NoteItemFilter filter = new NoteItemFilter();
-        AttributeFilter missingFilter = new AttributeFilter();
-        missingFilter.setQname(new HibQName("ns","name"));
-        filter.getAttributeFilters().add(missingFilter);
-        Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i where exists "
-                + "(select a.id from HibAttribute a where a.item=i and a.qname=:param0)",
-                query.getQueryString());
-        missingFilter.setMissing(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i where not exists"
-                + " (select a.id from HibAttribute a where a.item=i and a.qname=:param0)",
                 query.getQueryString());
     }
 

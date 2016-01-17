@@ -20,37 +20,25 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a filter that matches a set of criteria to all items.
  * The set of criteria is essentially "ANDed" together.
  * For example if displayName and parent are set, then the filter
  * will match all items that match the displayName set AND belong to
- * the parent set. 
- * 
- * If there are multiple AttributeFilters or StampFilters, all filters
- * must match the item for the item to match the ItemFilter.
+ * the parent set.
  */
 public class ItemFilter {
    
-    FilterCriteria displayName = null;
-    HibCollectionItem parent = null;
-    FilterCriteria uid = null;
-    Integer maxResults = null;
-    
-    ArrayList<AttributeFilter> attributeFilters = new ArrayList<AttributeFilter>();
-    ArrayList<StampFilter> stampFilters = new ArrayList<StampFilter>();
-    HashMap<String, String> filterProperties = new HashMap<String, String>(); 
-    ArrayList<FilterOrder> order = new ArrayList<FilterOrder>();
+    private FilterCriteria displayName = null;
+    private HibCollectionItem parent = null;
+    private FilterCriteria uid = null;
+    private Integer maxResults = null;
 
-    /**
-     * List of AttributeFilters.  If there are multiple attribute filters,
-     * each filter must match for an item to match the ItemFilter.
-     * @return list of attribute filters
-     */
-    public List<AttributeFilter> getAttributeFilters() {
-        return attributeFilters;
-    }
+    private List<StampFilter> stampFilters = new ArrayList<>();
+    private Map<String, String> filterProperties = new HashMap<>();
+    private List<FilterOrder> order = new ArrayList<>();
 
     /**
      * Return a specific StampFilter instance

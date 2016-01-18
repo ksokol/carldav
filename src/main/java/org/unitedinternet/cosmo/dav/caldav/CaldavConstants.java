@@ -128,8 +128,6 @@ public interface CaldavConstants {
     String PROPERTY_CARDDAV_ADDRESS_DATA = "address-data";
     /** The CardDAV property name CARDDAV:addressbook-home-set */
     String PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET = "addressbook-home-set";
-    /** The CalDAV property name CALDAV:max-resource-size */
-    String PROPERTY_CALDAV_MAX_RESOURCE_SIZE = "max-resource-size";
     /** The Calendar Server property name CS:getctag */
     String PROPERTY_CS_GET_CTAG = "getctag";
 
@@ -149,8 +147,6 @@ public interface CaldavConstants {
     DavPropertyName SUPPORTEDADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA, NAMESPACE_CARDDAV);
     /** The CardDAV property CARDDAV:addressbook-home-set */
     DavPropertyName ADDRESSBOOKHOMESET = DavPropertyName.create(PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET, NAMESPACE_CARDDAV);
-    /** The CalDAV property CALDAV:max-resource-size */
-    DavPropertyName MAXRESOURCESIZE = DavPropertyName.create(PROPERTY_CALDAV_MAX_RESOURCE_SIZE, NAMESPACE_CALDAV);
 
     CosmoQName RESOURCE_TYPE_CALENDAR = new CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
 

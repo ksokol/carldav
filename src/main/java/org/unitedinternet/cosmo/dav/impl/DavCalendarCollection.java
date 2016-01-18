@@ -19,7 +19,6 @@ import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
-import org.unitedinternet.cosmo.dav.caldav.property.MaxResourceSize;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarData;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCollationSet;
@@ -60,7 +59,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
         registerLiveProperty(SUPPORTEDCALENDARDATA);
-        registerLiveProperty(MAXRESOURCESIZE);
         registerLiveProperty(GET_CTAG);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
@@ -131,7 +129,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new SupportedCalendarComponentSet());
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());
-        properties.add(new MaxResourceSize());
         properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
 
         if(cc.getDisplayName() != null){
@@ -167,7 +164,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         if(!(create && name.equals(SUPPORTEDCALENDARCOMPONENTSET)) &&
             (name.equals(SUPPORTEDCALENDARCOMPONENTSET) ||
                 name.equals(SUPPORTEDCALENDARDATA) ||
-                name.equals(MAXRESOURCESIZE) ||
                 name.equals(GET_CTAG))) {
                 throw new ProtectedPropertyModificationException(name);
         }
@@ -185,7 +181,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         if (name.equals(SUPPORTEDCALENDARCOMPONENTSET) ||
             name.equals(SUPPORTEDCALENDARDATA) ||
-            name.equals(MAXRESOURCESIZE) ||
             name.equals(GET_CTAG)) {
             throw new ProtectedPropertyModificationException(name);
         }

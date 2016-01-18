@@ -15,6 +15,9 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
@@ -262,7 +265,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         queryItem.setDisplayName("this is a test item2");
 
         queryItem.setContentLanguage("es");
-        queryItem.setContent(helper.getBytes("testdata/testdata2.txt"));
+        queryItem.setContent(helper.getString("testdata/testdata2.txt"));
 
         // Make sure modified date changes
         Thread.sleep(1000);
@@ -601,9 +604,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         // test get by path
         HibContentItem queryC = (HibContentItem) contentDao.findItemByPath("/testuser2@testem/a/b/c");
         Assert.assertNotNull(queryC);
-        helper.verifyInputStream(
-                helper.getInputStream("testdata/testdata1.txt"), ((HibFileItem) queryC)
-                        .getContent());
+        //helper.verifyInputStream(, ((HibFileItem) queryC).getContent());
+        assertThat(helper.getString("testdata/testdata1.txt"), is(((HibFileItem) queryC).getContent()));
+
         Assert.assertEquals("c", queryC.getName());
 
         // test get path/uid abstract
@@ -816,7 +819,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibFileItem content = new HibFileItem();
         content.setName(name);
         content.setDisplayName(name);
-        content.setContent(helper.getBytes("testdata/testdata1.txt"));
+        content.setContent(helper.getString("testdata/testdata1.txt"));
         content.setContentLanguage("en");
         content.setContentEncoding("UTF8");
         content.setContentType("text/text");

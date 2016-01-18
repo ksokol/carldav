@@ -15,30 +15,16 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.apache.commons.io.IOUtils;
-import org.unitedinternet.cosmo.CosmoIOException;
-import org.unitedinternet.cosmo.model.DataSizeException;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.Lob;
 
 @Entity
 @DiscriminatorValue("file")
 public class HibFileItem extends HibContentItem {
 
-    private static final long serialVersionUID = 1L;
-
-    public static final long MAX_CONTENT_SIZE = 10 * 1024 * 1024;
+    private static final long serialVersionUID = 2L;
 
     @Column(name = "contentType", length=64)
     private String contentType = null;
@@ -48,61 +34,17 @@ public class HibFileItem extends HibContentItem {
     
     @Column(name = "contentEncoding", length=32)
     private String contentEncoding = null;
-    
-    @Column(name = "contentLength")
-    private Long contentLength = null;
-    
-    @OneToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name="contentdataid")
-    private HibContentData contentData = null;
 
-    public byte[] getContent() {
-        try {
-            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-            InputStream contentStream = contentData.getContentInputStream();
-            IOUtils.copy(contentStream, bos);
-            contentStream.close();
-            return bos.toByteArray();
-        } catch (IOException e) {
-            throw new CosmoIOException("Error getting content", e);
-        }
+    @Column(name = "content", columnDefinition="CLOB")
+    @Lob
+    private String contentData;
+
+    public String getContent() {
+        return contentData;
     }
 
-    public void setContent(byte[] content) {
-        if (content.length > MAX_CONTENT_SIZE) {
-            throw new DataSizeException("Item content too large");
-        }
-        
-        try {
-            setContent(new ByteArrayInputStream(content));
-        } catch (IOException e) {
-            throw new CosmoIOException("Error setting content", e);
-        }
-    }
-
-    public void setContent(InputStream is) throws IOException {
-        if(contentData==null) {
-            contentData = new HibContentData(); 
-        }
-        
-        contentData.setContentInputStream(is);
-        
-        // Verify size is not greater than MAX.
-        // TODO: do this checking in ContentData.setContentInputStream()
-        if (contentData.getSize() > MAX_CONTENT_SIZE) {
-            throw new DataSizeException("Item content too large");
-        }
-        
-        setContentLength(contentData.getSize());
-    }
-
-    public InputStream getContentInputStream() {
-        if(contentData==null) {
-            return null;
-        }
-        else {
-            return contentData.getContentInputStream();
-        }
+    public void setContent(String content) {
+        this.contentData = content;
     }
 
     public String getContentEncoding() {
@@ -122,11 +64,7 @@ public class HibFileItem extends HibContentItem {
     }
 
     public Long getContentLength() {
-        return contentLength;
-    }
-
-    public void setContentLength(Long contentLength) {
-        this.contentLength = contentLength;
+        return contentData == null ? 0L : (long) contentData.length();
     }
 
     public String getContentType() {

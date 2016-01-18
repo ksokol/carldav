@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,8 +38,10 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Extends <code>DavResourceBase</code> to adapt the Cosmo
@@ -110,12 +113,11 @@ public class DavFile extends DavContentBase {
         if (! outputContext.hasStream()) {
             return;
         }
-        if (content.getContentInputStream() == null) {
+        if (content == null) {
             return;
         }
 
-        IOUtil.spool(content.getContentInputStream(),
-                     outputContext.getOutputStream());
+        IOUtil.spool(new ByteArrayInputStream(content.getContent().getBytes(StandardCharsets.UTF_8)), outputContext.getOutputStream());
     }
 
     
@@ -129,7 +131,7 @@ public class DavFile extends DavContentBase {
         try {
             InputStream content = inputContext.getInputStream();
             if (content != null) {
-                file.setContent(content);
+                file.setContent(IOUtils.toString(content));
             }
 
             if (inputContext.getContentLanguage() != null) {

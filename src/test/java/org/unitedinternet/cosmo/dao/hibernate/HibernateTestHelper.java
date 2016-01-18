@@ -24,13 +24,8 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Test Hibernate helper.
@@ -55,36 +50,16 @@ public class HibernateTestHelper {
         Assert.assertEquals(hibItem1.getUid(), hibItem2.getUid());
     }
 
-    /**
-     * Gets bytes.
-     * @param name The name.
-     * @return byte[].
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public byte[] getBytes(String name) throws Exception {
+    public String getString(String name) throws Exception {
         InputStream in = getClass().getClassLoader().getResourceAsStream(name);
         if (in == null) {
             throw new IllegalStateException("resource " + name + " not found");
         }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         IOUtils.copy(in, bos);
-        return bos.toByteArray();
+        return new String(bos.toByteArray(), "UTF-8");
     }
-    
-    /**
-     * Gets input stream.
-     * @param name The name.
-     * @return The input stream.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public InputStream getInputStream(String name) throws Exception {
-        InputStream in = getClass().getClassLoader().getResourceAsStream(name);
-        if (in == null) {
-            throw new IllegalStateException("resource " + name + " not found");
-        }
-        return in;
-    }
-    
+
     /**
      * Gets calendar.
      * @param name The name.
@@ -94,33 +69,6 @@ public class HibernateTestHelper {
     public Calendar getCalendar(String name) throws Exception {
         InputStream in = getClass().getClassLoader().getResourceAsStream(name);
         return CalendarUtils.parseCalendar(in);
-    }
-
-    /**
-     * Verify input stream.
-     * @param is1 The input stream.
-     * @param content The content.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public void verifyInputStream(InputStream is1, byte[] content)
-            throws Exception {
-        byte[] buf1 = new byte[4096];
-        byte[] buf2 = new byte[4096];
-
-        ByteArrayInputStream is2 = new ByteArrayInputStream(content);
-
-        int read1 = is1.read(buf1);
-        int read2 = is2.read(buf2);
-        while (read1 > 0 || read2 > 0) {
-            Assert.assertEquals(read1, read2);
-
-            for (int i = 0; i < read1; i++) {
-                Assert.assertEquals(buf1[i], buf2[i]);
-            }
-
-            read1 = is1.read(buf1);
-            read2 = is2.read(buf2);
-        }
     }
 
     /**

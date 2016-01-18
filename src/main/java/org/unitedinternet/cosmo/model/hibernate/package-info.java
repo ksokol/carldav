@@ -19,10 +19,6 @@
  * Type Definitions for custom hibernate data types.
  */
 @TypeDefs({
-    @TypeDef(
-            name="bufferedcontent_blob",
-            typeClass = org.unitedinternet.cosmo.hibernate.BufferedContentBlob.class
-        ),
 
     @TypeDef(
             name="calendar_clob",

@@ -1,6 +1,5 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
@@ -12,8 +11,6 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
-
-import java.io.IOException;
 
 /**
  * @author Kamill Sokol
@@ -73,12 +70,8 @@ public class AddressbookMultigetReport extends MultigetReport {
         final HibFileItem item = (HibFileItem) resource.getItem();
         final StringBuilder builder = new StringBuilder();
 
-        try {
-            builder.append(IOUtils.toString(item.getContentInputStream()));
-            return builder.toString();
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        builder.append(item.getContent());
+        return builder.toString();
     }
 
     @Override

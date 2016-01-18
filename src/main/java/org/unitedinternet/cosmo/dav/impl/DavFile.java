@@ -30,12 +30,10 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.property.ContentLanguage;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.model.DataSizeException;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 import java.io.ByteArrayInputStream;
@@ -151,8 +149,6 @@ public class DavFile extends DavContentBase {
             }
         } catch (IOException e) {
             throw new CosmoDavException(e);
-        } catch (DataSizeException e) {
-            throw new ForbiddenException(e.getMessage());
         }
     }
 

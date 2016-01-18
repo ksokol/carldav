@@ -22,23 +22,14 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.ModificationUidImpl;
 
-/**
- * Test for ModificationUid class.
- *
- */
 public class ModificationUidTest {
    
-    private static final TimeZoneRegistry TIMEZONE_REGISTRY =
-        TimeZoneRegistryFactory.getInstance().createRegistry();
+    private static final TimeZoneRegistry TIMEZONE_REGISTRY = TimeZoneRegistryFactory.getInstance().createRegistry();
 
-    /**
-     * Tests modification uid.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
     @Test
     public void testModificationUid() throws Exception {
         HibItem parent = new HibNoteItem();
@@ -47,12 +38,12 @@ public class ModificationUidTest {
         
         ModificationUidImpl modUid = new ModificationUidImpl(parent, date);
         Assert.assertEquals("abc:20070101", modUid.toString());
-        Assert.assertEquals(modUid, new ModificationUidImpl("abc:20070101"));
+        Assert.assertEquals(modUid.toString(), new ModificationUidImpl("abc:20070101").toString());
         
         date = new DateTime("20070101T100000");
         modUid = new ModificationUidImpl(parent, date);
         Assert.assertEquals("abc:20070101T100000", modUid.toString());
-        Assert.assertEquals(modUid, new ModificationUidImpl("abc:20070101T100000"));
+        Assert.assertEquals(modUid.toString(), new ModificationUidImpl("abc:20070101T100000").toString());
         
         date = new DateTime("20070101T100000", TIMEZONE_REGISTRY.getTimeZone("America/Chicago"));
         modUid = new ModificationUidImpl(parent, date);

@@ -17,8 +17,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 
 import java.text.ParseException;
@@ -39,10 +38,10 @@ import java.text.ParseException;
  */
 public class ModificationUidImpl {
 
-    public static final String RECURRENCEID_DELIMITER = ":";
+    private static final String RECURRENCEID_DELIMITER = ":";
     
-    private String parentUid = null;
-    private Date recurrenceId = null;
+    private String parentUid;
+    private Date recurrenceId;
     
     /**
      * Construct modification uid from parent Item and recurrenceId
@@ -50,6 +49,8 @@ public class ModificationUidImpl {
      * @param recurrenceId recurrenceId of modification
      */
     public ModificationUidImpl(HibItem parent, Date recurrenceId) {
+        Assert.notNull(parent, "parent is null");
+        Assert.notNull(recurrenceId, "recurrenceId is null");
         this.parentUid = parent.getUid();
         this.recurrenceId = recurrenceId;
     }
@@ -73,8 +74,7 @@ public class ModificationUidImpl {
     }
     
     public String toString() {
-        return parentUid + RECURRENCEID_DELIMITER
-                + fromDateToStringNoTimezone(recurrenceId);
+        return parentUid + RECURRENCEID_DELIMITER  + fromDateToStringNoTimezone(recurrenceId);
     }
     
     public String getParentUid() {
@@ -85,20 +85,6 @@ public class ModificationUidImpl {
         return recurrenceId;
     }
 
-    public boolean equals(Object obj) {
-        if(obj instanceof ModificationUidImpl) {
-            ModificationUidImpl modUid = (ModificationUidImpl) obj;
-            return ObjectUtils.equals(parentUid, modUid.getParentUid()) &&
-                   ObjectUtils.equals(recurrenceId, modUid.getRecurrenceId());
-        }
-        return super.equals(obj);
-    }
-    
-    public final int hashCode() {
-        return new HashCodeBuilder().append(getParentUid())
-                .append(recurrenceId).toHashCode();
-    }
-
     /**
      * Converts an ical4j Date instance to a string representation.  If the instance
      * is a DateTime and has a timezone, then the string representation will be
@@ -106,11 +92,7 @@ public class ModificationUidImpl {
      * @param date date to format
      * @return string representation of date
      */
-    public static String fromDateToStringNoTimezone(Date date) {
-        if(date==null) {
-            return null;
-        }
-        
+    private static String fromDateToStringNoTimezone(Date date) {
         if(date instanceof DateTime) {
             DateTime dt = (DateTime) date;
             // If DateTime has a timezone, then convert to UTC before
@@ -120,12 +102,10 @@ public class ModificationUidImpl {
                 DateTime copy = new DateTime(dt);
                 copy.setUtc(true);
                 return copy.toString();
-            } else {
-                return dt.toString();
             }
-        } else {
-            return date.toString();
+            return dt.toString();
         }
+        return date.toString();
     }
     
     /**
@@ -139,18 +119,11 @@ public class ModificationUidImpl {
      * @return ical4j Date instance
      * @throws ParseException
      */
-    public static Date fromStringToDate(String dateStr) throws ParseException {
-        if(dateStr==null) {
-            return null;
-        }
-        
+    private static Date fromStringToDate(String dateStr) throws ParseException {
         // handle date with no time first
         if(dateStr.indexOf("T") ==  -1) { 
             return new Date(dateStr);
         }
-        // otherwise it must be a date time
-        else {
-            return new DateTime(dateStr);
-        }
+        return new DateTime(dateStr);
     }
 }

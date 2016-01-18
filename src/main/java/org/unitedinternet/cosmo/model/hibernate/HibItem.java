@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
@@ -24,7 +23,6 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -38,7 +36,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyClass;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -86,11 +83,6 @@ public abstract class HibItem extends HibAuditableObject {
     @Version
     @Column(name="version", nullable = false)
     private Integer version;
-
-    @OneToMany(targetEntity=HibAttribute.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @MapKeyClass(String.class)
-    @BatchSize(size=50)
-    private List<HibAttribute> attributes;
 
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     private Set<HibStamp> stamps = new HashSet<>();

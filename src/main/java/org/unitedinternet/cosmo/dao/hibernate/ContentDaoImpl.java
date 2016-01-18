@@ -22,13 +22,13 @@ import org.hibernate.Query;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
+import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.List;
 import java.util.Set;
@@ -361,21 +361,11 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     @Override
     public void removeItemsFromCollection(HibCollectionItem collection) {
-        // faster way to delete all calendar items but requires cascade delete on FK at DB
-/*        Long collectionId = ((HibCollectionItem)collection).getId();
-        String deleteAllQuery = "delete from HibContentItem item where item.id in " +
-        		" (select collItem.item.id from HibCollectionItemDetails collItem "+
-                 " where collItem.collection.id=:collectionId)";
-        getSession().createQuery(deleteAllQuery).setLong("collectionId", collectionId).executeUpdate();
-*/
        for (HibItem hibItem : collection.getChildren()) {
             if (hibItem instanceof HibCollectionItem) {
                 removeCollectionRecursive((HibCollectionItem) hibItem);
             } else if (hibItem instanceof HibContentItem) {
-                ((HibItem) hibItem).removeParent(collection);
-                if (hibItem.getParents().size() == 0) {
-                    getSession().delete(hibItem);
-                }
+                getSession().delete(hibItem);
             } else {
                 getSession().delete(hibItem);
             }

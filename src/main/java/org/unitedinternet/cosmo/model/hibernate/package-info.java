@@ -49,10 +49,10 @@
         @NamedQuery(name = "collections.files.by.parent", query = "select item from HibItem item join"
                 + " item.parentDetails pd where pd.collection=:parent and item.class=HibFileItem"),
         @NamedQuery(name = "item.by.ownerId.nullParent.name", query = "select item from HibItem item"
-                + " where item.owner.id=:ownerid and size(item.parentDetails)=0 and item.name=:name"),
+                + " where item.owner.id=:ownerid and item.parentDetails is not null and item.name=:name"),
         @NamedQuery(name = "item.by.ownerId.nullParent.name.minusItem", query = "select item from"
                 + " HibItem item where item.id!=:itemid and item.owner.id=:ownerid and "
-                + "size(item.parentDetails)=0 and item.name=:name"),
+                + "item.parentDetails is not null and item.name=:name"),
         @NamedQuery(name = "item.by.ownerId.parentId.name.minusItem", query = "select item from HibItem "
                 + "item join item.parentDetails pd where item.id!=:itemid and item.owner.id=:ownerid and"
                 + " pd.collection.id=:parentid and item.name=:name"),

@@ -23,10 +23,8 @@ import org.hibernate.validator.constraints.Length;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -42,6 +40,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyClass;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -96,28 +95,18 @@ public abstract class HibItem extends HibAuditableObject {
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     private Set<HibStamp> stamps = new HashSet<>();
 
-    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    @BatchSize(size=50)
-    private Set<HibCollectionItemDetails> parentDetails = new HashSet<>();
-
-    private transient Set<HibCollectionItem> parents = null;
+    @OneToOne(targetEntity=HibCollectionItemDetails.class, mappedBy="item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+    private HibCollectionItemDetails parentDetails;
 
     @ManyToOne(targetEntity=User.class, fetch=FetchType.LAZY)
     @JoinColumn(name="ownerid", nullable = false)
     @NotNull
     private User owner;
 
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getStamps()
-     */
     public Set<HibStamp> getStamps() {
         return Collections.unmodifiableSet(stamps);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#addStamp(org.unitedinternet.cosmo.model.Stamp)
-     */
     public void addStamp(HibStamp stamp) {
         if (stamp == null) {
             throw new IllegalArgumentException("stamp cannot be null");
@@ -127,9 +116,6 @@ public abstract class HibItem extends HibAuditableObject {
         stamps.add(stamp);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#removeStamp(org.unitedinternet.cosmo.model.Stamp)
-     */
     public void removeStamp(HibStamp stamp) {
         // only remove stamps that belong to item
         if(!stamps.contains(stamp)) {
@@ -139,9 +125,6 @@ public abstract class HibItem extends HibAuditableObject {
         stamps.remove(stamp);
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getStamp(java.lang.String)
-     */
     public HibStamp getStamp(String type) {
         for(HibStamp stamp : stamps) {
             // only return stamp if it matches class and is active
@@ -153,9 +136,6 @@ public abstract class HibItem extends HibAuditableObject {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getStamp(java.lang.Class)
-     */
     public HibStamp getStamp(Class clazz) {
         for(HibStamp stamp : stamps) {
             // only return stamp if it is an instance of the specified class
@@ -167,137 +147,76 @@ public abstract class HibItem extends HibAuditableObject {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getClientCreationDate()
-     */
     public Date getClientCreationDate() {
         return clientCreationDate;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setClientCreationDate(java.util.Date)
-     */
     public void setClientCreationDate(Date clientCreationDate) {
         this.clientCreationDate = clientCreationDate;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getClientModifiedDate()
-     */
     public Date getClientModifiedDate() {
         return clientModifiedDate;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setClientModifiedDate(java.util.Date)
-     */
     public void setClientModifiedDate(Date clientModifiedDate) {
         this.clientModifiedDate = clientModifiedDate;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getName()
-     */
     public String getName() {
         return name;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setName(java.lang.String)
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getDisplayName()
-     */
     public String getDisplayName() {
         return displayName;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setDisplayName(java.lang.String)
-     */
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getOwner()
-     */
     public User getOwner() {
         return owner;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setOwner(org.unitedinternet.cosmo.model.User)
-     */
     public void setOwner(User owner) {
         this.owner = owner;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getUid()
-     */
     public String getUid() {
         return uid;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#setUid(java.lang.String)
-     */
     public void setUid(String uid) {
         this.uid = uid;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getVersion()
-     */
     public Integer getVersion() {
         return version;
     }
 
-    /**
-     * @param parent collection to add item to
-     */
     public void addParent(HibCollectionItem parent) {
-        parentDetails.add(new HibCollectionItemDetails(parent,this));
-
-        // clear cached parents
-        parents = null;
+        parentDetails = new HibCollectionItemDetails(parent,this);
     }
 
     public void removeParent(HibCollectionItem parent) {
         HibCollectionItemDetails cid = getParentDetails(parent);
         if(cid!=null) {
-            parentDetails.remove(cid);
-            // clear cached parents
-            parents = null;
+            parentDetails = null;
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getParents()
-     */
     public Set<HibCollectionItem> getParents() {
-        if(parents!=null) {
-            return parents;
+        if(parentDetails == null) {
+            return Collections.emptySet();
         }
-
-        parents = new HashSet<>();
-        for(HibCollectionItemDetails cid: parentDetails) {
-            parents.add(cid.getCollection());
-        }
-
-        parents = Collections.unmodifiableSet(parents);
-
-        return parents;
+        return Collections.singleton(parentDetails.getCollection());
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getParent()
-     */
     public HibCollectionItem getParent() {
         if(getParents().size()==0) {
             return null;
@@ -306,22 +225,14 @@ public abstract class HibItem extends HibAuditableObject {
         return getParents().iterator().next();
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.Item#getParentDetails(org.unitedinternet.cosmo.model.CollectionItem)
-     */
-    public HibCollectionItemDetails getParentDetails(HibCollectionItem parent) {
-        for(HibCollectionItemDetails cid: parentDetails) {
-            if(cid.getCollection().equals(parent)) {
-                return cid;
-            }
+    private HibCollectionItemDetails getParentDetails(HibCollectionItem parent) {
+        if(parentDetails.getCollection().equals(parent)) {
+            return parentDetails;
         }
 
         return null;
     }
 
-    /**
-     * Item uid determines equality
-     */
     @Override
     public boolean equals(Object obj) {
         if(obj==null || uid==null) {

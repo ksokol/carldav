@@ -14,5 +14,5 @@ VALUES ('collection', 3, 1448140260072, 'njy57RJot0LhdYELkMDJ9gQZiOM=', 14481402
 INSERT INTO stamp (stamptype, id, createdate, etag, modifydate, itemid) VALUES ('calendar', 1, 1448140260087, '', 1448140260087, 2);
 INSERT INTO stamp (stamptype, id, createdate, etag, modifydate, itemid) VALUES ('card', 2, 1448140260087, '', 1448140260087, 3);
 
-INSERT INTO collection_item (itemid, collectionid) VALUES (2, 1);
-INSERT INTO collection_item (itemid, collectionid) VALUES (3, 1);
+INSERT INTO collection_item (id, itemid, collectionid) VALUES (1,2, 1);
+INSERT INTO collection_item (id, itemid, collectionid) VALUES (2, 3, 1);

@@ -19,9 +19,12 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 /**
@@ -37,15 +40,9 @@ public class HibCollectionItemDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @ManyToOne(targetEntity = HibCollectionItem.class, fetch = FetchType.EAGER)
-    @JoinColumn(name = "collectionid", nullable = false)
-    public HibCollectionItem collection;
-
-    @Id
-    @ManyToOne(targetEntity = HibItem.class)
-    @JoinColumn(name = "itemid", nullable = false)
-    public HibItem item;
+    private Long id;
+    private HibCollectionItem collection;
+    private HibItem item;
 
     public HibCollectionItemDetails() {}
     
@@ -53,20 +50,34 @@ public class HibCollectionItemDetails implements Serializable {
         this.collection = collection;
         this.item = item;
     }
-    
-    public void setCollection(HibCollectionItem collection) {
-        this.collection = collection;
+
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    public Long getId() {
+        return id;
     }
-    
+
+    @ManyToOne(targetEntity = HibCollectionItem.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "collectionid", nullable = false)
     public HibCollectionItem getCollection() {
         return collection;
     }
 
-    public void  setItem(HibItem hibItem) {
-        this.item = hibItem;
-    }
-    
+    @OneToOne(targetEntity = HibItem.class)
+    @JoinColumn(name = "itemid", nullable = false)
     public HibItem getItem() {
         return item;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public void setCollection(final HibCollectionItem collection) {
+        this.collection = collection;
+    }
+
+    public void setItem(final HibItem item) {
+        this.item = item;
     }
 }

@@ -691,56 +691,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     /**
-     * Tests item in multiple collections.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testItemInMutipleCollections() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setOwner(user);
-
-        a = contentDao.createCollection(root, a);
-        
-        HibContentItem item = generateTestContent();
-        item.setName("test");
-
-        HibContentItem newItem = contentDao.createContent(a, item);
-
-        
-
-        HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(queryItem.getParents().size(), 1);
-        
-        HibCollectionItem b = new HibCollectionItem();
-        b.setName("b");
-        b.setOwner(user);
-        
-        b = contentDao.createCollection(root, b);
-        
-        contentDao.addItemToCollection(queryItem, b);
-        
-        
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(queryItem.getParents().size(), 2);
-        
-        b = (HibCollectionItem) contentDao.findItemByUid(b.getUid());
-        contentDao.removeItemFromCollection(queryItem, b);
-        
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(queryItem.getParents().size(), 1);
-        
-        a = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        contentDao.removeItemFromCollection(queryItem, a);
-        
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertNull(queryItem);
-    }
-    
-    /**
      * Tests item in multiple collections error.
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -782,63 +732,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         } catch (DuplicateItemNameException e) {
         }
     }
-    
-    /**
-     * Tests item in multiple collections delete collection.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testItemInMutipleCollectionsDeleteCollection() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setOwner(user);
-
-        a = contentDao.createCollection(root, a);
-        
-        HibContentItem item = generateTestContent();
-        item.setName("test");
-
-        HibContentItem newItem = contentDao.createContent(a, item);
-
-        
-
-        HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(queryItem.getParents().size(), 1);
-        
-        HibCollectionItem b = new HibCollectionItem();
-        b.setName("b");
-        b.setOwner(user);
-        
-        b = contentDao.createCollection(root, b);
-        
-        contentDao.addItemToCollection(queryItem, b);
-        
-        
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(queryItem.getParents().size(), 2);
-        
-        b = (HibCollectionItem) contentDao.findItemByUid(b.getUid());
-        contentDao.removeCollection(b);
-        
-        
-        b = (HibCollectionItem) contentDao.findItemByUid(b.getUid());
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertNull(b);
-        Assert.assertEquals(queryItem.getParents().size(), 1);
-        
-        a = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        contentDao.removeCollection(a);
-        
-        
-        a = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertNull(a);
-        Assert.assertNull(queryItem);
-    }
-    
     /**
      * Tests content dao.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -859,7 +753,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertTrue(getHibItem(newItem).getId() > -1);
         Assert.assertNotNull(newItem.getUid());
 
-        
+
 
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
         TriageStatus triageStatus = queryItem.getTriageStatus();
@@ -868,19 +762,19 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         triageStatus.setCode(TriageStatusUtil.CODE_LATER);
         BigDecimal rank = new BigDecimal("-98765.43");
         triageStatus.setRank(rank);
-        
+
         contentDao.updateContent(queryItem);
-        
-        
+
+
         queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
         triageStatus = queryItem.getTriageStatus();
         Assert.assertEquals(triageStatus.getCode(),
                             Integer.valueOf(TriageStatusUtil.CODE_LATER));
         Assert.assertEquals(triageStatus.getRank(), rank);
-        
+
         queryItem.setTriageStatus(null);
         contentDao.updateContent(queryItem);
-        
+
         // should be null triagestatus
         queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
         triageStatus = queryItem.getTriageStatus();

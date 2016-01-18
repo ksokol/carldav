@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Target;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -28,20 +27,9 @@ public abstract class HibContentItem extends HibItem {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "lastmodifiedby", length=255)
-    private String lastModifiedBy = null;
-
     @Embedded
     @Target(TriageStatus.class)
     private TriageStatus triageStatus = new TriageStatus();
-
-    public String getLastModifiedBy() {
-        return lastModifiedBy;
-    }
-
-    public void setLastModifiedBy(String lastModifiedBy) {
-        this.lastModifiedBy = lastModifiedBy;
-    }
 
     public TriageStatus getTriageStatus() {
         return triageStatus;

@@ -783,7 +783,6 @@ public class EntityConverter {
         }
         
         setBaseContentAttributes(noteMod);
-        noteMod.setLastModifiedBy(masterNote.getLastModifiedBy());
         noteMod.setModifies(masterNote);
         masterNote.addModification(noteMod);
         
@@ -808,7 +807,6 @@ public class EntityConverter {
         }
         
         noteMod.setClientModifiedDate(new Date());
-        noteMod.setLastModifiedBy(noteMod.getModifies().getLastModifiedBy());
         
         setCalendarAttributes(noteMod, event);
     }

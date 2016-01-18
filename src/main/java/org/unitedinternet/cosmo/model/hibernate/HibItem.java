@@ -218,28 +218,6 @@ public abstract class HibItem extends HibAuditableObject {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if(obj==null || uid==null) {
-            return false;
-        }
-        if( ! (obj instanceof HibItem)) {
-            return false;
-        }
-
-        return uid.equals(((HibItem) obj).getUid());
-    }
-
-    @Override
-    public int hashCode() {
-        if(uid==null) {
-            return super.hashCode();
-        }
-        else {
-            return uid.hashCode();
-        }
-    }
-
-    @Override
     public String calculateEntityTag() {
         String uid = getUid() != null ? getUid() : "-";
         String modTime = getModifiedDate() != null ?

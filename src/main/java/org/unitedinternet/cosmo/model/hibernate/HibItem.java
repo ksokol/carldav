@@ -209,14 +209,6 @@ public abstract class HibItem extends HibAuditableObject {
         return Collections.singleton(parentDetails.getCollection());
     }
 
-    public HibCollectionItem getParent() {
-        if(getParents().size()==0) {
-            return null;
-        }
-
-        return getParents().iterator().next();
-    }
-
     private HibCollectionItemDetails getParentDetails(HibCollectionItem parent) {
         if(parentDetails.getCollection().equals(parent)) {
             return parentDetails;

@@ -141,7 +141,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 throw new IllegalArgumentException("cannot remove root item");
             }
 
-            removeItemInternal(hibItem);
+            getSession().delete(hibItem);
             getSession().flush();
 
         } catch (ObjectNotFoundException onfe) {
@@ -196,7 +196,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             newItem.setOwner(user);
             newItem.setName(user.getEmail());
             //do not set this, it might be sensitive or different than name
-            //newItem.setDisplayName(newItem.getName()); 
+            //newItem.setDisplayName(newItem.getName());
             setBaseItemProps(newItem);
             getSession().save(newItem);
             getSession().flush();
@@ -280,10 +280,10 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    
+
     /**
      * find the set of collection items as children of the given collection item.
-     * 
+     *
      * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
@@ -467,13 +467,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             return;
         }
 
-        ((HibItem) hibItem).removeParent(collection);
-
-        // If the item belongs to no collection, then it should
-        // be purged.
-        if (hibItem.getParents().size() == 0) {
-            removeItemInternal(hibItem);
-        }
+        getSession().delete(hibItem);
     }
 
     protected void addItemToCollectionInternal(HibItem hibItem,
@@ -482,10 +476,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         getSession().update(hibItem);
         getSession().update(collection);
         ((HibItem) hibItem).addParent(collection);
-    }
-
-    protected void removeItemInternal(HibItem hibItem) {
-        getSession().delete(hibItem);
     }
 
     protected BaseModelObject getBaseModelObject(Object obj) {

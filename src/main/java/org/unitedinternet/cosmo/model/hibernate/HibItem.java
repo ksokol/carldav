@@ -195,26 +195,11 @@ public abstract class HibItem extends HibAuditableObject {
         parentDetails = new HibCollectionItemDetails(parent,this);
     }
 
-    public void removeParent(HibCollectionItem parent) {
-        HibCollectionItemDetails cid = getParentDetails(parent);
-        if(cid!=null) {
-            parentDetails = null;
-        }
-    }
-
     public Set<HibCollectionItem> getParents() {
         if(parentDetails == null) {
             return Collections.emptySet();
         }
         return Collections.singleton(parentDetails.getCollection());
-    }
-
-    private HibCollectionItemDetails getParentDetails(HibCollectionItem parent) {
-        if(parentDetails.getCollection().equals(parent)) {
-            return parentDetails;
-        }
-
-        return null;
     }
 
     @Override

@@ -381,18 +381,11 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             return;
         }
 
-        ((HibItem) note).removeParent(collection);
-
         for (HibNoteItem mod : note.getModifications()) {
             removeNoteItemFromCollectionInternal(mod, collection);
         }
 
-        // If the item belongs to no collection, then it should
-        // be purged.
-        if (note.getParents().size() == 0) {
-            removeItemInternal(note);
-        }
-
+        getSession().delete(note);
     }
 
 

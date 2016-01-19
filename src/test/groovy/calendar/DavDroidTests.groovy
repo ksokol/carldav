@@ -981,4 +981,35 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
     }
+
+
+    @Test
+    void preconditionFailed() {
+        addVEvent()
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        VERSION:2.0
+                        BEGIN:VEVENT
+                        UID:e94d89d2-b195-4128-a9a8-be83a873deae
+                        DTSTAMP:20151230T121137Z
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:precondition-failed>If-Match disallows conditional request</cosmo:precondition-failed>
+                            </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(xml(response1))
+
+    }
 }

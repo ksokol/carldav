@@ -377,7 +377,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         getSession().update(note);
 
         // do nothing if item doesn't belong to collection
-        if (!note.getParents().contains(collection)) {
+        if (note.getParent().getId() != collection.getId()) {
             return;
         }
 
@@ -428,19 +428,16 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             note.getModifies().updateTimestamp();
             note.getModifies().addModification(note);
 
-            if (!note.getModifies().getParents().contains(parent)) {
+            if (note.getModifies().getParent().getId() != parent.getId()) {
                 throw new ModelValidationException(note, "cannot create modification "
                         + note.getUid() + " in collection " + parent.getUid()
                         + ", master must be created or added first");
             }
 
-            // Add modification to all parents of master
-            for (HibCollectionItem col : note.getModifies().getParents()) {
-                ((HibItem) note).addParent(col);
-            }
+            note.addParent(note.getModifies().getParent());
         } else {
             // add parent to new content
-            ((HibItem) content).addParent(parent);
+            content.addParent(parent);
         }
 
 
@@ -474,7 +471,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         // verify icaluid not in use for collections
         if (content instanceof HibICalendarItem) {
-            checkForDuplicateICalUid((HibICalendarItem) content, content.getParents());
+            checkForDuplicateICalUid((HibICalendarItem) content, content.getParent());
         }
 
         setBaseItemProps(content);
@@ -642,23 +639,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
                         + " already in use for collection " + parent.getUid(),
                         item.getUid(), dup.getUid());
             }
-        }
-    }
-
-    protected void checkForDuplicateICalUid(HibICalendarItem item,
-                                            Set<HibCollectionItem> parents) {
-
-        if (item.getIcalUid() == null) {
-            return;
-        }
-
-        // ignore modifications
-        if (item instanceof HibNoteItem && ((HibNoteItem) item).getModifies() != null) {
-            return;
-        }
-
-        for (HibCollectionItem parent : parents) {
-            checkForDuplicateICalUid(item, parent);
         }
     }
 

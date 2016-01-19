@@ -195,11 +195,16 @@ public abstract class HibItem extends HibAuditableObject {
         parentDetails = new HibCollectionItemDetails(parent,this);
     }
 
+    @Deprecated
     public Set<HibCollectionItem> getParents() {
         if(parentDetails == null) {
             return Collections.emptySet();
         }
         return Collections.singleton(parentDetails.getCollection());
+    }
+
+    public HibCollectionItem getParent() {
+        return parentDetails.getCollection();
     }
 
     @Override

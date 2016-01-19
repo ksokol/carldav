@@ -463,7 +463,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         getSession().update(hibItem);
 
         // do nothing if item doesn't belong to collection
-        if (!hibItem.getParents().contains(collection)) {
+        if (hibItem.getParent().getId() != collection.getId()) {
             return;
         }
 

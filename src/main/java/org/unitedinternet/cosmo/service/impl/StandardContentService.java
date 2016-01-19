@@ -401,10 +401,13 @@ public class StandardContentService implements ContentService {
     }
     
     private void acquireLocks(Set<HibCollectionItem> locks, HibItem hibItem) {
-        for(HibCollectionItem parent: hibItem.getParents()) {
-            if(locks.contains(parent)) {
-                continue;
-            }
+        final HibCollectionItem parent = hibItem.getParent();
+
+        if(parent == null) {
+            return;
+        }
+
+        if(!locks.contains(parent)) {
             if (! lockManager.lockCollection(parent, lockTimeout)) {
                 throw new CollectionLockedException("unable to obtain collection lock");
             }

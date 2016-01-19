@@ -485,20 +485,20 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             note.getModifies().updateTimestamp();
             note.getModifies().addModification(note);
 
-            if (!note.getModifies().getParents().equals(parents)) {
-                StringBuffer modParents = new StringBuffer();
-                StringBuffer masterParents = new StringBuffer();
-                for (HibCollectionItem p : parents) {
-                    modParents.append(p.getUid() + ",");
+            for (final HibCollectionItem parent : parents) {
+                if (note.getModifies().getParent().getId() != parent.getId()) {
+                    StringBuffer modParents = new StringBuffer();
+                    StringBuffer masterParents = new StringBuffer();
+                    for (HibCollectionItem p : parents) {
+                        modParents.append(p.getUid() + ",");
+                    }
+                    masterParents.append(note.getModifies().getParent().getUid() + ",");
+                    throw new ModelValidationException(note,
+                            "cannot create modification " + note.getUid()
+                                    + " in collections " + modParents.toString()
+                                    + " because master's parents are different: "
+                                    + masterParents.toString());
                 }
-                for (HibCollectionItem p : note.getModifies().getParents()) {
-                    masterParents.append(p.getUid() + ",");
-                }
-                throw new ModelValidationException(note,
-                        "cannot create modification " + note.getUid()
-                                + " in collections " + modParents.toString()
-                                + " because master's parents are different: "
-                                + masterParents.toString());
             }
         }
 

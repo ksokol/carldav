@@ -83,7 +83,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where i.uid=:param0", query.getQueryString());
     }
-    
+
     @Test
     public void testModifiedSinceQuery(){
         NoteItemFilter filter = new NoteItemFilter();
@@ -94,7 +94,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Query query = queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where i.modifiedDate between :param0 and :param1", query.getQueryString());
     }
-    
+
     /**
      * Tests display name query.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -105,33 +105,33 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setDisplayName(Restrictions.eq("test"));
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where i.displayName=:param0", query.getQueryString());
-    
+
         filter.setDisplayName(Restrictions.neq("test"));
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where i.displayName!=:param0", query.getQueryString());
-    
+
         filter.setDisplayName(Restrictions.like("test"));
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where i.displayName like :param0", query.getQueryString());
-        
+
         filter.setDisplayName(Restrictions.nlike("test"));
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where i.displayName not like :param0", query.getQueryString());
-    
+
         filter.setDisplayName(Restrictions.isNull());
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where i.displayName is null", query.getQueryString());
-    
+
         filter.setDisplayName(Restrictions.ilike("test"));
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where lower(i.displayName) like :param0", query.getQueryString());
-    
+
         filter.setDisplayName(Restrictions.nilike("test"));
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i where lower(i.displayName) not like :param0", query.getQueryString());
-    
+
     }
-    
+
     /**
      * Tests parent query.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -142,10 +142,10 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         HibCollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibItem i join i.parentDetails pd where "
-                + "pd.collection=:parent", query.getQueryString());
+        Assert.assertEquals("select i from HibItem i join i.collection pd where "
+                + "pd=:parent", query.getQueryString());
     }
-    
+
     /**
      * Tests display name and parent query.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -157,10 +157,10 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         filter.setDisplayName(Restrictions.eq("test"));
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibItem i join i.parentDetails pd where "
-                + "pd.collection=:parent and i.displayName=:param1", query.getQueryString());
+        Assert.assertEquals("select i from HibItem i join i.collection pd where "
+                + "pd=:parent and i.displayName=:param1", query.getQueryString());
     }
-    
+
     /**
      * Tests content item query.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -172,24 +172,24 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
-                + "pd.collection=:parent and i.triageStatus.code=:param1", 
-                   query.getQueryString());
-    
+        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+                        + "pd=:parent and i.triageStatus.code=:param1",
+                query.getQueryString());
+
         filter.setTriageStatusCode(Restrictions.isNull());
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
-                + "pd.collection=:parent and i.triageStatus.code is null", 
-                   query.getQueryString());
-        
+        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+                        + "pd=:parent and i.triageStatus.code is null",
+                query.getQueryString());
+
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         filter.addOrderBy(ContentItemFilter.ORDER_BY_TRIAGE_STATUS_RANK_ASC);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.parentDetails pd where "
-                + "pd.collection=:parent and i.triageStatus.code=:param1 order by "
+        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+                + "pd=:parent and i.triageStatus.code=:param1 order by "
                 + "i.triageStatus.rank", query.getQueryString());
     }
-    
+
     /**
      * Tests note item query.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -203,42 +203,42 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setIcalUid(Restrictions.eq("icaluid"));
         filter.setBody(Restrictions.eq("body"));
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
-        
+
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd where pd.collection=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and i.body=:param4", query.getQueryString());
-        
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and i.body=:param4", query.getQueryString());
+
         filter = new NoteItemFilter();
         filter.setIsModification(true);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where i.modifies is not null", query.getQueryString());
-       
+
         filter.setIsModification(false);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where i.modifies is null", query.getQueryString());
-       
+
         filter.setIsModification(null);
-        
+
         filter.setHasModifications(true);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where size(i.modifications) > 0", query.getQueryString());
-        
+
         filter.setHasModifications(false);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where size(i.modifications) = 0", query.getQueryString());
-    
+
         filter =  new NoteItemFilter();
         filter.setMasterNoteItem(new HibNoteItem());
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where (i=:masterItem or "
                 + "i.modifies=:masterItem)", query.getQueryString());
-    
+
         filter = new NoteItemFilter();
         Date date1 = new Date(1000);
         Date date2 = new Date(2000);
         filter.setReminderTime(Restrictions.between(date1,date2));
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where i.remindertime between :param0 and :param1", query.getQueryString());
-    
+
     }
 
     /**
@@ -257,7 +257,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         missingFilter.setMissing(true);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibNoteItem i where not exists "
-                + "(select s.id from HibStamp s where s.item=i and s.class=HibEventStamp)",
+                        + "(select s.id from HibStamp s where s.item=i and s.class=HibEventStamp)",
                 query.getQueryString());
     }
 
@@ -276,14 +276,14 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         //filter.setBody("body");
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibBaseEventStamp es where pd.collection=:parent and "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd, "
+                + "HibBaseEventStamp es where pd=:parent and "
                 + "i.displayName=:param1 and es.item=i and es.class = 'event' and i.icalUid=:param2", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, HibBaseEventStamp "
-                + "es where pd.collection=:parent and i.displayName=:param1 and "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd, HibBaseEventStamp "
+                + "es where pd=:parent and i.displayName=:param1 and "
                 + "es.item=i and es.class = 'event' and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
                 + "and i.icalUid=:param2", query.getQueryString());
     }
@@ -304,8 +304,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.parentDetails pd, "
-                + "HibBaseEventStamp es where pd.collection=:parent and es.item=i "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd, "
+                + "HibBaseEventStamp es where pd=:parent and es.item=i "
                 + "and es.class = 'event' and ( (es.timeRangeIndex.isFloating=true and "
                 + "es.timeRangeIndex.startDate < '20070201T040000' and "
                 + "es.timeRangeIndex.endDate > '20070101T040000') or "

@@ -467,6 +467,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             return;
         }
 
+        hibItem.addParent(null);
         getSession().delete(hibItem);
     }
 

@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,28 +29,14 @@ public class HibCollectionItem extends HibItem {
 
     private static final long serialVersionUID = 1L;
 
-    @OneToMany(targetEntity=HibCollectionItemDetails.class, mappedBy="collection", fetch=FetchType.LAZY)
-    @Cascade( {CascadeType.DELETE }) 
-    private Set<HibCollectionItemDetails> childDetails = new HashSet<>();
-
-    private transient Set<HibItem> children = null;
+    @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
+    private Set<HibItem> childDetails = new HashSet<>();
 
     public Set<HibItem> getChildren() {
-        if(children!=null) {
-            return children;
-        }
-
-        children = new HashSet<>();
-        for(HibCollectionItemDetails cid: childDetails) {
-            children.add(cid.getItem());
-        }
-
-        children = Collections.unmodifiableSet(children);
-
-        return children;
+        return childDetails;
     }
 
     public void setChildren(final Set<HibItem> children) {
-        this.children = children;
+        childDetails = children;
     }
 }

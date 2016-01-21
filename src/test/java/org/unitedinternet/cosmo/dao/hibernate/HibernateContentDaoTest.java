@@ -717,7 +717,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
         Assert.assertNotNull(queryItem.getParent());
-        
+
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
         b.setOwner(user);

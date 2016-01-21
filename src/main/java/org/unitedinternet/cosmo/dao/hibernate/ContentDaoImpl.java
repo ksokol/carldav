@@ -65,9 +65,10 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             checkForDuplicateUid(collection);
 
             setBaseItemProps(collection);
-            ((HibItem) collection).addParent(parent);
+            collection.addParent(parent);
 
             getSession().save(collection);
+            getSession().refresh(parent);
             getSession().flush();
 
             return collection;
@@ -218,6 +219,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         try {
             getSession().refresh(collection);
             removeCollectionRecursive(collection);
+            getSession().delete(collection);
             getSession().flush();
         } catch (HibernateException e) {
             getSession().clear();
@@ -346,6 +348,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             }
         }
 
+        content.addParent(null);
         getSession().delete(content);
     }
 
@@ -365,8 +368,10 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             if (hibItem instanceof HibCollectionItem) {
                 removeCollectionRecursive((HibCollectionItem) hibItem);
             } else if (hibItem instanceof HibContentItem) {
+                hibItem.addParent(null);
                 getSession().delete(hibItem);
             } else {
+                hibItem.addParent(null);
                 getSession().delete(hibItem);
             }
         }
@@ -385,6 +390,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             removeNoteItemFromCollectionInternal(mod, collection);
         }
 
+        note.addParent(null);
         getSession().delete(note);
     }
 
@@ -442,6 +448,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
 
         getSession().save(content);
+        getSession().refresh(parent);
     }
 
     protected void createContentInternal(Set<HibCollectionItem> parents, HibContentItem content) {

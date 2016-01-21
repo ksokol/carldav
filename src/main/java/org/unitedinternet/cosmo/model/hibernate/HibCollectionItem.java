@@ -33,8 +33,4 @@ public class HibCollectionItem extends HibItem {
     public Set<HibItem> getItems() {
         return items;
     }
-
-    public void setItems(final Set<HibItem> items) {
-        this.items = items;
-    }
 }

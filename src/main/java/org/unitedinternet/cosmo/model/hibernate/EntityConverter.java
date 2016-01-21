@@ -250,7 +250,7 @@ public class EntityConverter {
         // zone registry.
         Map<String, CalendarComponent> tzIdx = new HashMap<>();
         
-        for (HibItem hibItem : collection.getChildren()) {
+        for (HibItem hibItem : collection.getItems()) {
            if (!(hibItem instanceof HibContentItem)) {
                continue;
            }

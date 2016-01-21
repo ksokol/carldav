@@ -23,4 +23,16 @@ class XmlHelper {
         assertThat(getetag, notNullValue())
         return getetag
     }
+
+    static String existinguuid(def result) {
+        def getetag = new XmlSlurper().parseText(result).'no-uid-conflict'.'existing-uuid'.text()
+        assertThat(getetag, notNullValue())
+        return getetag
+    }
+
+    static String conflictinguuid(def result) {
+        def getetag = new XmlSlurper().parseText(result).'no-uid-conflict'.'conflicting-uuid'.text()
+        assertThat(getetag, notNullValue())
+        return getetag
+    }
 }

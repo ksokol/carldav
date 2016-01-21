@@ -20,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static testutil.TestUser.USER01
 import static testutil.TestUser.USER01_PASSWORD
 import static testutil.helper.Base64Helper.user
+import static testutil.helper.XmlHelper.conflictinguuid
+import static testutil.helper.XmlHelper.existinguuid
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static testutil.mockmvc.CustomRequestBuilders.propfind
@@ -980,5 +982,58 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
+    }
+
+
+    @Test
+    void preconditionFailed() {
+        addVEvent()
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        VERSION:2.0
+                        BEGIN:VEVENT
+                        UID:e94d89d2-b195-4128-a9a8-be83a873deae
+                        DTSTAMP:20151230T121137Z
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:precondition-failed>If-Match disallows conditional request</cosmo:precondition-failed>
+                            </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(xml(response1))
+
+    }
+
+    @Test
+    void conflict() {
+        addVEvent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be11a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(ADD_VEVENT_REQUEST1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isConflict())
+                .andReturn().getResponse().getContentAsString()
+
+        def response1 = """\
+                        <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                            <C:no-uid-conflict>
+                                <cosmo:existing-uuid>${existinguuid(result1)}</cosmo:existing-uuid>
+                                <cosmo:conflicting-uuid>${conflictinguuid(result1)}</cosmo:conflicting-uuid>
+                            </C:no-uid-conflict>
+                        </D:error>"""
+
+        assertThat(result1, equalXml(response1))
     }
 }

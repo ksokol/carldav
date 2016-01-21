@@ -310,7 +310,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
         
         root = (HibCollectionItem) contentDao.getRootItem(user);
-        Assert.assertTrue(root.getChildren().size()==0);
+        Assert.assertTrue(root.getItems().size()==0);
         
     }
     
@@ -341,7 +341,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         contentDao.removeUserContent(user2);
         
         root = (HibCollectionItem) contentDao.getRootItem(user1);
-        Assert.assertEquals(0, root.getChildren().size());
+        Assert.assertEquals(0, root.getItems().size());
     }
 
     /**
@@ -592,12 +592,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         // test children
         @SuppressWarnings("rawtypes")
-        Collection children = a.getChildren();
+        Collection children = a.getItems();
         Assert.assertEquals(2, children.size());
         verifyContains(children, b);
         verifyContains(children, d);
 
-        children = root.getChildren();
+        children = root.getItems();
         Assert.assertEquals(1, children.size());
         verifyContains(children, a);
 
@@ -716,8 +716,8 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
 
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(queryItem.getParents().size(), 1);
-        
+        Assert.assertNotNull(queryItem.getCollection());
+
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
         b.setOwner(user);

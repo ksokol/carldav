@@ -65,9 +65,10 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             checkForDuplicateUid(collection);
 
             setBaseItemProps(collection);
-            ((HibItem) collection).addParent(parent);
+            collection.setCollection(parent);
 
             getSession().save(collection);
+            getSession().refresh(parent);
             getSession().flush();
 
             return collection;
@@ -218,6 +219,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         try {
             getSession().refresh(collection);
             removeCollectionRecursive(collection);
+            getSession().delete(collection);
             getSession().flush();
         } catch (HibernateException e) {
             getSession().clear();
@@ -346,6 +348,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             }
         }
 
+        content.setCollection(null);
         getSession().delete(content);
     }
 
@@ -361,12 +364,14 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     @Override
     public void removeItemsFromCollection(HibCollectionItem collection) {
-       for (HibItem hibItem : collection.getChildren()) {
+       for (HibItem hibItem : collection.getItems()) {
             if (hibItem instanceof HibCollectionItem) {
                 removeCollectionRecursive((HibCollectionItem) hibItem);
             } else if (hibItem instanceof HibContentItem) {
+                hibItem.setCollection(null);
                 getSession().delete(hibItem);
             } else {
+                hibItem.setCollection(null);
                 getSession().delete(hibItem);
             }
         }
@@ -377,22 +382,16 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         getSession().update(note);
 
         // do nothing if item doesn't belong to collection
-        if (!note.getParents().contains(collection)) {
+        if (note.getCollection().getId() != collection.getId()) {
             return;
         }
-
-        ((HibItem) note).removeParent(collection);
 
         for (HibNoteItem mod : note.getModifications()) {
             removeNoteItemFromCollectionInternal(mod, collection);
         }
 
-        // If the item belongs to no collection, then it should
-        // be purged.
-        if (note.getParents().size() == 0) {
-            removeItemInternal(note);
-        }
-
+        note.setCollection(null);
+        getSession().delete(note);
     }
 
 
@@ -435,23 +434,21 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             note.getModifies().updateTimestamp();
             note.getModifies().addModification(note);
 
-            if (!note.getModifies().getParents().contains(parent)) {
+            if (note.getModifies().getCollection().getId() != parent.getId()) {
                 throw new ModelValidationException(note, "cannot create modification "
                         + note.getUid() + " in collection " + parent.getUid()
                         + ", master must be created or added first");
             }
 
-            // Add modification to all parents of master
-            for (HibCollectionItem col : note.getModifies().getParents()) {
-                ((HibItem) note).addParent(col);
-            }
+            note.setCollection(note.getModifies().getCollection());
         } else {
             // add parent to new content
-            ((HibItem) content).addParent(parent);
+            content.setCollection(parent);
         }
 
 
         getSession().save(content);
+        getSession().refresh(parent);
     }
 
     protected void createContentInternal(Set<HibCollectionItem> parents, HibContentItem content) {
@@ -481,7 +478,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         // verify icaluid not in use for collections
         if (content instanceof HibICalendarItem) {
-            checkForDuplicateICalUid((HibICalendarItem) content, content.getParents());
+            checkForDuplicateICalUid((HibICalendarItem) content, content.getCollection());
         }
 
         setBaseItemProps(content);
@@ -495,25 +492,25 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             note.getModifies().updateTimestamp();
             note.getModifies().addModification(note);
 
-            if (!note.getModifies().getParents().equals(parents)) {
-                StringBuffer modParents = new StringBuffer();
-                StringBuffer masterParents = new StringBuffer();
-                for (HibCollectionItem p : parents) {
-                    modParents.append(p.getUid() + ",");
+            for (final HibCollectionItem parent : parents) {
+                if (note.getModifies().getCollection().getId() != parent.getId()) {
+                    StringBuffer modParents = new StringBuffer();
+                    StringBuffer masterParents = new StringBuffer();
+                    for (HibCollectionItem p : parents) {
+                        modParents.append(p.getUid() + ",");
+                    }
+                    masterParents.append(note.getModifies().getCollection().getUid() + ",");
+                    throw new ModelValidationException(note,
+                            "cannot create modification " + note.getUid()
+                                    + " in collections " + modParents.toString()
+                                    + " because master's parents are different: "
+                                    + masterParents.toString());
                 }
-                for (HibCollectionItem p : note.getModifies().getParents()) {
-                    masterParents.append(p.getUid() + ",");
-                }
-                throw new ModelValidationException(note,
-                        "cannot create modification " + note.getUid()
-                                + " in collections " + modParents.toString()
-                                + " because master's parents are different: "
-                                + masterParents.toString());
             }
         }
 
         for (HibCollectionItem parent : parents) {
-            ((HibItem) content).addParent(parent);
+            ((HibItem) content).setCollection(parent);
         }
 
 
@@ -649,23 +646,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
                         + " already in use for collection " + parent.getUid(),
                         item.getUid(), dup.getUid());
             }
-        }
-    }
-
-    protected void checkForDuplicateICalUid(HibICalendarItem item,
-                                            Set<HibCollectionItem> parents) {
-
-        if (item.getIcalUid() == null) {
-            return;
-        }
-
-        // ignore modifications
-        if (item instanceof HibNoteItem && ((HibNoteItem) item).getModifies() != null) {
-            return;
-        }
-
-        for (HibCollectionItem parent : parents) {
-            checkForDuplicateICalUid(item, parent);
         }
     }
 

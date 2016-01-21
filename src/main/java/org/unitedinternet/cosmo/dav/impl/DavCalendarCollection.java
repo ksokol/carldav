@@ -38,6 +38,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -236,8 +237,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             }
 
             try {
-                getContentService().updateContentItems(content.getParents(),
-                        toUpdate);
+                getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {
@@ -278,8 +278,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             LOG.debug("updating journal {}", member.getResourcePath());
 
             try {
-                getContentService().updateContentItems(content.getParents(),
-                        toUpdate);
+                getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {

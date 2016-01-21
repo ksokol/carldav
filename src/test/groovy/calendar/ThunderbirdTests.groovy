@@ -13,8 +13,7 @@ import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static testutil.TestUser.USER01
 import static testutil.helper.XmlHelper.getetag
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
@@ -1198,5 +1197,42 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(text(request1))
+    }
+
+    @Test
+    void preconditionFailed() {
+        addVEvent()
+
+        def request1 = VEVENT.replaceAll("DESCRIPTION:description", "DESCRIPTION:description altered")
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:precondition-failed>If-Match disallows conditional request</cosmo:precondition-failed>
+                            </D:error>"""
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(xml(response1))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        MvcResult result2 = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+        currentEtag = result2.getResponse().getHeader(ETAG)
+
+        mockMvc.perform(get("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(content().string(containsString("DESCRIPTION:description altered")))
     }
 }

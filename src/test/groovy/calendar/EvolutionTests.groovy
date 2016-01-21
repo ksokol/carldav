@@ -1322,4 +1322,34 @@ class EvolutionTests extends IntegrationTestSupport {
         addVCard()
         fetchingCalendarFirstTime()
     }
+
+    @Test
+    void preconditionFailed() {
+        addVEvent()
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        VERSION:2.0
+                        BEGIN:VEVENT
+                        UID:20151230T132406Z-27136-1000-3483-35@localhost
+                        DTSTAMP:20151230T121137Z
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:precondition-failed>If-Match disallows conditional request</cosmo:precondition-failed>
+                            </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(xml(response1))
+
+    }
 }

@@ -37,7 +37,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
@@ -87,8 +86,9 @@ public abstract class HibItem extends HibAuditableObject {
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     private Set<HibStamp> stamps = new HashSet<>();
 
-    @OneToOne(targetEntity=HibCollectionItemDetails.class, mappedBy="item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    private HibCollectionItemDetails parentDetails;
+    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "collectionid")
+    private HibCollectionItem collection;
 
     @ManyToOne(targetEntity=User.class, fetch=FetchType.LAZY)
     @JoinColumn(name="ownerid", nullable = false)
@@ -191,30 +191,12 @@ public abstract class HibItem extends HibAuditableObject {
         return version;
     }
 
-    public void addParent(HibCollectionItem parent) {
-        parentDetails = new HibCollectionItemDetails(parent,this);
+    public void setCollection(HibCollectionItem parent) {
+        collection = parent;
     }
 
-    public void removeParent(HibCollectionItem parent) {
-        HibCollectionItemDetails cid = getParentDetails(parent);
-        if(cid!=null) {
-            parentDetails = null;
-        }
-    }
-
-    public Set<HibCollectionItem> getParents() {
-        if(parentDetails == null) {
-            return Collections.emptySet();
-        }
-        return Collections.singleton(parentDetails.getCollection());
-    }
-
-    private HibCollectionItemDetails getParentDetails(HibCollectionItem parent) {
-        if(parentDetails.getCollection().equals(parent)) {
-            return parentDetails;
-        }
-
-        return null;
+    public HibCollectionItem getCollection() {
+        return collection;
     }
 
     @Override

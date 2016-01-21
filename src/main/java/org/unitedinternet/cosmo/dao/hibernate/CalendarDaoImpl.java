@@ -74,7 +74,7 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
             if (firstPassItemFilter != null) {
                 itemsToProces = itemFilterProcessor.processFilter(firstPassItemFilter);
             } else {
-                itemsToProces = collection.getChildren();
+                itemsToProces = collection.getItems();
             }
 
             CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();

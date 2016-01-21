@@ -65,7 +65,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             checkForDuplicateUid(collection);
 
             setBaseItemProps(collection);
-            collection.addParent(parent);
+            collection.setCollection(parent);
 
             getSession().save(collection);
             getSession().refresh(parent);
@@ -348,7 +348,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             }
         }
 
-        content.addParent(null);
+        content.setCollection(null);
         getSession().delete(content);
     }
 
@@ -364,14 +364,14 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     @Override
     public void removeItemsFromCollection(HibCollectionItem collection) {
-       for (HibItem hibItem : collection.getChildren()) {
+       for (HibItem hibItem : collection.getItems()) {
             if (hibItem instanceof HibCollectionItem) {
                 removeCollectionRecursive((HibCollectionItem) hibItem);
             } else if (hibItem instanceof HibContentItem) {
-                hibItem.addParent(null);
+                hibItem.setCollection(null);
                 getSession().delete(hibItem);
             } else {
-                hibItem.addParent(null);
+                hibItem.setCollection(null);
                 getSession().delete(hibItem);
             }
         }
@@ -382,7 +382,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         getSession().update(note);
 
         // do nothing if item doesn't belong to collection
-        if (note.getParent().getId() != collection.getId()) {
+        if (note.getCollection().getId() != collection.getId()) {
             return;
         }
 
@@ -390,7 +390,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             removeNoteItemFromCollectionInternal(mod, collection);
         }
 
-        note.addParent(null);
+        note.setCollection(null);
         getSession().delete(note);
     }
 
@@ -434,16 +434,16 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             note.getModifies().updateTimestamp();
             note.getModifies().addModification(note);
 
-            if (note.getModifies().getParent().getId() != parent.getId()) {
+            if (note.getModifies().getCollection().getId() != parent.getId()) {
                 throw new ModelValidationException(note, "cannot create modification "
                         + note.getUid() + " in collection " + parent.getUid()
                         + ", master must be created or added first");
             }
 
-            note.addParent(note.getModifies().getParent());
+            note.setCollection(note.getModifies().getCollection());
         } else {
             // add parent to new content
-            content.addParent(parent);
+            content.setCollection(parent);
         }
 
 
@@ -478,7 +478,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         // verify icaluid not in use for collections
         if (content instanceof HibICalendarItem) {
-            checkForDuplicateICalUid((HibICalendarItem) content, content.getParent());
+            checkForDuplicateICalUid((HibICalendarItem) content, content.getCollection());
         }
 
         setBaseItemProps(content);
@@ -493,13 +493,13 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             note.getModifies().addModification(note);
 
             for (final HibCollectionItem parent : parents) {
-                if (note.getModifies().getParent().getId() != parent.getId()) {
+                if (note.getModifies().getCollection().getId() != parent.getId()) {
                     StringBuffer modParents = new StringBuffer();
                     StringBuffer masterParents = new StringBuffer();
                     for (HibCollectionItem p : parents) {
                         modParents.append(p.getUid() + ",");
                     }
-                    masterParents.append(note.getModifies().getParent().getUid() + ",");
+                    masterParents.append(note.getModifies().getCollection().getUid() + ",");
                     throw new ModelValidationException(note,
                             "cannot create modification " + note.getUid()
                                     + " in collections " + modParents.toString()
@@ -510,7 +510,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         for (HibCollectionItem parent : parents) {
-            ((HibItem) content).addParent(parent);
+            ((HibItem) content).setCollection(parent);
         }
 
 

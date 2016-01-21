@@ -401,7 +401,7 @@ public class StandardContentService implements ContentService {
     }
     
     private void acquireLocks(Set<HibCollectionItem> locks, HibItem hibItem) {
-        final HibCollectionItem parent = hibItem.getParent();
+        final HibCollectionItem parent = hibItem.getCollection();
 
         if(parent == null) {
             return;

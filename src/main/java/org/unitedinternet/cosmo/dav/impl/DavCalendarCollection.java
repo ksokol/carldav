@@ -237,7 +237,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             }
 
             try {
-                getContentService().updateContentItems(Collections.singleton(content.getParent()), toUpdate);
+                getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {
@@ -278,7 +278,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             LOG.debug("updating journal {}", member.getResourcePath());
 
             try {
-                getContentService().updateContentItems(Collections.singleton(content.getParent()), toUpdate);
+                getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {

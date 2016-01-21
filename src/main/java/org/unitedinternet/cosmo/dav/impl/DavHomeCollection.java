@@ -71,7 +71,7 @@ public class DavHomeCollection extends DavCollectionBase {
     public DavResourceIterator getMembers() {
         List<org.apache.jackrabbit.webdav.DavResource> members = new ArrayList<>();
         try {
-            for (HibItem memberHibItem : ((HibCollectionItem) getItem()).getChildren()) {
+            for (HibItem memberHibItem : ((HibCollectionItem) getItem()).getItems()) {
                 WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
                     members.add(resource);

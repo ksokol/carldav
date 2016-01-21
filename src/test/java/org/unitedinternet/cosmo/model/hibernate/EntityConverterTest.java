@@ -258,7 +258,7 @@ public class EntityConverterTest {
         hibItems.add(note1);
         hibItems.add(note2);
 
-        collection.setChildren(hibItems);
+        collection.setItems(hibItems);
         Calendar fullCal = converter.convertCollection(collection);
         fullCal.validate();
         Assert.assertNotNull(fullCal);

@@ -55,7 +55,7 @@ public class CalendarResourceProvider extends FileProvider {
                     DavContent content)
         throws CosmoDavException, IOException {
 
-        // do content.getParent() check only for normal auth only, ticket auth is on the item only, not its parent.
+        // do content.getCollection() check only for normal auth only, ticket auth is on the item only, not its parent.
         if (!content.getParent().exists()) {
             throw new ConflictException("One or more intermediate collections must be created");
         }

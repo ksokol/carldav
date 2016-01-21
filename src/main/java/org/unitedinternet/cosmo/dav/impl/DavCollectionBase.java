@@ -125,7 +125,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
 
     public DavResourceIterator getMembers() {
         try {
-            for (HibItem memberHibItem : ((HibCollectionItem) getItem()).getChildren()) {
+            for (HibItem memberHibItem : ((HibCollectionItem) getItem()).getItems()) {
                 WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
                     members.add(resource);

@@ -463,11 +463,11 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         getSession().update(hibItem);
 
         // do nothing if item doesn't belong to collection
-        if (hibItem.getParent().getId() != collection.getId()) {
+        if (hibItem.getCollection().getId() != collection.getId()) {
             return;
         }
 
-        hibItem.addParent(null);
+        hibItem.setCollection(null);
         getSession().delete(hibItem);
     }
 
@@ -476,7 +476,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         verifyItemNameUnique(hibItem, collection);
         getSession().update(hibItem);
         getSession().update(collection);
-        ((HibItem) hibItem).addParent(collection);
+        ((HibItem) hibItem).setCollection(collection);
     }
 
     protected BaseModelObject getBaseModelObject(Object obj) {

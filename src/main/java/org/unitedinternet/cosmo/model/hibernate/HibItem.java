@@ -191,11 +191,11 @@ public abstract class HibItem extends HibAuditableObject {
         return version;
     }
 
-    public void addParent(HibCollectionItem parent) {
+    public void setCollection(HibCollectionItem parent) {
         collection = parent;
     }
 
-    public HibCollectionItem getParent() {
+    public HibCollectionItem getCollection() {
         return collection;
     }
 

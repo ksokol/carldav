@@ -30,13 +30,13 @@ public class HibCollectionItem extends HibItem {
     private static final long serialVersionUID = 1L;
 
     @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
-    private Set<HibItem> childDetails = new HashSet<>();
+    private Set<HibItem> items = new HashSet<>();
 
-    public Set<HibItem> getChildren() {
-        return childDetails;
+    public Set<HibItem> getItems() {
+        return items;
     }
 
-    public void setChildren(final Set<HibItem> children) {
-        childDetails = children;
+    public void setItems(final Set<HibItem> items) {
+        this.items = items;
     }
 }

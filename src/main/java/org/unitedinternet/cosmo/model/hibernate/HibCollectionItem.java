@@ -27,8 +27,6 @@ import javax.persistence.OneToMany;
 @DiscriminatorValue("collection")
 public class HibCollectionItem extends HibItem {
 
-    private static final long serialVersionUID = 1L;
-
     @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
     private Set<HibItem> items = new HashSet<>();
 

@@ -238,38 +238,7 @@ public class EntityConverterTest {
         Assert.assertEquals(0, item.getStamps().size());
         
     }
-    
-    /**
-     * Tests get calendar from collection.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testGetCalendarFromCollection() throws Exception {
-        
-        Calendar c1 = getCalendar("eventwithtimezone1.ics");
-        Calendar c2 = getCalendar("vtodo.ics");
-        HibNoteItem note1 = converter.convertEventCalendar(c1).iterator().next();
-        HibNoteItem note2 = converter.convertTaskCalendar(c2);
-       
-        HibCollectionItem collection = new HibCollectionItem();
-        collection.addStamp(new HibCalendarCollectionStamp(collection));
 
-        final Set<HibItem> hibItems = new HashSet<>();
-        hibItems.add(note1);
-        hibItems.add(note2);
-
-        collection.setItems(hibItems);
-        Calendar fullCal = converter.convertCollection(collection);
-        fullCal.validate();
-        Assert.assertNotNull(fullCal);
-        
-        // VTIMEZONE, VTODO, VEVENT
-        Assert.assertEquals(3,fullCal.getComponents().size());
-        Assert.assertEquals(1, fullCal.getComponents(Component.VTIMEZONE).size());
-        Assert.assertEquals(1, fullCal.getComponents(Component.VEVENT).size());
-        Assert.assertEquals(1, fullCal.getComponents(Component.VTODO).size());
-    }
-    
     /**
      * Tests convert task.
      * @throws Exception - if something is wrong this exception is thrown.

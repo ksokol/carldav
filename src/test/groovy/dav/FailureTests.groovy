@@ -96,4 +96,33 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(xml(response1))
     }
 
+    @Test
+    void addVTodoWithInvalidDtstamp() {
+        def request1 = """\
+                    BEGIN:VCALENDAR
+                    VERSION:2.0
+                    PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x
+                    BEGIN:VTODO
+                    DTSTAMP:20151231T115937
+                    UID:6f490b02-77d7-442e-abd3-1e0bb14c3259
+                    CREATED:20151231T115922Z
+                    LAST-MODIFIED:20151231T115922Z
+                    SUMMARY:add vtodo
+                    STATUS:NEEDS-ACTION
+                    END:VTODO
+                    END:VCALENDAR
+                    """.stripIndent()
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:valid-calendar-data>Invalid calendar object: DTSTAMP: DATE-TIME value must be specified in UTC time</C:valid-calendar-data>
+                            </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isBadRequest())
+                .andExpect(xml(response1))
+    }
 }

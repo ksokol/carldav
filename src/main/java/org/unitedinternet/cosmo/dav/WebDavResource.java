@@ -15,14 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import java.io.IOException;
-
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
+
+import java.io.IOException;
 
 /**
  * An interface providing resource functionality required by WebDAV
@@ -43,11 +40,6 @@ public interface WebDavResource
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
     DavCollection getParent() throws CosmoDavException;
-
-    MultiStatusResponse
-        updateProperties(DavPropertySet setProperties,
-                         DavPropertyNameSet removePropertyNames)
-        throws CosmoDavException;
 
     void writeTo(OutputContext out)
         throws CosmoDavException, IOException;

@@ -4,6 +4,7 @@ import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
+import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
@@ -123,6 +124,35 @@ class FailureTests extends IntegrationTestSupport {
                 .content(request1)
                 .header("If-None-Match", "*"))
                 .andExpect(status().isBadRequest())
+                .andExpect(xml(response1))
+    }
+
+    @Test
+    void calendarQueryWithInvalidCollation() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                  <C:text-match collation="i;unknown">20151230T132406Z-27136-1000-3483-35_localhost</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:supported-collation>Collation must be one of i;ascii-casemap, i;octet</C:supported-collation>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }
 }

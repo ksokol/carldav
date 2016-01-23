@@ -32,6 +32,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
@@ -52,8 +53,8 @@ public class HibNoteItem extends HibICalendarItem {
     @Column(name= "hasmodifications")
     private boolean hasModifications = false;
 
-    @Type(type="materialized_clob")
-    @Column(name= "body", length= 214748364)
+    @Column(name= "body", columnDefinition="CLOB")
+    @Lob
     private String body;
 
     @Column(name = "remindertime")

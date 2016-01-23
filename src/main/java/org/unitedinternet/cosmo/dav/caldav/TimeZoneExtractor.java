@@ -37,34 +37,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 public class TimeZoneExtractor {
 
     /**
-     * Creates an instance of <code>VTimeZone</code> from a
-     * DAV property value.
-     *
-     * The property value must be an iCalendar string. The further
-     * requirements for a valid time zone are as per 
-     * {@link #extractTimeZone(String)}.
-     *
-     * @param prop the <code>WebDavProperty</code> containing the
-     * timezone
-     * @return a <code>Calendar</code> containing a single
-     * <code>VTimeZone</code> representing the extracted  timezone, or
-     * <code>null</code> if the property or its value is <code>null</code>
-     * @throws CosmoDavException if the property value cannot be parsed or is not
-     * a valid iCalendar object containing a single VTIMEZONE component
-     */
-    public static Calendar extract(WebDavProperty prop)
-        throws CosmoDavException {
-        if (prop == null) {
-            return null;
-        }
-        if (prop.getValue() == null) {
-            return null;
-        }
-
-        return extractInCalendar(prop.getValueText());
-    }
-
-    /**
      * Creates an instance of <code>VTimeZone</code> from an
      * iCalendar string.
      *

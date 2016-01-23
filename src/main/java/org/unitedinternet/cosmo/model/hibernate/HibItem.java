@@ -117,17 +117,6 @@ public abstract class HibItem extends HibAuditableObject {
         stamps.remove(stamp);
     }
 
-    public HibStamp getStamp(String type) {
-        for(HibStamp stamp : stamps) {
-            // only return stamp if it matches class and is active
-            if(stamp.getType().equals(type)) {
-                return stamp;
-            }
-        }
-
-        return null;
-    }
-
     public HibStamp getStamp(Class clazz) {
         for(HibStamp stamp : stamps) {
             // only return stamp if it is an instance of the specified class

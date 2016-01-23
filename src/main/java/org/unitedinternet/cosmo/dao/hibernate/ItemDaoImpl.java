@@ -79,24 +79,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
 
     /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#findItemByPath(java.lang.String, java.lang.String)
-     */
-    public HibItem findItemByPath(String path, String parentUid) {
-        try {
-            HibItem parent = findItemByUid(parentUid);
-            if (parent == null) {
-                return null;
-            }
-            HibItem hibItem = itemPathTranslator.findItemByPath(path, (HibCollectionItem) parent);
-            return hibItem;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-
-    /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ItemDao#findItemParentByPath(java.lang.String)
      */
     public HibItem findItemParentByPath(String path) {
@@ -154,13 +136,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
-    }
-
-    public HibHomeCollectionItem getRootItem(User user, boolean forceReload) {
-        if(forceReload){
-            getSession().clear();
-        }
-        return getRootItem(user);
     }
 
     /*

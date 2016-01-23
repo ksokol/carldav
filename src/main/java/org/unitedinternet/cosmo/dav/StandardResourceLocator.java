@@ -63,14 +63,6 @@ public class StandardResourceLocator implements DavResourceLocator {
         }
     }
 
-    public URL getUrl(boolean isCollection) {
-        try {
-            return new URL(getHref(isCollection));
-        } catch (Exception e) {
-            throw new CosmoException(e);
-        }
-    }
-
     public URL getUrl(boolean absolute,
                       boolean isCollection) {
     try {
@@ -78,14 +70,6 @@ public class StandardResourceLocator implements DavResourceLocator {
     } catch (Exception e) {
         throw new CosmoException(e);
     }
-    }
-
-    public String getPrefix() {
-        return context.getProtocol() + "://" + context.getAuthority();
-    }
-
-    public String getBasePath() {
-        return context.getPath();
     }
 
     public String getBaseHref() {

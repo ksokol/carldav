@@ -51,27 +51,11 @@ public interface DavResourceLocator {
                           boolean isCollection);
 
     /**
-     * Returns a URL representing the href as per {@link getHref(boolean)}.
-     */
-    URL getUrl(boolean isCollection);
-
-    /**
      * Returns a URL representing the href as per
      * {@link getHref(boolean, boolean)}.
      */
     URL getUrl(boolean absolute,
                       boolean isCollection);
-
-    /**
-     * Returns the scheme and authority portion of the URL.
-     */
-    String getPrefix();
-
-    /**
-     * Returns the leading portion of the path (unescaped) that identifies the
-     * root of the dav namespace.
-     */
-    String getBasePath();
 
     /**
      * Returns the absolute escaped URL corresponding to the base path that

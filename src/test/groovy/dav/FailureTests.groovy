@@ -186,4 +186,29 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(status().isPreconditionFailed())
                 .andExpect(xml(response1))
     }
+
+    @Test
+    void calendarQueryWithInvalidFilter() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                            <C:calendar-data/>
+                          </D:prop>
+                          <C:filter />
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:valid-filter>CALDAV:filter must contain a comp-filter</C:valid-filter>
+                             </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
 }

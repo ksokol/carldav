@@ -15,18 +15,17 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import org.unitedinternet.cosmo.dav.BadRequestException;
+import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 
 /**
  * An exception indicating that the data in a report query filter is not
  * correctly constructed.
  */
-public class InvalidFilterException
-    extends ForbiddenException implements CaldavConstants {
+public class InvalidFilterException extends BadRequestException implements CaldavConstants {
     
     /**
      * Constructor.

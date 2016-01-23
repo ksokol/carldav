@@ -31,17 +31,14 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.ExRule;
 import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
-import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Type;
@@ -308,36 +305,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
       
     }
 
-    public void setRecurrenceRule(Recur recur) {
-        if (recur == null) {
-            return;
-        }
-        ArrayList<Recur> recurs = new ArrayList<Recur>(1);
-        recurs.add(recur);
-        setRecurrenceRules(recurs);
-    }
-
-    public List<Recur> getExceptionRules() {
-        ArrayList<Recur> l = new ArrayList<Recur>();
-        for (Object exrule : getEvent().getProperties().getProperties(Property.EXRULE)) {
-            l.add(((ExRule)exrule).getRecur());
-        }
-        return l;
-    }
-
-    public void setExceptionRules(List<Recur> recurs) {
-        if (recurs == null) {
-            return;
-        }
-        PropertyList pl = getEvent().getProperties();
-        for (ExRule exrule : (List<ExRule>) pl.getProperties(Property.EXRULE)) {
-            pl.remove(exrule);
-        }
-        for (Recur recur : recurs) {
-            pl.add(new ExRule(recur));
-        }
-    }
-
     public DateList getRecurrenceDates() {
         
         DateList l = null;
@@ -419,55 +386,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
         return null;
     }
 
-    public void removeDisplayAlarm() {
-        VEvent event = getEvent();
-
-        if (event == null) {
-            return;
-        }
-
-        for(Iterator it = event.getAlarms().iterator();it.hasNext();) {
-            VAlarm alarm = (VAlarm) it.next();
-            if (alarm.getProperties().getProperty(Property.ACTION).equals(
-                    Action.DISPLAY)) {
-                it.remove();
-            }
-        }
-    }
-    
-    public String getDisplayAlarmDescription() {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return null;
-        }
-        
-        Description description = (Description) alarm.getProperties()
-                .getProperty(Property.DESCRIPTION);
-        
-        if(description==null) {
-            return null;
-        }
-        
-        return description.getValue();
-    }
-
-    public void setDisplayAlarmDescription(String newDescription) {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return;
-        }
-        
-        Description description = (Description) alarm.getProperties()
-                .getProperty(Property.DESCRIPTION);
-        
-        if (description == null) {
-            description = new Description();
-            alarm.getProperties().add(description);
-        }
-        
-        description.setValue(newDescription);
-    }
-
     public Trigger getDisplayAlarmTrigger() {
         VAlarm alarm = getDisplayAlarm();
         if(alarm==null) {
@@ -475,129 +393,6 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
         }
         
         return (Trigger) alarm.getProperties().getProperty(Property.TRIGGER);
-    }
-    
-    public void setDisplayAlarmTrigger(Trigger newTrigger) {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return;
-        }
-        
-        Trigger oldTrigger = (Trigger) alarm.getProperties().getProperty(Property.TRIGGER);
-        if (oldTrigger != null) {
-            alarm.getProperties().remove(oldTrigger);
-        }
-
-        if(newTrigger!=null) {
-            alarm.getProperties().add(newTrigger);
-        }
-    }
-
-    public void setDisplayAlarmTriggerDate(DateTime triggerDate) {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return;
-        }
-
-        Trigger oldTrigger = (Trigger) alarm.getProperties().getProperty(Property.TRIGGER);
-        if (oldTrigger != null) {
-            alarm.getProperties().remove(oldTrigger);
-        }
-        
-        Trigger newTrigger = new Trigger();
-        newTrigger.getParameters().add(Value.DATE_TIME);
-        newTrigger.setDateTime(triggerDate);
-        
-        alarm.getProperties().add(newTrigger);
-    }
-
-    public Dur getDisplayAlarmDuration() {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return null;
-        }
-        
-        Duration dur =  (Duration) alarm.getProperties().getProperty(Property.DURATION);
-        if(dur!=null) {
-            return dur.getDuration();
-        }
-        else {
-            return null;
-        }
-    }
-
-    public void setDisplayAlarmDuration(Dur dur) {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return;
-        }
-        
-        Duration duration = (Duration) alarm.getProperties().getProperty(Property.DURATION);
-        if (dur == null) {
-            if (duration != null) {
-                alarm.getProperties().remove(duration);
-            }
-            return;
-        }
-        if (duration == null) {
-            duration = new Duration();
-            alarm.getProperties().add(duration);
-        }
-        
-        duration.setDuration(dur);
-    }
-
-    public Integer getDisplayAlarmRepeat() {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return null;
-        }
-        
-        Repeat repeat = (Repeat) alarm.getProperties().getProperty(Property.REPEAT);
-        
-        if(repeat==null) {
-            return null;
-        }
-        
-        return repeat.getCount();
-    }
-
-    public void setDisplayAlarmRepeat(Integer count) {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return;
-        }
-        Repeat repeat = (Repeat) alarm.getProperties().getProperty(Property.REPEAT);
-        if (count == null) {
-            if (repeat != null) {
-                alarm.getProperties().remove(repeat);
-            }
-            return;
-        }
-        if (repeat == null) {
-            repeat = new Repeat();
-            alarm.getProperties().add(repeat);
-        }
-
-        repeat.setCount(count.intValue());
-    }
-
-    public void setExceptionDates(DateList dates) {
-        if (dates == null) {
-            return;
-        }
-        
-        PropertyList pl = getEvent().getProperties();
-        for (ExDate exdate : (List<ExDate>) pl.getProperties(Property.EXDATE)) {
-            pl.remove(exdate);
-        }
-        if (dates.isEmpty()) {
-            return;
-        }
-        
-        ExDate exDate = new ExDate(dates);
-        setDateListPropertyValue(exDate);
-        pl.add(exDate);
     }
 
     public Date getRecurrenceId() {
@@ -684,12 +479,5 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
        DateList rdates = getRecurrenceDates();
        
        return rdates!=null && rdates.size()>0;
-    }
-
-    public void creatDisplayAlarm() {
-        VAlarm alarm = new VAlarm();
-        alarm.getProperties().add(Action.DISPLAY);
-        getEvent().getAlarms().add(alarm);
-        setDisplayAlarmDescription("Event Reminder");
     }
 }

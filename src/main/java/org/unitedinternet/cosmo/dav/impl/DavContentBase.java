@@ -28,10 +28,10 @@ import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
+import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -140,23 +140,6 @@ public abstract class DavContentBase extends DavItemResourceBase
         // content type is settable by subclasses
     }
 
-    /** */
-    protected void removeLiveProperty(DavPropertyName name, boolean create)
-        throws CosmoDavException {
-        super.removeLiveProperty(name);
-
-        HibContentItem content = (HibContentItem) getItem();
-        if (content == null) {
-            return;
-        }
-
-        if (name.equals(DavPropertyName.GETCONTENTLENGTH) ||
-            name.equals(DavPropertyName.GETCONTENTTYPE)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-    }
-
-    /** */
     protected Set<String> getDeadPropertyFilter() {
         return DEAD_PROPERTY_FILTER;
     }

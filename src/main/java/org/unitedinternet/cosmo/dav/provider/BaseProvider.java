@@ -130,7 +130,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
                        WebDavResource resource)
         throws CosmoDavException, IOException {
         if (! resource.exists()){
-            throw new NotFoundException();
+            response.setStatus(204);
+            return;
         }
         checkNoRequestBody(request);
 

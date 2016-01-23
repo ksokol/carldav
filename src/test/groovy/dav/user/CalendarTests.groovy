@@ -1829,4 +1829,20 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(text(response2));
     }
+
+    @Test
+    void doubleDelete() {
+        def uid = UUID_TODO
+
+        mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uid)
+                .content(CALDAV_TODO)
+                .contentType(TEXT_CALENDAR))
+                .andExpect(status().isCreated())
+
+        mockMvc.perform(delete("/dav/{email}/calendar/{uuid}.ics", USER01, uid))
+                .andExpect(status().isNoContent())
+
+        mockMvc.perform(delete("/dav/{email}/calendar/{uuid}.ics", USER01, uid))
+                .andExpect(status().isNoContent())
+    }
 }

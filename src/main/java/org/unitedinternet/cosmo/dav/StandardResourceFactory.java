@@ -111,7 +111,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
                 }
             }
         }
-    
+
+        if(request.getMethod().equals("DELETE")) {
+            return new DavCollectionBase(locator, this, idGenerator);
+        }
+
         throw new NotFoundException();
     }
 

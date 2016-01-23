@@ -616,12 +616,12 @@ public class EntityConverter {
      * @param calendar The calendar.
      */
     private void updateEventInternal(HibNoteItem masterNote, Calendar calendar) {
-        HashMap<Date, VEvent> exceptions = new HashMap<Date, VEvent>();
-        
+        final HashMap<Date, VEvent> exceptions = new HashMap<>();
+        final PropertyList calendarProperties = (PropertyList) calendar.getProperties().clone();
+
         Calendar masterCalendar = calendar;
         
-        ComponentList vevents = masterCalendar.getComponents().getComponents(
-                Component.VEVENT);
+        ComponentList vevents = masterCalendar.getComponents().getComponents(Component.VEVENT);
         HibEventStamp eventStamp = (HibEventStamp) masterNote.getStamp(HibEventStamp.class);
 
         // get list of exceptions (VEVENT with RECURRENCEID)
@@ -652,7 +652,17 @@ public class EntityConverter {
         
         // verify master event exists
         if (event==null) {
-            throw new ModelValidationException("no master calendar component found");
+            final ComponentList clonedComponentList = (ComponentList) vevents.clone();
+            final Calendar newMasterCalendar = new Calendar(calendarProperties, clonedComponentList);
+
+            eventStamp.setEventCalendar(newMasterCalendar);
+            compactTimezones(masterCalendar);
+
+            event = eventStamp.getEvent();
+
+            if(event == null) {
+                throw new ModelValidationException("no master calendar component found");
+            }
         }
         
         setCalendarAttributes(masterNote, event);

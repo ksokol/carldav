@@ -23,21 +23,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
  */
 public class DuplicateItemNameException extends ModelValidationException {
 
-    /**
-     */
-    public DuplicateItemNameException(HibItem hibItem) {
-        super(hibItem, "duplicate item name: " + hibItem.getName());
-    }
-
-    /**
-     */
     public DuplicateItemNameException(HibItem hibItem, String message) {
         super(hibItem, message);
-    }
-
-    /**
-     */
-    public DuplicateItemNameException(HibItem hibItem, String message, Throwable cause) {
-        super(hibItem, message, cause);
     }
 }

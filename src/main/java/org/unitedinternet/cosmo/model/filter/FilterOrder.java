@@ -24,11 +24,6 @@ public class FilterOrder {
     
     private String name = null;
     private Order order = Order.ASC;
-    
-    public FilterOrder(String name) {
-        super();
-        this.name = name;
-    }
 
     public FilterOrder(String name, Order order) {
         super();

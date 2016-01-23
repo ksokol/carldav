@@ -172,8 +172,8 @@ public class EntityConverter {
      * @param calendar calendar containing VJOURNAL
      * @return NoteItem representation of VJOURNAL
      */
-    public HibNoteItem convertJournalCalendar(Calendar calendar) {
-        HibNoteItem note = new HibNoteItem();
+    public HibJournalItem convertJournalCalendar(Calendar calendar) {
+        HibJournalItem note = new HibJournalItem();
         note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertJournalCalendar(note, calendar);
@@ -185,7 +185,7 @@ public class EntityConverter {
      * @param calendar calendar containing VJOURNAL
      * @return NoteItem representation of VJOURNAL
      */
-    public HibNoteItem convertJournalCalendar(HibNoteItem  note, Calendar calendar) {
+    public HibJournalItem convertJournalCalendar(HibJournalItem  note, Calendar calendar) {
         
         VJournal vj = (VJournal) getMasterComponent(calendar.getComponents(Component.VJOURNAL));
         setCalendarAttributes(note, vj);
@@ -331,7 +331,17 @@ public class EntityConverter {
 
         return getCalendarFromNote(note);
     }
-   
+
+
+    public Calendar convertJournal(HibJournalItem journal) {
+        HibBaseEventStamp event = (HibBaseEventStamp) journal.getStamp(HibBaseEventStamp.class);
+        if (event!=null) {
+            return getCalendarFromEventStamp(event);
+        }
+
+        throw new UnsupportedOperationException();
+    }
+
     /**
      * Gets calendar from note.
      * @param note The note item.
@@ -958,7 +968,7 @@ public class EntityConverter {
      * @param note The note item.
      * @param journal The VJournal.
      */
-    private void setCalendarAttributes(HibNoteItem note, VJournal journal) {
+    private void setCalendarAttributes(HibJournalItem note, VJournal journal) {
         // UID
         if(journal.getUid()!=null) {
             note.setIcalUid(journal.getUid().getValue());

@@ -234,7 +234,7 @@ public class EntityConverterTest {
        
         item = findItemByIcalUid(items, "19970901T130000Z-123405@host.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
+        Assert.assertTrue(item instanceof HibJournalItem);
         Assert.assertEquals(0, item.getStamps().size());
         
     }

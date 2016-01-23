@@ -260,7 +260,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     private void handleNoteItemFilter(StringBuffer selectBuf,
                                       StringBuffer whereBuf, Map<String, Object> params,
                                       NoteItemFilter filter) {
-        selectBuf.append("select i from HibNoteItem i");
+        selectBuf.append("select i from HibICalendarItem i");
         handleItemFilter(selectBuf, whereBuf, params, filter);
         handleContentItemFilter(selectBuf, whereBuf, params, filter);
 

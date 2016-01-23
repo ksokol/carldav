@@ -35,6 +35,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
@@ -269,7 +270,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convertJournalCalendar((HibNoteItem) content, event.getEventCalendar()));
+            toUpdate.add(converter.convertJournalCalendar((HibJournalItem) content, event.getEventCalendar()));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }

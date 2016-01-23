@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
@@ -30,7 +29,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -38,8 +36,8 @@ import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -198,21 +196,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
         members.add(base);
     }
 
-    public MultiStatusResponse addCollection(DavCollection collection, DavPropertySet properties) throws CosmoDavException {
-        if(!(collection instanceof DavCollectionBase)){
-            throw new IllegalArgumentException("Expected instance of :[" + DavCollectionBase.class.getName() + "]");
-        }
-        
-        DavCollectionBase base = (DavCollectionBase) collection;
-        base.populateItem(null);
-        MultiStatusResponse msr = base.populateAttributes(properties);
-        if (!hasNonOK(msr)) {
-            saveSubcollection(base);
-            members.add(base);
-        }
-        return msr;
-    }
-
     public WebDavResource findMember(String href) throws CosmoDavException {
         return memberToResource(href);
     }
@@ -270,27 +253,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
     /** */
     protected Set<String> getDeadPropertyFilter() {
         return DEAD_PROPERTY_FILTER;
-    }
-
-    /**
-     * Saves the given collection resource to storage.
-     */
-    protected void saveSubcollection(DavItemCollection member)
-            throws CosmoDavException {
-        HibCollectionItem collection = (HibCollectionItem) getItem();
-        HibCollectionItem subcollection = (HibCollectionItem) member.getItem();
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("creating collection " + member.getResourcePath());
-        }
-
-        try {
-            subcollection = getContentService().createCollection(collection,
-                    subcollection);
-            member.setItem(subcollection);
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
-        }
     }
 
     /**

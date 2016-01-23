@@ -26,7 +26,5 @@ public interface ItemPathTranslator {
 
     HibItem findItemByPath(String path, HibCollectionItem root);
 
-    String getItemName(String path);
-
     HibItem findItemParent(String path);
 }

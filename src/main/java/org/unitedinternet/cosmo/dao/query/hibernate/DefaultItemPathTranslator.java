@@ -15,9 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -26,21 +23,14 @@ import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
 /**
  * Default implementation for ItempPathTranslator. This implementation expects
  * paths to be of the format: /username/parent1/parent2/itemname
  */
 public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPathTranslator {
-
-    
-   
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.query.ItemPathTranslator#findItemByPath(org.hibernate.Session,
-     *      java.lang.String)
-     */
 
     /**
      * Finds item by path.
@@ -89,26 +79,6 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
         String parentPath = path.substring(0, lastIndex);
 
         return findItemByPath(parentPath);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public String getItemName(String path) {
-        if (path == null) {
-            return null;
-        }
-
-        int lastIndex = path.lastIndexOf("/");
-        if (lastIndex == -1) {
-            return null;
-        }
-
-        if ((lastIndex + 1) >= path.length()) {
-            return null;
-        }
-
-        return path.substring(lastIndex + 1);
     }
 
     /**

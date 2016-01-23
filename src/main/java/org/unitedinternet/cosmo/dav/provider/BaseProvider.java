@@ -22,8 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.MultiStatus;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
@@ -285,28 +283,5 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
     
     public IdGenerator getIdGenerator() {
         return idGenerator;
-    }
-
-    /**
-     * 
-     * @param msr MultiStatusResponse
-     * @return boolean 
-     */
-    public static boolean  hasNonOK(MultiStatusResponse msr){
-        if(msr == null || msr.getStatus() == null){
-            return false;
-        }
-        
-        for(Status status: msr.getStatus()){
-            
-            if(status != null){
-                int statusCode = status.getStatusCode();
-                
-                if( statusCode != 200){
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

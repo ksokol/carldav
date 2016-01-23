@@ -23,10 +23,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
  */
 public class ContentType extends StandardDavProperty {
 
-    public ContentType(String type) {
-        this(type, null);
-    }
-
     public ContentType(String type,
                        String encoding) {
         super(DavPropertyName.GETCONTENTTYPE, mt(type, encoding), false);

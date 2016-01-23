@@ -155,4 +155,35 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }
+
+
+    @Test
+    void addUnknownCalendarComponent() {
+        def request1 = """\
+                    BEGIN:VCALENDAR
+                    VERSION:2.0
+                    PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x
+                    BEGIN:VUNKNOWN
+                    DTSTAMP:20151231T115937Z
+                    UID:6f490b02-77d7-442e-abd3-1e0bb14c3259
+                    CREATED:20151231T115922Z
+                    LAST-MODIFIED:20151231T115922Z
+                    SUMMARY:add vtodo
+                    STATUS:NEEDS-ACTION
+                    END:VUNKNOWN
+                    END:VCALENDAR
+                    """.stripIndent()
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:supported-calendar-component>Calendar object must contain at least one of VEVENT, VTODO, VJOURNAL</C:supported-calendar-component>
+                            </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(xml(response1))
+    }
 }

@@ -44,59 +44,21 @@ public class JournalStampFilter extends StampFilter {
         updateFloatingTimes();
     }
 
-    /**
-     * Matches events that occur in a given time-range.
-     * @param start range start
-     * @param end range end
-     */
-    public void setTimeRange(Date start, Date end) {
-        dstart = utc(start);
-        dend = utc(end);
-
-        fstart = start;
-        fend = end;
-
-        updateFloatingTimes();
-        period = new Period(dstart, dend);
-    }
 
     public String getUTCStart() {
         return dstart.toString();
-    }
-
-    public String getUTCStart(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        sdf.setTimeZone(TimeZones.getUtcTimeZone());
-        return sdf.format(dstart);
     }
 
     public String getUTCEnd() {
         return dend.toString();
     }
 
-    public String getUTCEnd(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        sdf.setTimeZone(TimeZones.getUtcTimeZone());
-        return sdf.format(dend);
-    }
-
-    public String getFloatStart(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        return sdf.format(fstart);
-    }
-
     public String getFloatStart() {
         return fstart.toString();
     }
 
-
     public String getFloatEnd() {
         return fend.toString();
-    }
-
-    public String getFloatEnd(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        return sdf.format(fend);
     }
 
     public JournalStampFilter() {
@@ -164,11 +126,5 @@ public class JournalStampFilter extends StampFilter {
             }
         }
     }
-    
-    private static DateTime utc(Date date) {
-        DateTime dt = new DateTime(date);
-        dt.setUtc(true);
-        return dt;
-    }
- 
+
 }

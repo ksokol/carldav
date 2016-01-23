@@ -29,9 +29,6 @@ public interface CaldavConstants {
     String VALUE_NO = "no";
     /** The iCalendar media type */
     String CT_ICALENDAR = "text/calendar";
-    /** The media type for calendar collections */
-    String CONTENT_TYPE_CALENDAR_COLLECTION = "application/x-calendar-collection";
-
     /** The CalDAV XML namespace */
     String PRE_CALDAV = "C";
     String PRE_CARD = "CARD";
@@ -74,8 +71,6 @@ public interface CaldavConstants {
     String ELEMENT_CALDAV_FILTER = "filter";
     /** The CalDAV XML element name <CALDAV:comp-filter> */
     String ELEMENT_CALDAV_COMP_FILTER = "comp-filter";
-    /** The CalDAV XML element name <CARDDAV:filter> */
-    String ELEMENT_CARDDAV_FILTER = "filter";
     /** The CalDAV XML element name <CALDAV:prop-filter> */
     String ELEMENT_CALDAV_PROP_FILTER = "prop-filter";
     /** The CalDAV XML element name <CALDAV:param-filter> */

@@ -193,27 +193,6 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
             value.equals(prop.getValue());
     }
 
-    /**
-     * <p>
-     * Returns an instance of <code>StandardDavProperty</code> representing
-     * the given element. The element itself is provided as the property value.
-     * If either the element or its parent element has the attribute
-     * <code>xml:lang</code>, that attribute's value is provided as the
-     * property's language. The resulting property is not "protected" (i.e.
-     * it will not appear in "allprop" <code>PROPFIND</code> responses).
-     * </p>
-     */
-    public static StandardDavProperty createFromXml(Element e) {
-        DavPropertyName name = DavPropertyName.createFromXml(e);
-        String lang = DomUtil.getAttribute(e, XML_LANG, NAMESPACE_XML);
-        if (lang == null && e.getParentNode() != null &&
-            e.getParentNode().getNodeType() == Node.ELEMENT_NODE) {
-            lang = DomUtil.getAttribute((Element)e.getParentNode(), XML_LANG,
-                                        NAMESPACE_XML);
-        }
-        return new StandardDavProperty(name, e, lang);
-    }
-
 	@Override
 	public boolean isInvisibleInAllprop() {
         return false;

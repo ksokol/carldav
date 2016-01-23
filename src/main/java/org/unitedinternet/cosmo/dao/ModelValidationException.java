@@ -37,16 +37,4 @@ public class ModelValidationException
     public ModelValidationException(Object offendingObject, String message) {
         super(message);
         this.offendingObject = offendingObject;
-    }
-
-    /**
-     */
-    public ModelValidationException(Object offendingObject, String message, Throwable cause) {
-        super(message, cause);
-        this.offendingObject = offendingObject;
-    }
-
-    public Object getOffendingObject() {
-        return offendingObject;
-    }
-}
+    }}

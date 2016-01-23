@@ -15,17 +15,16 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
+import org.unitedinternet.cosmo.dav.BadRequestException;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.unitedinternet.cosmo.dav.ForbiddenException;
 
 /**
  * An exception indicating that a calendar resource contains missing or
  * invalid calendar data.
  */
-public class InvalidCalendarDataException
-    extends ForbiddenException implements CaldavConstants {
+public class InvalidCalendarDataException extends BadRequestException implements CaldavConstants {
     
     /**
      * Constructor.

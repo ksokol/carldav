@@ -1,0 +1,71 @@
+package dav
+
+import org.junit.Test
+import org.springframework.security.test.context.support.WithUserDetails
+import org.unitedinternet.cosmo.IntegrationTestSupport
+
+import static org.springframework.http.MediaType.TEXT_XML
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static testutil.TestUser.USER01
+import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static testutil.mockmvc.CustomRequestBuilders.report
+import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
+import static testutil.mockmvc.CustomResultMatchers.xml
+
+/**
+ * @author Kamill Sokol
+ */
+/**
+ * @author Kamill Sokol
+ */
+@WithUserDetails(USER01)
+class FailureTests extends IntegrationTestSupport {
+
+    @Test
+    void malformedXmlBody() {
+        def request1 = """\
+                        <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:pro
+                        </C:calendar-multiget>"""
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:bad-request>Unknown error parsing request document</cosmo:bad-request>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request1)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+                .andExpect(status().isBadRequest())
+    }
+
+    @Test
+    void malformedVEvent() {
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        VERSION:2.0
+                        PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x
+                        BEGIN:VEVENT
+                        DTSTAMP:20151230T185918Z
+                        """.stripIndent()
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:valid-calendar-data>Failed to parse calendar object: Error at line 6:Unexpected end of file</C:valid-calendar-data>
+                            </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(xml(response1))
+                .andExpect(textXmlContentType())
+                .andExpect(status().isBadRequest())
+    }
+
+
+
+}

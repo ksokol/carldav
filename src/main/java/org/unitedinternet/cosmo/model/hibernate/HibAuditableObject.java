@@ -16,22 +16,23 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.hibernate.annotations.Type;
 
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @MappedSuperclass
 public abstract class HibAuditableObject extends BaseModelObject {
 
     @Column(name = "createdate")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
     
     @Column(name = "modifydate")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
     
     @Column(name="etag")

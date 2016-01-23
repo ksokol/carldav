@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.hibernate.validator.Task;
 
 import java.nio.charset.Charset;
@@ -35,6 +34,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 @Entity
 @DiscriminatorValue("note")
@@ -58,7 +59,7 @@ public class HibNoteItem extends HibICalendarItem {
     private String body;
 
     @Column(name = "remindertime")
-    @Type(type="long_timestamp")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date remindertime;
 
     public String getBody() {

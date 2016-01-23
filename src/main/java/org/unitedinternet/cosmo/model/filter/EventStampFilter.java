@@ -20,7 +20,6 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.TimeZones;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
@@ -76,77 +75,25 @@ public class EventStampFilter extends StampFilter {
         // set timezone on floating times
         updateFloatingTimes();
     }
-    
-    /**
-     * Matches events that occur in a given time-range.
-     * @param start range start
-     * @param end range end
-     */
-    public void setTimeRange(Date start, Date end) {
-        dstart = utc(start);
-        dend = utc(end);
-        
-        fstart = start;
-        fend = end;
-        
-        updateFloatingTimes();
-        period = new Period(dstart, dend);
-    }
 
     public String getUTCStart() {
         return dstart.toString();
     }
 
-    public String getUTCStart(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        sdf.setTimeZone(TimeZones.getUtcTimeZone());
-        return sdf.format(dstart);
-    }
-    
     public String getUTCEnd() {
         return dend.toString();
     }
-    
-    public String getUTCEnd(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        sdf.setTimeZone(TimeZones.getUtcTimeZone());
-        return sdf.format(dend);
-    }
 
-    public String getFloatStart(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        return sdf.format(fstart);
-    }
-    
     public String getFloatStart() {
         return fstart.toString();
     }
-    
 
     public String getFloatEnd() {
         return fend.toString();
     }
-    
-    public String getFloatEnd(String dateTimeFormat) {
-        SimpleDateFormat sdf = new SimpleDateFormat(dateTimeFormat);
-        return sdf.format(fend);
-    }
-    
+
     public boolean isExpandRecurringEvents() {
         return expandRecurringEvents;
-    }
-
-    /**
-     * If a time-range query is specified, the filter can be configured
-     * to expand recurring events within the time range.  This results
-     * in a <code>NoteOccurrence</code> item returned for each occurrence
-     * of a matching recurring event during the specified time range.
-     * @param expandRecurringEvents if true and a time-range is specified,
-     *        return a NoteOccurrence for each occurence of a recurring event
-     *        during the time-range.
-     */
-    public void setExpandRecurringEvents(boolean expandRecurringEvents) {
-        this.expandRecurringEvents = expandRecurringEvents;
     }
 
     public EventStampFilter() {
@@ -168,8 +115,6 @@ public class EventStampFilter extends StampFilter {
         this.timezone = timezone;
         updateFloatingTimes();
     }
-    
-    
 
     public Boolean getIsRecurring() {
         return isRecurring;
@@ -229,11 +174,4 @@ public class EventStampFilter extends StampFilter {
             }
         }
     }
-    
-    private static DateTime utc(Date date) {
-        DateTime dt = new DateTime(date);
-        dt.setUtc(true);
-        return dt;
-    }
- 
 }

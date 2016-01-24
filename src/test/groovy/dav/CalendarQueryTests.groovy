@@ -6,6 +6,7 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.ResultMatcher
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
+import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
@@ -23,7 +24,8 @@ import static testutil.mockmvc.CustomResultMatchers.xml
 @WithUserDetails(USER01)
 class CalendarQueryTests extends IntegrationTestSupport {
 
-    def currentEtag;
+    def currentTodoEtag;
+    def currentEventEtag;
 
     @Before
     void setup() {
@@ -50,11 +52,26 @@ class CalendarQueryTests extends IntegrationTestSupport {
                 .andExpect(etag(notNullValue()))
                 .andReturn()
 
-        currentEtag = result1.getResponse().getHeader(ETAG)
+        currentTodoEtag = result1.getResponse().getHeader(ETAG)
+
+        def result2 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(ADD_VEVENT_REQUEST1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEventEtag = result2.getResponse().getHeader(ETAG)
     }
 
     @Test
     void calendarDataAllProp() {
+        def request1 = """\
+                        <CAL:comp name="VCALENDAR">
+                            <allprop />
+                        </CAL:comp>"""
+
         def response1 = """\
                             BEGIN:VCALENDAR
                             VERSION:2.0&#13;
@@ -63,13 +80,18 @@ class CalendarQueryTests extends IntegrationTestSupport {
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
-                .content(request("<allprop />"))
+                .content(request(request1))
                 .header("Depth", "1"))
-                .andExpect(response(response1))
+                .andExpect(todoResponse(response1))
     }
 
     @Test
     void calendarDataAllComp() {
+        def request1 = """\
+                        <CAL:comp name="VCALENDAR">
+                            <allcomp />
+                        </CAL:comp>"""
+
         def response1 = """\
                             BEGIN:VCALENDAR
                             BEGIN:VTODO&#13;
@@ -84,16 +106,18 @@ class CalendarQueryTests extends IntegrationTestSupport {
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
-                .content(request("<allcomp />"))
+                .content(request(request1))
                 .header("Depth", "1"))
-                .andExpect(response(response1))
+                .andExpect(todoResponse(response1))
     }
 
     @Test
     void calendarDataVTodoUid() {
         def request1 = """\
-                        <CAL:comp name="VTODO">
-                            <prop name="UID" />
+                        <CAL:comp name="VCALENDAR">
+                            <CAL:comp name="VTODO">
+                                <prop name="UID" />
+                            </CAL:comp>
                         </CAL:comp>"""
 
         def response1 = """\
@@ -107,42 +131,98 @@ class CalendarQueryTests extends IntegrationTestSupport {
                 .contentType(APPLICATION_XML)
                 .content(request(request1))
                 .header("Depth", "1"))
-                .andExpect(response(response1))
+                .andExpect(todoResponse(response1))
+    }
+
+    @Test
+    void expand() {
+        def request1 = """\
+                        <CAL:comp name="VCALENDAR">
+                            <CAL:comp name="VEVENT">
+                                <prop name="DTSTART" />
+                            </CAL:comp>
+                        </CAL:comp>
+                        <CAL:expand start="30121221T115937Z" end="30131231T235937Z">
+                        </CAL:expand>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request(request1, "VEVENT"))
+                .header("Depth", "1"))
+                .andExpect(eventResponse("BEGIN:VCALENDAR END:VCALENDAR"))
+
+        def request2 = """\
+                        <CAL:comp name="VCALENDAR">
+                            <CAL:comp name="VEVENT">
+                                <prop name="DTSTART" />
+                            </CAL:comp>
+                        </CAL:comp>
+                        <CAL:expand start="20160119T115937Z" end="20160128T235937Z">
+                        </CAL:expand>"""
+
+        def response2 = """\
+                            BEGIN:VCALENDAR
+                            BEGIN:VEVENT
+                            DTSTART:20160120T183027Z&#13;
+                            END:VEVENT
+                            BEGIN:VEVENT
+                            DTSTART:20160122T183027Z&#13;
+                            END:VEVENT
+                            BEGIN:VEVENT
+                            DTSTART:20160127T183027Z&#13;
+                            END:VEVENT
+                            END:VCALENDAR"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request(request2, "VEVENT"))
+                .header("Depth", "1"))
+                .andExpect(eventResponse(response2))
     }
 
     String request(String xmlFragment) {
+        return request(xmlFragment, "VTODO")
+    }
+
+    String request(String xmlFragment, String component) {
         return """\
                         <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
                             <prop>
                                 <getetag/>
                                 <CAL:calendar-data CAL:content-type="text/calendar" CAL:version="2.0">
-                                    <CAL:comp name="VCALENDAR">
-                                        ${xmlFragment}
-                                    </CAL:comp>
+                                    ${xmlFragment}
                                 </CAL:calendar-data>
                             </prop>
                             <CAL:filter>
                                 <CAL:comp-filter name="VCALENDAR">
-                                    <CAL:comp-filter name="VTODO"/>
+                                    <CAL:comp-filter name="${component}"/>
                                 </CAL:comp-filter>
                             </CAL:filter>
                         </CAL:calendar-query>"""
     }
 
-    ResultMatcher response(String calendarData) {
+    ResultMatcher todoResponse(String calendarData) {
+        return response(calendarData, currentTodoEtag, "6f490b02-77d7-442e-abd3-1e0bb14c3259")
+    }
+
+    ResultMatcher eventResponse(String calendarData) {
+        return response(calendarData, currentEventEtag, "e94d89d2-b195-4128-a9a8-be83a873deae")
+    }
+
+    ResultMatcher response(String calendarData, String etag, String uuid) {
         return xml("""\
-                        <D:multistatus xmlns:D="DAV:">
-                            <D:response>
-                                <D:href>/dav/test01@localhost.de/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics</D:href>
-                                <D:propstat>
-                                    <D:prop>
-                                        <D:getetag>${currentEtag}</D:getetag>
-                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">${calendarData}
-                                        </C:calendar-data>
-                                    </D:prop>
-                                    <D:status>HTTP/1.1 200 OK</D:status>
-                                </D:propstat>
-                            </D:response>
-                        </D:multistatus>""")
+                    <D:multistatus xmlns:D="DAV:">
+                        <D:response>
+                            <D:href>/dav/test01@localhost.de/calendar/${uuid}.ics</D:href>
+                            <D:propstat>
+                                <D:prop>
+                                    <D:getetag>${etag}</D:getetag>
+                                    <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">${calendarData}
+                                    </C:calendar-data>
+                                </D:prop>
+                                <D:status>HTTP/1.1 200 OK</D:status>
+                            </D:propstat>
+                        </D:response>
+                    </D:multistatus>""")
     }
 }

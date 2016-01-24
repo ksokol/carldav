@@ -205,8 +205,8 @@ public class CaldavOutputFilter
     
     private static Period parsePeriod(Element node, boolean utc)
         throws CosmoDavException {
-        DateTime trstart = null;
-        DateTime trend = null;
+        DateTime trstart;
+        DateTime trend;
         String start =
             DomUtil.getAttribute(node, ATTR_CALDAV_START, null);
         if (start == null) {

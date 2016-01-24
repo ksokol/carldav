@@ -319,4 +319,27 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(xml(response1))
                 .andExpect(textXmlContentType())
     }
+
+    @Test
+    void calendarDataQueryWithWrongContentType() {
+        def request1 = """\
+                        <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                            <prop>
+                                <CAL:calendar-data CAL:content-type="text/card" CAL:version="2.0" />
+                            </prop>
+                        </CAL:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:supported-calendar-data>Calendar data of type text/card not allowed; only text/calendar</C:supported-calendar-data>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(xml(response1))
+                .andExpect(textXmlContentType())
+    }
 }

@@ -2,11 +2,13 @@ package dav
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
+import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
@@ -210,5 +212,87 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
+    }
+
+    @Test
+    void getWithXmlBody() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                            <C:calendar-data/>
+                          </D:prop>
+                          <C:filter />
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:unsupported-media-type>Body not expected for method GET</cosmo:unsupported-media-type>
+                            </D:error>"""
+
+        mockMvc.perform(get("/dav/{email}/calendar", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1))
+                .andExpect(xml(response1))
+                .andExpect(status().isUnsupportedMediaType())
+    }
+
+    @Test
+    void deleteWithXmlBody() {
+         mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(ADD_VEVENT_REQUEST1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                            <C:calendar-data/>
+                          </D:prop>
+                          <C:filter />
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:unsupported-media-type>Body not expected for method DELETE</cosmo:unsupported-media-type>
+                            </D:error>"""
+
+        mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(xml(response1))
+                .andExpect(status().isUnsupportedMediaType())
+    }
+
+    @Test
+    void deleteWithMalformedXmlBody() {
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(ADD_VEVENT_REQUEST1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                            <C:calendar-data/
+                          </D:prop>
+                          <C:filter />
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:internal-server-error>Bad Request</cosmo:internal-server-error>
+                            </D:error>"""
+
+        mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1))
+                .andExpect(xml(response1))
+                .andExpect(status().isBadRequest())
     }
 }

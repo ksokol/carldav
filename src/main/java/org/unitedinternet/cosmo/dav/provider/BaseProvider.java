@@ -246,9 +246,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * @param request DavRequest
      * @throws CosmoDavException 
      */
-    protected void checkNoRequestBody(DavRequest request)
-        throws CosmoDavException {
-        boolean hasBody = false;
+    protected void checkNoRequestBody(DavRequest request) throws CosmoDavException {
+        boolean hasBody;
         try {
             hasBody = request.getRequestDocument() != null;
         } catch (IllegalArgumentException e) {

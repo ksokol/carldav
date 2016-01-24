@@ -4,7 +4,6 @@ import org.junit.Before
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.ResultMatcher
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
@@ -639,7 +638,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
     }
 
     @Test
-    void unknownElement() {
+    void unknownElementAndCompWithoutNameAttribute() {
         def request1 = """<CAL:unknown />"""
 
         def response1 = """\
@@ -659,6 +658,17 @@ class CalendarQueryTests extends IntegrationTestSupport {
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request1))
+                .header("Depth", "1"))
+                .andExpect(todoResponse(response1))
+
+        def request2 = """\
+                        <CAL:comp name="VCALENDAR">
+                            <CAL:comp />
+                        </CAL:comp>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request(request2))
                 .header("Depth", "1"))
                 .andExpect(todoResponse(response1))
     }

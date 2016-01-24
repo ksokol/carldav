@@ -299,6 +299,31 @@ class CalendarQueryTests extends IntegrationTestSupport {
                 .andExpect(xml(response4))
     }
 
+    @Test
+    void unknownElement() {
+        def request1 = """<CAL:unknown />"""
+
+        def response1 = """\
+                        BEGIN:VCALENDAR&#13;
+                        VERSION:2.0&#13;
+                        PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x&#13;
+                        BEGIN:VTODO&#13;
+                        DTSTAMP:20151231T115937Z&#13;
+                        UID:6f490b02-77d7-442e-abd3-1e0bb14c3259&#13;
+                        CREATED:20151231T115922Z&#13;
+                        LAST-MODIFIED:20151231T115922Z&#13;
+                        SUMMARY:add vtodo&#13;
+                        STATUS:NEEDS-ACTION&#13;
+                        END:VTODO&#13;
+                        END:VCALENDAR&#13;"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request(request1))
+                .header("Depth", "1"))
+                .andExpect(todoResponse(response1))
+    }
+
     String request(String xmlFragment) {
         return request(xmlFragment, "VTODO")
     }

@@ -142,8 +142,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                                 <prop name="DTSTART" />
                             </CAL:comp>
                         </CAL:comp>
-                        <CAL:expand start="30121221T115937Z" end="30131231T235937Z">
-                        </CAL:expand>"""
+                        <CAL:expand start="30121221T115937Z" end="30131231T235937Z" />"""
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
@@ -157,8 +156,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                                 <prop name="DTSTART" />
                             </CAL:comp>
                         </CAL:comp>
-                        <CAL:expand start="20160119T115937Z" end="20160128T235937Z">
-                        </CAL:expand>"""
+                        <CAL:expand start="20160119T115937Z" end="20160128T235937Z" />"""
 
         def response2 = """\
                             BEGIN:VCALENDAR

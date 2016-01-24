@@ -342,4 +342,41 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(xml(response1))
                 .andExpect(textXmlContentType())
     }
+
+    @Test
+    void calendarDataQueryWithInvalidTimeRanges() {
+        def request = { attributes ->
+            """\
+                <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                    <prop>
+                        <CAL:calendar-data CAL:content-type="text/calendar" CAL:version="2.0">
+                            <CAL:expand ${attributes} />
+                        </CAL:calendar-data>
+                    </prop>
+                </CAL:calendar-query>"""
+        }
+
+        def response = { message ->
+            xml("""\
+                <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                    <cosmo:bad-request>${message}</cosmo:bad-request>
+                </D:error>""")
+        }
+
+        def assertTimerange = { attributes, message ->
+            mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                    .contentType(APPLICATION_XML)
+                    .content(request(attributes)))
+                    .andExpect(status().isBadRequest())
+                    .andExpect(response(message))
+                    .andExpect(textXmlContentType())
+        }
+
+        assertTimerange("", "Expected timerange attribute start")
+        assertTimerange('start="1"', 'Timerange start not parseable: Unparseable date: "1"')
+        assertTimerange('start="20160132T115937Z"', 'Timerange start must be UTC')
+        assertTimerange('start="20160119T115937Z"', 'Expected timerange attribute end')
+        assertTimerange('start="20160119T115937Z" end="1"', 'Timerange end not parseable: Unparseable date: "1"')
+        assertTimerange('start="20160119T115937Z" end="20160132T115937Z"', 'Timerange end must be UTC')
+    }
 }

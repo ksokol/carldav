@@ -91,10 +91,10 @@ public class CaldavOutputFilter
                 result = parseCalendarDataComp(child);
 
             } else if (ELEMENT_CALDAV_EXPAND.equals(child.getLocalName())) {
-                expand = parsePeriod(child, true);
+                expand = parsePeriod(child);
             } else if (ELEMENT_CALDAV_LIMIT_RECURRENCE_SET.
                        equals(child.getLocalName())) {
-                limit = parsePeriod(child, true);
+                limit = parsePeriod(child);
             } else {
                 LOG.warn("Ignoring child " + child.getTagName() + " of " + cdata.getTagName());
             }
@@ -203,12 +203,10 @@ public class CaldavOutputFilter
         return result;
     }
     
-    private static Period parsePeriod(Element node, boolean utc)
-        throws CosmoDavException {
+    private static Period parsePeriod(Element node) throws CosmoDavException {
         DateTime trstart;
         DateTime trend;
-        String start =
-            DomUtil.getAttribute(node, ATTR_CALDAV_START, null);
+        String start = DomUtil.getAttribute(node, ATTR_CALDAV_START, null);
         if (start == null) {
             throw new BadRequestException("Expected timerange attribute " + ATTR_CALDAV_START);
         }
@@ -217,7 +215,7 @@ public class CaldavOutputFilter
         } catch (ParseException e) {
             throw new BadRequestException("Timerange start not parseable: " + e.getMessage());
         }
-        if (utc && !trstart.isUtc()) {
+        if (!trstart.isUtc()) {
             throw new BadRequestException("Timerange start must be UTC");
         }
 
@@ -231,7 +229,7 @@ public class CaldavOutputFilter
         } catch (ParseException e) {
             throw new BadRequestException("Timerange end not parseable: " + e.getMessage());
         }
-        if (utc && !trend.isUtc()) {
+        if (!trend.isUtc()) {
             throw new BadRequestException("Timerange end must be UTC");
         }
 

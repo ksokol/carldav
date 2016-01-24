@@ -15,27 +15,23 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import java.text.ParseException;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
-import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
-
+import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.w3c.dom.Element;
+
+import java.text.ParseException;
 
 /**
  * A utility for parsing an {@link OutputFilter} from XML.
@@ -51,7 +47,7 @@ public class CaldavOutputFilter
      * @return output filter.
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
-    public static OutputFilter createFromXml(Element cdata)
+    public OutputFilter createFromXml(Element cdata)
         throws CosmoDavException {
         OutputFilter result = null;
         Period expand = null;
@@ -64,7 +60,7 @@ public class CaldavOutputFilter
             throw new UnsupportedCalendarDataException(contentType);
         }
         String version =
-            DomUtil.getAttribute(cdata, ATTR_CALDAV_CONTENT_TYPE,
+            DomUtil.getAttribute(cdata, ATTR_CALDAV_VERSION,
                                  NAMESPACE_CALDAV);
         if (version != null && ! version.equals(ICALENDAR_VERSION)) {
                 throw new UnsupportedCalendarDataException();

@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.abdera.util.EntityTag;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.DavException;
@@ -375,7 +376,7 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
         }
 
         try {
-            return new ReportInfo(requestDocument.getDocumentElement(),
+            return new CustomReportInfo(requestDocument.getDocumentElement(),
                     getDepth(DEPTH_0));
         } catch (DavException e) {
             throw new CosmoDavException(e);

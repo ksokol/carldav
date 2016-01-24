@@ -76,19 +76,10 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
         return msr;
     }
 
-    // our methods
-
-    public OutputFilter getOutputFilter() {
-        return outputFilter;
-    }
-
     public void setOutputFilter(OutputFilter outputFilter) {
         this.outputFilter = outputFilter;
     }
 
-    /**
-     * Parses an output filter out of the given report info.
-     */
     protected OutputFilter findOutputFilter(ReportInfo info)
         throws CosmoDavException {
         Element propdata =
@@ -105,7 +96,7 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
             return null;
         }
 
-        return CaldavOutputFilter.createFromXml(cdata);
+        return new CaldavOutputFilter().createFromXml(cdata);
     }
 
     private String readCalendarData(DavCalendarResource resource)

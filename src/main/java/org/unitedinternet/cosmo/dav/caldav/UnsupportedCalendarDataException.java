@@ -15,34 +15,25 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
+import org.unitedinternet.cosmo.dav.BadRequestException;
+import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-
-import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 /**
  * An exception indicating that the data enclosed in a calendar resource
  * was not of a supported media type.
  */
-public class UnsupportedCalendarDataException
-    extends ForbiddenException
-    implements ICalendarConstants, CaldavConstants {
+public class UnsupportedCalendarDataException extends BadRequestException implements ICalendarConstants, CaldavConstants {
 
-    /**
-     * Constructor.
-     */
     public UnsupportedCalendarDataException() {
         super("Calendar data must be of media type " + ICALENDAR_MEDIA_TYPE + ", version " + ICALENDAR_VERSION);
         getNamespaceContext().addNamespace(PRE_CALDAV, NS_CALDAV);
     }
-    /**
-     * Constructor.
-     * @param mediaType The media type.
-     */
+
     public UnsupportedCalendarDataException(String mediaType) {
-        super("Calendar data of type " + mediaType + " not allowed; only " +
-              CT_ICALENDAR);
+        super("Calendar data of type " + mediaType + " not allowed; only " + CT_ICALENDAR);
         getNamespaceContext().addNamespace(PRE_CALDAV, NS_CALDAV);
     }
 

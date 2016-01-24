@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
+import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
@@ -152,6 +153,12 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
         if (reportInfo == null) {
             return null;
         }
+
+        if(reportInfo instanceof CustomReportInfo) {
+            CustomReportInfo customReportInfo = (CustomReportInfo) reportInfo;
+            return customReportInfo.getDocumentElement();
+        }
+
         Document document;
         try {
             document = DomUtil.createDocument();

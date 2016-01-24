@@ -82,8 +82,7 @@ public class CaldavOutputFilter implements DavConstants, CaldavConstants, ICalen
 
             } else if (ELEMENT_CALDAV_EXPAND.equals(child.getLocalName())) {
                 expand = parsePeriod(child);
-            } else if (ELEMENT_CALDAV_LIMIT_RECURRENCE_SET.
-                       equals(child.getLocalName())) {
+            } else if (ELEMENT_CALDAV_LIMIT_RECURRENCE_SET.equals(child.getLocalName())) {
                 limit = parsePeriod(child);
             }
         }

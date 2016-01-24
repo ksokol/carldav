@@ -7,6 +7,8 @@ import org.springframework.test.web.servlet.ResultMatcher
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
+import static calendar.EvolutionData.ADD_VEVENT_RECURRENCE_REQUEST1
+import static calendar.EvolutionData.UPDATE_VEVENT_RECURRENCE_REQUEST1
 import static org.hamcrest.Matchers.notNullValue
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
@@ -176,6 +178,125 @@ class CalendarQueryTests extends IntegrationTestSupport {
                 .content(request(request2, "VEVENT"))
                 .header("Depth", "1"))
                 .andExpect(eventResponse(response2))
+    }
+
+    @Test
+    void limitRecurrenceSet() {
+        mockMvc.perform(put("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(ADD_VEVENT_RECURRENCE_REQUEST1))
+                .andExpect(status().isCreated())
+
+        def result2 = mockMvc.perform(put("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(UPDATE_VEVENT_RECURRENCE_REQUEST1))
+                .andExpect(status().isNoContent())
+                .andReturn()
+
+
+        def eventWithRecurrenceIdEtag = result2.getResponse().getHeader(ETAG)
+
+        def request3 = """\
+                        <CAL:comp name="VCALENDAR">
+                            <CAL:comp name="VEVENT">
+                                <prop name="UID" />
+                                <prop name="RECURRENCE-ID" />
+                            </CAL:comp>
+                        </CAL:comp>
+                        <CAL:limit-recurrence-set start="30121221T115937Z" end="30131231T235937Z" />"""
+
+        def response3 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${eventWithRecurrenceIdEtag}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR
+                                            BEGIN:VEVENT
+                                            UID:20160123T135858Z-25739-1000-1796-13@localhost&#13;
+                                            END:VEVENT
+                                            END:VCALENDAR
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <D:getetag>${currentEventEtag}</D:getetag>
+                                        <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR
+                                            BEGIN:VEVENT
+                                            UID:e94d89d2-b195-4128-a9a8-be83a873deae&#13;
+                                            END:VEVENT
+                                            END:VCALENDAR
+                                        </C:calendar-data>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request(request3, "VEVENT"))
+                .header("Depth", "1"))
+                .andExpect(xml(response3))
+
+        def request4 = """\
+                        <CAL:comp name="VCALENDAR">
+                            <CAL:comp name="VEVENT">
+                                <prop name="UID" />
+                                  <prop name="RECURRENCE-ID" />
+                            </CAL:comp>
+                        </CAL:comp>
+                        <CAL:limit-recurrence-set start="10160119T115937Z" end="30160128T235937Z" />"""
+
+        def response4 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${eventWithRecurrenceIdEtag}</D:getetag>
+                                            <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR
+                                                BEGIN:VEVENT
+                                                UID:20160123T135858Z-25739-1000-1796-13@localhost&#13;
+                                                END:VEVENT
+                                                BEGIN:VEVENT
+                                                UID:20160123T135858Z-25739-1000-1796-13@localhost&#13;
+                                                RECURRENCE-ID;TZID=Europe/Berlin:20160123T155900&#13;
+                                                END:VEVENT
+                                                END:VCALENDAR
+                                            </C:calendar-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEventEtag}</D:getetag>
+                                            <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR
+                                                BEGIN:VEVENT
+                                                UID:e94d89d2-b195-4128-a9a8-be83a873deae&#13;
+                                                END:VEVENT
+                                                END:VCALENDAR
+                                            </C:calendar-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request(request4, "VEVENT"))
+                .header("Depth", "1"))
+                .andExpect(xml(response4))
     }
 
     String request(String xmlFragment) {

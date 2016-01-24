@@ -18,8 +18,6 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
@@ -36,9 +34,7 @@ import java.text.ParseException;
 /**
  * A utility for parsing an {@link OutputFilter} from XML.
  */
-public class CaldavOutputFilter
-    implements DavConstants, CaldavConstants, ICalendarConstants {
-    private static final Log LOG = LogFactory.getLog(CaldavOutputFilter.class);
+public class CaldavOutputFilter implements DavConstants, CaldavConstants, ICalendarConstants {
 
     /**
      * Returns an <code>OutputFilter</code> representing the given
@@ -47,28 +43,23 @@ public class CaldavOutputFilter
      * @return output filter.
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
-    public OutputFilter createFromXml(Element cdata)
-        throws CosmoDavException {
+    public OutputFilter createFromXml(Element cdata) throws CosmoDavException {
         OutputFilter result = null;
         Period expand = null;
         Period limit = null;
 
-        String contentType =
-            DomUtil.getAttribute(cdata, ATTR_CALDAV_CONTENT_TYPE,
-                                 NAMESPACE_CALDAV);
+        String contentType = DomUtil.getAttribute(cdata, ATTR_CALDAV_CONTENT_TYPE, NAMESPACE_CALDAV);
         if (contentType != null && ! contentType.equals(ICALENDAR_MEDIA_TYPE)) {
             throw new UnsupportedCalendarDataException(contentType);
         }
-        String version =
-            DomUtil.getAttribute(cdata, ATTR_CALDAV_VERSION,
-                                 NAMESPACE_CALDAV);
+
+        String version = DomUtil.getAttribute(cdata, ATTR_CALDAV_VERSION, NAMESPACE_CALDAV);
         if (version != null && ! version.equals(ICALENDAR_VERSION)) {
                 throw new UnsupportedCalendarDataException();
         }
 
         // Look at each child element of calendar-data
-        for (ElementIterator iter = DomUtil.getChildren(cdata);
-             iter.hasNext();) {
+        for (ElementIterator iter = DomUtil.getChildren(cdata); iter.hasNext();) {
 
             Element child = iter.nextElement();
             if (ELEMENT_CALDAV_COMP.equals(child.getLocalName())) {
@@ -77,14 +68,13 @@ public class CaldavOutputFilter
                 // <comp> element as VCALENDAR components are the only top-level
                 // components allowed in iCalendar data
                 if (result != null) {
-                    return null;
+                    throw new UnsupportedOperationException("only one top-level component supported");
                 }
 
                 // Get required name attribute and verify it is VCALENDAR
-                String name = 
-                    DomUtil.getAttribute(child, ATTR_CALDAV_NAME, null);
-                if (name == null || !Calendar.VCALENDAR.equals(name)) {
-                    return null;
+                String name = DomUtil.getAttribute(child, ATTR_CALDAV_NAME, null);
+                if (!Calendar.VCALENDAR.equals(name)) {
+                    throw new UnsupportedOperationException("only top-level comp name " + Calendar.VCALENDAR + " supported");
                 }
 
                 // Now parse filter item
@@ -95,8 +85,6 @@ public class CaldavOutputFilter
             } else if (ELEMENT_CALDAV_LIMIT_RECURRENCE_SET.
                        equals(child.getLocalName())) {
                 limit = parsePeriod(child);
-            } else {
-                LOG.warn("Ignoring child " + child.getTagName() + " of " + cdata.getTagName());
             }
         }
 

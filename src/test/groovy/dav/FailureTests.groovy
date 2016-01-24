@@ -2,6 +2,7 @@ package dav
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
@@ -378,5 +379,52 @@ class FailureTests extends IntegrationTestSupport {
         assertTimerange('start="20160119T115937Z"', 'Expected timerange attribute end')
         assertTimerange('start="20160119T115937Z" end="1"', 'Timerange end not parseable: Unparseable date: "1"')
         assertTimerange('start="20160119T115937Z" end="20160132T115937Z"', 'Timerange end must be UTC')
+    }
+
+    @Test
+    void calendarDataDuplicatedComp() {
+        def request1 = """\
+                <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                    <prop>
+                        <CAL:calendar-data CAL:content-type="text/calendar" CAL:version="2.0">
+                            <CAL:comp name="VCALENDAR" />
+                            <CAL:comp name="VCALENDAR" />
+                        </CAL:calendar-data>
+                    </prop>
+                </CAL:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:internal-server-error>only one top-level component supported</cosmo:internal-server-error>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1))
+                .andExpect(xml(response1))
+                .andExpect(status().isInternalServerError())
+    }
+
+    @Test
+    void calendarDataInvalidCompName() {
+        def request1 = """\
+                <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                    <prop>
+                        <CAL:calendar-data CAL:content-type="text/calendar" CAL:version="2.0">
+                            <CAL:comp name="UNKNOWN" />
+                        </CAL:calendar-data>
+                    </prop>
+                </CAL:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:internal-server-error>only top-level comp name VCALENDAR supported</cosmo:internal-server-error>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1))
+                .andExpect(xml(response1))
+                .andExpect(status().isInternalServerError())
     }
 }

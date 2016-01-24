@@ -2,7 +2,6 @@ package dav
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
@@ -126,6 +125,7 @@ class FailureTests extends IntegrationTestSupport {
                 .content(request1)
                 .header("If-None-Match", "*"))
                 .andExpect(status().isBadRequest())
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }
 
@@ -186,6 +186,7 @@ class FailureTests extends IntegrationTestSupport {
                 .content(request1)
                 .header("If-None-Match", "*"))
                 .andExpect(status().isPreconditionFailed())
+                .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }
 
@@ -235,14 +236,14 @@ class FailureTests extends IntegrationTestSupport {
                 .content(request1))
                 .andExpect(xml(response1))
                 .andExpect(status().isUnsupportedMediaType())
+                .andExpect(textXmlContentType())
     }
 
     @Test
     void deleteWithXmlBody() {
          mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
-                .content(ADD_VEVENT_REQUEST1)
-                .header("If-None-Match", "*"))
+                .content(ADD_VEVENT_REQUEST1))
                 .andExpect(status().isCreated())
 
         def request1 = """\
@@ -262,9 +263,9 @@ class FailureTests extends IntegrationTestSupport {
         mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1))
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(xml(response1))
                 .andExpect(status().isUnsupportedMediaType())
+                .andExpect(textXmlContentType())
     }
 
     @Test
@@ -278,7 +279,6 @@ class FailureTests extends IntegrationTestSupport {
         def request1 = """\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
-                            <D:getetag/>
                             <C:calendar-data/
                           </D:prop>
                           <C:filter />
@@ -294,5 +294,29 @@ class FailureTests extends IntegrationTestSupport {
                 .content(request1))
                 .andExpect(xml(response1))
                 .andExpect(status().isBadRequest())
+                .andExpect(textXmlContentType())
+    }
+
+    @Test
+    void calendarDataQueryWithWrongVersion() {
+        def request1 = """\
+                        <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                            <prop>
+                                <CAL:calendar-data CAL:content-type="text/calendar" CAL:version="42.0" />
+                            </prop>
+                        </CAL:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:supported-calendar-data>Calendar data must be of media type text/calendar, version 2.0</C:supported-calendar-data>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isBadRequest())
+                .andExpect(xml(response1))
+                .andExpect(textXmlContentType())
     }
 }

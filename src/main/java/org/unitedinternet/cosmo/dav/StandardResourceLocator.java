@@ -105,23 +105,6 @@ public class StandardResourceLocator implements DavResourceLocator {
         return factory;
     }
 
-    // our methods
-
-    public int hashCode() {
-        return context.toExternalForm().hashCode() + path.hashCode();
-    }
-
-    public boolean equals(Object o) {
-        if (o == null) {
-            return false;
-        }
-        if (! (o instanceof StandardResourceLocator)) {
-            return false;
-        }
-        StandardResourceLocator other = (StandardResourceLocator) o;
-        return other.hashCode() == hashCode();
-    }
-    
     private String buildHref(URL context, boolean isCollection, boolean absolute) throws URISyntaxException {
         String protocol = context.getProtocol();
         String host = context.getHost();

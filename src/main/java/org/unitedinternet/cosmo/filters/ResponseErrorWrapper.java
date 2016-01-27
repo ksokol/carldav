@@ -15,14 +15,14 @@
  */
 package org.unitedinternet.cosmo.filters;
 
+import org.apache.commons.io.IOUtils;
+import org.unitedinternet.cosmo.util.BufferedServletOutputStream;
+
 import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
-
-import org.apache.commons.io.IOUtils;
-import org.unitedinternet.cosmo.util.BufferedServletOutputStream;
 
 /**
  * HttpServletResponseWrapper that catches INTERNAL_SERVER_ERROR
@@ -134,15 +134,5 @@ public class ResponseErrorWrapper extends HttpServletResponseWrapper {
         } else {
             super.setStatus(sc);
         }
-    }
-    
-    /**
-     * @return buffered outputstream, only has a value if
-     *         an error has been trapped and getOutputStream()
-     *         was called, meaning the request handler was
-     *         trying to send error data.
-     */
-    public BufferedServletOutputStream getBufferedOutputStream() {
-        return bufferedOutput;
     }
 }

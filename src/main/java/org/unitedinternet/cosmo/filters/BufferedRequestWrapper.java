@@ -35,12 +35,7 @@ public class BufferedRequestWrapper extends HttpServletRequestWrapper {
     
     private BufferedServletInputStream inputStream = null;
     private boolean retryRequest = false;
-    
-    public BufferedRequestWrapper(HttpServletRequest request) throws IOException {
-        super(request);
-        inputStream = new BufferedServletInputStream(request.getInputStream());
-    }
-    
+
     /**
      * @param request servlet request
      * @param maxMemoryBuffer Maximum size of request that will be 
@@ -70,17 +65,5 @@ public class BufferedRequestWrapper extends HttpServletRequestWrapper {
             inputStream.resetToBeginning();
         }
         return inputStream;
-    }
-
-    @Override
-    public BufferedReader getReader()
-        throws IOException {
-        String encoding = getCharacterEncoding();
-        if (encoding == null) {
-            encoding = "UTF-8";
-        }
-        InputStreamReader in = 
-            new InputStreamReader(getInputStream(), encoding);
-        return new BufferedReader(in);
     }
 }

@@ -24,20 +24,13 @@ import org.unitedinternet.cosmo.dav.DavResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
-import java.util.Locale;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-/**
- * Extends {@link org.apache.jackrabbit.webdav.WebdavResponseImpl}
- */
 public class StandardDavResponse extends WebdavResponseImpl implements DavResponse, DavConstants {
 
     private static final Log LOG = LogFactory.getLog(StandardDavResponse.class);
@@ -46,175 +39,17 @@ public class StandardDavResponse extends WebdavResponseImpl implements DavRespon
 
     private HttpServletResponse originalHttpServletResponse;
 
-    /**
-     */
     public StandardDavResponse(HttpServletResponse response) {
         super(response);
         originalHttpServletResponse = response;
     }
 
-
-    public void addCookie(Cookie cookie) {
-        originalHttpServletResponse.addCookie(cookie);
-    }
-
-
-    public boolean containsHeader(String name) {
-        return originalHttpServletResponse.containsHeader(name);
-    }
-
-
-    public String encodeURL(String url) {
-        return originalHttpServletResponse.encodeURL(url);
-    }
-
-
-    public String getCharacterEncoding() {
-        return originalHttpServletResponse.getCharacterEncoding();
-    }
-
-
-    public String encodeRedirectURL(String url) {
-        return originalHttpServletResponse.encodeRedirectURL(url);
-    }
-
-
     public String getContentType() {
         return originalHttpServletResponse.getContentType();
     }
 
-
-    public String encodeUrl(String url) {
-        return originalHttpServletResponse.encodeUrl(url);
-    }
-
-
-    public String encodeRedirectUrl(String url) {
-        return originalHttpServletResponse.encodeRedirectUrl(url);
-    }
-
-
-    public ServletOutputStream getOutputStream() throws IOException {
-        return originalHttpServletResponse.getOutputStream();
-    }
-
-
-    public void sendError(int sc, String msg) throws IOException {
-        originalHttpServletResponse.sendError(sc, msg);
-    }
-
-
-    public PrintWriter getWriter() throws IOException {
-        return originalHttpServletResponse.getWriter();
-    }
-
-
-    public void sendError(int sc) throws IOException {
-        originalHttpServletResponse.sendError(sc);
-    }
-
-
     public void setCharacterEncoding(String charset) {
         originalHttpServletResponse.setCharacterEncoding(charset);
-    }
-
-
-    public void sendRedirect(String location) throws IOException {
-        originalHttpServletResponse.sendRedirect(location);
-    }
-
-
-    public void setDateHeader(String name, long date) {
-        originalHttpServletResponse.setDateHeader(name, date);
-    }
-
-
-    public void setContentLength(int len) {
-        originalHttpServletResponse.setContentLength(len);
-    }
-
-
-    public void addDateHeader(String name, long date) {
-        originalHttpServletResponse.addDateHeader(name, date);
-    }
-
-
-    public void setContentType(String type) {
-        originalHttpServletResponse.setContentType(type);
-    }
-
-
-    public void setHeader(String name, String value) {
-        //Including unvalidated data in an HTTP response header can enable
-        //cache-poisoning, cross-site scripting, cross-user defacement, page hijacking,
-        //cookie manipulation or open redirect.
-        value = value.replaceAll("\r", " ").replace("\n", " ");
-        originalHttpServletResponse.setHeader(name, value);
-    }
-
-
-    public void addHeader(String name, String value) {
-        originalHttpServletResponse.addHeader(name, value);
-    }
-
-
-    public void setBufferSize(int size) {
-        originalHttpServletResponse.setBufferSize(size);
-    }
-
-
-    public void setIntHeader(String name, int value) {
-        originalHttpServletResponse.setIntHeader(name, value);
-    }
-
-
-    public void addIntHeader(String name, int value) {
-        originalHttpServletResponse.addIntHeader(name, value);
-    }
-
-
-    public void setStatus(int sc) {
-        originalHttpServletResponse.setStatus(sc);
-    }
-
-
-    public int getBufferSize() {
-        return originalHttpServletResponse.getBufferSize();
-    }
-
-
-    public void flushBuffer() throws IOException {
-        originalHttpServletResponse.flushBuffer();
-    }
-
-
-    public void setStatus(int sc, String sm) {
-        originalHttpServletResponse.setStatus(sc, sm);
-    }
-
-
-    public void resetBuffer() {
-        originalHttpServletResponse.resetBuffer();
-    }
-
-
-    public boolean isCommitted() {
-        return originalHttpServletResponse.isCommitted();
-    }
-
-
-    public void reset() {
-        originalHttpServletResponse.reset();
-    }
-
-
-    public void setLocale(Locale loc) {
-        originalHttpServletResponse.setLocale(loc);
-    }
-
-
-    public Locale getLocale() {
-        return originalHttpServletResponse.getLocale();
     }
 
     @Override
@@ -272,11 +107,7 @@ public class StandardDavResponse extends WebdavResponseImpl implements DavRespon
         }
     }
 
-
     @Override
     public void setContentLengthLong(long len) {
-
     }
-
-
 }

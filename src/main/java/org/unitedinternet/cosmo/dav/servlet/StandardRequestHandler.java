@@ -349,4 +349,11 @@ public class StandardRequestHandler extends AbstractController implements Server
         response.addHeader("Allow", resource.getSupportedMethods());
         response.addHeader("DAV", resource.getComplianceClass());
     }
+
+    @Override
+    public ModelAndView handleRequest(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+        checkRequest(request);
+        prepareResponse(response);
+        return handleRequestInternal(request, response);
+    }
 }

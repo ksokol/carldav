@@ -15,6 +15,11 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
@@ -487,6 +492,21 @@ public class CalendarFilterEvaluaterTest {
         period = new Period(start, end);
         timeRangeFilter.setPeriod(period);
         Assert.assertTrue(evaluater.evaluate(calendar2, filter));
+    }
+
+    @Test
+    public void testNotVCalendar() {
+        final CalendarFilterEvaluater uut = new CalendarFilterEvaluater();
+
+        final ComponentFilter componentFilter = mock(ComponentFilter.class);
+        final CalendarFilter calendarFilter = mock(CalendarFilter.class);
+
+        when(calendarFilter.getFilter()).thenReturn(componentFilter);
+        when(componentFilter.getName()).thenReturn("NOT_VCALENDAR");
+
+        uut.evaluate(null, calendarFilter);
+
+        verify(componentFilter, never()).getComponentFilters();
     }
 
     /**

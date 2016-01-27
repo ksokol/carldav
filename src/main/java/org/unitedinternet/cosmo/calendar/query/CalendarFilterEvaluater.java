@@ -52,7 +52,7 @@ public class CalendarFilterEvaluater {
     
     private static final String COMP_VCALENDAR = "VCALENDAR";
     
-    private Stack<Component> stack = new Stack<Component>();
+    private Stack<Component> stack = new Stack<>();
 
     /**
      * Evaulate CalendarFilter against a Calendar.

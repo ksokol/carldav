@@ -16,12 +16,12 @@ public class AddressData extends StandardDavProperty implements CaldavConstants,
         super(ADDRESSDATA, calendarData, true);
     }
 
-    public Element toXml(Document document) {
-        Element element = super.toXml(document);
-
-        DomUtil.setAttribute(element, ATTR_CALDAV_CONTENT_TYPE, NAMESPACE_CARDDAV, CARD_MEDIA_TYPE);
-        DomUtil.setAttribute(element, ATTR_CALDAV_VERSION, NAMESPACE_CARDDAV, CARD_VERSION);
-
-        return element;
-    }
+//    public Element toXml(Document document) {
+//        Element element = super.toXml(document);
+//
+//        DomUtil.setAttribute(element, ATTR_CALDAV_CONTENT_TYPE, NAMESPACE_CARDDAV, CARD_MEDIA_TYPE);
+//        DomUtil.setAttribute(element, ATTR_CALDAV_VERSION, NAMESPACE_CARDDAV, CARD_VERSION);
+//
+//        return element;
+//    }
 }

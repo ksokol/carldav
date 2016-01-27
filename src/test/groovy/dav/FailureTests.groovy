@@ -2,7 +2,6 @@ package dav
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
@@ -426,5 +425,34 @@ class FailureTests extends IntegrationTestSupport {
                 .content(request1))
                 .andExpect(xml(response1))
                 .andExpect(status().isInternalServerError())
+    }
+
+    @Test
+    void textMatchWrongCollation() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                  <C:text-match collation="i;unknown">e94d89d2-b195-4128-a9a8-be83a873deae</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:supported-collation>Collation must be one of i;ascii-casemap, i;octet</C:supported-collation>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isPreconditionFailed())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
     }
 }

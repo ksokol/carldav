@@ -455,4 +455,30 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }
+
+    @Test
+    public void multipleCompFilter() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <D:prop>
+                            <D:getetag/>
+                          </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR" />
+                            <C:comp-filter name="IRRELEVANT" />
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <C:valid-filter>CALDAV:filter can contain only one comp-filter</C:valid-filter>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar", USER01)
+                .contentType(TEXT_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
 }

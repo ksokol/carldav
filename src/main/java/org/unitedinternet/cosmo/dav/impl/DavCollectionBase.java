@@ -200,12 +200,6 @@ public class DavCollectionBase extends DavItemResourceBase implements
         return memberToResource(href);
     }
 
-    // DavItemCollection
-
-    public boolean isCalendarCollection() {
-        return false;
-    }
-
     public boolean isHomeCollection() {
         return false;
     }

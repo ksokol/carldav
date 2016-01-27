@@ -17,8 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static testutil.TestUser.USER01
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.etag
-import static testutil.mockmvc.CustomResultMatchers.xml
+import static testutil.mockmvc.CustomResultMatchers.*
 
 /**
  * @author Kamill Sokol
@@ -717,5 +716,137 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             </D:propstat>
                         </D:response>
                     </D:multistatus>""")
+    }
+
+    @Test
+    void textMatchNegateCondition() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                  <C:text-match collation="i;ascii-casemap">e94d89d2-b195-4128-a9a8-be83a873deae</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                          <D:response>
+                            <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                            <D:status>HTTP/1.1 200 OK</D:status>
+                          </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                    <C:text-match negate-condition="yes" collation="i;ascii-casemap">e94d89d2-b195-4128-a9a8-be83a873deae</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response2 = """<D:multistatus xmlns:D="DAV:" />"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+
+
+        def request3 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                    <C:text-match>E94d89d2-b195-4128-a9a8-be83a873deae</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request3)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
+
+    @Test
+    void textMatchCaseless() {
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                  <C:text-match collation="i;octet">e94d89d2-b195-4128-a9a8-be83a873deae</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                          <D:response>
+                            <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                            <D:status>HTTP/1.1 200 OK</D:status>
+                          </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                    <C:text-match collation="i;octet">E94d89d2-b195-4128-a9a8-be83a873deae</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response2 = """<D:multistatus xmlns:D="DAV:" />"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
     }
 }

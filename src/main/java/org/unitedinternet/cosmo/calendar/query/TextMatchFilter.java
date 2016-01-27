@@ -36,55 +36,46 @@ import java.text.ParseException;
  * 
  * <!ELEMENT text-match (#PCDATA)> PCDATA value: string
  * 
- *  <!ATTLIST text-match collation        CDATA "i;ascii-casemap"
- *                             negate-condition (yes | no) "no">
+ * <!ATTLIST text-match collation CDATA "i;ascii-casemap" negate-condition (yes | no) "no">
  */
 public class TextMatchFilter implements DavConstants, CaldavConstants {
-    private boolean isNegateCondition = false;
 
-    private String collation = null;
-
-    private String value = null;
-
-    public static final String COLLATION_IASCII = "i;ascii-casemap";
+    private static final String COLLATION_IASCII = "i;ascii-casemap";
     public static final String COLLATION_OCTET = "i;octet";
-    
-    /**
-     * 
-     * @param value
-     */
+
+    private boolean isNegateCondition;
+    private String collation;
+    private String value;
+
     public TextMatchFilter(String value) {
         this.value = value;
     }
-    
+
     /**
      * Construct a TextMatchFilter object from a DOM Element
-     * @param element The dom element.
-     * @throws ParseException - if something is wrong this exception is thrown.
+     * 
+     * @param element
+     *            The dom element.
+     * @throws ParseException
+     *             - if something is wrong this exception is thrown.
      */
     public TextMatchFilter(Element element) throws ParseException {
         // Element data is string to match
         // TODO: do we need to do this replacing??
         value = DomUtil.getTextTrim(element).replaceAll("'", "''");
-        
+
         // Check attribute for collation
-        collation =
-            DomUtil.getAttribute(element, ATTR_CALDAV_COLLATION,null);
-                    
-        String negateCondition = 
-            DomUtil.getAttribute(element, ATTR_CALDAV_NEGATE_CONDITION,null);
-        
-        if((negateCondition == null) || !VALUE_YES.equals(negateCondition)) {
-            isNegateCondition = false;
-        }
-        else {
+        collation = DomUtil.getAttribute(element, ATTR_CALDAV_COLLATION, null);
+
+        String negateCondition = DomUtil.getAttribute(element, ATTR_CALDAV_NEGATE_CONDITION, null);
+
+        if (VALUE_YES.equals(negateCondition)) {
             isNegateCondition = true;
+        } else {
+            isNegateCondition = false;
         }
     }
 
-    /**
-     * Constructor.
-     */
     public TextMatchFilter() {
     }
 
@@ -109,26 +100,25 @@ public class TextMatchFilter implements DavConstants, CaldavConstants {
     }
 
     /**
-     * Returns true if the collation is a caseless collation, meaning
-     * case should be ingored when matching text.  The default collation
-     * is 'i;ascii-casemap', which is considered a caseless collation.
-     * On the other hand, 'i;octet' is not caseless.
+     * Returns true if the collation is a caseless collation, meaning case should be ingored when matching text. The default collation is 'i;ascii-casemap',
+     * which is considered a caseless collation. On the other hand, 'i;octet' is not caseless.
+     * 
      * @return true if the collation is a caseless collation
      */
     public boolean isCaseless() {
         return (collation == null || COLLATION_IASCII.equals(collation));
     }
-    
+
     /**
-     * Sets the collation to be caseless ('i;ascii-casemap') or
-     * not ('i;octet').
-     * @param caseless the value of the collation.
+     * Sets the collation to be caseless ('i;ascii-casemap') or not ('i;octet').
+     * 
+     * @param caseless
+     *            the value of the collation.
      */
     public void setCaseless(boolean caseless) {
-        if(caseless) {
+        if (caseless) {
             collation = null;
-        }
-        else {
+        } else {
             collation = COLLATION_OCTET;
         }
     }
@@ -137,7 +127,7 @@ public class TextMatchFilter implements DavConstants, CaldavConstants {
      * Validates if collation is supported.
      */
     public void validate() {
-        if(collation!=null && !CalendarUtils.isSupportedCollation(collation)) {
+        if (collation != null && !CalendarUtils.isSupportedCollation(collation)) {
             throw new UnsupportedCollationException();
         }
     }

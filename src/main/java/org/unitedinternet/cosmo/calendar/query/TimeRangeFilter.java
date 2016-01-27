@@ -100,39 +100,6 @@ public class TimeRangeFilter implements CaldavConstants {
         return Integer.parseInt(year) + 1 + start.substring(4);
     }
 
-    /**
-     * 
-     * @param dtStart The timerange start.
-     * @param dtEnd The timerange end.
-     */
-    public TimeRangeFilter(DateTime dtStart, DateTime dtEnd) {
-        if (!dtStart.isUtc()) {
-            throw new IllegalArgumentException("timerange start must be UTC");
-        }
-
-        if (!dtEnd.isUtc()) {
-            throw new IllegalArgumentException("timerange start must be UTC");
-        }
-
-        Period period = new Period(dtStart, dtEnd);
-        setPeriod(period);
-    }
-
-    public TimeRangeFilter(java.util.Date start, java.util.Date end) {
-        this(utc(start), utc(end));
-    }
-
-    private static DateTime utc(java.util.Date date) {
-        DateTime dt = new DateTime(date);
-        dt.setUtc(true);
-        return dt;
-    }
-
-    public TimeRangeFilter(String start, String end)
-        throws ParseException {
-        this(new DateTime(start), new DateTime(end));
-    }
-
     public Period getPeriod() {
         return period;
     }

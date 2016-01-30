@@ -21,8 +21,10 @@
        http://www.springframework.org/schema/util
        http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<bean id="protocolAuthenticationEntryPoint" class="org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint">
-        <property name="realmName" value="#{T(org.unitedinternet.cosmo.CosmoConstants).PRODUCT_NAME}" />
+    <bean id="protocolAuthenticationEntryPoint" class="carldav.security.CustomBasicAuthenticationEntryPoint">
+        <constructor-arg>
+            <value>#{T(org.unitedinternet.cosmo.CosmoConstants).PRODUCT_NAME}</value>
+        </constructor-arg>
     </bean>
 
 	<bean id="protocolBasicProcessingFilter"
@@ -69,6 +71,7 @@
          				retryFilter" />
 		</security:filter-chain-map>
 	</bean>
+
 
     <bean id="openSessionInViewFilter" class="org.springframework.orm.hibernate4.support.OpenSessionInViewFilter" />
 

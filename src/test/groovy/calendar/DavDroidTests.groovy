@@ -6,7 +6,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
-import static calendar.DavDroidData.ADD_AND_UPDATE_VEVENT_REQUEST4
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
 import static com.google.common.net.HttpHeaders.AUTHORIZATION
 import static org.hamcrest.Matchers.*
@@ -14,9 +13,7 @@ import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static testutil.TestUser.USER01
 import static testutil.TestUser.USER01_PASSWORD
 import static testutil.helper.Base64Helper.user
@@ -127,7 +124,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:propstat>
                                         <D:prop>
                                             <D:current-user-privilege-set/>
-                                            <CAL:calendar-home-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <C:calendar-home-set xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             <D:current-user-principal/>
                                             <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                             <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>

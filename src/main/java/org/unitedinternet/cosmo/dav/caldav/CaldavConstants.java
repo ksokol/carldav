@@ -145,6 +145,12 @@ public interface CaldavConstants {
 
     CosmoQName RESOURCE_TYPE_CALENDAR = new CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
 
+    /** The CalDAV property name CALDAV:calendar-home-set */
+    String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
+
+    /** The CalDAV property CALDAV:calendar-home-set */
+    DavPropertyName CALENDARHOMESET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
+
     /** The Calendar Server property CS:getctag */
     DavPropertyName GET_CTAG = DavPropertyName.create(PROPERTY_CS_GET_CTAG, NAMESPACE_CS);
 }

@@ -59,7 +59,7 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
         final String result = match(userId, request.getRequestURI());
         final CosmoUserDetails principal = (CosmoUserDetails) authentication.getPrincipal();
 
-        if(result == null || ("user".equalsIgnoreCase(result) && principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")))) {
+        if(result == null || ("user".equalsIgnoreCase(result)) && principal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             return;
         }
         throw new InsufficientAuthenticationException(principal.getUsername() + " not allowed to call " + result);
@@ -77,7 +77,11 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
 
         final List<String> pathSegments = uriComponentsBuilder.build().getPathSegments();
 
-        if(!"dav".equals(pathSegments.get(0))) {
+        if(pathSegments.size() == 0) {
+            return null;
+        }
+
+        if(!"dav".equals(pathSegments.get(0)) && !"principals".equals(pathSegments.get(0))) {
             return pathSegments.get(0);
         }
 
@@ -88,6 +92,14 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
         final String userIdFromUrl = pathSegments.get(1);
 
         if(!StringUtils.equalsIgnoreCase(userId, userIdFromUrl)) {
+            if(pathSegments.size() < 3) {
+                throw new InsufficientAuthenticationException("access denied for " + path);
+            }
+
+            if(StringUtils.equalsIgnoreCase(userId, pathSegments.get(3))) {
+                return null;
+            }
+
             throw new InsufficientAuthenticationException("access denied for " + path);
         }
 

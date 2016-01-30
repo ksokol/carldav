@@ -34,6 +34,9 @@ public interface ExtendedDavConstants extends DavConstants {
     String XML_LANG = "lang";
     String ADDRESSBOOK = "addressbook";
 
+    /** The ACL XML element name <DAV:principal> */
+    String ELEMENT_ACL_PRINCIPAL = "principal";
+
     Namespace NAMESPACE_XML =
             Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
@@ -62,8 +65,14 @@ public interface ExtendedDavConstants extends DavConstants {
     CosmoQName RESOURCE_TYPE_ADDRESSBOOK =
             new CosmoQName(NAMESPACE_CARDDAV.getURI(), ADDRESSBOOK, NAMESPACE_CARDDAV.getPrefix());
 
+    CosmoQName RESOURCE_TYPE_PRINCIPAL =
+            new CosmoQName(NAMESPACE.getURI(), ELEMENT_ACL_PRINCIPAL,
+                    NAMESPACE.getPrefix());
+
     UriTemplate TEMPLATE_HOME =
         new UriTemplate("/{username}/*");
     UriTemplate CARD_HOME =
             new UriTemplate("/{username}/contacts");
+    UriTemplate TEMPLATE_USER =
+            new UriTemplate("/principals/users/{username}/*");
 }

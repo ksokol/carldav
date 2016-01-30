@@ -58,6 +58,9 @@
                 </constructor-arg>
             </bean>
         </constructor-arg>
+        <constructor-arg>
+            <ref bean="userService" />
+        </constructor-arg>
 	</bean>
 
 	<bean id="davResourceLocatorFactory"

@@ -29,6 +29,7 @@ import org.unitedinternet.cosmo.dav.impl.DavFile;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
+import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -38,8 +39,11 @@ import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
+import org.unitedinternet.cosmo.service.UserService;
+import org.unitedinternet.cosmo.util.UriTemplate;
 
 public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
     private static final Log LOG =  LogFactory.getLog(StandardResourceFactory.class);
@@ -49,17 +53,20 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     private IdGenerator idGenerator;
     private CalendarQueryProcessor calendarQueryProcessor;
     private CardQueryProcessor cardQueryProcessor;
+    private UserService userService;
 
     public StandardResourceFactory(ContentService contentService,
                                    CosmoSecurityManager securityManager,
                                    IdGenerator idGenerator,
                                    CalendarQueryProcessor calendarQueryProcessor,
-                                   CardQueryProcessor cardQueryProcessor) {
+                                   CardQueryProcessor cardQueryProcessor,
+                                   UserService userService) {
         this.contentService = contentService;
         this.securityManager = securityManager;
         this.idGenerator = idGenerator;
         this.calendarQueryProcessor = calendarQueryProcessor;
         this.cardQueryProcessor = cardQueryProcessor;
+        this.userService = userService;
     }
 
     /**
@@ -134,6 +141,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             LOG.debug("resolving URI " + uri);
         }
 
+        UriTemplate.Match match = TEMPLATE_USER.match(uri);
+        if (match != null) {
+            return createUserPrincipalResource(locator, match);
+        }
+
         return createUnknownResource(locator, uri);
     }
 
@@ -182,6 +194,12 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         }
 
         return new DavFile((HibFileItem) hibItem, locator, this, idGenerator);
+    }
+
+
+    protected WebDavResource createUserPrincipalResource(DavResourceLocator locator, UriTemplate.Match match) throws CosmoDavException {
+        User user = userService.getUser(match.get("username"));
+        return user != null ? new DavUserPrincipal(user, locator, this) : null;
     }
 
     protected WebDavResource createUnknownResource(DavResourceLocator locator,

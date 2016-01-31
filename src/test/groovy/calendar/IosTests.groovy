@@ -5,16 +5,18 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
+import static org.hamcrest.Matchers.*
 import static org.springframework.http.HttpHeaders.ALLOW
+import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.TEXT_XML
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.options
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
-import static testutil.mockmvc.CustomResultMatchers.xml
+import static testutil.mockmvc.CustomResultMatchers.*
 
 /**
  * @author Kamill Sokol
@@ -26,7 +28,6 @@ class IosTests extends IntegrationTestSupport {
 
     @Test
     public void fetchingEmptyCalendarFirstTime() {
-
         def request1 = """\
                         <x0:propfind xmlns:x0="DAV:" xmlns:CAL="http://calendarserver.org/ns/" xmlns:x1="urn:ietf:params:xml:ns:caldav" xmlns:n0="http://cal.me.com/_namespace/">
                          <x0:prop>
@@ -79,7 +80,6 @@ class IosTests extends IntegrationTestSupport {
                 .content(request1)
                 .header("Depth", "0"))
                 .andExpect(status().isMultiStatus())
-        .andDo(MockMvcResultHandlers.print())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
 
@@ -238,7 +238,6 @@ class IosTests extends IntegrationTestSupport {
                 .content(request3)
                 .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
-        .andDo(MockMvcResultHandlers.print())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response3))
 
@@ -266,5 +265,198 @@ class IosTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response4))
+    }
+
+    @Test
+    void addVEvent() {
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Apple Inc.//iCal 3.0m//EN
+                        VERSION:2.0
+                        BEGIN:VTIMEZONE
+                        TZID:Europe/Berlin
+                        BEGIN:DAYLIGHT
+                        DTSTART:19810329T020000
+                        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+                        TZNAME:GMT+02:00
+                        TZOFFSETFROM:+0100
+                        TZOFFSETTO:+0200
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        DTSTART:19961027T030000
+                        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+                        TZNAME:GMT+01:00
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        END:STANDARD
+                        END:VTIMEZONE
+                        BEGIN:VEVENT
+                        DESCRIPTION:iOS Note
+                        DTEND;TZID=Europe/Berlin:20160203T220000
+                        DTSTAMP:20160131T170937Z
+                        DTSTART;TZID=Europe/Berlin:20160203T190000
+                        LAST-MODIFIED:20160131T170937Z
+                        LOCATION:iOS Location
+                        RRULE:FREQ=WEEKLY;UNTIL=20170309T225959Z
+                        SEQUENCE:0
+                        SUMMARY:iOS title
+                        TRANSP:OPAQUE
+                        UID:BC9458C9-C221-4E23-BA24-1E3D4EDBE65B
+                        BEGIN:VALARM
+                        ACTION:DISPLAY
+                        DESCRIPTION:Event reminder
+                        TRIGGER:-PT15M
+                        X-WR-ALARMUID:0C27CAB2-7842-40C6-93AF-C12C09A4F88B
+                        END:VALARM
+                        BEGIN:VALARM
+                        ACTION:DISPLAY
+                        DESCRIPTION:Event reminder
+                        TRIGGER:-PT5M
+                        X-WR-ALARMUID:F06D1833-D68F-4141-94C6-537C4FE48232
+                        END:VALARM
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        mockMvc.perform(get("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(text(request1))
+    }
+
+    @Test
+    void deleteVEvent() {
+        addVEvent()
+
+        mockMvc.perform(delete("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(nullValue()))
+
+        mockMvc.perform(get("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+                .andExpect(status().isNotFound())
+    }
+
+    @Test
+    void updateVEvent() {
+        addVEvent()
+
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Apple Inc.//iCal 3.0m//EN
+                        VERSION:2.0
+                        BEGIN:VTIMEZONE
+                        TZID:Europe/Berlin
+                        BEGIN:DAYLIGHT
+                        DTSTART:19810329T020000
+                        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+                        TZNAME:GMT+02:00
+                        TZOFFSETFROM:+0100
+                        TZOFFSETTO:+0200
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        DTSTART:19961027T030000
+                        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+                        TZNAME:GMT+01:00
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        END:STANDARD
+                        END:VTIMEZONE
+                        BEGIN:VEVENT
+                        DESCRIPTION:iOS Note
+                        DTEND;TZID=Europe/Berlin:20160203T220000
+                        DTSTAMP:20160131T173030Z
+                        DTSTART;TZID=Europe/Berlin:20160203T190000
+                        EXDATE;TZID=Europe/Berlin:20160203T190000
+                        EXDATE;TZID=Europe/Berlin:20160316T190000
+                        LAST-MODIFIED:20160131T173030Z
+                        LOCATION:iOS Location
+                        RRULE:FREQ=WEEKLY;UNTIL=20170309T225959Z
+                        SEQUENCE:0
+                        SUMMARY:iOS title
+                        TRANSP:OPAQUE
+                        UID:BC9458C9-C221-4E23-BA24-1E3D4EDBE65B
+                        BEGIN:VALARM
+                        ACTION:DISPLAY
+                        DESCRIPTION:Event reminder
+                        TRIGGER:-PT15M
+                        X-WR-ALARMUID:1BD5C979-1CFC-4B60-A704-998C952FAAD1
+                        END:VALARM
+                        BEGIN:VALARM
+                        ACTION:DISPLAY
+                        DESCRIPTION:Event reminder
+                        TRIGGER:-PT5M
+                        X-WR-ALARMUID:42511428-4548-4C71-A066-E074773D87C4
+                        END:VALARM
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        mockMvc.perform(get("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(text(request1))
+    }
+
+    @Test
+    void fetchCalendar() {
+        addVEvent()
+
+        def request1 = """\
+                        <x0:calendar-query xmlns:x1="DAV:" xmlns:x0="urn:ietf:params:xml:ns:caldav">
+                            <x1:prop>
+                                <x1:getetag/>
+                                <x1:resourcetype/>
+                            </x1:prop>
+                            <x0:filter>
+                                <x0:comp-filter name="VCALENDAR">
+                                    <x0:comp-filter name="VEVENT">
+                                        <x0:time-range start="20151228T230000Z"/>
+                                    </x0:comp-filter>
+                                </x0:comp-filter>
+                            </x0:filter>
+                        </x0:calendar-query>"""
+
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                              <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics</D:href>
+                                <D:propstat>
+                                  <D:prop>
+                                    <D:getetag>${currentEtag}</D:getetag>
+                                    <D:resourcetype/>
+                                  </D:prop>
+                                  <D:status>HTTP/1.1 200 OK</D:status>
+                                </D:propstat>
+                              </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(TEXT_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
     }
 }

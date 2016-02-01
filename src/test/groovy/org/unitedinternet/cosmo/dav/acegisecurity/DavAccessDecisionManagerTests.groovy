@@ -39,9 +39,7 @@ class DavAccessDecisionManagerTests {
     }
 
     @Test
-    void didNotMatchUri() {
-        expectedException.expect(InsufficientAuthenticationException.class)
-        expectedException.expectMessage("access denied for /dav")
+    void didMatchUri() {
         uut.match("user1", "/dav")
     }
 

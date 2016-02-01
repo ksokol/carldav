@@ -25,6 +25,7 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
@@ -224,18 +225,17 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
      */
     public DavResourceLocator getResourceLocator() {
         if (locator == null) {
-            URL context = null;
+            URL context;
             try {
 
-                String basePath = getContextPath() + "/" + ServerConstants.SVC_DAV;
-                context = new URL(getScheme(), getServerName(),
-                        getServerPort(), basePath);
+                final ServletUriComponentsBuilder servletUriComponentsBuilder = ServletUriComponentsBuilder.fromRequest(originalHttpServletRequest);
+                final String firstPathSegment = servletUriComponentsBuilder.build().getPathSegments().get(0);
+                final String basePath = "/" + firstPathSegment;
 
-                locator = locatorFactory.createResourceLocatorByUri(context,
-                        getRequestURI());
-            } catch (CosmoDavException e) {
-                throw new RuntimeException(e);
-            } catch (MalformedURLException e) {
+                context = new URL(getScheme(), getServerName(), getServerPort(), basePath);
+
+                locator = locatorFactory.createResourceLocatorByUri(context, getRequestURI());
+            } catch (CosmoDavException|MalformedURLException e) {
                 throw new RuntimeException(e);
             }
         }

@@ -15,17 +15,12 @@
  */
 package org.unitedinternet.cosmo.server;
 
-/**
- * Constants related to the protocols and interfaces presented by the
- * server.
- */
 public interface ServerConstants {
 
     String ATTR_SERVICE_EXCEPTION = "server.exception";
 
-    /**
-     * The service id for WebDAV
-     */
     String SVC_DAV = "dav";
+
+    String SVC_PRINCIPALS = "principals";
 
 }

@@ -86,7 +86,7 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
         }
 
         if(pathSegments.size() < 2) {
-            throw new InsufficientAuthenticationException("access denied for " + path);
+            return null;
         }
 
         final String userIdFromUrl = pathSegments.get(1);

@@ -80,11 +80,6 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
                 }
             }
 
-            if (! url.getPath().startsWith(context.getPath())) {
-                throw new BadRequestException(uri + " does not specify correct dav path " + 
-                        context.getPath());
-            }
-
             // trim base path
             String path = url.getPath().substring(context.getPath().length()) + "/";
             path = path.replaceAll("/{2,}", "/");

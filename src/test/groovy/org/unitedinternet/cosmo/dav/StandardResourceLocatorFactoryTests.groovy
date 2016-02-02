@@ -28,6 +28,16 @@ class StandardResourceLocatorFactoryTests {
     }
 
     @Test
+    void "create url encoded resource locator by URI"() {
+        def contextPath = "/dav"
+        def pathEncoded = "/test01%40localhost.de"
+        def pathDecoded = "/test01@localhost.de"
+        def locator = createResourceLocatorByUri(contextPath, pathEncoded)
+
+        assert locator.getPath() == pathDecoded
+    }
+
+    @Test
     void "create user collection principal resource locator by URI"() {
         def contextPath = "/principals"
         def path = "/users"

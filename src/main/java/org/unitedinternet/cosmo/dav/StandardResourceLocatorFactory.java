@@ -17,10 +17,12 @@ package org.unitedinternet.cosmo.dav;
 
 import org.unitedinternet.cosmo.model.hibernate.User;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
 
 /**
  * Standard implementation of {@link DavResourceLocatorFactory}.
@@ -84,8 +86,8 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
             String path = url.getPath().substring(context.getPath().length()) + "/";
             path = path.replaceAll("/{2,}", "/");
 
-            return new StandardResourceLocator(context, path, this);
-        } catch (URISyntaxException | MalformedURLException e) {
+            return new StandardResourceLocator(context, URLDecoder.decode(path, "UTF-8"), this);
+        } catch (URISyntaxException | MalformedURLException | UnsupportedEncodingException e) {
             throw new BadRequestException("Invalid URL: " + e.getMessage());
         }
     }

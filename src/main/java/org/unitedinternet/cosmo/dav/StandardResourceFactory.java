@@ -30,6 +30,7 @@ import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
+import org.unitedinternet.cosmo.dav.impl.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -146,6 +147,16 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             return createUserPrincipalResource(locator, match);
         }
 
+        match = TEMPLATE_USERS.match(uri);
+        if (match != null) {
+            return new DavUserPrincipalCollection(locator, this);
+        }
+
+        match = TEMPLATE_PRINCIPALS.match(uri);
+        if (match != null) {
+            return createUserPrincipalResource(locator);
+        }
+
         return createUnknownResource(locator, uri);
     }
 
@@ -199,6 +210,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
     protected WebDavResource createUserPrincipalResource(DavResourceLocator locator, UriTemplate.Match match) throws CosmoDavException {
         User user = userService.getUser(match.get("username"));
+        return user != null ? new DavUserPrincipal(user, locator, this) : null;
+    }
+
+    protected WebDavResource createUserPrincipalResource(DavResourceLocator locator) throws CosmoDavException {
+        User user = securityManager.getSecurityContext().getUser();
         return user != null ? new DavUserPrincipal(user, locator, this) : null;
     }
 

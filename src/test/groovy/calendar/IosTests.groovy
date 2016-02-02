@@ -2,10 +2,10 @@ package calendar
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static org.hamcrest.Matchers.*
+import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.TEXT_XML
@@ -13,10 +13,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.helper.XmlHelper.getetag
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static testutil.mockmvc.CustomRequestBuilders.propfind
 import static testutil.mockmvc.CustomRequestBuilders.report
 import static testutil.mockmvc.CustomResultMatchers.*
+import static testutil.xmlunit.XmlMatcher.equalXml
 
 /**
  * @author Kamill Sokol
@@ -48,12 +51,11 @@ class IosTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/principals/users/test01@localhost.de</D:href>
+                                    <D:href>/principals/users/test01@localhost.de</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <D:principal-collection-set/>
                                             <CAL:dropbox-home-URL xmlns:CAL="http://calendarserver.org/ns/"/>
-                                            <D:principal-URL/>
                                             <x1:schedule-outbox-URL xmlns:x1="urn:ietf:params:xml:ns:caldav"/>
                                             <x1:calendar-user-address-set xmlns:x1="urn:ietf:params:xml:ns:caldav"/>
                                             <n0:user-state xmlns:n0="http://cal.me.com/_namespace/"/>
@@ -68,6 +70,9 @@ class IosTests extends IntegrationTestSupport {
                                                 <D:href>/dav/test01@localhost.de</D:href>
                                             </C:calendar-home-set>
                                             <D:displayname>test01@localhost.de</D:displayname>
+                                            <D:principal-URL>
+                                                <D:href>/principals/users/test01@localhost.de</D:href>
+                                            </D:principal-URL>
                                             <D:supported-report-set/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
@@ -75,7 +80,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/principals/users/{email}/", USER01)
+        mockMvc.perform(propfind("/principals/users/{email}/", USER01)
                 .contentType(TEXT_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -83,10 +88,10 @@ class IosTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
 
-        mockMvc.perform(options("/dav/principals/users/{email}/", USER01))
+        mockMvc.perform(options("/principals/users/{email}/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
-                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT"))
+                .andExpect(header().string(ALLOW, "OPTIONS, GET, PROPFIND"))
 
         def request3 = """\
                         <x0:propfind xmlns:x0="DAV:" xmlns:x1="http://calendarserver.org/ns/" xmlns:CAL="urn:ietf:params:xml:ns:caldav" xmlns:n0="http://apple.com/ns/ical/">
@@ -457,6 +462,55 @@ class IosTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
+    }
 
+    @Test
+    void addVCard() {
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(IosData.ADD_VCARD_REQUEST1))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <A:getetag/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def result2 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(TEXT_XML)
+                .content(request2)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andReturn().getResponse().getContentAsString()
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag(result2, 0)}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result2, equalXml(response2))
     }
 }

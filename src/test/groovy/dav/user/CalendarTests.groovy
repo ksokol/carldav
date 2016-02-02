@@ -55,13 +55,13 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:getetag />
                                 <C:calendar-data />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag}</D:getetag>
@@ -142,13 +142,13 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:getetag />
                                 <C:calendar-data />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/18f0e0e5-4e1e-4e0d-b317-0d861d3e575c.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/18f0e0e5-4e1e-4e0d-b317-0d861d3e575c.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/18f0e0e5-4e1e-4e0d-b317-0d861d3e575c.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/18f0e0e5-4e1e-4e0d-b317-0d861d3e575c.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag}</D:getetag>
@@ -229,7 +229,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <C:calendar-data />
                                 <C:uuid xmlns:C="http://osafoundation.org/cosmo/DAV" />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                             <D:allprop />
                         </C:calendar-multiget>"""
 
@@ -252,7 +252,7 @@ public class CalendarTests extends IntegrationTestSupport {
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag}</D:getetag>
@@ -358,14 +358,14 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:getetag />
                                 <C:calendar-data />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                             <D:propname />
                         </C:calendar-multiget>"""
 
         def response = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag/>
@@ -530,13 +530,13 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:getetag />
                                 <C:calendar-data />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/${uid}.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag1}</D:getetag>
@@ -633,7 +633,7 @@ public class CalendarTests extends IntegrationTestSupport {
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag2}</D:getetag>
@@ -703,13 +703,13 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:getetag />
                                 <C:calendar-data />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/${uid}.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag1}</D:getetag>
@@ -818,7 +818,7 @@ public class CalendarTests extends IntegrationTestSupport {
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag2}</D:getetag>
@@ -894,13 +894,13 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:getetag />
                                 <C:calendar-data />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/${uid}.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag1}</D:getetag>
@@ -962,7 +962,7 @@ public class CalendarTests extends IntegrationTestSupport {
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/${uid}.ics</D:href>
                                 <D:status>HTTP/1.1 404 Not Found</D:status>
                             </D:response>
                         </D:multistatus>"""
@@ -1027,13 +1027,13 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:getetag />
                                 <C:calendar-data />
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/${uid}.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/9bb25dec-c1e5-468c-92ea-0152f9f4c1ee.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eTag1}</D:getetag>
@@ -1088,7 +1088,7 @@ public class CalendarTests extends IntegrationTestSupport {
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/${uid}.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/${uid}.ics</D:href>
                                 <D:status>HTTP/1.1 404 Not Found</D:status>
                             </D:response>
                         </D:multistatus>"""

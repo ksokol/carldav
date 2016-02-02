@@ -11,6 +11,7 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
+import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -21,29 +22,29 @@ import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
+import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
+import org.unitedinternet.cosmo.dav.property.PrincipalUrl;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.server.ServerConstants;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-
-/**
- * @author Kamill Sokol
- */
 
 /**
  * <p>
@@ -58,31 +59,27 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     private static final Log LOG = LogFactory.getLog(DavUserPrincipal.class);
 
-    private final Set<ReportType> REPORT_TYPES = new HashSet<>();
+    private final User user;
 
-    private User user;
-  //  private DavUserPrincipalCollection parent;
+    private DavUserPrincipalCollection parent;
 
     public DavUserPrincipal(User user, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
-      //  registerLiveProperty(DavPropertyName.CREATIONDATE);
+
         registerLiveProperty(DavPropertyName.GETLASTMODIFIED);
         registerLiveProperty(DavPropertyName.DISPLAYNAME);
         registerLiveProperty(DavPropertyName.ISCOLLECTION);
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
         registerLiveProperty(DavPropertyName.GETETAG);
         registerLiveProperty(CALENDARHOMESET);
-       // registerLiveProperty(CALENDARUSERADDRESSSET);
-      //  registerLiveProperty(PRINCIPALURL);
+        registerLiveProperty(PRINCIPALURL);
+        registerLiveProperty(ADDRESSBOOKHOMESET);
 
-       // REPORT_TYPES.add(PrincipalMatchReport.REPORT_TYPE_PRINCIPAL_MATCH);
         this.user = user;
     }
 
-    // Jackrabbit WebDavResource
-
     public String getSupportedMethods() {
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PROPPATCH, REPORT";
+        return "OPTIONS, GET, PROPFIND";
     }
 
     public boolean isCollection() {
@@ -90,7 +87,8 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     public long getModificationTime() {
-        return 0; //TODO user.getModifiedDate().getTime();
+        return -1;
+        //TODO user.getModifiedDate().getTime();
     }
 
     public boolean exists() {
@@ -102,7 +100,8 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     public String getETag() {
-        return null; //TODO"\"" + user.getEntityTag() + "\"";
+        return null;
+        //TODO"\"" + user.getEntityTag() + "\"";
     }
 
     public void writeTo(OutputContext context) throws CosmoDavException, IOException {
@@ -113,13 +112,12 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         throw new UnsupportedOperationException();
     }
 
-    @SuppressWarnings("unchecked")
     public DavResourceIterator getMembers() {
         // while it would be ideal to throw an UnsupportedOperationException,
         // MultiStatus tries to add a MultiStatusResponse for every member
         // of a WebDavResource regardless of whether or not it's a collection,
         // so we need to return an empty iterator.
-        return new DavResourceIteratorImpl(new ArrayList());
+        return new DavResourceIteratorImpl(Collections.emptyList());
     }
 
     public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
@@ -142,44 +140,35 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         throw new UnsupportedOperationException();
     }
 
-    // WebDavResource methods
-
     public DavCollection getParent() throws CosmoDavException {
-//        if (parent == null) {
-//            DavResourceLocator parentLocator = getResourceLocator().getParentLocator();
-//            parent = (DavUserPrincipalCollection) getResourceFactory().resolve(parentLocator);
-//        }
-//
-//        return parent;
-        throw new UnsupportedOperationException();
+        if (parent == null) {
+            DavResourceLocator parentLocator = getResourceLocator().getParentLocator();
+            parent = (DavUserPrincipalCollection) getResourceFactory().resolve(parentLocator);
+        }
+        return parent;
     }
-
-    // our methods
 
     public User getUser() {
         return user;
     }
 
     protected Set<QName> getResourceTypes() {
-        HashSet<QName> rt = new HashSet<>(1);
-        rt.add(RESOURCE_TYPE_PRINCIPAL);
-        return rt;
+        return Collections.emptySet();
     }
 
     public Set<ReportType> getReportTypes() {
-        return REPORT_TYPES;
+        return Collections.emptySet();
     }
 
     protected void loadLiveProperties(DavPropertySet properties) {
-      //  properties.add(new CreationDate(user.getCreationDate()));
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
     //TODO    properties.add(new Etag(user.getEntityTag()));
     //TODO    properties.add(new LastModified(user.getModifiedDate()));
-        properties.add(new CalendarHomeSet(getResourceLocator(), user));
-
-        //properties.add(new PrincipalUrl(getResourceLocator(), user));
+        properties.add(new CalendarHomeSet("/" + ServerConstants.SVC_DAV, user));
+        properties.add(new PrincipalUrl(getResourceLocator(), user));
+        properties.add(new AddressbookHomeSet("/" + ServerConstants.SVC_DAV, user));
     }
 
     protected void setLiveProperty(WebDavProperty property, boolean create) throws CosmoDavException {
@@ -195,10 +184,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     private void writeHtmlRepresentation(OutputContext context) throws CosmoDavException, IOException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("writing html representation for user principal " + getDisplayName());
-        }
-
         context.setContentType(IOUtil.buildContentType("text/html", "UTF-8"));
         context.setModificationTime(getModificationTime());
         context.setETag(getETag());
@@ -247,11 +232,19 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
             writer.write("\">");
             writer.write(StringEscapeUtils.escapeHtml(parent.getDisplayName()));
             writer.write("</a></li>\n");
-
-            User user = getSecurityManager().getSecurityContext().getUser();
-
             writer.write("<p>\n");
-            DavResourceLocator homeLocator = getResourceLocator().getFactory().createHomeLocator(getResourceLocator().getContext(), user);
+
+            final DavResourceLocator homeLocator;
+
+            try {
+                final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUri(getResourceLocator().getContext().toURI());
+                uriComponentsBuilder.replacePath(ServerConstants.SVC_DAV);
+                final URI uri = uriComponentsBuilder.build().toUri();
+                homeLocator = getResourceLocator().getFactory().createHomeLocator(uri.toURL(), user);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e.getMessage(), e);
+            }
+
             writer.write("<a href=\"");
             writer.write(homeLocator.getHref(true));
             writer.write("\">");

@@ -153,4 +153,9 @@ public interface CaldavConstants {
 
     /** The Calendar Server property CS:getctag */
     DavPropertyName GET_CTAG = DavPropertyName.create(PROPERTY_CS_GET_CTAG, NAMESPACE_CS);
+
+    /** The ACL property name DAV:principal-URL-set */
+    String PROPERTY_ACL_PRINCIPAL_URL = "principal-URL";
+    /** The ACL property DAV:principal-URL */
+    DavPropertyName PRINCIPALURL = DavPropertyName.create(PROPERTY_ACL_PRINCIPAL_URL);
 }

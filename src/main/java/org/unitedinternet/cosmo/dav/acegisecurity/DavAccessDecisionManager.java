@@ -85,6 +85,10 @@ public class DavAccessDecisionManager implements AccessDecisionManager, Extended
             return pathSegments.get(0);
         }
 
+        if("principals".equals(pathSegments.get(0))) {
+            return null;
+        }
+
         if(pathSegments.size() < 2) {
             return null;
         }

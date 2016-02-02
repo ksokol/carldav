@@ -14,7 +14,11 @@ import org.w3c.dom.Element;
 public class AddressbookHomeSet extends StandardDavProperty implements CaldavConstants {
 
     public AddressbookHomeSet(DavResourceLocator locator, User user) {
-        super(ADDRESSBOOKHOMESET, href(locator, user), true);
+        super(ADDRESSBOOKHOMESET, href(locator.getBaseHref(), user), true);
+    }
+
+    public AddressbookHomeSet(String baseHref, User user) {
+        super(ADDRESSBOOKHOMESET, href(baseHref, user), true);
     }
 
     public String getHref() {
@@ -31,7 +35,7 @@ public class AddressbookHomeSet extends StandardDavProperty implements CaldavCon
         return name;
     }
 
-    private static String href(DavResourceLocator locator, User user) {
-        return CARD_HOME.bindAbsolute(locator.getBaseHref(), user.getEmail());
+    private static String href(String baseHref, User user) {
+        return CARD_HOME.bindAbsolute(baseHref, user.getEmail());
     }
 }

@@ -269,7 +269,7 @@ public class UriTemplate {
             }
         }
 
-        if (candidate.hasNext() && ! segment.isAll()) {
+        if (candidate.hasNext() && ! (segment != null && segment.isAll())) {
             // candidate has more but our pattern is done
             return null;
         }

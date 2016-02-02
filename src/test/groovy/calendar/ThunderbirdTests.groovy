@@ -267,13 +267,13 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 <D:getetag/>
                                 <C:calendar-data/>
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${currentEtag}</D:getetag>
@@ -460,13 +460,13 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 <D:getetag/>
                                 <C:calendar-data/>
                             </D:prop>
-                            <D:href>/dav/test01%40localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
+                            <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
                         </C:calendar-multiget>"""
 
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${currentEtag}</D:getetag>
@@ -773,60 +773,6 @@ class ThunderbirdTests extends IntegrationTestSupport {
         def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01%40localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
-                                    <D:propstat>
-                                        <D:prop>
-                                            <D:getetag>${getetag1}</D:getetag>
-                                            <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
-                                                PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
-                                                VERSION:2.0&#13;
-                                                BEGIN:VTIMEZONE&#13;
-                                                TZID:Europe/Stockholm&#13;
-                                                BEGIN:DAYLIGHT&#13;
-                                                TZOFFSETFROM:+0100&#13;
-                                                TZOFFSETTO:+0200&#13;
-                                                TZNAME:CEST&#13;
-                                                DTSTART:19700329T020000&#13;
-                                                RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
-                                                END:DAYLIGHT&#13;
-                                                BEGIN:STANDARD&#13;
-                                                TZOFFSETFROM:+0200&#13;
-                                                TZOFFSETTO:+0100&#13;
-                                                TZNAME:CET&#13;
-                                                DTSTART:19701025T030000&#13;
-                                                RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
-                                                END:STANDARD&#13;
-                                                END:VTIMEZONE&#13;
-                                                BEGIN:VEVENT&#13;
-                                                CREATED:20151225T180011Z&#13;
-                                                LAST-MODIFIED:20151225T180151Z&#13;
-                                                DTSTAMP:20151225T180151Z&#13;
-                                                UID:0c3112fa-ba2b-4cb4-b495-1b842e3f3b77&#13;
-                                                SUMMARY:VEvent add&#13;
-                                                ORGANIZER;RSVP=TRUE;PARTSTAT=ACCEPTED;ROLE=CHAIR:mailto:kamill@test01@localhost.de&#13;
-                                                ATTENDEE;RSVP=TRUE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT:attendee1&#13;
-                                                RRULE:FREQ=DAILY;UNTIL=20160226T190000Z;INTERVAL=3&#13;
-                                                CATEGORIES:Business&#13;
-                                                DTSTART;TZID=Europe/Stockholm:20151209T200000&#13;
-                                                DTEND;TZID=Europe/Stockholm:20151209T215500&#13;
-                                                TRANSP:OPAQUE&#13;
-                                                LOCATION:location&#13;
-                                                DESCRIPTION:description&#13;
-                                                X-MOZ-SEND-INVITATIONS:TRUE&#13;
-                                                X-MOZ-SEND-INVITATIONS-UNDISCLOSED:FALSE&#13;
-                                                BEGIN:VALARM&#13;
-                                                ACTION:DISPLAY&#13;
-                                                TRIGGER;VALUE=DATE-TIME:20151225T190000Z&#13;
-                                                DESCRIPTION:Default Mozilla Description&#13;
-                                                END:VALARM&#13;
-                                                END:VEVENT&#13;
-                                                END:VCALENDAR&#13;
-                                            </C:calendar-data>
-                                        </D:prop>
-                                        <D:status>HTTP/1.1 200 OK</D:status>
-                                    </D:propstat>
-                                </D:response>
-                                <D:response>
                                     <D:href>/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
                                     <D:propstat>
                                         <D:prop>
@@ -888,6 +834,60 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                                 DESCRIPTION:Default Mozilla Description&#13;
                                                 END:VALARM&#13;
                                                 END:VTODO&#13;
+                                                END:VCALENDAR&#13;
+                                            </C:calendar-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag1}</D:getetag>
+                                            <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
+                                                PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN&#13;
+                                                VERSION:2.0&#13;
+                                                BEGIN:VTIMEZONE&#13;
+                                                TZID:Europe/Stockholm&#13;
+                                                BEGIN:DAYLIGHT&#13;
+                                                TZOFFSETFROM:+0100&#13;
+                                                TZOFFSETTO:+0200&#13;
+                                                TZNAME:CEST&#13;
+                                                DTSTART:19700329T020000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU&#13;
+                                                END:DAYLIGHT&#13;
+                                                BEGIN:STANDARD&#13;
+                                                TZOFFSETFROM:+0200&#13;
+                                                TZOFFSETTO:+0100&#13;
+                                                TZNAME:CET&#13;
+                                                DTSTART:19701025T030000&#13;
+                                                RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU&#13;
+                                                END:STANDARD&#13;
+                                                END:VTIMEZONE&#13;
+                                                BEGIN:VEVENT&#13;
+                                                CREATED:20151225T180011Z&#13;
+                                                LAST-MODIFIED:20151225T180151Z&#13;
+                                                DTSTAMP:20151225T180151Z&#13;
+                                                UID:0c3112fa-ba2b-4cb4-b495-1b842e3f3b77&#13;
+                                                SUMMARY:VEvent add&#13;
+                                                ORGANIZER;RSVP=TRUE;PARTSTAT=ACCEPTED;ROLE=CHAIR:mailto:kamill@test01@localhost.de&#13;
+                                                ATTENDEE;RSVP=TRUE;PARTSTAT=NEEDS-ACTION;ROLE=REQ-PARTICIPANT:attendee1&#13;
+                                                RRULE:FREQ=DAILY;UNTIL=20160226T190000Z;INTERVAL=3&#13;
+                                                CATEGORIES:Business&#13;
+                                                DTSTART;TZID=Europe/Stockholm:20151209T200000&#13;
+                                                DTEND;TZID=Europe/Stockholm:20151209T215500&#13;
+                                                TRANSP:OPAQUE&#13;
+                                                LOCATION:location&#13;
+                                                DESCRIPTION:description&#13;
+                                                X-MOZ-SEND-INVITATIONS:TRUE&#13;
+                                                X-MOZ-SEND-INVITATIONS-UNDISCLOSED:FALSE&#13;
+                                                BEGIN:VALARM&#13;
+                                                ACTION:DISPLAY&#13;
+                                                TRIGGER;VALUE=DATE-TIME:20151225T190000Z&#13;
+                                                DESCRIPTION:Default Mozilla Description&#13;
+                                                END:VALARM&#13;
+                                                END:VEVENT&#13;
                                                 END:VCALENDAR&#13;
                                             </C:calendar-data>
                                         </D:prop>

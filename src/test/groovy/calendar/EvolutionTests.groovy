@@ -255,7 +255,7 @@ class EvolutionTests extends IntegrationTestSupport {
         def response4 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01%40localhost.de/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics</D:href>
+                                <D:href>/dav/test01@localhost.de/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${XmlHelper.getetag(result4)}</D:getetag>

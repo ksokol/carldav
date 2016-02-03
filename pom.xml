@@ -116,19 +116,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-test</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>4.3.0.BUILD.SNAPSHOT-SPR-13179</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/spring-test-4.3.0.BUILD-SNAPSHOT-SPR-13719.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>

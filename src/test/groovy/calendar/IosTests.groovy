@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
+import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
@@ -423,7 +424,8 @@ class IosTests extends IntegrationTestSupport {
     }
 
     @Test
-    void fetchCalendar() {
+    void fetchCalendarFirstTime() {
+        addVCard()
         addVEvent()
 
         def request1 = """\
@@ -512,5 +514,394 @@ class IosTests extends IntegrationTestSupport {
                             </D:multistatus>"""
 
         assertThat(result2, equalXml(response2))
+    }
+
+    @Test
+    void updateVCard() {
+        addVCard()
+
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:3.0
+                        N:Nachname;Vorname;;;
+                        FN:Vorname Nachname
+                        UID:4EF54EC0-4D2D-48C1-B9F1-BDA5FC4DB00D
+                        END:VCARD
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(not(currentEtag)))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        def request2 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def response2 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 404 Not Found</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(TEXT_XML)
+                .content(request2)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(xml(response2))
+
+        def request3 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <A:getetag/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def result3 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(TEXT_XML)
+                .content(request3)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andReturn().getResponse().getContentAsString()
+
+        def response3 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag(result3, 0)}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result3, equalXml(response3))
+    }
+
+    @Test
+    void deleteVCard() {
+        addVCard()
+
+        mockMvc.perform(delete("/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01))
+                .andExpect(status().isNoContent())
+
+        def request2 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def response2 = """\
+                        <D:multistatus xmlns:D="DAV:">
+                            <D:response>
+                                <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                <D:propstat>
+                                    <D:prop>
+                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                    </D:prop>
+                                    <D:status>HTTP/1.1 404 Not Found</D:status>
+                                </D:propstat>
+                            </D:response>
+                        </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(TEXT_XML)
+                .content(request2)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(xml(response2))
+
+        def request3 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <A:getetag/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def result3 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+                .contentType(TEXT_XML)
+                .content(request3)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andReturn().getResponse().getContentAsString()
+
+        def response3 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag(result3, 0)}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result3, equalXml(response3))
+    }
+
+    @Test
+    void fetchAddressbookFirstTime() {
+        addVEvent()
+        addVCard()
+
+        def request1 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <A:add-member/>
+                            <A:current-user-privilege-set/>
+                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
+                            <A:resourcetype/>
+                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
+                            <A:quota-used-bytes/>
+                            <A:resource-id/>
+                            <A:supported-report-set/>
+                            <A:displayname/>
+                            <A:quota-available-bytes/>
+                            <A:owner/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:current-user-privilege-set/>
+                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <D:quota-used-bytes/>
+                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <D:quota-available-bytes/>
+                                            <D:owner/>
+                                            <D:add-member/>
+                                            <D:resource-id/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:displayname>contactDisplayName</D:displayname>
+                                            <D:supported-report-set>
+                                                <D:supported-report>
+                                                    <D:report>
+                                                        <CARD:addressbook-multiget xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                                    </D:report>
+                                                </D:supported-report>
+                                                <D:supported-report>
+                                                    <D:report>
+                                                        <CARD:addressbook-query xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                                    </D:report>
+                                                </D:supported-report>
+                                            </D:supported-report-set>
+                                            <D:resourcetype>
+                                                <D:collection/>
+                                                <CARD:addressbook xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                            </D:resourcetype>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:current-user-privilege-set/>
+                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <D:quota-used-bytes/>
+                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <D:quota-available-bytes/>
+                                            <D:owner/>
+                                            <D:add-member/>
+                                            <D:resource-id/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:displayname>292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:displayname>
+                                            <D:supported-report-set/>
+                                            <D:resourcetype/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts", USER01)
+                .contentType(TEXT_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+
+        def request2 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(propfind("/dav/{email}/contacts", USER01)
+                .contentType(TEXT_XML)
+                .content(request2)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
+
+        def request3 = """\
+                        <A:propfind xmlns:A="DAV:">
+                          <A:prop>
+                            <A:getetag/>
+                          </A:prop>
+                        </A:propfind>"""
+
+        def result3 = mockMvc.perform(propfind("/dav/{email}/contacts", USER01)
+                .contentType(TEXT_XML)
+                .content(request3)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andReturn().getResponse().getContentAsString()
+
+        def response3 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${getetag(result3)}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        assertThat(result3, equalXml(response3))
+
+        def request4 = """\
+                        <B:addressbook-multiget xmlns:B="urn:ietf:params:xml:ns:carddav">
+                          <A:prop xmlns:A="DAV:">
+                            <A:getetag/>
+                            <B:address-data/>
+                          </A:prop>
+                          <A:href xmlns:A="DAV:">/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</A:href>
+                        </B:addressbook-multiget>"""
+
+        def response4 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <CARD:address-data xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <D:getetag>${currentEtag}</D:getetag>
+                                            <CARD:address-data xmlns:CARD="urn:ietf:params:xml:ns:carddav">BEGIN:VCARD
+                                                VERSION:3.0
+                                                N:Nachname;Vorname;;;
+                                                FN:Vorname Nachname
+                                                NICKNAME:Nockname
+                                                ORG:Firma;
+                                                EMAIL;type=INTERNET;type=HOME;type=pref:test@localhost.de
+                                                EMAIL;type=INTERNET;type=WORK:test1@localhost.de
+                                                item1.EMAIL;type=INTERNET:test2@localhost.de
+                                                item1.X-ABLabel:_\$!&lt;Other&gt;!\$_
+                                                TEL;type=CELL;type=pref:012 3
+                                                TEL;type=IPHONE:0234
+                                                TEL;type=HOME:345
+                                                TEL;type=WORK:456
+                                                TEL;type=MAIN:768
+                                                TEL;type=HOME;type=FAX:890
+                                                TEL;type=WORK;type=FAX:901
+                                                TEL;type=PAGER:012
+                                                item2.TEL:234
+                                                item2.X-ABLabel:_\$!&lt;Other&gt;!\$_
+                                                item3.ADR;type=HOME;type=pref:;;street\\n42;Berlin;;12345;Deutschland
+                                                item3.X-ABADR:de
+                                                item4.URL;type=pref:http\\://ios.com
+                                                item4.X-ABLabel:_\$!&lt;HomePage&gt;!\$_
+                                                URL;type=HOME:http\\://private.con
+                                                URL;type=WORK:Http\\://work.com
+                                                item5.URL:http\\://other.com
+                                                item5.X-ABLabel:_\$!&lt;Other&gt;!\$_
+                                                PHOTO;BASE64:
+                                                /9j/4AAQSkZJRgABUUUUAFFFFABRRRQ
+                                                AUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAB
+                                                RRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFF
+                                                FFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUU
+                                                UAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB//Z
+                                                UID:4EF54EC0-4D2D-48C1-B9F1-BDA5FC4DB00D
+                                                END:VCARD
+                                            </CARD:address-data>
+                                        </D:prop>
+                                        <D:status>HTTP/1.1 200 OK</D:status>
+                                    </D:propstat>
+                                </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request4)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response4))
     }
 }

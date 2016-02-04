@@ -263,14 +263,14 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     }
 
     private void saveJournal(DavItemContent member) throws CosmoDavException {
-        HibContentItem content = (HibContentItem) member.getItem();
-        HibJournalStamp event = (HibJournalStamp) content.getStamp(HibJournalStamp.class);
+        HibJournalItem content = (HibJournalItem) member.getItem();
+        HibJournalStamp event = content.getJournalStamp();
         EntityConverter converter = new EntityConverter(getIdGenerator());
         Set<HibContentItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convertJournalCalendar((HibJournalItem) content, event.getEventCalendar()));
+            toUpdate.add(converter.convertJournalCalendar(content, event.getEventCalendar()));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }

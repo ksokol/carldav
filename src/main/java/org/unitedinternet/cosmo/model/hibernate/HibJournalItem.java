@@ -37,4 +37,8 @@ public class HibJournalItem extends HibICalendarItem {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public HibJournalStamp getJournalStamp() {
+        return (HibJournalStamp) super.getStamp(HibJournalStamp.class);
+    }
 }

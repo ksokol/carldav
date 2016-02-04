@@ -5,10 +5,9 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
-import net.fortuna.ical4j.util.TimeZones;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -62,7 +61,7 @@ public class JournalStampFilter extends StampFilter {
     }
 
     public JournalStampFilter() {
-        setStampClass(HibBaseEventStamp.class);
+        setStampClass(HibJournalStamp.class);
     }
 
     public TimeZone getTimezone() {

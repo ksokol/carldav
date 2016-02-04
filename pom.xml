@@ -17,13 +17,13 @@
         <version>1.3.0.RELEASE</version>
     </parent>
 
-    <groupId>org.unitedinternet.cosmo</groupId>
-    <artifactId>cosmo-core</artifactId>
-    <version>0.9-RC</version>
+    <groupId>carldav</groupId>
+    <artifactId>carldav</artifactId>
+    <version>0.1</version>
 
     <packaging>jar</packaging>
 
-    <name>cosmo-core</name>
+    <name>carldav</name>
 
     <repositories>
         <repository>

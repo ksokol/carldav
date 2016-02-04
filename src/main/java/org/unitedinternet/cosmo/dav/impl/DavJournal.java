@@ -21,7 +21,8 @@ public class DavJournal extends DavCalendarResource {
                       IdGenerator idGenerator)
         throws CosmoDavException {
         this(new HibJournalItem(), locator, factory, idGenerator);
-        getItem().addStamp(new HibJournalStamp(getItem()));
+        final HibJournalItem item = (HibJournalItem) getItem();
+        item.updateStamp();
     }
 
     public DavJournal(HibJournalItem item,

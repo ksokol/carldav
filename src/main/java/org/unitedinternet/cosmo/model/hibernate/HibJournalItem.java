@@ -41,4 +41,8 @@ public class HibJournalItem extends HibICalendarItem {
     public HibJournalStamp getJournalStamp() {
         return (HibJournalStamp) super.getStamp(HibJournalStamp.class);
     }
+
+    public void updateStamp() {
+        super.addStamp(new HibJournalStamp(this));
+    }
 }

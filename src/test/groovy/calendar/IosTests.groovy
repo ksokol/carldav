@@ -424,6 +424,110 @@ class IosTests extends IntegrationTestSupport {
     }
 
     @Test
+    void recurrence() {
+        def request1 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Apple Inc.//iCal 3.0m//EN
+                        VERSION:2.0
+                        BEGIN:VTIMEZONE
+                        TZID:Europe/Berlin
+                        BEGIN:DAYLIGHT
+                        DTSTART:19810329T020000
+                        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+                        TZNAME:GMT+02:00
+                        TZOFFSETFROM:+0100
+                        TZOFFSETTO:+0200
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        DTSTART:19961027T030000
+                        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+                        TZNAME:GMT+01:00
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        END:STANDARD
+                        END:VTIMEZONE
+                        BEGIN:VEVENT
+                        DTEND;TZID=Europe/Berlin:20160204T220000
+                        DTSTAMP:20160204T191524Z
+                        DTSTART;TZID=Europe/Berlin:20160204T210000
+                        LAST-MODIFIED:20160204T191524Z
+                        RRULE:FREQ=DAILY;UNTIL=20160311T225959Z
+                        SEQUENCE:0
+                        SUMMARY:Recurrence
+                        TRANSP:OPAQUE
+                        UID:E107202C-E367-4C24-989D-BD5BFECD2F6C
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request1))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result1.getResponse().getHeader(ETAG)
+
+        mockMvc.perform(get("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(text(request1))
+
+        def request2 = """\
+                        BEGIN:VCALENDAR
+                        CALSCALE:GREGORIAN
+                        PRODID:-//Apple Inc.//iCal 3.0m//EN
+                        VERSION:2.0
+                        BEGIN:VTIMEZONE
+                        TZID:Europe/Berlin
+                        BEGIN:DAYLIGHT
+                        DTSTART:19810329T020000
+                        RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+                        TZNAME:GMT+02:00
+                        TZOFFSETFROM:+0100
+                        TZOFFSETTO:+0200
+                        END:DAYLIGHT
+                        BEGIN:STANDARD
+                        DTSTART:19961027T030000
+                        RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+                        TZNAME:GMT+01:00
+                        TZOFFSETFROM:+0200
+                        TZOFFSETTO:+0100
+                        END:STANDARD
+                        END:VTIMEZONE
+                        BEGIN:VEVENT
+                        DTEND;TZID=Europe/Berlin:20160204T220000
+                        DTSTAMP:20160204T191837Z
+                        DTSTART;TZID=Europe/Berlin:20160204T210000
+                        EXDATE;TZID=Europe/Berlin:20160205T210000
+                        LAST-MODIFIED:20160204T191837Z
+                        RRULE:FREQ=DAILY;UNTIL=20160311T225959Z
+                        SEQUENCE:0
+                        SUMMARY:Recurrence
+                        TRANSP:OPAQUE
+                        UID:E107202C-E367-4C24-989D-BD5BFECD2F6C
+                        END:VEVENT
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def result2 = mockMvc.perform(put("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(request2))
+                .andExpect(status().isNoContent())
+                .andExpect(etag(notNullValue()))
+                .andReturn()
+
+        currentEtag = result2.getResponse().getHeader(ETAG)
+
+        mockMvc.perform(get("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01))
+                .andExpect(status().isOk())
+                .andExpect(etag(is(currentEtag)))
+                .andExpect(text(request2))
+    }
+
+    @Test
     void fetchCalendarFirstTime() {
         addVCard()
         addVEvent()

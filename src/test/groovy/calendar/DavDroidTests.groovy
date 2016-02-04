@@ -7,7 +7,6 @@ import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
-import static com.google.common.net.HttpHeaders.AUTHORIZATION
 import static org.hamcrest.Matchers.*
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.*

@@ -1,13 +1,14 @@
 package dav.user
 
 import org.junit.Test
+import org.springframework.http.HttpHeaders
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
-import static com.google.common.net.HttpHeaders.AUTHORIZATION
-import static org.apache.http.HttpHeaders.CONTENT_TYPE
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.startsWith
+import static org.springframework.http.HttpHeaders.AUTHORIZATION
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE
 import static org.springframework.http.MediaType.*
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*

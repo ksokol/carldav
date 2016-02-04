@@ -444,6 +444,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
         hibItem.setCollection(null);
         getSession().delete(hibItem);
+        getSession().refresh(collection);
     }
 
     protected void addItemToCollectionInternal(HibItem hibItem,

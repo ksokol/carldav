@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.unitedinternet.cosmo.hibernate.validator.DisplayName;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import javax.persistence.DiscriminatorValue;
@@ -25,7 +24,7 @@ import javax.persistence.Entity;
 @DiscriminatorValue("calendar")
 public class HibCalendarCollectionStamp extends HibStamp implements ICalendarConstants {
     
-    private static final long serialVersionUID = 4L;
+    private static final long serialVersionUID = 5L;
 
     public HibCalendarCollectionStamp() {
     }
@@ -37,14 +36,5 @@ public class HibCalendarCollectionStamp extends HibStamp implements ICalendarCon
     @Override
     public String calculateEntityTag() {
         return "";
-    }
-
-    @DisplayName
-    public String getDisplayName() {
-        return getItem().getDisplayName();
-    }
-
-    public void setDisplayName(String displayName) {
-        getItem().setDisplayName(displayName);
     }
 }

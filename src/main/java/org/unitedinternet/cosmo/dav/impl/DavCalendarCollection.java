@@ -133,8 +133,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new SupportedCalendarData());
         properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
 
-        if(cc.getDisplayName() != null){
-            properties.add(new DisplayName(cc.getDisplayName()));
+        if(getItem().getDisplayName() != null){
+            properties.add(new DisplayName(getItem().getDisplayName()));
         }
     }
 

@@ -264,39 +264,12 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());
     }
 
-    @Test(expected=ConstraintViolationException.class)
-    public void shouldNotAllowDisplayNamesWithLengthGreaterThan64() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setDisplayName("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-        root.addStamp(calendarStamp);
-
-        contentDao.updateCollection(root);
-
-    }
-
-    @Test(expected=ConstraintViolationException.class)
-    public void shouldNotAllowEmptyDisplayNames() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setDisplayName("");
-        root.addStamp(calendarStamp);
-
-        contentDao.updateCollection(root);
-
-    }
-
     public void shouldAllowLegalDisplayNames() throws Exception {
         User user = getUser(userDao, "testuser");
         HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
 
         HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        calendarStamp.setDisplayName("Valid display name");
         root.addStamp(calendarStamp);
         try{
             contentDao.updateCollection(root);

@@ -2,7 +2,6 @@ package calendar
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
@@ -155,7 +154,6 @@ class DavDroidTests extends IntegrationTestSupport {
                 .header("Depth", "0")
                 .header(AUTHORIZATION, user(USER01, USER01_PASSWORD)))
                 .andExpect(status().isMultiStatus())
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(xml(response3))
 
         def request4 = """\

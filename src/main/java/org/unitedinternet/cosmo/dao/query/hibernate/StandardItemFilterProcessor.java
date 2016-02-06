@@ -17,8 +17,6 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 
 import static java.util.Locale.ENGLISH;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.unitedinternet.cosmo.calendar.InstanceList;
@@ -61,12 +59,6 @@ import java.util.TreeMap;
  */
 public class StandardItemFilterProcessor extends AbstractDaoImpl implements ItemFilterProcessor {
 
-    private static final Log LOG = LogFactory.getLog(StandardItemFilterProcessor.class);
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.query.ItemFilterProcessor#processFilter
-     * (org.hibernate.Session, org.unitedinternet.cosmo.model.filter.ItemFilter)
-     */
     public Set<HibItem> processFilter(ItemFilter filter) {
         Query hibQuery = buildQuery(getSession(), filter);
         List<HibItem> queryResults = hibQuery.list();
@@ -119,10 +111,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
         selectBuf.append(orderBuf);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(selectBuf.toString());
-        }
-
         Query hqlQuery = session.createQuery(selectBuf.toString());
 
         for (Entry<String, Object> param : params.entrySet()) {
@@ -170,9 +158,9 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                                     ItemFilter filter) {
         for (StampFilter stampFilter : filter.getStampFilters()) {
             if (stampFilter instanceof EventStampFilter) {
-                handleEventStampFilter(selectBuf, whereBuf, (EventStampFilter) stampFilter);
+                handleStampFilter(selectBuf, whereBuf, stampFilter);
             } else if(stampFilter instanceof JournalStampFilter) {
-                handleJournalStampFilter(selectBuf, whereBuf, (JournalStampFilter) stampFilter);
+                handleStampFilter(selectBuf, whereBuf, stampFilter);
             } else {
                 handleStampFilter(whereBuf, stampFilter);
             }
@@ -196,48 +184,21 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         appendWhere(whereBuf, toAppend);
     }
 
-    private void handleEventStampFilter(StringBuffer selectBuf,
-                                        StringBuffer whereBuf,
-                                        EventStampFilter filter) {
+    private void handleStampFilter(StringBuffer selectBuf,
+                                   StringBuffer whereBuf,
+                                   StampFilter filter) {
 
-        selectBuf.append(", HibBaseEventStamp es");
+        selectBuf.append(", " + filter.getStampClass().getSimpleName() + " es");
         appendWhere(whereBuf, "es.item=i");
-        //TODO
-        appendWhere(whereBuf, "es.class = 'event'");
 
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {
-            if (filter.getIsRecurring().booleanValue() == true) {
+            if (filter.getIsRecurring() == true) {
                 appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=true or i.modifies is not null)");
             } else {
                 appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=false and i.modifies is null)");
             }
         }
-
-        // handle time range
-        if (filter.getPeriod() != null) {
-            whereBuf.append(" and ( ");
-            whereBuf.append("(es.timeRangeIndex.isFloating=true and es.timeRangeIndex.startDate < '" + filter.getFloatEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getFloatStart() + "')");
-
-            whereBuf.append(" or (es.timeRangeIndex.isFloating=false and " +
-                    "es.timeRangeIndex.startDate < '" + filter.getUTCEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getUTCStart() + "')");
-
-            // edge case where start==end
-            whereBuf.append(" or (es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and " +
-                    "(es.timeRangeIndex.startDate='" + filter.getFloatStart() + "' or es.timeRangeIndex.startDate='" + filter.getUTCStart() + "'))");
-
-            whereBuf.append(")");
-        }
-    }
-
-    private void handleJournalStampFilter(StringBuffer selectBuf, StringBuffer whereBuf, JournalStampFilter filter) {
-
-        selectBuf.append(", HibBaseEventStamp es");
-        appendWhere(whereBuf, "es.item=i");
-        //TODO
-        appendWhere(whereBuf, "es.class = 'journal'");
 
         // handle time range
         if (filter.getPeriod() != null) {
@@ -345,31 +306,14 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
      */
     private HashSet<HibItem> processResults(List<HibItem> results, ItemFilter itemFilter) {
         boolean hasTimeRangeFilter = false;
-        boolean includeMasterInResults = true;
-        boolean doTimeRangeSecondPass = true;
 
-        HashSet<HibItem> processedResults = new HashSet<HibItem>();
+        HashSet<HibItem> processedResults = new HashSet<>();
         EventStampFilter eventFilter = (EventStampFilter) itemFilter.getStampFilter(EventStampFilter.class);
 
 
         if (eventFilter != null) {
             // does eventFilter have timeRange filter?
             hasTimeRangeFilter = eventFilter.getPeriod() != null;
-        }
-
-        // When expanding recurring events do we include the master item in 
-        // the results, or just the expanded occurrences/modifications
-        if (hasTimeRangeFilter && "false".equalsIgnoreCase(itemFilter
-                .getFilterProperty(EventStampFilter.PROPERTY_INCLUDE_MASTER_ITEMS))) {
-            includeMasterInResults = false;
-        }
-
-        // Should we do a second pass to expand recurring events to determine
-        // if a recurring event actually occurs in the time-range specified,
-        // or should we just return the recurring event without double-checking.
-        if (hasTimeRangeFilter && "false".equalsIgnoreCase(itemFilter
-                .getFilterProperty(EventStampFilter.PROPERTY_DO_TIMERANGE_SECOND_PASS))) {
-            doTimeRangeSecondPass = false;
         }
 
         for (HibItem hibItem : results) {
@@ -386,31 +330,25 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             // master.
             if (note.getModifies() != null) {
                 processedResults.add(note);
-                if (includeMasterInResults) {
-                    processedResults.add(note.getModifies());
-                }
+                processedResults.add(note.getModifies());
             }
             // If filter doesn't have a timeRange, then we are done
             else if (!hasTimeRangeFilter) {
                 processedResults.add(note);
             } else {
-                processedResults.addAll(processMasterNote(note, eventFilter,
-                        includeMasterInResults, doTimeRangeSecondPass));
+                processedResults.addAll(processMasterNote(note, eventFilter));
             }
         }
 
         return processedResults;
     }
 
-    private Collection<HibContentItem> processMasterNote(HibNoteItem note,
-                                                      EventStampFilter filter, boolean includeMasterInResults,
-                                                      boolean doTimeRangeSecondPass) {
+    private Collection<HibContentItem> processMasterNote(HibNoteItem note, EventStampFilter filter) {
         HibEventStamp eventStamp = (HibEventStamp) note.getStamp(HibEventStamp.class);
-        ArrayList<HibContentItem> results = new ArrayList<>();
+        List<HibContentItem> results = new ArrayList<>();
 
-        // If the event is not recurring or the filter is configured
-        // to not do a second pass then just return the note
-        if (!eventStamp.isRecurring() || !doTimeRangeSecondPass) {
+        // If the event is not recurring
+        if (!eventStamp.isRecurring()) {
             results.add(note);
             return results;
         }
@@ -422,15 +360,9 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                 eventStamp.getExceptions(), filter.getPeriod().getStart(),
                 filter.getPeriod().getEnd(), filter.getTimezone());
 
-        // If recurring event occurs in range, add master unless the filter
-        // is configured to not return the master
-        if (instances.size() > 0 && includeMasterInResults) {
+        // If recurring event occurs in range, add master
+        if (instances.size() > 0) {
             results.add(note);
-        }
-
-        // If were aren't expanding, then return
-        if (filter.isExpandRecurringEvents() == false) {
-            return results;
         }
 
         return results;

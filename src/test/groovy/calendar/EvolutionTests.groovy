@@ -3,7 +3,6 @@ package calendar
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
@@ -1295,7 +1294,6 @@ class EvolutionTests extends IntegrationTestSupport {
                 .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(xml(response2))
     }
 

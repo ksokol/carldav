@@ -268,7 +268,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testEventStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
-        EventStampFilter eventFilter = new EventStampFilter();
+        EventStampFilter eventFilter = new EventStampFilter(HibEventStamp.class);
         HibCollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
         filter.setDisplayName(Restrictions.eq("test"));
@@ -277,14 +277,14 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, "
-                + "HibBaseEventStamp es where pd=:parent and "
-                + "i.displayName=:param1 and es.item=i and es.class = 'event' and i.icalUid=:param2", query.getQueryString());
+                + "HibEventStamp es where pd=:parent and "
+                + "i.displayName=:param1 and es.item=i and i.icalUid=:param2", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibBaseEventStamp "
+        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibEventStamp "
                 + "es where pd=:parent and i.displayName=:param1 and "
-                + "es.item=i and es.class = 'event' and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
+                + "es.item=i and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
                 + "and i.icalUid=:param2", query.getQueryString());
     }
 
@@ -295,7 +295,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testEventStampTimeRangeQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
-        EventStampFilter eventFilter = new EventStampFilter();
+        EventStampFilter eventFilter = new EventStampFilter(HibEventStamp.class);
         Period period = new Period(new DateTime("20070101T100000Z"), new DateTime("20070201T100000Z"));
         eventFilter.setPeriod(period);
         eventFilter.setTimezone(registry.getTimeZone("America/Chicago"));
@@ -305,8 +305,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, "
-                + "HibBaseEventStamp es where pd=:parent and es.item=i "
-                + "and es.class = 'event' and ( (es.timeRangeIndex.isFloating=true and "
+                + "HibEventStamp es where pd=:parent and es.item=i "
+                + "and ( (es.timeRangeIndex.isFloating=true and "
                 + "es.timeRangeIndex.startDate < '20070201T040000' and "
                 + "es.timeRangeIndex.endDate > '20070101T040000') or "
                 + "(es.timeRangeIndex.isFloating=false and "

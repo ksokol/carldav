@@ -170,6 +170,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
             newItem.setOwner(user);
             newItem.setName(user.getEmail());
+            newItem.setDisplayName("homeCollection");
             //do not set this, it might be sensitive or different than name
             //newItem.setDisplayName(newItem.getName());
             setBaseItemProps(newItem);

@@ -151,7 +151,7 @@ class IosTests extends IntegrationTestSupport {
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:displayname/>
+                                            <D:displayname>homeCollection</D:displayname>
                                             <D:resourcetype>
                                                 <D:collection/>
                                             </D:resourcetype>

@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -69,7 +70,8 @@ public abstract class HibItem extends HibAuditableObject {
     @Length(min = 1, max = 255)
     private String name;
 
-    @Column(name = "displayname", length=1024)
+    @Column(name = "displayname")
+    @NotEmpty
     private String displayName;
 
     @Column(name = "clientcreatedate")

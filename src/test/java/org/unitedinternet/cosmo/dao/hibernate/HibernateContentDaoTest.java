@@ -208,6 +208,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
+        a.setDisplayName("displayName");
         a.setOwner(getUser(userDao, "testuser2"));
 
         a = contentDao.createCollection(root, a);
@@ -448,6 +449,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
+        a.setDisplayName("displayName");
         a.setOwner(user);
 
         a = contentDao.createCollection(root, a);
@@ -472,6 +474,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
+        a.setDisplayName("displayName");
         a.setOwner(user);
 
         a = contentDao.createCollection(root, a);
@@ -504,6 +507,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
+        a.setDisplayName("displayName");
         a.setOwner(user);
 
         a = contentDao.createCollection(root, a);
@@ -530,6 +534,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
+        a.setDisplayName("displayName");
         a.setOwner(user);
 
         a = contentDao.createCollection(root, a);
@@ -559,12 +564,14 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
+        a.setDisplayName("displayName");
         a.setOwner(getUser(userDao, "testuser2"));
 
         a = contentDao.createCollection(root, a);
 
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
+        b.setDisplayName("displayName");
         b.setOwner(getUser(userDao, "testuser2"));
 
         b = contentDao.createCollection(a, b);
@@ -644,6 +651,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem collection = new HibCollectionItem();
         collection.setName("collection");
+        collection.setDisplayName("displayName");
         collection.setOwner(getUser(userDao, "testuser2"));
 
         collection = contentDao.createCollection(root, collection);
@@ -704,6 +712,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
+        a.setDisplayName("displayName");
         a.setOwner(user);
 
         a = contentDao.createCollection(root, a);
@@ -720,6 +729,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
+        b.setDisplayName("displayName");
         b.setOwner(user);
         
         b = contentDao.createCollection(root, b);

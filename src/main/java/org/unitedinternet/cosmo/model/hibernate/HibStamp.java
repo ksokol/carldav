@@ -50,8 +50,6 @@ public abstract class HibStamp extends HibAuditableObject {
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;
 
-    public abstract String getType();
-
     public HibItem getItem() {
         return item;
     }

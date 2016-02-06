@@ -25,15 +25,11 @@ import javax.persistence.Entity;
 @DiscriminatorValue("calendar")
 public class HibCalendarCollectionStamp extends HibStamp implements ICalendarConstants {
     
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     public HibCalendarCollectionStamp() {
     }
 
-    public String getType() {
-        return "calendar";
-    }
-    
     public HibCalendarCollectionStamp(HibCollectionItem collection) {
         setItem(collection);
     }

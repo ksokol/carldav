@@ -12,10 +12,6 @@ public class CardCollectionStamp extends HibStamp {
 
     private static final long serialVersionUID = -1L;
 
-    public String getType() {
-        return "card";
-    }
-
     public static CardCollectionStamp getStamp(HibItem hibItem) {
         return (CardCollectionStamp) hibItem.getStamp(CardCollectionStamp.class);
     }

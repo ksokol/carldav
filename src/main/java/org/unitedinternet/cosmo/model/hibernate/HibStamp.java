@@ -18,8 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import java.util.Date;
-
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -56,9 +54,5 @@ public abstract class HibStamp extends HibAuditableObject {
 
     public void setItem(HibItem hibItem) {
         this.item = hibItem;
-    }
-
-    public void updateTimestamp() {
-        setModifiedDate(new Date());
     }
 }

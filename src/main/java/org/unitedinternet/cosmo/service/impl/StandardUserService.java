@@ -24,7 +24,7 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
@@ -95,11 +95,10 @@ public class StandardUserService implements UserService {
 
         User newUser = userDao.getUserByEmail(user.getEmail());
 
-        HibCollectionItem calendar = new HibCollectionItem();
+        HibCollectionItem calendar = new HibCalendarCollectionItem();
         calendar.setOwner(user);
         calendar.setName("calendar");
         calendar.setDisplayName("calendarDisplayName");
-        calendar.addStamp(new HibCalendarCollectionStamp());
 
         final HibHomeCollectionItem homeCollection = contentDao.createRootItem(newUser);
         contentService.createCollection(homeCollection, calendar);

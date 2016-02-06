@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.Date;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,15 +30,12 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import javax.validation.ConstraintViolationException;
 
@@ -226,51 +221,10 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals(1, queryItem.getStamps().size());
     }
 
-    /**
-     * test calendar collection stamp.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCalendarCollectionStamp() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        Calendar testCal = helper.getCalendar("testdata/timezone.ics");
-
-        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-
-        root.addStamp(calendarStamp);
-
-        contentDao.updateCollection(root);
-
-
-        root = (HibCollectionItem) contentDao.findItemByUid(root.getUid());
-
-        HibContentItem item = generateTestContent();
-        HibEventStamp event = new HibEventStamp();
-        event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
-        item.addStamp(event);
-
-        contentDao.createContent(root, item);
-        session.clear();
-
-        HibCollectionItem queryCol = (HibCollectionItem) contentDao.findItemByUid(root.getUid());
-        Assert.assertEquals(1, queryCol.getStamps().size());
-        HibCalendarCollectionStamp stamp = (HibCalendarCollectionStamp) queryCol.getStamp(HibCalendarCollectionStamp.class);
-
-        Assert.assertTrue(stamp instanceof HibCalendarCollectionStamp);
-
-        Calendar cal = new EntityConverter(new VersionFourGenerator()).convertCollection(queryCol);
-        Assert.assertEquals(1, cal.getComponents().getComponents(Component.VEVENT).size());
-    }
-
     public void shouldAllowLegalDisplayNames() throws Exception {
         User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = contentDao.getRootItem(user);
 
-
-        HibCalendarCollectionStamp calendarStamp = new HibCalendarCollectionStamp(root);
-        root.addStamp(calendarStamp);
         try{
             contentDao.updateCollection(root);
         }catch(ConstraintViolationException ex){

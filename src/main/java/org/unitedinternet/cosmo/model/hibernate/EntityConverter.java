@@ -231,14 +231,6 @@ public class EntityConverter {
      * @return icalendar representation of collection
      */
     public Calendar convertCollection(HibCollectionItem collection) {
-        
-        // verify collection is a calendar
-        HibCalendarCollectionStamp ccs = (HibCalendarCollectionStamp) collection.getStamp(HibCalendarCollectionStamp.class);
-
-        if (ccs == null) {
-            return null;
-        }
-        
         Calendar calendar = ICalendarUtils.createBaseCalendar();
 
         // extract the supported calendar components for each child item and

@@ -30,7 +30,6 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
@@ -65,8 +64,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
-
-        deadPropertyFilter.add(HibCalendarCollectionStamp.class.getName());
     }
 
     /** */
@@ -108,18 +105,9 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         return rt;
     }
 
-    public HibCalendarCollectionStamp getCalendarCollectionStamp() {
-        return (HibCalendarCollectionStamp) getItem().getStamp(HibCalendarCollectionStamp.class);
-    }
-
     /** */
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
-
-        HibCalendarCollectionStamp cc = getCalendarCollectionStamp();
-        if (cc == null) {
-            return;
-        }
 
         // add CS:getctag property, which is the collection's entitytag
         // if it exists
@@ -153,11 +141,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
         super.setLiveProperty(property, create);
 
-        HibCalendarCollectionStamp cc = getCalendarCollectionStamp();
-        if (cc == null) {
-            return;
-        }
-
         DavPropertyName name = property.getName();
         if (property.getValue() == null) {
             throw new UnprocessableEntityException("Property " + name + " requires a value");
@@ -175,11 +158,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     protected void removeLiveProperty(DavPropertyName name)
         throws CosmoDavException {
         super.removeLiveProperty(name);
-
-        HibCalendarCollectionStamp cc = getCalendarCollectionStamp();
-        if (cc == null) {
-            return;
-        }
 
         if (name.equals(SUPPORTEDCALENDARCOMPONENTSET) ||
             name.equals(SUPPORTEDCALENDARDATA) ||

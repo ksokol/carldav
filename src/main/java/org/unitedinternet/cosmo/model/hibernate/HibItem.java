@@ -56,7 +56,7 @@ import javax.validation.constraints.NotNull;
 @DiscriminatorColumn(
         name="itemtype",
         discriminatorType=DiscriminatorType.STRING,
-        length=16)
+        length=32)
 public abstract class HibItem extends HibAuditableObject {
 
     @Column(name = "uid", nullable = false, length=255)

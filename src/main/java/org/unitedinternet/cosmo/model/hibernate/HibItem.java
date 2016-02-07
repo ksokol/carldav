@@ -41,7 +41,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -85,10 +84,6 @@ public abstract class HibItem extends HibAuditableObject {
     @Column(name = "clientmodifieddate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date clientModifiedDate;
-
-    @Version
-    @Column(name="version", nullable = false)
-    private Integer version;
 
     @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
     private Set<HibStamp> stamps = new HashSet<>();
@@ -189,10 +184,6 @@ public abstract class HibItem extends HibAuditableObject {
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public Integer getVersion() {
-        return version;
     }
 
     public void setCollection(HibCollectionItem parent) {

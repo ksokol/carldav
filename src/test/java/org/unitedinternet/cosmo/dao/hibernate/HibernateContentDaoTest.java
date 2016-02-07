@@ -260,7 +260,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibFileItem queryItem = (HibFileItem) contentDao.findItemByUid(newItem.getUid());
 
         helper.verifyItem(newItem, queryItem);
-        Assert.assertEquals(0, queryItem.getVersion().intValue());
 
         queryItem.setName("test2");
         queryItem.setDisplayName("this is a test item2");
@@ -276,8 +275,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         
         Thread.sleep(200);
         HibContentItem queryItem2 = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        Assert.assertTrue(queryItem2.getVersion().intValue() > 0);
-        
+
         helper.verifyItem(queryItem, queryItem2);
 
         Assert.assertTrue(newItemModifyDate.before(
@@ -414,8 +412,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
         helper.verifyItem(newItem, queryItem);
-        
-        Assert.assertTrue(((HibItem) queryItem).getVersion().equals(0));
 
         contentDao.removeContent(queryItem);
 
@@ -511,7 +507,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         a.setOwner(user);
 
         a = contentDao.createCollection(root, a);
-        Integer ver = ((HibItem) a).getVersion();
         Date timestamp = a.getModifiedDate();
         
         
@@ -519,7 +514,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Thread.sleep(3);
         
         a = contentDao.updateCollectionTimestamp(a);
-        Assert.assertTrue(((HibItem) a).getVersion()==ver + 1);
         Assert.assertTrue(timestamp.before(a.getModifiedDate()));
     }
 

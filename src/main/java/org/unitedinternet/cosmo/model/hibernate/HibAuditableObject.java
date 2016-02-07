@@ -37,10 +37,6 @@ public abstract class HibAuditableObject implements Serializable {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long id = Long.valueOf(-1);
 
-    @Column(name = "createdate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
-    
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
@@ -54,17 +50,6 @@ public abstract class HibAuditableObject implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.AuditableObject#getCreationDate()
-     */
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
     }
 
     /* (non-Javadoc)

@@ -41,25 +41,7 @@ public class AuditableObjectInterceptor extends EmptyInterceptor {
     @Override
     public boolean onFlushDirty(Object object, Serializable id, Object[] currentState,
             Object[] previousState, String[] propertyNames, Type[] types) {
-        if(! (object instanceof HibAuditableObject)) {
-            return false;
-        }
-        
-        // Set new modifyDate so that calculateEntityTag()
-        // has access to it
-        HibAuditableObject ao = (HibAuditableObject) object;
-        Date curDate = timeService.getCurrentTime();
-        ao.setModifiedDate(curDate);
-        
-        // update modifiedDate and entityTag
-        for ( int i=0; i < propertyNames.length; i++ ) {
-            if ( "modifiedDate".equals( propertyNames[i] ) ) {
-                currentState[i] = curDate;
-            } else if("etag".equals( propertyNames[i] )) {
-                currentState[i] = ao.calculateEntityTag();
-            }
-        }
-        return true;
+        return onSave(object, id, currentState, propertyNames, types);
     }
 
     @Override
@@ -77,8 +59,7 @@ public class AuditableObjectInterceptor extends EmptyInterceptor {
         
         // initialize modifiedDate, creationDate and entityTag
         for ( int i=0; i < propertyNames.length; i++ ) {
-            if ( "creationDate".equals(propertyNames[i]) ||
-                  "modifiedDate".equals(propertyNames[i]) ) {
+            if ("modifiedDate".equals(propertyNames[i])) {
                 state[i] = curDate;
             } else if("etag".equals( propertyNames[i] )) {
                 state[i] = ao.calculateEntityTag();

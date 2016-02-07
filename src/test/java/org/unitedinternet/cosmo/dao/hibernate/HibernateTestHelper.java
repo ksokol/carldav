@@ -41,7 +41,6 @@ public class HibernateTestHelper {
      */
     public void verifyItem(HibItem hibItem1, HibItem hibItem2) throws Exception {
         Assert.assertEquals(hibItem1.getName(), hibItem2.getName());
-        Assert.assertEquals(hibItem1.getCreationDate(), hibItem2.getCreationDate());
         Assert.assertEquals(hibItem1.getClientCreationDate(), hibItem2.getClientCreationDate());
         Assert.assertEquals(hibItem1.getClientModifiedDate(), hibItem2.getClientModifiedDate());
         Assert.assertEquals(hibItem1.getModifiedDate(), hibItem2.getModifiedDate());

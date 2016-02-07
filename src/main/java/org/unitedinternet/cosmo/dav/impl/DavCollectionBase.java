@@ -257,7 +257,7 @@ public class DavCollectionBase extends DavItemResourceBase implements
         HibContentItem content = (HibContentItem) member.getItem();
 
         try {
-            if (content.getCreationDate() != null) {
+            if (content.getId() != -1) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("updating member " + member.getResourcePath());
                 }

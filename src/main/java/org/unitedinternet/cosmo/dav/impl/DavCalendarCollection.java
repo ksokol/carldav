@@ -209,7 +209,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             throw new InvalidCalendarResourceException(e.getMessage());
         }
 
-        if (event.getCreationDate()!=null) {
+        if (event.getId()!= -1) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("updating event " + member.getResourcePath());
             }
@@ -251,7 +251,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             throw new InvalidCalendarResourceException(e.getMessage());
         }
 
-        if (content.getCreationDate()!=null) {
+        if (content.getId()!=-1) {
             LOG.debug("updating journal {}", member.getResourcePath());
 
             try {

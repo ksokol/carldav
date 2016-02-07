@@ -99,9 +99,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals(1, queryItem.getStamps().size());
 
         HibEventStamp stamp = (HibEventStamp) queryItem.getStamp(HibEventStamp.class);
-        Assert.assertNotNull(stamp.getCreationDate());
         Assert.assertNotNull(stamp.getModifiedDate());
-        Assert.assertTrue(stamp.getCreationDate().equals(stamp.getModifiedDate()));
         Assert.assertTrue(stamp instanceof HibEventStamp);
         Assert.assertEquals(stamp.getEventCalendar().toString(), event.getEventCalendar().toString());
         Assert.assertEquals("icaluid", ((HibNoteItem) queryItem).getIcalUid());
@@ -258,9 +256,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertEquals(1, queryItem.getStamps().size());
 
         HibEventExceptionStamp stamp = (HibEventExceptionStamp) queryItem.getStamp(HibEventExceptionStamp.class);
-        Assert.assertNotNull(stamp.getCreationDate());
         Assert.assertNotNull(stamp.getModifiedDate());
-        Assert.assertTrue(stamp.getCreationDate().equals(stamp.getModifiedDate()));
         Assert.assertTrue(stamp instanceof HibEventExceptionStamp);
         HibEventExceptionStamp ees = (HibEventExceptionStamp) stamp;
         Assert.assertEquals(ees.getEventCalendar().toString(), eventex.getEventCalendar()

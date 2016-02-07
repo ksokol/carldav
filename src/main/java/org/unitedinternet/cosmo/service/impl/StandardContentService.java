@@ -255,7 +255,7 @@ public class StandardContentService implements ContentService {
         try {
             
            for(HibContentItem content: hibContentItems) {
-               if(content.getCreationDate()==null) {
+               if(content.getId()==-1) {
                    contentDao.createContent(parents, content);
                }
                else {

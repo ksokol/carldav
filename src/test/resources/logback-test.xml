@@ -37,14 +37,14 @@
 
     <logger name="org.hibernate" level="TRACE" />
     <logger name="org.hibernate.type" level="TRACE" />
--->
+
 
     <logger name="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler" level="OFF"/>
     <logger name="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" level="OFF"/>
     <logger name="org.unitedinternet.cosmo.hibernate.validator.EventExceptionValidator" level="OFF"/>
     <logger name="org.hibernate.tool.hbm2ddl.SchemaExport" level="OFF"/>
     <logger name="org.springframework" level="OFF"/>
-
+-->
     <!-- ROOT logger setup -->
     <root level="WARN">
         <appender-ref ref="STDOUT"/>

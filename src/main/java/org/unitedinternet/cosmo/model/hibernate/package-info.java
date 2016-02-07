@@ -54,7 +54,7 @@
         @NamedQuery(name = "item.stamps.by.uid", query = "select i.stamps from HibItem i where i.uid=:uid"),
         @NamedQuery(name = "itemid.by.uid", query = "select i.id from HibItem i where i.uid=:uid"),
         @NamedQuery(name = "collectionItem.by.uid", query = "from HibCollectionItem i where i.uid=:uid"),
-        @NamedQuery(name = "contentItem.by.uid", query = "from HibContentItem i where i.uid=:uid"),
+        @NamedQuery(name = "contentItem.by.uid", query = "from HibItem i where i.uid=:uid"),
         @NamedQuery(name = "item.by.parent.name", query = "select item from HibItem item join"
                 + " item.collection pd where item.collection=:parent and item.name=:name"),
         // FIXME stfl .and.nullparent is not the correct name anymore!
@@ -67,7 +67,7 @@
         @NamedQuery(name = "icalendarItem.by.parent.icaluid", query = "select item.id from "
                 + "HibICalendarItem item join item.collection pd where"
                 + " pd.id=:parentid and item.icalUid=:icaluid"),
-        @NamedQuery(name = "contentItem.by.owner", query = "from HibContentItem i where i.owner=:owner"),
+        @NamedQuery(name = "contentItem.by.owner", query = "from HibItem i where i.owner=:owner"),
 
         // User Queries
         @NamedQuery(name="user.byEmail", query="from User where email=:email"),

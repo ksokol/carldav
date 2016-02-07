@@ -22,7 +22,7 @@ import javax.persistence.Lob;
 
 @Entity
 @DiscriminatorValue("file")
-public class HibFileItem extends HibContentItem {
+public class HibFileItem extends HibItem {
 
     private static final long serialVersionUID = 2L;
 

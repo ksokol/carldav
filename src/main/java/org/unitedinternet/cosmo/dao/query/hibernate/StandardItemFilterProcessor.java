@@ -272,7 +272,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                                          ContentItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
-            selectBuf.append("select i from HibContentItem i");
+            selectBuf.append("select i from HibNoteItem i");
             handleItemFilter(selectBuf, whereBuf, params, filter);
         }
 

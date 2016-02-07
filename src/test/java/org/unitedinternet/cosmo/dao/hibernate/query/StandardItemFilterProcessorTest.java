@@ -172,20 +172,20 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
                         + "pd=:parent and i.triageStatus.code=:param1",
                 query.getQueryString());
 
         filter.setTriageStatusCode(Restrictions.isNull());
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
                         + "pd=:parent and i.triageStatus.code is null",
                 query.getQueryString());
 
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         filter.addOrderBy(ContentItemFilter.ORDER_BY_TRIAGE_STATUS_RANK_ASC);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
                 + "pd=:parent and i.triageStatus.code=:param1 order by "
                 + "i.triageStatus.rank", query.getQueryString());
     }

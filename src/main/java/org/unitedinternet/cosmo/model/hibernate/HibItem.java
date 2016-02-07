@@ -30,6 +30,8 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -57,6 +59,10 @@ import javax.validation.constraints.NotNull;
         discriminatorType=DiscriminatorType.STRING,
         length=32)
 public abstract class HibItem extends HibAuditableObject {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @Column(name = "uid", nullable = false, length=255)
     @NotNull
@@ -95,6 +101,14 @@ public abstract class HibItem extends HibAuditableObject {
     @JoinColumn(name="ownerid", nullable = false)
     @NotNull
     private User owner;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
     public Set<HibStamp> getStamps() {
         return Collections.unmodifiableSet(stamps);

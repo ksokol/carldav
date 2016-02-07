@@ -22,6 +22,8 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -43,10 +45,22 @@ public abstract class HibStamp extends HibAuditableObject {
 
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
     public HibItem getItem() {
         return item;

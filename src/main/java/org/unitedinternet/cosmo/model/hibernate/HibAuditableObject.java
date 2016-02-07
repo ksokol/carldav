@@ -21,8 +21,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -32,24 +30,12 @@ public abstract class HibAuditableObject implements Serializable {
 
     private static final long serialVersionUID = 8396186357498363587L;
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
     
     @Column(name="etag")
     private String etag = "";
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.AuditableObject#getModifiedDate()

@@ -761,39 +761,18 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         item.setName("test");
         TriageStatus initialTriageStatus = new TriageStatus();
         TriageStatusUtil.initialize(initialTriageStatus);
-        item.setTriageStatus(initialTriageStatus);
 
         HibContentItem newItem = contentDao.createContent(root, item);
 
         Assert.assertTrue(getHibItem(newItem).getId() != null);
         Assert.assertNotNull(newItem.getUid());
 
-
-
         HibContentItem queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        TriageStatus triageStatus = queryItem.getTriageStatus();
-        Assert.assertEquals(initialTriageStatus, triageStatus);
-
-        triageStatus.setCode(TriageStatusUtil.CODE_LATER);
-        BigDecimal rank = new BigDecimal("-98765.43");
-        triageStatus.setRank(rank);
 
         contentDao.updateContent(queryItem);
 
-
         queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        triageStatus = queryItem.getTriageStatus();
-        Assert.assertEquals(triageStatus.getCode(),
-                            Integer.valueOf(TriageStatusUtil.CODE_LATER));
-        Assert.assertEquals(triageStatus.getRank(), rank);
-
-        queryItem.setTriageStatus(null);
         contentDao.updateContent(queryItem);
-
-        // should be null triagestatus
-        queryItem = (HibContentItem) contentDao.findItemByUid(newItem.getUid());
-        triageStatus = queryItem.getTriageStatus();
-        Assert.assertNull(triageStatus);
     }
 
     private void verifyContains(@SuppressWarnings("rawtypes") Collection items, HibCollectionItem collection) {

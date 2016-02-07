@@ -115,10 +115,12 @@ public abstract class DavContentBase extends DavItemResourceBase
         throws CosmoDavException {
         super.populateItem(inputContext);
 
-        HibContentItem content = (HibContentItem) getItem();
+        if(getItem() instanceof HibNoteItem) {
+            HibNoteItem content = (HibNoteItem) getItem();
 
-        if (content.getUid() == null) {
-            content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
+            if (content.getUid() == null) {
+                content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
+            }
         }
     }
 

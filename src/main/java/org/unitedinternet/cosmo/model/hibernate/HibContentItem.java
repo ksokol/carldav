@@ -27,15 +27,5 @@ public abstract class HibContentItem extends HibItem {
 
     private static final long serialVersionUID = 1L;
 
-    @Embedded
-    @Target(TriageStatus.class)
-    private TriageStatus triageStatus = new TriageStatus();
 
-    public TriageStatus getTriageStatus() {
-        return triageStatus;
-    }
-
-    public void setTriageStatus(TriageStatus ts) {
-        triageStatus = ts;
-    }
 }

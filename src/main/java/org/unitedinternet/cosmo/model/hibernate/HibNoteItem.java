@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.annotations.Target;
 import org.unitedinternet.cosmo.hibernate.validator.Task;
 
 import java.nio.charset.Charset;
@@ -28,6 +29,7 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -61,6 +63,18 @@ public class HibNoteItem extends HibICalendarItem {
     @Column(name = "remindertime")
     @Temporal(TemporalType.TIMESTAMP)
     private Date remindertime;
+
+    @Embedded
+    @Target(TriageStatus.class)
+    private TriageStatus triageStatus = new TriageStatus();
+
+    public TriageStatus getTriageStatus() {
+        return triageStatus;
+    }
+
+    public void setTriageStatus(TriageStatus ts) {
+        triageStatus = ts;
+    }
 
     public String getBody() {
         return body;

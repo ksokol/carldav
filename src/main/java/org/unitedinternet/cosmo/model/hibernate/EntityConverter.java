@@ -834,7 +834,10 @@ public class EntityConverter {
 
         item.setClientCreationDate(new Date());
         item.setClientModifiedDate(item.getClientCreationDate());
-        item.setTriageStatus(ts);
+
+        if(item instanceof HibNoteItem) {
+            ((HibNoteItem)item).setTriageStatus(ts);
+        }
     }    
 
     /**

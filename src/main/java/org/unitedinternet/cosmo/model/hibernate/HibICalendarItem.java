@@ -24,7 +24,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("icalendar")
-public abstract class HibICalendarItem extends HibContentItem {
+public abstract class HibICalendarItem extends HibItem {
 
     @Column(name="icaluid", length=255)
     private String icalUid = null;

@@ -22,7 +22,6 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
@@ -34,7 +33,7 @@ public abstract class HibAuditableObject implements Serializable {
     private static final long serialVersionUID = 8396186357498363587L;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue
     private Long id = Long.valueOf(-1);
 
     @Column(name = "modifydate")

@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -61,7 +60,6 @@ public abstract class HibItem extends HibAuditableObject {
 
     @Column(name = "uid", nullable = false, length=255)
     @NotNull
-    @NaturalId
     @Length(min = 1, max = 255)
     private String uid;
 

@@ -91,16 +91,11 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.ItemDao#findItemByUid(java.lang.String)
-     */
     public HibItem findItemByUid(String uid) {
         try {
             // prevent auto flushing when looking up item by uid
             getSession().setFlushMode(FlushMode.MANUAL);
-            return (HibItem) getSession().byNaturalId(HibItem.class).using("uid", uid).load();
+            return (HibItem) getSession().createQuery("select item from HibItem item where item.uid = :uid").setParameter("uid", uid).uniqueResult();
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);

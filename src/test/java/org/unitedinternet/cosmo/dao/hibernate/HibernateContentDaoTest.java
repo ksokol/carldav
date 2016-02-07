@@ -679,6 +679,8 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         contentDao.removeItemsFromCollection(collection);
 
+        session.flush();
+
         HibCollectionItem queryA = (HibCollectionItem) contentDao.findItemByUid(collection.getUid());
         Assert.assertNotNull(queryA);
 

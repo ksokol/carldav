@@ -34,7 +34,7 @@ public abstract class HibAuditableObject implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id = Long.valueOf(-1);
+    private Long id;
 
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)

@@ -55,7 +55,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw new IllegalArgumentException("collection must have owner");
         }
 
-        if (getBaseModelObject(collection).getId() != -1) {
+        if (getBaseModelObject(collection).getId() != null) {
             throw new IllegalArgumentException("invalid collection id (expected -1)");
         }
 
@@ -405,7 +405,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw new IllegalArgumentException("content cannot be null");
         }
 
-        if (getBaseModelObject(content).getId() != -1) {
+        if (getBaseModelObject(content).getId() != null) {
             throw new IllegalArgumentException("invalid content id (expected -1)");
         }
 
@@ -461,7 +461,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw new IllegalArgumentException("content cannot be null");
         }
 
-        if (getBaseModelObject(content).getId() != -1) {
+        if (getBaseModelObject(content).getId() != null) {
             throw new IllegalArgumentException("invalid content id (expected -1)");
         }
 
@@ -632,7 +632,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         // if icaluid is in use throw exception
         if (itemId != null) {
             // If the note is new, then its a duplicate icaluid
-            if (getBaseModelObject(item).getId() == -1) {
+            if (getBaseModelObject(item).getId() == null) {
                 HibItem dup = (HibItem) getSession().load(HibItem.class, itemId);
                 throw new IcalUidInUseException("iCal uid" + item.getIcalUid()
                         + " already in use for collection " + parent.getUid(),

@@ -96,7 +96,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibContentItem newItem = contentDao.createContent(root, item);
 
-        Assert.assertTrue(getHibItem(newItem).getId() > -1);
+        Assert.assertTrue(getHibItem(newItem).getId() != null);
         Assert.assertNotNull(newItem.getUid());
 
         
@@ -454,7 +454,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         a = contentDao.createCollection(root, a);
 
-        Assert.assertTrue(getHibItem(a).getId() > -1);
+        Assert.assertTrue(getHibItem(a).getId() != null);
         Assert.assertNotNull(a.getUid());
 
         
@@ -481,7 +481,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         
 
-        Assert.assertTrue(getHibItem(a).getId() > -1);
+        Assert.assertTrue(getHibItem(a).getId() != null);
         Assert.assertNotNull(a.getUid());
 
         HibCollectionItem queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
@@ -765,7 +765,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibContentItem newItem = contentDao.createContent(root, item);
 
-        Assert.assertTrue(getHibItem(newItem).getId() > -1);
+        Assert.assertTrue(getHibItem(newItem).getId() != null);
         Assert.assertNotNull(newItem.getUid());
 
 

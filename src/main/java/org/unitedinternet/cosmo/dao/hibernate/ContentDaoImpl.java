@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -87,7 +86,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
      * @see org.unitedinternet.cosmo.dao.ContentDao#createContent(org.unitedinternet.cosmo.model.CollectionItem,
      *      org.unitedinternet.cosmo.model.ContentItem)
      */
-    public HibContentItem createContent(HibCollectionItem parent, HibContentItem content) {
+    public HibItem createContent(HibCollectionItem parent, HibItem content) {
 
         try {
             createContentInternal(parent, content);
@@ -105,7 +104,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.dao.ContentDao#createContent(java.util.Set, org.unitedinternet.cosmo.model.ContentItem)
      */
-    public HibContentItem createContent(Set<HibCollectionItem> parents, HibContentItem content) {
+    public HibItem createContent(Set<HibCollectionItem> parents, HibItem content) {
 
         try {
             createContentInternal(parents, content);
@@ -185,7 +184,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
      * @param content The content that needs to be updated.
      * @return The updated content.
      */
-    public HibContentItem updateContent(HibContentItem content) {
+    public HibItem updateContent(HibItem content) {
         try {
             updateContentInternal(content);
             getSession().flush();
@@ -238,7 +237,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
      *
      * @param content The content item that need to be removed.
      */
-    public void removeContent(HibContentItem content) {
+    public void removeContent(HibItem content) {
 
         if (content == null) {
             throw new IllegalArgumentException("content cannot be null");
@@ -269,8 +268,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             Query query = getSession().getNamedQuery("contentItem.by.owner")
                     .setParameter("owner", user);
 
-            List<HibContentItem> results = query.list();
-            for (HibContentItem content : results) {
+            List<HibItem> results = query.list();
+            for (HibItem content : results) {
                 removeContentRecursive(content);
             }
             getSession().flush();
@@ -302,8 +301,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     @Override
     public void removeItem(HibItem hibItem) {
-        if (hibItem instanceof HibContentItem) {
-            removeContent((HibContentItem) hibItem);
+        if (hibItem instanceof HibItem) {
+            removeContent(hibItem);
         } else if (hibItem instanceof HibCollectionItem) {
             removeCollection((HibCollectionItem) hibItem);
         } else {
@@ -315,8 +314,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     @Override
     public void removeItemByPath(String path) {
         HibItem hibItem = this.findItemByPath(path);
-        if (hibItem instanceof HibContentItem) {
-            removeContent((HibContentItem) hibItem);
+        if (hibItem instanceof HibItem) {
+            removeContent(hibItem);
         } else if (hibItem instanceof HibCollectionItem) {
             removeCollection((HibCollectionItem) hibItem);
         } else {
@@ -327,8 +326,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     @Override
     public void removeItemByUid(String uid) {
         HibItem hibItem = this.findItemByUid(uid);
-        if (hibItem instanceof HibContentItem) {
-            removeContent((HibContentItem) hibItem);
+        if (hibItem instanceof HibItem) {
+            removeContent(hibItem);
         } else if (hibItem instanceof HibCollectionItem) {
             removeCollection((HibCollectionItem) hibItem);
         } else {
@@ -337,7 +336,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
 
-    private void removeContentRecursive(HibContentItem content) {
+    private void removeContentRecursive(HibItem content) {
         // Remove modifications
         if (content instanceof HibNoteItem) {
             HibNoteItem note = (HibNoteItem) content;
@@ -367,7 +366,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
        for (HibItem hibItem : collection.getItems()) {
             if (hibItem instanceof HibCollectionItem) {
                 removeCollectionRecursive((HibCollectionItem) hibItem);
-            } else if (hibItem instanceof HibContentItem) {
+            } else if (hibItem instanceof HibItem) {
                 hibItem.setCollection(null);
                 getSession().delete(hibItem);
             } else {
@@ -395,7 +394,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
 
-    protected void createContentInternal(HibCollectionItem parent, HibContentItem content) {
+    protected void createContentInternal(HibCollectionItem parent, HibItem content) {
 
         if (parent == null) {
             throw new IllegalArgumentException("parent cannot be null");
@@ -451,7 +450,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         getSession().refresh(parent);
     }
 
-    protected void createContentInternal(Set<HibCollectionItem> parents, HibContentItem content) {
+    protected void createContentInternal(Set<HibCollectionItem> parents, HibItem content) {
 
         if (parents == null) {
             throw new IllegalArgumentException("parent cannot be null");
@@ -510,14 +509,14 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         for (HibCollectionItem parent : parents) {
-            ((HibItem) content).setCollection(parent);
+            content.setCollection(parent);
         }
 
 
         getSession().save(content);
     }
 
-    protected void updateContentInternal(HibContentItem content) {
+    protected void updateContentInternal(HibItem content) {
 
         if (content == null) {
             throw new IllegalArgumentException("content cannot be null");
@@ -592,7 +591,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             // a single collection when the master note is in multiple collections.
             HibNoteItem note = (HibNoteItem) hibItem;
             if (note.getModifies() != null) {
-                removeContentRecursive((HibContentItem) hibItem);
+                removeContentRecursive(hibItem);
             } else {
                 removeNoteItemFromCollectionInternal((HibNoteItem) hibItem, collection);
             }

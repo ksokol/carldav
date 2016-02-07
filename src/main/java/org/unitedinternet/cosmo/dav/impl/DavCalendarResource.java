@@ -38,7 +38,7 @@ import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.ByteArrayInputStream;
@@ -54,7 +54,7 @@ public abstract class DavCalendarResource extends DavContentBase
     private static final Log LOG = LogFactory.getLog(DavCalendarResource.class);
     private final Set<ReportType> reportTypes = new HashSet<>();
 
-    public DavCalendarResource(HibContentItem item,
+    public DavCalendarResource(HibItem item,
                                DavResourceLocator locator,
                                DavResourceFactory factory,
                                IdGenerator idGenerator)

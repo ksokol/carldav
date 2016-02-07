@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.service;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.Set;
@@ -83,8 +82,8 @@ public interface ContentService {
      *            content to create
      * @return newly created content
      */
-    HibContentItem createContent(HibCollectionItem parent,
-                              HibContentItem content);
+    HibItem createContent(HibCollectionItem parent,
+                          HibItem content);
 
     /**
      * Create new content items in a parent collection.
@@ -97,7 +96,7 @@ public interface ContentService {
      *         if parent CollectionItem is locked
      */
     void createContentItems(HibCollectionItem parent,
-                            Set<HibContentItem> hibContentItems);
+                            Set<HibItem> hibContentItems);
 
     /**
      * Update content items.  This includes creating new items, removing
@@ -112,7 +111,7 @@ public interface ContentService {
      * @throws org.osaf.cosmo.model.CollectionLockedException
      *         if parent CollectionItem is locked
      */
-    void updateContentItems(Set<HibCollectionItem> parents, Set<HibContentItem> hibContentItems);
+    void updateContentItems(Set<HibCollectionItem> parents, Set<HibItem> hibContentItems);
     
     /**
      * Update an existing content item.
@@ -121,7 +120,7 @@ public interface ContentService {
      *            content item to update
      * @return updated content item
      */
-    HibContentItem updateContent(HibContentItem content);
+    HibItem updateContent(HibItem content);
 
 
     /**
@@ -130,7 +129,7 @@ public interface ContentService {
      * @param content
      *            content item to remove
      */
-    void removeContent(HibContentItem content);
+    void removeContent(HibItem content);
 
 
     /**

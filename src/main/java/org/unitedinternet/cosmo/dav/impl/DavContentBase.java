@@ -29,7 +29,7 @@ import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 
@@ -52,7 +52,7 @@ import javax.xml.namespace.QName;
  *
  * @see DavContent
  * @see DavResourceBase
- * @see HibContentItem
+ * @see HibItem
  */
 public abstract class DavContentBase extends DavItemResourceBase
     implements DavItemContent {
@@ -66,7 +66,7 @@ public abstract class DavContentBase extends DavItemResourceBase
     }
 
     /** */
-    public DavContentBase(HibContentItem item,
+    public DavContentBase(HibItem item,
                           DavResourceLocator locator,
                           DavResourceFactory factory,
                           IdGenerator idGenerator)
@@ -129,7 +129,7 @@ public abstract class DavContentBase extends DavItemResourceBase
         throws CosmoDavException {
         super.setLiveProperty(property, create);
 
-        HibContentItem content = (HibContentItem) getItem();
+        HibItem content = getItem();
         if (content == null) {
             return;
         }
@@ -149,7 +149,7 @@ public abstract class DavContentBase extends DavItemResourceBase
     @Override
     protected void updateItem() throws CosmoDavException {
         try {
-            getContentService().updateContent((HibContentItem) getItem());
+            getContentService().updateContent(getItem());
         } catch (CollectionLockedException e) {
             throw new LockedException();
         }

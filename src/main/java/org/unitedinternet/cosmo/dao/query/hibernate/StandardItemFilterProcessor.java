@@ -38,7 +38,6 @@ import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.NullExpression;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -343,9 +342,9 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         return processedResults;
     }
 
-    private Collection<HibContentItem> processMasterNote(HibNoteItem note, EventStampFilter filter) {
+    private Collection<HibItem> processMasterNote(HibNoteItem note, EventStampFilter filter) {
         HibEventStamp eventStamp = (HibEventStamp) note.getStamp(HibEventStamp.class);
-        List<HibContentItem> results = new ArrayList<>();
+        List<HibItem> results = new ArrayList<>();
 
         // If the event is not recurring
         if (!eventStamp.isRecurring()) {

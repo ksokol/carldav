@@ -31,7 +31,6 @@ import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
@@ -87,7 +86,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             new HashSet<>();
 
         HibCollectionItem collection = (HibCollectionItem) getItem();
-        for (HibContentItem memberItem :
+        for (HibItem memberItem :
              getCalendarQueryProcesor().filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberItem);
             if(resource!=null) {
@@ -196,10 +195,10 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     private void saveEvent(DavItemContent member)
         throws CosmoDavException {
 
-        HibContentItem content = (HibContentItem) member.getItem();
+        HibItem content = member.getItem();
         HibEventStamp event = (HibEventStamp) content.getStamp(HibEventStamp.class);
         EntityConverter converter = new EntityConverter(getIdGenerator());
-        Set<HibContentItem> toUpdate = new LinkedHashSet<>();
+        Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model
@@ -242,7 +241,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     private void saveJournal(DavItemContent member) throws CosmoDavException {
         HibJournalItem content = (HibJournalItem) member.getItem();
         EntityConverter converter = new EntityConverter(getIdGenerator());
-        Set<HibContentItem> toUpdate = new LinkedHashSet<>();
+        Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model

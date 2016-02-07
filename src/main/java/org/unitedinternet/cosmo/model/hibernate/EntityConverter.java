@@ -243,11 +243,11 @@ public class EntityConverter {
         Map<String, CalendarComponent> tzIdx = new HashMap<>();
         
         for (HibItem hibItem : collection.getItems()) {
-           if (!(hibItem instanceof HibContentItem)) {
+           if (!(hibItem instanceof HibItem)) {
                continue;
            }
-           
-           HibContentItem hibContentItem = (HibContentItem) hibItem;
+
+           HibItem hibContentItem = hibItem;
            Calendar childCalendar = convertContent(hibContentItem);
            
            // ignore items that can't be converted
@@ -288,7 +288,7 @@ public class EntityConverter {
      * @return The calendar.
      * </p>
      */
-    public Calendar convertContent(HibContentItem item) {
+    public Calendar convertContent(HibItem item) {
 
         if(item instanceof HibNoteItem) {
             return convertNote((HibNoteItem) item);
@@ -827,7 +827,7 @@ public class EntityConverter {
      * Sets base content attributes.
      * @param item The content item.
      */
-    private void setBaseContentAttributes(HibContentItem item) {
+    private void setBaseContentAttributes(HibItem item) {
         
         TriageStatus ts = new TriageStatus();
         TriageStatusUtil.initialize(ts);

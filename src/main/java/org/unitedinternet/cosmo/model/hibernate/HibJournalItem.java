@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import net.fortuna.ical4j.model.Calendar;
+
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -24,7 +26,7 @@ import javax.persistence.Lob;
 @DiscriminatorValue("journal")
 public class HibJournalItem extends HibICalendarItem {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     @Column(name= "body", columnDefinition="CLOB")
     @Lob
@@ -38,11 +40,24 @@ public class HibJournalItem extends HibICalendarItem {
         this.body = body;
     }
 
-    public HibJournalStamp getJournalStamp() {
-        return (HibJournalStamp) super.getStamp(HibJournalStamp.class);
+    public Calendar getCalendar() {
+        final HibJournalStamp journalStamp = getJournalStamp();
+        if(journalStamp != null) {
+            return journalStamp.getEventCalendar();
+        }
+        return null;
     }
 
-    public void updateStamp() {
-        super.addStamp(new HibJournalStamp(this));
+    public void setCalendar(final Calendar calendar) {
+        HibJournalStamp journalStamp = getJournalStamp();
+        if(journalStamp == null) {
+            journalStamp = new HibJournalStamp();
+            addStamp(journalStamp);
+        }
+        journalStamp.setEventCalendar(calendar);
+    }
+
+    private HibJournalStamp getJournalStamp() {
+        return (HibJournalStamp) super.getStamp(HibJournalStamp.class);
     }
 }

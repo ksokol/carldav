@@ -15,13 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+
 /**
  * Adds EventStamp specific criteria to StampFilter.
  * Matches only EventStamp instances.
  */
 public class EventStampFilter extends StampFilter {
 
-    public EventStampFilter(Class stampClass) {
-        super(stampClass);
+    public EventStampFilter() {
+        super(HibEventStamp.class);
     }
 }

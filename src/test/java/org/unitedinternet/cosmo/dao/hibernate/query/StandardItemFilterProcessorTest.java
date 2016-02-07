@@ -268,7 +268,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testEventStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
-        EventStampFilter eventFilter = new EventStampFilter(HibEventStamp.class);
+        EventStampFilter eventFilter = new EventStampFilter();
         HibCollectionItem parent = new HibCollectionItem();
         filter.setParent(parent);
         filter.setDisplayName(Restrictions.eq("test"));
@@ -295,7 +295,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testEventStampTimeRangeQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
-        EventStampFilter eventFilter = new EventStampFilter(HibEventStamp.class);
+        EventStampFilter eventFilter = new EventStampFilter();
         Period period = new Period(new DateTime("20070101T100000Z"), new DateTime("20070201T100000Z"));
         eventFilter.setPeriod(period);
         eventFilter.setTimezone(registry.getTimeZone("America/Chicago"));

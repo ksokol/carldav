@@ -30,7 +30,6 @@ import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 
 import java.util.Iterator;
 
@@ -117,9 +116,9 @@ public class CalendarFilterConverter {
     private void handleCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter) {
 
         if (COMP_VEVENT.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter, new EventStampFilter(HibEventStamp.class));
+            handleEventCompFilter(compFilter, itemFilter, new EventStampFilter());
         } else if (COMP_VJOURNAL.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter, new JournalStampFilter(HibJournalStamp.class));
+            handleEventCompFilter(compFilter, itemFilter, new JournalStampFilter());
         } else {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());
         }

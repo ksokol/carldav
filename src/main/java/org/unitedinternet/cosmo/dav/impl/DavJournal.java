@@ -10,7 +10,6 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
-import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 
 public class DavJournal extends DavCalendarResource {
 
@@ -19,8 +18,6 @@ public class DavJournal extends DavCalendarResource {
                       IdGenerator idGenerator)
         throws CosmoDavException {
         this(new HibJournalItem(), locator, factory, idGenerator);
-        final HibJournalItem item = (HibJournalItem) getItem();
-        item.updateStamp();
     }
 
     public DavJournal(HibJournalItem item,
@@ -43,9 +40,7 @@ public class DavJournal extends DavCalendarResource {
         }
 
         final HibJournalItem item = (HibJournalItem) getItem();
-
-        final HibJournalStamp stamp = item.getJournalStamp();
-        stamp.setEventCalendar(cal);
+        item.setCalendar(cal);
     }
 
     @Override

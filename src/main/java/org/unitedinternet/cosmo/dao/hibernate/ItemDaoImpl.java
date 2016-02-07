@@ -34,7 +34,7 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
+import org.unitedinternet.cosmo.model.hibernate.HibAuditableObject;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
@@ -451,7 +451,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         ((HibItem) hibItem).setCollection(collection);
     }
 
-    protected BaseModelObject getBaseModelObject(Object obj) {
-        return (BaseModelObject) obj;
+    protected HibAuditableObject getBaseModelObject(Object obj) {
+        return (HibAuditableObject) obj;
     }
 }

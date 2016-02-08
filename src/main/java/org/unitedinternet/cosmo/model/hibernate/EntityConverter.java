@@ -174,8 +174,8 @@ public class EntityConverter {
      */
     public HibJournalItem convertJournalCalendar(Calendar calendar) {
         HibJournalItem note = new HibJournalItem();
-        note.setUid(idGenerator.nextStringIdentifier());
-        setBaseContentAttributes(note);
+        note.setClientCreationDate(new Date());
+        note.setClientModifiedDate(note.getClientCreationDate());
         return convertJournalCalendar(note, calendar);
     }
     
@@ -282,7 +282,7 @@ public class EntityConverter {
      * <p>
      * If the item is a {@link HibNoteItem}, delegates to
      * {@link #convertNote(HibNoteItem)}. If the item is a {@link HibICalendarItem},
-     * delegates to {@link HibICalendarItem#getFullCalendar()}. Otherwise,
+     * delegates to {@link HibICalendarItem#getCalendar()}. Otherwise,
      * returns null.
      * @param item The content item.
      * @return The calendar.
@@ -322,16 +322,6 @@ public class EntityConverter {
         }
 
         return getCalendarFromNote(note);
-    }
-
-
-    public Calendar convertJournal(HibJournalItem journal) {
-        HibBaseEventStamp event = (HibBaseEventStamp) journal.getStamp(HibBaseEventStamp.class);
-        if (event!=null) {
-            return getCalendarFromEventStamp(event);
-        }
-
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -964,22 +954,17 @@ public class EntityConverter {
      * @param journal The VJournal.
      */
     private void setCalendarAttributes(HibJournalItem note, VJournal journal) {
-        // UID
-        if(journal.getUid()!=null) {
-            note.setIcalUid(journal.getUid().getValue());
-        }
-        
-        // for now displayName is limited to 1024 chars
+        note.setIcalUid(journal.getUid().getValue());
+        note.setUid(journal.getUid().getValue());
+
         if (journal.getSummary() != null) {
-            note.setDisplayName(StringUtils.substring(journal.getSummary()
-                    .getValue(), 0, 1024));
+            note.setDisplayName(journal.getSummary().getValue());
         }
 
         if (journal.getDescription() != null) {
             note.setBody(journal.getDescription().getValue());
         }
 
-        // look for DTSTAMP
         if (journal.getDateStamp() != null) {
             note.setClientModifiedDate(journal.getDateStamp().getDate());
         }

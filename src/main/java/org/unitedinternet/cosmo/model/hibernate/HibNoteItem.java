@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.VEvent;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Target;
@@ -64,6 +65,15 @@ public class HibNoteItem extends HibICalendarItem {
     @Embedded
     @Target(TriageStatus.class)
     private TriageStatus triageStatus = new TriageStatus();
+
+    public HibNoteItem() {}
+
+    public HibNoteItem(Calendar calendar, VEvent vEvent) {
+        HibEventExceptionStamp exceptionStamp =new HibEventExceptionStamp(this);
+        exceptionStamp.setEventCalendar(calendar);
+        exceptionStamp.setExceptionEvent(vEvent);
+        addStamp(exceptionStamp);
+    }
 
     public TriageStatus getTriageStatus() {
         return triageStatus;

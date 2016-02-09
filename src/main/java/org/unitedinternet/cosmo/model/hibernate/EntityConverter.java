@@ -746,7 +746,6 @@ public class EntityConverter {
      * @event The event.
      */
     private void createNoteModification(HibNoteItem masterNote, VEvent event) {
-        HibNoteItem noteMod = new HibNoteItem();
         Calendar exceptionCal = null;
         // a note modification should inherit the calendar product info as its master component.
         if(masterNote.getStamp(HibEventStamp.class) != null) {
@@ -761,11 +760,7 @@ public class EntityConverter {
             }
         }
 
-        HibEventExceptionStamp exceptionStamp =new HibEventExceptionStamp(noteMod);
-        exceptionStamp.setEventCalendar(exceptionCal);
-        exceptionStamp.setExceptionEvent(event);
-        noteMod.addStamp(exceptionStamp);
-
+        HibNoteItem noteMod = new HibNoteItem(exceptionCal, event);
         noteMod.setUid(new ModificationUidImpl(masterNote, event.getRecurrenceId().getDate()).toString());
         noteMod.setOwner(masterNote.getOwner());
         noteMod.setName(noteMod.getUid());

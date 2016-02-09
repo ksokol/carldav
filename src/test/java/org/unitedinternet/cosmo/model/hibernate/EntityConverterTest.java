@@ -135,8 +135,7 @@ public class EntityConverterTest {
         Assert.assertEquals("20060104T190000Z", uid.getRecurrenceId().toString());
         
         Assert.assertTrue(mod.getModifies()==master);
-        HibEventExceptionStamp ees = mod.getEventException();
-        Assert.assertNotNull(ees);
+        Assert.assertNotNull(mod.getEventException());
         
         // update event (change mod and add mod)
         calendar = getCalendar("event_with_exception2.ics");
@@ -211,8 +210,7 @@ public class EntityConverterTest {
         item = (HibNoteItem) findModByRecurrenceId(items, "20071129T203000Z" );
         Assert.assertNotNull(item);
 
-        final HibEventExceptionStamp eventException = item.getEventException();
-        Assert.assertNotNull(eventException);
+        Assert.assertNotNull(item.getEventException());
         
         item = (HibNoteItem) findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
         Assert.assertNotNull(item);
@@ -356,8 +354,7 @@ public class EntityConverterTest {
         exceptionStamp.createCalendar();
         exceptionStamp.setStartDate(eventStamp.getStartDate());
         exceptionStamp.setRecurrenceId(eventStamp.getStartDate());
-        mod.addStamp(exceptionStamp);
-        
+
         // test modification VEVENT gets added properly
         Calendar cal = converter.convertNote(master);
         ComponentList comps = cal.getComponents(Component.VEVENT);

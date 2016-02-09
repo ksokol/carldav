@@ -145,10 +145,9 @@ public class EventStampInterceptorTest {
         eventStamp.setEndDate(new DateTime("20070212T094500"));
         master.addStamp(eventStamp);
         
-        HibNoteItem mod = new HibNoteItem();
+        HibNoteItem mod = new HibNoteItem(eventStamp);
         mod.setModifies(master);
-        HibEventExceptionStamp eventExceptionStamp = new HibEventExceptionStamp(mod);
-        eventExceptionStamp.createCalendar();
+        HibEventExceptionStamp eventExceptionStamp = mod.getEventException();
         eventExceptionStamp.setStartDate(new DateTime("20070213T084500"));
        
         mod.addStamp(eventStamp);

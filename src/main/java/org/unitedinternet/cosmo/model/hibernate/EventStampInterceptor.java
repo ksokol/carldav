@@ -17,11 +17,9 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
-import org.unitedinternet.cosmo.calendar.util.Dates;
 
 import java.io.Serializable;
 
@@ -92,25 +90,7 @@ public class EventStampInterceptor extends EmptyInterceptor {
     protected HibEventTimeRangeIndex calculateEventStampIndexes(HibBaseEventStamp eventStamp) {
         Date startDate = eventStamp.getStartDate();
         Date endDate = eventStamp.getEndDate();
-        
-        // Handle "missing" endDate
-        if(endDate==null && eventStamp instanceof HibEventExceptionStamp ) {
-            // For "missing" endDate, get the duration of the master event
-            // and use with the startDate of the modification to calculate
-            // the endDate of the modification
-            HibEventExceptionStamp exceptionStamp = (HibEventExceptionStamp) eventStamp;
-            HibEventStamp masterStamp = exceptionStamp.getMasterStamp();
-            
-            // Make sure master EventStamp exists
-            if(masterStamp!=null) {
-                Dur duration = masterStamp.getDuration();
-                if(duration!=null) {
-                    endDate = Dates.getInstance(duration.getTime(startDate), startDate);
-                }
-            }
-        }
-        
-        
+
         boolean isRecurring = false;
         
         if (eventStamp.isRecurring()) {

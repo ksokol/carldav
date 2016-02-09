@@ -44,19 +44,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
                 Component.VEVENT).get(0);
     }
 
-    public void setExceptionEvent(VEvent event) {
-        if(getEventCalendar()==null) {
-            createCalendar();
-        }
-        
-        // remove all events
-        getEventCalendar().getComponents().removeAll(
-                getEventCalendar().getComponents().getComponents(Component.VEVENT));
-        
-        // add event exception
-        getEventCalendar().getComponents().add(event);
-    }
-
     @Override
     public String calculateEntityTag() {
         return "";

@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Cascade;
@@ -79,9 +80,20 @@ public class HibNoteItem extends HibICalendarItem {
 
     public HibNoteItem(Calendar calendar, VEvent vEvent) {
         HibEventExceptionStamp exceptionStamp =new HibEventExceptionStamp(this);
-        exceptionStamp.setEventCalendar(calendar);
-        exceptionStamp.setExceptionEvent(vEvent);
         addStamp(exceptionStamp);
+        exceptionStamp.setEventCalendar(calendar);
+
+        final HibEventExceptionStamp eventException = getEventException();
+
+        if(eventException.getEventCalendar()==null) {
+            eventException.createCalendar();
+        }
+
+        // remove all events
+        eventException.getEventCalendar().getComponents().removeAll(eventException.getEventCalendar().getComponents().getComponents(Component.VEVENT));
+
+        // add event exception
+        eventException.getEventCalendar().getComponents().add(vEvent);
     }
 
     public TriageStatus getTriageStatus() {

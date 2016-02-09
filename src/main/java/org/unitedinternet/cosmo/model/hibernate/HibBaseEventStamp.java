@@ -480,4 +480,9 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
        
        return rdates!=null && rdates.size()>0;
     }
+
+    @Override
+    public String calculateEntityTag() {
+        return "";
+    }
 }

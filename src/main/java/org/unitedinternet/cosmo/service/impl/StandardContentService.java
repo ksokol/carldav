@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
@@ -179,32 +175,8 @@ public class StandardContentService implements ContentService {
         if(eventStamp == null){
             return;
         }
+    }
 
-        Component masterEvent = eventStamp.getMaster();
-        
-        checkDatesForComponent(masterEvent);
-        
-        for(Component component : eventStamp.getExceptions()){
-            checkDatesForComponent(component);
-        }
-    }
-    
-    private void checkDatesForComponent(Component component){
-        if(component == null){
-            return;
-        }
-        
-        Property dtStart = component.getProperty(Property.DTSTART);
-        Property dtEnd = component.getProperty(Property.DTEND);
-        
-        if( dtStart instanceof DtStart && dtStart.getValue()!= null 
-            && dtEnd instanceof DtEnd && dtEnd.getValue() != null 
-           && ((DtStart)dtStart).getDate().compareTo(((DtEnd)dtEnd).getDate()) > 0 ){
-            throw new IllegalArgumentException("End date [" + dtEnd + " is lower than start date [" + dtStart + "]");
-        }
-        
-    }
-    
     /**
      * Create new content items in a parent collection.
      * 

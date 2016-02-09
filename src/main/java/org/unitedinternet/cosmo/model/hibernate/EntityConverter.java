@@ -418,9 +418,9 @@ public class EntityConverter {
         
         // add all exception events
         HibNoteItem note = (HibNoteItem) stamp.getItem();
-        TreeMap<String, VEvent> sortedMap = new TreeMap<String, VEvent>();
+        TreeMap<String, VEvent> sortedMap = new TreeMap<>();
         for(HibNoteItem exception : note.getModifications()) {
-            HibEventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
+            HibEventExceptionStamp exceptionStamp = exception.getEventException();
             
             // if modification isn't stamped as an event then ignore
             if (exceptionStamp==null) {

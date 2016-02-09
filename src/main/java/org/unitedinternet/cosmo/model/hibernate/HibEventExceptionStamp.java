@@ -27,9 +27,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
 
     private static final long serialVersionUID = 1L;
 
-    public HibEventExceptionStamp() {
-    }
-    
     public HibEventExceptionStamp(HibItem hibItem) {
         setItem(hibItem);
     }

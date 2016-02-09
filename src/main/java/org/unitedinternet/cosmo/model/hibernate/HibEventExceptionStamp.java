@@ -74,9 +74,10 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
         return HibEventStamp.getStamp(note.getModifies());
     }
 
-    public HibNoteItem getMasterNote() {
+    public Calendar getMasterNote() {
         HibNoteItem note = (HibNoteItem) getItem();
-        return note.getModifies();
+        final HibEventStamp stamp = HibEventStamp.getStamp(note.getModifies());
+        return stamp.getEventCalendar();
     }
 
     /**

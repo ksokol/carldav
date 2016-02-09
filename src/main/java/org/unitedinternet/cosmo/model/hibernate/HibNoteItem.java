@@ -121,7 +121,12 @@ public class HibNoteItem extends HibICalendarItem {
     public void setModifies(HibNoteItem modifies) {
         this.modifies = modifies;
     }
-        
+
+
+    public HibEventExceptionStamp getEventException() {
+        return (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
+    }
+
     @Override
     public String calculateEntityTag() {
         String uid = getUid() != null ? getUid() : "-";

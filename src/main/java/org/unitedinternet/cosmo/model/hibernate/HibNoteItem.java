@@ -51,10 +51,7 @@ public class HibNoteItem extends HibICalendarItem {
     
     @ManyToOne(targetEntity=HibNoteItem.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "modifiesitemid")
-    private HibNoteItem modifies = null;
-    
-    @Column(name= "hasmodifications")
-    private boolean hasModifications = false;
+    private HibNoteItem modifies;
 
     @Column(name= "body", columnDefinition="CLOB")
     @Lob
@@ -94,7 +91,6 @@ public class HibNoteItem extends HibICalendarItem {
 
     @Task
     public Calendar getTaskCalendar() {
-        // calendar stored as ICalendarAttribute on Item
         return getCalendar();
     }
     
@@ -103,27 +99,19 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public Set<HibNoteItem> getModifications() {
-        if(hasModifications) {
-            return Collections.unmodifiableSet(modifications);
-        }
-
-        return Collections.emptySet();
+        return Collections.unmodifiableSet(modifications);
     }
 
     public void addModification(HibNoteItem mod) {
         modifications.add(mod);
-        hasModifications = true;
     }
 
     public boolean removeModification(HibNoteItem mod) {
-        boolean removed = modifications.remove(mod);
-        hasModifications = modifications.size()!=0;
-        return removed;
+        return modifications.remove(mod);
     }
 
     public void removeAllModifications() {
         modifications.clear();
-        hasModifications = false;
     }
 
     public HibNoteItem getModifies() {

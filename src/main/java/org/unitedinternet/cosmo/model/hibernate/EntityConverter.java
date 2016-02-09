@@ -798,17 +798,7 @@ public class EntityConverter {
      * @param event The event.
      */
     private void updateNoteModification(HibNoteItem noteMod, VEvent event) {
-        HibEventExceptionStamp exceptionStamp = noteMod.getEventException();
-
-        // copy VTIMEZONEs to front if present
-        ComponentList vtimezones = exceptionStamp.getMasterNote().getComponents(Component.VTIMEZONE);
-        for(Object obj: vtimezones) {
-            VTimeZone vtimezone = (VTimeZone)obj;
-            exceptionStamp.getEventCalendar().getComponents().add(0, vtimezone);
-        }
-        
         noteMod.setClientModifiedDate(new Date());
-        
         setCalendarAttributes(noteMod, event);
     }
     

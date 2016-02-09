@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
-import org.unitedinternet.cosmo.hibernate.validator.EventException;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -40,7 +39,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
         return "eventexception";
     }
 
-    @EventException
     private Calendar getValidationCalendar() {//NOPMD
         return getEventCalendar();
     }

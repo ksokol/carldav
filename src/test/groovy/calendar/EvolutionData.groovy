@@ -94,9 +94,7 @@ class EvolutionData {
                         UID:20160123T135858Z-25739-1000-1796-13@localhost
                         DTSTAMP:20160119T173941Z
                         DTSTART;TZID=/freeassociation.sourceforge.net/Europe/Lisbon:
-                         20160123T155900
-                        DTEND;TZID=/freeassociation.sourceforge.net/Europe/Lisbon:
-                         20160123T165900
+                         20160121T155900
                         SEQUENCE:3
                         SUMMARY:event exception2
                         CLASS:PUBLIC

@@ -15,19 +15,18 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.Assert;
-import org.junit.Test;
-
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test EventStampHandler
@@ -130,40 +129,4 @@ public class EventStampInterceptorTest {
         Assert.assertEquals(HibEventStamp.TIME_INFINITY, index.getEndDate());
         Assert.assertTrue(index.getIsFloating().booleanValue());
     }
-    
-    /**
-     * Tests events stamp handler mods.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEventStampHandlerMods() throws Exception {
-        
-        HibNoteItem master = new HibNoteItem();
-        HibEventStamp eventStamp = new HibEventStamp(master);
-        eventStamp.createCalendar();
-        eventStamp.setStartDate(new DateTime("20070212T074500"));
-        eventStamp.setEndDate(new DateTime("20070212T094500"));
-        master.addStamp(eventStamp);
-        
-        HibNoteItem mod = new HibNoteItem(eventStamp);
-        mod.setModifies(master);
-        HibEventExceptionStamp eventExceptionStamp = mod.getEventException();
-        eventExceptionStamp.setStartDate(new DateTime("20070213T084500"));
-       
-        mod.addStamp(eventStamp);
-        
-        HibEventTimeRangeIndex index = interceptor.calculateEventStampIndexes(eventExceptionStamp);
-        
-        Assert.assertEquals("20070213T084500", index.getStartDate());
-        Assert.assertEquals("20070213T104500", index.getEndDate());
-        Assert.assertTrue(index.getIsFloating().booleanValue());
-        
-        // handle case where master isn't an event anymore
-        master.removeStamp(eventStamp);
-        index = interceptor.calculateEventStampIndexes(eventExceptionStamp);
-        
-        Assert.assertEquals("20070213T084500", index.getStartDate());
-        Assert.assertEquals("20070213T084500", index.getEndDate());
-    }
-    
 }

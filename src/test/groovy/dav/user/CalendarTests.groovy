@@ -3,6 +3,7 @@ package dav.user
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralData
 
@@ -1742,8 +1743,7 @@ public class CalendarTests extends IntegrationTestSupport {
                             BEGIN:VEVENT
                             UID:20160123T135858Z-25739-1000-1796-13@localhost
                             DTSTAMP:20160119T173941Z
-                            DTSTART;TZID=Europe/Lisbon:20160123T155900
-                            DTEND;TZID=Europe/Lisbon:20160123T165900
+                            DTSTART;TZID=Europe/Lisbon:20160121T155900
                             SEQUENCE:3
                             SUMMARY:event exception2
                             CLASS:PUBLIC
@@ -1751,6 +1751,7 @@ public class CalendarTests extends IntegrationTestSupport {
                             CREATED:20160123T135931Z
                             LAST-MODIFIED:20160123T145948Z
                             RECURRENCE-ID;TZID=Europe/Berlin:20160123T155900
+                            DURATION:PT1H
                             END:VEVENT
                             END:VCALENDAR
                             """.stripIndent()
@@ -1758,6 +1759,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01, uuid))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
+        .andDo(MockMvcResultHandlers.print())
                 .andExpect(text(response2));
     }
 

@@ -135,7 +135,7 @@ public class EntityConverterTest {
         Assert.assertEquals("20060104T190000Z", uid.getRecurrenceId().toString());
         
         Assert.assertTrue(mod.getModifies()==master);
-        HibEventExceptionStamp ees = (HibEventExceptionStamp) mod.getStamp(HibEventExceptionStamp.class);;
+        HibEventExceptionStamp ees = mod.getEventException();
         Assert.assertNotNull(ees);
         
         // update event (change mod and add mod)

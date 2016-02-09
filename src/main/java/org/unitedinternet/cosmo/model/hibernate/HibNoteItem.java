@@ -190,7 +190,7 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public VEvent getExceptionEvent() {
-        return getEventException().getExceptionEvent();
+        return getEventException().getEvent();
     }
 
     @Override

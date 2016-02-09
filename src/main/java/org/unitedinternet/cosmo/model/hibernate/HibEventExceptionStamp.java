@@ -36,10 +36,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
 
     @Override
     public VEvent getEvent() {
-        return getExceptionEvent();
-    }
-
-    public VEvent getExceptionEvent() {
         return (VEvent) getEventCalendar().getComponents().getComponents(
                 Component.VEVENT).get(0);
     }

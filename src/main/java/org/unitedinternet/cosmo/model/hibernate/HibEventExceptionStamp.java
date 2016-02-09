@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VEvent;
 
@@ -33,14 +32,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
     
     public HibEventExceptionStamp(HibItem hibItem) {
         setItem(hibItem);
-    }
-
-    public String getType() {
-        return "eventexception";
-    }
-
-    private Calendar getValidationCalendar() {//NOPMD
-        return getEventCalendar();
     }
 
     @Override
@@ -64,27 +55,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
         
         // add event exception
         getEventCalendar().getComponents().add(event);
-    }
-
-    @Deprecated
-    public HibEventStamp getMasterStamp() {
-        HibNoteItem note = (HibNoteItem) getItem();
-        return HibEventStamp.getStamp(note.getModifies());
-    }
-
-    public Calendar getMasterNote() {
-        HibNoteItem note = (HibNoteItem) getItem();
-        final HibEventStamp stamp = HibEventStamp.getStamp(note.getModifies());
-        return stamp.getEventCalendar();
-    }
-
-    /**
-     * Return EventExceptionStamp from Item
-     * @param hibItem
-     * @return EventExceptionStamp from Item
-     */
-    public static HibEventExceptionStamp getStamp(HibItem hibItem) {
-        return (HibEventExceptionStamp) hibItem.getStamp(HibEventExceptionStamp.class);
     }
 
     @Override

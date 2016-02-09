@@ -192,7 +192,8 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public VEvent getExceptionEvent() {
-        return getEventException().getEvent();
+        final HibEventExceptionStamp stamp = (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
+        return (VEvent) stamp.getEventCalendar().getComponents().getComponents(Component.VEVENT).get(0);
     }
 
     @Override

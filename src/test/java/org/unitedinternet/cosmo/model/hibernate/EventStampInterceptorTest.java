@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.TimeZone;
@@ -85,48 +84,5 @@ public class EventStampInterceptorTest {
         Assert.assertEquals("20070212T134500Z", index.getStartDate());
         Assert.assertEquals(HibEventStamp.TIME_INFINITY, index.getEndDate());
         Assert.assertFalse(index.getIsFloating().booleanValue());
-    }
-    
-    /**
-     * Tests event stamp handler all day.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEventStampHandlerAllDay() throws Exception {
-        
-        HibNoteItem master = new HibNoteItem();
-        HibEventStamp eventStamp = new HibEventStamp(master);
-        eventStamp.createCalendar();
-        eventStamp.setStartDate(new Date("20070212"));
-        eventStamp.setEndDate(new Date("20070213"));
-        master.addStamp(eventStamp);
-        
-        HibEventTimeRangeIndex index = interceptor.calculateEventStampIndexes(eventStamp);
-        
-        Assert.assertEquals("20070212", index.getStartDate());
-        Assert.assertEquals("20070213", index.getEndDate());
-        Assert.assertTrue(index.getIsFloating().booleanValue());
-      
-        String recur1 = "FREQ=DAILY;";
-        
-        ArrayList<Recur> recursList = new ArrayList<Recur>();
-        if (recur1 != null) {
-            for (String s : recur1.split(":")) {
-                try {
-                    recursList.add(new Recur(s));
-                } catch (ParseException e) {
-                   
-                }
-            }
-        }
-        
-        List<Recur> recurs = recursList;
-        eventStamp.setRecurrenceRules(recurs);
-        
-        index = interceptor.calculateEventStampIndexes(eventStamp);
-        
-        Assert.assertEquals("20070212", index.getStartDate());
-        Assert.assertEquals(HibEventStamp.TIME_INFINITY, index.getEndDate());
-        Assert.assertTrue(index.getIsFloating().booleanValue());
     }
 }

@@ -187,48 +187,39 @@ public class EntityConverterTest {
         // should be 8
         Assert.assertEquals(8, items.size());
 
-        HibICalendarItem item = findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
+        HibNoteItem item = (HibNoteItem) findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+
+        item = (HibNoteItem) findItemByIcalUid(items, "e3i849b29kd3fbp48hmkmgjst0@google.com" );
+        Assert.assertNotNull(item);
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+
+        item = (HibNoteItem) findItemByIcalUid(items, "4csitoh29h1arc46bnchg19oc8@google.com" );
+        Assert.assertNotNull(item);
         Assert.assertNotNull(item.getStamp(HibEventStamp.class));
         
         
-        item = findItemByIcalUid(items, "e3i849b29kd3fbp48hmkmgjst0@google.com" );
+        item = (HibNoteItem) findItemByIcalUid(items, "f920n2rdb0qdd6grkjh4m4jrq0@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
+        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+
+        item = (HibNoteItem) findItemByIcalUid(items, "jev0phs8mnfkuvoscrra1fh8j0@google.com" );
+        Assert.assertNotNull(item);
         Assert.assertNotNull(item.getStamp(HibEventStamp.class));
         
-        
-        item = findItemByIcalUid(items, "4csitoh29h1arc46bnchg19oc8@google.com" );
+        item = (HibNoteItem) findModByRecurrenceId(items, "20071129T203000Z" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+
+        final HibEventExceptionStamp eventException = item.getEventException();
+        Assert.assertNotNull(eventException);
         
-        
-        item = findItemByIcalUid(items, "f920n2rdb0qdd6grkjh4m4jrq0@google.com" );
+        item = (HibNoteItem) findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
         Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
-        
-        
-        item = findItemByIcalUid(items, "jev0phs8mnfkuvoscrra1fh8j0@google.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
-        
-        item = findModByRecurrenceId(items, "20071129T203000Z" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
-        Assert.assertNotNull(item.getStamp(HibEventExceptionStamp.class));
-        
-        item = findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibNoteItem);
-       
-        item = findItemByIcalUid(items, "19970901T130000Z-123405@host.com" );
-        Assert.assertNotNull(item);
-        Assert.assertTrue(item instanceof HibJournalItem);
-        Assert.assertEquals(0, item.getStamps().size());
+
+        HibJournalItem journalItem = (HibJournalItem) findItemByIcalUid(items, "19970901T130000Z-123405@host.com" );
+        Assert.assertNotNull(journalItem);
+        Assert.assertEquals(0, journalItem.getStamps().size());
         
     }
 

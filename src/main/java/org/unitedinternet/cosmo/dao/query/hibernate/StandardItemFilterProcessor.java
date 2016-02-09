@@ -148,18 +148,19 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             formatExpression(whereBuf, params, "i.displayName", filter.getDisplayName());
         }
 
-        handleStampFilters(selectBuf, whereBuf, filter);
+        handleStampFilters(selectBuf, whereBuf, filter, params);
 
     }
 
     private void handleStampFilters(StringBuffer selectBuf,
                                     StringBuffer whereBuf,
-                                    ItemFilter filter) {
+                                    ItemFilter filter,
+                                    Map<String, Object> params) {
         for (StampFilter stampFilter : filter.getStampFilters()) {
             if (stampFilter instanceof EventStampFilter) {
                 handleStampFilter(selectBuf, whereBuf, stampFilter);
             } else if(stampFilter instanceof JournalStampFilter) {
-                handleStampFilter(selectBuf, whereBuf, stampFilter);
+                handleJournalFilter(whereBuf, stampFilter, params);
             } else {
                 handleStampFilter(whereBuf, stampFilter);
             }
@@ -214,6 +215,25 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                     "(es.timeRangeIndex.startDate='" + filter.getFloatStart() + "' or es.timeRangeIndex.startDate='" + filter.getUTCStart() + "'))");
 
             whereBuf.append(")");
+        }
+    }
+
+    private void handleJournalFilter(StringBuffer whereBuf, StampFilter filter, Map<String, Object> params) {
+        appendWhere(whereBuf, "i.class = 'journal'");
+
+        // handle time range
+        if (filter.getPeriod() != null) {
+            whereBuf.append(" and ( ");
+            whereBuf.append("(i.startDate < :endDate)");
+            whereBuf.append(" and i.endDate > :startDate)");
+
+            // edge case where start==end
+            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
+
+            whereBuf.append(")");
+
+            params.put("startDate", filter.getStart());
+            params.put("endDate", filter.getEnd());
         }
     }
 

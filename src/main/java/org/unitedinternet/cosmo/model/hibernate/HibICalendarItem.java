@@ -41,11 +41,11 @@ public abstract class HibICalendarItem extends HibItem {
         this.icalUid = icalUid;
     }
 
-    protected Calendar getCalendar() {
+    public Calendar getCalendar() {
         return calendar;
     }
 
-    protected void setCalendar(Calendar calendar) {
+    public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
     }
 

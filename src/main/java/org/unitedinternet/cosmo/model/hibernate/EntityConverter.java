@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtStamp;
+import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
@@ -961,13 +962,15 @@ public class EntityConverter {
             note.setDisplayName(journal.getSummary().getValue());
         }
 
-        if (journal.getDescription() != null) {
-            note.setBody(journal.getDescription().getValue());
-        }
-
         if (journal.getDateStamp() != null) {
             note.setClientModifiedDate(journal.getDateStamp().getDate());
         }
+
+        final DtStart startDate = journal.getStartDate();
+        final DateTime dateTime = new DateTime(startDate.getDate());
+
+        note.setStartDate(dateTime);
+        note.setEndDate(dateTime);
     }
 
     /**

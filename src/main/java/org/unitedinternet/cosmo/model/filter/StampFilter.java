@@ -45,7 +45,6 @@ public class StampFilter {
     private Date fstart;
     private Date fend;
     private TimeZone timezone = null;
-    private boolean expandRecurringEvents = false;
 
     public StampFilter() {}
     
@@ -135,6 +134,14 @@ public class StampFilter {
         return fend.toString();
     }
 
+    public Date getEnd() {
+        return new Date(fend.getTime());
+    }
+
+    public Date getStart() {
+        return new Date(fstart.getTime());
+    }
+
     /**
      * Used in time-range filtering.  If set, and there is a time-range
      * to filter on, the timezone will be used in comparing floating
@@ -145,10 +152,6 @@ public class StampFilter {
     public void setTimezone(TimeZone timezone) {
         this.timezone = timezone;
         updateFloatingTimes();
-    }
-
-    public boolean isExpandRecurringEvents() {
-        return expandRecurringEvents;
     }
 
     private void updateFloatingTimes() {

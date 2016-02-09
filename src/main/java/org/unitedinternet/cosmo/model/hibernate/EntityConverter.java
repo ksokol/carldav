@@ -420,16 +420,14 @@ public class EntityConverter {
         HibNoteItem note = (HibNoteItem) stamp.getItem();
         TreeMap<String, VEvent> sortedMap = new TreeMap<>();
         for(HibNoteItem exception : note.getModifications()) {
-            HibEventExceptionStamp exceptionStamp = exception.getEventException();
-            
             // if modification isn't stamped as an event then ignore
-            if (exceptionStamp==null) {
+            if (exception.getEventException()==null) {
                 continue;
             }
             
             // Get exception event copy
             VEvent exceptionEvent = (VEvent) CalendarUtils
-                    .copyComponent(exceptionStamp.getExceptionEvent());
+                    .copyComponent(exception.getExceptionEvent());
 
             // ensure DURATION or DTEND exists on modfication
             if (ICalendarUtils.getDuration(exceptionEvent) == null) {
@@ -443,7 +441,7 @@ public class EntityConverter {
             // Check for inherited displayAlarm, which is represented
             // by a valarm with no TRIGGER
             VAlarm displayAlarm = getDisplayAlarm(exceptionEvent);
-            if(displayAlarm !=null && exceptionStamp.getDisplayAlarmTrigger()==null) {
+            if(displayAlarm !=null && exception.getDisplayAlarmTrigger()==null) {
                 exceptionEvent.getAlarms().remove(displayAlarm);
                 if (masterAlarm != null) {
                     exceptionEvent.getAlarms().add(masterAlarm);
@@ -452,14 +450,14 @@ public class EntityConverter {
             
             // Check for inherited LOCATION which is represented as null LOCATION
             // If inherited, and master event has a LOCATION, then add it to exception
-            if(exceptionStamp.getLocation()==null && masterLocation!=null) {
+            if(exception.getLocation()==null && masterLocation!=null) {
                 ICalendarUtils.setLocation(masterLocation, exceptionEvent);
             }
             
-            sortedMap.put(exceptionStamp.getRecurrenceId().toString(), exceptionEvent);
+            sortedMap.put(exception.getRecurrenceId(), exceptionEvent);
             
             // verify that timezones are present for exceptions, and add if not
-            tzid = getTzId(exceptionStamp.getStartDate());
+            tzid = getTzId(exception.getStartDate());
             if(tzid!=null && !tzMap.containsKey(tzid)) {
                 TimeZone tz = TIMEZONE_REGISTRY.getTimeZone(tzid);
                 if(tz!=null) {
@@ -469,7 +467,7 @@ public class EntityConverter {
                 }
             }
             
-            tzid = getTzId(exceptionStamp.getEndDate());
+            tzid = getTzId(exception.getEndDate());
             if(tzid!=null && !tzMap.containsKey(tzid)) {
                 TimeZone tz = TIMEZONE_REGISTRY.getTimeZone(tzid);
                 if(tz!=null) {

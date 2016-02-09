@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Target;
@@ -154,6 +155,30 @@ public class HibNoteItem extends HibICalendarItem {
             return true;
         }
         return false;
+    }
+
+    public net.fortuna.ical4j.model.Date getStartDate() {
+        return getEventException().getStartDate();
+    }
+
+    public net.fortuna.ical4j.model.Date getEndDate() {
+        return getEventException().getEndDate();
+    }
+
+    public String getRecurrenceId() {
+        return getEventException().getRecurrenceId().toString();
+    }
+
+    public String getLocation() {
+        return getEventException().getLocation();
+    }
+
+    public Trigger getDisplayAlarmTrigger() {
+        return getEventException().getDisplayAlarmTrigger();
+    }
+
+    public VEvent getExceptionEvent() {
+        return getEventException().getExceptionEvent();
     }
 
     @Override

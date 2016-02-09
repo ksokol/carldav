@@ -37,7 +37,6 @@ import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.io.FileInputStream;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -138,12 +137,6 @@ public class EntityConverterTest {
         Assert.assertTrue(mod.getModifies()==master);
         HibEventExceptionStamp ees = (HibEventExceptionStamp) mod.getStamp(HibEventExceptionStamp.class);;
         Assert.assertNotNull(ees);
-        
-        // mod should include VTIMEZONES
-        Calendar eventCal = ees.getEventCalendar();
-        ComponentList vtimezones = eventCal.getComponents(Component.VTIMEZONE);
-        Assert.assertEquals(1, vtimezones.size());
-        
         
         // update event (change mod and add mod)
         calendar = getCalendar("event_with_exception2.ics");

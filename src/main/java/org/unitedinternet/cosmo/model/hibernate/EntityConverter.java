@@ -772,19 +772,10 @@ public class EntityConverter {
         exceptionStamp.setExceptionEvent(event);
         noteMod.addStamp(exceptionStamp);
 
-        noteMod.setUid(new ModificationUidImpl(masterNote, event.getRecurrenceId()
-                .getDate()).toString());
+        noteMod.setUid(new ModificationUidImpl(masterNote, event.getRecurrenceId().getDate()).toString());
         noteMod.setOwner(masterNote.getOwner());
         noteMod.setName(noteMod.getUid());
-        
-        // copy VTIMEZONEs to front if present
-        HibEventStamp es = (HibEventStamp) masterNote.getStamp(HibEventStamp.class);
-        ComponentList vtimezones = es.getEventCalendar().getComponents(Component.VTIMEZONE);
-        for(Object obj : vtimezones) {
-            VTimeZone vtimezone = (VTimeZone)obj;
-            exceptionStamp.getEventCalendar().getComponents().add(0, vtimezone);
-        }
-        
+
         setBaseContentAttributes(noteMod);
         noteMod.setModifies(masterNote);
         masterNote.addModification(noteMod);

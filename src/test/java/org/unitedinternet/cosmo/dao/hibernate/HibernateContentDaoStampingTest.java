@@ -31,7 +31,6 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -229,38 +228,6 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
             Assert.fail("Valid display name was used");
         }
 
-    }
-    /**
-     * Test event exception stamp.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEventExceptionStamp() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibNoteItem item = generateTestContent();
-
-        item.setIcalUid("icaluid");
-        item.setBody("this is a body");
-
-        HibEventExceptionStamp eventex = new HibEventExceptionStamp();
-        eventex.setEventCalendar(helper.getCalendar("testdata/exception.ics"));
-
-        item.addStamp(eventex);
-
-        HibItem newItem = contentDao.createContent(root, item);
-
-
-        HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
-        Assert.assertEquals(1, queryItem.getStamps().size());
-
-        HibEventExceptionStamp stamp = (HibEventExceptionStamp) queryItem.getStamp(HibEventExceptionStamp.class);
-        Assert.assertNotNull(stamp.getModifiedDate());
-        Assert.assertTrue(stamp instanceof HibEventExceptionStamp);
-        HibEventExceptionStamp ees = stamp;
-        Assert.assertEquals(ees.getEventCalendar().toString(), eventex.getEventCalendar()
-                .toString());
     }
 
     /**

@@ -71,7 +71,8 @@ public class HibNoteItem extends HibICalendarItem {
     public HibNoteItem() {}
 
     public HibNoteItem(HibEventStamp eventStamp) {
-        HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp(this);
+        HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp();
+        exceptionStamp.setItem(this);
         addStamp(exceptionStamp);
         exceptionStamp.createCalendar();
         exceptionStamp.setStartDate(eventStamp.getStartDate());
@@ -79,7 +80,8 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public HibNoteItem(Calendar calendar, VEvent vEvent) {
-        HibEventExceptionStamp exceptionStamp =new HibEventExceptionStamp(this);
+        HibEventExceptionStamp exceptionStamp =new HibEventExceptionStamp();
+        exceptionStamp.setItem(this);
         addStamp(exceptionStamp);
         exceptionStamp.setEventCalendar(calendar);
 

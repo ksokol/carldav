@@ -27,10 +27,6 @@ public class HibEventExceptionStamp extends HibBaseEventStamp {
 
     private static final long serialVersionUID = 1L;
 
-    public HibEventExceptionStamp(HibItem hibItem) {
-        setItem(hibItem);
-    }
-
     @Override
     public VEvent getEvent() {
         return (VEvent) getEventCalendar().getComponents().getComponents(

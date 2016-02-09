@@ -730,15 +730,9 @@ public class EntityConverter {
      * @param recurrenceId The reccurence id.
      * @return The note item.
      */
-    private HibNoteItem getModification(HibNoteItem masterNote,
-                                     Date recurrenceId) {
+    private HibNoteItem getModification(HibNoteItem masterNote, Date recurrenceId) {
         for (HibNoteItem mod : masterNote.getModifications()) {
-            HibEventExceptionStamp exceptionStamp = mod.getEventException();
-            // only interested in mods with event stamp
-            if (exceptionStamp == null) {
-                continue;
-            }
-            if (exceptionStamp.getRecurrenceId().equals(recurrenceId)) {
+            if(mod.hasRecurrenceId(recurrenceId)) {
                 return mod;
             }
         }

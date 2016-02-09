@@ -122,9 +122,20 @@ public class HibNoteItem extends HibICalendarItem {
         this.modifies = modifies;
     }
 
-
     public HibEventExceptionStamp getEventException() {
         return (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
+    }
+
+    public boolean hasRecurrenceId(net.fortuna.ical4j.model.Date recurrenceId) {
+        HibEventExceptionStamp exceptionStamp = getEventException();
+        // only interested in mods with event stamp
+        if (exceptionStamp == null) {
+            return false;
+        }
+        if (exceptionStamp.getRecurrenceId().equals(recurrenceId)) {
+            return true;
+        }
+        return false;
     }
 
     @Override

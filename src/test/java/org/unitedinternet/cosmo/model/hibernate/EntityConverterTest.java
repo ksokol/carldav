@@ -397,7 +397,7 @@ public class EntityConverterTest {
         Assert.assertEquals("master location", modEvent.getLocation().getValue());
         
     }
-    
+
     /**
      * Tests inherited any time.
      * @throws Exception - if something is wrong this exception is thrown.
@@ -423,8 +423,7 @@ public class EntityConverterTest {
         exceptionStamp.createCalendar();
         exceptionStamp.setRecurrenceId(new DateTime("20070212T074500"));
         exceptionStamp.setStartDate(new DateTime("20070212T074500"));
-        mod.addStamp(exceptionStamp);
-        
+
         Calendar cal = converter.convertNote(master);
         cal.validate();
         ComponentList comps = cal.getComponents(Component.VEVENT);
@@ -434,13 +433,13 @@ public class EntityConverterTest {
         cal.validate();
         comps = cal.getComponents(Component.VEVENT);
         Assert.assertEquals(2, comps.size());
-        
+
         cal = converter.convertNote(master);
         cal.validate();
         comps = cal.getComponents(Component.VEVENT);
         Assert.assertEquals(2, comps.size());
     }
-    
+
     /**
      * Finds item by Ical uid.
      * @param items The items.

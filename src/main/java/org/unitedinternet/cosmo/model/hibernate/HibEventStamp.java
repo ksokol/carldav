@@ -61,7 +61,7 @@ public class HibEventStamp extends HibBaseEventStamp {
         // add all exception events
         HibNoteItem note = (HibNoteItem) getItem();
         for(HibNoteItem exception : note.getModifications()) {
-            HibEventExceptionStamp exceptionStamp = HibEventExceptionStamp.getStamp(exception);
+            HibEventExceptionStamp exceptionStamp = exception.getEventException();
             if(exceptionStamp!=null) {
                 exceptions.add(exceptionStamp.getEvent());
             }

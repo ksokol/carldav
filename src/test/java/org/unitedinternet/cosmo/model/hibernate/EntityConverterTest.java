@@ -344,16 +344,11 @@ public class EntityConverterTest {
         
         eventStamp.getEventCalendar().validate();
 
-        HibNoteItem mod = new HibNoteItem();
+        HibNoteItem mod = new HibNoteItem(eventStamp);
         mod.setDisplayName("modDisplayName");
         mod.setBody("modBody");
         mod.setModifies(master);
         master.addModification(mod);
-        HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
-        mod.addStamp(exceptionStamp);
-        exceptionStamp.createCalendar();
-        exceptionStamp.setStartDate(eventStamp.getStartDate());
-        exceptionStamp.setRecurrenceId(eventStamp.getStartDate());
 
         // test modification VEVENT gets added properly
         Calendar cal = converter.convertNote(master);
@@ -373,7 +368,6 @@ public class EntityConverterTest {
         // test inherited description/location/body
         mod.setDisplayName(null);
         mod.setBody((String) null);
-        exceptionStamp.setLocation(null);
         
         cal = converter.convertNote(master);
         comps = cal.getComponents(Component.VEVENT);
@@ -403,14 +397,9 @@ public class EntityConverterTest {
         eventStamp.setRecurrenceDates(dates);
         master.addStamp(eventStamp);
 
-        HibNoteItem mod = new HibNoteItem();
+        HibNoteItem mod = new HibNoteItem(eventStamp);
         mod.setModifies(master);
         master.addModification(mod);
-        HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp(mod);
-        mod.addStamp(exceptionStamp);
-        exceptionStamp.createCalendar();
-        exceptionStamp.setRecurrenceId(new DateTime("20070212T074500"));
-        exceptionStamp.setStartDate(new DateTime("20070212T074500"));
 
         Calendar cal = converter.convertNote(master);
         cal.validate();

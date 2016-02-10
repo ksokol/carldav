@@ -277,12 +277,12 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, "
-                + "HibEventStamp es where pd=:parent and "
+                + "HibBaseEventStamp es where pd=:parent and "
                 + "i.displayName=:param1 and es.item=i and i.icalUid=:param2", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibEventStamp "
+        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibBaseEventStamp "
                 + "es where pd=:parent and i.displayName=:param1 and "
                 + "es.item=i and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
                 + "and i.icalUid=:param2", query.getQueryString());
@@ -305,7 +305,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, "
-                + "HibEventStamp es where pd=:parent and es.item=i "
+                + "HibBaseEventStamp es where pd=:parent and es.item=i "
                 + "and ( (es.timeRangeIndex.isFloating=true and "
                 + "es.timeRangeIndex.startDate < '20070201T040000' and "
                 + "es.timeRangeIndex.endDate > '20070101T040000') or "

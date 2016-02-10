@@ -44,7 +44,7 @@ public class EventStampInterceptorTest {
     public void testEventStampHandler() throws Exception {
         
         HibNoteItem master = new HibNoteItem();
-        HibEventStamp eventStamp = new HibEventStamp(master);
+        HibBaseEventStamp eventStamp = new HibBaseEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         eventStamp.setEndDate(new DateTime("20070212T094500"));
@@ -82,7 +82,7 @@ public class EventStampInterceptorTest {
         index = interceptor.calculateEventStampIndexes(eventStamp);
         
         Assert.assertEquals("20070212T134500Z", index.getStartDate());
-        Assert.assertEquals(HibEventStamp.TIME_INFINITY, index.getEndDate());
+        Assert.assertEquals(HibBaseEventStamp.TIME_INFINITY, index.getEndDate());
         Assert.assertFalse(index.getIsFloating().booleanValue());
     }
 }

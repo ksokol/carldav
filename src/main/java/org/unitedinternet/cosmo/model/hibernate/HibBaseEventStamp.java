@@ -16,6 +16,8 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
@@ -43,6 +45,7 @@ import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
+import org.unitedinternet.cosmo.hibernate.validator.Event;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import java.util.ArrayList;
@@ -72,7 +75,7 @@ import javax.validation.constraints.NotNull;
                 @Index(name = "idx_recurring",columnList = "isrecurring")}
 )
 @DiscriminatorValue("baseevent")
-public abstract class HibBaseEventStamp extends HibStamp implements ICalendarConstants {
+public class HibBaseEventStamp extends HibStamp implements ICalendarConstants {
 
     public static final String TIME_INFINITY = "Z-TIME-INFINITY";
 
@@ -84,7 +87,47 @@ public abstract class HibBaseEventStamp extends HibStamp implements ICalendarCon
     @Embedded
     private HibEventTimeRangeIndex timeRangeIndex = null;
 
-    public abstract VEvent getEvent();
+    public HibBaseEventStamp() {}
+
+    public HibBaseEventStamp(HibItem hibItem) {
+        setItem(hibItem);
+    }
+
+    public VEvent getEvent() {
+        if(getEventCalendar()==null) {
+            return null;
+        }
+
+        ComponentList events = getEventCalendar().getComponents().getComponents(
+                Component.VEVENT);
+
+        if(events.size()==0) {
+            return null;
+        }
+
+        return (VEvent) events.get(0);
+    }
+
+    /** Used by the hibernate validator **/
+    @Event
+    private Calendar getValidationCalendar() {//NOPMD
+        return getEventCalendar();
+    }
+
+    public List<Component> getExceptions() {
+        ArrayList<Component> exceptions = new ArrayList<>();
+
+        // add all exception events
+        HibNoteItem note = (HibNoteItem) getItem();
+        for(HibNoteItem exception : note.getModifications()) {
+            final VEvent exceptionEvent = exception.getExceptionEvent();
+            if(exceptionEvent!=null) {
+                exceptions.add(exceptionEvent);
+            }
+        }
+
+        return exceptions;
+    }
 
     public Calendar getEventCalendar() {
         return eventCalendar;

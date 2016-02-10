@@ -15,15 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.component.VEvent;
-import org.unitedinternet.cosmo.hibernate.validator.Event;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
@@ -37,47 +28,7 @@ public class HibEventStamp extends HibBaseEventStamp {
     }
     
     public HibEventStamp(HibItem hibItem) {
-        setItem(hibItem);
+        super(hibItem);
     }
 
-    @Override
-    public VEvent getEvent() {
-        return (VEvent) getMaster();
-    }
-
-    /** Used by the hibernate validator **/
-    @Event
-    private Calendar getValidationCalendar() {//NOPMD
-        return getEventCalendar();
-    }
-
-    public List<Component> getExceptions() {
-        ArrayList<Component> exceptions = new ArrayList<>();
-        
-        // add all exception events
-        HibNoteItem note = (HibNoteItem) getItem();
-        for(HibNoteItem exception : note.getModifications()) {
-            final VEvent exceptionEvent = exception.getExceptionEvent();
-            if(exceptionEvent!=null) {
-                exceptions.add(exceptionEvent);
-            }
-        }
-        
-        return exceptions;
-    }
-
-    public Component getMaster() {
-        if(getEventCalendar()==null) {
-            return null;
-        }
-        
-        ComponentList events = getEventCalendar().getComponents().getComponents(
-                Component.VEVENT);
-        
-        if(events.size()==0) {
-            return null;
-        }
-        
-        return (VEvent) events.get(0);
-    }
 }

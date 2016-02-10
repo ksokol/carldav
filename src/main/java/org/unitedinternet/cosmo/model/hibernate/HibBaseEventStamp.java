@@ -77,8 +77,6 @@ import javax.validation.constraints.NotNull;
 @DiscriminatorValue("event")
 public class HibBaseEventStamp extends HibStamp implements ICalendarConstants {
 
-    public static final String TIME_INFINITY = "Z-TIME-INFINITY";
-
     @Column(table="event_stamp", name = "icaldata", length=102400000, nullable = false)
     @Type(type="calendar_clob")
     @NotNull

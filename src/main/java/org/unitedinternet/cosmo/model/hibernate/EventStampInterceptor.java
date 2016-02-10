@@ -30,6 +30,8 @@ public class EventStampInterceptor extends EmptyInterceptor {
 
     private static final long serialVersionUID = 5339230223113722458L;
 
+    public static final String TIME_INFINITY = "Z-TIME-INFINITY";
+
     @Override
     public boolean onFlushDirty(Object object, Serializable id, Object[] currentState,
             Object[] previousState, String[] propertyNames, Type[] types) {
@@ -138,7 +140,7 @@ public class EventStampInterceptor extends EmptyInterceptor {
             timeRangeIndex.setEndDate(fromDateToStringNoTimezone(endDate));
         }
         else {
-            timeRangeIndex.setEndDate(HibBaseEventStamp.TIME_INFINITY);
+            timeRangeIndex.setEndDate(TIME_INFINITY);
         }
         
         timeRangeIndex.setIsFloating(isFloating);

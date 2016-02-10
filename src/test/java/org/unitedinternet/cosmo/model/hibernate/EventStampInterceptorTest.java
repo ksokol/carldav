@@ -82,7 +82,7 @@ public class EventStampInterceptorTest {
         index = interceptor.calculateEventStampIndexes(eventStamp);
         
         Assert.assertEquals("20070212T134500Z", index.getStartDate());
-        Assert.assertEquals(HibBaseEventStamp.TIME_INFINITY, index.getEndDate());
+        Assert.assertEquals(EventStampInterceptor.TIME_INFINITY, index.getEndDate());
         Assert.assertFalse(index.getIsFloating().booleanValue());
     }
 }

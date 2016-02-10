@@ -85,8 +85,8 @@ public abstract class HibItem extends HibAuditableObject {
     @Temporal(TemporalType.TIMESTAMP)
     private Date clientModifiedDate;
 
-    @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    private Set<HibStamp> stamps = new HashSet<>();
+    @OneToMany(targetEntity=HibBaseEventStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
+    private Set<HibBaseEventStamp> stamps = new HashSet<>();
 
     @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "collectionid")
@@ -105,11 +105,11 @@ public abstract class HibItem extends HibAuditableObject {
         this.id = id;
     }
 
-    public Set<HibStamp> getStamps() {
+    public Set<HibBaseEventStamp> getStamps() {
         return Collections.unmodifiableSet(stamps);
     }
 
-    public void addStamp(HibStamp stamp) {
+    public void addStamp(HibBaseEventStamp stamp) {
         if (stamp == null) {
             throw new IllegalArgumentException("stamp cannot be null");
         }
@@ -118,7 +118,7 @@ public abstract class HibItem extends HibAuditableObject {
         stamps.add(stamp);
     }
 
-    public void removeStamp(HibStamp stamp) {
+    public void removeStamp(HibBaseEventStamp stamp) {
         // only remove stamps that belong to item
         if(!stamps.contains(stamp)) {
             return;
@@ -127,8 +127,8 @@ public abstract class HibItem extends HibAuditableObject {
         stamps.remove(stamp);
     }
 
-    public HibStamp getStamp(Class clazz) {
-        for(HibStamp stamp : stamps) {
+    public HibBaseEventStamp getStamp(Class clazz) {
+        for(HibBaseEventStamp stamp : stamps) {
             // only return stamp if it is an instance of the specified class
             if(clazz.isInstance(stamp)) {
                 return stamp;

@@ -167,20 +167,12 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         }
     }
 
-    private void handleStampFilter(StringBuffer whereBuf, 
-                                   StampFilter filter) {
-
+    private void handleStampFilter(StringBuffer whereBuf, StampFilter filter) {
         String toAppend = "";
         if (filter.isMissing()) {
             toAppend += "not ";
         }
-        toAppend += "exists (select s.id from HibStamp s where s.item=i and s.class=";
-
-        //TODO
-        String simpleName = filter.getStampClass().getSimpleName();
-        simpleName = simpleName.startsWith("Hib") ? simpleName : "Hib" + simpleName;
-
-        toAppend += simpleName + ")";
+        toAppend += "exists (select s.id from HibBaseEventStamp s where s.item=i)";
         appendWhere(whereBuf, toAppend);
     }
 

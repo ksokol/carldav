@@ -43,20 +43,25 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.hibernate.validator.Event;
-import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SecondaryTable;
 import javax.validation.constraints.NotNull;
@@ -74,8 +79,7 @@ import javax.validation.constraints.NotNull;
                 @Index(name = "idx_floating",columnList = "isFloating"),
                 @Index(name = "idx_recurring",columnList = "isrecurring")}
 )
-@DiscriminatorValue("event")
-public class HibBaseEventStamp extends HibStamp implements ICalendarConstants {
+public class HibBaseEventStamp extends HibAuditableObject {
 
     @Column(table="event_stamp", name = "icaldata", length=102400000, nullable = false)
     @Type(type="calendar_clob")
@@ -84,6 +88,31 @@ public class HibBaseEventStamp extends HibStamp implements ICalendarConstants {
 
     @Embedded
     private HibEventTimeRangeIndex timeRangeIndex = null;
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SELECT)
+    @JoinColumn(name = "itemid", nullable = false)
+    private HibItem item;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    public HibItem getItem() {
+        return item;
+    }
+
+    public void setItem(HibItem hibItem) {
+        this.item = hibItem;
+    }
 
     public HibBaseEventStamp() {}
 

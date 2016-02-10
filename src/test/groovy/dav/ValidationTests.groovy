@@ -3,7 +3,6 @@ package dav
 import org.junit.Ignore
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
@@ -148,7 +147,6 @@ class ValidationTests extends IntegrationTestSupport {
         mockMvc.perform(put("/dav/{email}/contacts/9A5A5BA1-13C26FE2-8887CB2B.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1))
-                .andDo(MockMvcResultHandlers.print())
                 .andExpect(textXmlContentType())
                 .andExpect(status().isBadRequest())
                 .andExpect(xml(response1))

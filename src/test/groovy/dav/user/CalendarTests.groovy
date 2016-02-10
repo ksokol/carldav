@@ -3,7 +3,6 @@ package dav.user
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralData
 
@@ -1759,7 +1758,6 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01, uuid))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
-        .andDo(MockMvcResultHandlers.print())
                 .andExpect(text(response2));
     }
 

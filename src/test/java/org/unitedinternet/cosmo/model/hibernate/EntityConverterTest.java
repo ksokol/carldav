@@ -346,10 +346,12 @@ public class EntityConverterTest {
         
         eventStamp.getEventCalendar().validate();
 
-        HibNoteItem mod = new HibNoteItem(eventStamp);
+        HibNoteItem mod = new HibNoteItem();
         mod.setDisplayName("modDisplayName");
         mod.setBody("modBody");
         mod.setModifies(master);
+        mod.setStartDate(eventStamp.getStartDate());
+        mod.setRecurrenceId(eventStamp.getStartDate());
         master.addModification(mod);
 
         // test modification VEVENT gets added properly
@@ -399,8 +401,10 @@ public class EntityConverterTest {
         eventStamp.setRecurrenceDates(dates);
         master.addStamp(eventStamp);
 
-        HibNoteItem mod = new HibNoteItem(eventStamp);
+        HibNoteItem mod = new HibNoteItem();
         mod.setModifies(master);
+        mod.setStartDate(eventStamp.getStartDate());
+        mod.setRecurrenceId(eventStamp.getStartDate());
         master.addModification(mod);
 
         Calendar cal = converter.convertNote(master);

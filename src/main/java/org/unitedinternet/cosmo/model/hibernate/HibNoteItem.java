@@ -85,12 +85,7 @@ public class HibNoteItem extends HibICalendarItem {
     @Target(TriageStatus.class)
     private TriageStatus triageStatus = new TriageStatus();
 
-    public HibNoteItem() {}
-
-    public HibNoteItem(HibEventStamp eventStamp) {
-        setCalendar(createCalendar());
-        startDate = eventStamp.getStartDate();
-        recurrenceId = eventStamp.getStartDate();
+    public HibNoteItem() {
     }
 
     public HibNoteItem(Calendar calendar, VEvent vEvent) {
@@ -226,6 +221,10 @@ public class HibNoteItem extends HibICalendarItem {
         return recurrenceId.toString();
     }
 
+    public void setRecurrenceId(final Date recurrenceId) {
+        this.recurrenceId = recurrenceId;
+    }
+
     public String getLocation() {
         final Property p = getExceptionEvent().getProperties().getProperty(Property.LOCATION);
         if (p == null) {
@@ -265,6 +264,11 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public VEvent getExceptionEvent() {
+        final Calendar calendar = getCalendar();
+        if(calendar == null) {
+            setCalendar(createCalendar());
+        }
+
         return (VEvent) getCalendar().getComponents().getComponents(Component.VEVENT).get(0);
     }
 

@@ -80,8 +80,4 @@ public class HibEventStamp extends HibBaseEventStamp {
         
         return (VEvent) events.get(0);
     }
-
-    public static HibEventStamp getStamp(HibItem hibItem) {
-        return (HibEventStamp) hibItem.getStamp(HibEventStamp.class);
-    }
 }

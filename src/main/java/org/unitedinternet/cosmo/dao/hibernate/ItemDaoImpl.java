@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -390,10 +389,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             HibICalendarItem ical = (HibICalendarItem) hibItem;
             if (ical.getIcalUid() == null) {
                 ical.setIcalUid(hibItem.getUid());
-                HibEventStamp es = HibEventStamp.getStamp(ical);
-                if (es != null) {
-                    es.setIcalUid(ical.getIcalUid());
-                }
             }
         }
     }

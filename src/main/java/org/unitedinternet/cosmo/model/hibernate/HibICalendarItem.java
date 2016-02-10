@@ -39,6 +39,10 @@ public abstract class HibICalendarItem extends HibItem {
 
     public void setIcalUid(String icalUid) {
         this.icalUid = icalUid;
+        final HibEventStamp stamp = (HibEventStamp) getStamp(HibEventStamp.class);
+        if(stamp != null) {
+            stamp.setIcalUid(icalUid);
+        }
     }
 
     public Calendar getCalendar() {

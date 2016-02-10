@@ -17,11 +17,13 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
+import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Target;
+import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.hibernate.validator.Task;
 
 import java.nio.charset.Charset;
@@ -64,6 +66,14 @@ public class HibNoteItem extends HibICalendarItem {
     @Temporal(TemporalType.TIMESTAMP)
     private Date remindertime;
 
+    @Column(name = "startdate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startDate;
+
+    @Column(name = "recurrenceid")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date recurrenceId;
+
     @Embedded
     @Target(TriageStatus.class)
     private TriageStatus triageStatus = new TriageStatus();
@@ -74,9 +84,11 @@ public class HibNoteItem extends HibICalendarItem {
         HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp();
         exceptionStamp.setItem(this);
         addStamp(exceptionStamp);
-        exceptionStamp.createCalendar();
+        exceptionStamp.setEventCalendar(createCalendar());
         exceptionStamp.setStartDate(eventStamp.getStartDate());
         exceptionStamp.setRecurrenceId(eventStamp.getStartDate());
+        startDate = eventStamp.getStartDate();
+        recurrenceId = eventStamp.getStartDate();
     }
 
     public HibNoteItem(Calendar calendar, VEvent vEvent) {
@@ -88,14 +100,15 @@ public class HibNoteItem extends HibICalendarItem {
         final HibEventExceptionStamp eventException = getEventException();
 
         if(eventException.getEventCalendar()==null) {
-            eventException.createCalendar();
+            exceptionStamp.setEventCalendar(createCalendar());
         }
 
+        final ComponentList components = eventException.getEventCalendar().getComponents();
         // remove all events
-        eventException.getEventCalendar().getComponents().removeAll(eventException.getEventCalendar().getComponents().getComponents(Component.VEVENT));
+        components.removeAll(components.getComponents(Component.VEVENT));
 
         // add event exception
-        eventException.getEventCalendar().getComponents().add(vEvent);
+        components.add(vEvent);
     }
 
     public TriageStatus getTriageStatus() {
@@ -155,20 +168,20 @@ public class HibNoteItem extends HibICalendarItem {
         this.modifies = modifies;
     }
 
+    public void setStartDate(final Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setRecurrenceId(final Date recurrenceId) {
+        this.recurrenceId = recurrenceId;
+    }
+
     public HibEventExceptionStamp getEventException() {
         return (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
     }
 
     public boolean hasRecurrenceId(net.fortuna.ical4j.model.Date recurrenceId) {
-        HibEventExceptionStamp exceptionStamp = getEventException();
-        // only interested in mods with event stamp
-        if (exceptionStamp == null) {
-            return false;
-        }
-        if (exceptionStamp.getRecurrenceId().equals(recurrenceId)) {
-            return true;
-        }
-        return false;
+        return getRecurrenceId() != null && getRecurrenceId().toString().equals(recurrenceId.toString());
     }
 
     public net.fortuna.ical4j.model.Date getStartDate() {
@@ -215,5 +228,24 @@ public class HibNoteItem extends HibICalendarItem {
         }
       
         return encodeEntityTag(etag.toString().getBytes(Charset.forName("UTF-8")));
+    }
+
+    private Calendar createCalendar() {
+        String icalUid = getIcalUid();
+        if(icalUid==null) {
+            // A modifications UID will be the parent's icaluid
+            // or uid
+            if(getModifies()!=null) {
+                if(getModifies().getIcalUid()!=null) {
+                    icalUid = getModifies().getIcalUid();
+                }
+                else {
+                    icalUid = getModifies().getUid();
+                }
+            } else {
+                icalUid = getUid();
+            }
+        }
+        return ICalendarUtils.createBaseCalendar(new VEvent(), icalUid);
     }
 }

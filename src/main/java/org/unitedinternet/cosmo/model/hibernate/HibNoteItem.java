@@ -26,13 +26,11 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Target;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
-import org.unitedinternet.cosmo.hibernate.validator.Task;
 
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -57,7 +55,7 @@ import javax.persistence.TemporalType;
 @DiscriminatorValue("note")
 public class HibNoteItem extends HibICalendarItem {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     @OneToMany(targetEntity=HibNoteItem.class, mappedBy = "modifies", fetch=FetchType.LAZY)
     @Cascade( {CascadeType.DELETE} )
@@ -90,26 +88,20 @@ public class HibNoteItem extends HibICalendarItem {
     public HibNoteItem() {}
 
     public HibNoteItem(HibEventStamp eventStamp) {
-        HibEventExceptionStamp exceptionStamp = new HibEventExceptionStamp();
-        exceptionStamp.setItem(this);
-        addStamp(exceptionStamp);
-        exceptionStamp.setEventCalendar(createCalendar());
-        exceptionStamp.setStartDate(eventStamp.getStartDate());
-        exceptionStamp.setRecurrenceId(eventStamp.getStartDate());
+        setCalendar(createCalendar());
         startDate = eventStamp.getStartDate();
         recurrenceId = eventStamp.getStartDate();
     }
 
     public HibNoteItem(Calendar calendar, VEvent vEvent) {
-        HibEventExceptionStamp exceptionStamp =new HibEventExceptionStamp();
-        exceptionStamp.setItem(this);
-        addStamp(exceptionStamp);
-        exceptionStamp.setEventCalendar(calendar);
+        setCalendar(calendar);
+        final VEvent vEvent1 = (VEvent) getCalendar().getComponents().getComponents(Component.VEVENT).get(0);
+        recurrenceId = vEvent1.getRecurrenceId().getDate();
 
-        final Calendar eventCalendar = getCalendar2();
+        final Calendar eventCalendar = getCalendar();
 
         if(eventCalendar == null) {
-            exceptionStamp.setEventCalendar(createCalendar());
+            setCalendar(createCalendar());
         }
 
         final ComponentList components = eventCalendar.getComponents();
@@ -118,10 +110,6 @@ public class HibNoteItem extends HibICalendarItem {
 
         // add event exception
         components.add(vEvent);
-    }
-
-    private Calendar getCalendar2() {
-        return getEventException().getEventCalendar();
     }
 
     public TriageStatus getTriageStatus() {
@@ -144,7 +132,7 @@ public class HibNoteItem extends HibICalendarItem {
         this.remindertime = new Date(remindertime.getTime());
     }
 
-    @Task
+    //@Task
     public Calendar getTaskCalendar() {
         return getCalendar();
     }
@@ -179,10 +167,6 @@ public class HibNoteItem extends HibICalendarItem {
 
     public void setStartDate(final Date startDate) {
         this.startDate = startDate;
-    }
-
-    private HibEventExceptionStamp getEventException() {
-        return (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
     }
 
     public boolean hasRecurrenceId(net.fortuna.ical4j.model.Date recurrenceId) {
@@ -239,11 +223,7 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public String getRecurrenceId() {
-        RecurrenceId rid = getExceptionEvent().getRecurrenceId();
-        if (rid == null) {
-            return null;
-        }
-        return rid.getDate().toString();
+        return recurrenceId.toString();
     }
 
     public String getLocation() {
@@ -285,7 +265,7 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public VEvent getExceptionEvent() {
-        return (VEvent) getCalendar2().getComponents().getComponents(Component.VEVENT).get(0);
+        return (VEvent) getCalendar().getComponents().getComponents(Component.VEVENT).get(0);
     }
 
     @Override

@@ -420,11 +420,6 @@ public class EntityConverter {
         HibNoteItem note = (HibNoteItem) stamp.getItem();
         TreeMap<String, VEvent> sortedMap = new TreeMap<>();
         for(HibNoteItem exception : note.getModifications()) {
-            // if modification isn't stamped as an event then ignore
-            if (exception.getEventException()==null) {
-                continue;
-            }
-            
             // Get exception event copy
             VEvent exceptionEvent = (VEvent) CalendarUtils
                     .copyComponent(exception.getExceptionEvent());

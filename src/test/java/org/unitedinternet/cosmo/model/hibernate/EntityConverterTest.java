@@ -16,6 +16,8 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 
+import static org.hamcrest.Matchers.*;
+
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -30,6 +32,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.Status;
+import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
@@ -135,7 +138,6 @@ public class EntityConverterTest {
         Assert.assertEquals("20060104T190000Z", uid.getRecurrenceId().toString());
         
         Assert.assertTrue(mod.getModifies()==master);
-        Assert.assertNotNull(mod.getEventException());
         
         // update event (change mod and add mod)
         calendar = getCalendar("event_with_exception2.ics");
@@ -210,7 +212,7 @@ public class EntityConverterTest {
         item = (HibNoteItem) findModByRecurrenceId(items, "20071129T203000Z" );
         Assert.assertNotNull(item);
 
-        Assert.assertNotNull(item.getEventException());
+        Assert.assertNotNull(item.getModifies());
         
         item = (HibNoteItem) findItemByIcalUid(items, "19970901T130000Z-123404@host.com" );
         Assert.assertNotNull(item);

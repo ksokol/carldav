@@ -18,7 +18,15 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Action;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.RecurrenceId;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -30,6 +38,7 @@ import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -97,7 +106,7 @@ public class HibNoteItem extends HibICalendarItem {
         addStamp(exceptionStamp);
         exceptionStamp.setEventCalendar(calendar);
 
-        final Calendar eventCalendar = getEventException().getEventCalendar();
+        final Calendar eventCalendar = getCalendar2();
 
         if(eventCalendar == null) {
             exceptionStamp.setEventCalendar(createCalendar());
@@ -109,6 +118,10 @@ public class HibNoteItem extends HibICalendarItem {
 
         // add event exception
         components.add(vEvent);
+    }
+
+    private Calendar getCalendar2() {
+        return getEventException().getEventCalendar();
     }
 
     public TriageStatus getTriageStatus() {
@@ -168,7 +181,7 @@ public class HibNoteItem extends HibICalendarItem {
         this.startDate = startDate;
     }
 
-    public HibEventExceptionStamp getEventException() {
+    private HibEventExceptionStamp getEventException() {
         return (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
     }
 
@@ -177,27 +190,102 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public net.fortuna.ical4j.model.Date getStartDate() {
-        return getEventException().getStartDate();
+        //return getEventException().getStartDate();
+        VEvent event = getExceptionEvent();
+        if(event==null) {
+            return null;
+        }
+
+        DtStart dtStart = event.getStartDate();
+        if (dtStart == null) {
+            return null;
+        }
+        return dtStart.getDate();
+    }
+
+    private Dur getDuration() {
+        return ICalendarUtils.getDuration(getExceptionEvent());
     }
 
     public net.fortuna.ical4j.model.Date getEndDate() {
-        return getEventException().getEndDate();
+        VEvent event = getExceptionEvent();
+        if(event==null) {
+            return null;
+        }
+        DtEnd dtEnd = event.getEndDate(false);
+        // if no DTEND, then calculate endDate from DURATION
+        if (dtEnd == null) {
+            net.fortuna.ical4j.model.Date startDate = getStartDate();
+            Dur duration = this.getDuration();
+
+            // if no DURATION, then there is no end time
+            if(duration==null) {
+                return null;
+            }
+
+            net.fortuna.ical4j.model.Date endDate = null;
+            if(startDate instanceof DateTime) {
+                endDate = new DateTime(startDate);
+            }
+            else {
+                endDate = new net.fortuna.ical4j.model.Date(startDate);
+            }
+
+            endDate.setTime(duration.getTime(startDate).getTime());
+            return endDate;
+        }
+
+        return dtEnd.getDate();
     }
 
     public String getRecurrenceId() {
-        return getEventException().getRecurrenceId().toString();
+        RecurrenceId rid = getExceptionEvent().getRecurrenceId();
+        if (rid == null) {
+            return null;
+        }
+        return rid.getDate().toString();
     }
 
     public String getLocation() {
-        return getEventException().getLocation();
+        final Property p = getExceptionEvent().getProperties().getProperty(Property.LOCATION);
+        if (p == null) {
+            return null;
+        }
+        return p.getValue();
+
     }
 
     public Trigger getDisplayAlarmTrigger() {
-        return getEventException().getDisplayAlarmTrigger();
+        VAlarm alarm = getDisplayAlarm();
+        if(alarm==null) {
+            return null;
+        }
+
+        return (Trigger) alarm.getProperties().getProperty(Property.TRIGGER);
+    }
+
+    private VAlarm getDisplayAlarm() {
+        VEvent event = getExceptionEvent();
+
+        if(event==null) {
+            return null;
+        }
+
+        return getDisplayAlarm(event);
+    }
+
+    private VAlarm getDisplayAlarm(VEvent event) {
+        for(Iterator it = event.getAlarms().iterator();it.hasNext();) {
+            VAlarm alarm = (VAlarm) it.next();
+            if (alarm.getProperties().getProperty(Property.ACTION).equals(Action.DISPLAY)) {
+                return alarm;
+            }
+        }
+        return null;
     }
 
     public VEvent getExceptionEvent() {
-        return (VEvent) getEventException().getEventCalendar().getComponents().getComponents(Component.VEVENT).get(0);
+        return (VEvent) getCalendar2().getComponents().getComponents(Component.VEVENT).get(0);
     }
 
     @Override

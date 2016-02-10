@@ -190,24 +190,24 @@ public class EntityConverterTest {
 
         HibNoteItem item = (HibNoteItem) findItemByIcalUid(items, "8qv7nuaq50vk3r98tvj37vjueg@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+        Assert.assertNotNull(item.getStamp(HibBaseEventStamp.class));
 
         item = (HibNoteItem) findItemByIcalUid(items, "e3i849b29kd3fbp48hmkmgjst0@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+        Assert.assertNotNull(item.getStamp(HibBaseEventStamp.class));
 
         item = (HibNoteItem) findItemByIcalUid(items, "4csitoh29h1arc46bnchg19oc8@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+        Assert.assertNotNull(item.getStamp(HibBaseEventStamp.class));
         
         
         item = (HibNoteItem) findItemByIcalUid(items, "f920n2rdb0qdd6grkjh4m4jrq0@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+        Assert.assertNotNull(item.getStamp(HibBaseEventStamp.class));
 
         item = (HibNoteItem) findItemByIcalUid(items, "jev0phs8mnfkuvoscrra1fh8j0@google.com" );
         Assert.assertNotNull(item);
-        Assert.assertNotNull(item.getStamp(HibEventStamp.class));
+        Assert.assertNotNull(item.getStamp(HibBaseEventStamp.class));
         
         item = (HibNoteItem) findModByRecurrenceId(items, "20071129T203000Z" );
         Assert.assertNotNull(item);
@@ -273,7 +273,7 @@ public class EntityConverterTest {
         master.setBody("body");
         master.setIcalUid("icaluid");
         master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        HibEventStamp eventStamp = new HibEventStamp(master);
+        HibBaseEventStamp eventStamp = new HibBaseEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         master.addStamp(eventStamp);
@@ -333,7 +333,7 @@ public class EntityConverterTest {
         master.setIcalUid("icaluid");
         master.setDisplayName("master displayName");
         master.setBody("master body");
-        HibEventStamp eventStamp = new HibEventStamp(master);
+        HibBaseEventStamp eventStamp = new HibBaseEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
         eventStamp.setDuration(new Dur("PT1H"));
@@ -391,7 +391,7 @@ public class EntityConverterTest {
     @Test
     public void testInheritedAnyTime() throws Exception {
         HibNoteItem master = new HibNoteItem();
-        HibEventStamp eventStamp = new HibEventStamp(master);
+        HibBaseEventStamp eventStamp = new HibBaseEventStamp(master);
         eventStamp.createCalendar();
         eventStamp.setStartDate(new DateTime("20070212T074500"));
 

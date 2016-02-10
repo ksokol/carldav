@@ -30,8 +30,8 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
+import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -87,7 +87,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
 
-        HibEventStamp event = new HibEventStamp();
+        HibBaseEventStamp event = new HibBaseEventStamp();
         event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
 
         item.addStamp(event);
@@ -97,9 +97,9 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
         Assert.assertEquals(1, queryItem.getStamps().size());
 
-        HibEventStamp stamp = (HibEventStamp) queryItem.getStamp(HibEventStamp.class);
+        HibBaseEventStamp stamp = (HibBaseEventStamp) queryItem.getStamp(HibBaseEventStamp.class);
         Assert.assertNotNull(stamp.getModifiedDate());
-        Assert.assertTrue(stamp instanceof HibEventStamp);
+        Assert.assertTrue(stamp instanceof HibBaseEventStamp);
         Assert.assertEquals(stamp.getEventCalendar().toString(), event.getEventCalendar().toString());
         Assert.assertEquals("icaluid", ((HibNoteItem) queryItem).getIcalUid());
         Assert.assertEquals("this is a body", ((HibNoteItem) queryItem).getBody());
@@ -119,7 +119,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
 
-        HibEventStamp event = new HibEventStamp();
+        HibBaseEventStamp event = new HibBaseEventStamp();
         event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
 
         item.addStamp(event);
@@ -131,7 +131,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
         HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
 
-        event = (HibEventStamp) queryItem.getStamp(HibEventStamp.class);
+        event = (HibBaseEventStamp) queryItem.getStamp(HibBaseEventStamp.class);
         Assert.assertEquals("20050817T115000Z", event.getTimeRangeIndex().getStartDate());
         Assert.assertEquals("20050817T131500Z",event.getTimeRangeIndex().getEndDate());
         Assert.assertFalse(event.getTimeRangeIndex().getIsFloating().booleanValue());
@@ -145,32 +145,10 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
 
         queryItem = contentDao.findItemByUid(newItem.getUid());
 
-        event = (HibEventStamp) queryItem.getStamp(HibEventStamp.class);
+        event = (HibBaseEventStamp) queryItem.getStamp(HibBaseEventStamp.class);
         Assert.assertEquals("20070101", event.getTimeRangeIndex().getStartDate());
         Assert.assertEquals("20070101",event.getTimeRangeIndex().getEndDate());
         Assert.assertTrue(event.getTimeRangeIndex().getIsFloating().booleanValue());
-    }
-
-    /**
-     * Test event stamp validation.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testEventStampValidation() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibItem item = generateTestContent();
-
-        HibEventStamp event = new HibEventStamp();
-        event.setEventCalendar(helper.getCalendar("testdata/noevent.ics"));
-        item.addStamp(event);
-
-        try {
-            contentDao.createContent(root, item);
-
-            Assert.fail("able to create invalid event!");
-        } catch (IllegalStateException is) {}
     }
 
     /**
@@ -187,7 +165,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         item.setIcalUid("icaluid");
         item.setBody("this is a body");
 
-        HibEventStamp event = new HibEventStamp();
+        HibBaseEventStamp event = new HibBaseEventStamp();
         event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
 
         item.addStamp(event);
@@ -198,7 +176,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
         Assert.assertEquals(1, queryItem.getStamps().size());
 
-        HibEventStamp stamp = (HibEventStamp) queryItem.getStamp(HibEventStamp.class);
+        HibBaseEventStamp stamp = (HibBaseEventStamp) queryItem.getStamp(HibBaseEventStamp.class);
         queryItem.removeStamp(stamp);
         contentDao.updateContent(queryItem);
 
@@ -207,7 +185,7 @@ public class HibernateContentDaoStampingTest extends IntegrationTestSupport {
         Assert.assertNotNull(queryItem);
         Assert.assertEquals(queryItem.getStamps().size(),0);
 
-        event = new HibEventStamp();
+        event = new HibBaseEventStamp();
         event.setEventCalendar(helper.getCalendar("testdata/cal1.ics"));
         queryItem.addStamp(event);
 

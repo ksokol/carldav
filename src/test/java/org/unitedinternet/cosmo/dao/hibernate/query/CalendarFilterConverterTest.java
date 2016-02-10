@@ -33,8 +33,8 @@ import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
+import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 
 
 /**
@@ -140,7 +140,7 @@ public class CalendarFilterConverterTest {
         Assert.assertEquals(1, noteFilter.getStampFilters().size());
         
         StampFilter sf = noteFilter.getStampFilters().get(0);
-        Assert.assertEquals(HibEventStamp.class, sf.getStampClass());
+        Assert.assertEquals(HibBaseEventStamp.class, sf.getStampClass());
         Assert.assertEquals(true, sf.isMissing());
     }
     

@@ -28,8 +28,8 @@ import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
+import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 
 import java.util.Iterator;
 
@@ -109,7 +109,7 @@ public class CalendarFilterConverter {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
         filter.setIsModification(false);
-        filter.getStampFilters().add(new StampFilter(HibEventStamp.class, true));
+        filter.getStampFilters().add(new StampFilter(HibBaseEventStamp.class, true));
         return filter;
     }
 

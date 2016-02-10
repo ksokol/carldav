@@ -97,13 +97,13 @@ public class HibNoteItem extends HibICalendarItem {
         addStamp(exceptionStamp);
         exceptionStamp.setEventCalendar(calendar);
 
-        final HibEventExceptionStamp eventException = getEventException();
+        final Calendar eventCalendar = getEventException().getEventCalendar();
 
-        if(eventException.getEventCalendar()==null) {
+        if(eventCalendar == null) {
             exceptionStamp.setEventCalendar(createCalendar());
         }
 
-        final ComponentList components = eventException.getEventCalendar().getComponents();
+        final ComponentList components = eventCalendar.getComponents();
         // remove all events
         components.removeAll(components.getComponents(Component.VEVENT));
 
@@ -129,10 +129,6 @@ public class HibNoteItem extends HibICalendarItem {
 
     public void setRemindertime(Date remindertime) {
         this.remindertime = new Date(remindertime.getTime());
-    }
-
-    public Date getRemindertime() {
-        return new Date(remindertime.getTime());
     }
 
     @Task
@@ -172,10 +168,6 @@ public class HibNoteItem extends HibICalendarItem {
         this.startDate = startDate;
     }
 
-    public void setRecurrenceId(final Date recurrenceId) {
-        this.recurrenceId = recurrenceId;
-    }
-
     public HibEventExceptionStamp getEventException() {
         return (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
     }
@@ -205,8 +197,7 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public VEvent getExceptionEvent() {
-        final HibEventExceptionStamp stamp = (HibEventExceptionStamp) getStamp(HibEventExceptionStamp.class);
-        return (VEvent) stamp.getEventCalendar().getComponents().getComponents(Component.VEVENT).get(0);
+        return (VEvent) getEventException().getEventCalendar().getComponents().getComponents(Component.VEVENT).get(0);
     }
 
     @Override

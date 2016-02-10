@@ -39,10 +39,6 @@ public class HibEventStamp extends HibBaseEventStamp {
     public HibEventStamp(HibItem hibItem) {
         setItem(hibItem);
     }
-    
-    public String getType() {
-        return "event";
-    }
 
     @Override
     public VEvent getEvent() {
@@ -87,10 +83,5 @@ public class HibEventStamp extends HibBaseEventStamp {
 
     public static HibEventStamp getStamp(HibItem hibItem) {
         return (HibEventStamp) hibItem.getStamp(HibEventStamp.class);
-    }
-
-    @Override
-    public String calculateEntityTag() {
-        return "";
     }
 }

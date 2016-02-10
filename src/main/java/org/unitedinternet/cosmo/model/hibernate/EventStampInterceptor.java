@@ -138,7 +138,7 @@ public class EventStampInterceptor extends EmptyInterceptor {
             timeRangeIndex.setEndDate(fromDateToStringNoTimezone(endDate));
         }
         else {
-            timeRangeIndex.setEndDate(HibEventStamp.TIME_INFINITY);
+            timeRangeIndex.setEndDate(HibBaseEventStamp.TIME_INFINITY);
         }
         
         timeRangeIndex.setIsFloating(isFloating);

@@ -20,7 +20,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateList;
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.FileInputStream;
@@ -34,7 +34,7 @@ public class EventStampTest {
         HibNoteItem master = new HibNoteItem();
         master.setDisplayName("displayName");
         master.setBody("body");
-        HibEventStamp eventStamp = new HibEventStamp(master);
+        HibBaseEventStamp eventStamp = new HibBaseEventStamp(master);
         
         eventStamp.setEventCalendar(getCalendar("recurring_with_exdates.ics"));
         

@@ -34,7 +34,7 @@ import org.unitedinternet.cosmo.dav.impl.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -193,7 +193,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             if(note.getModifies()!=null) {
                 return null;
             }
-            else if (hibItem.getStamp(HibEventStamp.class) != null) {
+            else if (hibItem.getStamp(HibBaseEventStamp.class) != null) {
                 return new DavEvent(note, locator, this, idGenerator);
             }
             else {

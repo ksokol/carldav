@@ -74,7 +74,7 @@ import javax.validation.constraints.NotNull;
                 @Index(name = "idx_floating",columnList = "isFloating"),
                 @Index(name = "idx_recurring",columnList = "isrecurring")}
 )
-@DiscriminatorValue("baseevent")
+@DiscriminatorValue("event")
 public class HibBaseEventStamp extends HibStamp implements ICalendarConstants {
 
     public static final String TIME_INFINITY = "Z-TIME-INFINITY";

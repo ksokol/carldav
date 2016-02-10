@@ -19,14 +19,12 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.lock.LockManager;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -139,7 +137,6 @@ public class StandardContentService implements ContentService {
      */
     public HibItem createContent(HibCollectionItem parent,
                                  HibItem content) {
-        checkDatesForEvent(content);
         // Obtain locks to all collections involved.
         Set<HibCollectionItem> locks = acquireLocks(parent, content);
         
@@ -156,26 +153,6 @@ public class StandardContentService implements ContentService {
             releaseLocks(locks);
         }   
     }
-    private void checkDatesForEvents(Collection<HibItem> items){
-        if(items == null){
-            return;
-        }
-        for(HibItem item : items){
-            checkDatesForEvent(item);
-        }
-    }
-    private void checkDatesForEvent(HibItem item){
-        if(!(item instanceof HibNoteItem)){
-            return;
-        }
-
-        HibNoteItem noteItem = (HibNoteItem)item;
-        HibEventStamp eventStamp = (HibEventStamp) noteItem.getStamp(HibEventStamp.class);
-        
-        if(eventStamp == null){
-            return;
-        }
-    }
 
     /**
      * Create new content items in a parent collection.
@@ -189,7 +166,6 @@ public class StandardContentService implements ContentService {
      */
     public void createContentItems(HibCollectionItem parent,
                                      Set<HibItem> hibContentItems) {
-        checkDatesForEvents(hibContentItems);
         if (! lockManager.lockCollection(parent, lockTimeout)) {
             throw new CollectionLockedException("unable to obtain collection lock");
         }
@@ -218,7 +194,6 @@ public class StandardContentService implements ContentService {
      *         if parent CollectionItem is locked
      */
     public void updateContentItems(Set<HibCollectionItem> parents, Set<HibItem> hibContentItems) {
-        checkDatesForEvents(hibContentItems);
         // Obtain locks to all collections involved.  A collection is involved
         // if it is the parent of one of updated items.
         Set<HibCollectionItem> locks = acquireLocks(hibContentItems);
@@ -254,7 +229,6 @@ public class StandardContentService implements ContentService {
      *         if parent CollectionItem is locked
      */
     public HibItem updateContent(HibItem content) {
-        checkDatesForEvent(content);
         Set<HibCollectionItem> locks = acquireLocks(content);
         
         try {

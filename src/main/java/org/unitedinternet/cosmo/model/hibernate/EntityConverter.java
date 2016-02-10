@@ -130,10 +130,10 @@ public class EntityConverter {
      * @return set note item.
      */
     public Set<HibNoteItem> convertEventCalendar(HibNoteItem note, Calendar calendar) {
-        HibEventStamp eventStamp = (HibEventStamp) note.getStamp(HibEventStamp.class);
+        HibBaseEventStamp eventStamp = (HibBaseEventStamp) note.getStamp(HibBaseEventStamp.class);
         
         if (eventStamp == null) {
-            eventStamp = new HibEventStamp(note);
+            eventStamp = new HibBaseEventStamp(note);
             note.addStamp(eventStamp);
         }
 
@@ -608,7 +608,7 @@ public class EntityConverter {
         Calendar masterCalendar = calendar;
         
         ComponentList vevents = masterCalendar.getComponents().getComponents(Component.VEVENT);
-        HibEventStamp eventStamp = (HibEventStamp) masterNote.getStamp(HibEventStamp.class);
+        HibBaseEventStamp eventStamp = (HibBaseEventStamp) masterNote.getStamp(HibBaseEventStamp.class);
 
         // get list of exceptions (VEVENT with RECURRENCEID)
         for (Iterator<VEvent> i = vevents.iterator(); i.hasNext();) {
@@ -741,8 +741,8 @@ public class EntityConverter {
     private void createNoteModification(HibNoteItem masterNote, VEvent event) {
         Calendar exceptionCal = null;
         // a note modification should inherit the calendar product info as its master component.
-        if(masterNote.getStamp(HibEventStamp.class) != null) {
-            HibEventStamp masterStamp = (HibEventStamp) masterNote.getStamp(HibEventStamp.class);
+        if(masterNote.getStamp(HibBaseEventStamp.class) != null) {
+            HibBaseEventStamp masterStamp = (HibBaseEventStamp) masterNote.getStamp(HibBaseEventStamp.class);
             Calendar masterCal = masterStamp.getEventCalendar();
             if(masterCal != null && masterCal.getProductId() != null) {
                 exceptionCal = new Calendar();

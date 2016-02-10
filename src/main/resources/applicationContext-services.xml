@@ -71,6 +71,7 @@
             <value>
                 /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_DAV}/**=dav
                 /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_PRINCIPALS}/**=dav
+                /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_PRINCIPALS}=dav
             </value>
         </property>
     </bean>

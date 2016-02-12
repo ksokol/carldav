@@ -33,7 +33,6 @@ import net.fortuna.ical4j.model.property.Trigger;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
-import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
 import java.util.Collections;
@@ -158,90 +157,11 @@ public class EntityConverter {
         return null;
     }
 
-    /**
-     * Returns a calendar representing the note.
-     * <p>
-     * If the note is a modification, returns null. If the note has an event
-     * stamp, returns a calendar containing the event and any exceptions. If
-     * the note has a task stamp, returns a calendar containing the task.
-     * Otherwise, returns a calendar containing a journal.
-     * </p>
-     * @param note The note item.
-     * @return calendar The calendar.
-     */
     public Calendar convertNote(HibNoteItem note) {
-        HibBaseEventStamp event = note.getStamp(HibBaseEventStamp.class);
-        if (event!=null) {
+        if (note.isEvent()) {
             return note.getStampCalendar();
         }
-
-        return getCalendarFromNote(note);
-    }
-
-    /**
-     * Gets calendar from note.
-     * @param note The note item.
-     * @return The calendar.
-     */
-    protected Calendar getCalendarFromNote(HibNoteItem note) {
-        // Start with existing calendar if present
-        Calendar calendar = note.getTaskCalendar();
-        
-        // otherwise, start with new calendar
-        if (calendar == null) {
-            calendar = ICalendarUtils.createBaseCalendar(new VToDo());
-        }
-        else {
-            // use copy when merging calendar with item properties
-            calendar = CalendarUtils.copyCalendar(calendar);
-        }
-        
-        // merge in displayName,body
-        VToDo task = (VToDo) calendar.getComponent(Component.VTODO);
-        mergeCalendarProperties(task, note);
-        
-        return calendar;
-    }
-
-    /**
-     * Merges calendar properties.
-     * @param task The task.
-     * @param note The note item.
-     */
-    private void mergeCalendarProperties(VToDo task, HibNoteItem note) {
-        //uid = icaluid or uid
-        //summary = displayName
-        //description = body
-        //dtstamp = clientModifiedDate/modifiedDate
-        //completed = triageStatus==DONE/triageStatusRank
-        
-        String icalUid = note.getIcalUid();
-        if (icalUid==null) {
-            icalUid = note.getUid();
-        }
-        
-        if (note.getClientModifiedDate()!=null) {
-            ICalendarUtils.setDtStamp(note.getClientModifiedDate(), task);
-        }
-        else {
-            ICalendarUtils.setDtStamp(note.getModifiedDate(), task);
-        }
-        
-        ICalendarUtils.setUid(icalUid, task);
-        ICalendarUtils.setSummary(note.getDisplayName(), task);
-        ICalendarUtils.setDescription(note.getBody(), task);
-        
-        // Set COMPLETED/STATUS if triagestatus is DONE
-        TriageStatus ts = note.getTriageStatus();
-        DateTime completeDate = null;
-        if(ts!=null && ts.getCode()==TriageStatusUtil.CODE_DONE) {
-            ICalendarUtils.setStatus(Status.VTODO_COMPLETED, task);
-            if (ts.getRank() != null) {
-                completeDate =  new DateTime(TriageStatusUtil.getDateFromRank(ts.getRank()));
-            }
-        }
-        
-        ICalendarUtils.setCompleted(completeDate, task);
+        return note.getCalendar();
     }
 
     /**

@@ -26,7 +26,6 @@ import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VToDo;
-import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.Status;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -87,43 +86,6 @@ public class EntityConverterTest {
         Assert.assertTrue(rankTime<=end && rankTime>=begin);
     }
 
-    /**
-     * Tests convert task.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testConvertTask() throws Exception {
-        HibNoteItem master = new HibNoteItem();
-        master.setDisplayName("displayName");
-        master.setBody("body");
-        master.setIcalUid("icaluid");
-        master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        master.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
-        
-        Calendar cal = converter.convertNote(master);
-        cal.validate();
-        
-        Assert.assertEquals(1, cal.getComponents().size());
-        
-        ComponentList comps = cal.getComponents(Component.VTODO);
-        Assert.assertEquals(1, comps.size());
-        VToDo task = (VToDo) comps.get(0);
-        
-        Assert.assertNull(task.getDateCompleted());
-        
-        DateTime completeDate = new DateTime("20080122T100000Z");
-        
-        master.getTriageStatus().setCode(TriageStatusUtil.CODE_DONE);
-        master.getTriageStatus().setRank(TriageStatusUtil.getRank(completeDate.getTime()));
-
-        cal = converter.convertNote(master);
-        task = (VToDo) cal.getComponents().get(0);
-        
-        Completed completed = task.getDateCompleted();
-        Assert.assertNotNull(completed);
-        Assert.assertEquals(completeDate.getTime(), completed.getDate().getTime());
-    }
-    
     /**
      * Tests convert event.
      * @throws Exception - if something is wrong this exception is thrown.

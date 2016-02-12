@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.calendar;
 
-import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
@@ -24,14 +23,12 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.TimeZone;
-import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.Related;
 import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
@@ -39,14 +36,11 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.property.Uid;
-import net.fortuna.ical4j.model.property.Version;
-import org.unitedinternet.cosmo.CosmoConstants;
 import org.unitedinternet.cosmo.CosmoParseException;
 import org.unitedinternet.cosmo.calendar.util.Dates;
 
@@ -61,30 +55,6 @@ import java.util.List;
  */
 public class ICalendarUtils {
 
-    /**
-     * Create a base Calendar containing a single component.
-     * @param comp Component to add to the base Calendar
-     * @return base Calendar
-     */
-    public static Calendar createBaseCalendar(CalendarComponent comp) {
-        Calendar cal = createBaseCalendar(); 
-        cal.getComponents().add(comp);
-        return cal;
-    }
-    
-    /**
-     * Create a base Calendar containing no components.
-     * @return base Calendar
-     */
-    public static Calendar createBaseCalendar() {
-        Calendar cal = new Calendar();
-        cal.getProperties().add(new ProdId(CosmoConstants.PRODUCT_ID));
-        cal.getProperties().add(Version.VERSION_2_0);
-        cal.getProperties().add(CalScale.GREGORIAN);
-        
-        return cal;
-    }
-    
     /**
      * Update the SUMMARY property on a component.
      * @param text SUMMARY value to update.  If null, the SUMMARY property
@@ -170,31 +140,7 @@ public class ICalendarUtils {
             vtodo.getProperties().add(status);
         }
     }
-    
-    /**
-     * Update the DTSTAMP property on a component.
-     * @param date DTSTAMP value to update.  If null, the DTSTAMP property
-     *        will be removed
-     * @param comp component to update
-     */
-    public static void setDtStamp(java.util.Date date, Component comp) {
-        DtStamp dtStamp = (DtStamp)
-        comp.getProperties().getProperty(Property.DTSTAMP);
-   
-        if (date == null) {
-            if (dtStamp != null) {
-                comp.getProperties().remove(dtStamp);
-            }
-            return;
-        }                
-        if (dtStamp == null) {
-            dtStamp = new DtStamp();
-            comp.getProperties().add(dtStamp);
-        }
-        
-        dtStamp.getDate().setTime(date.getTime());
-    }
-    
+
     /**
      * Update the UID property on a component.
      * @param text UID value to update.  If null, the UID property

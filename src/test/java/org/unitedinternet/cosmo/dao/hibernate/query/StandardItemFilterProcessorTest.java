@@ -41,7 +41,6 @@ import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -208,31 +207,6 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and i.body=:param4", query.getQueryString());
 
         filter = new NoteItemFilter();
-        filter.setIsModification(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where i.modifies is not null", query.getQueryString());
-
-        filter.setIsModification(false);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where i.modifies is null", query.getQueryString());
-
-        filter.setIsModification(null);
-
-        filter.setHasModifications(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where size(i.modifications) > 0", query.getQueryString());
-
-        filter.setHasModifications(false);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where size(i.modifications) = 0", query.getQueryString());
-
-        filter =  new NoteItemFilter();
-        filter.setMasterNoteItem(new HibNoteItem());
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where (i=:masterItem or "
-                + "i.modifies=:masterItem)", query.getQueryString());
-
-        filter = new NoteItemFilter();
         Date date1 = new Date(1000);
         Date date2 = new Date(2000);
         filter.setReminderTime(Restrictions.between(date1,date2));
@@ -284,7 +258,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibBaseEventStamp "
                 + "es where pd=:parent and i.displayName=:param1 and "
-                + "es.item=i and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
+                + "es.item=i and (es.timeRangeIndex.isRecurring=true) "
                 + "and i.icalUid=:param2", query.getQueryString());
     }
 

@@ -136,7 +136,6 @@ public class CalendarFilterConverterTest {
         Assert.assertTrue(itemFilter instanceof NoteItemFilter);
         NoteItemFilter noteFilter = (NoteItemFilter) itemFilter;
       
-        Assert.assertFalse(noteFilter.getIsModification().booleanValue());
         Assert.assertEquals(1, noteFilter.getStampFilters().size());
         
         StampFilter sf = noteFilter.getStampFilters().get(0);

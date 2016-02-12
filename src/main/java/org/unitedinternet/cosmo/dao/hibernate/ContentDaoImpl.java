@@ -16,12 +16,10 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -280,26 +278,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     @Override
-    public void initializeItem(HibItem hibItem) {
-        super.initializeItem(hibItem);
-
-        // Initialize master NoteItem if applicable
-        try {
-            if (hibItem instanceof HibNoteItem) {
-                HibNoteItem note = (HibNoteItem) hibItem;
-                if (note.getModifies() != null) {
-                    Hibernate.initialize(note.getModifies());
-                    initializeItem(note.getModifies());
-                }
-            }
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-
-    }
-
-    @Override
     public void removeItem(HibItem hibItem) {
         if (hibItem instanceof HibItem) {
             removeContent(hibItem);
@@ -337,16 +315,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
 
     private void removeContentRecursive(HibItem content) {
-        // Remove modifications
-        if (content instanceof HibNoteItem) {
-            HibNoteItem note = (HibNoteItem) content;
-            if (note.getModifies() != null) {
-                // remove mod from master's collection
-                note.getModifies().removeModification(note);
-                note.getModifies().updateTimestamp();
-            }
-        }
-
         content.setCollection(null);
         getSession().delete(content);
     }
@@ -385,10 +353,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             return;
         }
 
-        for (HibNoteItem mod : note.getModifications()) {
-            removeNoteItemFromCollectionInternal(mod, collection);
-        }
-
         note.setCollection(null);
         getSession().delete(note);
     }
@@ -422,29 +386,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         setBaseItemProps(content);
 
-
-        // When a note modification is added, it must be added to all
-        // collections that the parent note is in, because a note modification's
-        // parents are tied to the parent note.
-        if (isNoteModification(content)) {
-            HibNoteItem note = (HibNoteItem) content;
-
-            // ensure master is dirty so that etag gets updated
-            note.getModifies().updateTimestamp();
-            note.getModifies().addModification(note);
-
-            if (note.getModifies().getCollection().getId() != parent.getId()) {
-                throw new ModelValidationException(note, "cannot create modification "
-                        + note.getUid() + " in collection " + parent.getUid()
-                        + ", master must be created or added first");
-            }
-
-            note.setCollection(note.getModifies().getCollection());
-        } else {
-            // add parent to new content
-            content.setCollection(parent);
-        }
-
+        // add parent to new content
+        content.setCollection(parent);
 
         getSession().save(content);
         getSession().refresh(parent);
@@ -482,32 +425,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         setBaseItemProps(content);
 
-        // Ensure NoteItem modifications have the same parents as the 
-        // master note.
-        if (isNoteModification(content)) {
-            HibNoteItem note = (HibNoteItem) content;
-
-            // ensure master is dirty so that etag gets updated
-            note.getModifies().updateTimestamp();
-            note.getModifies().addModification(note);
-
-            for (final HibCollectionItem parent : parents) {
-                if (note.getModifies().getCollection().getId() != parent.getId()) {
-                    StringBuffer modParents = new StringBuffer();
-                    StringBuffer masterParents = new StringBuffer();
-                    for (HibCollectionItem p : parents) {
-                        modParents.append(p.getUid() + ",");
-                    }
-                    masterParents.append(note.getModifies().getCollection().getUid() + ",");
-                    throw new ModelValidationException(note,
-                            "cannot create modification " + note.getUid()
-                                    + " in collections " + modParents.toString()
-                                    + " because master's parents are different: "
-                                    + masterParents.toString());
-                }
-            }
-        }
-
         for (HibCollectionItem parent : parents) {
             content.setCollection(parent);
         }
@@ -529,12 +446,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         content.updateTimestamp();
-
-        if (isNoteModification(content)) {
-            // ensure master is dirty so that etag gets updated
-            ((HibNoteItem) content).getModifies().updateTimestamp();
-        }
-
     }
 
     protected void updateCollectionInternal(HibCollectionItem collection) {
@@ -558,43 +469,18 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     protected void addItemToCollectionInternal(HibItem hibItem,
                                                HibCollectionItem collection) {
 
-        // Don't allow note modifications to be added to a collection
-        // When a master is added, all the modifications are added
-        if (isNoteModification(hibItem)) {
-            throw new ModelValidationException(hibItem, "cannot add modification "
-                    + hibItem.getUid() + " to collection " + collection.getUid()
-                    + ", only master");
-        }
-
         if (hibItem instanceof HibICalendarItem) {
             // verify icaluid is unique within collection
             checkForDuplicateICalUid((HibICalendarItem) hibItem, collection);
         }
 
         super.addItemToCollectionInternal(hibItem, collection);
-
-        // Add all modifications
-        if (hibItem instanceof HibNoteItem) {
-            for (HibNoteItem mod : ((HibNoteItem) hibItem).getModifications()) {
-                super.addItemToCollectionInternal(mod, collection);
-            }
-        }
     }
 
     @Override
     protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
         if (hibItem instanceof HibNoteItem) {
-            // When a note modification is removed, it is really removed from
-            // all collections because a modification can't live in one collection
-            // and not another.  It is tied to the collections that the master
-            // note is in.  Therefore you can't just remove a modification from
-            // a single collection when the master note is in multiple collections.
-            HibNoteItem note = (HibNoteItem) hibItem;
-            if (note.getModifies() != null) {
-                removeContentRecursive(hibItem);
-            } else {
-                removeNoteItemFromCollectionInternal((HibNoteItem) hibItem, collection);
-            }
+            removeNoteItemFromCollectionInternal((HibNoteItem) hibItem, collection);
         } else {
             super.removeItemFromCollectionInternal(hibItem, collection);
         }
@@ -605,11 +491,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         // TODO: should icalUid be required?  Currrently its not and all
         // items created by the webui dont' have it.
         if (item.getIcalUid() == null) {
-            return;
-        }
-
-        // ignore modifications
-        if (item instanceof HibNoteItem && ((HibNoteItem) item).getModifies() != null) {
             return;
         }
 
@@ -647,15 +528,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             }
         }
     }
-
-    private boolean isNoteModification(HibItem hibItem) {
-        if (!(hibItem instanceof HibNoteItem)) {
-            return false;
-        }
-
-        return ((HibNoteItem) hibItem).getModifies() != null;
-    }
-
 
     @Override
     public void destroy() {

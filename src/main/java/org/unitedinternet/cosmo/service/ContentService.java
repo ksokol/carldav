@@ -122,16 +122,6 @@ public interface ContentService {
      */
     HibItem updateContent(HibItem content);
 
-
-    /**
-     * Remove content item
-     *
-     * @param content
-     *            content item to remove
-     */
-    void removeContent(HibItem content);
-
-
     /**
      * find the set of collection items as children of the given collection item.
      * 

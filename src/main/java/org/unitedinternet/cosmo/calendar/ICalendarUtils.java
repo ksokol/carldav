@@ -39,7 +39,6 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Status;
@@ -61,20 +60,7 @@ import java.util.List;
  * objects.
  */
 public class ICalendarUtils {
-    
-    /**
-     * Create a base Calendar containing a single component.
-     * @param comp Component to add to the base Calendar
-     * @param icalUid uid of component, if null no UID 
-     *                property will be added to the component
-     * @return base Calendar
-     */
-    public static Calendar createBaseCalendar(CalendarComponent comp, String icalUid) {
-        Uid uid = new Uid(icalUid);
-        comp.getProperties().add(uid);
-        return createBaseCalendar(comp);
-    }
-    
+
     /**
      * Create a base Calendar containing a single component.
      * @param comp Component to add to the base Calendar
@@ -143,30 +129,7 @@ public class ICalendarUtils {
         }
         description.setValue(text);
     }
-    
-    /**
-     * Update the LOCATION property on a component.
-     * @param text LOCATION value to update.  If null, the LOCATION property
-     *        will be removed
-     * @param comp component to update
-     */
-    public static void setLocation(String text, Component comp) {
-        Location location = (Location)
-        comp.getProperties().getProperty(Property.LOCATION);
-   
-        if (text == null) {
-            if (location != null) {
-                comp.getProperties().remove(location);
-            }
-            return;
-        }                
-        if (location == null) {
-            location = new Location();
-            comp.getProperties().add(location);
-        }
-        location.setValue(text);
-    }
-    
+
     /**
      * Update the COMPLETED property on a VTODO component.
      * 

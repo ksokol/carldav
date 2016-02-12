@@ -19,8 +19,6 @@ import static java.util.Locale.ENGLISH;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.unitedinternet.cosmo.calendar.InstanceList;
-import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
@@ -186,9 +184,9 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {
             if (filter.getIsRecurring() == true) {
-                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=true or i.modifies is not null)");
+                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=true)");
             } else {
-                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=false and i.modifies is null)");
+                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=false)");
             }
         }
 
@@ -251,29 +249,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             formatExpression(whereBuf, params, "i.remindertime", filter.getReminderTime());
         }
 
-        //filter by master NoteItem
-        if (filter.getMasterNoteItem() != null) {
-            appendWhere(whereBuf, "(i=:masterItem or i.modifies=:masterItem)");
-            params.put("masterItem", filter.getMasterNoteItem());
-        }
-
-        // filter modifications
-        if (filter.getIsModification() != null) {
-            if (filter.getIsModification().booleanValue() == true) {
-                appendWhere(whereBuf, "i.modifies is not null");
-            } else {
-                appendWhere(whereBuf, "i.modifies is null");
-            }
-        }
-
-        if (filter.getHasModifications() != null) {
-            if (filter.getHasModifications().booleanValue() == true) {
-                appendWhere(whereBuf, "size(i.modifications) > 0");
-            } else {
-                appendWhere(whereBuf, "size(i.modifications) = 0");
-            }
-        }
-        
         if(filter.getModifiedSince() != null){
             formatExpression(whereBuf, params, "i.modifiedDate", filter.getModifiedSince());
         }
@@ -337,14 +312,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
             HibNoteItem note = (HibNoteItem) hibItem;
 
-            // If note is a modification then add both the modification and the 
-            // master.
-            if (note.getModifies() != null) {
-                processedResults.add(note);
-                processedResults.add(note.getModifies());
-            }
-            // If filter doesn't have a timeRange, then we are done
-            else if (!hasTimeRangeFilter) {
+            if (!hasTimeRangeFilter) {
                 processedResults.add(note);
             } else {
                 processedResults.addAll(processMasterNote(note, eventFilter));
@@ -355,7 +323,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     }
 
     private Collection<HibItem> processMasterNote(HibNoteItem note, EventStampFilter filter) {
-        HibBaseEventStamp eventStamp = (HibBaseEventStamp) note.getStamp(HibBaseEventStamp.class);
+        HibBaseEventStamp eventStamp = note.getStamp(HibBaseEventStamp.class);
         List<HibItem> results = new ArrayList<>();
 
         // If the event is not recurring
@@ -364,18 +332,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             return results;
         }
 
-        // Otherwise, expand the recurring item to determine if it actually
-        // occurs in the time range specified
-        RecurrenceExpander expander = new RecurrenceExpander();
-        InstanceList instances = expander.getOcurrences(eventStamp.getEvent(),
-                eventStamp.getExceptions(), filter.getPeriod().getStart(),
-                filter.getPeriod().getEnd(), filter.getTimezone());
-
-        // If recurring event occurs in range, add master
-        if (instances.size() > 0) {
-            results.add(note);
-        }
-
+        results.add(note);
         return results;
     }
 

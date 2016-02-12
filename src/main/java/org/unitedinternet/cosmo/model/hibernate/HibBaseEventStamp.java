@@ -24,33 +24,21 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.parameter.TzId;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.DateListProperty;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.ExDate;
-import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.RecurrenceId;
-import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.model.property.Trigger;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
-import org.unitedinternet.cosmo.hibernate.validator.Event;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -135,27 +123,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
         return (VEvent) events.get(0);
     }
 
-    /** Used by the hibernate validator **/
-    @Event
-    private Calendar getValidationCalendar() {//NOPMD
-        return getEventCalendar();
-    }
-
-    public List<Component> getExceptions() {
-        ArrayList<Component> exceptions = new ArrayList<>();
-
-        // add all exception events
-        HibNoteItem note = (HibNoteItem) getItem();
-        for(HibNoteItem exception : note.getModifications()) {
-            final VEvent exceptionEvent = exception.getExceptionEvent();
-            if(exceptionEvent!=null) {
-                exceptions.add(exceptionEvent);
-            }
-        }
-
-        return exceptions;
-    }
-
     public Calendar getEventCalendar() {
         return eventCalendar;
     }
@@ -178,10 +145,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
             throw new IllegalStateException("no event");
         }
         ICalendarUtils.setUid(uid, getEvent());
-    }
-
-    protected void setIcalUid(String text, VEvent event) {
-        event.getUid().setValue(text);
     }
 
     public void setSummary(String text) {
@@ -285,35 +248,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
             prop.getParameters().add(Value.DATE);
         }
     }
-    
-    protected void setDateListPropertyValue(DateListProperty prop) {
-        if (prop == null) {
-            return;
-        }
-        Value value = (Value)
-            prop.getParameters().getParameter(Parameter.VALUE);
-        if (value != null) {
-            prop.getParameters().remove(value);
-        }
-        
-        value = prop.getDates().getType();
-        
-        // set VALUE=DATE but not VALUE=DATE-TIME as its redundant
-        if(value.equals(Value.DATE)) {
-            prop.getParameters().add(value);
-        }
-        
-        // update timezone for now because ical4j DateList doesn't
-        Parameter param = (Parameter) prop.getParameters().getParameter(
-                Parameter.TZID);
-        if (param != null) {
-            prop.getParameters().remove(param);
-        }
-        
-        if(prop.getDates().getTimeZone()!=null) {
-            prop.getParameters().add(new TzId(prop.getDates().getTimeZone().getID()));
-        }
-    }
 
     public Dur getDuration() {
         return ICalendarUtils.getDuration(getEvent());
@@ -321,33 +255,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
 
     public void setDuration(Dur dur) {
         ICalendarUtils.setDuration(getEvent(), dur);
-    }
-
-    public String getLocation() {
-        Property p = getEvent().getProperties().
-            getProperty(Property.LOCATION);
-        if (p == null) {
-            return null;
-        }
-        return p.getValue();
-    }
-
-    public void setLocation(String text) {
-        
-        Location location = (Location)
-            getEvent().getProperties().getProperty(Property.LOCATION);
-        
-        if (text == null) {
-            if (location != null) {
-                getEvent().getProperties().remove(location);
-            }
-            return;
-        }                
-        if (location == null) {
-            location = new Location();
-            getEvent().getProperties().add(location);
-        }
-        location.setValue(text);
     }
 
     public List<Recur> getRecurrenceRules() {
@@ -361,24 +268,10 @@ public class HibBaseEventStamp extends HibAuditableObject {
         return l;
     }
 
-    public void setRecurrenceRules(List<Recur> recurs) {
-        if (recurs == null) {
-            return;
-        }
-        PropertyList pl = getEvent().getProperties();
-        for (RRule rrule : (List<RRule>) pl.getProperties(Property.RRULE)) {
-            pl.remove(rrule);
-        }
-        for (Recur recur : recurs) {
-            pl.add(new RRule(recur));
-        }
-      
-    }
-
     public DateList getRecurrenceDates() {
-        
+
         DateList l = null;
-        
+
         VEvent event = getEvent();
         if(event==null) {
             return null;
@@ -396,158 +289,17 @@ public class HibBaseEventStamp extends HibAuditableObject {
             }
             l.addAll(rdate.getDates());
         }
-            
-        return l;
-    }
-
-    public void setRecurrenceDates(DateList dates) {
-        if (dates == null) {
-            return;
-        }
-
-        PropertyList pl = getEvent().getProperties();
-        for (RDate rdate : (List<RDate>) pl.getProperties(Property.RDATE)) {
-            pl.remove(rdate);
-        }
-        if (dates.isEmpty()) {
-            return;
-        }
-
-        RDate rDate = new RDate(dates);
-        setDateListPropertyValue(rDate);
-        pl.add(rDate);
-    }
-
-    public DateList getExceptionDates() {
-        DateList l = null;
-        for (Object property : getEvent().getProperties().getProperties(Property.EXDATE)) {
-            ExDate exdate = (ExDate) property;
-            if(l==null) {
-                if (Value.DATE.equals(exdate.getParameter(Parameter.VALUE))) {
-                    l = new DateList(Value.DATE);
-                }
-                else {
-                    l = new DateList(Value.DATE_TIME, exdate.getDates().getTimeZone());
-                }
-            }
-            l.addAll(exdate.getDates());
-        }
 
         return l;
     }
 
-    public VAlarm getDisplayAlarm() {
-        VEvent event = getEvent();
-       
-        if(event==null) {
-            return null;
-        }
-        
-        return getDisplayAlarm(event);
-    }
-
-    protected VAlarm getDisplayAlarm(VEvent event) {
-        for(Iterator it = event.getAlarms().iterator();it.hasNext();) {
-            VAlarm alarm = (VAlarm) it.next();
-            if (alarm.getProperties().getProperty(Property.ACTION).equals(Action.DISPLAY)) {
-                return alarm;
-            }
-        }
-        return null;
-    }
-
-    public Trigger getDisplayAlarmTrigger() {
-        VAlarm alarm = getDisplayAlarm();
-        if(alarm==null) {
-            return null;
-        }
-        
-        return (Trigger) alarm.getProperties().getProperty(Property.TRIGGER);
-    }
-
-    public Date getRecurrenceId() {
-        RecurrenceId rid = getEvent().getRecurrenceId();
-        if (rid == null) {
-            return null;
-        }
-        return rid.getDate();
-    }
-
-    public void setRecurrenceId(Date date) {
-        RecurrenceId recurrenceId = (RecurrenceId)
-            getEvent().getProperties().
-            getProperty(Property.RECURRENCE_ID);
-        if (date == null) {
-            if (recurrenceId != null) {
-                getEvent().getProperties().remove(recurrenceId);
-            }
-            return;
-        }
-        if (recurrenceId == null) {
-            recurrenceId = new RecurrenceId();
-            getEvent().getProperties().add(recurrenceId);
-        }
-        
-        recurrenceId.setDate(date);
-        setDatePropertyValue(recurrenceId, date);
-    }
-
-    public String getStatus() {
-        Property p = getEvent().getProperties().
-            getProperty(Property.STATUS);
-        if (p == null) {
-            return null;
-        }
-        return p.getValue();
-    }
-
-    public void setStatus(String text) {
-        // ical4j Status value is immutable, so if there's any change
-        // at all, we have to remove the old status and add a new
-        // one.
-        Status status = (Status)
-            getEvent().getProperties().getProperty(Property.STATUS);
-        if (status != null) {
-            getEvent().getProperties().remove(status);
-        }
-        if (text == null) {
-            return;
-        }
-        getEvent().getProperties().add(new Status(text));
-    }
-
-    public void createCalendar() {
-
-        HibNoteItem note = (HibNoteItem) getItem();
-       
-        String icalUid = note.getIcalUid();
-        if(icalUid==null) {
-            // A modifications UID will be the parent's icaluid
-            // or uid
-            if(note.getModifies()!=null) {
-                if(note.getModifies().getIcalUid()!=null) {
-                    icalUid = note.getModifies().getIcalUid();
-                }
-                else {
-                    icalUid = note.getModifies().getUid();
-                }
-            } else {
-                icalUid = note.getUid();
-            }
-        }
-
-        Calendar cal = ICalendarUtils.createBaseCalendar(new VEvent(), icalUid);
-        
-        setEventCalendar(cal);
-    }
-    
     public boolean isRecurring() {
        if(getRecurrenceRules().size()>0) {
            return true;
        }
-       
+
        DateList rdates = getRecurrenceDates();
-       
+
        return rdates!=null && rdates.size()>0;
     }
 

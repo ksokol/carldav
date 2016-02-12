@@ -246,29 +246,6 @@ public class StandardContentService implements ContentService {
     }
 
     /**
-     * Remove content item
-     * 
-     * @param content
-     *            content item to remove
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked           
-     */
-    public void removeContent(HibItem content) {
-        Set<HibCollectionItem> locks = acquireLocks(content);
-        
-        try {
-            contentDao.removeContent(content);
-            // update collections
-            for(HibCollectionItem parent : locks) {
-                contentDao.updateCollectionTimestamp(parent);
-            }
-        } finally {
-            releaseLocks(locks);
-        }
-    }
-
-    
-    /**
      * find the set of collection items as children of the given collection item.
      * 
      * @param hibCollectionItem parent collection item
@@ -357,15 +334,6 @@ public class StandardContentService implements ContentService {
                 throw new CollectionLockedException("unable to obtain collection lock");
             }
             locks.add(parent);
-        }
-        
-        // Acquire locks on master item's parents, as an addition/deletion
-        // of a modifications item affects all the parents of the master item.
-        if(hibItem instanceof HibNoteItem) {
-            HibNoteItem note = (HibNoteItem) hibItem;
-            if(note.getModifies()!=null) {
-                acquireLocks(locks, note.getModifies());
-            }
         }
     }
     

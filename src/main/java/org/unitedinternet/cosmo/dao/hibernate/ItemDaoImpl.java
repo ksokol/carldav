@@ -16,10 +16,7 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.service.generator.IdGenerator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectDeletedException;
 import org.hibernate.ObjectNotFoundException;
@@ -36,7 +33,6 @@ import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
@@ -52,8 +48,6 @@ import javax.validation.ConstraintViolationException;
  * Implementation of ItemDao using Hibernate persistent objects.
  */
 public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
-
-    private static final Log LOG = LogFactory.getLog(ItemDaoImpl.class);
 
     private IdGenerator idGenerator = null;
     private TokenService ticketKeyGenerator = null;
@@ -234,22 +228,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#initializeItem(org.unitedinternet.cosmo.model.Item)
-     */
-    public void initializeItem(HibItem hibItem) {
-        try {
-            LOG.info("initialize Item : "+ hibItem.getUid());
-            // initialize all the proxied-associations, to prevent
-            // lazy-loading of this data
-            Hibernate.initialize(hibItem.getStamps());
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-
     /**
      * find the set of collection items as children of the given collection item.
      *
@@ -384,12 +362,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
         if (hibItem.getName() == null) {
             hibItem.setName(hibItem.getUid());
-        }
-        if (hibItem instanceof HibICalendarItem) {
-            HibICalendarItem ical = (HibICalendarItem) hibItem;
-            if (ical.getIcalUid() == null) {
-                ical.setIcalUid(hibItem.getUid());
-            }
         }
     }
 

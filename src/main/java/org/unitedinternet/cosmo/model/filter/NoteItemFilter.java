@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-
 /**
  * Adds NoteItem specific criteria to ItemFilter.
  * Matches only NoteItem instances.
@@ -26,11 +24,6 @@ public class NoteItemFilter extends ContentItemFilter {
     private FilterCriteria body = null;
     private FilterCriteria reminderTime = null;
     private FilterCriteria modifiedSince = null;
-    
-    private Boolean hasModifications = null;
-    private Boolean isModification = null;
-    
-    private HibNoteItem masterNoteItem = null;
 
     /**
      * Match notes with a body that matches a given String.
@@ -54,44 +47,6 @@ public class NoteItemFilter extends ContentItemFilter {
      */
     public void setIcalUid(FilterCriteria icalUid) {
         this.icalUid = icalUid;
-    }
-
-    public Boolean getHasModifications() {
-        return hasModifications;
-    }
-
-    /**
-     * Matches notes with or without modifications.
-     * @param hasModifications if present, matches notes with or without
-     *                         modifications
-     */
-    public void setHasModifications(Boolean hasModifications) {
-        this.hasModifications = hasModifications;
-    }
-
-    public Boolean getIsModification() {
-        return isModification;
-    }
-
-    /**
-     * Matches notes that are or are not a modification
-     * @param isModification if present, matches notes that are or are not
-     *                        a modification
-     */
-    public void setIsModification(Boolean isModification) {
-        this.isModification = isModification;
-    }
-
-    public HibNoteItem getMasterNoteItem() {
-        return masterNoteItem;
-    }
-
-    /**
-     * Matches the specified NoteItem and any modifications to that NoteItem
-     * @param masterNoteItem
-     */
-    public void setMasterNoteItem(HibNoteItem masterNoteItem) {
-        this.masterNoteItem = masterNoteItem;
     }
 
     public FilterCriteria getReminderTime() {

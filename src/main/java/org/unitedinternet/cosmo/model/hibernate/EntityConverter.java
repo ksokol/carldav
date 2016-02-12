@@ -172,7 +172,7 @@ public class EntityConverter {
     public Calendar convertNote(HibNoteItem note) {
         HibBaseEventStamp event = note.getStamp(HibBaseEventStamp.class);
         if (event!=null) {
-            return getCalendarFromEventStamp(event);
+            return note.getStampCalendar();
         }
 
         return getCalendarFromNote(note);
@@ -201,15 +201,6 @@ public class EntityConverter {
         mergeCalendarProperties(task, note);
         
         return calendar;
-    }
-    
-    /**
-     * gets calendar from event stamp.
-     * @param stamp The event stamp.
-     * @return The calendar.
-     */
-    protected Calendar getCalendarFromEventStamp(HibBaseEventStamp stamp) {
-        return stamp.getEventCalendar();
     }
 
     /**

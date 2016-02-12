@@ -161,6 +161,11 @@ public abstract class HibItem extends HibAuditableObject {
         }
     }
 
+    public boolean isRecurring() {
+        final HibBaseEventStamp stamp = getStamp(HibBaseEventStamp.class);
+        return stamp.isRecurring();
+    }
+
     public Date getClientCreationDate() {
         return clientCreationDate;
     }

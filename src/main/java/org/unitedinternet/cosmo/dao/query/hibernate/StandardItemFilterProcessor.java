@@ -36,12 +36,8 @@ import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.NullExpression;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +55,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
     public Set<HibItem> processFilter(ItemFilter filter) {
         Query hibQuery = buildQuery(getSession(), filter);
         List<HibItem> queryResults = hibQuery.list();
-        return processResults(queryResults, filter);
+        return processResults(queryResults);
     }
 
     /**
@@ -285,50 +281,14 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
      * for the entire recurrence series, and expansion is required to determine
      * if the event actually occurs, and to return individual occurences.
      */
-    private HashSet<HibItem> processResults(List<HibItem> results, ItemFilter itemFilter) {
-        boolean hasTimeRangeFilter = false;
-
+    private HashSet<HibItem> processResults(List<HibItem> results) {
         HashSet<HibItem> processedResults = new HashSet<>();
-        EventStampFilter eventFilter = (EventStampFilter) itemFilter.getStampFilter(EventStampFilter.class);
-
-
-        if (eventFilter != null) {
-            // does eventFilter have timeRange filter?
-            hasTimeRangeFilter = eventFilter.getPeriod() != null;
-        }
 
         for (HibItem hibItem : results) {
-
-            // If item is not a note, then nothing to do
-            if (!(hibItem instanceof HibNoteItem)) {
-                processedResults.add(hibItem);
-                continue;
-            }
-
-            HibNoteItem note = (HibNoteItem) hibItem;
-
-            if (!hasTimeRangeFilter) {
-                processedResults.add(note);
-            } else {
-                processedResults.addAll(processMasterNote(note, eventFilter));
-            }
+            processedResults.add(hibItem);
         }
 
         return processedResults;
-    }
-
-    private Collection<HibItem> processMasterNote(HibNoteItem note, EventStampFilter filter) {
-        HibBaseEventStamp eventStamp = note.getStamp(HibBaseEventStamp.class);
-        List<HibItem> results = new ArrayList<>();
-
-        // If the event is not recurring
-        if (!eventStamp.isRecurring()) {
-            results.add(note);
-            return results;
-        }
-
-        results.add(note);
-        return results;
     }
 
     private void formatExpression(StringBuffer whereBuf,

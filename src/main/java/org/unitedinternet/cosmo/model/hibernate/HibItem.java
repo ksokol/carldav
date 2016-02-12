@@ -154,6 +154,13 @@ public abstract class HibItem extends HibAuditableObject {
         getStamp(HibBaseEventStamp.class).setEventCalendar(calendar);
     }
 
+    public void setIcalUid(String icalUid) {
+        final HibBaseEventStamp stamp = getStamp(HibBaseEventStamp.class);
+        if(stamp != null) {
+            stamp.setIcalUid(icalUid);
+        }
+    }
+
     public Date getClientCreationDate() {
         return clientCreationDate;
     }

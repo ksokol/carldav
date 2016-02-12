@@ -140,9 +140,14 @@ public abstract class HibItem extends HibAuditableObject {
         return null;
     }
 
+    @Deprecated
+    private HibBaseEventStamp getStamp() {
+        return getStamp(HibBaseEventStamp.class);
+    }
+
     //TODO rename me
     public Calendar getStampCalendar() {
-        final HibBaseEventStamp stamp = getStamp(HibBaseEventStamp.class);
+        final HibBaseEventStamp stamp = getStamp();
         if(stamp != null) {
             return stamp.getEventCalendar();
         }
@@ -154,15 +159,20 @@ public abstract class HibItem extends HibAuditableObject {
         getStamp(HibBaseEventStamp.class).setEventCalendar(calendar);
     }
 
+    @Deprecated
+    public boolean isEvent() {
+        return getStamp() != null;
+    }
+
     public void setIcalUid(String icalUid) {
-        final HibBaseEventStamp stamp = getStamp(HibBaseEventStamp.class);
+        final HibBaseEventStamp stamp = getStamp();
         if(stamp != null) {
             stamp.setIcalUid(icalUid);
         }
     }
 
     public boolean isRecurring() {
-        final HibBaseEventStamp stamp = getStamp(HibBaseEventStamp.class);
+        final HibBaseEventStamp stamp = getStamp();
         return stamp.isRecurring();
     }
 

@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -127,6 +128,7 @@ public abstract class HibItem extends HibAuditableObject {
         stamps.remove(stamp);
     }
 
+    @Deprecated
     public HibBaseEventStamp getStamp(Class clazz) {
         for(HibBaseEventStamp stamp : stamps) {
             // only return stamp if it is an instance of the specified class
@@ -136,6 +138,20 @@ public abstract class HibItem extends HibAuditableObject {
         }
 
         return null;
+    }
+
+    //TODO rename me
+    public Calendar getStampCalendar() {
+        final HibBaseEventStamp stamp = getStamp(HibBaseEventStamp.class);
+        if(stamp != null) {
+            return stamp.getEventCalendar();
+        }
+        return null;
+    }
+
+    //TODO rename me
+    public void setStampCalendar(final Calendar calendar) {
+        getStamp(HibBaseEventStamp.class).setEventCalendar(calendar);
     }
 
     public Date getClientCreationDate() {

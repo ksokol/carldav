@@ -1,6 +1,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
+import net.fortuna.ical4j.model.Calendar;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -192,23 +193,21 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
     }
 
-    private void saveEvent(DavItemContent member)
-        throws CosmoDavException {
-
+    private void saveEvent(DavItemContent member) throws CosmoDavException {
         HibItem content = member.getItem();
-        HibBaseEventStamp event = (HibBaseEventStamp) content.getStamp(HibBaseEventStamp.class);
+        final Calendar calendar = content.getStampCalendar();
         EntityConverter converter = new EntityConverter(getIdGenerator());
         Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model
             toUpdate.addAll(converter.convertEventCalendar(
-                    (HibNoteItem) content, event.getEventCalendar()));
+                    (HibNoteItem) content, calendar));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
 
-        if (event.getId()!= null) {
+        if (content.getId()!= null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("updating event " + member.getResourcePath());
             }

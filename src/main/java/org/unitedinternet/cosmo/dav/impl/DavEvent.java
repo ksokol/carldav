@@ -36,8 +36,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
  */
 public class DavEvent extends DavCalendarResource {
 
-
-    /** */
     public DavEvent(DavResourceLocator locator,
                     DavResourceFactory factory,
                     IdGenerator idGenerator)
@@ -45,8 +43,7 @@ public class DavEvent extends DavCalendarResource {
         this(new HibNoteItem(), locator, factory, idGenerator);
         getItem().addStamp(new HibBaseEventStamp(getItem()));
     }
-    
-    /** */
+
     public DavEvent(HibNoteItem item,
                     DavResourceLocator locator,
                     DavResourceFactory factory,
@@ -55,17 +52,8 @@ public class DavEvent extends DavCalendarResource {
         super(item, locator, factory, idGenerator);
     }
 
-    // our methods
-
-    /**
-     * Returns the calendar object associated with this resource.
-     */
     public Calendar getCalendar() {
         return new EntityConverter(getIdGenerator()).convertNote((HibNoteItem)getItem());
-    }
-    
-    public HibBaseEventStamp getEventStamp() {
-        return (HibBaseEventStamp) getItem().getStamp(HibBaseEventStamp.class);
     }
 
     protected void setCalendar(Calendar calendar)
@@ -77,7 +65,7 @@ public class DavEvent extends DavCalendarResource {
             throw new UnprocessableEntityException("VCALENDAR does not contain any VEVENTs or VJOURNAL");
         }
 
-        getEventStamp().setEventCalendar(calendar);
+        getItem().setStampCalendar(calendar);
     }
 
     @Override

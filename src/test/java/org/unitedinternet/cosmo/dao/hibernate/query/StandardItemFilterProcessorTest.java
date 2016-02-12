@@ -222,17 +222,11 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testBasicStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
-        StampFilter missingFilter = new StampFilter();
-        missingFilter.setStampClass(HibBaseEventStamp.class);
-        filter.getStampFilters().add(missingFilter);
-        Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where exists (select s.id from HibBaseEventStamp s "
-                + "where s.item=i)", query.getQueryString());
-        missingFilter.setMissing(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where not exists "
-                        + "(select s.id from HibBaseEventStamp s where s.item=i)",
-                query.getQueryString());
+        StampFilter stampFilter = new StampFilter();
+        stampFilter.setStampClass(HibBaseEventStamp.class);
+        filter.getStampFilters().add(stampFilter);
+        Query query = queryBuilder.buildQuery(session, filter);
+        Assert.assertEquals("select i from HibICalendarItem i where not exists (select s.id from HibBaseEventStamp s where s.item=i)", query.getQueryString());
     }
 
     /**

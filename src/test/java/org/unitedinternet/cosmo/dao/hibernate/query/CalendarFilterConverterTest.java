@@ -140,7 +140,6 @@ public class CalendarFilterConverterTest {
         
         StampFilter sf = noteFilter.getStampFilters().get(0);
         Assert.assertEquals(HibBaseEventStamp.class, sf.getStampClass());
-        Assert.assertEquals(true, sf.isMissing());
     }
     
     /**

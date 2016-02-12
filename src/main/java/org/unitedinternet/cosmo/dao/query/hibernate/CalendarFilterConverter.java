@@ -108,7 +108,7 @@ public class CalendarFilterConverter {
     private ItemFilter createFirstPassTaskFilter(HibCollectionItem collection) {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
-        filter.getStampFilters().add(new StampFilter(HibBaseEventStamp.class, true));
+        filter.getStampFilters().add(new StampFilter(HibBaseEventStamp.class));
         return filter;
     }
 

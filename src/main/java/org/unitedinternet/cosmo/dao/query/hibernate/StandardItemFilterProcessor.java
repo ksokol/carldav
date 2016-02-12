@@ -160,18 +160,13 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             } else if(stampFilter instanceof JournalStampFilter) {
                 handleJournalFilter(whereBuf, stampFilter, params);
             } else {
-                handleStampFilter(whereBuf, stampFilter);
+                handleStampFilter(whereBuf);
             }
         }
     }
 
-    private void handleStampFilter(StringBuffer whereBuf, StampFilter filter) {
-        String toAppend = "";
-        if (filter.isMissing()) {
-            toAppend += "not ";
-        }
-        toAppend += "exists (select s.id from HibBaseEventStamp s where s.item=i)";
-        appendWhere(whereBuf, toAppend);
+    private void handleStampFilter(StringBuffer whereBuf) {
+        appendWhere(whereBuf, "not exists (select s.id from HibBaseEventStamp s where s.item=i)");
     }
 
     private void handleStampFilter(StringBuffer selectBuf,

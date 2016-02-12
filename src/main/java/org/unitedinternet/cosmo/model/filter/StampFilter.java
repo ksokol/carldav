@@ -35,8 +35,7 @@ import java.util.Date;
 public class StampFilter {
 
     private static final Log LOG = LogFactory.getLog(StampFilter.class);
-  
-    private boolean isMissing = false;
+
     private Class stampClass = null;
     private Boolean isRecurring = null;
     private Period period = null;
@@ -48,28 +47,10 @@ public class StampFilter {
 
     public StampFilter() {}
     
-    public StampFilter(Class stampClass, boolean isMissing) {
-        this.stampClass = stampClass;
-        this.isMissing = isMissing;
-    }
-
     public StampFilter(Class stampClass) {
         this.stampClass = stampClass;
     }
 
-    public boolean isMissing() {
-        return isMissing;
-    }
-    
-    /**
-     * If true, match Items that do not have the
-     * specified Stamp.
-     * @param isMissing
-     */
-    public void setMissing(boolean isMissing) {
-        this.isMissing = isMissing;
-    }
-    
     public Class getStampClass() {
         return stampClass;
     }

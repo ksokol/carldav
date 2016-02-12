@@ -20,7 +20,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -106,10 +105,6 @@ public abstract class HibItem extends HibAuditableObject {
         this.id = id;
     }
 
-    public Set<HibBaseEventStamp> getStamps() {
-        return Collections.unmodifiableSet(stamps);
-    }
-
     public void addStamp(HibBaseEventStamp stamp) {
         if (stamp == null) {
             throw new IllegalArgumentException("stamp cannot be null");
@@ -119,30 +114,16 @@ public abstract class HibItem extends HibAuditableObject {
         stamps.add(stamp);
     }
 
-    public void removeStamp(HibBaseEventStamp stamp) {
-        // only remove stamps that belong to item
-        if(!stamps.contains(stamp)) {
-            return;
-        }
-
-        stamps.remove(stamp);
-    }
-
     @Deprecated
-    public HibBaseEventStamp getStamp(Class clazz) {
+    private HibBaseEventStamp getStamp() {
         for(HibBaseEventStamp stamp : stamps) {
             // only return stamp if it is an instance of the specified class
-            if(clazz.isInstance(stamp)) {
+            if(HibBaseEventStamp.class.isInstance(stamp)) {
                 return stamp;
             }
         }
 
         return null;
-    }
-
-    @Deprecated
-    private HibBaseEventStamp getStamp() {
-        return getStamp(HibBaseEventStamp.class);
     }
 
     //TODO rename me
@@ -156,7 +137,7 @@ public abstract class HibItem extends HibAuditableObject {
 
     //TODO rename me
     public void setStampCalendar(final Calendar calendar) {
-        getStamp(HibBaseEventStamp.class).setEventCalendar(calendar);
+        getStamp().setEventCalendar(calendar);
     }
 
     @Deprecated

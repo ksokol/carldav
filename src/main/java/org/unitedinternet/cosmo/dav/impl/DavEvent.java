@@ -42,7 +42,7 @@ public class DavEvent extends DavCalendarResource {
                     IdGenerator idGenerator)
         throws CosmoDavException {
         this(new HibNoteItem(), locator, factory, idGenerator);
-        getItem().addStamp(new HibBaseEventStamp(getItem()));
+        ((HibNoteItem) getItem()).addStamp(new HibBaseEventStamp(getItem()));
     }
 
     public DavEvent(HibNoteItem item,

@@ -18,9 +18,15 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Type;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 @Entity
 @DiscriminatorValue("icalendar")
@@ -32,6 +38,9 @@ public abstract class HibICalendarItem extends HibItem {
     @Column(name = "calendar", length= 2147483647)
     @Type(type="calendar_clob")
     private Calendar calendar;
+
+    @OneToMany(targetEntity=HibBaseEventStamp.class, mappedBy = "item", fetch= FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval=true)
+    private Set<HibBaseEventStamp> stamps = new HashSet<>();
 
     public String getIcalUid() {
         return icalUid;
@@ -60,6 +69,27 @@ public abstract class HibICalendarItem extends HibItem {
     @Deprecated
     public boolean isEvent() {
         return getStamp() != null;
+    }
+
+    public void addStamp(HibBaseEventStamp stamp) {
+        if (stamp == null) {
+            throw new IllegalArgumentException("stamp cannot be null");
+        }
+
+        stamp.setItem(this);
+        stamps.add(stamp);
+    }
+
+    @Deprecated
+    public HibBaseEventStamp getStamp() {
+        for(HibBaseEventStamp stamp : stamps) {
+            // only return stamp if it is an instance of the specified class
+            if(HibBaseEventStamp.class.isInstance(stamp)) {
+                return stamp;
+            }
+        }
+
+        return null;
     }
 
 }

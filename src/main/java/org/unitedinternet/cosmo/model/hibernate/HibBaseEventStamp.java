@@ -41,7 +41,7 @@ public class HibBaseEventStamp extends HibAuditableObject {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(targetEntity=HibItem.class, fetch = FetchType.EAGER)
+    @ManyToOne(targetEntity=HibICalendarItem.class, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SELECT)
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;

@@ -20,8 +20,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import java.nio.charset.Charset;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -36,7 +34,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -84,9 +81,6 @@ public abstract class HibItem extends HibAuditableObject {
     @Temporal(TemporalType.TIMESTAMP)
     private Date clientModifiedDate;
 
-    @OneToMany(targetEntity=HibBaseEventStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    private Set<HibBaseEventStamp> stamps = new HashSet<>();
-
     @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "collectionid")
     private HibCollectionItem collection;
@@ -104,27 +98,6 @@ public abstract class HibItem extends HibAuditableObject {
         this.id = id;
     }
 
-    public void addStamp(HibBaseEventStamp stamp) {
-        if (stamp == null) {
-            throw new IllegalArgumentException("stamp cannot be null");
-        }
-
-        stamp.setItem(this);
-        stamps.add(stamp);
-    }
-
-    @Deprecated
-    public HibBaseEventStamp getStamp() {
-        for(HibBaseEventStamp stamp : stamps) {
-            // only return stamp if it is an instance of the specified class
-            if(HibBaseEventStamp.class.isInstance(stamp)) {
-                return stamp;
-            }
-        }
-
-        return null;
-    }
-    
     public void setIcalUid(String icalUid) {
         //TODO
     }

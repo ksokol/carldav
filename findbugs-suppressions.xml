@@ -4,10 +4,6 @@
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.hibernate.CompoundInterceptor" />
-        <Bug pattern="UWF_FIELD_NOT_INITIALIZED_IN_CONSTRUCTOR" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>

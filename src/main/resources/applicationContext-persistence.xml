@@ -21,7 +21,7 @@
 
     <!-- Sesssion factory -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
-        <property name="entityInterceptor" ref="cosmoHibernateInterceptor" />
+        <property name="entityInterceptor" ref="auditableObjectInterceptor" />
         <property name="dataSource" ref="dataSource" />
         <property name="packagesToScan" value="org.unitedinternet.cosmo.model" />
         <property name="hibernateProperties">
@@ -39,14 +39,6 @@
 
     <bean id="auditableObjectInterceptor" class="org.unitedinternet.cosmo.model.hibernate.AuditableObjectInterceptor">
         <constructor-arg index="0" ref="timeService" />
-    </bean>
-
-    <bean id="cosmoHibernateInterceptor" class="org.unitedinternet.cosmo.hibernate.CompoundInterceptor">
-        <property name="interceptors">
-            <list>
-                <ref bean="auditableObjectInterceptor" />
-            </list>
-        </property>
     </bean>
 
     <!--  Transaction Definitions -->

@@ -27,10 +27,8 @@ import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import org.hibernate.annotations.Fetch;
@@ -130,14 +128,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
     public void setEventCalendar(Calendar calendar) {
         this.eventCalendar = calendar;
     }
-    
-    public HibEventTimeRangeIndex getTimeRangeIndex() {
-        return timeRangeIndex;
-    }
-
-    public String getIcalUid() {
-        return getEvent().getUid().getValue();
-    }
 
     public void setIcalUid(String uid) {
         VEvent event = getEvent();
@@ -145,14 +135,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
             throw new IllegalStateException("no event");
         }
         ICalendarUtils.setUid(uid, getEvent());
-    }
-
-    public void setSummary(String text) {
-        ICalendarUtils.setSummary(text, getEvent());
-    }
-
-    public void setDescription(String text) {
-        ICalendarUtils.setDescription(text, getEvent());
     }
 
     public Date getStartDate() {
@@ -166,18 +148,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
             return null;
         }
         return dtStart.getDate();
-    }
-
-    public void setStartDate(Date date) {
-        DtStart dtStart = getEvent().getStartDate();
-        if (dtStart != null) {
-            dtStart.setDate(date);
-        }
-        else {
-            dtStart = new DtStart(date);
-            getEvent().getProperties().add(dtStart);
-        }
-        setDatePropertyValue(dtStart, date);
     }
 
     public Date getEndDate() {
@@ -211,50 +181,8 @@ public class HibBaseEventStamp extends HibAuditableObject {
         return dtEnd.getDate();
     }
 
-    public void setEndDate(Date date) {
-        DtEnd dtEnd = getEvent().getEndDate(false);
-        if (dtEnd != null && date != null) {
-            dtEnd.setDate(date);
-        }
-        else  if(dtEnd !=null && date == null) {
-            // remove DtEnd if there is no end date
-            getEvent().getProperties().remove(dtEnd);
-        }
-        else {
-            // remove the duration if there was one
-            Duration duration = (Duration) getEvent().getProperties().
-                getProperty(Property.DURATION);
-            if (duration != null) {
-                getEvent().getProperties().remove(duration);
-            }
-            dtEnd = new DtEnd(date);
-            getEvent().getProperties().add(dtEnd);
-        }
-        setDatePropertyValue(dtEnd, date);
-    }
-
-    protected void setDatePropertyValue(DateProperty prop, Date date) {
-        if (prop == null) {
-            return;
-        }
-        Value value = (Value) prop.getParameters().getParameter(Parameter.VALUE);
-        if (value != null) {
-            prop.getParameters().remove(value);
-        }
-        
-        // Add VALUE=DATE for Date values, otherwise
-        // leave out VALUE=DATE-TIME because it is redundant
-        if(! (date instanceof DateTime)) {
-            prop.getParameters().add(Value.DATE);
-        }
-    }
-
     public Dur getDuration() {
         return ICalendarUtils.getDuration(getEvent());
-    }
-
-    public void setDuration(Dur dur) {
-        ICalendarUtils.setDuration(getEvent(), dur);
     }
 
     public List<Recur> getRecurrenceRules() {

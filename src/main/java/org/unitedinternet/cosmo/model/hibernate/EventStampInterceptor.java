@@ -15,11 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
-import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 
 import java.io.Serializable;
 
@@ -28,9 +25,13 @@ import java.io.Serializable;
  */
 public class EventStampInterceptor extends EmptyInterceptor {
 
-    private static final long serialVersionUID = 5339230223113722458L;
+    private static final long serialVersionUID = 1L;
 
-    public static final String TIME_INFINITY = "Z-TIME-INFINITY";
+    private final EntityConverter entityConverter;
+
+    public EventStampInterceptor(final EntityConverter entityConverter) {
+        this.entityConverter = entityConverter;
+    }
 
     @Override
     public boolean onFlushDirty(Object object, Serializable id, Object[] currentState,
@@ -41,7 +42,7 @@ public class EventStampInterceptor extends EmptyInterceptor {
         
         // calculate time-range-index
         HibBaseEventStamp es = (HibBaseEventStamp) object;
-        HibEventTimeRangeIndex index = calculateEventStampIndexes(es);
+        HibEventTimeRangeIndex index = entityConverter.calculateEventStampIndexes(es);
         
         if(index==null) {
             return false;
@@ -67,7 +68,7 @@ public class EventStampInterceptor extends EmptyInterceptor {
         
         // calculate time-range-index
         HibBaseEventStamp es = (HibBaseEventStamp) object;
-        HibEventTimeRangeIndex index = calculateEventStampIndexes(es);
+        HibEventTimeRangeIndex index = entityConverter.calculateEventStampIndexes(es);
         
         if(index==null) {
             return false;
@@ -83,92 +84,4 @@ public class EventStampInterceptor extends EmptyInterceptor {
         
         return false;
     }
-    
-    /**
-     * Update the TimeRangeIndex property of the BaseEventStamp.
-     * For recurring events, this means calculating the first start date
-     * and the last end date for all occurences.
-     */
-    protected HibEventTimeRangeIndex calculateEventStampIndexes(HibBaseEventStamp eventStamp) {
-        Date startDate = eventStamp.getStartDate();
-        Date endDate = eventStamp.getEndDate();
-
-        boolean isRecurring = false;
-        
-        if (eventStamp.isRecurring()) {
-            isRecurring = true;
-            RecurrenceExpander expander = new RecurrenceExpander();
-            Date[] range = expander
-                    .calculateRecurrenceRange(eventStamp.getEventCalendar());
-            startDate = range[0];
-            endDate = range[1];
-        } else {
-            // If there is no end date, then its a point-in-time event
-            if (endDate == null) {
-                endDate = startDate;
-            }
-        }
-        
-        boolean isFloating = false;
-        
-        // must have start date
-        if(startDate==null) {
-            return null;
-        }
-        
-        // A floating date is a DateTime with no timezone, or
-        // a Date
-        if(startDate instanceof DateTime) {
-            DateTime dtStart = (DateTime) startDate;
-            if(dtStart.getTimeZone()==null && !dtStart.isUtc()) {
-                isFloating = true;
-            }
-        } else {
-            // Date instances are really floating because you can't pin
-            // the a date like 20070101 to an instant without first
-            // knowing the timezone
-            isFloating = true;
-        }
-        
-        HibEventTimeRangeIndex timeRangeIndex = new HibEventTimeRangeIndex();
-        timeRangeIndex.setStartDate(fromDateToStringNoTimezone(startDate));
-        
-        
-        // A null endDate equates to infinity, which is represented by
-        // a String that will always come after any date when compared.
-        if(endDate!=null) {
-            timeRangeIndex.setEndDate(fromDateToStringNoTimezone(endDate));
-        }
-        else {
-            timeRangeIndex.setEndDate(TIME_INFINITY);
-        }
-        
-        timeRangeIndex.setIsFloating(isFloating);
-        timeRangeIndex.setIsRecurring(isRecurring);
-        
-        return timeRangeIndex;
-    }
-    
-    private String fromDateToStringNoTimezone(Date date) {
-        if(date==null) {
-            return null;
-        }
-        
-        if(date instanceof DateTime) {
-            DateTime dt = (DateTime) date;
-            // If DateTime has a timezone, then convert to UTC before
-            // serializing as String.
-            if(dt.getTimeZone()!=null) {
-                // clone instance first to prevent changes to original instance
-                DateTime copy = new DateTime(dt);
-                copy.setUtc(true);
-                return copy.toString();
-            } else {
-                return dt.toString();
-            }
-        } else {
-            return date.toString();
-        }
-    }
-
 }

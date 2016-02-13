@@ -16,13 +16,9 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.component.VEvent;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
-import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -95,35 +91,12 @@ public class HibBaseEventStamp extends HibAuditableObject {
         setItem(hibItem);
     }
 
-    public VEvent getEvent() {
-        if(getEventCalendar()==null) {
-            return null;
-        }
-
-        ComponentList events = getEventCalendar().getComponents().getComponents(
-                Component.VEVENT);
-
-        if(events.size()==0) {
-            return null;
-        }
-
-        return (VEvent) events.get(0);
-    }
-
     public Calendar getEventCalendar() {
         return eventCalendar;
     }
 
     public void setEventCalendar(Calendar calendar) {
         this.eventCalendar = calendar;
-    }
-
-    public void setIcalUid(String uid) {
-        VEvent event = getEvent();
-        if(event==null) {
-            throw new IllegalStateException("no event");
-        }
-        ICalendarUtils.setUid(uid, getEvent());
     }
 
     public boolean isRecurring() {

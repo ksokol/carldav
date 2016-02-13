@@ -151,10 +151,7 @@ public abstract class HibItem extends HibAuditableObject {
     }
 
     public void setIcalUid(String icalUid) {
-        final HibBaseEventStamp stamp = getStamp();
-        if(stamp != null) {
-            stamp.setIcalUid(icalUid);
-        }
+        //TODO
     }
 
     public boolean isRecurring() {

@@ -19,16 +19,10 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
-import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.property.Status;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -42,9 +36,7 @@ import java.io.FileInputStream;
  */
 public class EntityConverterTest {
     protected String baseDir = "src/test/resources/testdata/entityconverter/";
-    private static final TimeZoneRegistry TIMEZONE_REGISTRY =
-        TimeZoneRegistryFactory.getInstance().createRegistry();
-    
+
     protected EntityConverter converter = new EntityConverter(new VersionFourGenerator());
 
     /**
@@ -84,69 +76,6 @@ public class EntityConverterTest {
         Assert.assertTrue(TriageStatusUtil.CODE_DONE==ts.getCode());
         long rankTime = TriageStatusUtil.getDateFromRank(ts.getRank()).getTime();
         Assert.assertTrue(rankTime<=end && rankTime>=begin);
-    }
-
-    /**
-     * Tests convert event.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Ignore
-    @Test
-    public void testConvertEvent() throws Exception {
-        TimeZoneRegistry registry =
-            TimeZoneRegistryFactory.getInstance().createRegistry();
-        HibNoteItem master = new HibNoteItem();
-        master.setDisplayName("displayName");
-        master.setBody("body");
-        master.setIcalUid("icaluid");
-        master.setClientModifiedDate(new DateTime("20070101T100000Z"));
-        HibBaseEventStamp eventStamp = new HibBaseEventStamp(master);
-        eventStamp.setStartDate(new DateTime("20070212T074500"));
-        master.addStamp(eventStamp);
-        
-        Calendar cal = converter.convertNote(master);
-        cal.validate();
-        
-        // date has no timezone, so there should be no timezones
-        Assert.assertEquals(0, cal.getComponents(Component.VTIMEZONE).size());
-      
-        eventStamp.setStartDate(new DateTime("20070212T074500",TIMEZONE_REGISTRY.getTimeZone("America/Chicago")));
-        
-        cal = converter.convertNote(master);
-        cal.validate();
-        
-        // should be a single VEVENT
-        ComponentList comps = cal.getComponents(Component.VEVENT);
-        Assert.assertEquals(1, comps.size());
-        VEvent event = (VEvent) comps.get(0);
-        
-        // test VALUE=DATE-TIME is not present
-        Assert.assertNull(event.getStartDate().getParameter(Parameter.VALUE));
-        
-        // test item properties got merged into calendar
-        Assert.assertEquals("displayName", event.getSummary().getValue());
-        Assert.assertEquals("body", event.getDescription().getValue());
-        Assert.assertEquals("icaluid", event.getUid().getValue());
-        Assert.assertEquals(master.getClientModifiedDate().getTime(), event.getDateStamp().getDate().getTime());
-         
-        // date has timezone, so there should be a timezone
-        Assert.assertEquals(1, cal.getComponents(Component.VTIMEZONE).size());
-        
-        eventStamp.setEndDate(new DateTime("20070212T074500",TIMEZONE_REGISTRY.getTimeZone("America/Los_Angeles")));
-        
-        cal = converter.convertNote(master);
-        cal.validate();
-        
-        // dates have 2 different timezones, so there should be 2 timezones
-        Assert.assertEquals(2, cal.getComponents(Component.VTIMEZONE).size());
-        
-        // add timezones to master event calendar
-        eventStamp.getEventCalendar().getComponents().add(registry.getTimeZone("America/Chicago").getVTimeZone());
-        eventStamp.getEventCalendar().getComponents().add(registry.getTimeZone("America/Los_Angeles").getVTimeZone());
-        
-        cal = converter.convertNote(master);
-        cal.validate();
-        Assert.assertEquals(2, cal.getComponents(Component.VTIMEZONE).size());
     }
 
     /**

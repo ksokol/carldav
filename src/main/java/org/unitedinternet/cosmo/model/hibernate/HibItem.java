@@ -127,6 +127,11 @@ public abstract class HibItem extends HibAuditableObject {
     }
 
     //TODO rename me
+    public void setStampCalendar() {
+        addStamp(new HibBaseEventStamp(this));
+    }
+
+    //TODO rename me
     public Calendar getStampCalendar() {
         final HibBaseEventStamp stamp = getStamp();
         if(stamp != null) {

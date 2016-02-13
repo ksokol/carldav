@@ -101,8 +101,7 @@ public class EntityConverter {
             note.setDisplayName(event.getSummary().getValue());
         }
 
-        final HibBaseEventStamp stamp = note.getStamp();
-        calculateEventStampIndexes(calendar, event, stamp);
+        calculateEventStampIndexes(calendar, event, note);
 
         return Collections.singleton(note);
     }
@@ -387,7 +386,7 @@ public class EntityConverter {
         return l;
     }
 
-    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibBaseEventStamp stamp) {
+    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibNoteItem note) {
         Date startDate = getStartDate(event);
         Date endDate = getEndDate(event);
 
@@ -428,16 +427,16 @@ public class EntityConverter {
         }
 
         final DateTime startDateTime = new DateTime(startDate);
-        stamp.setStartDate(startDateTime);
+        note.setStartDate(startDateTime);
 
         // A null endDate equates to infinity, which is represented by
         // a String that will always come after any date when compared.
         if(endDate!=null) {
             final DateTime endDateTime = new DateTime(endDate);
-            stamp.setEndDate(endDateTime);
+            note.setEndDate(endDateTime);
         }
 
-        stamp.setIsFloating(isFloating);
-        stamp.setIsRecurring(isRecurring);
+        note.setFloating(isFloating);
+        note.setRecurring(isRecurring);
     }
 }

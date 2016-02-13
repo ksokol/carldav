@@ -18,26 +18,11 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -52,10 +37,6 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SecondaryTable;
 import javax.validation.constraints.NotNull;
 
-
-/**
- * Hibernate persistent BaseEventStamp.
- */
 @Entity
 @SecondaryTable(name="event_stamp", pkJoinColumns={
         @PrimaryKeyJoinColumn(name="stampid", referencedColumnName="id")},
@@ -145,50 +126,8 @@ public class HibBaseEventStamp extends HibAuditableObject {
         ICalendarUtils.setUid(uid, getEvent());
     }
 
-    public List<Recur> getRecurrenceRules() {
-        ArrayList<Recur> l = new ArrayList<Recur>();
-        VEvent event = getEvent();
-        if(event!=null) {
-            for (Object rrule : getEvent().getProperties().getProperties(Property.RRULE)) {
-                l.add(((RRule)rrule).getRecur());
-            }
-        }
-        return l;
-    }
-
-    public DateList getRecurrenceDates() {
-
-        DateList l = null;
-
-        VEvent event = getEvent();
-        if(event==null) {
-            return null;
-        }
-
-        for (Object property : getEvent().getProperties().getProperties(Property.RDATE)) {
-            RDate rdate = (RDate) property;
-            if(l==null) {
-                if(Value.DATE.equals(rdate.getParameter(Parameter.VALUE))) {
-                    l = new DateList(Value.DATE);
-                }
-                else {
-                    l = new DateList(Value.DATE_TIME, rdate.getDates().getTimeZone());
-                }
-            }
-            l.addAll(rdate.getDates());
-        }
-
-        return l;
-    }
-
     public boolean isRecurring() {
-       if(getRecurrenceRules().size()>0) {
-           return true;
-       }
-
-       DateList rdates = getRecurrenceDates();
-
-       return rdates!=null && rdates.size()>0;
+        return getTimeRangeIndex().getIsRecurring();
     }
 
     @Override

@@ -176,19 +176,19 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {
             if (filter.getIsRecurring() == true) {
-                appendWhere(whereBuf, "(es.isRecurring=true)");
+                appendWhere(whereBuf, "(i.recurring=true)");
             } else {
-                appendWhere(whereBuf, "(es.isRecurring=false)");
+                appendWhere(whereBuf, "(i.recurring=false)");
             }
         }
 
         if (filter.getPeriod() != null) {
             whereBuf.append(" and ( ");
-            whereBuf.append("(es.startDate < :endDate)");
-            whereBuf.append(" and es.endDate > :startDate)");
+            whereBuf.append("(i.startDate < :endDate)");
+            whereBuf.append(" and i.endDate > :startDate)");
 
             // edge case where start==end
-            whereBuf.append(" or (es.startDate=es.endDate and (es.startDate=:startDate or es.startDate=:endDate))");
+            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
 
             whereBuf.append(")");
 

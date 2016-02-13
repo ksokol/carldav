@@ -31,6 +31,16 @@ import javax.persistence.TemporalType;
 
 @Entity
 @DiscriminatorValue("note")
+/*
+@Table(name = "stamp",
+        indexes = {
+                @Index(name = "idx_startdt",columnList = "startdate"),
+                @Index(name = "idx_enddt",columnList = "enddate"),
+                @Index(name = "idx_floating",columnList = "floating"),
+                @Index(name = "idx_recurring",columnList = "recurring")
+        }
+)
+*/
 public class HibNoteItem extends HibICalendarItem {
 
     private static final long serialVersionUID = 4L;
@@ -88,22 +98,18 @@ public class HibNoteItem extends HibICalendarItem {
 
     public void setStartDate(final Date startDate) {
         this.startDate = startDate;
-        getStamp().setStartDate(startDate);
     }
 
     public void setEndDate(final Date endDate) {
         this.endDate = endDate;
-        getStamp().setEndDate(endDate);
     }
 
     public void setFloating(boolean floating) {
         this.floating = floating;
-        getStamp().setIsFloating(floating);
     }
 
     public void setRecurring(boolean recurring) {
         this.recurring = recurring;
-        getStamp().setIsRecurring(recurring);
     }
 
     @Override

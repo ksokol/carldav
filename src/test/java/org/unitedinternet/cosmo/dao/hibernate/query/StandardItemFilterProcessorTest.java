@@ -252,7 +252,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibBaseEventStamp "
                 + "es where pd=:parent and i.displayName=:param1 and "
-                + "es.item=i and (es.isRecurring=true) "
+                + "es.item=i and (i.recurring=true) "
                 + "and i.icalUid=:param2", query.getQueryString());
     }
 
@@ -273,8 +273,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibBaseEventStamp es " +
-                "where pd=:parent and es.item=i and ( (es.startDate < :endDate) and es.endDate > :startDate) " +
-                "or (es.startDate=es.endDate and (es.startDate=:startDate or es.startDate=:endDate)))"
+                "where pd=:parent and es.item=i and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
+                "or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate)))"
                 ,query.getQueryString());
     }
 }

@@ -152,7 +152,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                                     Map<String, Object> params) {
         for (StampFilter stampFilter : filter.getStampFilters()) {
             if (stampFilter instanceof EventStampFilter) {
-                handleStampFilter(selectBuf, whereBuf, stampFilter);
+                handleStampFilter(selectBuf, whereBuf, stampFilter, params);
             } else if(stampFilter instanceof JournalStampFilter) {
                 handleJournalFilter(whereBuf, stampFilter, params);
             } else {
@@ -167,7 +167,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
     private void handleStampFilter(StringBuffer selectBuf,
                                    StringBuffer whereBuf,
-                                   StampFilter filter) {
+                                   StampFilter filter,
+                                   Map<String, Object> params) {
 
         selectBuf.append(", " + filter.getStampClass().getSimpleName() + " es");
         appendWhere(whereBuf, "es.item=i");
@@ -181,21 +182,18 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             }
         }
 
-        // handle time range
         if (filter.getPeriod() != null) {
             whereBuf.append(" and ( ");
-            whereBuf.append("(es.isFloating=true and es.startDate < '" + filter.getFloatEnd() + "'");
-            whereBuf.append(" and es.endDate > '" + filter.getFloatStart() + "')");
-
-            whereBuf.append(" or (es.isFloating=false and " +
-                    "es.startDate < '" + filter.getUTCEnd() + "'");
-            whereBuf.append(" and es.endDate > '" + filter.getUTCStart() + "')");
+            whereBuf.append("(es.startDate < :endDate)");
+            whereBuf.append(" and es.endDate > :startDate)");
 
             // edge case where start==end
-            whereBuf.append(" or (es.startDate=es.endDate and " +
-                    "(es.startDate='" + filter.getFloatStart() + "' or es.startDate='" + filter.getUTCStart() + "'))");
+            whereBuf.append(" or (es.startDate=es.endDate and (es.startDate=:startDate or es.startDate=:endDate))");
 
             whereBuf.append(")");
+
+            params.put("startDate", filter.getStart());
+            params.put("endDate", filter.getEnd());
         }
     }
 

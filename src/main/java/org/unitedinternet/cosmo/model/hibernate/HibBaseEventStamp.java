@@ -20,6 +20,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -56,11 +58,11 @@ public class HibBaseEventStamp extends HibAuditableObject {
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;
 
-    @Column(name = "startdate", length=16)
-    private String startDate;
+    @Column(name = "startdate")
+    private Date startDate;
 
-    @Column(name = "enddate", length=16)
-    private String endDate;
+    @Column(name = "enddate")
+    private Date endDate;
 
     @Column(name = "isfloating")
     private Boolean isFloating;
@@ -98,20 +100,20 @@ public class HibBaseEventStamp extends HibAuditableObject {
         this.eventCalendar = calendar;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public Date getStartDate() {
+        return new Date(startDate.getTime());
     }
 
-    public void setStartDate(final String startDate) {
-        this.startDate = startDate;
+    public void setStartDate(final Date startDate) {
+        this.startDate = new Date(startDate.getTime());
     }
 
-    public String getEndDate() {
-        return endDate;
+    public Date getEndDate() {
+        return new Date(endDate.getTime());
     }
 
-    public void setEndDate(final String endDate) {
-        this.endDate = endDate;
+    public void setEndDate(final Date endDate) {
+        this.endDate = new Date(endDate.getTime());
     }
 
     public Boolean getIsFloating() {

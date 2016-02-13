@@ -59,8 +59,6 @@ import java.util.Set;
  */
 public class EntityConverter {
 
-    private static final String TIME_INFINITY = "Z-TIME-INFINITY";
-
     private final IdGenerator idGenerator;
 
     public EntityConverter(IdGenerator idGenerator) {
@@ -429,40 +427,17 @@ public class EntityConverter {
             isFloating = true;
         }
 
-        stamp.setStartDate(fromDateToStringNoTimezone(startDate));
+        final DateTime startDateTime = new DateTime(startDate);
+        stamp.setStartDate(startDateTime);
 
         // A null endDate equates to infinity, which is represented by
         // a String that will always come after any date when compared.
         if(endDate!=null) {
-            stamp.setEndDate(fromDateToStringNoTimezone(endDate));
-        }
-        else {
-            stamp.setEndDate(TIME_INFINITY);
+            final DateTime endDateTime = new DateTime(endDate);
+            stamp.setEndDate(endDateTime);
         }
 
         stamp.setIsFloating(isFloating);
         stamp.setIsRecurring(isRecurring);
-    }
-
-    private String fromDateToStringNoTimezone(Date date) {
-        if(date==null) {
-            return null;
-        }
-
-        if(date instanceof DateTime) {
-            DateTime dt = (DateTime) date;
-            // If DateTime has a timezone, then convert to UTC before
-            // serializing as String.
-            if(dt.getTimeZone()!=null) {
-                // clone instance first to prevent changes to original instance
-                DateTime copy = new DateTime(dt);
-                copy.setUtc(true);
-                return copy.toString();
-            } else {
-                return dt.toString();
-            }
-        } else {
-            return date.toString();
-        }
     }
 }

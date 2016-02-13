@@ -90,7 +90,7 @@ public class EntityConverter {
      * @param calendar The calendar.
      * @return set note item.
      */
-    public Set<HibNoteItem> convertEventCalendar(HibNoteItem note, Calendar calendar) {
+    public Set<HibEventItem> convertEventCalendar(HibEventItem note, Calendar calendar) {
         final VEvent event = (VEvent) calendar.getComponent("VEVENT");
 
         if(event.getUid()!=null) {
@@ -197,7 +197,15 @@ public class EntityConverter {
      * @param task The task vToDo.
      */
     private void setCalendarAttributes(HibNoteItem note, VToDo task) {
-        
+
+        if(task.getStartDate() != null) {
+            final DtStart startDate = task.getStartDate();
+            final DateTime dateTime = new DateTime(startDate.getDate());
+
+            note.setStartDate(dateTime);
+            note.setEndDate(dateTime);
+        }
+
         // UID
         if(task.getUid()!=null) {
             note.setIcalUid(task.getUid().getValue());
@@ -383,7 +391,7 @@ public class EntityConverter {
         return l;
     }
 
-    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibNoteItem note) {
+    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibEventItem note) {
         Date startDate = getStartDate(event);
         Date endDate = getEndDate(event);
 

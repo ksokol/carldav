@@ -155,14 +155,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                 handleStampFilter(selectBuf, whereBuf, stampFilter, params);
             } else if(stampFilter instanceof JournalStampFilter) {
                 handleJournalFilter(whereBuf, stampFilter, params);
-            } else {
-                handleStampFilter(whereBuf);
             }
         }
-    }
-
-    private void handleStampFilter(StringBuffer whereBuf) {
-        appendWhere(whereBuf, "not exists (select s.id from HibBaseEventStamp s where s.item=i)");
     }
 
     private void handleStampFilter(StringBuffer selectBuf,
@@ -170,8 +164,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                                    StampFilter filter,
                                    Map<String, Object> params) {
 
-        selectBuf.append(", " + filter.getStampClass().getSimpleName() + " es");
-        appendWhere(whereBuf, "es.item=i");
+        appendWhere(whereBuf, "i.class=:clazz");
+        params.put("clazz", filter.getType());
 
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {

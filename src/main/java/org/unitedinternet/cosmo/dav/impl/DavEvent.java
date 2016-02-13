@@ -23,10 +23,8 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 /**
  * Extends <code>DavCalendarResource</code> to adapt the Cosmo
@@ -41,11 +39,10 @@ public class DavEvent extends DavCalendarResource {
                     DavResourceFactory factory,
                     IdGenerator idGenerator)
         throws CosmoDavException {
-        this(new HibNoteItem(), locator, factory, idGenerator);
-        ((HibNoteItem) getItem()).addStamp(new HibBaseEventStamp(getItem()));
+        this(new HibEventItem(), locator, factory, idGenerator);
     }
 
-    public DavEvent(HibNoteItem item,
+    public DavEvent(HibEventItem item,
                     DavResourceLocator locator,
                     DavResourceFactory factory,
                     IdGenerator idGenerator)
@@ -54,7 +51,7 @@ public class DavEvent extends DavCalendarResource {
     }
 
     public Calendar getCalendar() {
-        return new EntityConverter(getIdGenerator()).convertNote((HibNoteItem)getItem());
+        return ((HibICalendarItem) getItem()).getCalendar();
     }
 
     protected void setCalendar(Calendar calendar)

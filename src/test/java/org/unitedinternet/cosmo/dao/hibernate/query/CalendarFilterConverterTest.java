@@ -33,8 +33,8 @@ import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 
 /**
@@ -124,13 +124,7 @@ public class CalendarFilterConverterTest {
         ComponentFilter taskComp = new ComponentFilter();
         taskComp.setName("VTODO");
         rootComp.getComponentFilters().add(taskComp);
-        
-        try {
-            converter.translateToItemFilter(calendar, calFilter);
-            Assert.fail("shouldn't get here");
-        } catch(IllegalArgumentException e) {}
-        
-        
+
         ItemFilter itemFilter = converter.getFirstPassFilter(calendar, calFilter);
         Assert.assertNotNull(itemFilter);
         Assert.assertTrue(itemFilter instanceof NoteItemFilter);
@@ -139,7 +133,7 @@ public class CalendarFilterConverterTest {
         Assert.assertEquals(1, noteFilter.getStampFilters().size());
         
         StampFilter sf = noteFilter.getStampFilters().get(0);
-        Assert.assertEquals(HibBaseEventStamp.class, sf.getStampClass());
+        Assert.assertEquals(HibICalendarItem.class, sf.getStampClass());
     }
     
     /**

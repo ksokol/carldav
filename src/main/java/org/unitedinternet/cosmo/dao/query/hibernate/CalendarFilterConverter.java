@@ -28,8 +28,8 @@ import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibBaseEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Iterator;
 
@@ -108,7 +108,7 @@ public class CalendarFilterConverter {
     private ItemFilter createFirstPassTaskFilter(HibCollectionItem collection) {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
-        filter.getStampFilters().add(new StampFilter(HibBaseEventStamp.class));
+        filter.getStampFilters().add(new StampFilter(HibICalendarItem.class));
         return filter;
     }
 
@@ -118,6 +118,10 @@ public class CalendarFilterConverter {
             handleEventCompFilter(compFilter, itemFilter, new EventStampFilter());
         } else if (COMP_VJOURNAL.equalsIgnoreCase(compFilter.getName())) {
             handleEventCompFilter(compFilter, itemFilter, new JournalStampFilter());
+        } else if(COMP_VTODO.equalsIgnoreCase(compFilter.getName())) {
+            final EventStampFilter eventStampFilter = new EventStampFilter();
+            eventStampFilter.setType("note");
+            handleEventCompFilter(compFilter, itemFilter, eventStampFilter);
         } else {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());
         }

@@ -44,6 +44,7 @@ public class StampFilter {
     private Date fstart;
     private Date fend;
     private TimeZone timezone = null;
+    private String type;
 
     public StampFilter() {}
     
@@ -121,6 +122,14 @@ public class StampFilter {
 
     public Date getStart() {
         return new Date(fstart.getTime());
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(final String type) {
+        this.type = type;
     }
 
     /**

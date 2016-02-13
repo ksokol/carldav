@@ -115,7 +115,7 @@ public abstract class HibItem extends HibAuditableObject {
     }
 
     @Deprecated
-    private HibBaseEventStamp getStamp() {
+    public HibBaseEventStamp getStamp() {
         for(HibBaseEventStamp stamp : stamps) {
             // only return stamp if it is an instance of the specified class
             if(HibBaseEventStamp.class.isInstance(stamp)) {

@@ -93,6 +93,10 @@ public class EntityConverter {
             note.setDisplayName(event.getSummary().getValue());
         }
 
+        final HibBaseEventStamp stamp = note.getStamp();
+        final HibEventTimeRangeIndex hibEventTimeRangeIndex = calculateEventStampIndexes(stamp);
+        stamp.setTimeRangeIndex(hibEventTimeRangeIndex);
+
         return Collections.singleton(note);
     }
 

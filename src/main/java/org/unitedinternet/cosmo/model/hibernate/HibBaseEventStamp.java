@@ -100,6 +100,14 @@ public class HibBaseEventStamp extends HibAuditableObject {
         this.item = hibItem;
     }
 
+    public HibEventTimeRangeIndex getTimeRangeIndex() {
+        return timeRangeIndex;
+    }
+
+    public void setTimeRangeIndex(final HibEventTimeRangeIndex timeRangeIndex) {
+        this.timeRangeIndex = timeRangeIndex;
+    }
+
     public HibBaseEventStamp() {}
 
     public HibBaseEventStamp(HibItem hibItem) {

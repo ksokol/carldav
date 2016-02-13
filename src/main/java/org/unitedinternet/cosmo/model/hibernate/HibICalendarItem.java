@@ -43,6 +43,10 @@ public abstract class HibICalendarItem extends HibItem {
     }
 
     public Calendar getCalendar() {
+        final HibBaseEventStamp stamp = getStamp();
+        if(stamp != null) {
+            return stamp.getEventCalendar();
+        }
         return calendar;
     }
 

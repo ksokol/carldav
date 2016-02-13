@@ -171,9 +171,6 @@ public class EntityConverter {
     }
 
     public Calendar convertNote(HibNoteItem note) {
-        if (note.isEvent()) {
-            return note.getStampCalendar();
-        }
         return note.getCalendar();
     }
 

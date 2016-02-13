@@ -43,6 +43,18 @@ public class HibNoteItem extends HibICalendarItem {
     @Temporal(TemporalType.TIMESTAMP)
     private Date remindertime;
 
+    @Column(name = "startdate")
+    private Date startDate;
+
+    @Column(name = "enddate")
+    private Date endDate;
+
+    @Column(name = "floating")
+    private boolean floating;
+
+    @Column(name = "recurring")
+    private boolean recurring;
+
     @Embedded
     @Target(TriageStatus.class)
     private TriageStatus triageStatus = new TriageStatus();
@@ -75,18 +87,22 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public void setStartDate(final Date startDate) {
+        this.startDate = startDate;
         getStamp().setStartDate(startDate);
     }
 
     public void setEndDate(final Date endDate) {
+        this.endDate = endDate;
         getStamp().setEndDate(endDate);
     }
 
     public void setFloating(boolean floating) {
+        this.floating = floating;
         getStamp().setIsFloating(floating);
     }
 
     public void setRecurring(boolean recurring) {
+        this.recurring = recurring;
         getStamp().setIsRecurring(recurring);
     }
 

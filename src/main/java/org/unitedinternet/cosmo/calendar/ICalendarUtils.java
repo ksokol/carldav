@@ -30,17 +30,13 @@ import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.Related;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.Completed;
-import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.Repeat;
 import net.fortuna.ical4j.model.property.Status;
-import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Trigger;
-import net.fortuna.ical4j.model.property.Uid;
 import org.unitedinternet.cosmo.CosmoParseException;
 import org.unitedinternet.cosmo.calendar.util.Dates;
 
@@ -54,51 +50,6 @@ import java.util.List;
  * objects.
  */
 public class ICalendarUtils {
-
-    /**
-     * Update the SUMMARY property on a component.
-     * @param text SUMMARY value to update.  If null, the SUMMARY property
-     *        will be removed
-     * @param comp component to update
-     */
-    public static void setSummary(String text, Component comp) {
-        Summary summary = (Summary)
-        comp.getProperties().getProperty(Property.SUMMARY);
-        if (text == null) {
-            if (summary != null) {
-                comp.getProperties().remove(summary);
-            }
-            return;
-        }                
-        if (summary == null) {
-            summary = new Summary();
-            comp.getProperties().add(summary);
-        }
-        summary.setValue(text);
-    }
-
-    /**
-     * Update the DESCRIPTION property on a component.
-     * @param text DESCRIPTION value to update.  If null, the DESCRIPTION property
-     *        will be removed
-     * @param comp component to update
-     */
-    public static void setDescription(String text, Component comp) {
-        Description description = (Description)
-        comp.getProperties().getProperty(Property.DESCRIPTION);
-   
-        if (text == null) {
-            if (description != null) {
-                comp.getProperties().remove(description);
-            }
-            return;
-        }                
-        if (description == null) {
-            description = new Description();
-            comp.getProperties().add(description);
-        }
-        description.setValue(text);
-    }
 
     /**
      * Update the COMPLETED property on a VTODO component.
@@ -140,29 +91,6 @@ public class ICalendarUtils {
             vtodo.getProperties().add(status);
         }
     }
-
-    /**
-     * Update the UID property on a component.
-     * @param text UID value to update.  If null, the UID property
-     *        will be removed
-     * @param comp component to update
-     */
-    public static void setUid(String text, Component comp) {
-        Uid uid = (Uid)
-        comp.getProperties().getProperty(Property.UID);
-   
-        if (text == null) {
-            if (uid != null) {
-                comp.getProperties().remove(uid);
-            }
-            return;
-        }                
-        if (uid == null) {
-            uid = new Uid();
-            comp.getProperties().add(uid);
-        }
-        uid.setValue(text);
-    }
     
     /**
      * Get the duration for an event.  If the DURATION property
@@ -187,40 +115,7 @@ public class ICalendarUtils {
         }
         return new Duration(dtstart.getDate(), dtend.getDate()).getDuration();
     }
-    
-    /**
-     * Set the duration for an event.  If DTEND is present, remove it.
-     * @param event The event.
-     * @param dur The duration.
-     */
-    public static void setDuration(VEvent event, Dur dur) {
-        Duration duration = (Duration)
-            event.getProperties().getProperty(Property.DURATION);
-        
-       
-        // remove DURATION if dur is null
-        if(dur==null) {
-            if(duration != null) {
-                event.getProperties().remove(duration);
-            }
-            return;
-        }
-        
-        // update dur on existing DURATION
-        if (duration != null) {
-            duration.setDuration(dur);
-        }
-        else {
-            // remove the dtend if there was one
-            DtEnd dtend = event.getEndDate();
-            if (dtend != null) {
-                event.getProperties().remove(dtend);
-            }
-            duration = new Duration(dur);
-            event.getProperties().add(duration);
-        }
-    }
-    
+
     /**
      * Construct a new DateTime instance for floating times (no timezone).
      * If the specified date is not floating, then the instance is returned. 

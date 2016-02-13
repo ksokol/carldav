@@ -15,27 +15,18 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.constraints.NotNull;
 
 @Entity
 public class HibBaseEventStamp extends HibAuditableObject {
-
-    @Column(name = "icaldata", length=102400000, nullable = false)
-    @Type(type="calendar_clob")
-    @NotNull
-    private Calendar eventCalendar = null;
 
     @Id
     @GeneratedValue
@@ -66,14 +57,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
 
     public HibBaseEventStamp(HibItem hibItem) {
         setItem(hibItem);
-    }
-
-    public Calendar getEventCalendar() {
-        return eventCalendar;
-    }
-
-    public void setEventCalendar(Calendar calendar) {
-        this.eventCalendar = calendar;
     }
 
     @Override

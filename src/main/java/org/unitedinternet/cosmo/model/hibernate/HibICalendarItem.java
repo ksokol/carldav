@@ -52,18 +52,11 @@ public abstract class HibICalendarItem extends HibItem {
     }
 
     public Calendar getCalendar() {
-        final HibBaseEventStamp stamp = getStamp();
-        if(stamp != null) {
-            return stamp.getEventCalendar();
-        }
         return calendar;
     }
 
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
-        if(getStamp() != null) {
-            getStamp().setEventCalendar(calendar);
-        }
     }
 
     @Deprecated

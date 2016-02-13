@@ -15,12 +15,15 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
-import org.hibernate.annotations.Type;
+
+import java.io.StringReader;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 
 @Entity
 @DiscriminatorValue("icalendar")
@@ -29,9 +32,9 @@ public abstract class HibICalendarItem extends HibItem {
     @Column(name="icaluid", length=255)
     private String icalUid = null;
 
-    @Column(name = "calendar", length= 2147483647)
-    @Type(type="calendar_clob")
-    private Calendar calendar;
+    @Column(name = "calendar", columnDefinition = "CLOB")
+    @Lob
+    private String calendar;
 
     public String getIcalUid() {
         return icalUid;
@@ -43,10 +46,14 @@ public abstract class HibICalendarItem extends HibItem {
     }
 
     public Calendar getCalendar() {
-        return calendar;
+        try {
+            return new CalendarBuilder().build(new StringReader(calendar));
+        } catch (Exception exception) {
+            throw new RuntimeException(exception.getMessage(), exception);
+        }
     }
 
     public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
+        this.calendar = calendar.toString();
     }
 }

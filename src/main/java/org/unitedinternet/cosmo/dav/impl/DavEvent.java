@@ -24,6 +24,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 /**
@@ -64,7 +65,8 @@ public class DavEvent extends DavCalendarResource {
             throw new UnprocessableEntityException("VCALENDAR does not contain any VEVENTs or VJOURNAL");
         }
 
-        getItem().setStampCalendar(calendar);
+        final HibICalendarItem item = (HibICalendarItem) getItem();
+        item.setCalendar(calendar);
     }
 
     @Override

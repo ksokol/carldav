@@ -52,6 +52,9 @@ public abstract class HibICalendarItem extends HibItem {
 
     public void setCalendar(Calendar calendar) {
         this.calendar = calendar;
+        if(getStamp() != null) {
+            getStamp().setEventCalendar(calendar);
+        }
     }
 
 }

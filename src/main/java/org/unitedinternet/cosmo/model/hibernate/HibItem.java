@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -129,11 +128,6 @@ public abstract class HibItem extends HibAuditableObject {
     //TODO rename me
     public void setStampCalendar() {
         addStamp(new HibBaseEventStamp(this));
-    }
-
-    //TODO rename me
-    public void setStampCalendar(final Calendar calendar) {
-        getStamp().setEventCalendar(calendar);
     }
 
     @Deprecated

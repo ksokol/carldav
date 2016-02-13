@@ -37,7 +37,6 @@ public abstract class HibICalendarItem extends HibItem {
 
     public void setIcalUid(String icalUid) {
         this.icalUid = icalUid;
-        super.setIcalUid(icalUid);
     }
 
     public String getCalendar() {

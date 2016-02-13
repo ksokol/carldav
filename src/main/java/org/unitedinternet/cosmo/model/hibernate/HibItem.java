@@ -98,10 +98,6 @@ public abstract class HibItem extends HibAuditableObject {
         this.id = id;
     }
 
-    public void setIcalUid(String icalUid) {
-        //TODO
-    }
-
     public Date getClientCreationDate() {
         return clientCreationDate;
     }

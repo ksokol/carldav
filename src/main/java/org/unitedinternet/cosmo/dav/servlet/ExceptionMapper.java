@@ -1,21 +1,16 @@
 package org.unitedinternet.cosmo.dav.servlet;
 
-import static org.unitedinternet.cosmo.server.ServerConstants.ATTR_SERVICE_EXCEPTION;
-
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.ValidationException;
-
+@Deprecated
 public enum ExceptionMapper {
     DAV_EXCEPTION_MAPPER (CosmoDavException.class){
         @Override
-        protected CosmoDavException doMap(Throwable t, HttpServletRequest request) {
+        protected CosmoDavException doMap(Throwable t) {
             return (CosmoDavException)t;
         }
-    },
-    VALIDATION_EXCEPTION_MAPPER (ValidationException.class);
+    };
 
     private Class<? extends Throwable> exceptionRoot;
 
@@ -29,19 +24,18 @@ public enum ExceptionMapper {
 
 
     //Default behavior. See http://tools.ietf.org/search/rfc4791#section-1.3
-    CosmoDavException doMap(Throwable t, HttpServletRequest request){
+    CosmoDavException doMap(Throwable t){
         return new ForbiddenException(t.getMessage());
     }
 
-    public static CosmoDavException map(Throwable t, HttpServletRequest request){
+    public static CosmoDavException map(Throwable t){
 
         for(ExceptionMapper mapper : values()){
             if(mapper.supports(t)){
-                return mapper.doMap(t, request);
+                return mapper.doMap(t);
             }
         }
 
-        request.setAttribute(ATTR_SERVICE_EXCEPTION, t);
         return new CosmoDavException(t);
     }
 }

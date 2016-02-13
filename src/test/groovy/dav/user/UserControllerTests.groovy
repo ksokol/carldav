@@ -1,7 +1,6 @@
 package dav.user
 
 import org.junit.Test
-import org.springframework.http.HttpHeaders
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1

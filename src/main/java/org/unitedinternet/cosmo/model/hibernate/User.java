@@ -15,9 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Email;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.Set;
 
@@ -55,7 +53,6 @@ public class User {
     }
 
     @NotNull
-    @NaturalId
     @Column(name = "email", nullable=false, unique=true)
     @Email
     public String getEmail() {

@@ -58,7 +58,7 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
                 Set results = itemFilterProcessor.processFilter(itemFilter);
                 return (Set<HibICalendarItem>) results;
             } catch (IllegalArgumentException e) {
-                LOG.warn("", e);
+                LOG.warn(e.getMessage(), e);
             }
 
             // Use brute-force method if CalendarFilter can't be translated

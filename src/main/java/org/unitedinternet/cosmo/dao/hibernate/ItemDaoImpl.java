@@ -16,10 +16,7 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.service.generator.IdGenerator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.FlushMode;
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectDeletedException;
 import org.hibernate.ObjectNotFoundException;
@@ -34,11 +31,8 @@ import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.BaseModelObject;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
@@ -54,8 +48,6 @@ import javax.validation.ConstraintViolationException;
  * Implementation of ItemDao using Hibernate persistent objects.
  */
 public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
-
-    private static final Log LOG = LogFactory.getLog(ItemDaoImpl.class);
 
     private IdGenerator idGenerator = null;
     private TokenService ticketKeyGenerator = null;
@@ -91,16 +83,11 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.ItemDao#findItemByUid(java.lang.String)
-     */
     public HibItem findItemByUid(String uid) {
         try {
             // prevent auto flushing when looking up item by uid
             getSession().setFlushMode(FlushMode.MANUAL);
-            return (HibItem) getSession().byNaturalId(HibItem.class).using("uid", uid).load();
+            return (HibItem) getSession().createQuery("select item from HibItem item where item.uid = :uid").setParameter("uid", uid).uniqueResult();
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
@@ -170,6 +157,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
             newItem.setOwner(user);
             newItem.setName(user.getEmail());
+            newItem.setDisplayName("homeCollection");
             //do not set this, it might be sensitive or different than name
             //newItem.setDisplayName(newItem.getName());
             setBaseItemProps(newItem);
@@ -239,22 +227,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
     }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#initializeItem(org.unitedinternet.cosmo.model.Item)
-     */
-    public void initializeItem(HibItem hibItem) {
-        try {
-            LOG.info("initialize Item : "+ hibItem.getUid());
-            // initialize all the proxied-associations, to prevent
-            // lazy-loading of this data
-            Hibernate.initialize(hibItem.getStamps());
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
 
     /**
      * find the set of collection items as children of the given collection item.
@@ -391,16 +363,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         if (hibItem.getName() == null) {
             hibItem.setName(hibItem.getUid());
         }
-        if (hibItem instanceof HibICalendarItem) {
-            HibICalendarItem ical = (HibICalendarItem) hibItem;
-            if (ical.getIcalUid() == null) {
-                ical.setIcalUid(hibItem.getUid());
-                HibEventStamp es = HibEventStamp.getStamp(ical);
-                if (es != null) {
-                    es.setIcalUid(ical.getIcalUid());
-                }
-            }
-        }
     }
 
     protected HibHomeCollectionItem findRootItem(Long dbUserId) {
@@ -455,7 +417,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         ((HibItem) hibItem).setCollection(collection);
     }
 
-    protected BaseModelObject getBaseModelObject(Object obj) {
-        return (BaseModelObject) obj;
+    protected HibItem getBaseModelObject(Object obj) {
+        return (HibItem) obj;
     }
 }

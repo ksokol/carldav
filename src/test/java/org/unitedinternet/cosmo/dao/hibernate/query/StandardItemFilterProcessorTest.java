@@ -40,8 +40,7 @@ import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -172,20 +171,20 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
                         + "pd=:parent and i.triageStatus.code=:param1",
                 query.getQueryString());
 
         filter.setTriageStatusCode(Restrictions.isNull());
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
                         + "pd=:parent and i.triageStatus.code is null",
                 query.getQueryString());
 
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
         filter.addOrderBy(ContentItemFilter.ORDER_BY_TRIAGE_STATUS_RANK_ASC);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibContentItem i join i.collection pd where "
+        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
                 + "pd=:parent and i.triageStatus.code=:param1 order by "
                 + "i.triageStatus.rank", query.getQueryString());
     }
@@ -208,31 +207,6 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and i.body=:param4", query.getQueryString());
 
         filter = new NoteItemFilter();
-        filter.setIsModification(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where i.modifies is not null", query.getQueryString());
-
-        filter.setIsModification(false);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where i.modifies is null", query.getQueryString());
-
-        filter.setIsModification(null);
-
-        filter.setHasModifications(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where size(i.modifications) > 0", query.getQueryString());
-
-        filter.setHasModifications(false);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where size(i.modifications) = 0", query.getQueryString());
-
-        filter =  new NoteItemFilter();
-        filter.setMasterNoteItem(new HibNoteItem());
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where (i=:masterItem or "
-                + "i.modifies=:masterItem)", query.getQueryString());
-
-        filter = new NoteItemFilter();
         Date date1 = new Date(1000);
         Date date2 = new Date(2000);
         filter.setReminderTime(Restrictions.between(date1,date2));
@@ -248,17 +222,11 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testBasicStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
-        StampFilter missingFilter = new StampFilter();
-        missingFilter.setStampClass(HibEventStamp.class);
-        filter.getStampFilters().add(missingFilter);
-        Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where exists (select s.id from HibStamp s "
-                + "where s.item=i and s.class=HibEventStamp)", query.getQueryString());
-        missingFilter.setMissing(true);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where not exists "
-                        + "(select s.id from HibStamp s where s.item=i and s.class=HibEventStamp)",
-                query.getQueryString());
+        StampFilter stampFilter = new StampFilter();
+        stampFilter.setStampClass(HibICalendarItem.class);
+        filter.getStampFilters().add(stampFilter);
+        Query query = queryBuilder.buildQuery(session, filter);
+        Assert.assertEquals("select i from HibICalendarItem i", query.getQueryString());
     }
 
     /**
@@ -276,16 +244,16 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         //filter.setBody("body");
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, "
-                + "HibBaseEventStamp es where pd=:parent and "
-                + "i.displayName=:param1 and es.item=i and es.class = 'event' and i.icalUid=:param2", query.getQueryString());
+        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
+                + "where pd=:parent and "
+                + "i.displayName=:param1 and i.class=:clazz and i.icalUid=:param3", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, HibBaseEventStamp "
-                + "es where pd=:parent and i.displayName=:param1 and "
-                + "es.item=i and es.class = 'event' and (es.timeRangeIndex.isRecurring=true or i.modifies is not null) "
-                + "and i.icalUid=:param2", query.getQueryString());
+        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
+                + "where pd=:parent and i.displayName=:param1 and "
+                + "i.class=:clazz and (i.recurring=true) "
+                + "and i.icalUid=:param3", query.getQueryString());
     }
 
     /**
@@ -304,16 +272,9 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd, "
-                + "HibBaseEventStamp es where pd=:parent and es.item=i "
-                + "and es.class = 'event' and ( (es.timeRangeIndex.isFloating=true and "
-                + "es.timeRangeIndex.startDate < '20070201T040000' and "
-                + "es.timeRangeIndex.endDate > '20070101T040000') or "
-                + "(es.timeRangeIndex.isFloating=false and "
-                + "es.timeRangeIndex.startDate < '20070201T100000Z' and "
-                + "es.timeRangeIndex.endDate > '20070101T100000Z') or "
-                + "(es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and "
-                + "(es.timeRangeIndex.startDate='20070101T040000' or "
-                + "es.timeRangeIndex.startDate='20070101T100000Z')))", query.getQueryString());
+        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd " +
+                "where pd=:parent and i.class=:clazz and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
+                "or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate)))"
+                ,query.getQueryString());
     }
 }

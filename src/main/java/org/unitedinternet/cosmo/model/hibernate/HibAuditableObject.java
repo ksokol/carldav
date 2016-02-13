@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -25,29 +26,16 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @MappedSuperclass
-public abstract class HibAuditableObject extends BaseModelObject {
+public abstract class HibAuditableObject implements Serializable {
 
-    @Column(name = "createdate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
-    
+    private static final long serialVersionUID = 8396186357498363587L;
+
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
     
     @Column(name="etag")
     private String etag = "";
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.AuditableObject#getCreationDate()
-     */
-    public Date getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(Date creationDate) {
-        this.creationDate = creationDate;
-    }
 
     /* (non-Javadoc)
      * @see org.unitedinternet.cosmo.model.AuditableObject#getModifiedDate()

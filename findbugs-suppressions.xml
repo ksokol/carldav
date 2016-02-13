@@ -16,14 +16,6 @@
         <Bug pattern="SE_BAD_FIELD" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibEventExceptionStamp" />
-        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
-    </Match>
-    <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibEventStamp" />
-        <Bug pattern="UPM_UNCALLED_PRIVATE_METHOD" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>

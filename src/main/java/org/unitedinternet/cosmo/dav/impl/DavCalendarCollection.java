@@ -1,6 +1,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
+import net.fortuna.ical4j.model.Calendar;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -30,13 +31,11 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
-import org.unitedinternet.cosmo.model.hibernate.HibJournalStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.Collections;
@@ -65,8 +64,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
-
-        deadPropertyFilter.add(HibCalendarCollectionStamp.class.getName());
     }
 
     /** */
@@ -91,7 +88,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             new HashSet<>();
 
         HibCollectionItem collection = (HibCollectionItem) getItem();
-        for (HibContentItem memberItem :
+        for (HibItem memberItem :
              getCalendarQueryProcesor().filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberItem);
             if(resource!=null) {
@@ -108,18 +105,9 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         return rt;
     }
 
-    public HibCalendarCollectionStamp getCalendarCollectionStamp() {
-        return (HibCalendarCollectionStamp) getItem().getStamp(HibCalendarCollectionStamp.class);
-    }
-
     /** */
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
-
-        HibCalendarCollectionStamp cc = getCalendarCollectionStamp();
-        if (cc == null) {
-            return;
-        }
 
         // add CS:getctag property, which is the collection's entitytag
         // if it exists
@@ -133,8 +121,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new SupportedCalendarData());
         properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
 
-        if(cc.getDisplayName() != null){
-            properties.add(new DisplayName(cc.getDisplayName()));
+        if(getItem().getDisplayName() != null){
+            properties.add(new DisplayName(getItem().getDisplayName()));
         }
     }
 
@@ -153,11 +141,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         throws CosmoDavException {
         super.setLiveProperty(property, create);
 
-        HibCalendarCollectionStamp cc = getCalendarCollectionStamp();
-        if (cc == null) {
-            return;
-        }
-
         DavPropertyName name = property.getName();
         if (property.getValue() == null) {
             throw new UnprocessableEntityException("Property " + name + " requires a value");
@@ -175,11 +158,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     protected void removeLiveProperty(DavPropertyName name)
         throws CosmoDavException {
         super.removeLiveProperty(name);
-
-        HibCalendarCollectionStamp cc = getCalendarCollectionStamp();
-        if (cc == null) {
-            return;
-        }
 
         if (name.equals(SUPPORTEDCALENDARCOMPONENTSET) ||
             name.equals(SUPPORTEDCALENDARDATA) ||
@@ -216,23 +194,21 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
     }
 
-    private void saveEvent(DavItemContent member)
-        throws CosmoDavException {
-
-        HibContentItem content = (HibContentItem) member.getItem();
-        HibEventStamp event = (HibEventStamp) content.getStamp(HibEventStamp.class);
+    private void saveEvent(DavItemContent member) throws CosmoDavException {
+        HibICalendarItem content = (HibICalendarItem) member.getItem();
+        final Calendar calendar = content.getCalendar();
         EntityConverter converter = new EntityConverter(getIdGenerator());
-        Set<HibContentItem> toUpdate = new LinkedHashSet<>();
+        Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model
             toUpdate.addAll(converter.convertEventCalendar(
-                    (HibNoteItem) content, event.getEventCalendar()));
+                    (HibEventItem) content, calendar));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
 
-        if (event.getCreationDate()!=null) {
+        if (content.getId()!= null) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("updating event " + member.getResourcePath());
             }
@@ -263,19 +239,18 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     }
 
     private void saveJournal(DavItemContent member) throws CosmoDavException {
-        HibContentItem content = (HibContentItem) member.getItem();
-        HibJournalStamp event = (HibJournalStamp) content.getStamp(HibJournalStamp.class);
+        HibJournalItem content = (HibJournalItem) member.getItem();
         EntityConverter converter = new EntityConverter(getIdGenerator());
-        Set<HibContentItem> toUpdate = new LinkedHashSet<>();
+        Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convertJournalCalendar((HibJournalItem) content, event.getEventCalendar()));
+            toUpdate.add(converter.convertJournalCalendar(content, content.getCalendar()));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
 
-        if (event.getCreationDate()!=null) {
+        if (content.getId()!= null) {
             LOG.debug("updating journal {}", member.getResourcePath());
 
             try {

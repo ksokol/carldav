@@ -29,7 +29,7 @@ import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Iterator;
 
@@ -108,27 +108,27 @@ public class CalendarFilterConverter {
     private ItemFilter createFirstPassTaskFilter(HibCollectionItem collection) {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
-        filter.setIsModification(false);
-        filter.getStampFilters().add(new StampFilter(HibEventStamp.class, true));
+        filter.getStampFilters().add(new StampFilter(HibICalendarItem.class));
         return filter;
     }
 
     private void handleCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter) {
 
         if (COMP_VEVENT.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter);
+            handleEventCompFilter(compFilter, itemFilter, new EventStampFilter());
         } else if (COMP_VJOURNAL.equalsIgnoreCase(compFilter.getName())) {
-            handleJournalCompFilter(compFilter, itemFilter);
+            handleEventCompFilter(compFilter, itemFilter, new JournalStampFilter());
+        } else if(COMP_VTODO.equalsIgnoreCase(compFilter.getName())) {
+            final EventStampFilter eventStampFilter = new EventStampFilter();
+            eventStampFilter.setType("note");
+            handleEventCompFilter(compFilter, itemFilter, eventStampFilter);
         } else {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());
         }
     }
 
-    private void handleEventCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter) {
-        // TODO: handle case of multiple VEVENT filters
-        EventStampFilter eventFilter = new EventStampFilter();
+    private void handleEventCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter, StampFilter eventFilter) {
         itemFilter.getStampFilters().add(eventFilter);
-
         TimeRangeFilter trf = compFilter.getTimeRangeFilter();
 
         // handle time-range filter
@@ -150,31 +150,6 @@ public class CalendarFilterConverter {
         }
     }
 
-    private void handleJournalCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter) {
-        JournalStampFilter eventFilter = new JournalStampFilter();
-        itemFilter.getStampFilters().add(eventFilter);
-
-        TimeRangeFilter trf = compFilter.getTimeRangeFilter();
-
-        // handle time-range filter
-        if (trf != null) {
-            eventFilter.setPeriod(trf.getPeriod());
-            if (trf.getTimezone() != null) {
-                eventFilter.setTimezone(new TimeZone(trf.getTimezone()));
-            }
-        }
-
-        for (Iterator it = compFilter.getComponentFilters().iterator(); it.hasNext(); ) {
-            ComponentFilter subComp = (ComponentFilter) it.next();
-            throw new IllegalArgumentException("unsupported sub component filter: " + subComp.getName());
-        }
-
-        for (Iterator it = compFilter.getPropFilters().iterator(); it.hasNext(); ) {
-            PropertyFilter propFilter = (PropertyFilter) it.next();
-            handleJournalPropFilter(propFilter, itemFilter);
-        }
-    }
-
     private void handleEventPropFilter(PropertyFilter propFilter, NoteItemFilter itemFilter) {
 
         if (PROP_UID.equalsIgnoreCase(propFilter.getName())) {
@@ -183,14 +158,6 @@ public class CalendarFilterConverter {
             handleSummaryPropFilter(propFilter, itemFilter);
         } else if (PROP_DESCRIPTION.equalsIgnoreCase(propFilter.getName())) {
             handleDescriptionPropFilter(propFilter, itemFilter);
-        } else {
-            throw new IllegalArgumentException("unsupported prop filter: " + propFilter.getName());
-        }
-    }
-
-    private void handleJournalPropFilter(PropertyFilter propFilter, NoteItemFilter itemFilter) {
-        if (PROP_UID.equalsIgnoreCase(propFilter.getName())) {
-            handleUidPropFilter(propFilter, itemFilter);
         } else {
             throw new IllegalArgumentException("unsupported prop filter: " + propFilter.getName());
         }

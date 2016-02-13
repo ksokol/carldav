@@ -15,14 +15,11 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.annotations.NaturalId;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,16 +27,16 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -55,12 +52,15 @@ import javax.validation.constraints.NotNull;
 @DiscriminatorColumn(
         name="itemtype",
         discriminatorType=DiscriminatorType.STRING,
-        length=16)
+        length=32)
 public abstract class HibItem extends HibAuditableObject {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @Column(name = "uid", nullable = false, length=255)
     @NotNull
-    @NaturalId
     @Length(min = 1, max = 255)
     private String uid;
 
@@ -69,7 +69,8 @@ public abstract class HibItem extends HibAuditableObject {
     @Length(min = 1, max = 255)
     private String name;
 
-    @Column(name = "displayname", length=1024)
+    @Column(name = "displayname")
+    @NotEmpty
     private String displayName;
 
     @Column(name = "clientcreatedate")
@@ -80,13 +81,6 @@ public abstract class HibItem extends HibAuditableObject {
     @Temporal(TemporalType.TIMESTAMP)
     private Date clientModifiedDate;
 
-    @Version
-    @Column(name="version", nullable = false)
-    private Integer version;
-
-    @OneToMany(targetEntity=HibStamp.class, mappedBy = "item", fetch=FetchType.LAZY, cascade=CascadeType.ALL, orphanRemoval=true)
-    private Set<HibStamp> stamps = new HashSet<>();
-
     @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "collectionid")
     private HibCollectionItem collection;
@@ -96,37 +90,16 @@ public abstract class HibItem extends HibAuditableObject {
     @NotNull
     private User owner;
 
-    public Set<HibStamp> getStamps() {
-        return Collections.unmodifiableSet(stamps);
+    public Long getId() {
+        return id;
     }
 
-    public void addStamp(HibStamp stamp) {
-        if (stamp == null) {
-            throw new IllegalArgumentException("stamp cannot be null");
-        }
-
-        stamp.setItem(this);
-        stamps.add(stamp);
+    public void setId(final Long id) {
+        this.id = id;
     }
 
-    public void removeStamp(HibStamp stamp) {
-        // only remove stamps that belong to item
-        if(!stamps.contains(stamp)) {
-            return;
-        }
-
-        stamps.remove(stamp);
-    }
-
-    public HibStamp getStamp(Class clazz) {
-        for(HibStamp stamp : stamps) {
-            // only return stamp if it is an instance of the specified class
-            if(clazz.isInstance(stamp)) {
-                return stamp;
-            }
-        }
-
-        return null;
+    public void setIcalUid(String icalUid) {
+        //TODO
     }
 
     public Date getClientCreationDate() {
@@ -175,10 +148,6 @@ public abstract class HibItem extends HibAuditableObject {
 
     public void setUid(String uid) {
         this.uid = uid;
-    }
-
-    public Integer getVersion() {
-        return version;
     }
 
     public void setCollection(HibCollectionItem parent) {

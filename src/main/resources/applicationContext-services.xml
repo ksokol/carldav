@@ -71,6 +71,7 @@
             <value>
                 /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_DAV}/**=dav
                 /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_PRINCIPALS}/**=dav
+                /#{T(org.unitedinternet.cosmo.server.ServerConstants).SVC_PRINCIPALS}=dav
             </value>
         </property>
     </bean>
@@ -79,6 +80,7 @@
         <constructor-arg index="0" ref="davResourceLocatorFactory" />
         <constructor-arg index="1" ref="davResourceFactory" />
         <constructor-arg index="2" ref="idGenerator" />
+        <constructor-arg index="3" ref="exceptionResolverHandler" />
 	</bean>
 
 

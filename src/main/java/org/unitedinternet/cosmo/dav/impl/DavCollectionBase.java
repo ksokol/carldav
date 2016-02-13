@@ -38,7 +38,6 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.util.DomWriter;
@@ -254,10 +253,10 @@ public class DavCollectionBase extends DavItemResourceBase implements
      */
     protected void saveContent(DavItemContent member) throws CosmoDavException {
         HibCollectionItem collection = (HibCollectionItem) getItem();
-        HibContentItem content = (HibContentItem) member.getItem();
+        HibItem content = member.getItem();
 
         try {
-            if (content.getCreationDate() != null) {
+            if (content.getId() != null) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("updating member " + member.getResourcePath());
                 }

@@ -17,12 +17,8 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 
 import static java.util.Locale.ENGLISH;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.unitedinternet.cosmo.calendar.InstanceList;
-import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
@@ -40,13 +36,8 @@ import org.unitedinternet.cosmo.model.filter.LikeExpression;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
 import org.unitedinternet.cosmo.model.filter.NullExpression;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibContentItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -61,16 +52,10 @@ import java.util.TreeMap;
  */
 public class StandardItemFilterProcessor extends AbstractDaoImpl implements ItemFilterProcessor {
 
-    private static final Log LOG = LogFactory.getLog(StandardItemFilterProcessor.class);
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.query.ItemFilterProcessor#processFilter
-     * (org.hibernate.Session, org.unitedinternet.cosmo.model.filter.ItemFilter)
-     */
     public Set<HibItem> processFilter(ItemFilter filter) {
         Query hibQuery = buildQuery(getSession(), filter);
         List<HibItem> queryResults = hibQuery.list();
-        return processResults(queryResults, filter);
+        return processResults(queryResults);
     }
 
     /**
@@ -119,10 +104,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
         selectBuf.append(orderBuf);
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(selectBuf.toString());
-        }
-
         Query hqlQuery = session.createQuery(selectBuf.toString());
 
         for (Entry<String, Object> param : params.entrySet()) {
@@ -161,99 +142,71 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             formatExpression(whereBuf, params, "i.displayName", filter.getDisplayName());
         }
 
-        handleStampFilters(selectBuf, whereBuf, filter);
+        handleStampFilters(selectBuf, whereBuf, filter, params);
 
     }
 
     private void handleStampFilters(StringBuffer selectBuf,
                                     StringBuffer whereBuf,
-                                    ItemFilter filter) {
+                                    ItemFilter filter,
+                                    Map<String, Object> params) {
         for (StampFilter stampFilter : filter.getStampFilters()) {
             if (stampFilter instanceof EventStampFilter) {
-                handleEventStampFilter(selectBuf, whereBuf, (EventStampFilter) stampFilter);
+                handleStampFilter(selectBuf, whereBuf, stampFilter, params);
             } else if(stampFilter instanceof JournalStampFilter) {
-                handleJournalStampFilter(selectBuf, whereBuf, (JournalStampFilter) stampFilter);
-            } else {
-                handleStampFilter(whereBuf, stampFilter);
+                handleJournalFilter(whereBuf, stampFilter, params);
             }
         }
     }
 
-    private void handleStampFilter(StringBuffer whereBuf, 
-                                   StampFilter filter) {
+    private void handleStampFilter(StringBuffer selectBuf,
+                                   StringBuffer whereBuf,
+                                   StampFilter filter,
+                                   Map<String, Object> params) {
 
-        String toAppend = "";
-        if (filter.isMissing()) {
-            toAppend += "not ";
-        }
-        toAppend += "exists (select s.id from HibStamp s where s.item=i and s.class=";
-
-        //TODO
-        String simpleName = filter.getStampClass().getSimpleName();
-        simpleName = simpleName.startsWith("Hib") ? simpleName : "Hib" + simpleName;
-
-        toAppend += simpleName + ")";
-        appendWhere(whereBuf, toAppend);
-    }
-
-    private void handleEventStampFilter(StringBuffer selectBuf,
-                                        StringBuffer whereBuf,
-                                        EventStampFilter filter) {
-
-        selectBuf.append(", HibBaseEventStamp es");
-        appendWhere(whereBuf, "es.item=i");
-        //TODO
-        appendWhere(whereBuf, "es.class = 'event'");
+        appendWhere(whereBuf, "i.class=:clazz");
+        params.put("clazz", filter.getType());
 
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {
-            if (filter.getIsRecurring().booleanValue() == true) {
-                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=true or i.modifies is not null)");
+            if (filter.getIsRecurring() == true) {
+                appendWhere(whereBuf, "(i.recurring=true)");
             } else {
-                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=false and i.modifies is null)");
+                appendWhere(whereBuf, "(i.recurring=false)");
             }
         }
 
-        // handle time range
         if (filter.getPeriod() != null) {
             whereBuf.append(" and ( ");
-            whereBuf.append("(es.timeRangeIndex.isFloating=true and es.timeRangeIndex.startDate < '" + filter.getFloatEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getFloatStart() + "')");
-
-            whereBuf.append(" or (es.timeRangeIndex.isFloating=false and " +
-                    "es.timeRangeIndex.startDate < '" + filter.getUTCEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getUTCStart() + "')");
+            whereBuf.append("(i.startDate < :endDate)");
+            whereBuf.append(" and i.endDate > :startDate)");
 
             // edge case where start==end
-            whereBuf.append(" or (es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and " +
-                    "(es.timeRangeIndex.startDate='" + filter.getFloatStart() + "' or es.timeRangeIndex.startDate='" + filter.getUTCStart() + "'))");
+            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
 
             whereBuf.append(")");
+
+            params.put("startDate", filter.getStart());
+            params.put("endDate", filter.getEnd());
         }
     }
 
-    private void handleJournalStampFilter(StringBuffer selectBuf, StringBuffer whereBuf, JournalStampFilter filter) {
-
-        selectBuf.append(", HibBaseEventStamp es");
-        appendWhere(whereBuf, "es.item=i");
-        //TODO
-        appendWhere(whereBuf, "es.class = 'journal'");
+    private void handleJournalFilter(StringBuffer whereBuf, StampFilter filter, Map<String, Object> params) {
+        appendWhere(whereBuf, "i.class = 'journal'");
 
         // handle time range
         if (filter.getPeriod() != null) {
             whereBuf.append(" and ( ");
-            whereBuf.append("(es.timeRangeIndex.isFloating=true and es.timeRangeIndex.startDate < '" + filter.getFloatEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getFloatStart() + "')");
-
-            whereBuf.append(" or (es.timeRangeIndex.isFloating=false and " +
-                    "es.timeRangeIndex.startDate < '" + filter.getUTCEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getUTCStart() + "')");
+            whereBuf.append("(i.startDate < :endDate)");
+            whereBuf.append(" and i.endDate > :startDate)");
 
             // edge case where start==end
-            whereBuf.append(" or (es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and " +
-                    "(es.timeRangeIndex.startDate='" + filter.getFloatStart() + "' or es.timeRangeIndex.startDate='" + filter.getUTCStart() + "'))");
+            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
 
             whereBuf.append(")");
+
+            params.put("startDate", filter.getStart());
+            params.put("endDate", filter.getEnd());
         }
     }
 
@@ -279,29 +232,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             formatExpression(whereBuf, params, "i.remindertime", filter.getReminderTime());
         }
 
-        //filter by master NoteItem
-        if (filter.getMasterNoteItem() != null) {
-            appendWhere(whereBuf, "(i=:masterItem or i.modifies=:masterItem)");
-            params.put("masterItem", filter.getMasterNoteItem());
-        }
-
-        // filter modifications
-        if (filter.getIsModification() != null) {
-            if (filter.getIsModification().booleanValue() == true) {
-                appendWhere(whereBuf, "i.modifies is not null");
-            } else {
-                appendWhere(whereBuf, "i.modifies is null");
-            }
-        }
-
-        if (filter.getHasModifications() != null) {
-            if (filter.getHasModifications().booleanValue() == true) {
-                appendWhere(whereBuf, "size(i.modifications) > 0");
-            } else {
-                appendWhere(whereBuf, "size(i.modifications) = 0");
-            }
-        }
-        
         if(filter.getModifiedSince() != null){
             formatExpression(whereBuf, params, "i.modifiedDate", filter.getModifiedSince());
         }
@@ -312,7 +242,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                                          ContentItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
-            selectBuf.append("select i from HibContentItem i");
+            selectBuf.append("select i from HibNoteItem i");
             handleItemFilter(selectBuf, whereBuf, params, filter);
         }
 
@@ -343,97 +273,14 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
      * for the entire recurrence series, and expansion is required to determine
      * if the event actually occurs, and to return individual occurences.
      */
-    private HashSet<HibItem> processResults(List<HibItem> results, ItemFilter itemFilter) {
-        boolean hasTimeRangeFilter = false;
-        boolean includeMasterInResults = true;
-        boolean doTimeRangeSecondPass = true;
-
-        HashSet<HibItem> processedResults = new HashSet<HibItem>();
-        EventStampFilter eventFilter = (EventStampFilter) itemFilter.getStampFilter(EventStampFilter.class);
-
-
-        if (eventFilter != null) {
-            // does eventFilter have timeRange filter?
-            hasTimeRangeFilter = eventFilter.getPeriod() != null;
-        }
-
-        // When expanding recurring events do we include the master item in 
-        // the results, or just the expanded occurrences/modifications
-        if (hasTimeRangeFilter && "false".equalsIgnoreCase(itemFilter
-                .getFilterProperty(EventStampFilter.PROPERTY_INCLUDE_MASTER_ITEMS))) {
-            includeMasterInResults = false;
-        }
-
-        // Should we do a second pass to expand recurring events to determine
-        // if a recurring event actually occurs in the time-range specified,
-        // or should we just return the recurring event without double-checking.
-        if (hasTimeRangeFilter && "false".equalsIgnoreCase(itemFilter
-                .getFilterProperty(EventStampFilter.PROPERTY_DO_TIMERANGE_SECOND_PASS))) {
-            doTimeRangeSecondPass = false;
-        }
+    private HashSet<HibItem> processResults(List<HibItem> results) {
+        HashSet<HibItem> processedResults = new HashSet<>();
 
         for (HibItem hibItem : results) {
-
-            // If item is not a note, then nothing to do
-            if (!(hibItem instanceof HibNoteItem)) {
-                processedResults.add(hibItem);
-                continue;
-            }
-
-            HibNoteItem note = (HibNoteItem) hibItem;
-
-            // If note is a modification then add both the modification and the 
-            // master.
-            if (note.getModifies() != null) {
-                processedResults.add(note);
-                if (includeMasterInResults) {
-                    processedResults.add(note.getModifies());
-                }
-            }
-            // If filter doesn't have a timeRange, then we are done
-            else if (!hasTimeRangeFilter) {
-                processedResults.add(note);
-            } else {
-                processedResults.addAll(processMasterNote(note, eventFilter,
-                        includeMasterInResults, doTimeRangeSecondPass));
-            }
+            processedResults.add(hibItem);
         }
 
         return processedResults;
-    }
-
-    private Collection<HibContentItem> processMasterNote(HibNoteItem note,
-                                                      EventStampFilter filter, boolean includeMasterInResults,
-                                                      boolean doTimeRangeSecondPass) {
-        HibEventStamp eventStamp = (HibEventStamp) note.getStamp(HibEventStamp.class);
-        ArrayList<HibContentItem> results = new ArrayList<>();
-
-        // If the event is not recurring or the filter is configured
-        // to not do a second pass then just return the note
-        if (!eventStamp.isRecurring() || !doTimeRangeSecondPass) {
-            results.add(note);
-            return results;
-        }
-
-        // Otherwise, expand the recurring item to determine if it actually
-        // occurs in the time range specified
-        RecurrenceExpander expander = new RecurrenceExpander();
-        InstanceList instances = expander.getOcurrences(eventStamp.getEvent(),
-                eventStamp.getExceptions(), filter.getPeriod().getStart(),
-                filter.getPeriod().getEnd(), filter.getTimezone());
-
-        // If recurring event occurs in range, add master unless the filter
-        // is configured to not return the master
-        if (instances.size() > 0 && includeMasterInResults) {
-            results.add(note);
-        }
-
-        // If were aren't expanding, then return
-        if (filter.isExpandRecurringEvents() == false) {
-            return results;
-        }
-
-        return results;
     }
 
     private void formatExpression(StringBuffer whereBuf,

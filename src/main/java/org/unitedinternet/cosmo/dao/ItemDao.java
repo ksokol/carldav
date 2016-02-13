@@ -111,12 +111,6 @@ public interface ItemDao extends Dao {
     void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection);
 
     /**
-     * Initialize item, ensuring any proxied associations will be loaded.
-     * @param hibItem The item initialized.
-     */
-    void initializeItem(HibItem hibItem);
-
-    /**
      * find the set of collection items as children of the given collection item.
      * 
      * @param hibCollectionItem parent collection item

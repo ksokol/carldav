@@ -23,9 +23,8 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 /**
  * Extends <code>DavCalendarResource</code> to adapt the Cosmo
@@ -36,18 +35,14 @@ import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
  */
 public class DavEvent extends DavCalendarResource {
 
-
-    /** */
     public DavEvent(DavResourceLocator locator,
                     DavResourceFactory factory,
                     IdGenerator idGenerator)
         throws CosmoDavException {
-        this(new HibNoteItem(), locator, factory, idGenerator);
-        getItem().addStamp(new HibEventStamp(getItem()));
+        this(new HibEventItem(), locator, factory, idGenerator);
     }
-    
-    /** */
-    public DavEvent(HibNoteItem item,
+
+    public DavEvent(HibEventItem item,
                     DavResourceLocator locator,
                     DavResourceFactory factory,
                     IdGenerator idGenerator)
@@ -55,17 +50,8 @@ public class DavEvent extends DavCalendarResource {
         super(item, locator, factory, idGenerator);
     }
 
-    // our methods
-
-    /**
-     * Returns the calendar object associated with this resource.
-     */
     public Calendar getCalendar() {
-        return new EntityConverter(getIdGenerator()).convertNote((HibNoteItem)getItem());
-    }
-    
-    public HibEventStamp getEventStamp() {
-        return (HibEventStamp) getItem().getStamp(HibEventStamp.class);
+        return ((HibICalendarItem) getItem()).getCalendar();
     }
 
     protected void setCalendar(Calendar calendar)
@@ -77,7 +63,8 @@ public class DavEvent extends DavCalendarResource {
             throw new UnprocessableEntityException("VCALENDAR does not contain any VEVENTs or VJOURNAL");
         }
 
-        getEventStamp().setEventCalendar(calendar);
+        final HibICalendarItem item = (HibICalendarItem) getItem();
+        item.setCalendar(calendar);
     }
 
     @Override

@@ -31,10 +31,10 @@ import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipalCollection;
-import org.unitedinternet.cosmo.model.hibernate.CardCollectionStamp;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventStamp;
+import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -175,28 +175,25 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         }
 
         if (hibItem instanceof HibCollectionItem) {
-            if (hibItem.getStamp(HibCalendarCollectionStamp.class) != null) {
-                return new DavCalendarCollection((HibCollectionItem) hibItem,
-                                                 locator, this,idGenerator);
-            } else if(hibItem.getStamp(CardCollectionStamp.class) != null) {
+            if (hibItem instanceof HibCalendarCollectionItem) {
+                return new DavCalendarCollection((HibCollectionItem) hibItem, locator, this,idGenerator);
+            }
+            else if(hibItem instanceof HibCardCollectionItem) {
                 return new DavCardCollection((HibCollectionItem) hibItem, locator, this, idGenerator, getCardQueryProcessor());
-            } else {
+            }
+            else {
                 return new DavCollectionBase((HibCollectionItem) hibItem, locator, this, idGenerator);
             }
         }
 
+        if (hibItem instanceof HibEventItem) {
+            HibEventItem note = (HibEventItem) hibItem;
+            return new DavEvent(note, locator, this, idGenerator);
+        }
+
         if (hibItem instanceof HibNoteItem) {
             HibNoteItem note = (HibNoteItem) hibItem;
-            // don't expose modifications
-            if(note.getModifies()!=null) {
-                return null;
-            }
-            else if (hibItem.getStamp(HibEventStamp.class) != null) {
-                return new DavEvent(note, locator, this, idGenerator);
-            }
-            else {
-                return new DavTask(note, locator, this, idGenerator);
-            }
+            return new DavTask(note, locator, this, idGenerator);
         }
 
         if (hibItem instanceof HibJournalItem) {

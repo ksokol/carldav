@@ -145,54 +145,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
         ICalendarUtils.setUid(uid, getEvent());
     }
 
-    public Date getStartDate() {
-        VEvent event = getEvent();
-        if(event==null) {
-            return null;
-        }
-        
-        DtStart dtStart = event.getStartDate();
-        if (dtStart == null) {
-            return null;
-        }
-        return dtStart.getDate();
-    }
-
-    public Date getEndDate() {
-        VEvent event = getEvent();
-        if(event==null) {
-            return null;
-        }
-        DtEnd dtEnd = event.getEndDate(false);
-        // if no DTEND, then calculate endDate from DURATION
-        if (dtEnd == null) {
-            Date startDate = getStartDate();
-            Dur duration = getDuration();
-            
-            // if no DURATION, then there is no end time
-            if(duration==null) {
-                return null;
-            }
-            
-            Date endDate = null;
-            if(startDate instanceof DateTime) {
-                endDate = new DateTime(startDate);
-            }
-            else {
-                endDate = new Date(startDate);
-            }
-            
-            endDate.setTime(duration.getTime(startDate).getTime());
-            return endDate;
-        }
-            
-        return dtEnd.getDate();
-    }
-
-    public Dur getDuration() {
-        return ICalendarUtils.getDuration(getEvent());
-    }
-
     public List<Recur> getRecurrenceRules() {
         ArrayList<Recur> l = new ArrayList<Recur>();
         VEvent event = getEvent();

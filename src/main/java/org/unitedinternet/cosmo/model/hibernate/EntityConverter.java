@@ -20,14 +20,22 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.Date;
+import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VJournal;
 import net.fortuna.ical4j.model.component.VToDo;
+import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Completed;
+import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.RDate;
+import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.apache.commons.lang.StringUtils;
@@ -36,8 +44,10 @@ import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -93,8 +103,8 @@ public class EntityConverter {
             note.setDisplayName(event.getSummary().getValue());
         }
 
+        final HibEventTimeRangeIndex hibEventTimeRangeIndex = calculateEventStampIndexes(calendar, event);
         final HibBaseEventStamp stamp = note.getStamp();
-        final HibEventTimeRangeIndex hibEventTimeRangeIndex = calculateEventStampIndexes(stamp);
         stamp.setTimeRangeIndex(hibEventTimeRangeIndex);
 
         return Collections.singleton(note);
@@ -294,17 +304,102 @@ public class EntityConverter {
         throw new IllegalArgumentException("no master found");
     }
 
-    public HibEventTimeRangeIndex calculateEventStampIndexes(HibBaseEventStamp eventStamp) {
-        Date startDate = eventStamp.getStartDate();
-        Date endDate = eventStamp.getEndDate();
+
+    private Date getStartDate(VEvent event) {
+        if(event==null) {
+            return null;
+        }
+
+        DtStart dtStart = event.getStartDate();
+        if (dtStart == null) {
+            return null;
+        }
+        return dtStart.getDate();
+    }
+
+    private Date getEndDate(VEvent event) {
+        if(event==null) {
+            return null;
+        }
+        DtEnd dtEnd = event.getEndDate(false);
+        // if no DTEND, then calculate endDate from DURATION
+        if (dtEnd == null) {
+            Date startDate = getStartDate(event);
+            Dur duration = ICalendarUtils.getDuration(event);
+
+            // if no DURATION, then there is no end time
+            if(duration==null) {
+                return null;
+            }
+
+            Date endDate = null;
+            if(startDate instanceof DateTime) {
+                endDate = new DateTime(startDate);
+            }
+            else {
+                endDate = new Date(startDate);
+            }
+
+            endDate.setTime(duration.getTime(startDate).getTime());
+            return endDate;
+        }
+
+        return dtEnd.getDate();
+    }
+
+    private boolean isRecurring(VEvent event) {
+        if(getRecurrenceRules(event).size()>0) {
+            return true;
+        }
+
+        DateList rdates = getRecurrenceDates(event);
+
+        return rdates!=null && rdates.size()>0;
+    }
+
+    private List<Recur> getRecurrenceRules(VEvent event) {
+        ArrayList<Recur> l = new ArrayList<Recur>();
+        if(event!=null) {
+            for (Object rrule : event.getProperties().getProperties(Property.RRULE)) {
+                l.add(((RRule)rrule).getRecur());
+            }
+        }
+        return l;
+    }
+
+    private DateList getRecurrenceDates(VEvent event) {
+        DateList l = null;
+
+        if(event==null) {
+            return null;
+        }
+
+        for (Object property : event.getProperties().getProperties(Property.RDATE)) {
+            RDate rdate = (RDate) property;
+            if(l==null) {
+                if(Value.DATE.equals(rdate.getParameter(Parameter.VALUE))) {
+                    l = new DateList(Value.DATE);
+                }
+                else {
+                    l = new DateList(Value.DATE_TIME, rdate.getDates().getTimeZone());
+                }
+            }
+            l.addAll(rdate.getDates());
+        }
+
+        return l;
+    }
+
+    public HibEventTimeRangeIndex calculateEventStampIndexes(Calendar calendar, VEvent event) {
+        Date startDate = getStartDate(event);
+        Date endDate = getEndDate(event);
 
         boolean isRecurring = false;
 
-        if (eventStamp.isRecurring()) {
+        if (isRecurring(event)) {
             isRecurring = true;
             RecurrenceExpander expander = new RecurrenceExpander();
-            Date[] range = expander
-                    .calculateRecurrenceRange(eventStamp.getEventCalendar());
+            Date[] range = expander.calculateRecurrenceRange(calendar);
             startDate = range[0];
             endDate = range[1];
         } else {

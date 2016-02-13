@@ -124,17 +124,7 @@ public abstract class HibItem extends HibAuditableObject {
 
         return null;
     }
-
-    //TODO rename me
-    public void setStampCalendar() {
-        addStamp(new HibBaseEventStamp(this));
-    }
-
-    @Deprecated
-    public boolean isEvent() {
-        return getStamp() != null;
-    }
-
+    
     public void setIcalUid(String icalUid) {
         //TODO
     }

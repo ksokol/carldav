@@ -187,7 +187,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
         if (hibItem instanceof HibNoteItem) {
             HibNoteItem note = (HibNoteItem) hibItem;
-            if (hibItem.isEvent()) {
+            if (((HibNoteItem) hibItem).isEvent()) {
                 return new DavEvent(note, locator, this, idGenerator);
             }
             else {

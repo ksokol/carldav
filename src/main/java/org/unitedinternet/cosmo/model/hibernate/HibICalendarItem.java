@@ -57,4 +57,9 @@ public abstract class HibICalendarItem extends HibItem {
         }
     }
 
+    @Deprecated
+    public boolean isEvent() {
+        return getStamp() != null;
+    }
+
 }

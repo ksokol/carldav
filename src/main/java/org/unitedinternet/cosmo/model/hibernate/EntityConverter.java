@@ -103,8 +103,9 @@ public class EntityConverter {
             note.setDisplayName(event.getSummary().getValue());
         }
 
-        final HibEventTimeRangeIndex hibEventTimeRangeIndex = calculateEventStampIndexes(calendar, event);
         final HibBaseEventStamp stamp = note.getStamp();
+        final HibEventTimeRangeIndex hibEventTimeRangeIndex = calculateEventStampIndexes(calendar, event, stamp);
+
         stamp.setTimeRangeIndex(hibEventTimeRangeIndex);
 
         return Collections.singleton(note);
@@ -390,7 +391,7 @@ public class EntityConverter {
         return l;
     }
 
-    public HibEventTimeRangeIndex calculateEventStampIndexes(Calendar calendar, VEvent event) {
+    public HibEventTimeRangeIndex calculateEventStampIndexes(Calendar calendar, VEvent event, HibBaseEventStamp stamp) {
         Date startDate = getStartDate(event);
         Date endDate = getEndDate(event);
 
@@ -432,19 +433,25 @@ public class EntityConverter {
 
         HibEventTimeRangeIndex timeRangeIndex = new HibEventTimeRangeIndex();
         timeRangeIndex.setStartDate(fromDateToStringNoTimezone(startDate));
+        stamp.setStartDate(fromDateToStringNoTimezone(startDate));
 
 
         // A null endDate equates to infinity, which is represented by
         // a String that will always come after any date when compared.
         if(endDate!=null) {
             timeRangeIndex.setEndDate(fromDateToStringNoTimezone(endDate));
+            stamp.setEndDate(fromDateToStringNoTimezone(endDate));
         }
         else {
             timeRangeIndex.setEndDate(TIME_INFINITY);
+            stamp.setEndDate(TIME_INFINITY);
         }
 
         timeRangeIndex.setIsFloating(isFloating);
+        stamp.setIsFloating(isFloating);
+
         timeRangeIndex.setIsRecurring(isRecurring);
+        stamp.setIsRecurring(isRecurring);
 
         return timeRangeIndex;
     }

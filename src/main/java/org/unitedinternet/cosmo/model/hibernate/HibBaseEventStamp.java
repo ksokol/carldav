@@ -61,6 +61,18 @@ public class HibBaseEventStamp extends HibAuditableObject {
     @JoinColumn(name = "itemid", nullable = false)
     private HibItem item;
 
+    @Column(name = "startdate", length=16)
+    private String startDate;
+
+    @Column(name = "enddate", length=16)
+    private String endDate;
+
+    @Column(name = "isfloating")
+    private Boolean isFloating;
+
+    @Column(name = "isrecurring")
+    private Boolean isRecurring;
+
     public Long getId() {
         return id;
     }
@@ -101,6 +113,40 @@ public class HibBaseEventStamp extends HibAuditableObject {
 
     public boolean isRecurring() {
         return getTimeRangeIndex().getIsRecurring();
+    }
+
+
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(final String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(final String endDate) {
+        this.endDate = endDate;
+    }
+
+    public Boolean getIsFloating() {
+        return isFloating;
+    }
+
+    public void setIsFloating(final Boolean isFloating) {
+        this.isFloating = isFloating;
+    }
+
+    public Boolean getIsRecurring() {
+        return isRecurring;
+    }
+
+    public void setIsRecurring(final Boolean isRecurring) {
+        this.isRecurring = isRecurring;
     }
 
     @Override

@@ -156,7 +156,7 @@ public abstract class HibItem extends HibAuditableObject {
 
     public boolean isRecurring() {
         final HibBaseEventStamp stamp = getStamp();
-        return stamp.isRecurring();
+        return stamp.getIsRecurring();
     }
 
     public Date getClientCreationDate() {

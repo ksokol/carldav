@@ -175,25 +175,25 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {
             if (filter.getIsRecurring() == true) {
-                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=true)");
+                appendWhere(whereBuf, "(es.isRecurring=true)");
             } else {
-                appendWhere(whereBuf, "(es.timeRangeIndex.isRecurring=false)");
+                appendWhere(whereBuf, "(es.isRecurring=false)");
             }
         }
 
         // handle time range
         if (filter.getPeriod() != null) {
             whereBuf.append(" and ( ");
-            whereBuf.append("(es.timeRangeIndex.isFloating=true and es.timeRangeIndex.startDate < '" + filter.getFloatEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getFloatStart() + "')");
+            whereBuf.append("(es.isFloating=true and es.startDate < '" + filter.getFloatEnd() + "'");
+            whereBuf.append(" and es.endDate > '" + filter.getFloatStart() + "')");
 
-            whereBuf.append(" or (es.timeRangeIndex.isFloating=false and " +
-                    "es.timeRangeIndex.startDate < '" + filter.getUTCEnd() + "'");
-            whereBuf.append(" and es.timeRangeIndex.endDate > '" + filter.getUTCStart() + "')");
+            whereBuf.append(" or (es.isFloating=false and " +
+                    "es.startDate < '" + filter.getUTCEnd() + "'");
+            whereBuf.append(" and es.endDate > '" + filter.getUTCStart() + "')");
 
             // edge case where start==end
-            whereBuf.append(" or (es.timeRangeIndex.startDate=es.timeRangeIndex.endDate and " +
-                    "(es.timeRangeIndex.startDate='" + filter.getFloatStart() + "' or es.timeRangeIndex.startDate='" + filter.getUTCStart() + "'))");
+            whereBuf.append(" or (es.startDate=es.endDate and " +
+                    "(es.startDate='" + filter.getFloatStart() + "' or es.startDate='" + filter.getUTCStart() + "'))");
 
             whereBuf.append(")");
         }

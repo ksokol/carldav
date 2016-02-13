@@ -104,9 +104,7 @@ public class EntityConverter {
         }
 
         final HibBaseEventStamp stamp = note.getStamp();
-        final HibEventTimeRangeIndex hibEventTimeRangeIndex = calculateEventStampIndexes(calendar, event, stamp);
-
-        stamp.setTimeRangeIndex(hibEventTimeRangeIndex);
+        calculateEventStampIndexes(calendar, event, stamp);
 
         return Collections.singleton(note);
     }
@@ -391,7 +389,7 @@ public class EntityConverter {
         return l;
     }
 
-    public HibEventTimeRangeIndex calculateEventStampIndexes(Calendar calendar, VEvent event, HibBaseEventStamp stamp) {
+    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibBaseEventStamp stamp) {
         Date startDate = getStartDate(event);
         Date endDate = getEndDate(event);
 
@@ -414,7 +412,7 @@ public class EntityConverter {
 
         // must have start date
         if(startDate==null) {
-            return null;
+            return;
         }
 
         // A floating date is a DateTime with no timezone, or
@@ -431,29 +429,19 @@ public class EntityConverter {
             isFloating = true;
         }
 
-        HibEventTimeRangeIndex timeRangeIndex = new HibEventTimeRangeIndex();
-        timeRangeIndex.setStartDate(fromDateToStringNoTimezone(startDate));
         stamp.setStartDate(fromDateToStringNoTimezone(startDate));
-
 
         // A null endDate equates to infinity, which is represented by
         // a String that will always come after any date when compared.
         if(endDate!=null) {
-            timeRangeIndex.setEndDate(fromDateToStringNoTimezone(endDate));
             stamp.setEndDate(fromDateToStringNoTimezone(endDate));
         }
         else {
-            timeRangeIndex.setEndDate(TIME_INFINITY);
             stamp.setEndDate(TIME_INFINITY);
         }
 
-        timeRangeIndex.setIsFloating(isFloating);
         stamp.setIsFloating(isFloating);
-
-        timeRangeIndex.setIsRecurring(isRecurring);
         stamp.setIsRecurring(isRecurring);
-
-        return timeRangeIndex;
     }
 
     private String fromDateToStringNoTimezone(Date date) {

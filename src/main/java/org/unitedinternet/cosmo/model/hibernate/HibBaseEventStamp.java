@@ -21,7 +21,6 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,28 +28,24 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@SecondaryTable(name="event_stamp", pkJoinColumns={
-        @PrimaryKeyJoinColumn(name="stampid", referencedColumnName="id")},
+@Table(name = "stamp",
         indexes = {
-                @Index(name = "idx_startdt",columnList = "startDate"),
-                @Index(name = "idx_enddt",columnList = "endDate"),
-                @Index(name = "idx_floating",columnList = "isFloating"),
-                @Index(name = "idx_recurring",columnList = "isrecurring")}
+                @Index(name = "idx_startdt",columnList = "startdate"),
+                @Index(name = "idx_enddt",columnList = "enddate"),
+                @Index(name = "idx_floating",columnList = "isfloating"),
+                @Index(name = "idx_recurring",columnList = "isrecurring")
+        }
 )
 public class HibBaseEventStamp extends HibAuditableObject {
 
-    @Column(table="event_stamp", name = "icaldata", length=102400000, nullable = false)
+    @Column(name = "icaldata", length=102400000, nullable = false)
     @Type(type="calendar_clob")
     @NotNull
     private Calendar eventCalendar = null;
-
-    @Embedded
-    private HibEventTimeRangeIndex timeRangeIndex = null;
 
     @Id
     @GeneratedValue
@@ -89,14 +84,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
         this.item = hibItem;
     }
 
-    public HibEventTimeRangeIndex getTimeRangeIndex() {
-        return timeRangeIndex;
-    }
-
-    public void setTimeRangeIndex(final HibEventTimeRangeIndex timeRangeIndex) {
-        this.timeRangeIndex = timeRangeIndex;
-    }
-
     public HibBaseEventStamp() {}
 
     public HibBaseEventStamp(HibItem hibItem) {
@@ -110,12 +97,6 @@ public class HibBaseEventStamp extends HibAuditableObject {
     public void setEventCalendar(Calendar calendar) {
         this.eventCalendar = calendar;
     }
-
-    public boolean isRecurring() {
-        return getTimeRangeIndex().getIsRecurring();
-    }
-
-
 
     public String getStartDate() {
         return startDate;

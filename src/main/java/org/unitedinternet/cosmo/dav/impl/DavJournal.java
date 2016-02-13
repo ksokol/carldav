@@ -17,14 +17,14 @@ public class DavJournal extends DavCalendarResource {
         super(item, locator, factory, idGenerator);
     }
 
-    public Calendar getCalendar() {
+    public String getCalendar() {
         HibJournalItem note = (HibJournalItem) getItem();
         return note.getCalendar();
     }
 
     public void setCalendar(Calendar cal) throws CosmoDavException {
         final HibJournalItem item = (HibJournalItem) getItem();
-        item.setCalendar(cal);
+        item.setCalendar(cal.toString());
     }
 
     @Override

@@ -105,7 +105,7 @@ public abstract class DavCalendarResource extends DavContentBase
     /**
      * @return The calendar object associated with this resource.
      */
-    public abstract Calendar getCalendar();
+    public abstract String getCalendar();
     
     /**
      * Set the calendar object associated with this resource.
@@ -129,10 +129,10 @@ public abstract class DavCalendarResource extends DavContentBase
         outputContext.setContentType(contentType);
   
         // Get calendar
-        Calendar calendar = getCalendar();
+        String calendar = getCalendar();
         
         // convert Calendar object to String, then to bytes (UTF-8)    
-        byte[] calendarBytes = calendar.toString().getBytes("UTF-8");
+        byte[] calendarBytes = calendar.getBytes("UTF-8");
         outputContext.setContentLength(calendarBytes.length);
         outputContext.setModificationTime(getModificationTime());
         outputContext.setETag(getETag());

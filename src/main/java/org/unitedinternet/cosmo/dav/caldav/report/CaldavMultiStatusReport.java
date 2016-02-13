@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Calendar;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
@@ -27,6 +29,8 @@ import org.unitedinternet.cosmo.dav.caldav.property.CalendarData;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.report.MultiStatusReport;
 import org.w3c.dom.Element;
+
+import java.io.StringReader;
 
 /**
  * <p>
@@ -104,12 +108,18 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
         if (! resource.exists()) {
             return null;
         }
+        final String calendarString = resource.getCalendar();
         StringBuffer buffer = new StringBuffer();
         if (outputFilter != null) {
-            outputFilter.filter(resource.getCalendar(), buffer);
+            try {
+                final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
+                outputFilter.filter(calendar, buffer);
+            } catch (Exception exception) {
+                throw new RuntimeException(exception.getMessage(), exception);
+            }
         }
         else {
-            buffer.append(resource.getCalendar().toString());
+            buffer.append(calendarString);
         }
         return buffer.toString();
     }

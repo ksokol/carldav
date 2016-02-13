@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import carldav.service.generator.IdGenerator;
+import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -44,6 +45,7 @@ import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -90,20 +92,26 @@ public class EntityConverter {
      * @param calendar The calendar.
      * @return set note item.
      */
-    public Set<HibEventItem> convertEventCalendar(HibEventItem note, Calendar calendar) {
-        final VEvent event = (VEvent) calendar.getComponent("VEVENT");
+    public Set<HibEventItem> convertEventCalendar(HibEventItem note, String calendarString) {
 
-        if(event.getUid()!=null) {
-            note.setIcalUid(event.getUid().getValue());
+        try {
+            final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
+            final VEvent event = (VEvent) calendar.getComponent("VEVENT");
+
+            if(event.getUid()!=null) {
+                note.setIcalUid(event.getUid().getValue());
+            }
+
+            if (event.getSummary() != null) {
+                note.setDisplayName(event.getSummary().getValue());
+            }
+
+            calculateEventStampIndexes(calendar, event, note);
+
+            return Collections.singleton(note);
+        } catch (Exception exception) {
+            throw new RuntimeException(exception.getMessage(), exception);
         }
-
-        if (event.getSummary() != null) {
-            note.setDisplayName(event.getSummary().getValue());
-        }
-
-        calculateEventStampIndexes(calendar, event, note);
-
-        return Collections.singleton(note);
     }
 
     /**
@@ -112,11 +120,15 @@ public class EntityConverter {
      * @param calendar calendar containing VJOURNAL
      * @return NoteItem representation of VJOURNAL
      */
-    public HibJournalItem convertJournalCalendar(HibJournalItem  note, Calendar calendar) {
-        
-        VJournal vj = (VJournal) getMasterComponent(calendar.getComponents(Component.VJOURNAL));
-        setCalendarAttributes(note, vj);
-        return note;
+    public HibJournalItem convertJournalCalendar(HibJournalItem  note, String calendarString) {
+        try {
+            final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
+            VJournal vj = (VJournal) getMasterComponent(calendar.getComponents(Component.VJOURNAL));
+            setCalendarAttributes(note, vj);
+            return note;
+        } catch (Exception exception) {
+            throw new RuntimeException(exception.getMessage(), exception);
+        }
     }
 
     /**
@@ -164,14 +176,18 @@ public class EntityConverter {
      * </p>
      */
     public Calendar convertContent(HibItem item) {
-        if(item instanceof HibNoteItem) {
-            return convertNote((HibNoteItem) item);
+        HibICalendarItem calendarItem = (HibICalendarItem) item;
+
+        if(calendarItem.getCalendar() != null) {
+
+            try {
+                new CalendarBuilder().build(new StringReader(calendarItem.getCalendar()));
+            } catch (Exception exception) {
+                //TODO
+                exception.printStackTrace();
+            }
         }
         return null;
-    }
-
-    public Calendar convertNote(HibNoteItem note) {
-        return note.getCalendar();
     }
 
     /**

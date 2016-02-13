@@ -93,7 +93,7 @@ public class HibNoteItem extends HibICalendarItem {
     }
 
     public void setTaskCalendar(Calendar calendar) {
-        setCalendar(calendar);
+        setCalendar(calendar.toString());
     }
 
     public void setStartDate(final Date startDate) {

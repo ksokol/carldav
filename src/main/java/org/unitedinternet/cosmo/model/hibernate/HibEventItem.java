@@ -1,7 +1,5 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
-
 import java.nio.charset.Charset;
 import java.util.Date;
 
@@ -64,10 +62,6 @@ public class HibEventItem extends HibICalendarItem {
 
     public void setRemindertime(Date remindertime) {
         this.remindertime = new Date(remindertime.getTime());
-    }
-
-    public void setTaskCalendar(Calendar calendar) {
-        setCalendar(calendar);
     }
 
     public void setStartDate(final Date startDate) {

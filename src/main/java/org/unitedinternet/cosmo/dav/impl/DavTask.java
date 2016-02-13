@@ -69,8 +69,8 @@ public class DavTask extends DavCalendarResource {
      * </ul>
      * @return The calendar exported.
      */
-    public Calendar getCalendar() {
-        return new EntityConverter(getIdGenerator()).convertNote((HibNoteItem)getItem());
+    public String getCalendar() {
+        return ((HibNoteItem)getItem()).getCalendar();
     }
 
     /**

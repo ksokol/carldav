@@ -1,7 +1,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
-import net.fortuna.ical4j.model.Calendar;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -36,7 +35,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -196,14 +194,12 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private void saveEvent(DavItemContent member) throws CosmoDavException {
         HibICalendarItem content = (HibICalendarItem) member.getItem();
-        final Calendar calendar = content.getCalendar();
         EntityConverter converter = new EntityConverter(getIdGenerator());
         Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.addAll(converter.convertEventCalendar(
-                    (HibEventItem) content, calendar));
+            toUpdate.addAll(converter.convertEventCalendar((HibEventItem) content, content.getCalendar()));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }

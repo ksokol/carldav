@@ -50,7 +50,7 @@ public class DavEvent extends DavCalendarResource {
         super(item, locator, factory, idGenerator);
     }
 
-    public Calendar getCalendar() {
+    public String getCalendar() {
         return ((HibICalendarItem) getItem()).getCalendar();
     }
 
@@ -64,7 +64,7 @@ public class DavEvent extends DavCalendarResource {
         }
 
         final HibICalendarItem item = (HibICalendarItem) getItem();
-        item.setCalendar(calendar);
+        item.setCalendar(calendar.toString());
     }
 
     @Override

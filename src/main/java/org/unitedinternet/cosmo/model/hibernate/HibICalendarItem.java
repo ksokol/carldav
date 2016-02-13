@@ -15,11 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-
-import java.io.StringReader;
-
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -45,15 +40,11 @@ public abstract class HibICalendarItem extends HibItem {
         super.setIcalUid(icalUid);
     }
 
-    public Calendar getCalendar() {
-        try {
-            return new CalendarBuilder().build(new StringReader(calendar));
-        } catch (Exception exception) {
-            throw new RuntimeException(exception.getMessage(), exception);
-        }
+    public String getCalendar() {
+        return calendar;
     }
 
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar.toString();
+    public void setCalendar(String calendar) {
+        this.calendar = calendar;
     }
 }

@@ -15,9 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
+
 import carldav.service.generator.IdGenerator;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
@@ -25,15 +26,12 @@ import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.property.ContentLanguage;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
 import java.io.ByteArrayInputStream;
@@ -91,8 +89,7 @@ public class DavFile extends DavContentBase {
 
         HibFileItem content = (HibFileItem) getItem();
 
-        String contentType = content.getContentType();
-        outputContext.setContentType(contentType);
+        outputContext.setContentType(CARD_MEDIA_TYPE);
 
         long len = content.getContentLength() != null ?
             content.getContentLength().longValue() : 0;
@@ -123,14 +120,6 @@ public class DavFile extends DavContentBase {
             if (content != null) {
                 file.setCalendar(IOUtils.toString(content));
             }
-
-            String contentType = inputContext.getContentType();
-            if (contentType != null) {
-                file.setContentType(IOUtil.getMimeType(contentType));
-            }
-            else {
-                file.setContentType(IOUtil.getMimeType(file.getName()));
-            }
         } catch (IOException e) {
             throw new CosmoDavException(e);
         }
@@ -146,29 +135,7 @@ public class DavFile extends DavContentBase {
         }
 
         properties.add(new ContentLength(content.getContentLength()));
-        properties.add(new ContentType(content.getContentType(), null));
-    }
-
-    /** */
-    protected void setLiveProperty(WebDavProperty property, boolean create)
-        throws CosmoDavException {
-        super.setLiveProperty(property, create);
-
-        HibFileItem content = (HibFileItem) getItem();
-        if (content == null) {
-            return;
-        }
-
-        DavPropertyName name = property.getName();
-        String text = property.getValueText();
-
-        if (name.equals(DavPropertyName.GETCONTENTTYPE)) {
-            String type = IOUtil.getMimeType(text);
-            if (StringUtils.isBlank(type)) {
-                throw new BadRequestException("Property " + name + " requires a valid media type");
-            }
-            content.setContentType(type);
-        }
+        properties.add(new ContentType(CARD_MEDIA_TYPE, null));
     }
 
     /** */

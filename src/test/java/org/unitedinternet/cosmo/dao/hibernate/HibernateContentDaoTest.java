@@ -775,7 +775,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setName(name);
         content.setDisplayName(name);
         content.setCalendar(helper.getString("testdata/testdata1.txt"));
-        content.setContentType("text/text");
         content.setOwner(getUser(userDao, owner));
         return content;
     }

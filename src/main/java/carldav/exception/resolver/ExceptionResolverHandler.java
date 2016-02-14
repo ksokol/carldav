@@ -18,6 +18,7 @@ public class ExceptionResolverHandler {
     public ExceptionResolverHandler() {
         exceptionResolvers = new ArrayList<>();
         exceptionResolvers.add(new ConstrainViolationExceptionResolver());
+        exceptionResolvers.add(new UidInUseExceptionResolver());
     }
 
     public CosmoDavException resolve(final Exception exception) {

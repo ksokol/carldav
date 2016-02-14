@@ -54,19 +54,11 @@ import java.util.Set;
 public class EntityConverter {
 
     public Set<HibICalendarItem> convertEventCalendar(HibICalendarItem note, String calendarString) {
-
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
             final VEvent event = (VEvent) calendar.getComponent("VEVENT");
 
-            if(event.getUid()!=null) {
-                note.setIcalUid(event.getUid().getValue());
-            }
-
-            if (event.getSummary() != null) {
-                note.setDisplayName(event.getSummary().getValue());
-            }
-
+            setCalendarAttributes(note, event);
             calculateEventStampIndexes(calendar, event, note);
 
             return Collections.singleton(note);

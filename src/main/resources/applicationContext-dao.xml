@@ -60,7 +60,5 @@
         </property>
     </bean>
 
-    <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter">
-        <constructor-arg index="0" ref="idGenerator" />
-    </bean>
+    <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter" />
 </beans>

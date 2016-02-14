@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -40,7 +39,6 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
@@ -60,13 +58,6 @@ import java.util.Set;
  * {@link HibNoteItem} with zero or more {@link HibNoteItem} modifications
  */
 public class EntityConverter {
-
-    private final IdGenerator idGenerator;
-
-    public EntityConverter(IdGenerator idGenerator) {
-        Assert.notNull(idGenerator, "idGenerator is null");
-        this.idGenerator = idGenerator;
-    }
 
     /**
      * Expands an event calendar and returns a set of notes representing the
@@ -140,7 +131,6 @@ public class EntityConverter {
      */
     public HibNoteItem convertTaskCalendar(Calendar calendar) {
         HibNoteItem note = new HibNoteItem();
-        note.setUid(idGenerator.nextStringIdentifier());
         setBaseContentAttributes(note);
         return convertTaskCalendar(note, calendar);
     }

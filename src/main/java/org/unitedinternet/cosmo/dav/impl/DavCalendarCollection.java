@@ -194,7 +194,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private void saveEvent(DavItemContent member) throws CosmoDavException {
         HibICalendarItem content = (HibICalendarItem) member.getItem();
-        EntityConverter converter = new EntityConverter(getIdGenerator());
+        EntityConverter converter = new EntityConverter();
         Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
@@ -236,7 +236,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private void saveJournal(DavItemContent member) throws CosmoDavException {
         HibJournalItem content = (HibJournalItem) member.getItem();
-        EntityConverter converter = new EntityConverter(getIdGenerator());
+        EntityConverter converter = new EntityConverter();
         Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {

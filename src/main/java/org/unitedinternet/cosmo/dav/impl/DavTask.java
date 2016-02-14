@@ -98,7 +98,7 @@ public class DavTask extends DavCalendarResource {
             throw new UnprocessableEntityException("VCALENDAR does not contain any VTODOS");
         }
 
-        EntityConverter converter = new EntityConverter(getIdGenerator());
+        EntityConverter converter = new EntityConverter();
         converter.convertTaskCalendar(note, cal);
     }
 

@@ -26,7 +26,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.util.VersionFourGenerator;
 
 import java.io.FileInputStream;
 
@@ -37,7 +36,7 @@ import java.io.FileInputStream;
 public class EntityConverterTest {
     protected String baseDir = "src/test/resources/testdata/entityconverter/";
 
-    protected EntityConverter converter = new EntityConverter(new VersionFourGenerator());
+    protected EntityConverter converter = new EntityConverter();
 
     /**
      * Tests entity convertor task.

@@ -19,28 +19,15 @@ import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Target;
 
 import java.nio.charset.Charset;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @DiscriminatorValue("note")
-/*
-@Table(name = "stamp",
-        indexes = {
-                @Index(name = "idx_startdt",columnList = "startdate"),
-                @Index(name = "idx_enddt",columnList = "enddate"),
-                @Index(name = "idx_floating",columnList = "floating"),
-                @Index(name = "idx_recurring",columnList = "recurring")
-        }
-)
-*/
 public class HibNoteItem extends HibICalendarItem {
 
     private static final long serialVersionUID = 4L;
@@ -48,22 +35,6 @@ public class HibNoteItem extends HibICalendarItem {
     @Column(name= "body", columnDefinition="CLOB")
     @Lob
     private String body;
-
-    @Column(name = "remindertime")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date remindertime;
-
-    @Column(name = "startdate")
-    private Date startDate;
-
-    @Column(name = "enddate")
-    private Date endDate;
-
-    @Column(name = "floating")
-    private boolean floating;
-
-    @Column(name = "recurring")
-    private boolean recurring;
 
     @Embedded
     @Target(TriageStatus.class)
@@ -88,28 +59,8 @@ public class HibNoteItem extends HibICalendarItem {
         this.body = body;
     }
 
-    public void setRemindertime(Date remindertime) {
-        this.remindertime = new Date(remindertime.getTime());
-    }
-
     public void setTaskCalendar(Calendar calendar) {
         setCalendar(calendar.toString());
-    }
-
-    public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setFloating(boolean floating) {
-        this.floating = floating;
-    }
-
-    public void setRecurring(boolean recurring) {
-        this.recurring = recurring;
     }
 
     @Override

@@ -16,41 +16,9 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 
-import java.util.Date;
-
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 @Entity
 @DiscriminatorValue("journal")
-public class HibJournalItem extends HibICalendarItem {
-
-    private static final long serialVersionUID = 4L;
-
-    @Column(name = "startdate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startDate;
-
-    @Column(name = "enddate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endDate;
-
-    public Date getStartDate() {
-        return new Date(startDate.getTime());
-    }
-
-    public void setStartDate(final Date startDate) {
-        this.startDate = new Date(startDate.getTime());
-    }
-
-    public Date getEndDate() {
-        return new Date(endDate.getTime());
-    }
-
-    public void setEndDate(final Date endDate) {
-        this.endDate = new Date(endDate.getTime());
-    }
-}
+public class HibJournalItem extends HibICalendarItem {}

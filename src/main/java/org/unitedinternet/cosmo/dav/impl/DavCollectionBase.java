@@ -29,6 +29,7 @@ import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -71,8 +72,7 @@ import javax.xml.stream.XMLStreamException;
  * @see DavResourceBase
  * @see HibCollectionItem
  */
-public class DavCollectionBase extends DavItemResourceBase implements
-        DavItemCollection {
+public class DavCollectionBase extends DavItemResourceBase implements DavItemResource, DavCollection {
     private static final Log LOG = LogFactory.getLog(DavCollectionBase.class);
     private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<String>();
     protected final Set<ReportType> reportTypes = new HashSet<>();

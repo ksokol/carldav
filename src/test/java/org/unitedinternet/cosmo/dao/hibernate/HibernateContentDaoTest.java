@@ -259,7 +259,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         queryItem.setName("test2");
         queryItem.setDisplayName("this is a test item2");
-        queryItem.setContent(helper.getString("testdata/testdata2.txt"));
+        queryItem.setCalendar(helper.getString("testdata/testdata2.txt"));
 
         // Make sure modified date changes
         Thread.sleep(1000);
@@ -577,7 +577,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibItem queryC = contentDao.findItemByPath("/testuser2@testem/a/b/c");
         Assert.assertNotNull(queryC);
         //helper.verifyInputStream(, ((HibFileItem) queryC).getContent());
-        assertThat(helper.getString("testdata/testdata1.txt"), is(((HibFileItem) queryC).getContent()));
+        assertThat(helper.getString("testdata/testdata1.txt"), is(((HibFileItem) queryC).getCalendar()));
 
         Assert.assertEquals("c", queryC.getName());
 
@@ -774,7 +774,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibFileItem content = new HibFileItem();
         content.setName(name);
         content.setDisplayName(name);
-        content.setContent(helper.getString("testdata/testdata1.txt"));
+        content.setCalendar(helper.getString("testdata/testdata1.txt"));
         content.setContentType("text/text");
         content.setOwner(getUser(userDao, owner));
         return content;

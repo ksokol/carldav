@@ -18,31 +18,18 @@ package org.unitedinternet.cosmo.model.hibernate;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 @Entity
 @DiscriminatorValue("file")
-public class HibFileItem extends HibItem {
+public class HibFileItem extends HibICalendarItem {
 
     private static final long serialVersionUID = 3L;
 
     @Column(name = "contentType", length=64)
     private String contentType = null;
 
-    @Column(name = "content", columnDefinition="CLOB")
-    @Lob
-    private String contentData;
-
-    public String getContent() {
-        return contentData;
-    }
-
-    public void setContent(String content) {
-        this.contentData = content;
-    }
-
     public Long getContentLength() {
-        return contentData == null ? 0L : (long) contentData.length();
+        return getCalendar() == null ? 0L : (long) getCalendar().length();
     }
 
     public String getContentType() {

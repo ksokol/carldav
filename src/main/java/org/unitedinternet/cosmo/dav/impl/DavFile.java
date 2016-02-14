@@ -107,7 +107,7 @@ public class DavFile extends DavContentBase {
             return;
         }
 
-        IOUtil.spool(new ByteArrayInputStream(content.getContent().getBytes(StandardCharsets.UTF_8)), outputContext.getOutputStream());
+        IOUtil.spool(new ByteArrayInputStream(content.getCalendar().getBytes(StandardCharsets.UTF_8)), outputContext.getOutputStream());
     }
 
     
@@ -121,7 +121,7 @@ public class DavFile extends DavContentBase {
         try {
             InputStream content = inputContext.getInputStream();
             if (content != null) {
-                file.setContent(IOUtils.toString(content));
+                file.setCalendar(IOUtils.toString(content));
             }
 
             String contentType = inputContext.getContentType();

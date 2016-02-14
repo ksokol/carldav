@@ -70,7 +70,7 @@ public class AddressbookMultigetReport extends MultigetReport {
         final HibFileItem item = (HibFileItem) resource.getItem();
         final StringBuilder builder = new StringBuilder();
 
-        builder.append(item.getContent());
+        builder.append(item.getCalendar());
         return builder.toString();
     }
 

@@ -259,8 +259,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         queryItem.setName("test2");
         queryItem.setDisplayName("this is a test item2");
-
-        queryItem.setContentLanguage("es");
         queryItem.setContent(helper.getString("testdata/testdata2.txt"));
 
         // Make sure modified date changes
@@ -777,8 +775,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setName(name);
         content.setDisplayName(name);
         content.setContent(helper.getString("testdata/testdata1.txt"));
-        content.setContentLanguage("en");
-        content.setContentEncoding("UTF8");
         content.setContentType("text/text");
         content.setOwner(getUser(userDao, owner));
         return content;

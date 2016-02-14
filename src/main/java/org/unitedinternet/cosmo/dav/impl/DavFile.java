@@ -93,14 +93,8 @@ public class DavFile extends DavContentBase {
 
         HibFileItem content = (HibFileItem) getItem();
 
-        String contentType =
-            IOUtil.buildContentType(content.getContentType(),
-                                    content.getContentEncoding());
+        String contentType = content.getContentType();
         outputContext.setContentType(contentType);
-
-        if (content.getContentLanguage() != null) {
-            outputContext.setContentLanguage(content.getContentLanguage());
-        }
 
         long len = content.getContentLength() != null ?
             content.getContentLength().longValue() : 0;
@@ -132,20 +126,12 @@ public class DavFile extends DavContentBase {
                 file.setContent(IOUtils.toString(content));
             }
 
-            if (inputContext.getContentLanguage() != null) {
-                file.setContentLanguage(inputContext.getContentLanguage());
-            }
-
             String contentType = inputContext.getContentType();
             if (contentType != null) {
                 file.setContentType(IOUtil.getMimeType(contentType));
             }
             else {
                 file.setContentType(IOUtil.getMimeType(file.getName()));
-            }
-            String contentEncoding = IOUtil.getEncoding(contentType);
-            if (contentEncoding != null) {
-                file.setContentEncoding(contentEncoding);
             }
         } catch (IOException e) {
             throw new CosmoDavException(e);
@@ -161,12 +147,8 @@ public class DavFile extends DavContentBase {
             return;
         }
 
-        if (content.getContentLanguage() != null) {
-            properties.add(new ContentLanguage(content.getContentLanguage()));
-        }
         properties.add(new ContentLength(content.getContentLength()));
-        properties.add(new ContentType(content.getContentType(),
-                                       content.getContentEncoding()));
+        properties.add(new ContentType(content.getContentType(), null));
     }
 
     /** */
@@ -182,18 +164,12 @@ public class DavFile extends DavContentBase {
         DavPropertyName name = property.getName();
         String text = property.getValueText();
 
-        if (name.equals(DavPropertyName.GETCONTENTLANGUAGE)) {
-            content.setContentLanguage(text);
-            return;
-        }
-
         if (name.equals(DavPropertyName.GETCONTENTTYPE)) {
             String type = IOUtil.getMimeType(text);
             if (StringUtils.isBlank(type)) {
                 throw new BadRequestException("Property " + name + " requires a valid media type");
             }
             content.setContentType(type);
-            content.setContentEncoding(IOUtil.getEncoding(text));
         }
     }
 
@@ -204,11 +180,6 @@ public class DavFile extends DavContentBase {
 
         HibFileItem content = (HibFileItem) getItem();
         if (content == null) {
-            return;
-        }
-
-        if (name.equals(DavPropertyName.GETCONTENTLANGUAGE)) {
-            content.setContentLanguage(null);
             return;
         }
     }

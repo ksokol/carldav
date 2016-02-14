@@ -24,16 +24,10 @@ import javax.persistence.Lob;
 @DiscriminatorValue("file")
 public class HibFileItem extends HibItem {
 
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
 
     @Column(name = "contentType", length=64)
     private String contentType = null;
-    
-    @Column(name = "contentLanguage", length=32)
-    private String contentLanguage = null;
-    
-    @Column(name = "contentEncoding", length=32)
-    private String contentEncoding = null;
 
     @Column(name = "content", columnDefinition="CLOB")
     @Lob
@@ -45,22 +39,6 @@ public class HibFileItem extends HibItem {
 
     public void setContent(String content) {
         this.contentData = content;
-    }
-
-    public String getContentEncoding() {
-        return contentEncoding;
-    }
-
-    public void setContentEncoding(String contentEncoding) {
-        this.contentEncoding = contentEncoding;
-    }
-
-    public String getContentLanguage() {
-        return contentLanguage;
-    }
-
-    public void setContentLanguage(String contentLanguage) {
-        this.contentLanguage = contentLanguage;
     }
 
     public Long getContentLength() {

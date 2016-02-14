@@ -101,9 +101,4 @@ public class DavTask extends DavCalendarResource {
         EntityConverter converter = new EntityConverter();
         converter.convertTaskCalendar(note, cal);
     }
-
-    @Override
-    public boolean isCollection() {
-        return false;
-    }
 }

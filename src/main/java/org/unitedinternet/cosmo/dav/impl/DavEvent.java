@@ -67,9 +67,4 @@ public class DavEvent extends DavCalendarResource {
         item.setCalendar(calendar.toString());
     }
 
-    @Override
-    public boolean isCollection() {
-        return false;
-    }   
-
 }

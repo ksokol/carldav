@@ -174,4 +174,9 @@ public abstract class DavCalendarResource extends DavContentBase
             throw new ProtectedPropertyModificationException(name);
         }
     }
+
+    @Override
+    public boolean isCollection() {
+        return false;
+    }
 }

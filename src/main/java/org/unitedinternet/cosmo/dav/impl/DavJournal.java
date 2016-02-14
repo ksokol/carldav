@@ -27,8 +27,4 @@ public class DavJournal extends DavCalendarResource {
         item.setCalendar(cal.toString());
     }
 
-    @Override
-    public boolean isCollection() {
-        return false;
-    }
 }

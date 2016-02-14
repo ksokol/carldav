@@ -40,6 +40,7 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.ByteArrayInputStream;
@@ -103,19 +104,14 @@ public abstract class DavCalendarResource extends DavContentBase
         return getCalendarQueryProcesor().filterQuery((HibNoteItem)getItem(), filter);
     }
 
-    /**
-     * @return The calendar object associated with this resource.
-     */
     public String getCalendar() {
         return ((HibICalendarItem)getItem()).getCalendar();
     }
-    
-    /**
-     * Set the calendar object associated with this resource.
-     * @param calendar calendar object parsed from inputcontext
-     */
-    protected abstract void setCalendar(Calendar calendar)
-        throws CosmoDavException;
+
+    public void setCalendar(Calendar calendar) throws CosmoDavException {
+        final HibICalendarItem item = (HibICalendarItem) getItem();
+        item.setCalendar(calendar.toString());
+    }
 
     public void writeTo(OutputContext outputContext)
         throws CosmoDavException, IOException {

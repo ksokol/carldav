@@ -50,7 +50,7 @@ public class DavEvent extends DavCalendarResource {
         super(item, locator, factory, idGenerator);
     }
 
-    protected void setCalendar(Calendar calendar)
+    public void setCalendar(Calendar calendar)
         throws CosmoDavException {
         
         ComponentList vevents = calendar.getComponents(Component.VEVENT);

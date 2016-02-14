@@ -48,7 +48,6 @@ import java.nio.charset.StandardCharsets;
  * This class defines the following live properties:
  *
  * <ul>
- * <li><code>DAV:getcontentlanguage</code></li>
  * <li><code>DAV:getcontentlength</code> (protected)</li>
  * <li><code>DAV:getcontenttype</code></li>
  * </ul>
@@ -66,7 +65,6 @@ public class DavFile extends DavContentBase {
         throws CosmoDavException {
         super(item, locator, factory, idGenerator);
 
-        registerLiveProperty(DavPropertyName.GETCONTENTLANGUAGE);
         registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
         registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
     }

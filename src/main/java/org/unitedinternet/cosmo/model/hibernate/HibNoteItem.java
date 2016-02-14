@@ -16,10 +16,8 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import net.fortuna.ical4j.model.Calendar;
-import org.hibernate.annotations.Target;
 
 import javax.persistence.DiscriminatorValue;
-import javax.persistence.Embedded;
 import javax.persistence.Entity;
 
 @Entity
@@ -28,19 +26,7 @@ public class HibNoteItem extends HibICalendarItem {
 
     private static final long serialVersionUID = 4L;
 
-    @Embedded
-    @Target(TriageStatus.class)
-    private TriageStatus triageStatus = new TriageStatus();
-
     public HibNoteItem() {
-    }
-
-    public TriageStatus getTriageStatus() {
-        return triageStatus;
-    }
-
-    public void setTriageStatus(TriageStatus ts) {
-        triageStatus = ts;
     }
 
     public void setTaskCalendar(Calendar calendar) {

@@ -15,9 +15,12 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import org.hibernate.annotations.Target;
+
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Lob;
@@ -59,6 +62,10 @@ public abstract class HibICalendarItem extends HibItem {
 
     @Column(name = "recurring")
     private boolean recurring;
+
+    @Embedded
+    @Target(TriageStatus.class)
+    private TriageStatus triageStatus;
 
     public String getIcalUid() {
         return icalUid;
@@ -114,5 +121,13 @@ public abstract class HibICalendarItem extends HibItem {
 
     public void setRecurring(final boolean recurring) {
         this.recurring = recurring;
+    }
+
+    public TriageStatus getTriageStatus() {
+        return triageStatus;
+    }
+
+    public void setTriageStatus(final TriageStatus triageStatus) {
+        this.triageStatus = triageStatus;
     }
 }

@@ -18,8 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import org.hibernate.annotations.Target;
 
-import java.nio.charset.Charset;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -47,16 +45,5 @@ public class HibNoteItem extends HibICalendarItem {
 
     public void setTaskCalendar(Calendar calendar) {
         setCalendar(calendar.toString());
-    }
-
-    @Override
-    public String calculateEntityTag() {
-        String uid = getUid() != null ? getUid() : "-";
-        String modTime = getModifiedDate() != null ?
-            Long.valueOf(getModifiedDate().getTime()).toString() : "-";
-         
-        StringBuffer etag = new StringBuffer(uid + ":" + modTime);
-
-        return encodeEntityTag(etag.toString().getBytes(Charset.forName("UTF-8")));
     }
 }

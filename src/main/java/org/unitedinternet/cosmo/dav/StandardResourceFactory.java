@@ -103,7 +103,9 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             if (parent instanceof DavCalendarCollection) {
                 return new DavEvent(locator, this, idGenerator);
             }
-            return new DavCard(locator, this, idGenerator);
+            if (parent instanceof DavCardCollection) {
+                return new DavCard(locator, this, idGenerator);
+            }
         }
         
         // handle OPTIONS for non-existent resource

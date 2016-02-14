@@ -151,4 +151,34 @@ class ValidationTests extends IntegrationTestSupport {
                 .andExpect(status().isBadRequest())
                 .andExpect(xml(response1))
     }
+
+    @Test
+    void unknownCalendarResource() {
+        def request1 = """\
+                        BEGIN:VCARD
+                        VERSION:4.0
+                        UID:d0f1d24e-2f4b-4318-b38c-92c6a0130c6a
+                        PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 vcard4android ez-vcard/0.9.6
+                        FN:Name Prefix Name Middle Name Last Name\\, Name Suffix
+                        N:Suffix;Name Prefix Name Middle Name Last Name;Name;;
+                        X-PHONETIC-FIRST-NAME:name
+                        X-PHONETIC-LAST-NAME:phonetic
+                        TEL;TYPE=cell:746-63
+                        TEL;TYPE=work:1111-1
+                        EMAIL;TYPE=home:email@localhost
+                        ORG:Company
+                        TITLE:Title
+                        IMPP:sip:sip
+                        NICKNAME:Nickname
+                        NOTE:Notes
+                        REV:20160109T131938Z
+                        END:VCARD
+                        """.stripIndent()
+
+        mockMvc.perform(put("/dav/{email}/unknown/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+                .contentType(TEXT_VCARD)
+                .content(request1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isNotFound())
+    }
 }

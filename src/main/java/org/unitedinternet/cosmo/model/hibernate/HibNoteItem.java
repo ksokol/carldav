@@ -20,21 +20,15 @@ import org.hibernate.annotations.Target;
 
 import java.nio.charset.Charset;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 @Entity
 @DiscriminatorValue("note")
 public class HibNoteItem extends HibICalendarItem {
 
     private static final long serialVersionUID = 4L;
-
-    @Column(name= "body", columnDefinition="CLOB")
-    @Lob
-    private String body;
 
     @Embedded
     @Target(TriageStatus.class)
@@ -49,14 +43,6 @@ public class HibNoteItem extends HibICalendarItem {
 
     public void setTriageStatus(TriageStatus ts) {
         triageStatus = ts;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 
     public void setTaskCalendar(Calendar calendar) {

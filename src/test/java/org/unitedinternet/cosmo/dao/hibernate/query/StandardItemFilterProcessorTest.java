@@ -200,11 +200,11 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(parent);
         filter.setDisplayName(Restrictions.eq("test"));
         filter.setIcalUid(Restrictions.eq("icaluid"));
-        filter.setBody(Restrictions.eq("body"));
+
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
 
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3 and i.body=:param4", query.getQueryString());
+        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3", query.getQueryString());
 
         filter = new NoteItemFilter();
         Date date1 = new Date(1000);

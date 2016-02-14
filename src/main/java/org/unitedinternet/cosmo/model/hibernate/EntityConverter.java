@@ -223,10 +223,6 @@ public class EntityConverter {
                     .getValue(), 0, 1024));
         }
 
-        if (task.getDescription() != null) {
-            note.setBody(task.getDescription().getValue());
-        }
-
         // look for DTSTAMP
         if (task.getDateStamp() != null) {
             note.setClientModifiedDate(task.getDateStamp().getDate());

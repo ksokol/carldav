@@ -2,10 +2,8 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import java.nio.charset.Charset;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 
 /**
  * @author Kamill Sokol
@@ -16,19 +14,7 @@ public class HibEventItem extends HibICalendarItem {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(name= "body", columnDefinition="CLOB")
-    @Lob
-    private String body;
-
     public HibEventItem() {
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
     }
 
     @Override

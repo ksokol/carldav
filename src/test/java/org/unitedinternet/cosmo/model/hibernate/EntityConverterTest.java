@@ -46,7 +46,7 @@ public class EntityConverterTest {
     public void testEntityConverterTask() throws Exception {
         Calendar calendar = getCalendar("vtodo.ics");
 
-        HibNoteItem note = converter.convertTaskCalendar(calendar);
+        HibICalendarItem note = converter.convertTaskCalendar(calendar);
 
         Assert.assertTrue(TriageStatusUtil.CODE_NOW==note.getTriageStatus().getCode());
 

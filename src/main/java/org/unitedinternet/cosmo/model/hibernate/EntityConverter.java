@@ -50,40 +50,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-/**
- * A component that converts iCalendar objects to entities and vice versa.
- * Often this is not a straight one-to-one mapping, because recurring
- * iCalendar events are modeled as multiple events in a single
- * {@link Calendar}, whereas recurring items are modeled as a master
- * {@link HibNoteItem} with zero or more {@link HibNoteItem} modifications
- */
 public class EntityConverter {
 
-    /**
-     * Expands an event calendar and returns a set of notes representing the
-     * master and exception items.
-     * <p>
-     * The provided note corresponds to the recurrence master or, for
-     * non-recurring items, the single event in the calendar. The result set
-     * includes both the master note as well as a modification note for
-     * exception event in the calendar.
-     * </p>
-     * <p>
-     * If the master note does not already have a UUID or an event stamp, one
-     * is assigned to it. A UUID is assigned because any modification items
-     * that are created require the master's UUID in order to construct
-     * their own.
-     * </p>
-     * <p>
-     * If the given note is already persistent, and the calendar does not
-     * contain an exception event matching an existing modification, that
-     * modification is set inactive. It is still returned in the result set.
-     * </p>
-     * @param note The note item.
-     * @param calendar The calendar.
-     * @return set note item.
-     */
-    public Set<HibEventItem> convertEventCalendar(HibEventItem note, String calendarString) {
+    public Set<HibICalendarItem> convertEventCalendar(HibICalendarItem note, String calendarString) {
 
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
@@ -105,13 +74,7 @@ public class EntityConverter {
         }
     }
 
-    /**
-     * Update existing NoteItem with calendar containing single VJOURNAL
-     * @param note note to update
-     * @param calendar calendar containing VJOURNAL
-     * @return NoteItem representation of VJOURNAL
-     */
-    public HibJournalItem convertJournalCalendar(HibJournalItem  note, String calendarString) {
+    public HibICalendarItem convertJournalCalendar(HibJournalItem  note, String calendarString) {
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
             VJournal vj = (VJournal) getMasterComponent(calendar.getComponents(Component.VJOURNAL));
@@ -129,7 +92,7 @@ public class EntityConverter {
      *            calendar containing VTODO
      * @return NoteItem representation of VTODO
      */
-    public HibNoteItem convertTaskCalendar(Calendar calendar) {
+    public HibICalendarItem convertTaskCalendar(Calendar calendar) {
         HibNoteItem note = new HibNoteItem();
         setBaseContentAttributes(note);
         return convertTaskCalendar(note, calendar);
@@ -144,7 +107,7 @@ public class EntityConverter {
      *            calendar containing VTODO
      * @return NoteItem representation of VTODO
      */
-    public HibNoteItem convertTaskCalendar(HibNoteItem  note, Calendar calendar) {
+    public HibICalendarItem convertTaskCalendar(HibICalendarItem  note, Calendar calendar) {
         
         note.setCalendar(calendar.toString());
         VToDo todo = (VToDo) getMasterComponent(calendar.getComponents(Component.VTODO));
@@ -154,24 +117,10 @@ public class EntityConverter {
         return note;
     }
 
-    /**
-     * Returns a calendar representing the item.
-     * <p>
-     * If the item is a {@link HibNoteItem}, delegates to
-     * {@link #convertNote(HibNoteItem)}. If the item is a {@link HibICalendarItem},
-     * delegates to {@link HibICalendarItem#getCalendar()}. Otherwise,
-     * returns null.
-     * @param item The content item.
-     * @return The calendar.
-     * </p>
-     */
-    public Calendar convertContent(HibItem item) {
-        HibICalendarItem calendarItem = (HibICalendarItem) item;
-
-        if(calendarItem.getCalendar() != null) {
-
+    public Calendar convertContent(HibICalendarItem item) {
+        if(item.getCalendar() != null) {
             try {
-                new CalendarBuilder().build(new StringReader(calendarItem.getCalendar()));
+                new CalendarBuilder().build(new StringReader(item.getCalendar()));
             } catch (Exception exception) {
                 //TODO
                 exception.printStackTrace();
@@ -184,8 +133,7 @@ public class EntityConverter {
      * Sets base content attributes.
      * @param item The content item.
      */
-    private void setBaseContentAttributes(HibItem item) {
-
+    private void setBaseContentAttributes(HibICalendarItem item) {
         TriageStatus ts = new TriageStatus();
         TriageStatusUtil.initialize(ts);
 
@@ -193,7 +141,7 @@ public class EntityConverter {
         item.setClientModifiedDate(item.getClientCreationDate());
 
         if(item instanceof HibNoteItem) {
-            ((HibNoteItem)item).setTriageStatus(ts);
+            item.setTriageStatus(ts);
         }
     }
 
@@ -202,7 +150,7 @@ public class EntityConverter {
      * @param note The note item.
      * @param task The task vToDo.
      */
-    private void setCalendarAttributes(HibNoteItem note, VToDo task) {
+    private void setCalendarAttributes(HibICalendarItem note, VToDo task) {
 
         if(task.getStartDate() != null) {
             final DtStart startDate = task.getStartDate();
@@ -271,7 +219,7 @@ public class EntityConverter {
      * @param note The note item.
      * @param journal The VJournal.
      */
-    private void setCalendarAttributes(HibJournalItem note, VJournal journal) {
+    private void setCalendarAttributes(HibICalendarItem note, VJournal journal) {
         note.setIcalUid(journal.getUid().getValue());
         note.setUid(journal.getUid().getValue());
 
@@ -393,7 +341,7 @@ public class EntityConverter {
         return l;
     }
 
-    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibEventItem note) {
+    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibICalendarItem note) {
         Date startDate = getStartDate(event);
         Date endDate = getEndDate(event);
 

@@ -35,7 +35,7 @@ import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -246,14 +246,14 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
 
-        HibFileItem item = generateTestContent();
+        HibCardItem item = generateTestContent();
 
         HibItem newItem = contentDao.createContent(root, item);
         Date newItemModifyDate = newItem.getModifiedDate();
         
         
 
-        HibFileItem queryItem = (HibFileItem) contentDao.findItemByUid(newItem.getUid());
+        HibCardItem queryItem = (HibCardItem) contentDao.findItemByUid(newItem.getUid());
 
         helper.verifyItem(newItem, queryItem);
 
@@ -264,7 +264,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         // Make sure modified date changes
         Thread.sleep(1000);
         
-        queryItem = (HibFileItem) contentDao.updateContent(queryItem);
+        queryItem = (HibCardItem) contentDao.updateContent(queryItem);
         
         
         Thread.sleep(200);
@@ -577,7 +577,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibItem queryC = contentDao.findItemByPath("/testuser2@testem/a/b/c");
         Assert.assertNotNull(queryC);
         //helper.verifyInputStream(, ((HibFileItem) queryC).getContent());
-        assertThat(helper.getString("testdata/testdata1.txt"), is(((HibFileItem) queryC).getCalendar()));
+        assertThat(helper.getString("testdata/testdata1.txt"), is(((HibCardItem) queryC).getCalendar()));
 
         Assert.assertEquals("c", queryC.getName());
 
@@ -765,13 +765,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         return helper.getUser(userDao, contentDao, username);
     }
 
-    private HibFileItem generateTestContent() throws Exception {
+    private HibCardItem generateTestContent() throws Exception {
         return generateTestContent("test", "testuser");
     }
 
-    private HibFileItem generateTestContent(String name, String owner)
+    private HibCardItem generateTestContent(String name, String owner)
             throws Exception {
-        HibFileItem content = new HibFileItem();
+        HibCardItem content = new HibCardItem();
         content.setName(name);
         content.setDisplayName(name);
         content.setCalendar(helper.getString("testdata/testdata1.txt"));

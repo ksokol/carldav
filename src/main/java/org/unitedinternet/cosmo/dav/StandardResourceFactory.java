@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavFile;
+import org.unitedinternet.cosmo.dav.impl.DavCard;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavJournal;
 import org.unitedinternet.cosmo.dav.impl.DavTask;
@@ -35,7 +35,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
-import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
@@ -85,7 +85,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
      * The type of resource to create is chosen as such:
      * <ul>
      * <li><code>PUT</code>, <code>COPY</code>, <code>MOVE</code></li>:
-     * {@link DavFile}</li>
+     * {@link DavCard}</li>
      * </ul>
      */
     public WebDavResource resolve(DavResourceLocator locator,
@@ -103,7 +103,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             if (parent instanceof DavCalendarCollection) {
                 return new DavEvent(locator, this, idGenerator);
             }
-            return new DavFile(locator, this, idGenerator);
+            return new DavCard(locator, this, idGenerator);
         }
         
         // handle OPTIONS for non-existent resource
@@ -201,7 +201,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             return new DavJournal(journal, locator, this, idGenerator);
         }
 
-        return new DavFile((HibFileItem) hibItem, locator, this, idGenerator);
+        return new DavCard((HibCardItem) hibItem, locator, this, idGenerator);
     }
 
 

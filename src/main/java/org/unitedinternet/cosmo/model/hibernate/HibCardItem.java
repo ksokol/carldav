@@ -19,5 +19,5 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue("file")
-public class HibFileItem extends HibICalendarItem {}
+@DiscriminatorValue("card")
+public class HibCardItem extends HibICalendarItem {}

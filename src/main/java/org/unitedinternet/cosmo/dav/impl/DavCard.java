@@ -27,35 +27,20 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
-import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-/**
- * Extends <code>DavResourceBase</code> to adapt the Cosmo
- * <code>HibFileItem</code> to the DAV resource model.
- *
- * This class defines the following live properties:
- *
- * <ul>
- * <li><code>DAV:getcontentlength</code> (protected)</li>
- * <li><code>DAV:getcontenttype</code></li>
- * </ul>
- *
- * @see DavContent
- * @see HibFileItem
- */
-public class DavFile extends DavContentBase {
-    private static final Log LOG = LogFactory.getLog(DavFile.class);
+public class DavCard extends DavContentBase {
+    private static final Log LOG = LogFactory.getLog(DavCard.class);
 
-    public DavFile(HibFileItem item,
+    public DavCard(HibCardItem item,
                    DavResourceLocator locator,
                    DavResourceFactory factory,
                    IdGenerator idGenerator)
@@ -67,11 +52,11 @@ public class DavFile extends DavContentBase {
     }
 
     /** */
-    public DavFile(DavResourceLocator locator,
+    public DavCard(DavResourceLocator locator,
                    DavResourceFactory factory,
                    IdGenerator idGenerator)
         throws CosmoDavException {
-        this(new HibFileItem(), locator, factory, idGenerator);
+        this(new HibCardItem(), locator, factory, idGenerator);
     }
 
     // WebDavResource
@@ -86,7 +71,7 @@ public class DavFile extends DavContentBase {
             LOG.debug("spooling file " + getResourcePath());
         }
 
-        HibFileItem content = (HibFileItem) getItem();
+        HibCardItem content = (HibCardItem) getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
         outputContext.setContentType(CARD_MEDIA_TYPE);
@@ -110,7 +95,7 @@ public class DavFile extends DavContentBase {
         throws CosmoDavException {
         super.populateItem(inputContext);
 
-        HibFileItem file = (HibFileItem) getItem();
+        HibCardItem file = (HibCardItem) getItem();
 
         try {
             InputStream content = inputContext.getInputStream();
@@ -126,7 +111,7 @@ public class DavFile extends DavContentBase {
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
 
-        HibFileItem content = (HibFileItem) getItem();
+        HibCardItem content = (HibCardItem) getItem();
         if (content == null) {
             return;
         }
@@ -139,7 +124,7 @@ public class DavFile extends DavContentBase {
         throws CosmoDavException {
         super.removeLiveProperty(name);
 
-        HibFileItem content = (HibFileItem) getItem();
+        HibCardItem content = (HibCardItem) getItem();
         if (content == null) {
             return;
         }

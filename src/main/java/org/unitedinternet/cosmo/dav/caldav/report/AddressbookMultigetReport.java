@@ -9,8 +9,8 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
-import org.unitedinternet.cosmo.dav.impl.DavFile;
-import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
+import org.unitedinternet.cosmo.dav.impl.DavCard;
+import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 
 /**
  * @author Kamill Sokol
@@ -54,7 +54,7 @@ public class AddressbookMultigetReport extends MultigetReport {
             msr = new MultiStatusResponse(resource, props, propfindType);
         }
 
-        final DavFile file = (DavFile) resource;
+        final DavCard file = (DavCard) resource;
         if (getPropFindProps().contains(ADDRESSDATA)) {
             msr.add(new AddressData(readCardData(file)));
         }
@@ -62,12 +62,12 @@ public class AddressbookMultigetReport extends MultigetReport {
         return msr;
     }
 
-    private String readCardData(final DavFile resource) throws CosmoDavException {
+    private String readCardData(final DavCard resource) throws CosmoDavException {
         if (! resource.exists()) {
             return null;
         }
 
-        final HibFileItem item = (HibFileItem) resource.getItem();
+        final HibCardItem item = (HibCardItem) resource.getItem();
         final StringBuilder builder = new StringBuilder();
 
         builder.append(item.getCalendar());

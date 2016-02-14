@@ -26,7 +26,7 @@
         @NamedQuery(name = "collections.children.by.parent", query = "select item from HibItem item join"
                 + " item.collection pd where item.collection=:parent and item.class=HibCollectionItem"),
         @NamedQuery(name = "collections.files.by.parent", query = "select item from HibItem item join"
-                + " item.collection pd where item.collection=:parent and item.class=HibFileItem"),
+                + " item.collection pd where item.collection=:parent and item.class=HibCardItem"),
         @NamedQuery(name = "itemId.by.parentId.name", query = "select item.id from HibItem item join"
                 + " item.collection pd where pd.id=:parentid and item.name=:name"),
         @NamedQuery(name = "item.by.uid", query = "from HibItem i where i.uid=:uid"),

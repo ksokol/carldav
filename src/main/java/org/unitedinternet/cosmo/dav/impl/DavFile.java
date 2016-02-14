@@ -30,7 +30,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.model.hibernate.HibFileItem;
 
@@ -88,12 +87,10 @@ public class DavFile extends DavContentBase {
         }
 
         HibFileItem content = (HibFileItem) getItem();
+        final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
         outputContext.setContentType(CARD_MEDIA_TYPE);
-
-        long len = content.getContentLength() != null ?
-            content.getContentLength().longValue() : 0;
-        outputContext.setContentLength(len);
+        outputContext.setContentLength(calendar.length);
         outputContext.setModificationTime(getModificationTime());
         outputContext.setETag(getETag());
 
@@ -104,7 +101,7 @@ public class DavFile extends DavContentBase {
             return;
         }
 
-        IOUtil.spool(new ByteArrayInputStream(content.getCalendar().getBytes(StandardCharsets.UTF_8)), outputContext.getOutputStream());
+        IOUtil.spool(new ByteArrayInputStream(calendar), outputContext.getOutputStream());
     }
 
     
@@ -134,7 +131,6 @@ public class DavFile extends DavContentBase {
             return;
         }
 
-        properties.add(new ContentLength(content.getContentLength()));
         properties.add(new ContentType(CARD_MEDIA_TYPE, null));
     }
 

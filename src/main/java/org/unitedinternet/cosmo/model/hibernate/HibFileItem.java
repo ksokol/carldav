@@ -20,11 +20,4 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("file")
-public class HibFileItem extends HibICalendarItem {
-
-    private static final long serialVersionUID = 3L;
-
-    public Long getContentLength() {
-        return getCalendar() == null ? 0L : (long) getCalendar().length();
-    }
-}
+public class HibFileItem extends HibICalendarItem {}

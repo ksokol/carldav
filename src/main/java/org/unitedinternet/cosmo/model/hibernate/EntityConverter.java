@@ -33,6 +33,7 @@ import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
@@ -184,29 +185,33 @@ public class EntityConverter {
             }
         }
     }
-    
-    /**
-     * Sets calendar attributes.
-     * @param note The note item.
-     * @param journal The VJournal.
-     */
-    private void setCalendarAttributes(HibICalendarItem note, VJournal journal) {
-        note.setIcalUid(journal.getUid().getValue());
-        note.setUid(journal.getUid().getValue());
 
-        if (journal.getSummary() != null) {
-            note.setDisplayName(journal.getSummary().getValue());
+    private void setCalendarAttributes(HibICalendarItem note, Component component) {
+        final Property uid = component.getProperty(Property.UID);
+        if(uid != null) {
+            note.setIcalUid(uid.getValue());
+            note.setUid(uid.getValue());
         }
 
-        if (journal.getDateStamp() != null) {
-            note.setClientModifiedDate(journal.getDateStamp().getDate());
+        final Property summary = component.getProperty(Property.SUMMARY);
+        if(summary != null) {
+            note.setDisplayName(summary.getValue());
         }
 
-        final DtStart startDate = journal.getStartDate();
-        final DateTime dateTime = new DateTime(startDate.getDate());
+        final Property dtStamp = component.getProperty(Property.DTSTAMP);
+        if(dtStamp != null) {
+            note.setClientModifiedDate((((DtStamp) dtStamp).getDate()));
+        }
 
-        note.setStartDate(dateTime);
-        note.setEndDate(dateTime);
+        final Property startDate = component.getProperty(Property.DTSTART);
+        if(startDate != null) {
+            final Date dtStart = ((DtStart) startDate).getDate();
+            final DateTime dateTime = new DateTime(dtStart);
+
+            note.setStartDate(dateTime);
+            note.setEndDate(dateTime);
+
+        }
     }
 
     /**

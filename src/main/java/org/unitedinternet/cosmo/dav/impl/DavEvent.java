@@ -50,10 +50,6 @@ public class DavEvent extends DavCalendarResource {
         super(item, locator, factory, idGenerator);
     }
 
-    public String getCalendar() {
-        return ((HibICalendarItem) getItem()).getCalendar();
-    }
-
     protected void setCalendar(Calendar calendar)
         throws CosmoDavException {
         

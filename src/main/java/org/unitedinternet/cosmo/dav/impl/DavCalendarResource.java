@@ -38,6 +38,7 @@ import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
@@ -105,7 +106,9 @@ public abstract class DavCalendarResource extends DavContentBase
     /**
      * @return The calendar object associated with this resource.
      */
-    public abstract String getCalendar();
+    public String getCalendar() {
+        return ((HibICalendarItem)getItem()).getCalendar();
+    }
     
     /**
      * Set the calendar object associated with this resource.

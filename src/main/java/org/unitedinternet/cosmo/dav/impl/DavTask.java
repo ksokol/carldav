@@ -54,24 +54,6 @@ public class DavTask extends DavCalendarResource {
         throws CosmoDavException {
         super(item, locator, factory, idGenerator);
     }
-    
-    // our methods
-
-    /**
-     * <p>
-     * Exports the stamp as a calendar object containing a single VTODO.
-     * Sets the following properties:
-     * </p>
-     * <ul>
-     * <li>UID: item's icalUid or uid</li>
-     * <li>SUMMARY: item's displayName</li>
-     * <li>DESCRIPTION: item's body</li>
-     * </ul>
-     * @return The calendar exported.
-     */
-    public String getCalendar() {
-        return ((HibNoteItem)getItem()).getCalendar();
-    }
 
     /**
      * <p>

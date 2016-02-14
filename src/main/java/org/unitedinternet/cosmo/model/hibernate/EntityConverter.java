@@ -87,19 +87,6 @@ public class EntityConverter {
 
     /**
      * Convert calendar containing single VTODO into NoteItem
-     *
-     * @param calendar
-     *            calendar containing VTODO
-     * @return NoteItem representation of VTODO
-     */
-    public HibICalendarItem convertTaskCalendar(Calendar calendar) {
-        HibNoteItem note = new HibNoteItem();
-        setBaseContentAttributes(note);
-        return convertTaskCalendar(note, calendar);
-    }
-
-    /**
-     * Convert calendar containing single VTODO into NoteItem
      * 
      * @param note
      *            note to update
@@ -127,22 +114,6 @@ public class EntityConverter {
             }
         }
         return null;
-    }
-
-    /**
-     * Sets base content attributes.
-     * @param item The content item.
-     */
-    private void setBaseContentAttributes(HibICalendarItem item) {
-        TriageStatus ts = new TriageStatus();
-        TriageStatusUtil.initialize(ts);
-
-        item.setClientCreationDate(new Date());
-        item.setClientModifiedDate(item.getClientCreationDate());
-
-        if(item instanceof HibNoteItem) {
-            item.setTriageStatus(ts);
-        }
     }
 
     /**

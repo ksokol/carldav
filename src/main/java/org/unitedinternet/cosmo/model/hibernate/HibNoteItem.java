@@ -15,21 +15,9 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("note")
-public class HibNoteItem extends HibICalendarItem {
-
-    private static final long serialVersionUID = 4L;
-
-    public HibNoteItem() {
-    }
-
-    public void setTaskCalendar(Calendar calendar) {
-        setCalendar(calendar.toString());
-    }
-}
+public class HibNoteItem extends HibICalendarItem {}

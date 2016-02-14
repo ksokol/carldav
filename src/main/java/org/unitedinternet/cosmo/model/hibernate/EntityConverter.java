@@ -146,7 +146,7 @@ public class EntityConverter {
      */
     public HibNoteItem convertTaskCalendar(HibNoteItem  note, Calendar calendar) {
         
-        note.setTaskCalendar(calendar);
+        note.setCalendar(calendar.toString());
         VToDo todo = (VToDo) getMasterComponent(calendar.getComponents(Component.VTODO));
         
         setCalendarAttributes(note, todo);

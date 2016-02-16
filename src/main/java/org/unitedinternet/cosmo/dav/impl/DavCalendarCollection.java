@@ -1,7 +1,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
-import net.fortuna.ical4j.model.Component;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -34,7 +33,6 @@ import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -46,6 +44,8 @@ import javax.xml.namespace.QName;
 public class DavCalendarCollection extends DavCollectionBase implements CaldavConstants, ICalendarConstants {
 
     private static final Logger LOG =  LoggerFactory.getLogger(DavCalendarCollection.class);
+
+    private static final EntityConverter converter = new EntityConverter();
 
     private final Set<String> deadPropertyFilter = new HashSet<>(10);
 
@@ -182,7 +182,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         if (member instanceof DavEvent) {
             saveEvent(member);
         } else if(member instanceof DavJournal) {
-            saveJournal(member);
+           // saveJournal(member);
+            saveEvent(member);
         } else {
             try {
                 super.saveContent(member);
@@ -194,20 +195,16 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private void saveEvent(DavItemContent member) throws CosmoDavException {
         HibICalendarItem content = (HibICalendarItem) member.getItem();
-        EntityConverter converter = new EntityConverter();
         Set<HibItem> toUpdate = new LinkedHashSet<>();
 
         try {
-            // convert icalendar representation to cosmo data model
             toUpdate.add(converter.convert(content));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
 
         if (content.getId()!= null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("updating event " + member.getResourcePath());
-            }
+            LOG.debug("updating {} {} ", content.getType(), member.getResourcePath());
 
             try {
                 getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
@@ -217,46 +214,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 throw new LockedException();
             }
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("creating event " + member.getResourcePath());
-            }
-
-            try {
-                getContentService().createContentItems((HibCollectionItem) getItem(), toUpdate);
-            } catch (IcalUidInUseException e) {
-                throw new UidConflictException(e);
-            } catch (CollectionLockedException e) {
-                throw new LockedException();
-            }
-        }
-
-        member.setItem(content);
-    }
-
-    private void saveJournal(DavItemContent member) throws CosmoDavException {
-        HibJournalItem content = (HibJournalItem) member.getItem();
-        EntityConverter converter = new EntityConverter();
-        Set<HibItem> toUpdate = new LinkedHashSet<>();
-
-        try {
-            // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convert(content));
-        } catch (ModelValidationException e) {
-            throw new InvalidCalendarResourceException(e.getMessage());
-        }
-
-        if (content.getId()!= null) {
-            LOG.debug("updating journal {}", member.getResourcePath());
-
-            try {
-                getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
-            } catch (IcalUidInUseException e) {
-                throw new UidConflictException(e);
-            } catch (CollectionLockedException e) {
-                throw new LockedException();
-            }
-        } else {
-            LOG.debug("creating journal {}", member.getResourcePath());
+            LOG.debug("creating {} {}", content.getType(), member.getResourcePath());
 
             try {
                 getContentService().createContentItems((HibCollectionItem) getItem(), toUpdate);

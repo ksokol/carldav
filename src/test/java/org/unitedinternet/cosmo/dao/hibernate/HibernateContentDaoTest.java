@@ -34,8 +34,8 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
@@ -141,13 +141,11 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibNoteItem note1 = generateTestNote("note1", "testuser");
         note1.setUid("icaluid");
-        note1.setIcalUid("icaluid");
 
         contentDao.createContent(root, note1);
 
         HibNoteItem note2 = generateTestNote("note2", "testuser");
         note2.setUid("icaluid");
-        note1.setIcalUid("icaluid");
 
         try {
             contentDao.createContent(root, note2);
@@ -776,7 +774,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibCardItem content = new HibCardItem();
         content.setName(name);
         content.setDisplayName(name);
-        content.setIcalUid(UUID.randomUUID().toString());
         content.setCalendar(helper.getString("testdata/testdata1.txt"));
         content.setOwner(getUser(userDao, owner));
         return content;

@@ -46,9 +46,6 @@ public abstract class HibICalendarItem extends HibItem {
         VEVENT, VJOURNAL, VTODO, VCARD
     }
 
-    @Column(name="icaluid", length=255)
-    private String icalUid = null;
-
     @Column(name = "calendar", columnDefinition = "CLOB")
     @Lob
     private String calendar;
@@ -76,10 +73,6 @@ public abstract class HibICalendarItem extends HibItem {
     @Embedded
     @Target(TriageStatus.class)
     private TriageStatus triageStatus;
-
-    public void setIcalUid(String icalUid) {
-        this.icalUid = icalUid;
-    }
 
     public String getCalendar() {
         return calendar;

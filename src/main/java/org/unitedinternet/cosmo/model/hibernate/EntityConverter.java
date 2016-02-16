@@ -100,7 +100,6 @@ public class EntityConverter {
             uidString = uid.getValue();
         }
 
-        note.setIcalUid(uidString);
         note.setUid(uidString);
 
         final Property summary = component.getProperty(Property.SUMMARY);

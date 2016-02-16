@@ -118,20 +118,4 @@ public class DavCard extends DavContentBase {
 
         properties.add(new ContentType(CARD_MEDIA_TYPE, null));
     }
-
-    /** */
-    protected void removeLiveProperty(DavPropertyName name)
-        throws CosmoDavException {
-        super.removeLiveProperty(name);
-
-        HibCardItem content = (HibCardItem) getItem();
-        if (content == null) {
-            return;
-        }
-    }
-
-    @Override
-    public boolean isCollection() {
-        return false;
-    }
 }

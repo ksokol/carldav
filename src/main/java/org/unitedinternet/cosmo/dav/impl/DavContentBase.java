@@ -64,10 +64,10 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavI
         super(item, locator, factory, idGenerator);
     }
 
-    // Jackrabbit WebDavResource
-
-    /** */
-    public abstract boolean isCollection();
+    @Override
+    public boolean isCollection() {
+        return false;
+    }
 
     /** */
     public String getSupportedMethods() {

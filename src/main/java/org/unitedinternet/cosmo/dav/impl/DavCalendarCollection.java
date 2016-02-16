@@ -29,7 +29,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -44,8 +43,6 @@ import javax.xml.namespace.QName;
 public class DavCalendarCollection extends DavCollectionBase implements CaldavConstants, ICalendarConstants {
 
     private static final Logger LOG =  LoggerFactory.getLogger(DavCalendarCollection.class);
-
-    private static final EntityConverter converter = new EntityConverter();
 
     public DavCalendarCollection(HibCollectionItem collection,
                                  DavResourceLocator locator,

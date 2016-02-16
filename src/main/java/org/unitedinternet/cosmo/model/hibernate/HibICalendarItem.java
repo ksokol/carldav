@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.annotations.Target;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -46,6 +47,7 @@ public abstract class HibICalendarItem extends HibItem {
     }
 
     @Column(name="icaluid", length=255)
+    @NotEmpty
     private String icalUid = null;
 
     @Column(name = "calendar", columnDefinition = "CLOB")

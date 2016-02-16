@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import ezvcard.Ezvcard;
+import ezvcard.VCard;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
@@ -49,6 +51,24 @@ import java.util.List;
 
 public class EntityConverter {
 
+    public HibItem convertCard(HibICalendarItem cardItem) {
+        try {
+            VCard vcard = Ezvcard.parse(cardItem.getCalendar()).first();
+            final String uidString = vcard.getUid().getValue();
+            cardItem.setIcalUid(uidString);
+
+            if(vcard.getFormattedName() != null) {
+                cardItem.setDisplayName(vcard.getFormattedName().getValue());
+            } else {
+                cardItem.setDisplayName(uidString);
+            }
+
+            return cardItem;
+        } catch (Exception exception) {
+            throw new RuntimeException(exception.getMessage(), exception);
+        }
+    }
+
     public HibItem convert(HibICalendarItem calendarItem) {
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarItem.getCalendar()));
@@ -75,14 +95,19 @@ public class EntityConverter {
 
     private void setCalendarAttributes(HibICalendarItem note, Component component) {
         final Property uid = component.getProperty(Property.UID);
+        String uidString = null;
         if(uid != null) {
-            note.setIcalUid(uid.getValue());
-            note.setUid(uid.getValue());
+            uidString = uid.getValue();
         }
+
+        note.setIcalUid(uidString);
+        note.setUid(uidString);
 
         final Property summary = component.getProperty(Property.SUMMARY);
         if(summary != null) {
             note.setDisplayName(summary.getValue());
+        } else {
+            note.setDisplayName(uidString);
         }
 
         final Property dtStamp = component.getProperty(Property.DTSTAMP);

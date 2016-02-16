@@ -1,6 +1,5 @@
 package dav
 
-import org.junit.Ignore
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
@@ -113,7 +112,6 @@ class ValidationTests extends IntegrationTestSupport {
                 .andExpect(xml(response1))
     }
 
-    @Ignore
     @Test
     void uidVCard() {
         def request1 = """\
@@ -141,7 +139,7 @@ class ValidationTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>may not be empty for property displayName actual value []</cosmo:bad-request>
+                                <cosmo:bad-request>may not be empty for property icalUid actual value []</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(put("/dav/{email}/contacts/9A5A5BA1-13C26FE2-8887CB2B.vcf", USER01)

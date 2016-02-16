@@ -31,6 +31,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,6 +40,8 @@ import java.nio.charset.StandardCharsets;
 
 public class DavCard extends DavContentBase {
     private static final Log LOG = LogFactory.getLog(DavCard.class);
+
+
 
     public DavCard(HibCardItem item,
                    DavResourceLocator locator,
@@ -91,16 +94,17 @@ public class DavCard extends DavContentBase {
 
     
     /** */
-    protected void populateItem(InputContext inputContext)
-        throws CosmoDavException {
+    protected void populateItem(InputContext inputContext) throws CosmoDavException {
         super.populateItem(inputContext);
 
-        HibCardItem file = (HibCardItem) getItem();
+        HibICalendarItem file = (HibICalendarItem) getItem();
 
         try {
             InputStream content = inputContext.getInputStream();
             if (content != null) {
-                file.setCalendar(IOUtils.toString(content));
+                final String s = IOUtils.toString(content);
+                file.setCalendar(s);
+                converter.convertCard(file);
             }
         } catch (IOException e) {
             throw new CosmoDavException(e);

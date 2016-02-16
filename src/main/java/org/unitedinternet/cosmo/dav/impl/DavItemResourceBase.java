@@ -43,6 +43,7 @@ import org.unitedinternet.cosmo.dav.property.LastModified;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
+import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -80,6 +81,8 @@ import java.util.Set;
 public abstract class DavItemResourceBase extends DavResourceBase implements DavItemResource {
 
     private static final Log log = LogFactory.getLog(DavItemResourceBase.class);
+
+    protected static final EntityConverter converter = new EntityConverter();
 
     private HibItem hibItem;
     private DavCollection parent;

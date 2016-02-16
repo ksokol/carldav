@@ -45,6 +45,7 @@ import org.unitedinternet.cosmo.model.hibernate.User;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.UUID;
 
 import javax.validation.ConstraintViolationException;
 
@@ -774,6 +775,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibCardItem content = new HibCardItem();
         content.setName(name);
         content.setDisplayName(name);
+        content.setIcalUid(UUID.randomUUID().toString());
         content.setCalendar(helper.getString("testdata/testdata1.txt"));
         content.setOwner(getUser(userDao, owner));
         return content;

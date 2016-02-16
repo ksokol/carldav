@@ -946,7 +946,7 @@ class IosTests extends IntegrationTestSupport {
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:displayname>292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:displayname>
+                                            <D:displayname>Vorname Nachname</D:displayname>
                                             <D:supported-report-set/>
                                             <D:resourcetype/>
                                         </D:prop>

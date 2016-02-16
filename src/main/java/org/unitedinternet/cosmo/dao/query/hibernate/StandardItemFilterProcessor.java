@@ -219,7 +219,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
         // filter by icaluid
         if (filter.getIcalUid() != null) {
-            formatExpression(whereBuf, params, "i.icalUid", filter.getIcalUid());
+            formatExpression(whereBuf, params, "i.uid", filter.getIcalUid());
         }
 
         // filter by body

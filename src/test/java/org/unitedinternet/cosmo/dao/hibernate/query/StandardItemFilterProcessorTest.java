@@ -204,7 +204,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
 
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.icalUid=:param3", query.getQueryString());
+        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.uid=:param3", query.getQueryString());
 
         filter = new NoteItemFilter();
         Date date1 = new Date(1000);
@@ -246,14 +246,14 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
                 + "where pd=:parent and "
-                + "i.displayName=:param1 and i.class=:clazz and i.icalUid=:param3", query.getQueryString());
+                + "i.displayName=:param1 and i.class=:clazz and i.uid=:param3", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
                 + "where pd=:parent and i.displayName=:param1 and "
                 + "i.class=:clazz and (i.recurring=true) "
-                + "and i.icalUid=:param3", query.getQueryString());
+                + "and i.uid=:param3", query.getQueryString());
     }
 
     /**

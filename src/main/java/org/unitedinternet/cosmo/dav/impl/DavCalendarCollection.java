@@ -70,12 +70,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT";
     }
 
-    public boolean isCalendarCollection() {
-        return true;
-    }
-
-    // our methods
-
     /**
      * Returns the member resources in this calendar collection matching
      * the given filter.
@@ -179,18 +173,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             throw new IllegalArgumentException("member not DavCalendarResource");
         }
 
-        if (member instanceof DavEvent) {
-            saveEvent(member);
-        } else if(member instanceof DavJournal) {
-           // saveJournal(member);
-            saveEvent(member);
-        } else {
-            try {
-                super.saveContent(member);
-            } catch (IcalUidInUseException e) {
-                throw new UidConflictException(e);
-            }
-        }
+        saveEvent(member);
     }
 
     private void saveEvent(DavItemContent member) throws CosmoDavException {

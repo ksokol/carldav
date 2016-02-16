@@ -16,71 +16,18 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
-/**
- * Extends <code>DavCalendarResource</code> to adapt the Cosmo
- * <code>ContentItem</code> with an <code>TaskStamp</code> to 
- * the DAV resource model.
- *
- * This class does not define any live properties.
- *
- * @see DavCalendarResource
- */
 public class DavTask extends DavCalendarResource {
 
-
-    /** */
-    public DavTask(DavResourceLocator locator,
-                  DavResourceFactory factory,
-                  IdGenerator idGenerator)
-        throws CosmoDavException {
+    public DavTask(DavResourceLocator locator, DavResourceFactory factory, IdGenerator idGenerator) throws CosmoDavException {
         this(new HibNoteItem(), locator, factory, idGenerator);
     }
 
-    /** */
-    public DavTask(HibNoteItem item,
-                   DavResourceLocator locator,
-                   DavResourceFactory factory,
-                   IdGenerator idGenerator)
-        throws CosmoDavException {
+    public DavTask(HibNoteItem item, DavResourceLocator locator, DavResourceFactory factory, IdGenerator idGenerator) throws CosmoDavException {
         super(item, locator, factory, idGenerator);
-    }
-
-    /**
-     * <p>
-     * Imports a calendar object containing a VTODO. Sets the
-     * following properties:
-     * </p>
-     * <ul>
-     * <li>display name: the VTODO's SUMMARY (or the item's name, if the
-     * SUMMARY is blank)</li>
-     * <li>icalUid: the VTODO's UID</li>
-     * <li>body: the VTODO's DESCRIPTION</li>
-     * <li>reminderTime: if the VTODO has a DISPLAY VALARM
-     *     the reminderTime will be set to the trigger time</li>
-     * </ul>
-     * @param cal The calendar imported.
-     * @throws CosmoDavException - if something is wrong this exception is thrown.
-     */
-    public void setCalendar(Calendar cal)
-        throws CosmoDavException {
-        HibNoteItem note = (HibNoteItem) getItem();
-
-        ComponentList vtodos = cal.getComponents(note.getType().name());
-        if (vtodos.isEmpty()) {
-            throw new UnprocessableEntityException("VCALENDAR does not contain any VTODOS");
-        }
-        note.setCalendar(cal.toString());
-        EntityConverter converter = new EntityConverter();
-        converter.convert(note);
     }
 }

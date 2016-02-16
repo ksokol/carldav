@@ -48,15 +48,13 @@ public class DavInputContext extends InputContextImpl implements CaldavConstants
         super(request, in);
     }
 
-    /**
-     * Parses the input stream into a calendar object.
-     * 
-     * @return The calendar object.
-     * @throws CosmoDavException
-     *             - if something is wrong this exception is thrown.
-     */
+    @Deprecated
     public Calendar getCalendar() throws CosmoDavException {
         return getCalendar(false);
+    }
+
+    public String getCalendarString() throws CosmoDavException {
+        return getCalendar().toString();
     }
 
     /**

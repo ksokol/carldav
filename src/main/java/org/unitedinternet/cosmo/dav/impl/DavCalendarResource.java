@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
-import net.fortuna.ical4j.model.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
@@ -78,24 +77,14 @@ public class DavCalendarResource extends DavContentBase implements ICalendarCons
         }
     }
 
-    // DavResourceBase methods
-
     @Override
-    protected void populateItem(InputContext inputContext)
-        throws CosmoDavException {
+    protected void populateItem(InputContext inputContext) throws CosmoDavException {
         super.populateItem(inputContext);
 
         DavInputContext dic = (DavInputContext) inputContext;
-        Calendar calendar = dic.getCalendar();
-
-        setCalendar(calendar.toString());
+        setCalendar(dic.getCalendarString());
     }
 
-    // our methods
-
-    /**
-     * @return true if this resource matches the given filter.
-     */
     public boolean matches(CalendarFilter filter)
         throws CosmoDavException {
         return getCalendarQueryProcesor().filterQuery((HibNoteItem)getItem(), filter);
@@ -151,8 +140,8 @@ public class DavCalendarResource extends DavContentBase implements ICalendarCons
         super.loadLiveProperties(properties);
 
         try {
-            byte[] calendarBytes = getCalendar().toString().getBytes("UTF-8");
-            properties.add(new ContentLength(Long.valueOf(calendarBytes.length)));
+            byte[] calendarBytes = getCalendar().getBytes("UTF-8");
+            properties.add(new ContentLength((long) calendarBytes.length));
         } catch (Exception e) {
             throw new CosmoException("Can't convert calendar", e);
         }

@@ -15,35 +15,23 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
-import net.fortuna.ical4j.model.Component;
 import org.apache.commons.lang.StringUtils;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
+import java.util.List;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-/**
- * An exception indicating that a calendar resource did not contain any
- * supported calendar components.
- */
-public class SupportedCalendarComponentException
-    extends PreconditionFailedException
-    implements ICalendarConstants, CaldavConstants {
-    
-    private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL };
-    /**
-     * Constructor.
-     */
-    public SupportedCalendarComponentException() {
-        super("Calendar object must contain at least one of " +
-              StringUtils.join(SUPPORTED_COMPONENT_TYPES, ", "));
+public class SupportedCalendarComponentException extends PreconditionFailedException implements ICalendarConstants, CaldavConstants {
+
+    public SupportedCalendarComponentException(List<String> supportedComponents) {
+        super("Calendar object must contain at least one of " + StringUtils.join(supportedComponents, ", "));
         getNamespaceContext().addNamespace(PRE_CALDAV, NS_CALDAV);
     }
 
-    protected void writeContent(XMLStreamWriter writer)
-        throws XMLStreamException {
+    protected void writeContent(XMLStreamWriter writer) throws XMLStreamException {
         writer.writeStartElement(NS_CALDAV, "supported-calendar-component");
         writer.writeCharacters(getMessage());
         writer.writeEndElement();

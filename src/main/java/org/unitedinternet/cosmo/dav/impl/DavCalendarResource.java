@@ -47,12 +47,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Abstract calendar resource.
- */
-public abstract class DavCalendarResource extends DavContentBase
-    implements ICalendarConstants {
+public class DavCalendarResource extends DavContentBase implements ICalendarConstants {
+
     private static final Log LOG = LogFactory.getLog(DavCalendarResource.class);
+
     private final Set<ReportType> reportTypes = new HashSet<>();
 
     public DavCalendarResource(HibItem item,

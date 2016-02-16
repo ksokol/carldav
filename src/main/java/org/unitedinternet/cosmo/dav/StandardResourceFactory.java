@@ -22,24 +22,20 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
+import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
+import org.unitedinternet.cosmo.dav.impl.DavCard;
 import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
-import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavCard;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
-import org.unitedinternet.cosmo.dav.impl.DavJournal;
-import org.unitedinternet.cosmo.dav.impl.DavTask;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
-import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -101,7 +97,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             // type is required
             WebDavResource parent = resolve(locator.getParentLocator());
             if (parent instanceof DavCalendarCollection) {
-                return new DavEvent(locator, this, idGenerator);
+                return new DavCalendarResource(new HibEventItem(), locator, this, idGenerator);
             }
             if (parent instanceof DavCardCollection) {
                 return new DavCard(locator, this, idGenerator);
@@ -114,7 +110,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             WebDavResource parent = resolve(locator.getParentLocator());
             if(parent!=null && parent.exists()) {
                 if(parent instanceof DavCalendarCollection) {
-                    return new DavEvent(locator, this, idGenerator);
+                    return new DavCalendarResource(new HibEventItem(), locator, this, idGenerator);
                 }
                 else {
                     return new DavCollectionBase(locator, this, idGenerator);
@@ -172,8 +168,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         Assert.notNull(hibItem, "item cannot be null");
 
         if (hibItem instanceof HibHomeCollectionItem) {
-            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator,
-                                         this, idGenerator);
+            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator, this, idGenerator);
         }
 
         if (hibItem instanceof HibCollectionItem) {
@@ -188,22 +183,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             }
         }
 
-        if (hibItem instanceof HibEventItem) {
-            HibEventItem note = (HibEventItem) hibItem;
-            return new DavEvent(note, locator, this, idGenerator);
+        if(hibItem instanceof HibCardItem) {
+            return new DavCard((HibCardItem) hibItem, locator, this, idGenerator);
         }
 
-        if (hibItem instanceof HibNoteItem) {
-            HibNoteItem note = (HibNoteItem) hibItem;
-            return new DavTask(note, locator, this, idGenerator);
-        }
-
-        if (hibItem instanceof HibJournalItem) {
-            HibJournalItem journal = (HibJournalItem) hibItem;
-            return new DavJournal(journal, locator, this, idGenerator);
-        }
-
-        return new DavCard((HibCardItem) hibItem, locator, this, idGenerator);
+        return new DavCalendarResource(hibItem, locator, this, idGenerator);
     }
 
 

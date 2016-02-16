@@ -27,7 +27,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarDataException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
-import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
 
 import java.io.IOException;
@@ -94,9 +93,6 @@ public class DavInputContext extends InputContextImpl implements CaldavConstants
             }
             if (!allowCalendarWithMethod && c.getProperties().getProperty(Property.METHOD) != null) {
                 throw new InvalidCalendarResourceException("Calendar object contains METHOD property");
-            }
-            if (!CalendarUtils.hasSupportedComponent(c)) {
-                throw new SupportedCalendarComponentException();
             }
 
             calendar = c;

@@ -26,29 +26,27 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
-import org.unitedinternet.cosmo.dav.impl.DavEvent;
-import org.unitedinternet.cosmo.dav.impl.DavJournal;
-import org.unitedinternet.cosmo.dav.impl.DavTask;
+import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
+import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
+import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * <p>
- * An implementation of <code>DavProvider</code> that implements
- * access to <code>DavCalendarResource</code> resources.
- * </p>
- *
- * @see DavProvider
- */
 public class CalendarResourceProvider extends FileProvider {
 
-    public CalendarResourceProvider(DavResourceFactory resourceFactory,
-            IdGenerator idGenerator) {
+    private static final List<String> SUPPORTED_COMPONENT_TYPES = new ArrayList<String>() {{
+        add(Component.VEVENT);
+        add(Component.VTODO);
+        add(Component.VJOURNAL);
+    }};
+
+    public CalendarResourceProvider(DavResourceFactory resourceFactory, IdGenerator idGenerator) {
         super(resourceFactory, idGenerator);
     }
-    
-    // DavProvider methods
 
     public void put(DavRequest request,
                     DavResponse response,
@@ -63,8 +61,8 @@ public class CalendarResourceProvider extends FileProvider {
         int status = content.exists() ? 204 : 201;
         DavInputContext ctx = (DavInputContext) createInputContext(request);
         if (! content.exists()) {
-            content = createCalendarResource(request, response,
-                                             content.getResourceLocator(),
+            content = createCalendarResource(
+                    content.getResourceLocator(),
                                              ctx.getCalendar());
         }
         
@@ -78,20 +76,17 @@ public class CalendarResourceProvider extends FileProvider {
         response.setHeader("ETag", content.getETag());
     }
 
-    protected DavContent createCalendarResource(DavRequest request,
-                                                DavResponse response,
-                                                DavResourceLocator locator,
-                                                Calendar calendar)
-        throws CosmoDavException {
+    protected DavContent createCalendarResource(DavResourceLocator locator, Calendar calendar) throws CosmoDavException {
+
         if (!calendar.getComponents(Component.VEVENT).isEmpty()) {
-            return new DavEvent(locator, getResourceFactory(), getIdGenerator());
+            return new DavCalendarResource(new HibEventItem(), locator, getResourceFactory(), getIdGenerator());
         }
         if (!calendar.getComponents(Component.VTODO).isEmpty()) {
-            return new DavTask(locator, getResourceFactory(), getIdGenerator());
+            return new DavCalendarResource(new HibNoteItem(), locator, getResourceFactory(), getIdGenerator());
         }
         if (!calendar.getComponents(Component.VJOURNAL).isEmpty()) {
-            return new DavJournal(locator, getResourceFactory(), getIdGenerator());
+            return new DavCalendarResource(new HibJournalItem(), locator, getResourceFactory(), getIdGenerator());
         }
-        throw new SupportedCalendarComponentException();
+        throw new SupportedCalendarComponentException(SUPPORTED_COMPONENT_TYPES);
   }
 }

@@ -60,7 +60,7 @@ public abstract class HibItem extends HibAuditableObject {
     private Long id;
 
     @Column(name = "uid", nullable = false, length=255)
-    @NotNull
+    @NotEmpty
     @Length(min = 1, max = 255)
     private String uid;
 

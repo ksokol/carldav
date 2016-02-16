@@ -66,6 +66,14 @@ public abstract class HibICalendarItem extends HibItem {
     @Column(name = "recurring")
     private Boolean recurring;
 
+    @Column(name = "clientcreatedate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date clientCreationDate;
+
+    @Column(name = "clientmodifieddate")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date clientModifiedDate;
+
     @Enumerated
     @Column(name ="type")
     private Type type;
@@ -128,6 +136,22 @@ public abstract class HibICalendarItem extends HibItem {
 
     public void setTriageStatus(final TriageStatus triageStatus) {
         this.triageStatus = triageStatus;
+    }
+
+    public Date getClientCreationDate() {
+        return clientCreationDate;
+    }
+
+    public void setClientCreationDate(Date clientCreationDate) {
+        this.clientCreationDate = clientCreationDate;
+    }
+
+    public Date getClientModifiedDate() {
+        return clientModifiedDate;
+    }
+
+    public void setClientModifiedDate(Date clientModifiedDate) {
+        this.clientModifiedDate = clientModifiedDate;
     }
 
     public Type getType() {

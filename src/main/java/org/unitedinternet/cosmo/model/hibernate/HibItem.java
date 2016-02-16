@@ -19,7 +19,6 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.nio.charset.Charset;
-import java.util.Date;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,14 +32,10 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-
-
 @Table(name = "item",
         indexes={@Index(name = "idx_itemtype",columnList = "itemtype" ),
                  @Index(name = "idx_itemuid",columnList = "uid" ),
@@ -66,33 +61,10 @@ public abstract class HibItem extends HibAuditableObject {
     @NotEmpty
     private String displayName;
 
-    @Column(name = "clientcreatedate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date clientCreationDate;
-
-    @Column(name = "clientmodifieddate")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date clientModifiedDate;
 
     @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "collectionid")
     private HibCollectionItem collection;
-
-    public Date getClientCreationDate() {
-        return clientCreationDate;
-    }
-
-    public void setClientCreationDate(Date clientCreationDate) {
-        this.clientCreationDate = clientCreationDate;
-    }
-
-    public Date getClientModifiedDate() {
-        return clientModifiedDate;
-    }
-
-    public void setClientModifiedDate(Date clientModifiedDate) {
-        this.clientModifiedDate = clientModifiedDate;
-    }
 
     public String getName() {
         return name;

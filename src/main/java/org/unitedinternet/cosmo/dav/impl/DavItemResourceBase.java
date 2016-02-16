@@ -44,6 +44,7 @@ import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -243,9 +244,10 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             hibItem.setOwner(owner);
         }
 
-        if (hibItem.getUid() == null) {
-            hibItem.setClientCreationDate(Calendar.getInstance().getTime());
-            hibItem.setClientModifiedDate(hibItem.getClientCreationDate());
+        if (hibItem.getUid() == null && hibItem instanceof HibICalendarItem) {
+            HibICalendarItem hibICalendarItem = (HibICalendarItem) hibItem;
+            hibICalendarItem.setClientCreationDate(Calendar.getInstance().getTime());
+            hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());
         }
     }
 

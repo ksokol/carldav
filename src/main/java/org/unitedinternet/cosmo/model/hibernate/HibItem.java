@@ -59,9 +59,8 @@ public abstract class HibItem extends HibAuditableObject {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "uid", nullable = false, length=255)
+    @Column(name = "uid", nullable = false)
     @NotEmpty
-    @Length(min = 1, max = 255)
     private String uid;
 
     @Column(name = "itemname", nullable = false, length=255)

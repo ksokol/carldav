@@ -55,7 +55,7 @@ public class EntityConverter {
         try {
             VCard vcard = Ezvcard.parse(cardItem.getCalendar()).first();
             final String uidString = vcard.getUid().getValue();
-            cardItem.setIcalUid(uidString);
+            cardItem.setUid(uidString);
 
             if(vcard.getFormattedName() != null) {
                 cardItem.setDisplayName(vcard.getFormattedName().getValue());

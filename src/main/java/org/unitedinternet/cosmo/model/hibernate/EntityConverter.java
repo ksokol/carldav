@@ -25,11 +25,10 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VJournal;
-import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.DtEnd;
@@ -39,143 +38,42 @@ import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
-import org.apache.commons.lang.StringUtils;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class EntityConverter {
 
-    public Set<HibICalendarItem> convertEventCalendar(HibICalendarItem note, String calendarString) {
+    public HibItem convert(HibICalendarItem note, String calendarString, String type) {
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
-            final VEvent event = (VEvent) calendar.getComponent("VEVENT");
+            Component component = getFirstComponent(calendar.getComponents(type));
 
-            setCalendarAttributes(note, event);
-            calculateEventStampIndexes(calendar, event, note);
+            note.setCalendar(calendarString);
+            setCalendarAttributes(note, component);
+            calculateEventStampIndexes(calendar, component, note);
 
-            return Collections.singleton(note);
-        } catch (Exception exception) {
-            throw new RuntimeException(exception.getMessage(), exception);
-        }
-    }
-
-    public HibICalendarItem convertJournalCalendar(HibJournalItem  note, String calendarString) {
-        try {
-            final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
-            VJournal vj = (VJournal) getMasterComponent(calendar.getComponents(Component.VJOURNAL));
-            setCalendarAttributes(note, vj);
             return note;
         } catch (Exception exception) {
             throw new RuntimeException(exception.getMessage(), exception);
         }
     }
 
-    /**
-     * Convert calendar containing single VTODO into NoteItem
-     * 
-     * @param note
-     *            note to update
-     * @param calendar
-     *            calendar containing VTODO
-     * @return NoteItem representation of VTODO
-     */
-    public HibICalendarItem convertTaskCalendar(HibICalendarItem  note, Calendar calendar) {
-        
-        note.setCalendar(calendar.toString());
-        VToDo todo = (VToDo) getMasterComponent(calendar.getComponents(Component.VTODO));
-        
-        setCalendarAttributes(note, todo);
-        
-        return note;
-    }
-
     public Calendar convertContent(HibICalendarItem item) {
         if(item.getCalendar() != null) {
             try {
-                new CalendarBuilder().build(new StringReader(item.getCalendar()));
+                return new CalendarBuilder().build(new StringReader(item.getCalendar()));
             } catch (Exception exception) {
                 //TODO
                 exception.printStackTrace();
             }
         }
         return null;
-    }
-
-    /**
-     * Sets calendar attributes.
-     * @param note The note item.
-     * @param task The task vToDo.
-     */
-    private void setCalendarAttributes(HibICalendarItem note, VToDo task) {
-
-        if(task.getStartDate() != null) {
-            final DtStart startDate = task.getStartDate();
-            final DateTime dateTime = new DateTime(startDate.getDate());
-
-            note.setStartDate(dateTime);
-            note.setEndDate(dateTime);
-        }
-
-        // UID
-        if(task.getUid()!=null) {
-            note.setIcalUid(task.getUid().getValue());
-        }
-        
-        // for now displayName is limited to 1024 chars
-        if (task.getSummary() != null) {
-            note.setDisplayName(StringUtils.substring(task.getSummary()
-                    .getValue(), 0, 1024));
-        }
-
-        // look for DTSTAMP
-        if (task.getDateStamp() != null) {
-            note.setClientModifiedDate(task.getDateStamp().getDate());
-        }
-
-        // look for absolute VALARM
-        VAlarm va = ICalendarUtils.getDisplayAlarm(task);
-        if (va != null && va.getTrigger()!=null) {
-            Trigger trigger = va.getTrigger();
-            Date reminderTime = trigger.getDateTime();
-           if (reminderTime != null) {
-                note.setRemindertime(reminderTime);
-           }
-        }
-        
-        // look for COMPLETED or STATUS:COMPLETED
-        Completed completed = task.getDateCompleted();
-        Status status = task.getStatus();
-        TriageStatus ts = note.getTriageStatus();
-        
-        // Initialize TriageStatus if necessary
-        if(completed!=null || Status.VTODO_COMPLETED.equals(status)) {
-            if (ts == null) {
-                ts = TriageStatusUtil.initialize(new TriageStatus());
-                note.setTriageStatus(ts);
-            }
-            
-            // TriageStatus.code will be DONE
-            note.getTriageStatus().setCode(TriageStatusUtil.CODE_DONE);
-            
-            // TriageStatus.rank will be the COMPLETED date if present
-            // or currentTime
-            if(completed!=null) {
-                note.getTriageStatus().setRank(
-                        TriageStatusUtil.getRank(completed.getDate().getTime()));
-            }
-            else {
-                note.getTriageStatus().setRank(
-                        TriageStatusUtil.getRank(System.currentTimeMillis()));
-            }
-        }
     }
 
     private void setCalendarAttributes(HibICalendarItem note, Component component) {
@@ -195,23 +93,51 @@ public class EntityConverter {
             note.setClientModifiedDate((((DtStamp) dtStamp).getDate()));
         }
 
-        final Property startDate = component.getProperty(Property.DTSTART);
+        final DtStart startDate = ICalendarUtils.getStartDate(component);
         if(startDate != null) {
-            final Date dtStart = ((DtStart) startDate).getDate();
-            final DateTime dateTime = new DateTime(dtStart);
+            final Date date = startDate.getDate();
+            note.setStartDate(date);
+            note.setEndDate(date);
+        }
 
-            note.setStartDate(dateTime);
-            note.setEndDate(dateTime);
+        VAlarm va = ICalendarUtils.getDisplayAlarm(component);
+        if (va != null && va.getTrigger()!=null) {
+            Trigger trigger = va.getTrigger();
+            Date reminderTime = trigger.getDateTime();
+            if (reminderTime != null) {
+                note.setRemindertime(reminderTime);
+            }
+        }
 
+        // look for COMPLETED or STATUS:COMPLETED
+        Completed completed = (Completed) component.getProperty(Property.COMPLETED);
+        Status status = (Status) component.getProperty(Property.STATUS);
+        TriageStatus ts = note.getTriageStatus();
+
+        // Initialize TriageStatus if necessary
+        if(completed!=null || Status.VTODO_COMPLETED.equals(status)) {
+            if (ts == null) {
+                ts = TriageStatusUtil.initialize(new TriageStatus());
+                note.setTriageStatus(ts);
+            }
+
+            // TriageStatus.code will be DONE
+            note.getTriageStatus().setCode(TriageStatusUtil.CODE_DONE);
+
+            // TriageStatus.rank will be the COMPLETED date if present
+            // or currentTime
+            if(completed!=null) {
+                note.getTriageStatus().setRank(
+                        TriageStatusUtil.getRank(completed.getDate().getTime()));
+            }
+            else {
+                note.getTriageStatus().setRank(
+                        TriageStatusUtil.getRank(System.currentTimeMillis()));
+            }
         }
     }
 
-    /**
-     * gets master component.
-     * @param components The component list.
-     * @return The component.
-     */
-    private Component getMasterComponent(ComponentList components) {
+    private Component getFirstComponent(ComponentList components) {
         Iterator<Component> it = components.iterator();
         while(it.hasNext()) {
             Component c = it.next();
@@ -219,31 +145,32 @@ public class EntityConverter {
                 return c;
             }
         }
-        
-        throw new IllegalArgumentException("no master found");
+
+        if(components.size() == 1) {
+            return (Component) components.get(0);
+        }
+        throw new IllegalArgumentException("no component in calendar found");
     }
 
-
-    private Date getStartDate(VEvent event) {
+    private Date getEndDate(Component event) {
         if(event==null) {
             return null;
         }
 
-        DtStart dtStart = event.getStartDate();
-        if (dtStart == null) {
-            return null;
+        DtEnd dtEnd = null;
+        if(event instanceof VEvent) {
+            dtEnd = ((VEvent) event).getEndDate(false);
         }
-        return dtStart.getDate();
-    }
 
-    private Date getEndDate(VEvent event) {
-        if(event==null) {
-            return null;
-        }
-        DtEnd dtEnd = event.getEndDate(false);
         // if no DTEND, then calculate endDate from DURATION
         if (dtEnd == null) {
-            Date startDate = getStartDate(event);
+            final DtStart dtStart = ICalendarUtils.getStartDate(event);
+            Date startDate = null;
+
+            if(dtStart != null) {
+                startDate = dtStart.getDate();
+            }
+
             Dur duration = ICalendarUtils.getDuration(event);
 
             // if no DURATION, then there is no end time
@@ -251,7 +178,7 @@ public class EntityConverter {
                 return null;
             }
 
-            Date endDate = null;
+            Date endDate;
             if(startDate instanceof DateTime) {
                 endDate = new DateTime(startDate);
             }
@@ -266,27 +193,30 @@ public class EntityConverter {
         return dtEnd.getDate();
     }
 
-    private boolean isRecurring(VEvent event) {
+    private boolean isRecurring(Component event) {
         if(getRecurrenceRules(event).size()>0) {
             return true;
         }
 
-        DateList rdates = getRecurrenceDates(event);
+        final DateList rdates = getRecurrenceDates(event);
 
         return rdates!=null && rdates.size()>0;
     }
 
-    private List<Recur> getRecurrenceRules(VEvent event) {
-        ArrayList<Recur> l = new ArrayList<Recur>();
-        if(event!=null) {
-            for (Object rrule : event.getProperties().getProperties(Property.RRULE)) {
-                l.add(((RRule)rrule).getRecur());
-            }
+    private List<Recur> getRecurrenceRules(Component event) {
+        final List<Recur> l = new ArrayList<>();
+        if(event==null) {
+            return l;
+        }
+        final PropertyList properties = event.getProperties().getProperties(Property.RRULE);
+        for (Object rrule : properties) {
+            l.add(((RRule)rrule).getRecur());
+
         }
         return l;
     }
 
-    private DateList getRecurrenceDates(VEvent event) {
+    private DateList getRecurrenceDates(Component event) {
         DateList l = null;
 
         if(event==null) {
@@ -309,8 +239,14 @@ public class EntityConverter {
         return l;
     }
 
-    public void calculateEventStampIndexes(Calendar calendar, VEvent event, HibICalendarItem note) {
-        Date startDate = getStartDate(event);
+    private void calculateEventStampIndexes(Calendar calendar, Component event, HibICalendarItem note) {
+        final DtStart dtStart = ICalendarUtils.getStartDate(event);
+        Date startDate = null;
+
+        if(dtStart != null) {
+            startDate = dtStart.getDate();
+        }
+
         Date endDate = getEndDate(event);
 
         boolean isRecurring = false;
@@ -319,8 +255,14 @@ public class EntityConverter {
             isRecurring = true;
             RecurrenceExpander expander = new RecurrenceExpander();
             Date[] range = expander.calculateRecurrenceRange(calendar);
-            startDate = range[0];
-            endDate = range[1];
+
+            if(range.length > 0) {
+                startDate = range[0];
+            }
+
+            if(range.length > 1) {
+                endDate = range[1];
+            }
         } else {
             // If there is no end date, then its a point-in-time event
             if (endDate == null) {
@@ -338,8 +280,8 @@ public class EntityConverter {
         // A floating date is a DateTime with no timezone, or
         // a Date
         if(startDate instanceof DateTime) {
-            DateTime dtStart = (DateTime) startDate;
-            if(dtStart.getTimeZone()==null && !dtStart.isUtc()) {
+            DateTime dtStart2 = (DateTime) startDate;
+            if(dtStart2.getTimeZone()==null && !dtStart2.isUtc()) {
                 isFloating = true;
             }
         } else {

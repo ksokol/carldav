@@ -29,13 +29,11 @@ import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.Related;
 import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Due;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.Repeat;
-import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.unitedinternet.cosmo.CosmoParseException;
 import org.unitedinternet.cosmo.calendar.util.Dates;
@@ -52,60 +50,19 @@ import java.util.List;
 public class ICalendarUtils {
 
     /**
-     * Update the COMPLETED property on a VTODO component.
-     * 
-     * @param date
-     *            completion date. If null, the COMPLETED property will be
-     *            removed
-     * @param vtodo
-     *            vtodo component to update
-     */
-    public static void setCompleted(DateTime date, VToDo vtodo) {
-        Completed completed = vtodo.getDateCompleted();
-        if (completed != null) {
-            vtodo.getProperties().remove(completed);
-        }
-         
-        if (date != null) {
-            completed = new Completed(date);
-            vtodo.getProperties().add(completed);
-        }
-       
-    }
-    
-    /**
-     * Update the STATUS property on a VTODO component.
-     * 
-     * @param status
-     *            status to set. If null, the STATUS property will be removed
-     * @param vtodo
-     *            vtodo component to update
-     */
-    public static void setStatus(Status status, VToDo vtodo) {
-        Status currStatus = vtodo.getStatus();
-        if (currStatus != null) {
-            vtodo.getProperties().remove(currStatus);
-        }
-         
-        if (status != null) {
-            vtodo.getProperties().add(status);
-        }
-    }
-    
-    /**
      * Get the duration for an event.  If the DURATION property
      * exist, use that.  Else, calculate duration from DTSTART and
      * DTEND.
      * @param event The event.
      * @return duration for event
      */
-    public static Dur getDuration(VEvent event) {
+    public static Dur getDuration(Component event) {
         Duration duration = (Duration)
             event.getProperties().getProperty(Property.DURATION);
         if (duration != null) {
             return duration.getDuration();
         }
-        DtStart dtstart = event.getStartDate();
+        DtStart dtstart = getStartDate(event);
         if (dtstart == null) {
             return null;
         }
@@ -114,6 +71,19 @@ public class ICalendarUtils {
             return null;
         }
         return new Duration(dtstart.getDate(), dtend.getDate()).getDuration();
+    }
+
+    public static DtStart getStartDate(Component component) {
+        if(component==null) {
+            return null;
+        }
+
+        final Property startDate = component.getProperty(Property.DTSTART);
+        if(startDate != null) {
+            return ((DtStart) startDate);
+
+        }
+        return null;
     }
 
     /**

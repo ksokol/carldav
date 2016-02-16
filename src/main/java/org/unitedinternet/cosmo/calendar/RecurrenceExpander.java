@@ -15,13 +15,6 @@
  */
 package org.unitedinternet.cosmo.calendar;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.ComponentList;
@@ -43,6 +36,12 @@ import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.Dates;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Utility class that contains apis that that involve
@@ -364,9 +363,11 @@ public class RecurrenceExpander {
      * @return The date.
      */
     private Date getStartDate(Component comp) {
-        DtStart prop = (DtStart) comp.getProperties().getProperty(
-                Property.DTSTART);
-        return (prop != null) ? prop.getDate() : null;
+        final DtStart dtStart = ICalendarUtils.getStartDate(comp);
+        if(dtStart != null) {
+            return dtStart.getDate();
+        }
+        return null;
     }
 
     /**

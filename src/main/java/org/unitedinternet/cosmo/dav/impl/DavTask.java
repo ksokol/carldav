@@ -81,6 +81,6 @@ public class DavTask extends DavCalendarResource {
         }
 
         EntityConverter converter = new EntityConverter();
-        converter.convertTaskCalendar(note, cal);
+        converter.convert(note, cal.toString(), Component.VTODO);
     }
 }

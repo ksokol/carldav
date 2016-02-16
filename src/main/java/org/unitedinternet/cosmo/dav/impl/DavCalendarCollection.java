@@ -1,6 +1,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
+import net.fortuna.ical4j.model.Component;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -31,7 +32,6 @@ import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
@@ -199,7 +199,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.addAll(converter.convertEventCalendar((HibEventItem) content, content.getCalendar()));
+            toUpdate.add(converter.convert(content, content.getCalendar(), Component.VEVENT));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
@@ -222,8 +222,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             }
 
             try {
-                getContentService().createContentItems(
-                        (HibCollectionItem) getItem(), toUpdate);
+                getContentService().createContentItems((HibCollectionItem) getItem(), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
             } catch (CollectionLockedException e) {
@@ -241,7 +240,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convertJournalCalendar(content, content.getCalendar()));
+            toUpdate.add(converter.convert(content, content.getCalendar(), Component.VJOURNAL));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }

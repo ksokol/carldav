@@ -28,6 +28,7 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarDataException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
+import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -80,7 +81,7 @@ public class DavInputContext extends InputContextImpl implements CaldavConstants
             throw new BadRequestException("No media type specified");
         }
         String mediaType = IOUtil.getMimeType(getContentType());
-        if (!IOUtil.getMimeType(mediaType).equals(CT_ICALENDAR)) {
+        if (!IOUtil.getMimeType(mediaType).equals(CT_ICALENDAR) && !IOUtil.getMimeType(mediaType).equals(ICalendarConstants.CARD_MEDIA_TYPE)) {
             throw new UnsupportedCalendarDataException(mediaType);
         }
 

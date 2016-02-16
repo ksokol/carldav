@@ -33,7 +33,7 @@ public class UnsupportedCalendarDataException extends BadRequestException implem
     }
 
     public UnsupportedCalendarDataException(String mediaType) {
-        super("Calendar data of type " + mediaType + " not allowed; only " + CT_ICALENDAR);
+        super("Calendar data of type " + mediaType + " not allowed; only " + CT_ICALENDAR + " or " + ICalendarConstants.CARD_MEDIA_TYPE);
         getNamespaceContext().addNamespace(PRE_CALDAV, NS_CALDAV);
     }
 

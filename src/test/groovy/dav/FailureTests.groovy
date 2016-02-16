@@ -331,7 +331,7 @@ class FailureTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <C:supported-calendar-data>Calendar data of type text/card not allowed; only text/calendar</C:supported-calendar-data>
+                                <C:supported-calendar-data>Calendar data of type text/card not allowed; only text/calendar or text/vcard</C:supported-calendar-data>
                             </D:error>"""
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)

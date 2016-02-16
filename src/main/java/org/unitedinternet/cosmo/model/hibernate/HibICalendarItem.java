@@ -77,10 +77,6 @@ public abstract class HibICalendarItem extends HibItem {
     @Target(TriageStatus.class)
     private TriageStatus triageStatus;
 
-    public String getIcalUid() {
-        return icalUid;
-    }
-
     public void setIcalUid(String icalUid) {
         this.icalUid = icalUid;
     }

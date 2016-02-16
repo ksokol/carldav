@@ -487,10 +487,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     protected void checkForDuplicateICalUid(HibICalendarItem item, HibCollectionItem parent) {
-
-        // TODO: should icalUid be required?  Currrently its not and all
-        // items created by the webui dont' have it.
-        if (item.getIcalUid() == null) {
+        if (item.getUid() == null) {
             return;
         }
 

@@ -88,7 +88,7 @@ public class DavCalendarResource extends DavContentBase implements ICalendarCons
         DavInputContext dic = (DavInputContext) inputContext;
         Calendar calendar = dic.getCalendar();
 
-        setCalendar(calendar);
+        setCalendar(calendar.toString());
     }
 
     // our methods
@@ -105,9 +105,9 @@ public class DavCalendarResource extends DavContentBase implements ICalendarCons
         return ((HibICalendarItem)getItem()).getCalendar();
     }
 
-    public void setCalendar(Calendar calendar) throws CosmoDavException {
+    public void setCalendar(String calendar) throws CosmoDavException {
         final HibICalendarItem item = (HibICalendarItem) getItem();
-        item.setCalendar(calendar.toString());
+        item.setCalendar(calendar);
     }
 
     public void writeTo(OutputContext outputContext)

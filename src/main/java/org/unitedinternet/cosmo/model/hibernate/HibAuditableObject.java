@@ -21,8 +21,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -35,6 +38,10 @@ public abstract class HibAuditableObject implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+
+    @ManyToOne(targetEntity=User.class, fetch= FetchType.LAZY)
+    @JoinColumn(name="ownerid", nullable = false)
+    private User owner;
 
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)
@@ -49,6 +56,14 @@ public abstract class HibAuditableObject implements Serializable {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+    
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
     public Date getModifiedDate() {

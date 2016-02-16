@@ -78,11 +78,6 @@ public abstract class HibItem extends HibAuditableObject {
     @JoinColumn(name = "collectionid")
     private HibCollectionItem collection;
 
-    @ManyToOne(targetEntity=User.class, fetch=FetchType.LAZY)
-    @JoinColumn(name="ownerid", nullable = false)
-    @NotNull
-    private User owner;
-
     public Date getClientCreationDate() {
         return clientCreationDate;
     }
@@ -113,14 +108,6 @@ public abstract class HibItem extends HibAuditableObject {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
     }
 
     public String getUid() {

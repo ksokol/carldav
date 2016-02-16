@@ -499,11 +499,11 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         if (item instanceof HibNoteItem) {
             hibQuery = getSession().getNamedQuery(
                     "noteItemId.by.parent.icaluid").setParameter("parentid",
-                    getBaseModelObject(parent).getId()).setParameter("icaluid", item.getIcalUid());
+                    getBaseModelObject(parent).getId()).setParameter("icaluid", item.getUid());
         } else {
             hibQuery = getSession().getNamedQuery(
                     "icalendarItem.by.parent.icaluid").setParameter("parentid",
-                    getBaseModelObject(parent).getId()).setParameter("icaluid", item.getIcalUid());
+                    getBaseModelObject(parent).getId()).setParameter("icaluid", item.getUid());
         }
         hibQuery.setFlushMode(FlushMode.MANUAL);
 
@@ -514,7 +514,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             // If the note is new, then its a duplicate icaluid
             if (getBaseModelObject(item).getId() == null) {
                 HibItem dup = (HibItem) getSession().load(HibItem.class, itemId);
-                throw new IcalUidInUseException("iCal uid" + item.getIcalUid()
+                throw new IcalUidInUseException("iCal uid" + item.getUid()
                         + " already in use for collection " + parent.getUid(),
                         item.getUid(), dup.getUid());
             }
@@ -522,7 +522,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             // icaluid, then its a duplicate icaluid
             if (getBaseModelObject(item).getId().equals(itemId)) {
                 HibItem dup = (HibItem) getSession().load(HibItem.class, itemId);
-                throw new IcalUidInUseException("iCal uid" + item.getIcalUid()
+                throw new IcalUidInUseException("iCal uid" + item.getUid()
                         + " already in use for collection " + parent.getUid(),
                         item.getUid(), dup.getUid());
             }

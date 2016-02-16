@@ -54,18 +54,8 @@ import javax.xml.namespace.QName;
  * @see DavResourceBase
  * @see HibItem
  */
-public abstract class DavContentBase extends DavItemResourceBase
-    implements DavItemContent {
+public abstract class DavContentBase extends DavItemResourceBase implements DavItemContent {
 
-    private static final Set<String> DEAD_PROPERTY_FILTER =
-        new HashSet<String>();
-
-    static {
-
-        DEAD_PROPERTY_FILTER.add(HibNoteItem.class.getName());
-    }
-
-    /** */
     public DavContentBase(HibItem item,
                           DavResourceLocator locator,
                           DavResourceFactory factory,
@@ -104,13 +94,10 @@ public abstract class DavContentBase extends DavItemResourceBase
         throw new UnsupportedOperationException();
     }
 
-    // our methods
-
     protected Set<QName> getResourceTypes() {
-        return new HashSet<QName>();
+        return new HashSet<>();
     }
 
-    /** */
     protected void populateItem(InputContext inputContext)
         throws CosmoDavException {
         super.populateItem(inputContext);
@@ -143,7 +130,7 @@ public abstract class DavContentBase extends DavItemResourceBase
     }
 
     protected Set<String> getDeadPropertyFilter() {
-        return DEAD_PROPERTY_FILTER;
+        return new HashSet<>(1);
     }
 
     @Override
@@ -153,8 +140,5 @@ public abstract class DavContentBase extends DavItemResourceBase
         } catch (CollectionLockedException e) {
             throw new LockedException();
         }
-
     }
-    
-    
 }

@@ -47,8 +47,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private static final EntityConverter converter = new EntityConverter();
 
-    private final Set<String> deadPropertyFilter = new HashSet<>(10);
-
     public DavCalendarCollection(HibCollectionItem collection,
                                  DavResourceLocator locator,
                                  DavResourceFactory factory,
@@ -156,14 +154,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
             name.equals(GET_CTAG)) {
             throw new ProtectedPropertyModificationException(name);
         }
-    }
-
-    /** */
-    protected Set<String> getDeadPropertyFilter() {
-        Set<String> copy = new HashSet<>();
-        copy.addAll(super.getDeadPropertyFilter());
-        copy.addAll(deadPropertyFilter);
-        return copy;
     }
 
     /** */

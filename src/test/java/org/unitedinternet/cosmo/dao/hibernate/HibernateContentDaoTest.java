@@ -135,18 +135,19 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
      * @throws Exception - if something is wrong this exception is thrown.
      */
     @Test
-    public void testContentDaoCreateNoteDuplicateIcalUid() throws Exception {
+    public void testContentDaoCreateNoteDuplicateUid() throws Exception {
         User user = getUser(userDao, "testuser");
         HibCollectionItem root = contentDao.getRootItem(user);
 
         HibNoteItem note1 = generateTestNote("note1", "testuser");
+        note1.setUid("icaluid");
         note1.setIcalUid("icaluid");
 
         contentDao.createContent(root, note1);
 
         HibNoteItem note2 = generateTestNote("note2", "testuser");
-        note2.setIcalUid("icaluid");
-         
+        note2.setUid("icaluid");
+        note1.setIcalUid("icaluid");
 
         try {
             contentDao.createContent(root, note2);
@@ -780,12 +781,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setOwner(getUser(userDao, owner));
         return content;
     }
-    
+
     private HibNoteItem generateTestNote(String name, String owner)
             throws Exception {
         HibNoteItem content = new HibNoteItem();
         content.setName(name);
         content.setDisplayName(name);
+        content.setUid(UUID.randomUUID().toString());
         content.setOwner(getUser(userDao, owner));
         return content;
     }

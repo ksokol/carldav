@@ -38,10 +38,10 @@
         @NamedQuery(name = "item.by.ownerName.name.nullParent", query = "select i from "
                 + "HibCollectionItem i, User u where i.owner=u and u.email=:email and i.name=:name"),
         @NamedQuery(name = "noteItemId.by.parent.icaluid", query = "select item.id from HibNoteItem item"
-                + " join item.collection pd where pd.id=:parentid and item.icalUid=:icaluid"),
+                + " join item.collection pd where pd.id=:parentid and item.uid=:icaluid"),
         @NamedQuery(name = "icalendarItem.by.parent.icaluid", query = "select item.id from "
                 + "HibICalendarItem item join item.collection pd where"
-                + " pd.id=:parentid and item.icalUid=:icaluid"),
+                + " pd.id=:parentid and item.uid=:icaluid"),
         @NamedQuery(name = "contentItem.by.owner", query = "from HibItem i where i.owner=:owner"),
 
         // User Queries

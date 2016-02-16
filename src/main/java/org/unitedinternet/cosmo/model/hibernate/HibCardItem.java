@@ -20,4 +20,9 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("card")
-public class HibCardItem extends HibICalendarItem {}
+public class HibCardItem extends HibICalendarItem {
+
+    public HibCardItem() {
+        setType(Type.VCARD);
+    }
+}

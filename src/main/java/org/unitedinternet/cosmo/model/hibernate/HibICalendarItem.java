@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.Index;
 import javax.persistence.Lob;
 import javax.persistence.Table;
@@ -39,6 +40,10 @@ import javax.persistence.TemporalType;
 @Entity
 @DiscriminatorValue("icalendar")
 public abstract class HibICalendarItem extends HibItem {
+
+    public enum Type {
+        VEVENT, VJOURNAL, VTODO, VCARD
+    }
 
     @Column(name="icaluid", length=255)
     private String icalUid = null;
@@ -62,6 +67,10 @@ public abstract class HibICalendarItem extends HibItem {
 
     @Column(name = "recurring")
     private Boolean recurring;
+
+    @Enumerated
+    @Column(name ="type")
+    private Type type;
 
     @Embedded
     @Target(TriageStatus.class)
@@ -129,5 +138,13 @@ public abstract class HibICalendarItem extends HibItem {
 
     public void setTriageStatus(final TriageStatus triageStatus) {
         this.triageStatus = triageStatus;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(final Type type) {
+        this.type = type;
     }
 }

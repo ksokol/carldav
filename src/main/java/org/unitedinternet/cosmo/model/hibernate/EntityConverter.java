@@ -49,16 +49,13 @@ import java.util.List;
 
 public class EntityConverter {
 
-    public HibItem convert(HibICalendarItem note, String calendarString, String type) {
+    public HibItem convert(HibICalendarItem calendarItem) {
         try {
-            final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarString));
-            Component component = getFirstComponent(calendar.getComponents(type));
-
-            note.setCalendar(calendarString);
-            setCalendarAttributes(note, component);
-            calculateEventStampIndexes(calendar, component, note);
-
-            return note;
+            final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarItem.getCalendar()));
+            Component component = getFirstComponent(calendar.getComponents(calendarItem.getType().name()));
+            setCalendarAttributes(calendarItem, component);
+            calculateEventStampIndexes(calendar, component, calendarItem);
+            return calendarItem;
         } catch (Exception exception) {
             throw new RuntimeException(exception.getMessage(), exception);
         }

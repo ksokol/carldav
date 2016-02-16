@@ -20,4 +20,9 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("note")
-public class HibNoteItem extends HibICalendarItem {}
+public class HibNoteItem extends HibICalendarItem {
+
+    public HibNoteItem() {
+        setType(Type.VTODO);
+    }
+}

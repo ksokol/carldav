@@ -21,4 +21,9 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("journal")
-public class HibJournalItem extends HibICalendarItem {}
+public class HibJournalItem extends HibICalendarItem {
+
+    public HibJournalItem() {
+        setType(Type.VJOURNAL);
+    }
+}

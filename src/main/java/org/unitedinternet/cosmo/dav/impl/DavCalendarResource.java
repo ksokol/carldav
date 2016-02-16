@@ -40,7 +40,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.io.ByteArrayInputStream;

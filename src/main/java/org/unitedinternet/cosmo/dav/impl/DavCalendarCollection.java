@@ -199,7 +199,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convert(content, content.getCalendar(), Component.VEVENT));
+            toUpdate.add(converter.convert(content));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
@@ -240,7 +240,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
         try {
             // convert icalendar representation to cosmo data model
-            toUpdate.add(converter.convert(content, content.getCalendar(), Component.VJOURNAL));
+            toUpdate.add(converter.convert(content));
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }

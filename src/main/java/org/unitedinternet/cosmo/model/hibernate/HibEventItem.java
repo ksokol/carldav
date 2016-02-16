@@ -8,4 +8,9 @@ import javax.persistence.Entity;
  */
 @Entity
 @DiscriminatorValue("event")
-public class HibEventItem extends HibICalendarItem {}
+public class HibEventItem extends HibICalendarItem {
+
+    public HibEventItem() {
+        setType(Type.VEVENT);
+    }
+}

@@ -74,13 +74,13 @@ public class DavTask extends DavCalendarResource {
     public void setCalendar(Calendar cal)
         throws CosmoDavException {
         HibNoteItem note = (HibNoteItem) getItem();
-        
-        ComponentList vtodos = cal.getComponents(Component.VTODO);
+
+        ComponentList vtodos = cal.getComponents(note.getType().name());
         if (vtodos.isEmpty()) {
             throw new UnprocessableEntityException("VCALENDAR does not contain any VTODOS");
         }
-
+        note.setCalendar(cal.toString());
         EntityConverter converter = new EntityConverter();
-        converter.convert(note, cal.toString(), Component.VTODO);
+        converter.convert(note);
     }
 }

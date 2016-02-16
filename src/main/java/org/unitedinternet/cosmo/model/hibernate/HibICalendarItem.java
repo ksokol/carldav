@@ -58,10 +58,10 @@ public abstract class HibICalendarItem extends HibItem {
     private Date endDate;
 
     @Column(name = "floating")
-    private boolean floating;
+    private Boolean floating;
 
     @Column(name = "recurring")
-    private boolean recurring;
+    private Boolean recurring;
 
     @Embedded
     @Target(TriageStatus.class)
@@ -107,19 +107,19 @@ public abstract class HibICalendarItem extends HibItem {
         this.endDate = endDate;
     }
 
-    public boolean isFloating() {
+    public Boolean getFloating() {
         return floating;
     }
 
-    public void setFloating(final boolean floating) {
+    public void setFloating(final Boolean floating) {
         this.floating = floating;
     }
 
-    public boolean isRecurring() {
+    public Boolean getRecurring() {
         return recurring;
     }
 
-    public void setRecurring(final boolean recurring) {
+    public void setRecurring(final Boolean recurring) {
         this.recurring = recurring;
     }
 

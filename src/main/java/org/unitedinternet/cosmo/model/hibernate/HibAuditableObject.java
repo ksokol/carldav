@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -46,6 +47,10 @@ public abstract class HibAuditableObject implements Serializable {
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
+
+    @Column(name = "displayname")
+    @NotEmpty
+    private String displayName;
     
     @Column(name="etag")
     private String etag = "";
@@ -57,7 +62,7 @@ public abstract class HibAuditableObject implements Serializable {
     public void setId(final Long id) {
         this.id = id;
     }
-    
+
     public User getOwner() {
         return owner;
     }
@@ -72,6 +77,14 @@ public abstract class HibAuditableObject implements Serializable {
 
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+    
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     /* (non-Javadoc)

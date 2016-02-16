@@ -57,11 +57,6 @@ public abstract class HibItem extends HibAuditableObject {
     @Length(min = 1, max = 255)
     private String name;
 
-    @Column(name = "displayname")
-    @NotEmpty
-    private String displayName;
-
-
     @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "collectionid")
     private HibCollectionItem collection;
@@ -72,14 +67,6 @@ public abstract class HibItem extends HibAuditableObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
     }
 
     public String getUid() {

@@ -19,7 +19,7 @@ package org.unitedinternet.cosmo.model.filter;
  * Adds NoteItem specific criteria to ItemFilter.
  * Matches only NoteItem instances.
  */
-public class NoteItemFilter extends ContentItemFilter {
+public class NoteItemFilter extends ItemFilter {
     private FilterCriteria icalUid = null;
     private FilterCriteria body = null;
     private FilterCriteria reminderTime = null;

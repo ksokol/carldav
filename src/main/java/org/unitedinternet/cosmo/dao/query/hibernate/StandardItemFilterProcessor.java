@@ -22,7 +22,6 @@ import org.hibernate.Session;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.BetweenExpression;
-import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
 import org.unitedinternet.cosmo.model.filter.EqualsExpression;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.FilterCriteria;
@@ -80,8 +79,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
         if (filter instanceof NoteItemFilter) {
             handleNoteItemFilter(selectBuf, whereBuf, params, (NoteItemFilter) filter);
-        } else if (filter instanceof ContentItemFilter) {
-            handleContentItemFilter(selectBuf, whereBuf, params, (ContentItemFilter) filter);
+        } else if (filter instanceof ItemFilter) {
+            handleContentItemFilter(selectBuf, whereBuf, params, filter);
         } else {
             handleItemFilter(selectBuf, whereBuf, params, filter);
         }
@@ -239,16 +238,11 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
 
     private void handleContentItemFilter(StringBuffer selectBuf,
                                          StringBuffer whereBuf, Map<String, Object> params,
-                                         ContentItemFilter filter) {
+                                         ItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
-            selectBuf.append("select i from HibNoteItem i");
+            selectBuf.append("select i from HibItem i");
             handleItemFilter(selectBuf, whereBuf, params, filter);
-        }
-
-        // handle triageStatus filter
-        if (filter.getTriageStatusCode() != null) {
-            formatExpression(whereBuf, params, "i.triageStatus.code", filter.getTriageStatusCode());
         }
     }
 

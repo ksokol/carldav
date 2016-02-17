@@ -28,10 +28,7 @@ import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.CollectionLockedException;
-import org.unitedinternet.cosmo.model.TriageStatusUtil;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.model.hibernate.TriageStatus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -96,19 +93,6 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavI
 
     protected Set<QName> getResourceTypes() {
         return new HashSet<>();
-    }
-
-    protected void populateItem(InputContext inputContext)
-        throws CosmoDavException {
-        super.populateItem(inputContext);
-
-        if(getItem() instanceof HibNoteItem) {
-            HibNoteItem content = (HibNoteItem) getItem();
-
-            if (content.getUid() == null) {
-                content.setTriageStatus(TriageStatusUtil.initialize(new TriageStatus()));
-            }
-        }
     }
 
     /** */

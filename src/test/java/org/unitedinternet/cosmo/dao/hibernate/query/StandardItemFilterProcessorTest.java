@@ -32,8 +32,6 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
-import org.unitedinternet.cosmo.model.TriageStatusUtil;
-import org.unitedinternet.cosmo.model.filter.ContentItemFilter;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
@@ -158,61 +156,6 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd where "
                 + "pd=:parent and i.displayName=:param1", query.getQueryString());
-    }
-
-    /**
-     * Tests content item query.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentItemQuery() throws Exception {
-        ContentItemFilter filter = new ContentItemFilter();
-        HibCollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
-        filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
-        Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
-                        + "pd=:parent and i.triageStatus.code=:param1",
-                query.getQueryString());
-
-        filter.setTriageStatusCode(Restrictions.isNull());
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
-                        + "pd=:parent and i.triageStatus.code is null",
-                query.getQueryString());
-
-        filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
-        filter.addOrderBy(ContentItemFilter.ORDER_BY_TRIAGE_STATUS_RANK_ASC);
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibNoteItem i join i.collection pd where "
-                + "pd=:parent and i.triageStatus.code=:param1 order by "
-                + "i.triageStatus.rank", query.getQueryString());
-    }
-
-    /**
-     * Tests note item query.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testNoteItemQuery() throws Exception {
-        NoteItemFilter filter = new NoteItemFilter();
-        HibCollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
-        filter.setDisplayName(Restrictions.eq("test"));
-        filter.setIcalUid(Restrictions.eq("icaluid"));
-
-        filter.setTriageStatusCode(Restrictions.eq(TriageStatusUtil.CODE_DONE));
-
-        Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd where pd=:parent and i.displayName=:param1 and i.triageStatus.code=:param2 and i.uid=:param3", query.getQueryString());
-
-        filter = new NoteItemFilter();
-        Date date1 = new Date(1000);
-        Date date2 = new Date(2000);
-        filter.setReminderTime(Restrictions.between(date1,date2));
-        query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where i.remindertime between :param0 and :param1", query.getQueryString());
-
     }
 
     /**

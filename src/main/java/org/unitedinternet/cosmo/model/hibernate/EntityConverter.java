@@ -32,17 +32,14 @@ import net.fortuna.ical4j.model.Recur;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.Completed;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RDate;
 import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Status;
 import net.fortuna.ical4j.model.property.Trigger;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
-import org.unitedinternet.cosmo.model.TriageStatusUtil;
 
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -127,33 +124,6 @@ public class EntityConverter {
             Date reminderTime = trigger.getDateTime();
             if (reminderTime != null) {
                 note.setRemindertime(reminderTime);
-            }
-        }
-
-        // look for COMPLETED or STATUS:COMPLETED
-        Completed completed = (Completed) component.getProperty(Property.COMPLETED);
-        Status status = (Status) component.getProperty(Property.STATUS);
-        TriageStatus ts = note.getTriageStatus();
-
-        // Initialize TriageStatus if necessary
-        if(completed!=null || Status.VTODO_COMPLETED.equals(status)) {
-            if (ts == null) {
-                ts = TriageStatusUtil.initialize(new TriageStatus());
-                note.setTriageStatus(ts);
-            }
-
-            // TriageStatus.code will be DONE
-            note.getTriageStatus().setCode(TriageStatusUtil.CODE_DONE);
-
-            // TriageStatus.rank will be the COMPLETED date if present
-            // or currentTime
-            if(completed!=null) {
-                note.getTriageStatus().setRank(
-                        TriageStatusUtil.getRank(completed.getDate().getTime()));
-            }
-            else {
-                note.getTriageStatus().setRank(
-                        TriageStatusUtil.getRank(System.currentTimeMillis()));
             }
         }
     }

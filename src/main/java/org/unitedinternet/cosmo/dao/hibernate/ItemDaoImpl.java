@@ -54,54 +54,21 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     private ItemPathTranslator itemPathTranslator = null;
     private ItemFilterProcessor itemFilterProcessor = null;
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.ItemDao#findItemByPath(java.lang.String)
-     */
     public HibItem findItemByPath(String path) {
-        try {
-            HibItem dbHibItem = itemPathTranslator.findItemByPath(path);
-            return dbHibItem;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        return itemPathTranslator.findItemByPath(path);
     }
 
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#findItemParentByPath(java.lang.String)
-     */
     public HibItem findItemParentByPath(String path) {
-        try {
-            HibItem dbHibItem = itemPathTranslator.findItemParent(path);
-            return dbHibItem;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        return itemPathTranslator.findItemParent(path);
     }
 
     public HibItem findItemByUid(String uid) {
-        try {
-            // prevent auto flushing when looking up item by uid
-            getSession().setFlushMode(FlushMode.MANUAL);
-            return (HibItem) getSession().createQuery("select item from HibItem item where item.uid = :uid").setParameter("uid", uid).uniqueResult();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        getSession().setFlushMode(FlushMode.MANUAL);
+        return (HibItem) getSession().createQuery("select item from HibItem item where item.uid = :uid").setParameter("uid", uid).uniqueResult();
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.ItemDao#removeItem(org.unitedinternet.cosmo.model.Item)
-     */
     public void removeItem(HibItem hibItem) {
         try {
-
             if (hibItem == null) {
                 throw new IllegalArgumentException("item cannot be null");
             }
@@ -125,23 +92,10 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.ItemDao#getRootItem(org.unitedinternet.cosmo.model.User)
-     */
     public HibHomeCollectionItem getRootItem(User user) {
-        try {
-            return findRootItem(user.getId());
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        return findRootItem(user.getId());
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#createRootItem(org.unitedinternet.cosmo.model.User)
-     */
     public HibHomeCollectionItem createRootItem(User user) {
         try {
 
@@ -174,58 +128,31 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     public void addItemToCollection(HibItem hibItem, HibCollectionItem collection) {
-        try {
-            addItemToCollectionInternal(hibItem, collection);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        addItemToCollectionInternal(hibItem, collection);
+        getSession().flush();
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        try {
-            removeItemFromCollectionInternal(hibItem, collection);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        removeItemFromCollectionInternal(hibItem, collection);
+        getSession().flush();
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#removeItemByPath(java.lang.String)
-     */
     public void removeItemByPath(String path) {
-        try {
-            HibItem hibItem = itemPathTranslator.findItemByPath(path);
-            if (hibItem == null) {
-                throw new ItemNotFoundException("item at " + path
-                        + " not found");
-            }
-            removeItem(hibItem);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        HibItem hibItem = itemPathTranslator.findItemByPath(path);
+        if (hibItem == null) {
+            throw new ItemNotFoundException("item at " + path
+                    + " not found");
         }
+        removeItem(hibItem);
+     }
 
-    }
-
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ItemDao#removeItemByUid(java.lang.String)
-     */
     public void removeItemByUid(String uid) {
-        try {
-            HibItem hibItem = findItemByUid(uid);
-            if (hibItem == null) {
-                throw new ItemNotFoundException("item with uid " + uid
-                        + " not found");
-            }
-            removeItem(hibItem);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        HibItem hibItem = findItemByUid(uid);
+        if (hibItem == null) {
+            throw new ItemNotFoundException("item with uid " + uid
+                    + " not found");
         }
+        removeItem(hibItem);
     }
 
     /**
@@ -235,39 +162,29 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      * @return set of children collection items or empty list of parent collection has no children
      */
     public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem){
-        try {
-            HashSet<HibCollectionItem> children = new HashSet<HibCollectionItem>();
-            Query hibQuery = getSession().getNamedQuery("collections.children.by.parent")
-                    .setParameter("parent", hibCollectionItem);
+        HashSet<HibCollectionItem> children = new HashSet<HibCollectionItem>();
+        Query hibQuery = getSession().getNamedQuery("collections.children.by.parent")
+                .setParameter("parent", hibCollectionItem);
 
-            List<?> results = hibQuery.list();
-            for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
-                HibCollectionItem content = (HibCollectionItem) it.next();
-                children.add(content);
-            }
-            return children;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        List<?> results = hibQuery.list();
+        for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
+            HibCollectionItem content = (HibCollectionItem) it.next();
+            children.add(content);
         }
+        return children;
     }
 
     public Set<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem){
-        try {
-            HashSet<HibItem> children = new HashSet<HibItem>();
-            Query hibQuery = getSession().getNamedQuery("collections.files.by.parent")
-                    .setParameter("parent", hibCollectionItem);
+        HashSet<HibItem> children = new HashSet<HibItem>();
+        Query hibQuery = getSession().getNamedQuery("collections.files.by.parent")
+                .setParameter("parent", hibCollectionItem);
 
-            List<?> results = hibQuery.list();
-            for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
-                HibItem content = (HibItem) it.next();
-                children.add(content);
-            }
-            return children;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        List<?> results = hibQuery.list();
+        for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
+            HibItem content = (HibItem) it.next();
+            children.add(content);
         }
+        return children;
     }
 
     /**

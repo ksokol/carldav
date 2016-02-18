@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
@@ -45,11 +46,15 @@ import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
+import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
+import org.unitedinternet.cosmo.dav.property.PrincipalUrl;
 import org.unitedinternet.cosmo.dav.property.SupportedReportSet;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -516,5 +521,23 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
     @Override
     public WebDavResource[] getReferenceResources(DavPropertyName hrefPropertyName) {
     	return new WebDavResource[]{};
+    }
+
+    protected void generateHrefIfNecessary(final PrintWriter writer, final WebDavProperty prop, final String text) {
+        if(instanceOf(prop)) {
+            writer.write("<a href=\"");
+        }
+
+        writer.write(StringEscapeUtils.escapeHtml(text));
+
+        if(instanceOf(prop)) {
+            writer.write("\">");
+            writer.write(StringEscapeUtils.escapeHtml(text));
+            writer.write("</a>\n");
+        }
+    }
+
+    protected boolean instanceOf(final WebDavProperty prop) {
+        return prop instanceof AddressbookHomeSet || prop instanceof CalendarHomeSet || prop instanceof PrincipalUrl;
     }
 }

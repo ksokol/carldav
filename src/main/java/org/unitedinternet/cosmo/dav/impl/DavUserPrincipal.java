@@ -221,7 +221,9 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
                 writer.write("<dt>");
                 writer.write(StringEscapeUtils.escapeHtml(prop.getName().toString()));
                 writer.write("</dt><dd>");
-                writer.write(StringEscapeUtils.escapeHtml(text));
+
+                generateHrefIfNecessary(writer, prop, text);
+
                 writer.write("</dd>\n");
             }
             writer.write("</dl>\n");

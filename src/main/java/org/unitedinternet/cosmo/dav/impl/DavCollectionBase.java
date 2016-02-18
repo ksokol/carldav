@@ -17,9 +17,11 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.service.generator.IdGenerator;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
+import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -28,17 +30,26 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.CosmoException;
+import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.ForbiddenException;
+import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.property.DisplayName;
+import org.unitedinternet.cosmo.dav.property.Etag;
+import org.unitedinternet.cosmo.dav.property.IsCollection;
+import org.unitedinternet.cosmo.dav.property.LastModified;
+import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.DomWriter;
 import org.w3c.dom.Element;
 
@@ -70,20 +81,25 @@ import javax.xml.stream.XMLStreamException;
  * @see DavResourceBase
  * @see HibCollectionItem
  */
-public class DavCollectionBase extends DavItemResourceBase implements DavItemResource, DavCollection {
+public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
     private static final Log LOG = LogFactory.getLog(DavCollectionBase.class);
     private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<String>();
     protected final Set<ReportType> reportTypes = new HashSet<>();
 
     private List<org.apache.jackrabbit.webdav.DavResource> members;
 
+    private HibCollectionItem item;
+    private DavCollection parent;
+    private IdGenerator idGenerator;
+
     static {
         DEAD_PROPERTY_FILTER.add(HibCollectionItem.class.getName());
     }
 
     public DavCollectionBase(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory, IdGenerator idGenerator) throws CosmoDavException {
-        super(collection, locator, factory, idGenerator);
-
+        super(locator, factory);
+        this.item = collection;
+        this.idGenerator = idGenerator;
         members = new ArrayList<>();
     }
 
@@ -91,6 +107,10 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
             DavResourceFactory factory, IdGenerator idGenerator)
             throws CosmoDavException {
         this(new HibCollectionItem(), locator, factory, idGenerator);
+    }
+
+    public HibCollectionItem getItem() {
+        return item;
     }
 
     // Jackrabbit WebDavResource
@@ -104,12 +124,32 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
         }
     }
 
+    @Override
+    public boolean exists() {
+        return item.getId() != null;
+    }
+
     public boolean isCollection() {
         return true;
     }
 
+    @Override
+    public String getDisplayName() {
+        return item.getDisplayName();
+    }
+
+    @Override
+    public long getModificationTime() {
+        return 0;
+    }
+
     public void spool(OutputContext outputContext) throws IOException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public DavResource getCollection() {
+        return null;
     }
 
     public void addMember(org.apache.jackrabbit.webdav.DavResource member,
@@ -120,7 +160,7 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
 
     public DavResourceIterator getMembers() {
         try {
-            for (HibItem memberHibItem : ((HibCollectionItem) getItem()).getItems()) {
+            for (HibItem memberHibItem : item.getItems()) {
                 WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
                     members.add(resource);
@@ -135,7 +175,7 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
 
     public DavResourceIterator getCollectionMembers() {
         try {
-            Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems((HibCollectionItem) getItem());
+            Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems(item);
             for (HibItem memberHibItem : hibCollectionItems) {
                 WebDavResource resource = memberToResource(memberHibItem);
                 if (resource != null) {
@@ -154,11 +194,18 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
             LOG.debug("removing resource '" + member.getDisplayName()
                     + "' from '" + getDisplayName() + "'");
         }
-        if(!(member instanceof DavItemResource)){
+
+        HibItem hibItem;
+
+        if(member instanceof DavCollectionBase) {
+            hibItem = ((DavCollectionBase) member).getItem();
+        } else if(member instanceof DavItemResource) {
+            hibItem = ((DavItemResource) member).getItem();
+        } else {
             throw new IllegalArgumentException("Expected 'member' as instance of: [" + DavItemResource.class.getName() +"]");
         }
-        HibCollectionItem collection = (HibCollectionItem) getItem();
-        HibItem hibItem = ((DavItemResource) member).getItem();
+
+        HibCollectionItem collection = item;
 
         if (hibItem instanceof HibCollectionItem) {
             getContentService().removeCollection((HibCollectionItem) hibItem);
@@ -171,9 +218,39 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
 
     // WebDavResource
 
+    @Override
+    public DavCollection getParent() throws CosmoDavException {
+        if (parent == null) {
+            DavResourceLocator parentLocator = getResourceLocator()
+                    .getParentLocator();
+            try {
+                parent = (DavCollection) getResourceFactory().resolve(
+                        parentLocator);
+            } catch (ClassCastException e) {
+                throw new ForbiddenException("Resource "
+                        + parentLocator.getPath() + " is not a collection");
+            }
+            if (parent == null)
+                parent = new DavCollectionBase(parentLocator,
+                        getResourceFactory(), idGenerator);
+        }
+
+        return parent;
+    }
+
     public void writeTo(OutputContext out) throws CosmoDavException,
             IOException {
         writeHtmlDirectoryIndex(out);
+    }
+
+    @Override
+    public String getETag() {
+        if (getItem() == null)
+            return null;
+        // an item that is about to be created does not yet have an etag
+        if (StringUtils.isBlank(getItem().getEntityTag()))
+            return null;
+        return "\"" + getItem().getEntityTag() + "\"";
     }
 
     // DavCollection
@@ -209,17 +286,21 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
         return reportTypes;
     }
 
-    /** */
     protected void loadLiveProperties(DavPropertySet properties) {
-        super.loadLiveProperties(properties);
+        if (item == null) {
+            return;
+        }
+
+        properties.add(new LastModified(item.getModifiedDate()));
+        properties.add(new Etag(getETag()));
+        properties.add(new DisplayName(getDisplayName()));
+        properties.add(new ResourceType(getResourceTypes()));
+        properties.add(new IsCollection(isCollection()));
     }
 
-    /** */
-    protected void setLiveProperty(WebDavProperty property, boolean create)
-            throws CosmoDavException {
-        super.setLiveProperty(property, create);
+    protected void setLiveProperty(WebDavProperty property, boolean create) throws CosmoDavException {
 
-        HibCollectionItem cc = (HibCollectionItem) getItem();
+        HibCollectionItem cc = item;
         if (cc == null) {
             return;
         }
@@ -229,24 +310,45 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
             throw new UnprocessableEntityException("Property " + name
                     + " requires a value");
         }
+
+        if (name.equals(DavPropertyName.GETLASTMODIFIED)
+                || name.equals(DavPropertyName.GETETAG)
+                || name.equals(DavPropertyName.RESOURCETYPE)
+                || name.equals(DavPropertyName.ISCOLLECTION)) {
+            throw new ProtectedPropertyModificationException(name);
+        }
+
+        if (name.equals(DavPropertyName.DISPLAYNAME)) {
+            item.setDisplayName(property.getValueText());
+        }
     }
 
-    /** */
-    protected void removeLiveProperty(DavPropertyName name)
-            throws CosmoDavException {
-        super.removeLiveProperty(name);
+    protected void removeLiveProperty(DavPropertyName name) throws CosmoDavException {
+        if (item == null) {
+            return;
+        }
+
+        if (name.equals(DavPropertyName.GETLASTMODIFIED)
+                || name.equals(DavPropertyName.GETETAG)
+                || name.equals(DavPropertyName.DISPLAYNAME)
+                || name.equals(DavPropertyName.RESOURCETYPE)
+                || name.equals(DavPropertyName.ISCOLLECTION)) {
+            throw new ProtectedPropertyModificationException(name);
+        }
+
+        getProperties().remove(name);
     }
 
-    /** */
-    protected Set<String> getDeadPropertyFilter() {
-        return DEAD_PROPERTY_FILTER;
+    @Override
+    protected void setDeadProperty(final WebDavProperty property) throws CosmoDavException {
+
     }
 
     /**
      * Saves the given content resource to storage.
      */
     protected void saveContent(DavItemResource member) throws CosmoDavException {
-        HibCollectionItem collection = (HibCollectionItem) getItem();
+        HibCollectionItem collection = item;
         HibItem content = member.getItem();
 
         if (content.getId() != null) {
@@ -401,9 +503,11 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
         }
     }
 
-    @Override
-    protected void updateItem() throws CosmoDavException {
-        getContentService().updateCollection((HibCollectionItem) getItem());
+    protected ContentService getContentService() {
+        return getResourceFactory().getContentService();
     }
 
+    protected CalendarQueryProcessor getCalendarQueryProcesor() {
+        return getResourceFactory().getCalendarQueryProcessor();
+    }
 }

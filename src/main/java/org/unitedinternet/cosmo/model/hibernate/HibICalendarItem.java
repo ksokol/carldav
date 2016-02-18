@@ -20,6 +20,7 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Index;
 import javax.persistence.Lob;
@@ -71,7 +72,7 @@ public abstract class HibICalendarItem extends HibItem {
     @Temporal(TemporalType.TIMESTAMP)
     private Date clientModifiedDate;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     @Column(name ="type")
     private Type type;
 

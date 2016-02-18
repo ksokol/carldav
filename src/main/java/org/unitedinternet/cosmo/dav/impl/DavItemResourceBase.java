@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
@@ -41,7 +40,6 @@ import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
 import org.unitedinternet.cosmo.dav.property.LastModified;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.dav.property.Uuid;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -51,10 +49,8 @@ import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -99,7 +95,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(DavPropertyName.DISPLAYNAME);
         registerLiveProperty(DavPropertyName.ISCOLLECTION);
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
-        registerLiveProperty(UUID);
 
         this.hibItem = hibItem;
         this.idGenerator = idGenerator;
@@ -261,7 +256,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
-        properties.add(new Uuid(hibItem.getUid()));
     }
 
     protected void setLiveProperty(WebDavProperty property, boolean create)
@@ -279,8 +273,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         if (name.equals(DavPropertyName.GETLASTMODIFIED)
                 || name.equals(DavPropertyName.GETETAG)
                 || name.equals(DavPropertyName.RESOURCETYPE)
-                || name.equals(DavPropertyName.ISCOLLECTION)
-                || name.equals(UUID)) {
+                || name.equals(DavPropertyName.ISCOLLECTION)) {
             throw new ProtectedPropertyModificationException(name);
         }
 
@@ -299,8 +292,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                 || name.equals(DavPropertyName.GETETAG)
                 || name.equals(DavPropertyName.DISPLAYNAME)
                 || name.equals(DavPropertyName.RESOURCETYPE)
-                || name.equals(DavPropertyName.ISCOLLECTION)
-                || name.equals(UUID)) {
+                || name.equals(DavPropertyName.ISCOLLECTION)) {
             throw new ProtectedPropertyModificationException(name);
         }
 

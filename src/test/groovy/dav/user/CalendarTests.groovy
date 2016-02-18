@@ -225,7 +225,6 @@ public class CalendarTests extends IntegrationTestSupport {
                             <D:prop>
                                 <D:getetag />
                                 <C:calendar-data />
-                                <C:uuid xmlns:C="http://osafoundation.org/cosmo/DAV" />
                             </D:prop>
                             <D:href>/dav/test01@localhost.de/calendar/59BC120D-E909-4A56-A70D-8E97914E51A3.ics</D:href>
                             <D:allprop />
@@ -238,14 +237,11 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andReturn().getResponse().getContentAsString()
 
         def xml = new XmlSlurper().parseText(result1)
-        def cosmoUuid = xml.response.propstat.prop.uuid.text()
         def lastModified = xml.response.propstat.prop.getlastmodified.text()
 
         //assert date format - TODO hamcrest matcher
         DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
         format.parse(lastModified);
-
-        assertThat(cosmoUuid, notNullValue())
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -272,7 +268,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         </D:supported-report-set>
                                         <D:getcontentlength>920</D:getcontentlength>
                                         <D:resourcetype/>
-                                        <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">${cosmoUuid}</cosmo:uuid>
                                         <C:calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav" C:content-type="text/calendar" C:version="2.0">BEGIN:VCALENDAR&#13;
                                             VERSION:2.0&#13;
                                             X-WR-CALNAME:Work&#13;
@@ -374,7 +369,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:supported-report-set/>
                                         <D:getcontentlength/>
                                         <D:resourcetype/>
-                                        <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV"/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -429,7 +423,6 @@ public class CalendarTests extends IntegrationTestSupport {
                                             <C:supported-collation>i;ascii-casemap</C:supported-collation>
                                             <C:supported-collation>i;octet</C:supported-collation>
                                         </C:supported-collation-set>
-                                        <cosmo:uuid xmlns:cosmo="http://osafoundation.org/cosmo/DAV">a172ed34-0106-4616-bb40-a416a8305465</cosmo:uuid>
                                         <D:displayname>calendarDisplayName</D:displayname>
                                         <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
                                             <D:href>/dav/test01@localhost.de/contacts</D:href>

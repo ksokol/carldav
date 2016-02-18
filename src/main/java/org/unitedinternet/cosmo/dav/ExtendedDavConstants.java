@@ -37,17 +37,6 @@ public interface ExtendedDavConstants extends DavConstants {
     Namespace NAMESPACE_XML =
             Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
-    /** The Cosmo XML namespace  */
-    Namespace NAMESPACE_COSMO =
-        Namespace.getNamespace(PRE_COSMO, NS_COSMO);
-
-    /** The Cosmo property name <code>uuid</code> */
-    String PROPERTY_UUID = "uuid";
-
-    /** The Cosmo property <code>cosmo:uuid</code> */
-    DavPropertyName UUID =
-        DavPropertyName.create(PROPERTY_UUID, NAMESPACE_COSMO);
-
     DavPropertyName SUPPORTEDREPORTSET =
         DavPropertyName.create("supported-report-set", NAMESPACE);
 

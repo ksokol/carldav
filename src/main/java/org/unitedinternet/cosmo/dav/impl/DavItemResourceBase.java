@@ -41,7 +41,6 @@ import org.unitedinternet.cosmo.dav.property.IsCollection;
 import org.unitedinternet.cosmo.dav.property.LastModified;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -76,7 +75,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     private static final Log log = LogFactory.getLog(DavItemResourceBase.class);
 
-    protected static final EntityConverter converter = new EntityConverter();
 
     private HibItem hibItem;
     private DavCollection parent;

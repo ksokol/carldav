@@ -51,6 +51,7 @@ import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.property.PrincipalUrl;
 import org.unitedinternet.cosmo.dav.property.SupportedReportSet;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
+import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 
 import java.io.IOException;
@@ -85,6 +86,8 @@ import javax.xml.namespace.QName;
  */
 public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVResource{
 
+    protected static final EntityConverter converter = new EntityConverter();
+    
     @Override
     public void move(final DavResource destination) throws DavException {
 

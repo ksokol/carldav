@@ -87,7 +87,7 @@ public class DavCalendarResource extends DavContentBase implements ICalendarCons
 
     public boolean matches(CalendarFilter filter)
         throws CosmoDavException {
-        return getCalendarQueryProcesor().filterQuery((HibNoteItem)getItem(), filter);
+        return getCalendarQueryProcesor().filterQuery((HibICalendarItem)getItem(), filter);
     }
 
     public String getCalendar() {

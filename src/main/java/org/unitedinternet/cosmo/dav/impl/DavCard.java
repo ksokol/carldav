@@ -74,7 +74,7 @@ public class DavCard extends DavContentBase {
             LOG.debug("spooling file " + getResourcePath());
         }
 
-        HibCardItem content = (HibCardItem) getItem();
+        HibICalendarItem content = (HibICalendarItem) getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
         outputContext.setContentType(CARD_MEDIA_TYPE);
@@ -115,7 +115,7 @@ public class DavCard extends DavContentBase {
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
 
-        HibCardItem content = (HibCardItem) getItem();
+        HibICalendarItem content = (HibICalendarItem) getItem();
         if (content == null) {
             return;
         }

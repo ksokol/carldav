@@ -11,6 +11,7 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavCard;
 import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 /**
  * @author Kamill Sokol
@@ -67,7 +68,7 @@ public class AddressbookMultigetReport extends MultigetReport {
             return null;
         }
 
-        final HibCardItem item = (HibCardItem) resource.getItem();
+        final HibICalendarItem item = (HibICalendarItem) resource.getItem();
         final StringBuilder builder = new StringBuilder();
 
         builder.append(item.getCalendar());

@@ -82,8 +82,9 @@ import javax.xml.stream.XMLStreamException;
  * @see HibCollectionItem
  */
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
+
     private static final Log LOG = LogFactory.getLog(DavCollectionBase.class);
-    private static final Set<String> DEAD_PROPERTY_FILTER = new HashSet<String>();
+
     protected final Set<ReportType> reportTypes = new HashSet<>();
 
     private List<org.apache.jackrabbit.webdav.DavResource> members;
@@ -91,10 +92,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     private HibCollectionItem item;
     private DavCollection parent;
     private IdGenerator idGenerator;
-
-    static {
-        DEAD_PROPERTY_FILTER.add(HibCollectionItem.class.getName());
-    }
 
     public DavCollectionBase(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory, IdGenerator idGenerator) throws CosmoDavException {
         super(locator, factory);

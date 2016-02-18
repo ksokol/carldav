@@ -66,9 +66,6 @@ import java.util.Set;
  * <li><code>DAV:iscollection</code> (protected)</li>
  * <li><code>DAV:resourcetype</code> (protected)</li>
  * <li><code>DAV:owner</code> (protected)</li>
- * <li><code>DAV:principal-collection-set</code> (protected)</li>
- * <li><code>ticket:ticketdiscovery</code> (protected)</li>
- * <li><code>cosmo:uuid</code> (protected)</li>
  * </ul>
  * <p>
  * This class does not define any resource types.
@@ -103,7 +100,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     // WebDavResource methods
 
     public boolean exists() {
-        return hibItem != null && hibItem.getUid() != null;
+        return hibItem != null && hibItem.getId() != null;
     }
 
     public String getDisplayName() {
@@ -218,7 +215,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             log.debug("populating item for " + getResourcePath());
         }
 
-        if (hibItem.getUid() == null) {
+        if (hibItem.getId() == null) {
             try {
                 hibItem.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
@@ -239,7 +236,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             hibItem.setOwner(owner);
         }
 
-        if (hibItem.getUid() == null && hibItem instanceof HibICalendarItem) {
+        if (hibItem.getId() == null && hibItem instanceof HibICalendarItem) {
             HibICalendarItem hibICalendarItem = (HibICalendarItem) hibItem;
             hibICalendarItem.setClientCreationDate(Calendar.getInstance().getTime());
             hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());

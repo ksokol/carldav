@@ -154,7 +154,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     }
 
     /** */
-    protected void saveContent(DavItemContent member)
+    protected void saveContent(DavItemResource member)
         throws CosmoDavException {
         if (! (member instanceof DavCalendarResource)) {
             throw new IllegalArgumentException("member not DavCalendarResource");
@@ -163,7 +163,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         saveEvent(member);
     }
 
-    private void saveEvent(DavItemContent member) throws CosmoDavException {
+    private void saveEvent(DavItemResource member) throws CosmoDavException {
         HibICalendarItem content = (HibICalendarItem) member.getItem();
         Set<HibItem> toUpdate = new LinkedHashSet<>();
 

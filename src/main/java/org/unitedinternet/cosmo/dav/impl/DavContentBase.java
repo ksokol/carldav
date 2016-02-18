@@ -51,7 +51,7 @@ import javax.xml.namespace.QName;
  * @see DavResourceBase
  * @see HibItem
  */
-public abstract class DavContentBase extends DavItemResourceBase implements DavItemContent {
+public abstract class DavContentBase extends DavItemResourceBase implements DavContent {
 
     public DavContentBase(HibItem item,
                           DavResourceLocator locator,

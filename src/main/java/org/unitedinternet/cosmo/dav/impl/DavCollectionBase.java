@@ -251,7 +251,7 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
     /**
      * Saves the given content resource to storage.
      */
-    protected void saveContent(DavItemContent member) throws CosmoDavException {
+    protected void saveContent(DavItemResource member) throws CosmoDavException {
         HibCollectionItem collection = (HibCollectionItem) getItem();
         HibItem content = member.getItem();
 

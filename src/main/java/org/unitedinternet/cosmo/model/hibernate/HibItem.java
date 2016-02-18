@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.CascadeType;
@@ -30,7 +29,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -50,22 +48,9 @@ public abstract class HibItem extends HibAuditableObject {
     @NotEmpty
     private String uid;
 
-    @Column(name = "itemname", nullable = false, length=255)
-    @NotNull
-    @Length(min = 1, max = 255)
-    private String name;
-
     @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "collectionid")
     private HibCollectionItem collection;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public String getUid() {
         return uid;

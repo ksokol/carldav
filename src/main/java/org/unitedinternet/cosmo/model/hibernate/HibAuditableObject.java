@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
@@ -31,6 +32,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public abstract class HibAuditableObject implements Serializable {
@@ -55,6 +57,11 @@ public abstract class HibAuditableObject implements Serializable {
     
     @Column(name="etag")
     private String etag;
+
+    @Column(name = "itemname", nullable = false, length=255)
+    @NotNull
+    @Length(min = 1, max = 255)
+    private String name;
 
     public Long getId() {
         return id;
@@ -86,6 +93,14 @@ public abstract class HibAuditableObject implements Serializable {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void updateTimestamp() {

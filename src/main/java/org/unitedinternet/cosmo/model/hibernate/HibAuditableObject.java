@@ -19,6 +19,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -53,7 +54,7 @@ public abstract class HibAuditableObject implements Serializable {
     private String displayName;
     
     @Column(name="etag")
-    private String etag = "";
+    private String etag;
 
     public Long getId() {
         return id;
@@ -87,31 +88,23 @@ public abstract class HibAuditableObject implements Serializable {
         this.displayName = displayName;
     }
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.AuditableObject#updateTimestamp()
-     */
     public void updateTimestamp() {
         modifiedDate = new Date();
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.model.AuditableObject#getEntityTag()
-     */
+
     public String getEntityTag() {
         return etag;
     }
 
-    /**
-     * Calculates object's entity tag. Returns the empty string. Subclasses should override this.
-     */
-    public abstract String calculateEntityTag();
+    public String calculateEntityTag() {
+        String uid = getId() != null ? getId().toString() : "-";
+        String modTime = getModifiedDate() != null ?
+                Long.valueOf(getModifiedDate().getTime()).toString() : "-";
+        String etag = uid + ":" + modTime;
+        return encodeEntityTag(etag.getBytes(Charset.forName("UTF-8")));
+    }
 
-    /**
-     * <p>
-     * Returns a Base64-encoded SHA-1 digest of the provided bytes.
-     * </p>
-     */
-    protected static String encodeEntityTag(byte[] bytes) {
+    private static String encodeEntityTag(byte[] bytes) {
         return DigestUtils.md5Hex(bytes);
     }
 }

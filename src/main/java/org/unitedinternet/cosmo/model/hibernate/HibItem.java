@@ -18,8 +18,6 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import java.nio.charset.Charset;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -83,14 +81,5 @@ public abstract class HibItem extends HibAuditableObject {
 
     public HibCollectionItem getCollection() {
         return collection;
-    }
-
-    @Override
-    public String calculateEntityTag() {
-        String uid = getUid() != null ? getUid() : "-";
-        String modTime = getModifiedDate() != null ?
-                Long.valueOf(getModifiedDate().getTime()).toString() : "-";
-                String etag = uid + ":" + modTime;
-                return encodeEntityTag(etag.getBytes(Charset.forName("UTF-8")));
     }
 }

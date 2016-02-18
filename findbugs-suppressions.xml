@@ -1,9 +1,5 @@
 <FindBugsFilter>
     <Match>
-        <Class name="org.unitedinternet.cosmo.filters.RetryFilter" />
-        <Bug pattern="EI_EXPOSE_REP2" />
-    </Match>
-    <Match>
         <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>

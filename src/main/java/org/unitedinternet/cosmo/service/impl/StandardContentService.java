@@ -17,15 +17,11 @@ package org.unitedinternet.cosmo.service.impl;
 
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.service.ContentService;
-import org.unitedinternet.cosmo.service.lock.LockManager;
 
-import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -37,15 +33,10 @@ import java.util.Set;
 public class StandardContentService implements ContentService {
 
     private final ContentDao contentDao;
-    private final LockManager lockManager;
-  
-    private long lockTimeout = 100;
 
-    public StandardContentService(final ContentDao contentDao, final LockManager lockManager) {
+    public StandardContentService(final ContentDao contentDao) {
         Assert.notNull(contentDao, "contentDao is null");
-        Assert.notNull(lockManager, "lockManager is null");
         this.contentDao = contentDao;
-        this.lockManager = lockManager;
     }
 
     /**
@@ -87,24 +78,9 @@ public class StandardContentService implements ContentService {
      * @param collection
      *            collection item to update
      * @return updated collection
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if CollectionItem is locked
      */
     public HibCollectionItem updateCollection(HibCollectionItem collection) {
-
-       /* if(collection instanceof HomeCollectionItem) {
-            throw new IllegalArgumentException("cannot update home collection");
-        }*///ical adds default alarms in home collection, so we must allow the update
-        
-        if (! lockManager.lockCollection(collection, lockTimeout)) {
-            throw new CollectionLockedException("unable to obtain collection lock");
-        }
-        
-        try {
-            return contentDao.updateCollection(collection);
-        } finally {
-            lockManager.unlockCollection(collection);
-        }
+        return contentDao.updateCollection(collection);
     }
 
     /**
@@ -132,26 +108,11 @@ public class StandardContentService implements ContentService {
      * @param content
      *            content to create
      * @return newly created content
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
      */
-    public HibItem createContent(HibCollectionItem parent,
-                                 HibItem content) {
-        // Obtain locks to all collections involved.
-        Set<HibCollectionItem> locks = acquireLocks(parent, content);
-        
-        try {
-            content = contentDao.createContent(parent, content);
-            
-            // update collections
-            for(HibCollectionItem col : locks) {
-                contentDao.updateCollectionTimestamp(col);
-            }
-            
-            return content;
-        } finally {
-            releaseLocks(locks);
-        }   
+    public HibItem createContent(HibCollectionItem parent, HibItem content) {
+        content = contentDao.createContent(parent, content);
+        contentDao.updateCollectionTimestamp(content.getCollection());
+        return content;
     }
 
     /**
@@ -161,23 +122,13 @@ public class StandardContentService implements ContentService {
      *            parent collection of content items.
      * @param hibContentItems
      *            content items to create
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
      */
-    public void createContentItems(HibCollectionItem parent,
-                                     Set<HibItem> hibContentItems) {
-        if (! lockManager.lockCollection(parent, lockTimeout)) {
-            throw new CollectionLockedException("unable to obtain collection lock");
+    public void createContentItems(HibCollectionItem parent, Set<HibItem> hibContentItems) {
+        for(HibItem content : hibContentItems) {
+            contentDao.createContent(parent, content);
         }
-        try {
-            for(HibItem content : hibContentItems) {
-                contentDao.createContent(parent, content);
-            }
-            
-            contentDao.updateCollectionTimestamp(parent);
-        } finally {
-            lockManager.unlockCollection(parent);
-        }   
+
+        contentDao.updateCollectionTimestamp(parent);
     }
 
     /**
@@ -190,34 +141,18 @@ public class StandardContentService implements ContentService {
      * @param parents
      *            parents that new content items will be added to.
      * @param hibContentItems to update
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
      */
     public void updateContentItems(Set<HibCollectionItem> parents, Set<HibItem> hibContentItems) {
-        // Obtain locks to all collections involved.  A collection is involved
-        // if it is the parent of one of updated items.
-        Set<HibCollectionItem> locks = acquireLocks(hibContentItems);
-        
-        try {
-            
-           for(HibItem content: hibContentItems) {
-               if(content.getId()== null) {
-                   contentDao.createContent(parents, content);
-               }
-               else {
-                   contentDao.updateContent(content);
-               }
+       for(HibItem content: hibContentItems) {
+           if(content.getId()== null) {
+               contentDao.createContent(parents, content);
            }
-           
-           // update collections
-           for(HibCollectionItem parent : locks) {
-               contentDao.updateCollectionTimestamp(parent);
+           else {
+               contentDao.updateContent(content);
            }
-        } finally {
-            releaseLocks(locks);
-        }
+           contentDao.updateCollectionTimestamp(content.getCollection());
+       }
     }
-    
 
     /**
      * Update an existing content item.
@@ -225,24 +160,11 @@ public class StandardContentService implements ContentService {
      * @param content
      *            content item to update
      * @return updated content item
-     * @throws org.unitedinternet.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
      */
     public HibItem updateContent(HibItem content) {
-        Set<HibCollectionItem> locks = acquireLocks(content);
-        
-        try {
-            content = contentDao.updateContent(content);
-            
-            // update collections
-            for(HibCollectionItem parent : locks) {
-                contentDao.updateCollectionTimestamp(parent);
-            }
-            
-            return content;
-        } finally {
-            releaseLocks(locks);
-        }
+        content = contentDao.updateContent(content);
+        contentDao.updateCollectionTimestamp(content.getCollection());
+        return content;
     }
 
     /**
@@ -253,93 +175,5 @@ public class StandardContentService implements ContentService {
      */
     public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem) {
         return contentDao.findCollectionItems(hibCollectionItem);
-    }
-
-    /**
-     * Given a set of items, aquire a lock on all parents
-     */
-    private Set<HibCollectionItem> acquireLocks(Set<? extends HibItem> children) {
-        
-        HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
-        
-        // Get locks for all collections involved
-        try {
-            
-            for(HibItem child : children) {
-                acquireLocks(locks, child);
-            }
-           
-            return locks;
-        } catch (RuntimeException e) {
-            releaseLocks(locks);
-            throw e;
-        }
-    }
-    
-    /**
-     * Given a collection and a set of items, aquire a lock on the collection and
-     * all 
-     */
-    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, Set<HibItem> children) {
-        
-        HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
-        
-        // Get locks for all collections involved
-        try {
-            
-            if (! lockManager.lockCollection(collection, lockTimeout)) {
-                throw new CollectionLockedException("unable to obtain collection lock");
-            }
-            
-            locks.add(collection);
-            
-            for(HibItem child : children) {
-                acquireLocks(locks, child);
-            }
-           
-            return locks;
-        } catch (RuntimeException e) {
-            releaseLocks(locks);
-            throw e;
-        }
-    }
-    
-    private Set<HibCollectionItem> acquireLocks(HibCollectionItem collection, HibItem hibItem) {
-        HashSet<HibItem> hibItems = new HashSet<HibItem>();
-        hibItems.add(hibItem);
-        
-        return acquireLocks(collection, hibItems);
-    }
-    
-    private Set<HibCollectionItem> acquireLocks(HibItem hibItem) {
-        HashSet<HibCollectionItem> locks = new HashSet<HibCollectionItem>();
-        try {
-            acquireLocks(locks, hibItem);
-            return locks;
-        } catch (RuntimeException e) {
-            releaseLocks(locks);
-            throw e;
-        }
-    }
-    
-    private void acquireLocks(Set<HibCollectionItem> locks, HibItem hibItem) {
-        final HibCollectionItem parent = hibItem.getCollection();
-
-        if(parent == null) {
-            return;
-        }
-
-        if(!locks.contains(parent)) {
-            if (! lockManager.lockCollection(parent, lockTimeout)) {
-                throw new CollectionLockedException("unable to obtain collection lock");
-            }
-            locks.add(parent);
-        }
-    }
-    
-    private void releaseLocks(Set<HibCollectionItem> locks) {
-        for(HibCollectionItem lock : locks) {
-            lockManager.unlockCollection(lock);
-        }
     }
 }

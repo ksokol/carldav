@@ -67,8 +67,7 @@
                         securityContextPersistenceFilter,
 				        protocolBasicProcessingFilter,
          				davExceptionTranslationFilter,
-         				davFilterInvocationInterceptor,
-         				retryFilter" />
+         				davFilterInvocationInterceptor" />
 		</security:filter-chain-map>
 	</bean>
 

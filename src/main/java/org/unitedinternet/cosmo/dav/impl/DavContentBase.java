@@ -24,10 +24,8 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.ArrayList;
@@ -119,10 +117,6 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavC
 
     @Override
     protected void updateItem() throws CosmoDavException {
-        try {
-            getContentService().updateContent(getItem());
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
-        }
+        getContentService().updateContent(getItem());
     }
 }

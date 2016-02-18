@@ -21,12 +21,8 @@
         <constructor-arg index="2" ref="userDao" />
 	</bean>
 
-	<bean id="contentLockManager"
-		class="org.unitedinternet.cosmo.service.lock.SingleVMLockManager" />
-
 	<bean id="contentService" class="org.unitedinternet.cosmo.service.impl.StandardContentService">
         <constructor-arg index="0" ref="contentDao" />
-        <constructor-arg index="1" ref="contentLockManager" />
 	</bean>
 
 	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
@@ -89,23 +85,4 @@
 	<bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
 		<constructor-arg index="0" ref="userDao" />
 	</bean>
-
-    <!-- Retry Filter -->
-    <bean id="retryFilter" class="org.unitedinternet.cosmo.filters.RetryFilter">
-        <property name="maxRetries" value="10" />
-        <property name="methods">
-            <list>
-                <value>POST</value>
-                <value>PUT</value>
-                <value>DELETE</value>
-            </list>
-        </property>
-        <property name="exceptions">
-            <list>
-                <value>org.springframework.dao.ConcurrencyFailureException</value>
-                <value>org.springframework.dao.DataIntegrityViolationException
-                </value>
-            </list>
-        </property>
-    </bean>
 </beans>

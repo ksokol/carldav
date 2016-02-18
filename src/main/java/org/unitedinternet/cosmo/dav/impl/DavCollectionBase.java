@@ -33,11 +33,9 @@ import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
-import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -162,14 +160,10 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
         HibCollectionItem collection = (HibCollectionItem) getItem();
         HibItem hibItem = ((DavItemResource) member).getItem();
 
-        try {
-            if (hibItem instanceof HibCollectionItem) {
-                getContentService().removeCollection((HibCollectionItem) hibItem);
-            } else {
-                getContentService().removeItemFromCollection(hibItem, collection);
-            }
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
+        if (hibItem instanceof HibCollectionItem) {
+            getContentService().removeCollection((HibCollectionItem) hibItem);
+        } else {
+            getContentService().removeItemFromCollection(hibItem, collection);
         }
 
         members.remove(member);
@@ -255,23 +249,19 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
         HibCollectionItem collection = (HibCollectionItem) getItem();
         HibItem content = member.getItem();
 
-        try {
-            if (content.getId() != null) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("updating member " + member.getResourcePath());
-                }
-
-                content = getContentService().updateContent(content);
-            } else {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("creating member " + member.getResourcePath());
-                }
-
-                content = getContentService()
-                        .createContent(collection, content);
+        if (content.getId() != null) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("updating member " + member.getResourcePath());
             }
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
+
+            content = getContentService().updateContent(content);
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("creating member " + member.getResourcePath());
+            }
+
+            content = getContentService()
+                    .createContent(collection, content);
         }
 
         member.setItem(content);
@@ -413,11 +403,7 @@ public class DavCollectionBase extends DavItemResourceBase implements DavItemRes
 
     @Override
     protected void updateItem() throws CosmoDavException {
-        try {
-            getContentService().updateCollection((HibCollectionItem) getItem());
-        } catch (CollectionLockedException e) {
-            throw new LockedException();
-        }
+        getContentService().updateCollection((HibCollectionItem) getItem());
     }
 
 }

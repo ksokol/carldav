@@ -10,7 +10,6 @@ import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.LockedException;
 import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -27,7 +26,6 @@ import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.CollectionLockedException;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -180,8 +178,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
-            } catch (CollectionLockedException e) {
-                throw new LockedException();
             }
         } else {
             LOG.debug("creating {} {}", content.getType(), member.getResourcePath());
@@ -190,8 +186,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
                 getContentService().createContentItems((HibCollectionItem) getItem(), toUpdate);
             } catch (IcalUidInUseException e) {
                 throw new UidConflictException(e);
-            } catch (CollectionLockedException e) {
-                throw new LockedException();
             }
         }
 

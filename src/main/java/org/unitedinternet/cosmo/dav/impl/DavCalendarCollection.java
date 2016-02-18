@@ -15,7 +15,6 @@ import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
-import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
@@ -26,14 +25,11 @@ import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -163,30 +159,20 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private void saveEvent(DavItemResource member) throws CosmoDavException {
         HibICalendarItem content = (HibICalendarItem) member.getItem();
-        Set<HibItem> toUpdate = new LinkedHashSet<>();
+        final HibItem converted;
 
         try {
-            toUpdate.add(converter.convert(content));
+            converted = converter.convert(content);
         } catch (ModelValidationException e) {
             throw new InvalidCalendarResourceException(e.getMessage());
         }
 
         if (content.getId()!= null) {
             LOG.debug("updating {} {} ", content.getType(), member.getResourcePath());
-
-            try {
-                getContentService().updateContentItems(Collections.singleton(content.getCollection()), toUpdate);
-            } catch (IcalUidInUseException e) {
-                throw new UidConflictException(e);
-            }
+            getContentService().updateContent(converted);
         } else {
             LOG.debug("creating {} {}", content.getType(), member.getResourcePath());
-
-            try {
-                getContentService().createContentItems((HibCollectionItem) getItem(), toUpdate);
-            } catch (IcalUidInUseException e) {
-                throw new UidConflictException(e);
-            }
+            getContentService().createContent((HibCollectionItem) getItem(), converted);
         }
 
         member.setItem(content);

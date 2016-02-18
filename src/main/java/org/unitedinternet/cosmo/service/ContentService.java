@@ -86,34 +86,6 @@ public interface ContentService {
                           HibItem content);
 
     /**
-     * Create new content items in a parent collection.
-     * 
-     * @param parent
-     *            parent collection of content items.
-     * @param hibContentItems
-     *            content items to create
-     * @throws org.osaf.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
-     */
-    void createContentItems(HibCollectionItem parent,
-                            Set<HibItem> hibContentItems);
-
-    /**
-     * Update content items.  This includes creating new items, removing
-     * existing items, and updating existing items.  ContentItem deletion is
-     * represented by setting ContentItem.isActive to false.  ContentItem deletion
-     * removes item from system, not just from the parent collections.
-     * ContentItem creation adds the item to the specified parent collections.
-     * 
-     * @param parents
-     *            parents that new content items will be added to.
-     * @param hibContentItems to update
-     * @throws org.osaf.cosmo.model.CollectionLockedException
-     *         if parent CollectionItem is locked
-     */
-    void updateContentItems(Set<HibCollectionItem> parents, Set<HibItem> hibContentItems);
-    
-    /**
      * Update an existing content item.
      * 
      * @param content

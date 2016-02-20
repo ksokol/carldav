@@ -17,8 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
@@ -27,8 +25,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
@@ -64,8 +60,6 @@ import java.util.Date;
  */
 public abstract class DavItemResourceBase extends DavResourceBase implements DavItemResource {
 
-    private static final Log log = LogFactory.getLog(DavItemResourceBase.class);
-
     private HibItem hibItem;
     private DavCollection parent;
 
@@ -94,47 +88,22 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     }
 
     public String getETag() {
-        if (getItem() == null)
-            return null;
-        // an item that is about to be created does not yet have an etag
         if (StringUtils.isBlank(getItem().getEntityTag()))
             return null;
         return "\"" + getItem().getEntityTag() + "\"";
     }
 
     public long getModificationTime() {
-        if (getItem() == null)
-            return -1;
         if (getItem().getModifiedDate() == null)
             return new Date().getTime();
         return getItem().getModifiedDate().getTime();
     }
 
-    public WebDavResource getCollection() {
-        try {
-            return getParent();
-        } catch (CosmoDavException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    // WebDavResource methods
-
     public DavCollection getParent() throws CosmoDavException {
         if (parent == null) {
-            DavResourceLocator parentLocator = getResourceLocator()
-                    .getParentLocator();
-            try {
-                parent = (DavCollection) getResourceFactory().resolve(
-                        parentLocator);
-            } catch (ClassCastException e) {
-                throw new ForbiddenException("Resource "
-                        + parentLocator.getPath() + " is not a collection");
-            }
-            if (parent == null)
-                parent = new DavCollectionBase(parentLocator, getResourceFactory());
+            DavResourceLocator parentLocator = getResourceLocator().getParentLocator();
+            parent = (DavCollection) getResourceFactory().resolve(parentLocator);
         }
-
         return parent;
     }
 
@@ -151,30 +120,14 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return getResourceFactory().getCalendarQueryProcessor();
     }
 
-    /**
-     * Sets the properties of the item backing this resource from the given
-     * input context.
-     */
-    protected void populateItem(InputContext inputContext)
-            throws CosmoDavException {
-        if (log.isDebugEnabled()) {
-            log.debug("populating item for " + getResourcePath());
-        }
-
+    protected void populateItem(InputContext inputContext) throws CosmoDavException {
         if (hibItem.getId() == null) {
             try {
                 hibItem.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 throw new CosmoDavException(e);
             }
-            if (hibItem.getDisplayName() == null){
-                hibItem.setDisplayName(hibItem.getName());
-            }
         }
-
-        // if we don't know specifically who the user is, then the
-        // owner of the resource becomes the person who issued the
-        // ticket
 
         // Only initialize owner once
         if (hibItem.getOwner() == null) {
@@ -182,18 +135,12 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             hibItem.setOwner(owner);
         }
 
-        if (hibItem.getId() == null && hibItem instanceof HibICalendarItem) {
-            HibICalendarItem hibICalendarItem = (HibICalendarItem) hibItem;
-            hibICalendarItem.setClientCreationDate(Calendar.getInstance().getTime());
-            hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());
-        }
+        HibICalendarItem hibICalendarItem = (HibICalendarItem) hibItem;
+        hibICalendarItem.setClientCreationDate(Calendar.getInstance().getTime());
+        hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());
     }
 
     protected void loadLiveProperties(DavPropertySet properties) {
-        if (hibItem == null) {
-            return;
-        }
-
         properties.add(new LastModified(hibItem.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));

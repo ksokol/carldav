@@ -23,7 +23,7 @@
 
     <bean id="protocolAuthenticationEntryPoint" class="carldav.security.CustomBasicAuthenticationEntryPoint">
         <constructor-arg>
-            <value>#{T(org.unitedinternet.cosmo.CosmoConstants).PRODUCT_NAME}</value>
+            <value>carldav</value>
         </constructor-arg>
     </bean>
 

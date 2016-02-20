@@ -24,7 +24,7 @@
                 + " item.collection pd where item.owner.id=:ownerid and "
                 + "pd.id=:parentid and item.name=:name"),
         @NamedQuery(name = "collections.children.by.parent", query = "select item from HibItem item join"
-                + " item.collection pd where item.collection=:parent and item.class=HibCollectionItem"),
+                + " item.collection pd where item.collection=:parent and item.type is null"), //TODO item.class=HibCollectionItem => item.type is null
         @NamedQuery(name = "collections.files.by.parent", query = "select item from HibItem item join"
                 + " item.collection pd where item.collection=:parent and item.class=HibCardItem"),
         @NamedQuery(name = "itemId.by.parentId.name", query = "select item.id from HibItem item join"

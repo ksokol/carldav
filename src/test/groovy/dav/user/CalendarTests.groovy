@@ -14,10 +14,12 @@ import static org.hamcrest.Matchers.notNullValue
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.HttpMethod.POST
+import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
+import static testutil.TestUser.USER02
 import static testutil.builder.GeneralData.*
 import static testutil.builder.GeneralResponse.NOT_FOUND
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
@@ -1419,5 +1421,39 @@ public class CalendarTests extends IntegrationTestSupport {
 
         mockMvc.perform(delete("/dav/{email}/calendar/{uuid}.ics", USER01, uid))
                 .andExpect(status().isNoContent())
+    }
+
+    @WithUserDetails(USER02)
+    @Test
+    void depthInfinity() {
+        mockMvc.perform(put("/dav/{email}/calendar/subcalendar/{uuid}.ics", USER02, UUID_TODO)
+                .content(CALDAV_TODO)
+                .contentType(TEXT_CALENDAR))
+                .andExpect(status().isCreated())
+
+        def request2 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VTODO" />
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response2 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                              <D:response>
+                                <D:href>/dav/test02@localhost.de/calendar/subcalendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics</D:href>
+                                <D:status>HTTP/1.1 200 OK</D:status>
+                              </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar", USER02)
+                .contentType(APPLICATION_XML)
+                .content(request2)
+                .header("Depth", "infinity"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response2))
     }
 }

@@ -26,8 +26,6 @@ import org.unitedinternet.cosmo.model.filter.EqualsExpression;
 import org.unitedinternet.cosmo.model.filter.EventStampFilter;
 import org.unitedinternet.cosmo.model.filter.FilterCriteria;
 import org.unitedinternet.cosmo.model.filter.FilterExpression;
-import org.unitedinternet.cosmo.model.filter.FilterOrder;
-import org.unitedinternet.cosmo.model.filter.FilterOrder.Order;
 import org.unitedinternet.cosmo.model.filter.ILikeExpression;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
@@ -86,21 +84,6 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         }
 
         selectBuf.append(whereBuf);
-
-        for (FilterOrder fo : filter.getOrders()) {
-            if (orderBuf.length() == 0) {
-                orderBuf.append(" order by ");
-            } else {
-                orderBuf.append(", ");
-            }
-
-            orderBuf.append("i." + fo.getName());
-
-            if (fo.getOrder().equals(Order.DESC)) {
-                orderBuf.append(" desc");
-            }
-        }
-
         selectBuf.append(orderBuf);
 
         Query hqlQuery = session.createQuery(selectBuf.toString());

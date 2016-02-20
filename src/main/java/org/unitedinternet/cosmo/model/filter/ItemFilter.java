@@ -35,7 +35,6 @@ public class ItemFilter {
     private Integer maxResults = null;
 
     private List<StampFilter> stampFilters = new ArrayList<>();
-    private List<FilterOrder> order = new ArrayList<>();
 
     /**
      * Return a specific StampFilter instance
@@ -94,10 +93,6 @@ public class ItemFilter {
      */
     public void setUid(FilterCriteria uid) {
         this.uid = uid;
-    }
-
-    public List<FilterOrder> getOrders() {
-        return order;
     }
 
     public Integer getMaxResults() {

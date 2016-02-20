@@ -58,9 +58,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
 
     }
@@ -144,9 +141,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
     }
 

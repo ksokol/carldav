@@ -7,13 +7,8 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 
 /**
  * Abstract Dao implementation.
@@ -23,9 +18,7 @@ import javax.validation.ConstraintViolationException;
  */
 public abstract class AbstractDaoImpl {
 
-    private static final Log LOG = LogFactory.getLog(AbstractDaoImpl.class);
     private SessionFactory sessionFactory;
-
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -37,21 +30,4 @@ public abstract class AbstractDaoImpl {
     protected Session getSession() {
         return sessionFactory.getCurrentSession();
     }
-
-    /**
-     * Logs constraint violeation exception
-     *
-     * @param cve - if something is wrong this exception is thrown.
-     */
-    protected void logConstraintViolationException(ConstraintViolationException cve) {
-        // log more info about the constraint violation
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(cve.getLocalizedMessage());
-            for (ConstraintViolation<?> cv : cve.getConstraintViolations()) {
-                LOG.debug("property name: " + cv.getPropertyPath() + " property: "
-                        + cv.getInvalidValue());
-            }
-        }
-    }
-
 }

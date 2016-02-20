@@ -75,9 +75,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
     }
 
@@ -96,9 +93,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
     }
     
@@ -114,9 +108,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
     }
     
@@ -167,9 +158,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
     }
 
@@ -193,9 +181,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
     }
 

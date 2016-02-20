@@ -121,9 +121,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        } catch (ConstraintViolationException cve) {
-            logConstraintViolationException(cve);
-            throw cve;
         }
     }
 

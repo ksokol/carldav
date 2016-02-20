@@ -32,9 +32,6 @@
 
     <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl">
         <constructor-arg>
-            <ref bean="entityConverter" />
-        </constructor-arg>
-        <constructor-arg>
             <ref bean="itemFilterProcessor" />
         </constructor-arg>
     </bean>

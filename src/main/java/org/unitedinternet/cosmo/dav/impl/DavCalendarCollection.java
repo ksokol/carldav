@@ -1,19 +1,14 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
-import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
@@ -22,7 +17,6 @@ import org.unitedinternet.cosmo.dav.caldav.property.SupportedCollationSet;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -35,12 +29,9 @@ import javax.xml.namespace.QName;
 
 public class DavCalendarCollection extends DavCollectionBase implements CaldavConstants, ICalendarConstants {
 
-    private static final Logger LOG =  LoggerFactory.getLogger(DavCalendarCollection.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DavCalendarCollection.class);
 
-    public DavCalendarCollection(HibCollectionItem collection,
-                                 DavResourceLocator locator,
-                                 DavResourceFactory factory)
-        throws CosmoDavException {
+    public DavCalendarCollection(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(collection, locator, factory);
 
         registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
@@ -51,28 +42,17 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
     }
 
-    /** */
     public String getSupportedMethods() {
-        // calendar collections not allowed inside calendar collections
         return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT";
     }
 
-    /**
-     * Returns the member resources in this calendar collection matching
-     * the given filter.
-     */
-    public Set<DavCalendarResource> findMembers(CalendarFilter filter)
-        throws CosmoDavException {
-        Set<DavCalendarResource> members =
-            new HashSet<>();
+    public Set<DavCalendarResource> findMembers(CalendarFilter filter) throws CosmoDavException {
+        Set<DavCalendarResource> members = new HashSet<>();
 
-        HibCollectionItem collection = (HibCollectionItem) getItem();
-        for (HibItem memberItem :
-             getCalendarQueryProcesor().filterQuery(collection, filter)) {
+        HibCollectionItem collection = getItem();
+        for (HibItem memberItem : getCalendarQueryProcesor().filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberItem);
-            if(resource!=null) {
-                members.add((DavCalendarResource) resource);
-            }
+            members.add((DavCalendarResource) resource);
         }
 
         return members;
@@ -84,53 +64,27 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         return rt;
     }
 
-    /** */
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
 
-        // add CS:getctag property, which is the collection's entitytag
-        // if it exists
-        HibItem hibItem = getItem();
-        if(hibItem !=null && hibItem.getEntityTag()!=null) {
-            properties.add(new GetCTag(hibItem.getEntityTag()));
-        }
-
+        properties.add(new GetCTag(getItem().getEntityTag()));
         properties.add(new SupportedCalendarComponentSet());
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());
         properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
-
-        if(getItem().getDisplayName() != null){
-            properties.add(new DisplayName(getItem().getDisplayName()));
-        }
+        properties.add(new DisplayName(getItem().getDisplayName()));
     }
 
-    /** */
-    protected void saveContent(DavItemResource member)
-        throws CosmoDavException {
-        if (! (member instanceof DavCalendarResource)) {
-            throw new IllegalArgumentException("member not DavCalendarResource");
-        }
-
-        saveEvent(member);
-    }
-
-    private void saveEvent(DavItemResource member) throws CosmoDavException {
+    protected void saveContent(DavItemResource member) throws CosmoDavException {
         HibICalendarItem content = (HibICalendarItem) member.getItem();
-        final HibItem converted;
+        final HibItem converted = converter.convert(content);
 
-        try {
-            converted = converter.convert(content);
-        } catch (ModelValidationException e) {
-            throw new InvalidCalendarResourceException(e.getMessage());
-        }
-
-        if (content.getId()!= null) {
+        if (content.getId() != null) {
             LOG.debug("updating {} {} ", content.getType(), member.getResourcePath());
             getContentService().updateContent(converted);
         } else {
             LOG.debug("creating {} {}", content.getType(), member.getResourcePath());
-            getContentService().createContent((HibCollectionItem) getItem(), converted);
+            getContentService().createContent(getItem(), converted);
         }
 
         member.setItem(content);

@@ -39,13 +39,11 @@ import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
-import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.impl.StandardDavRequest;
 import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
 import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
 import org.unitedinternet.cosmo.dav.provider.FileProvider;
-import org.unitedinternet.cosmo.dav.provider.UserPrincipalProvider;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import java.io.IOException;
@@ -197,9 +195,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
         if (resource instanceof DavCalendarResource) {
             return new CalendarResourceProvider(resourceFactory);
-        }
-        if (resource instanceof DavUserPrincipal) {
-            return new UserPrincipalProvider(resourceFactory);
         }
         return new FileProvider(resourceFactory);
     }

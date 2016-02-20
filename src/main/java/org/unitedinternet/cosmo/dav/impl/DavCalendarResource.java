@@ -15,15 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -40,12 +37,11 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.Set;
 
 public class DavCalendarResource extends DavItemResourceBase implements DavContent, ICalendarConstants {
-
-    private static final Log LOG = LogFactory.getLog(DavCalendarResource.class);
 
     private final Set<ReportType> reportTypes = new HashSet<>();
 
@@ -60,17 +56,6 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
-    }
-       
-    // WebDavResource methods
-
-    public String getSupportedMethods() {
-        if(exists()) {
-            return "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT";
-        }
-        else {
-            return "OPTIONS, TRACE, PUT";
-        }
     }
 
     @Override
@@ -95,18 +80,8 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         item.setCalendar(calendar);
     }
 
-    public void writeTo(OutputContext outputContext)
-        throws CosmoDavException, IOException {
-        if (! exists()) {
-            throw new IllegalStateException("cannot spool a nonexistent resource");
-        }
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("spooling file " + getResourcePath());
-        }
-
-        String contentType =
-            IOUtil.buildContentType(ICALENDAR_MEDIA_TYPE, "UTF-8");
+    public void writeTo(OutputContext outputContext) throws CosmoDavException, IOException {
+        String contentType = IOUtil.buildContentType(ICALENDAR_MEDIA_TYPE, "UTF-8");
         outputContext.setContentType(contentType);
   
         // Get calendar
@@ -131,22 +106,11 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         return reportTypes;
     }
 
-    /** */
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
+        byte[] calendarBytes = getCalendar().getBytes(Charset.forName("UTF-8"));
 
-        try {
-            byte[] calendarBytes = getCalendar().getBytes("UTF-8");
-            properties.add(new ContentLength((long) calendarBytes.length));
-        } catch (Exception e) {
-            throw new CosmoException("Can't convert calendar", e);
-        }
-
+        properties.add(new ContentLength((long) calendarBytes.length));
         properties.add(new ContentType(ICALENDAR_MEDIA_TYPE, "UTF-8"));
-    }
-
-    @Override
-    public boolean isCollection() {
-        return false;
     }
 }

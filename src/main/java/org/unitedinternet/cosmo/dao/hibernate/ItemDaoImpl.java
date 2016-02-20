@@ -17,12 +17,7 @@ package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
-import org.hibernate.ObjectDeletedException;
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
-import org.hibernate.UnresolvableObjectException;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
@@ -39,8 +34,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
 
 public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
@@ -68,28 +61,16 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     public void removeItem(HibItem hibItem) {
-        try {
-            if (hibItem == null) {
-                throw new IllegalArgumentException("item cannot be null");
-            }
-
-            if (hibItem instanceof HibHomeCollectionItem) {
-                throw new IllegalArgumentException("cannot remove root item");
-            }
-
-            getSession().delete(hibItem);
-            getSession().flush();
-
-        } catch (ObjectNotFoundException onfe) {
-            throw new ItemNotFoundException("item not found");
-        } catch (ObjectDeletedException ode) {
-            throw new ItemNotFoundException("item not found");
-        } catch (UnresolvableObjectException uoe) {
-            throw new ItemNotFoundException("item not found");
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        if (hibItem == null) {
+            throw new IllegalArgumentException("item cannot be null");
         }
+
+        if (hibItem instanceof HibHomeCollectionItem) {
+            throw new IllegalArgumentException("cannot remove root item");
+        }
+
+        getSession().delete(hibItem);
+        getSession().flush();
     }
 
     public HibHomeCollectionItem getRootItem(User user) {
@@ -97,31 +78,25 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     public HibHomeCollectionItem createRootItem(User user) {
-        try {
-
-            if (user == null) {
-                throw new IllegalArgumentException("invalid user");
-            }
-
-            if (findRootItem(user.getId()) != null) {
-                throw new CosmoException("user already has root item", new CosmoException());
-            }
-
-            HibHomeCollectionItem newItem = new HibHomeCollectionItem();
-
-            newItem.setOwner(user);
-            newItem.setName(user.getEmail());
-            newItem.setDisplayName("homeCollection");
-            //do not set this, it might be sensitive or different than name
-            //newItem.setDisplayName(newItem.getName());
-            setBaseItemProps(newItem);
-            getSession().save(newItem);
-            getSession().flush();
-            return newItem;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        if (user == null) {
+            throw new IllegalArgumentException("invalid user");
         }
+
+        if (findRootItem(user.getId()) != null) {
+            throw new CosmoException("user already has root item", new CosmoException());
+        }
+
+        HibHomeCollectionItem newItem = new HibHomeCollectionItem();
+
+        newItem.setOwner(user);
+        newItem.setName(user.getEmail());
+        newItem.setDisplayName("homeCollection");
+        //do not set this, it might be sensitive or different than name
+        //newItem.setDisplayName(newItem.getName());
+        setBaseItemProps(newItem);
+        getSession().save(newItem);
+        getSession().flush();
+        return newItem;
     }
 
     public void addItemToCollection(HibItem hibItem, HibCollectionItem collection) {

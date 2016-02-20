@@ -17,9 +17,7 @@ package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
@@ -31,8 +29,6 @@ import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.List;
 import java.util.Set;
-
-import javax.validation.ConstraintViolationException;
 
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
@@ -59,210 +55,81 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw new IllegalArgumentException("invalid collection id (expected -1)");
         }
 
+        // verify uid not in use
+        checkForDuplicateUid(collection);
 
-        try {
-            // verify uid not in use
-            checkForDuplicateUid(collection);
+        setBaseItemProps(collection);
+        collection.setCollection(parent);
 
-            setBaseItemProps(collection);
-            collection.setCollection(parent);
+        getSession().save(collection);
+        getSession().refresh(parent);
+        getSession().flush();
 
-            getSession().save(collection);
-            getSession().refresh(parent);
-            getSession().flush();
-
-            return collection;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        return collection;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#createContent(org.unitedinternet.cosmo.model.CollectionItem,
-     *      org.unitedinternet.cosmo.model.ContentItem)
-     */
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
-
-        try {
-            createContentInternal(parent, content);
-            getSession().flush();
-            return content;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        createContentInternal(parent, content);
+        getSession().flush();
+        return content;
     }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ContentDao#createContent(java.util.Set, org.unitedinternet.cosmo.model.ContentItem)
-     */
+
     public HibItem createContent(Set<HibCollectionItem> parents, HibItem content) {
-
-        try {
-            createContentInternal(parents, content);
-            getSession().flush();
-            return content;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        createContentInternal(parents, content);
+        getSession().flush();
+        return content;
     }
-    
 
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ContentDao#updateCollectionTimestamp(org.unitedinternet.cosmo.model.CollectionItem)
-     */
-
-    /**
-     * Updates collection timestamp.
-     *
-     * @param collection The timestamp of this collection needs to be updated.
-     * @return The new collection item updated.
-     */
     public HibCollectionItem updateCollectionTimestamp(HibCollectionItem collection) {
-        try {
-            if (!getSession().contains(collection)) {
-                collection = (HibCollectionItem) getSession().merge(collection);
-            }
-            collection.updateTimestamp();
-            getSession().flush();
-            return collection;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        if (!getSession().contains(collection)) {
+            collection = (HibCollectionItem) getSession().merge(collection);
         }
+        collection.updateTimestamp();
+        getSession().flush();
+        return collection;
     }
-    
-    
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#updateCollection(org.unitedinternet.cosmo.model.CollectionItem)
-     */
 
-    /**
-     * Updates collection.
-     *
-     * @param collection The updated collection.
-     */
     public HibCollectionItem updateCollection(HibCollectionItem collection) {
-        try {
-
-            updateCollectionInternal(collection);
-            getSession().flush();
-
-            return collection;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        updateCollectionInternal(collection);
+        getSession().flush();
+        return collection;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#updateContent(org.unitedinternet.cosmo.model.ContentItem)
-     */
-
-    /**
-     * Updates content item.
-     *
-     * @param content The content that needs to be updated.
-     * @return The updated content.
-     */
     public HibItem updateContent(HibItem content) {
-        try {
-            updateContentInternal(content);
-            getSession().flush();
-            return content;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        updateContentInternal(content);
+        getSession().flush();
+        return content;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#removeCollection(org.unitedinternet.cosmo.model.CollectionItem)
-     */
-
-    /**
-     * Removes the collection given.
-     *
-     * @param collection The collection that needs to be removed.
-     */
     public void removeCollection(HibCollectionItem collection) {
-
         if (collection == null) {
             throw new IllegalArgumentException("collection cannot be null");
         }
 
-        try {
-            getSession().refresh(collection);
-            removeCollectionRecursive(collection);
-            getSession().delete(collection);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        getSession().refresh(collection);
+        removeCollectionRecursive(collection);
+        getSession().delete(collection);
+        getSession().flush();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.unitedinternet.cosmo.dao.ContentDao#removeContent(org.unitedinternet.cosmo.model.ContentItem)
-     */
-
-    /**
-     * Removes the content given.
-     *
-     * @param content The content item that need to be removed.
-     */
     public void removeContent(HibItem content) {
-
         if (content == null) {
             throw new IllegalArgumentException("content cannot be null");
         }
 
-        try {
-            getSession().refresh(content);
-            removeContentRecursive(content);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        getSession().refresh(content);
+        removeContentRecursive(content);
+        getSession().flush();
     }
-    
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.ContentDao#removeUserContent(org.unitedinternet.cosmo.model.User)
-     */
 
-    /**
-     * Removes user content.
-     *
-     * @param user The content of the user needs to be removed.
-     */
     public void removeUserContent(User user) {
-        try {
-            Query query = getSession().getNamedQuery("contentItem.by.owner")
-                    .setParameter("owner", user);
+        Query query = getSession().getNamedQuery("contentItem.by.owner").setParameter("owner", user);
 
-            List<HibItem> results = query.list();
-            for (HibItem content : results) {
-                removeContentRecursive(content);
-            }
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        List<HibItem> results = query.list();
+        for (HibItem content : results) {
+            removeContentRecursive(content);
         }
+        getSession().flush();
     }
 
     @Override

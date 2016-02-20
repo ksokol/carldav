@@ -18,8 +18,6 @@ package org.unitedinternet.cosmo.dao.hibernate;
 import net.fortuna.ical4j.model.Calendar;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.HibernateException;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
@@ -49,57 +47,50 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
         this.itemFilterProcessor = itemFilterProcessor;
     }
 
-    public Set<HibICalendarItem> findCalendarItems(HibCollectionItem collection,
-                                                CalendarFilter filter) {
-
+    public Set<HibICalendarItem> findCalendarItems(HibCollectionItem collection, CalendarFilter filter) {
+        CalendarFilterConverter filterConverter = new CalendarFilterConverter();
         try {
-            CalendarFilterConverter filterConverter = new CalendarFilterConverter();
-            try {
-                // translate CalendarFilter to ItemFilter and execute filter
-                ItemFilter itemFilter = filterConverter.translateToItemFilter(collection, filter);
-                Set results = itemFilterProcessor.processFilter(itemFilter);
-                return (Set<HibICalendarItem>) results;
-            } catch (IllegalArgumentException e) {
-                LOG.warn(e.getMessage(), e);
-            }
+            // translate CalendarFilter to ItemFilter and execute filter
+            ItemFilter itemFilter = filterConverter.translateToItemFilter(collection, filter);
+            Set results = itemFilterProcessor.processFilter(itemFilter);
+            return (Set<HibICalendarItem>) results;
+        } catch (IllegalArgumentException e) {
+            LOG.warn(e.getMessage(), e);
+        }
 
-            // Use brute-force method if CalendarFilter can't be translated
-            // to an ItemFilter (slower but at least gets the job done).
-            HashSet<HibICalendarItem> results = new HashSet<HibICalendarItem>();
-            Set<HibItem> itemsToProces = null;
+        // Use brute-force method if CalendarFilter can't be translated
+        // to an ItemFilter (slower but at least gets the job done).
+        HashSet<HibICalendarItem> results = new HashSet<HibICalendarItem>();
+        Set<HibItem> itemsToProces = null;
 
-            // Optimization:
-            // Do a first pass query if possible to reduce the number
-            // of items we have to examine.  Otherwise we have to examine
-            // all items.
-            ItemFilter firstPassItemFilter = filterConverter.getFirstPassFilter(collection, filter);
-            if (firstPassItemFilter != null) {
-                itemsToProces = itemFilterProcessor.processFilter(firstPassItemFilter);
-            } else {
-                itemsToProces = collection.getItems();
-            }
+        // Optimization:
+        // Do a first pass query if possible to reduce the number
+        // of items we have to examine.  Otherwise we have to examine
+        // all items.
+        ItemFilter firstPassItemFilter = filterConverter.getFirstPassFilter(collection, filter);
+        if (firstPassItemFilter != null) {
+            itemsToProces = itemFilterProcessor.processFilter(firstPassItemFilter);
+        } else {
+            itemsToProces = collection.getItems();
+        }
 
-            CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();
+        CalendarFilterEvaluater evaluater = new CalendarFilterEvaluater();
 
-            // Evaluate filter against all calendar items
-            for (HibItem child : itemsToProces) {
+        // Evaluate filter against all calendar items
+        for (HibItem child : itemsToProces) {
 
-                // only care about calendar items
-                if (child instanceof HibICalendarItem) {
+            // only care about calendar items
+            if (child instanceof HibICalendarItem) {
 
-                    HibICalendarItem content = (HibICalendarItem) child;
-                    Calendar calendar = entityConverter.convertContent(content);
+                HibICalendarItem content = (HibICalendarItem) child;
+                Calendar calendar = entityConverter.convertContent(content);
 
-                    if (calendar != null && evaluater.evaluate(calendar, filter)) {
-                        results.add(content);
-                    }
+                if (calendar != null && evaluater.evaluate(calendar, filter)) {
+                    results.add(content);
                 }
             }
-
-            return results;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
+
+        return results;
     }
 }

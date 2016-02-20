@@ -16,10 +16,8 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import org.hibernate.FlushMode;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -29,8 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.validation.ConstraintViolationException;
-
 
 /**
  * Implemtation of UserDao using Hibernate persistence objects.
@@ -38,110 +34,73 @@ import javax.validation.ConstraintViolationException;
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     public User createUser(User user) {
-
-        try {
-            if (user == null) {
-                throw new IllegalArgumentException("user is required");
-            }
-
-            if (user.getId() != -1) {
-                throw new IllegalArgumentException("new user is required");
-            }
-
-            if (findUserByEmailIgnoreCase(user.getEmail()) != null) {
-                throw new DuplicateEmailException(user.getEmail());
-            }
-
-            getSession().save(user);
-            getSession().flush();
-            return user;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        if (user == null) {
+            throw new IllegalArgumentException("user is required");
         }
 
+        if (user.getId() != -1) {
+            throw new IllegalArgumentException("new user is required");
+        }
+
+        if (findUserByEmailIgnoreCase(user.getEmail()) != null) {
+            throw new DuplicateEmailException(user.getEmail());
+        }
+
+        getSession().save(user);
+        getSession().flush();
+        return user;
     }
 
     public User getUser(String email) {
-        try {
-            return findUserByEmail(email);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        return findUserByEmail(email);
     }
 
     public User getUserByEmail(String email) {
         if (email == null) {
             throw new IllegalArgumentException("email required");
         }
-        try {
-            return findUserByEmail(email);
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        return findUserByEmail(email);
     }
 
     public Set<User> getUsers() {
-        try {
-            HashSet<User> users = new HashSet<User>();
-            Iterator it = getSession().getNamedQuery("user.all").iterate();
-            while (it.hasNext()) {
-                users.add((User) it.next());
-            }
-
-            return users;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        Set<User> users = new HashSet<>();
+        Iterator it = getSession().getNamedQuery("user.all").iterate();
+        while (it.hasNext()) {
+            users.add((User) it.next());
         }
+
+        return users;
     }
 
     public void removeUser(String email) {
-        try {
-            User user = findUserByEmail(email);
-            // delete user
-            if (user != null) {
-                removeUser(user);
-            }
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
+        User user = findUserByEmail(email);
+        // delete user
+        if (user != null) {
+            removeUser(user);
         }
     }
 
     public void removeUser(User user) {
-        try {
-            getSession().delete(user);
-            getSession().flush();
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
+        getSession().delete(user);
+        getSession().flush();
     }
 
     public User updateUser(User user) {
-        try {
-            // prevent auto flushing when querying for existing users
-            getSession().setFlushMode(FlushMode.MANUAL);
+        // prevent auto flushing when querying for existing users
+        getSession().setFlushMode(FlushMode.MANUAL);
 
-            User findUser = findUserByEmailIgnoreCaseAndId(user.getId(), user.getEmail());
+        User findUser = findUserByEmailIgnoreCaseAndId(user.getId(), user.getEmail());
 
-            if (findUser != null) {
-                if (findUser.getEmail().equals(user.getEmail())) {
-                    throw new DuplicateEmailException(user.getEmail());
-                }
+        if (findUser != null) {
+            if (findUser.getEmail().equals(user.getEmail())) {
+                throw new DuplicateEmailException(user.getEmail());
             }
-
-            getSession().update(user);
-            getSession().flush();
-
-            return user;
-        } catch (HibernateException e) {
-            getSession().clear();
-            throw SessionFactoryUtils.convertHibernateAccessException(e);
         }
+
+        getSession().update(user);
+        getSession().flush();
+
+        return user;
     }
 
     private User findUserByEmailIgnoreCaseAndId(Long userId, String email) {

@@ -19,8 +19,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.Set;
-
 /**
  * Interface for DAO that provides base operations for content items.
  * 
@@ -64,17 +62,6 @@ public interface ContentDao extends ItemDao {
      * @return newly created content
      */
     public HibItem createContent(HibCollectionItem parent, HibItem content);
-
-    /**
-     * Create new content item and associate with multiple parent collections.
-     * 
-     * @param parents
-     *            parent collections of content. 
-     * @param content
-     *            content to create
-     * @return newly created content
-     */
-    public HibItem createContent(Set<HibCollectionItem> parents, HibItem content);
 
     /**
      * Update an existing content item.

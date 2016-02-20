@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.List;
-import java.util.Set;
 
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
@@ -70,12 +69,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
         createContentInternal(parent, content);
-        getSession().flush();
-        return content;
-    }
-
-    public HibItem createContent(Set<HibCollectionItem> parents, HibItem content) {
-        createContentInternal(parents, content);
         getSession().flush();
         return content;
     }
@@ -246,46 +239,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         getSession().save(content);
         getSession().refresh(parent);
-    }
-
-    protected void createContentInternal(Set<HibCollectionItem> parents, HibItem content) {
-
-        if (parents == null) {
-            throw new IllegalArgumentException("parent cannot be null");
-        }
-
-        if (content == null) {
-            throw new IllegalArgumentException("content cannot be null");
-        }
-
-        if (getBaseModelObject(content).getId() != null) {
-            throw new IllegalArgumentException("invalid content id (expected -1)");
-        }
-
-        if (content.getOwner() == null) {
-            throw new IllegalArgumentException("content must have owner");
-        }
-
-        if (parents.size() == 0) {
-            throw new IllegalArgumentException("content must have at least one parent");
-        }
-
-        // verify uid not in use
-        checkForDuplicateUid(content);
-
-        // verify icaluid not in use for collections
-        if (content instanceof HibICalendarItem) {
-            checkForDuplicateICalUid((HibICalendarItem) content, content.getCollection());
-        }
-
-        setBaseItemProps(content);
-
-        for (HibCollectionItem parent : parents) {
-            content.setCollection(parent);
-        }
-
-
-        getSession().save(content);
     }
 
     protected void updateContentInternal(HibItem content) {

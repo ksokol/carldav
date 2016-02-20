@@ -3,18 +3,15 @@ package org.unitedinternet.cosmo.dav.impl;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.SUPPORTEDADDRESSDATA;
 
 import carldav.card.CardQueryProcessor;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedAddressData;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookMultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookQueryReport;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
@@ -66,23 +63,5 @@ public class DavCardCollection extends DavCollectionBase {
     protected void loadLiveProperties(final DavPropertySet properties) {
         super.loadLiveProperties(properties);
         properties.add(new SupportedAddressData());
-    }
-
-    @Override
-    protected void setLiveProperty(final WebDavProperty property, final boolean create) throws CosmoDavException {
-        super.setLiveProperty(property, create);
-        final DavPropertyName name = property.getName();
-        if(!(create && name.equals(SUPPORTEDADDRESSDATA))) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-    }
-
-    @Override
-    protected void removeLiveProperty(final DavPropertyName name) throws CosmoDavException {
-        super.removeLiveProperty(name);
-        if (name.equals(SUPPORTEDADDRESSDATA)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-        getProperties().remove(name);
     }
 }

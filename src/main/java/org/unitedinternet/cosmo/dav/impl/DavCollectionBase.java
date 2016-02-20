@@ -25,7 +25,6 @@ import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.CosmoException;
@@ -36,8 +35,6 @@ import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
-import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
@@ -288,52 +285,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
-    }
-
-    protected void setLiveProperty(WebDavProperty property, boolean create) throws CosmoDavException {
-
-        HibCollectionItem cc = item;
-        if (cc == null) {
-            return;
-        }
-
-        DavPropertyName name = property.getName();
-        if (property.getValue() == null) {
-            throw new UnprocessableEntityException("Property " + name
-                    + " requires a value");
-        }
-
-        if (name.equals(DavPropertyName.GETLASTMODIFIED)
-                || name.equals(DavPropertyName.GETETAG)
-                || name.equals(DavPropertyName.RESOURCETYPE)
-                || name.equals(DavPropertyName.ISCOLLECTION)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-
-        if (name.equals(DavPropertyName.DISPLAYNAME)) {
-            item.setDisplayName(property.getValueText());
-        }
-    }
-
-    protected void removeLiveProperty(DavPropertyName name) throws CosmoDavException {
-        if (item == null) {
-            return;
-        }
-
-        if (name.equals(DavPropertyName.GETLASTMODIFIED)
-                || name.equals(DavPropertyName.GETETAG)
-                || name.equals(DavPropertyName.DISPLAYNAME)
-                || name.equals(DavPropertyName.RESOURCETYPE)
-                || name.equals(DavPropertyName.ISCOLLECTION)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-
-        getProperties().remove(name);
-    }
-
-    @Override
-    protected void setDeadProperty(final WebDavProperty property) throws CosmoDavException {
-
     }
 
     /**

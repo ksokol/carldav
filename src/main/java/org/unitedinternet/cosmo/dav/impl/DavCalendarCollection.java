@@ -105,46 +105,6 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         }
     }
 
-    /**
-     * The CALDAV:supported-calendar-component-set property is
-      used to specify restrictions on the calendar component types that
-      calendar object resources may contain in a calendar collection.
-      Any attempt by the client to store calendar object resources with
-      component types not listed in this property, if it exists, MUST
-      result in an error, with the CALDAV:supported-calendar-component
-      precondition (Section 5.3.2.1) being violated.  Since this
-      property is protected, it cannot be changed by clients using a
-      PROPPATCH request.
-     * */
-    protected void setLiveProperty(WebDavProperty property, boolean create)
-        throws CosmoDavException {
-        super.setLiveProperty(property, create);
-
-        DavPropertyName name = property.getName();
-        if (property.getValue() == null) {
-            throw new UnprocessableEntityException("Property " + name + " requires a value");
-        }
-
-        if(!(create && name.equals(SUPPORTEDCALENDARCOMPONENTSET)) &&
-            (name.equals(SUPPORTEDCALENDARCOMPONENTSET) ||
-                name.equals(SUPPORTEDCALENDARDATA) ||
-                name.equals(GET_CTAG))) {
-                throw new ProtectedPropertyModificationException(name);
-        }
-    }
-
-    /** */
-    protected void removeLiveProperty(DavPropertyName name)
-        throws CosmoDavException {
-        super.removeLiveProperty(name);
-
-        if (name.equals(SUPPORTEDCALENDARCOMPONENTSET) ||
-            name.equals(SUPPORTEDCALENDARDATA) ||
-            name.equals(GET_CTAG)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-    }
-
     /** */
     protected void saveContent(DavItemResource member)
         throws CosmoDavException {

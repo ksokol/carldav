@@ -28,13 +28,11 @@ import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -144,17 +142,6 @@ public class DavCalendarResource extends DavContentBase implements ICalendarCons
         }
 
         properties.add(new ContentType(ICALENDAR_MEDIA_TYPE, "UTF-8"));
-    }
-
-    /** */
-    protected void setLiveProperty(WebDavProperty property, boolean create)
-        throws CosmoDavException {
-        super.setLiveProperty(property, create);
-
-        DavPropertyName name = property.getName();
-        if (name.equals(DavPropertyName.GETCONTENTTYPE)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
     }
 
     @Override

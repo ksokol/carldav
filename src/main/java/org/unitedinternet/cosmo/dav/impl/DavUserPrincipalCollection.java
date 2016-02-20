@@ -12,13 +12,10 @@ import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -132,17 +129,5 @@ public class DavUserPrincipalCollection extends DavResourceBase implements DavCo
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
         //TODO properties.add(new CurrentUserPrincipal(getResourceLocator(),  getSecurityManager().getSecurityContext().getUser()));
-    }
-
-    protected void setLiveProperty(WebDavProperty property, boolean create) throws CosmoDavException {
-        throw new ProtectedPropertyModificationException(property.getName());
-    }
-
-    protected void removeLiveProperty(DavPropertyName name) throws CosmoDavException {
-        throw new ProtectedPropertyModificationException(name);
-    }
-
-    protected void setDeadProperty(WebDavProperty property) throws CosmoDavException {
-        throw new ForbiddenException("Dead properties are not supported on this collection");
     }
 }

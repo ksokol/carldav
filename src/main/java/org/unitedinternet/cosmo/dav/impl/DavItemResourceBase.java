@@ -31,15 +31,12 @@ import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
-import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
 import org.unitedinternet.cosmo.dav.property.LastModified;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -240,65 +237,11 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         properties.add(new IsCollection(isCollection()));
     }
 
-    protected void setLiveProperty(WebDavProperty property, boolean create)
-            throws CosmoDavException {
-        if (hibItem == null) {
-            return;
-        }
-
-        DavPropertyName name = property.getName();
-        if (property.getValue() == null) {
-            throw new UnprocessableEntityException("Property " + name
-                    + " requires a value");
-        }
-
-        if (name.equals(DavPropertyName.GETLASTMODIFIED)
-                || name.equals(DavPropertyName.GETETAG)
-                || name.equals(DavPropertyName.RESOURCETYPE)
-                || name.equals(DavPropertyName.ISCOLLECTION)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-
-        if (name.equals(DavPropertyName.DISPLAYNAME)) {
-            hibItem.setDisplayName(property.getValueText());
-        }
-    }
-
-    protected void removeLiveProperty(DavPropertyName name)
-            throws CosmoDavException {
-        if (hibItem == null) {
-            return;
-        }
-
-        if (name.equals(DavPropertyName.GETLASTMODIFIED)
-                || name.equals(DavPropertyName.GETETAG)
-                || name.equals(DavPropertyName.DISPLAYNAME)
-                || name.equals(DavPropertyName.RESOURCETYPE)
-                || name.equals(DavPropertyName.ISCOLLECTION)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-
-        getProperties().remove(name);
-    }
-
     /**
      * Returns a list of names of <code>Attribute</code>s that should not be
      * exposed through DAV as dead properties.
      */
     protected abstract Set<String> getDeadPropertyFilter();
-
-    protected void setDeadProperty(WebDavProperty property)
-            throws CosmoDavException {
-        if (log.isDebugEnabled()) {
-            log.debug("setting dead property " + property.getName() + " on "
-                    + getResourcePath() + " to " + property.getValue());
-        }
-
-        if (property.getValue() == null) {
-            throw new UnprocessableEntityException("Property "
-                    + property.getName() + " requires a value");
-        }
-    }
 
     abstract protected void updateItem() throws CosmoDavException;
 

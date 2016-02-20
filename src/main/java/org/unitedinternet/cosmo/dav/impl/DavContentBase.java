@@ -18,13 +18,10 @@ package org.unitedinternet.cosmo.dav.impl;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.ArrayList;
@@ -89,24 +86,6 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavC
 
     protected Set<QName> getResourceTypes() {
         return new HashSet<>();
-    }
-
-    /** */
-    protected void setLiveProperty(WebDavProperty property, boolean create)
-        throws CosmoDavException {
-        super.setLiveProperty(property, create);
-
-        HibItem content = getItem();
-        if (content == null) {
-            return;
-        }
-
-        DavPropertyName name = property.getName();
-        if (name.equals(DavPropertyName.GETCONTENTLENGTH)) {
-            throw new ProtectedPropertyModificationException(name);
-        }
-
-        // content type is settable by subclasses
     }
 
     protected Set<String> getDeadPropertyFilter() {

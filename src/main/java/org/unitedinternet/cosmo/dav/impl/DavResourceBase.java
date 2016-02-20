@@ -424,10 +424,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         initialized = true;
     }    
 
-    /**
-     * Calls {@link #setLiveProperty(WebDavProperty)} or
-     * {@link setDeadProperty(WebDavProperty)}.
-     */
     protected void setResourceProperty(WebDavProperty property, boolean create)
         throws CosmoDavException {
         DavPropertyName name = property.getName();
@@ -438,17 +434,10 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         if (isLiveProperty(property.getName())) {
             setLiveProperty(property, create);
         }
-        else { 
-            setDeadProperty(property);
-        }
         
         properties.add(property);
     }
 
-    /**
-     * Calls {@link #removeLiveProperty(DavPropertyName)} or
-     * {@link removeDeadProperty(DavPropertyName)}.
-     */
     protected void removeResourceProperty(DavPropertyName name)
         throws CosmoDavException {
         if (name.equals(SUPPORTEDREPORTSET)) {
@@ -468,18 +457,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
     protected abstract void loadLiveProperties(DavPropertySet properties);
 
     /**
-     * Sets a live DAV property on the resource.
-     *
-     * @param property the property to set
-     *
-     * @throws CosmoDavException if the property is protected
-     * or if a null value is specified for a property that does not
-     * accept them or if an invalid value is specified
-     */
- /*   protected abstract void setLiveProperty(WebDavProperty property)
-        throws CosmoDavException;*/
-    
-    /**
      * Sets a live DAV property on the resource on resource initialization.
      *
      * @param property the property to set
@@ -488,8 +465,9 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
      * or if a null value is specified for a property that does not
      * accept them or if an invalid value is specified
      */
-    protected abstract void setLiveProperty(WebDavProperty property, boolean create)
-        throws CosmoDavException;
+    protected void setLiveProperty(WebDavProperty property, boolean create) throws CosmoDavException {
+        throw new ProtectedPropertyModificationException(property.getName());
+    }
 
     /**
      * Removes a live DAV property from the resource.
@@ -498,8 +476,9 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
      *
      * @throws CosmoDavException if the property is protected
      */
-    protected abstract void removeLiveProperty(DavPropertyName name)
-        throws CosmoDavException;
+    protected void removeLiveProperty(DavPropertyName name) throws CosmoDavException {
+        throw new ProtectedPropertyModificationException(name);
+    }
 
     /**
      * Sets a dead DAV property on the resource.
@@ -509,8 +488,9 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
      * @throws CosmoDavException if a null value is specified for a property that
      * does not accept them or if an invalid value is specified
      */
-    protected abstract void setDeadProperty(WebDavProperty property)
-        throws CosmoDavException;
+    protected void setDeadProperty(WebDavProperty property) throws CosmoDavException {
+        throw new ProtectedPropertyModificationException(property.getName());
+    }
 
     public OptionsResponse getOptionResponse(OptionsInfo optionsInfo){
     	return null;

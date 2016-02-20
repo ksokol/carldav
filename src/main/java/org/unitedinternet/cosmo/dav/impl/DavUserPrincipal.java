@@ -18,8 +18,6 @@ import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
@@ -169,18 +167,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new CalendarHomeSet("/" + ServerConstants.SVC_DAV, user));
         properties.add(new PrincipalUrl(getResourceLocator(), user));
         properties.add(new AddressbookHomeSet("/" + ServerConstants.SVC_DAV, user));
-    }
-
-    protected void setLiveProperty(WebDavProperty property, boolean create) throws CosmoDavException {
-        throw new ProtectedPropertyModificationException(property.getName());
-    }
-
-    protected void removeLiveProperty(DavPropertyName name) throws CosmoDavException {
-        throw new ProtectedPropertyModificationException(name);
-    }
-
-    protected void setDeadProperty(WebDavProperty property) throws CosmoDavException {
-        throw new ForbiddenException("Dead properties are not supported on this resource");
     }
 
     private void writeHtmlRepresentation(OutputContext context) throws CosmoDavException, IOException {

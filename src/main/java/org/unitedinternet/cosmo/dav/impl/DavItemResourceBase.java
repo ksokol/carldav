@@ -77,6 +77,8 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(DavPropertyName.DISPLAYNAME);
         registerLiveProperty(DavPropertyName.ISCOLLECTION);
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
+        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
+        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
 
         this.hibItem = hibItem;
     }

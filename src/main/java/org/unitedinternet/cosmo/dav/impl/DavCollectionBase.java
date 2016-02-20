@@ -46,8 +46,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
-import org.unitedinternet.cosmo.util.DomWriter;
-import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -62,7 +60,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * Extends <code>DavResourceBase</code> to adapt the Cosmo
@@ -130,7 +127,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public long getModificationTime() {
-        return 0;
+        return item.getModifiedDate() == null ? 0 : item.getModifiedDate().getTime();
     }
 
     public void spool(OutputContext outputContext) throws IOException {
@@ -141,7 +138,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     public DavResource getCollection() {
         return null;
     }
-    
+
     public DavResourceIterator getMembers() {
         try {
             for (HibItem memberHibItem : item.getItems()) {
@@ -326,64 +323,44 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return getResourceFactory().resolve(locator);
     }
 
-    private void writeHtmlDirectoryIndex(OutputContext context)
-            throws CosmoDavException, IOException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("writing html directory index for  " + getDisplayName());
-        }
-
+    private void writeHtmlDirectoryIndex(OutputContext context) throws CosmoDavException, IOException {
         context.setContentType(IOUtil.buildContentType("text/html", "UTF-8"));
         context.setModificationTime(getModificationTime());
         context.setETag(getETag());
 
-        if (!context.hasStream()) {
+        if(!context.hasStream()) {
             return;
         }
 
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(
-                context.getOutputStream(), "utf8"));
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(context.getOutputStream(), "utf8"));
         try{
             writer.write("<html>\n<head><title>");
-            String colName = getDisplayName() != null ? getDisplayName()
-                    : "no name";
-            writer.write(StringEscapeUtils.escapeHtml(colName));
+            String colName = StringEscapeUtils.escapeHtml(getDisplayName());
+            writer.write(colName);
     
             writer.write("</title></head>\n");
             writer.write("<body>\n");
             writer.write("<h1>");
-    
-            writer.write(StringEscapeUtils.escapeHtml(colName));
-    
+            writer.write(colName);
             writer.write("</h1>\n");
     
             WebDavResource parent = getParent();
-            if (parent.exists()) {
-                writer.write("Parent: <a href=\"");
-                writer.write(parent.getResourceLocator().getHref(true));
-                writer.write("\">");
-                if (parent.getDisplayName() != null) {
-                    writer.write(StringEscapeUtils.escapeHtml(parent
-                            .getDisplayName()));
-                } else {
-                    writer.write("no name");
-                }
-                writer.write("</a></li>\n");
-            }
-    
+
+            writer.write("Parent: <a href=\"");
+            writer.write(parent.getResourceLocator().getHref(true));
+            writer.write("\">");
+            writer.write(StringEscapeUtils.escapeHtml(parent.getDisplayName()));
+            writer.write("</a></li>\n");
+
             writer.write("<h2>Members</h2>\n");
             writer.write("<ul>\n");
+
             for (DavResourceIterator i = getMembers(); i.hasNext();) {
                 WebDavResource child = (WebDavResource) i.nextResource();
                 writer.write("<li><a href=\"");
-                writer.write(child.getResourceLocator().getHref(
-                        child.isCollection()));
+                writer.write(child.getResourceLocator().getHref(child.isCollection()));
                 writer.write("\">");
-                if (child.getDisplayName() != null) {
-                    writer.write(StringEscapeUtils.escapeHtml(child
-                            .getDisplayName()));
-                } else {
-                    writer.write("no name");
-                }
+                writer.write(StringEscapeUtils.escapeHtml(child.getDisplayName()));
                 writer.write("</a></li>\n");
             }
             writer.write("</ul>\n");
@@ -393,25 +370,12 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
             for (final Map.Entry<String, WebDavProperty> i : getWebDavProperties().entrySet()) {
                 WebDavProperty prop = i.getValue();
-                Object value = prop.getValue();
-                String text = null;
-                if (value instanceof Element) {
-                    try {
-                        text = DomWriter.write((Element) value);
-                    } catch (XMLStreamException e) {
-                        LOG.warn("Error serializing value for property "
-                                + prop.getName());
-                    }
-                }
-                if (text == null) {
-                    text = prop.getValueText();
-                }
+                String text = prop.getValueText();
                 if (text == null) {
                     text = "-- no value --";
                 }
                 writer.write("<dt>");
-                writer.write(StringEscapeUtils
-                        .escapeHtml(prop.getName().toString()));
+                writer.write(StringEscapeUtils.escapeHtml(prop.getName().toString()));
                 writer.write("</dt><dd>");
                 writer.write(StringEscapeUtils.escapeHtml(text));
                 writer.write("</dd>\n");
@@ -419,18 +383,17 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
             writer.write("</dl>\n");
     
             User user = getSecurityManager().getSecurityContext().getUser();
-            if (user != null) {
-                writer.write("<p>\n");
-                if (!isHomeCollection()) {
-                    DavResourceLocator homeLocator = getResourceLocator()
-                            .getFactory().createHomeLocator(
-                                    getResourceLocator().getContext(), user);
-                    writer.write("<a href=\"");
-                    writer.write(homeLocator.getHref(true));
-                    writer.write("\">");
-                    writer.write("Home collection");
-                    writer.write("</a><br>\n");
-                }
+
+            writer.write("<p>\n");
+            if (!isHomeCollection()) {
+                DavResourceLocator homeLocator = getResourceLocator()
+                        .getFactory().createHomeLocator(
+                                getResourceLocator().getContext(), user);
+                writer.write("<a href=\"");
+                writer.write(homeLocator.getHref(true));
+                writer.write("\">");
+                writer.write("Home collection");
+                writer.write("</a><br>\n");
             }
     
             writer.write("</body>");

@@ -5,11 +5,13 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralData
+import testutil.helper.XmlHelper
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 import static calendar.EvolutionData.*
+import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
 import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ETAG
@@ -1455,5 +1457,69 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
+    }
+
+    @Test
+    void collectionResourceGet() {
+        mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, UUID_TODO)
+                .content(CALDAV_TODO)
+                .contentType(TEXT_CALENDAR))
+                .andExpect(status().isCreated())
+
+        def request1 = """\
+                        <propfind xmlns="DAV:">
+                            <prop>
+                                <displayname/>
+                                <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
+                                <n1:getctag xmlns:n1="http://calendarserver.org/ns/"/>
+                            </prop>
+                        </propfind>"""
+
+
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "0"))
+                .andReturn().getResponse().getContentAsString()
+
+        def getctag = XmlHelper.getctag(result1)
+
+        def result2 = mockMvc.perform(get("/dav/{email}/calendar", USER01))
+                .andExpect(status().isOk())
+                .andExpect(textHtmlContentType())
+                .andReturn().getResponse()
+
+        def lastModified = result2.getHeader("Last-Modified")
+
+        def response2 = """\
+                            <html>
+                            <head><title>calendarDisplayName</title></head>
+                            <body>
+                            <h1>calendarDisplayName</h1>
+                            Parent: <a href="/dav/test01@localhost.de/">homeCollection</a></li>
+                            <h2>Members</h2>
+                            <ul>
+                            <li><a href="/dav/test01@localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics">test task</a></li>
+                            </ul>
+                            <h2>Properties</h2>
+                            <dl>
+                            <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd>/dav/test01@localhost.de/contacts</dd>
+                            <dt>{DAV:}displayname</dt><dd>calendarDisplayName</dd>
+                            <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${getctag}</dd>
+                            <dt>{DAV:}getetag</dt><dd>&quot;${getctag}&quot;</dd>
+                            <dt>{DAV:}getlastmodified</dt><dd>${lastModified}</dd>
+                            <dt>{DAV:}iscollection</dt><dd>1</dd>
+                            <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>
+                            <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-component-set</dt><dd>VEVENT, VJOURNAL, VTODO</dd>
+                            <dt>{urn:ietf:params:xml:ns:caldav}supported-calendar-data</dt><dd>-- no value --</dd>
+                            <dt>{urn:ietf:params:xml:ns:caldav}supported-collation-set</dt><dd>i;ascii-casemap, i;octet</dd>
+                            <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query</dd>
+                            </dl>
+                            <p>
+                            <a href="/dav/test01@localhost.de/">Home collection</a><br>
+                            </body></html>
+                            """.stripIndent()
+
+        assertThat(result2.getContentAsString(), is(response2))
     }
 }

@@ -18,6 +18,8 @@ package org.unitedinternet.cosmo.dav.impl;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
+import org.apache.jackrabbit.webdav.DavResourceIterator;
+import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
@@ -113,7 +115,21 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         this.initialized = false;
     }
 
-    // WebDavResource methods
+    public String getSupportedMethods() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean isCollection() {
+        return false;
+    }
+
+    public DavResourceIterator getMembers() {
+        // while it would be ideal to throw an UnsupportedOperationException,
+        // MultiStatus tries to add a MultiStatusResponse for every member
+        // of a WebDavResource regardless of whether or not it's a collection,
+        // so we need to return an empty iterator.
+        return new DavResourceIteratorImpl(new ArrayList());
+    }
 
     public String getComplianceClass() {
         return WebDavResource.COMPLIANCE_CLASS;
@@ -385,7 +401,9 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
     /**
      * Returns the set of resource types for this resource.
      */
-    protected abstract Set<QName> getResourceTypes();
+    protected Set<QName> getResourceTypes() {
+        return new HashSet<>();
+    }
 
     /**
      * Determines whether or not the given property name identifies a

@@ -222,7 +222,9 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         properties.add(new IsCollection(isCollection()));
     }
 
-    abstract protected void updateItem() throws CosmoDavException;
+    protected void updateItem() throws CosmoDavException {
+        getContentService().updateContent(getItem());
+    }
 
     public static boolean hasNonOK(MultiStatusResponse msr) {
         if (msr == null || msr.getStatus() == null) {

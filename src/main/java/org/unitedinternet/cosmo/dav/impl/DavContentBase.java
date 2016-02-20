@@ -15,35 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-/**
- * Extends <code>DavItemResourceBase</code> to adapt the Cosmo
- * <code>ContentItem</code> to the DAV resource model.
- *
- * This class defines the following live properties:
- *
- * <ul>
- * <li><code>DAV:getetag</code> (protected)</li>
- * <li><code>DAV:getlastmodified</code> (protected)</li>
- * </ul>
- *
- * @see DavContent
- * @see DavResourceBase
- * @see HibItem
- */
 public abstract class DavContentBase extends DavItemResourceBase implements DavContent {
 
     public DavContentBase(HibItem item,
@@ -51,32 +28,5 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavC
                           DavResourceFactory factory)
         throws CosmoDavException {
         super(item, locator, factory);
-    }
-
-    @Override
-    public boolean isCollection() {
-        return false;
-    }
-
-    /** */
-    public String getSupportedMethods() {
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND, COPY, PUT, DELETE, MOVE";
-    }
-
-    public DavResourceIterator getMembers() {
-        // while it would be ideal to throw an UnsupportedOperationException,
-        // MultiStatus tries to add a MultiStatusResponse for every member
-        // of a WebDavResource regardless of whether or not it's a collection,
-        // so we need to return an empty iterator.
-        return new DavResourceIteratorImpl(new ArrayList());
-    }
-
-    protected Set<QName> getResourceTypes() {
-        return new HashSet<>();
-    }
-
-    @Override
-    protected void updateItem() throws CosmoDavException {
-        getContentService().updateContent(getItem());
     }
 }

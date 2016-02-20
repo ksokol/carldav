@@ -26,6 +26,7 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
@@ -37,10 +38,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-public class DavCard extends DavContentBase {
+public class DavCard extends DavItemResourceBase implements DavContent {
+
     private static final Log LOG = LogFactory.getLog(DavCard.class);
-
-
 
     public DavCard(HibCardItem item,
                    DavResourceLocator locator,

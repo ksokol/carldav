@@ -236,11 +236,11 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     // DavCollection
 
     public void addContent(DavContent content, InputContext context) throws CosmoDavException {
-        if(!(content instanceof DavContentBase)) {
-            throw new IllegalArgumentException("Expected instance of : [" + DavContentBase.class.getName() + "]");
+        if(!(content instanceof DavItemResourceBase)) {
+            throw new IllegalArgumentException("Expected instance of : [" + DavItemResourceBase.class.getName() + "]");
         }
-        
-        DavContentBase base = (DavContentBase) content;
+
+        DavItemResourceBase base = (DavItemResourceBase) content;
         base.populateItem(context);
         saveContent(base);
         members.add(base);

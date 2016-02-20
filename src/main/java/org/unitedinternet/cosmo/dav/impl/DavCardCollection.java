@@ -45,14 +45,14 @@ public class DavCardCollection extends DavCollectionBase {
         return resourceTypes;
     }
 
-    public Set<DavContentBase> findMembers(AddressbookFilter filter) throws CosmoDavException {
-        Set<DavContentBase> members = new HashSet<>();
+    public Set<DavItemResourceBase> findMembers(AddressbookFilter filter) throws CosmoDavException {
+        Set<DavItemResourceBase> members = new HashSet<>();
 
-        HibCollectionItem collection = (HibCollectionItem) getItem();
+        HibCollectionItem collection = getItem();
         for (HibItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberHibItem);
             if (resource != null) {
-                members.add((DavContentBase) resource);
+                members.add((DavItemResourceBase) resource);
             }
         }
 

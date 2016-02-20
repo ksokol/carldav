@@ -26,6 +26,7 @@ import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
@@ -42,7 +43,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DavCalendarResource extends DavContentBase implements ICalendarConstants {
+public class DavCalendarResource extends DavItemResourceBase implements DavContent, ICalendarConstants {
 
     private static final Log LOG = LogFactory.getLog(DavCalendarResource.class);
 

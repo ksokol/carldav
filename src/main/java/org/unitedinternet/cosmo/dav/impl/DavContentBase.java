@@ -79,11 +79,6 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavC
         return new DavResourceIteratorImpl(new ArrayList());
     }
 
-    public void removeMember(org.apache.jackrabbit.webdav.DavResource member)
-        throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
     protected Set<QName> getResourceTypes() {
         return new HashSet<>();
     }

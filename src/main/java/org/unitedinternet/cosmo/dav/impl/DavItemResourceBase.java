@@ -19,11 +19,8 @@ import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -40,7 +37,6 @@ import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
-import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.PathUtil;
 
 import java.io.UnsupportedEncodingException;
@@ -140,21 +136,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return parent;
     }
 
-    public MultiStatusResponse updateProperties(DavPropertySet setProperties,
-            DavPropertyNameSet removePropertyNames) throws CosmoDavException {
-        MultiStatusResponse msr = super.updateProperties(setProperties,
-                removePropertyNames);
-        if (hasNonOK(msr)) {
-            return msr;
-        }
-
-        updateItem();
-
-        return msr;
-    }
-
-    // DavItemResource methods
-
     public HibItem getItem() {
         return hibItem;
     }
@@ -162,10 +143,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     public void setItem(HibItem hibItem) throws CosmoDavException {
         this.hibItem = hibItem;
         loadProperties();
-    }
-
-    protected ContentService getContentService() {
-        return getResourceFactory().getContentService();
     }
 
     protected CalendarQueryProcessor getCalendarQueryProcesor() {
@@ -220,27 +197,5 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
-    }
-
-    protected void updateItem() throws CosmoDavException {
-        getContentService().updateContent(getItem());
-    }
-
-    public static boolean hasNonOK(MultiStatusResponse msr) {
-        if (msr == null || msr.getStatus() == null) {
-            return false;
-        }
-
-        for (Status status : msr.getStatus()) {
-
-            if (status != null) {
-                int statusCode = status.getStatusCode();
-
-                if (statusCode != 200) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }

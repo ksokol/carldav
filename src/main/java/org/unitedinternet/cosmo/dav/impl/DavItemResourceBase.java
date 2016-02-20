@@ -46,7 +46,6 @@ import org.unitedinternet.cosmo.util.PathUtil;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * <p>
@@ -222,12 +221,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
     }
-
-    /**
-     * Returns a list of names of <code>Attribute</code>s that should not be
-     * exposed through DAV as dead properties.
-     */
-    protected abstract Set<String> getDeadPropertyFilter();
 
     abstract protected void updateItem() throws CosmoDavException;
 

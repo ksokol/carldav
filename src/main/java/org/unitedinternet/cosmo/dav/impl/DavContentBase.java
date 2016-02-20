@@ -88,10 +88,6 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavC
         return new HashSet<>();
     }
 
-    protected Set<String> getDeadPropertyFilter() {
-        return new HashSet<>(1);
-    }
-
     @Override
     protected void updateItem() throws CosmoDavException {
         getContentService().updateContent(getItem());

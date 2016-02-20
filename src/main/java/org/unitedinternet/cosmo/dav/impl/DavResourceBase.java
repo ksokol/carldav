@@ -37,6 +37,7 @@ import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.springframework.util.ReflectionUtils;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
@@ -359,6 +360,10 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         } catch (CosmoDavException e) {
             throw new CosmoException(e);
         }
+    }
+
+    public DavCollection getParent() throws CosmoDavException {
+        return null;
     }
 
     protected void generateHrefIfNecessary(final PrintWriter writer, final WebDavProperty prop, final String text) {

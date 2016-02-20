@@ -12,7 +12,6 @@ import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
@@ -93,12 +92,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         writeHtmlRepresentation(context);
     }
 
-
-    public DavCollection getParent() throws CosmoDavException {
-        //TODO
-        return null;
-    }
-
     protected Set<QName> getResourceTypes() {
         return Collections.emptySet();
     }
@@ -122,10 +115,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         context.setContentType(IOUtil.buildContentType("text/html", "UTF-8"));
         context.setModificationTime(getModificationTime());
         context.setETag(getETag());
-
-        if (!context.hasStream()) {
-            return;
-        }
 
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(context.getOutputStream(), "utf8"));
         try {
@@ -151,15 +140,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
                 writer.write("</dd>\n");
             }
             writer.write("</dl>\n");
-
-            WebDavResource parent = getParent();
-            if(parent != null) {
-                writer.write("<a href=\"");
-                writer.write(parent.getResourceLocator().getHref(true));
-                writer.write("\">");
-                writer.write(StringEscapeUtils.escapeHtml(parent.getDisplayName()));
-                writer.write("</a>\n");
-            }
             writer.write("<p>\n");
 
             final DavResourceLocator homeLocator;

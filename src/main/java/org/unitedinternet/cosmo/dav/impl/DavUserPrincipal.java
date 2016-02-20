@@ -116,10 +116,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         return new DavResourceIteratorImpl(Collections.emptyList());
     }
 
-    public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
     public WebDavResource getCollection() {
         try {
             return getParent();
@@ -128,21 +124,9 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         }
     }
 
-    public void move(org.apache.jackrabbit.webdav.DavResource destination) throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    public void copy(org.apache.jackrabbit.webdav.DavResource destination, boolean shallow) throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
     public DavCollection getParent() throws CosmoDavException {
         //TODO
         return null;
-    }
-
-    public User getUser() {
-        return user;
     }
 
     protected Set<QName> getResourceTypes() {
@@ -210,11 +194,13 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
             writer.write("</dl>\n");
 
             WebDavResource parent = getParent();
-            writer.write("<a href=\"");
-            writer.write(parent.getResourceLocator().getHref(true));
-            writer.write("\">");
-            writer.write(StringEscapeUtils.escapeHtml(parent.getDisplayName()));
-            writer.write("</a></li>\n");
+            if(parent != null) {
+                writer.write("<a href=\"");
+                writer.write(parent.getResourceLocator().getHref(true));
+                writer.write("\">");
+                writer.write(StringEscapeUtils.escapeHtml(parent.getDisplayName()));
+                writer.write("</a>\n");
+            }
             writer.write("<p>\n");
 
             final DavResourceLocator homeLocator;

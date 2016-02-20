@@ -170,10 +170,13 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
 
     public void removeProperty(DavPropertyName propertyName) throws DavException {
         throw new UnsupportedOperationException();
-
     }
 
     public MultiStatusResponse alterProperties(List<? extends PropEntry> changeList) throws DavException{
+        throw new UnsupportedOperationException();
+    }
+
+    public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
         throw new UnsupportedOperationException();
     }
 

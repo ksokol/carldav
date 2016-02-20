@@ -164,23 +164,12 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         return sorted;
     }
 
-    public void setProperty(org.apache.jackrabbit.webdav.property.DavProperty<?> property)
-        throws DavException {
-        if (! exists()) {
-            throw new NotFoundException();
-        }
-        if(!(property instanceof WebDavProperty)){
-            throw new IllegalArgumentException("Expected type for 'property' is :[" + WebDavProperty.class.getName() + "]");
-        }
-        setResourceProperty((WebDavProperty) property, false);
+    public void setProperty(org.apache.jackrabbit.webdav.property.DavProperty<?> property) throws DavException {
+        throw new UnsupportedOperationException();
     }
 
-    public void removeProperty(DavPropertyName propertyName)
-        throws DavException {
-        if (! exists()) {
-            throw new NotFoundException();
-        }
-        removeResourceProperty(propertyName);
+    public void removeProperty(DavPropertyName propertyName) throws DavException {
+        throw new UnsupportedOperationException();
 
     }
 

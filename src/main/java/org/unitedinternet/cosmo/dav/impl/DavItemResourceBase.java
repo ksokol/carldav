@@ -113,20 +113,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return getItem().getModifiedDate().getTime();
     }
 
-    public void setProperty(
-            org.apache.jackrabbit.webdav.property.DavProperty<?> property)
-            throws org.apache.jackrabbit.webdav.DavException {
-        super.setProperty(property);
-        updateItem();
-    }
-
-    public void removeProperty(DavPropertyName propertyName)
-            throws org.apache.jackrabbit.webdav.DavException {
-        super.removeProperty(propertyName);
-
-        updateItem();
-    }
-
     public WebDavResource getCollection() {
         try {
             return getParent();

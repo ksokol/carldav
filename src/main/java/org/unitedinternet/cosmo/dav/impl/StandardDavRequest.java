@@ -25,6 +25,7 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -34,7 +35,6 @@ import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.server.ServerConstants;
 import org.unitedinternet.cosmo.util.BufferedServletInputStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -47,8 +47,6 @@ import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.activation.MimeType;
-import javax.activation.MimeTypeParseException;
 import javax.servlet.AsyncContext;
 import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
@@ -63,21 +61,8 @@ import javax.servlet.http.Part;
 
 public class StandardDavRequest extends WebdavRequestImpl implements DavRequest, ExtendedDavConstants, CaldavConstants {
 
-    private static final MimeType APPLICATION_XML = registerMimeType("application/xml");
-    private static final MimeType TEXT_XML = registerMimeType("text/xml");
-    
-    /**
-     * 
-     * @param s mimeType as String
-     * @return MimeType 
-     */
-    private static final MimeType registerMimeType(String s) {
-        try {
-            return new MimeType(s);
-        } catch (MimeTypeParseException e) {
-            throw new RuntimeException("Can't register MIME type " + s, e);
-        }
-    }
+    private static final MediaType APPLICATION_XML = MediaType.APPLICATION_XML;
+    private static final MediaType TEXT_XML = MediaType.TEXT_XML;
 
     private int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
@@ -139,8 +124,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
     public Enumeration<String> getParameterNames() {
         return originalHttpServletRequest.getParameterNames();
     }
-    
-
 
     public int getRemotePort() {
         return originalHttpServletRequest.getRemotePort();
@@ -275,8 +258,9 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
             if (StringUtils.isBlank(getContentType()) && requireDocument) {
                 throw new BadRequestException("No Content-Type specified");
             }
-            MimeType mimeType = new MimeType(getContentType());
-            if (!(mimeType.match(APPLICATION_XML) || mimeType.match(TEXT_XML))) {
+
+            final MediaType mediaType = MediaType.valueOf(getContentType());
+            if (!(mediaType.equals(APPLICATION_XML) || mediaType.equals(TEXT_XML))) {
                 throw new UnsupportedMediaTypeException(
                         "Expected Content-Type " + APPLICATION_XML + " or "
                                 + TEXT_XML);
@@ -284,8 +268,6 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
 
             return getRequestDocument();
 
-        } catch (MimeTypeParseException e) {
-            throw new UnsupportedMediaTypeException(e.getMessage());
         } catch (IllegalArgumentException e) {
             throwBadRequestExceptionFrom(e);
         } catch (DavException e) {

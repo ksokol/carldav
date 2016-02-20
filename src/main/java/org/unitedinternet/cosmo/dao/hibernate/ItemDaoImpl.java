@@ -220,14 +220,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         this.itemFilterProcessor = itemFilterProcessor;
     }
 
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.Dao#destroy()
-     */
-    public abstract void destroy();
-
     /*
      * (non-Javadoc)
      *

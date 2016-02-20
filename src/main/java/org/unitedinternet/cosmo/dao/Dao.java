@@ -25,10 +25,4 @@ public interface Dao {
      * and defaulting optional properties.
      */
     public void init();
-
-    /**
-     * Readies the DAO for garbage collection, shutting down any
-     * resources used.
-     */
-    public void destroy();
 }

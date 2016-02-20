@@ -525,10 +525,4 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             }
         }
     }
-
-    @Override
-    public void destroy() {
-
-    }
-
 }

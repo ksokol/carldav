@@ -165,15 +165,15 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             }
 
             ((ReportBase) resource.getReport(info)).run(response);
-        } catch (DavException e) {
-            if (e instanceof CosmoDavException){
-                throw (CosmoDavException) e;
-            }
-            throw new CosmoDavException(e);
+        } catch (DavException exception) {
+            throw new CosmoDavException(exception.getErrorCode(),exception.getMessage(),exception.getCause());
+        } catch (CosmoDavException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new CosmoDavException(exception);
         }
     }
 
-    // our methods
     /**
      * 
      * @param request 

@@ -86,14 +86,14 @@ class FailureTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>Unknown error parsing request document</cosmo:bad-request>
+                                <cosmo:unsupported-media-type>Expected Content-Type application/xml or text/xml</cosmo:unsupported-media-type>
                             </D:error>"""
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType("application/json")
                 .content(request1)
                 .header("Depth", "1"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isUnsupportedMediaType())
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }

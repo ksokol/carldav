@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import org.apache.jackrabbit.webdav.DavServletResponse;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,14 +26,12 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
-/**
- * An unclassified WebDAV Exception.
- */
-public class CosmoDavException extends org.apache.jackrabbit.webdav.DavException
-    implements ExtendedDavConstants {
+public class CosmoDavException extends RuntimeException implements ExtendedDavConstants {
 
     private static final long serialVersionUID = 2980452139790396998L;
     private transient DavNamespaceContext nsc;
+
+    private int errorCode = DavServletResponse.SC_INTERNAL_SERVER_ERROR;
 
     public CosmoDavException(int code) {
         this(code, null, null);
@@ -54,11 +54,14 @@ public class CosmoDavException extends org.apache.jackrabbit.webdav.DavException
         this(500, t.getMessage(), t);
     }
 
-    public CosmoDavException(int code,
-                        String message,
-                        Throwable t) {
-        super(code, message, t, null);
+    public CosmoDavException(int errorCode, String message, Throwable cause) {
+        super(message, cause);
+        this.errorCode = errorCode;
         nsc = new DavNamespaceContext();
+    }
+
+    public int getErrorCode() {
+        return errorCode;
     }
 
     public boolean hasContent() {
@@ -97,17 +100,17 @@ public class CosmoDavException extends org.apache.jackrabbit.webdav.DavException
          * Constructor.
          */
         public DavNamespaceContext() {
-            uris = new HashMap<String,String>();
+            uris = new HashMap<>();
             uris.put("D", "DAV:");
             uris.put(PRE_COSMO, NS_COSMO);
 
-            prefixes = new HashMap<String,HashSet<String>>();
+            prefixes = new HashMap<>();
 
-            HashSet<String> dav = new HashSet<String>(1);
+            HashSet<String> dav = new HashSet<>(1);
             dav.add("D");
             prefixes.put("DAV:", dav);
 
-            HashSet<String> cosmo = new HashSet<String>(1);
+            HashSet<String> cosmo = new HashSet<>(1);
             cosmo.add(PRE_COSMO);
             prefixes.put(NS_COSMO, cosmo);
         }
@@ -141,7 +144,7 @@ public class CosmoDavException extends org.apache.jackrabbit.webdav.DavException
         public void addNamespace(String prefix, String namespaceURI) {
             uris.put(prefix, namespaceURI);
 
-            HashSet<String> ns = new HashSet<String>(1);
+            HashSet<String> ns = new HashSet<>(1);
             ns.add(prefix);
             prefixes.put(namespaceURI, ns);
         }

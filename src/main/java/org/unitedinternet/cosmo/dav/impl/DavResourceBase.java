@@ -266,13 +266,12 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
             Report report = reportClass.newInstance();
             report.init(this, reportInfo);
             return report;
-        } catch (DavException e){
-            if (e instanceof CosmoDavException) {
-                throw (CosmoDavException) e;
-            }
-            throw new CosmoDavException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage(), e);
+        } catch (DavException exception){
+            throw new CosmoDavException(exception.getErrorCode(),exception.getMessage(),exception.getCause());
+        } catch (CosmoDavException exception) {
+            throw exception;
+        } catch (Exception exception) {
+            throw new CosmoDavException(exception);
         }
     }
 

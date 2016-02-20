@@ -59,8 +59,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     private final User user;
 
-    private DavUserPrincipalCollection parent;
-
     public DavUserPrincipal(User user, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
@@ -139,11 +137,8 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     public DavCollection getParent() throws CosmoDavException {
-        if (parent == null) {
-            DavResourceLocator parentLocator = getResourceLocator().getParentLocator();
-            parent = (DavUserPrincipalCollection) getResourceFactory().resolve(parentLocator);
-        }
-        return parent;
+        //TODO
+        return null;
     }
 
     public User getUser() {

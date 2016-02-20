@@ -38,14 +38,12 @@ import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
-import org.unitedinternet.cosmo.dav.impl.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.dav.impl.StandardDavRequest;
 import org.unitedinternet.cosmo.dav.impl.StandardDavResponse;
 import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
 import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
 import org.unitedinternet.cosmo.dav.provider.FileProvider;
-import org.unitedinternet.cosmo.dav.provider.UserPrincipalCollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.UserPrincipalProvider;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
@@ -212,9 +210,6 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
         if (resource instanceof DavUserPrincipal) {
             return new UserPrincipalProvider(resourceFactory);
-        }
-        if (resource instanceof DavUserPrincipalCollection) {
-            return new UserPrincipalCollectionProvider(resourceFactory);
         }
         return new FileProvider(resourceFactory);
     }

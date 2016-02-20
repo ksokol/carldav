@@ -27,7 +27,6 @@ import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
-import org.unitedinternet.cosmo.dav.impl.DavUserPrincipalCollection;
 import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
@@ -139,11 +138,6 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         UriTemplate.Match match = TEMPLATE_USER.match(uri);
         if (match != null) {
             return createUserPrincipalResource(locator, match);
-        }
-
-        match = TEMPLATE_USERS.match(uri);
-        if (match != null) {
-            return new DavUserPrincipalCollection(locator, this);
         }
 
         match = TEMPLATE_PRINCIPALS.match(uri);

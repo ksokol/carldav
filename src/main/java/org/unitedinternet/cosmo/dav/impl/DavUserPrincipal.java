@@ -1,17 +1,12 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -28,8 +23,6 @@ import org.unitedinternet.cosmo.dav.property.ResourceType;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.server.ServerConstants;
-import org.unitedinternet.cosmo.util.DomWriter;
-import org.w3c.dom.Element;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -41,7 +34,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * <p>
@@ -53,8 +45,6 @@ import javax.xml.stream.XMLStreamException;
  * @see User
  */
 public class DavUserPrincipal extends DavResourceBase implements CaldavConstants, DavContent {
-
-    private static final Log LOG = LogFactory.getLog(DavUserPrincipal.class);
 
     private final User user;
 
@@ -103,21 +93,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         writeHtmlRepresentation(context);
     }
 
-    public DavResourceIterator getMembers() {
-        // while it would be ideal to throw an UnsupportedOperationException,
-        // MultiStatus tries to add a MultiStatusResponse for every member
-        // of a WebDavResource regardless of whether or not it's a collection,
-        // so we need to return an empty iterator.
-        return new DavResourceIteratorImpl(Collections.emptyList());
-    }
-
-    public WebDavResource getCollection() {
-        try {
-            return getParent();
-        } catch (CosmoDavException e) {
-            throw new CosmoException(e);
-        }
-    }
 
     public DavCollection getParent() throws CosmoDavException {
         //TODO
@@ -166,18 +141,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
             writer.write("<dl>\n");
             for (final Map.Entry<String, WebDavProperty> i : getWebDavProperties().entrySet()) {
                 WebDavProperty prop = i.getValue();
-                Object value = prop.getValue();
-                String text = null;
-                if (value instanceof Element) {
-                    try {
-                        text = DomWriter.write((Element) value);
-                    } catch (XMLStreamException e) {
-                        LOG.warn("Error serializing value for property " + prop.getName());
-                    }
-                }
-                if (text == null) {
-                    text = prop.getValueText();
-                }
+                String text = prop.getValueText();
                 writer.write("<dt>");
                 writer.write(StringEscapeUtils.escapeHtml(prop.getName().toString()));
                 writer.write("</dt><dd>");

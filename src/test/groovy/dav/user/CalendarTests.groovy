@@ -1,5 +1,8 @@
 package dav.user
 
+import calendar.DavDroidData
+import org.junit.Assert
+import org.junit.Ignore
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
@@ -1521,5 +1524,79 @@ public class CalendarTests extends IntegrationTestSupport {
                             """.stripIndent()
 
         assertThat(result2.getContentAsString(), is(response2))
+    }
+
+    @Test
+    void "run report with depth 0 on calendar event in valid timerange"() {
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(DavDroidData.ADD_VEVENT_REQUEST1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:time-range start="20101210T071757Z" end="20360218T071757Z"/>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                              <D:response>
+                                <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                <D:status>HTTP/1.1 200 OK</D:status>
+                              </D:response>
+                            </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
+
+    @Test
+    void "run report with depth 0 on calendar event in invalid timerange"() {
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(TEXT_CALENDAR)
+                .content(DavDroidData.ADD_VEVENT_REQUEST1)
+                .header("If-None-Match", "*"))
+                .andExpect(status().isCreated())
+                .andExpect(etag(notNullValue()))
+
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:time-range start="19701210T071757Z" end="19710218T071757Z"/>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        def response1 = """<D:multistatus xmlns:D="DAV:" />"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "0"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
+
+    @Ignore
+    @Test
+    void "run report with depth 0 on contacts item in valid timerange"() {
+        Assert.fail("not implemented yet")
     }
 }

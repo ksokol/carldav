@@ -18,9 +18,7 @@ package org.unitedinternet.cosmo.model.filter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a filter that matches a set of criteria to all items.
@@ -37,7 +35,6 @@ public class ItemFilter {
     private Integer maxResults = null;
 
     private List<StampFilter> stampFilters = new ArrayList<>();
-    private Map<String, String> filterProperties = new HashMap<>();
     private List<FilterOrder> order = new ArrayList<>();
 
     /**
@@ -98,30 +95,7 @@ public class ItemFilter {
     public void setUid(FilterCriteria uid) {
         this.uid = uid;
     }
-    
-    /**
-     * Get a filter property
-     * @param key key
-     * @return value of property
-     */
-    public String getFilterProperty(String key) {
-        return filterProperties.get(key);
-    }
-    
-    /**
-     * <p>
-     * Add an item property to order results by.  For now, this is only 
-     * really useful when used with setMaxResults(), where you
-     * only want to return the top X items, where the items are
-     * in a certain order before the top X are chosen.
-     * </p>
-     *
-     * @param fo
-     */
-    public void addOrderBy(FilterOrder fo) {
-        order.add(fo);
-    }
-    
+
     public List<FilterOrder> getOrders() {
         return order;
     }

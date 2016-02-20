@@ -481,4 +481,25 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }
+
+    @Test
+    public void missingHrefInCalendarMultiget() {
+        def request1 = """\
+                        <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
+                            <D:prop>
+                                <D:getetag />
+                            </D:prop>
+                        </C:calendar-multiget>"""
+
+        def response1 = """\
+                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                                <cosmo:bad-request>Expected at least one {DAV:}href</cosmo:bad-request>
+                            </D:error>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .content(request1)
+                .contentType(TEXT_XML))
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
 }

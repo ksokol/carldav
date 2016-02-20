@@ -26,7 +26,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Set;
 
-public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
+public class CalendarDaoImpl implements CalendarDao {
 
     private final ItemFilterProcessor itemFilterProcessor;
 

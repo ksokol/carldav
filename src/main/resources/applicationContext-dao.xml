@@ -30,7 +30,7 @@
 
     <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" />
 
-    <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl">
+    <bean id="calendarDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl">
         <constructor-arg>
             <ref bean="itemFilterProcessor" />
         </constructor-arg>

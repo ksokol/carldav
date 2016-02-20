@@ -40,7 +40,6 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
-import org.unitedinternet.cosmo.dav.ProtectedPropertyModificationException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
@@ -325,24 +324,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return new HashSet<>();
     }
 
-    /**
-     * Determines whether or not the given property name identifies a
-     * live property.
-     * 
-     * If the server understands the semantic meaning of a property
-     * (probably because the property is defined in a DAV-related
-     * specification somewhere), then the property is defined as
-     * "live". Live properties are typically explicitly represented in the
-     * object model.
-     *
-     * If the server does not know anything specific about the
-     * property (usually because it was defined by a particular
-     * client), then it is known as a "dead" property.
-     */
-    protected boolean isLiveProperty(DavPropertyName name) {
-        return liveProperties.contains(name);
-    }
-
     protected void loadProperties() {
         if (initialized) {
             return;
@@ -359,30 +340,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * Loads the live DAV properties for the resource.
      */
     protected abstract void loadLiveProperties(DavPropertySet properties);
-
-    /**
-     * Sets a live DAV property on the resource on resource initialization.
-     *
-     * @param property the property to set
-     *
-     * @throws CosmoDavException if the property is protected
-     * or if a null value is specified for a property that does not
-     * accept them or if an invalid value is specified
-     */
-    protected void setLiveProperty(WebDavProperty property, boolean create) throws CosmoDavException {
-        throw new ProtectedPropertyModificationException(property.getName());
-    }
-
-    /**
-     * Removes a live DAV property from the resource.
-     *
-     * @param name the name of the property to remove
-     *
-     * @throws CosmoDavException if the property is protected
-     */
-    protected void removeLiveProperty(DavPropertyName name) throws CosmoDavException {
-        throw new ProtectedPropertyModificationException(name);
-    }
 
     @Override
     public void move(final org.apache.jackrabbit.webdav.DavResource destination) throws DavException {

@@ -212,8 +212,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
             // if uid is in use throw exception
             if (itemId != null) {
-                throw new UidInUseException(hibItem.getUid(), "uid " + hibItem.getUid()
-                        + " already in use");
+                throw new UidInUseException("uid " + hibItem.getUid() + " already in use");
             }
         }
     }

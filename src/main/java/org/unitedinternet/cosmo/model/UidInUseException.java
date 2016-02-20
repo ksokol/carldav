@@ -15,21 +15,9 @@
  */
 package org.unitedinternet.cosmo.model;
 
-/**
- * An exception that indicates that the uid chosen for an item is
- * already in use by another item.
- */
 public class UidInUseException extends IcalUidInUseException {
 
-    String uid = null;
-    
-    /** */
-    public UidInUseException(String uid, String message) {
+    public UidInUseException(String message) {
         super(message);
-        this.uid = uid;
-    }
-
-    public String getUid() {
-        return uid;
     }
 }

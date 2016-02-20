@@ -37,12 +37,6 @@ public class IcalUidInUseException extends RuntimeException {
         this.existingUid = existingUid;
     }
 
-    /** */
-    public IcalUidInUseException(String message,
-                             Throwable cause) {
-        super(message, cause);
-    }
-
     /**
      * The uid of the item tested
      */

@@ -16,9 +16,12 @@
 package org.unitedinternet.cosmo.dav.servlet;
 
 import carldav.exception.resolver.ExceptionResolverHandler;
+import carldav.exception.resolver.ResponseUtils;
 import org.apache.abdera.util.EntityTag;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jackrabbit.webdav.WebdavResponse;
+import org.apache.jackrabbit.webdav.WebdavResponseImpl;
 import org.springframework.util.Assert;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -28,7 +31,6 @@ import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
-import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.dav.NotModifiedException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
@@ -39,7 +41,6 @@ import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
 import org.unitedinternet.cosmo.dav.impl.StandardDavRequest;
-import org.unitedinternet.cosmo.dav.impl.StandardDavResponse;
 import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
 import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
@@ -79,24 +80,11 @@ public class StandardRequestHandler extends AbstractController implements Server
         this.resourceFactory = resourceFactory;
         this.exceptionResolverHandler = exceptionResolverHandler;
     }
-    /**
-     * <p>
-     * Processes the request and returns a response. Calls
-     * {@link DavResourceFactory.createResource(DavResourceLocator, DavRequest, DavResponse)}
-     * to find the targeted resource. Calls {@link #preconditions(DavRequest, DavResponse, WebDavResource)}
-     * to verify preconditions. Calls {@link #process(DavRequest, DavResponse, WebDavResource)}
-     * to execute the verified request.
-     * </p>
-     * <p>
-     * Invalid preconditions and processing exceptions are handled by
-     * sending a response with the appropriate error status and message and
-     * an entity describing the error.
-     * </p>
-     */
+
     @Override
     protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
         final DavRequest wreq = createDavRequest(request);
-        final DavResponse wres = createDavResponse(response);
+        final WebdavResponse wres = createDavResponse(response);
 
         try {
             final WebDavResource resource = resolveTarget(wreq);
@@ -111,7 +99,9 @@ public class StandardRequestHandler extends AbstractController implements Server
             // Although not ideal, for now simply check for this type and log at a different level.
             LOG.error("error (" + de.getErrorCode() + "): " + de.getMessage(), de);
 
-            wres.sendDavError(de);
+           // wres.sendDavError(de);
+
+            ResponseUtils.sendDavError(de, wres);
         }
         return null;
     }
@@ -134,7 +124,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * <li>The <code>If-Unmodified-Since</code> request header</li>
      * </ul>
      */
-    protected void preconditions(DavRequest request, DavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
+    protected void preconditions(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         ifMatch(request, response, resource);
         ifNoneMatch(request, response, resource);
         ifModifiedSince(request, resource);
@@ -148,7 +138,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * specific provider method is chosen by examining the request method.
      * </p>
      */
-    protected void process(DavRequest request, DavResponse response, WebDavResource resource) throws IOException, CosmoDavException {
+    protected void process(DavRequest request, WebdavResponse response, WebDavResource resource) throws IOException, CosmoDavException {
         DavProvider provider = createProvider(resource);
 
         if (request.getMethod().equals("OPTIONS")) {
@@ -237,8 +227,8 @@ public class StandardRequestHandler extends AbstractController implements Server
      * provided <code>HttpServletResponse</code>.
      * </p>
      */
-    protected DavResponse createDavResponse(HttpServletResponse response) {
-        return new StandardDavResponse(response);
+    protected WebdavResponse createDavResponse(HttpServletResponse response) {
+        return new WebdavResponseImpl(response);
     }
 
     /**
@@ -251,7 +241,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         return resourceFactory.resolve(request.getResourceLocator(), request);
     }
 
-    private void ifMatch(DavRequest request, DavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
+    private void ifMatch(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         EntityTag[] requestEtags = request.getIfMatch();
         if (requestEtags.length == 0) {
             return;
@@ -271,7 +261,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         throw new PreconditionFailedException("If-Match disallows conditional request");
     }
 
-    private void ifNoneMatch(DavRequest request, DavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
+    private void ifNoneMatch(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         EntityTag[] requestEtags = request.getIfNoneMatch();
         if (requestEtags.length == 0) {
             return;
@@ -350,7 +340,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         return "GET".equals(request.getMethod()) || "HEAD".equals(request.getMethod());
     }
 
-    private void options(DavResponse response, WebDavResource resource) {
+    private void options(WebdavResponse response, WebDavResource resource) {
         response.setStatus(200);
         response.addHeader("Allow", resource.getSupportedMethods());
         response.addHeader("DAV", resource.getComplianceClass());

@@ -15,12 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class CollectionProvider extends BaseProvider {
     }
 
     public void put(DavRequest request,
-                    DavResponse response,
+                    WebdavResponse response,
                     DavContent content)
         throws CosmoDavException, IOException {
         throw new MethodNotAllowedException("PUT not allowed for a collection");

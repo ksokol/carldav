@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.MultiStatus;
+import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
@@ -31,7 +32,6 @@ import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -64,7 +64,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void get(DavRequest request,
-                    DavResponse response,
+                    WebdavResponse response,
                     WebDavResource resource)
         throws CosmoDavException, IOException {
         spool(request, response, resource, true);
@@ -75,7 +75,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void head(DavRequest request,
-                     DavResponse response,
+                     WebdavResponse response,
                      WebDavResource resource)
         throws CosmoDavException, IOException {
         spool(request, response, resource, false);
@@ -86,7 +86,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void propfind(DavRequest request,
-                         DavResponse response,
+                         WebdavResponse response,
                          WebDavResource resource)
         throws CosmoDavException, IOException {
         if (! resource.exists()){
@@ -121,7 +121,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void delete(DavRequest request,
-                       DavResponse response,
+                       WebdavResponse response,
                        WebDavResource resource)
         throws CosmoDavException, IOException {
         if (! resource.exists()){
@@ -148,7 +148,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void report(DavRequest request,
-                       DavResponse response,
+                       WebdavResponse response,
                        WebDavResource resource)
         throws CosmoDavException, IOException {
         if (! resource.exists()){
@@ -184,7 +184,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * @throws IOException 
      */
     protected void spool(DavRequest request,
-                         DavResponse response,
+                         WebdavResponse response,
                          WebDavResource resource,
                          boolean withEntity)
         throws CosmoDavException, IOException {
@@ -229,7 +229,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * @return OutputContext
      * @throws IOException 
      */
-    protected OutputContext createOutputContext(DavResponse response,
+    protected OutputContext createOutputContext(WebdavResponse response,
                                                 boolean withEntity)
         throws IOException {
         OutputStream out = withEntity ? response.getOutputStream() : null;

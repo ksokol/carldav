@@ -1,12 +1,12 @@
 package carldav.controller;
 
+import carldav.exception.resolver.ResponseUtils;
 import org.springframework.boot.autoconfigure.web.AbstractErrorController;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.impl.StandardDavResponse;
 
 import java.io.IOException;
 import java.util.Map;
@@ -29,9 +29,7 @@ public class CustomErrorController extends AbstractErrorController {
         final Map<String, Object> errorAttributes = getErrorAttributes(request, false);
         final HttpStatus status = getStatus(request);
         final String message = errorAttributes.get("message").toString();
-        final StandardDavResponse wres = new StandardDavResponse(response);
-
-        wres.sendDavError(new CosmoDavException(status.value(), message));
+        ResponseUtils.sendDavError(new CosmoDavException(status.value(), message), response);
     }
 
     @Override

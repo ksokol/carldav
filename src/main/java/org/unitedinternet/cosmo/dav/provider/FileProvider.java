@@ -15,12 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.impl.DavItemResourceBase;
 
 import java.io.IOException;
@@ -42,7 +42,7 @@ public class FileProvider extends BaseProvider {
     // DavProvider methods
 
     public void put(DavRequest request,
-                    DavResponse response,
+                    WebdavResponse response,
                     DavContent content)
         throws CosmoDavException, IOException {
         if (! content.getParent().exists()) {

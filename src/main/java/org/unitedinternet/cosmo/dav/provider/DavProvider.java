@@ -15,48 +15,25 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.DavResponse;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 
 import java.io.IOException;
 
-/**
- * <p>
- * An interface for components that execute requests against WebDAV resources.
- * </p>
- */
 public interface DavProvider {
 
-    void get(DavRequest request,
-                    DavResponse response,
-                    WebDavResource resource)
-        throws CosmoDavException, IOException;
+    void get(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void head(DavRequest request,
-                     DavResponse response,
-                     WebDavResource resource)
-        throws CosmoDavException, IOException;
+    void head(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void propfind(DavRequest request,
-                         DavResponse response,
-                         WebDavResource resource)
-        throws CosmoDavException, IOException;
+    void propfind(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void put(DavRequest request,
-                    DavResponse response,
-                    DavContent content)
-        throws CosmoDavException, IOException;
+    void put(DavRequest request, WebdavResponse response, DavContent content) throws CosmoDavException, IOException;
 
-    void delete(DavRequest request,
-                       DavResponse response,
-                       WebDavResource resource)
-        throws CosmoDavException, IOException;
+    void delete(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void report(DavRequest request,
-                       DavResponse response,
-                       WebDavResource resource)
-        throws CosmoDavException, IOException;
+    void report(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 }

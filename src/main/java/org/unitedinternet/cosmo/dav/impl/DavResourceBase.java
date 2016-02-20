@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
-import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
@@ -34,12 +33,10 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameIterator;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.PropEntry;
-import org.apache.jackrabbit.webdav.version.DeltaVResource;
-import org.apache.jackrabbit.webdav.version.OptionsInfo;
-import org.apache.jackrabbit.webdav.version.OptionsResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
+import org.springframework.util.ReflectionUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -59,6 +56,7 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -87,15 +85,9 @@ import javax.xml.namespace.QName;
  * 
  * @see WebDavResource
  */
-public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVResource{
+public abstract class DavResourceBase implements ExtendedDavConstants, WebDavResource {
 
     protected static final EntityConverter converter = new EntityConverter();
-    
-    @Override
-    public void move(final DavResource destination) throws DavException {
-
-        throw new UnsupportedOperationException();
-    }
 
     private final HashSet<DavPropertyName> liveProperties = new HashSet<>(10);
     private final Set<ReportType> reportTypes = new HashSet<>(10);
@@ -256,11 +248,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         return null;
     }
 
-    @Override
-    public void copy(final DavResource destination, final boolean shallow) throws DavException {
-        throw new UnsupportedOperationException();
-    }
-
     // WebDavResource methods
 
     public MultiStatusResponse
@@ -334,8 +321,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         return msr;
     }
 
-    public Report getReport(ReportInfo reportInfo)
-        throws CosmoDavException {
+    public Report getReport(ReportInfo reportInfo) throws CosmoDavException {
         if (! exists()) {
             throw new NotFoundException();
         }
@@ -345,12 +331,22 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         }
 
         try {
-        	return ReportType.getType(reportInfo).createReport(this, reportInfo);
+
+            //TODO workaround for ReportType.createReport(DeltaVResource, ReportInfo)
+            final ReportType type = ReportType.getType(reportInfo);
+            final Field reportClassField = ReflectionUtils.findField(type.getClass(), "reportClass");
+            reportClassField.setAccessible(true);
+            final Class<? extends Report> reportClass = (Class<? extends Report>) ReflectionUtils.getField(reportClassField, type);
+            Report report = reportClass.newInstance();
+            report.init(this, reportInfo);
+            return report;
         } catch (DavException e){
             if (e instanceof CosmoDavException) {
                 throw (CosmoDavException) e;
             }
             throw new CosmoDavException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -423,10 +419,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         return liveProperties.contains(name);
     }
 
-    /**
-     * Calls {@link #loadLiveProperties()} and {@link #loadDeadProperties()}
-     * to load the resource's properties from its backing state.
-     */
     protected void loadProperties() {
         if (initialized) {
             return;
@@ -495,30 +487,14 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
         throw new ProtectedPropertyModificationException(name);
     }
 
-    /**
-     * Sets a dead DAV property on the resource.
-     *
-     * @param property the property to set
-     *
-     * @throws CosmoDavException if a null value is specified for a property that
-     * does not accept them or if an invalid value is specified
-     */
-    protected void setDeadProperty(WebDavProperty property) throws CosmoDavException {
-        throw new ProtectedPropertyModificationException(property.getName());
-    }
-
-    public OptionsResponse getOptionResponse(OptionsInfo optionsInfo){
-    	return null;
+    @Override
+    public void move(final org.apache.jackrabbit.webdav.DavResource destination) throws DavException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
-    public void addWorkspace(org.apache.jackrabbit.webdav.DavResource workspace) {
-    	
-    }
-    
-    @Override
-    public WebDavResource[] getReferenceResources(DavPropertyName hrefPropertyName) {
-    	return new WebDavResource[]{};
+    public void copy(final org.apache.jackrabbit.webdav.DavResource destination, final boolean shallow) throws DavException {
+        throw new UnsupportedOperationException();
     }
 
     protected void generateHrefIfNecessary(final PrintWriter writer, final WebDavProperty prop, final String text) {

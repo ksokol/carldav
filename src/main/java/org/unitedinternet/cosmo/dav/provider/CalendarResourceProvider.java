@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import carldav.service.generator.IdGenerator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.dav.ConflictException;
@@ -44,8 +43,8 @@ public class CalendarResourceProvider extends FileProvider {
         add(Component.VJOURNAL);
     }};
 
-    public CalendarResourceProvider(DavResourceFactory resourceFactory, IdGenerator idGenerator) {
-        super(resourceFactory, idGenerator);
+    public CalendarResourceProvider(DavResourceFactory resourceFactory) {
+        super(resourceFactory);
     }
 
     public void put(DavRequest request,
@@ -79,13 +78,13 @@ public class CalendarResourceProvider extends FileProvider {
     protected DavContent createCalendarResource(DavResourceLocator locator, Calendar calendar) throws CosmoDavException {
 
         if (!calendar.getComponents(Component.VEVENT).isEmpty()) {
-            return new DavCalendarResource(new HibEventItem(), locator, getResourceFactory(), getIdGenerator());
+            return new DavCalendarResource(new HibEventItem(), locator, getResourceFactory());
         }
         if (!calendar.getComponents(Component.VTODO).isEmpty()) {
-            return new DavCalendarResource(new HibNoteItem(), locator, getResourceFactory(), getIdGenerator());
+            return new DavCalendarResource(new HibNoteItem(), locator, getResourceFactory());
         }
         if (!calendar.getComponents(Component.VJOURNAL).isEmpty()) {
-            return new DavCalendarResource(new HibJournalItem(), locator, getResourceFactory(), getIdGenerator());
+            return new DavCalendarResource(new HibJournalItem(), locator, getResourceFactory());
         }
         throw new SupportedCalendarComponentException(SUPPORTED_COMPONENT_TYPES);
   }

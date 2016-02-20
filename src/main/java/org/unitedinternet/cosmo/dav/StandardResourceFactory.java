@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dav;
 
 import carldav.card.CardQueryProcessor;
-import carldav.service.generator.IdGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
@@ -47,20 +46,17 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
     private ContentService contentService;
     private CosmoSecurityManager securityManager;
-    private IdGenerator idGenerator;
     private CalendarQueryProcessor calendarQueryProcessor;
     private CardQueryProcessor cardQueryProcessor;
     private UserService userService;
 
     public StandardResourceFactory(ContentService contentService,
                                    CosmoSecurityManager securityManager,
-                                   IdGenerator idGenerator,
                                    CalendarQueryProcessor calendarQueryProcessor,
                                    CardQueryProcessor cardQueryProcessor,
                                    UserService userService) {
         this.contentService = contentService;
         this.securityManager = securityManager;
-        this.idGenerator = idGenerator;
         this.calendarQueryProcessor = calendarQueryProcessor;
         this.cardQueryProcessor = cardQueryProcessor;
         this.userService = userService;
@@ -97,10 +93,10 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             // type is required
             WebDavResource parent = resolve(locator.getParentLocator());
             if (parent instanceof DavCalendarCollection) {
-                return new DavCalendarResource(new HibEventItem(), locator, this, idGenerator);
+                return new DavCalendarResource(new HibEventItem(), locator, this);
             }
             if (parent instanceof DavCardCollection) {
-                return new DavCard(locator, this, idGenerator);
+                return new DavCard(locator, this);
             }
         }
         
@@ -110,16 +106,16 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             WebDavResource parent = resolve(locator.getParentLocator());
             if(parent!=null && parent.exists()) {
                 if(parent instanceof DavCalendarCollection) {
-                    return new DavCalendarResource(new HibEventItem(), locator, this, idGenerator);
+                    return new DavCalendarResource(new HibEventItem(), locator, this);
                 }
                 else {
-                    return new DavCollectionBase(locator, this, idGenerator);
+                    return new DavCollectionBase(locator, this);
                 }
             }
         }
 
         if(request.getMethod().equals("DELETE")) {
-            return new DavCollectionBase(locator, this, idGenerator);
+            return new DavCollectionBase(locator, this);
         }
 
         throw new NotFoundException();
@@ -168,26 +164,26 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         Assert.notNull(hibItem, "item cannot be null");
 
         if (hibItem instanceof HibHomeCollectionItem) {
-            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator, this, idGenerator);
+            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator, this);
         }
 
         if (hibItem instanceof HibCollectionItem) {
             if (hibItem instanceof HibCalendarCollectionItem) {
-                return new DavCalendarCollection((HibCollectionItem) hibItem, locator, this,idGenerator);
+                return new DavCalendarCollection((HibCollectionItem) hibItem, locator, this);
             }
             else if(hibItem instanceof HibCardCollectionItem) {
-                return new DavCardCollection((HibCollectionItem) hibItem, locator, this, idGenerator, getCardQueryProcessor());
+                return new DavCardCollection((HibCollectionItem) hibItem, locator, this, getCardQueryProcessor());
             }
             else {
-                return new DavCollectionBase((HibCollectionItem) hibItem, locator, this, idGenerator);
+                return new DavCollectionBase((HibCollectionItem) hibItem, locator, this);
             }
         }
 
         if(hibItem instanceof HibCardItem) {
-            return new DavCard((HibCardItem) hibItem, locator, this, idGenerator);
+            return new DavCard((HibCardItem) hibItem, locator, this);
         }
 
-        return new DavCalendarResource(hibItem, locator, this, idGenerator);
+        return new DavCalendarResource(hibItem, locator, this);
     }
 
 

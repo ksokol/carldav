@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
 
-import carldav.service.generator.IdGenerator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -45,10 +44,9 @@ public class DavCard extends DavContentBase {
 
     public DavCard(HibCardItem item,
                    DavResourceLocator locator,
-                   DavResourceFactory factory,
-                   IdGenerator idGenerator)
+                   DavResourceFactory factory)
         throws CosmoDavException {
-        super(item, locator, factory, idGenerator);
+        super(item, locator, factory);
 
         registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
         registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
@@ -56,10 +54,9 @@ public class DavCard extends DavContentBase {
 
     /** */
     public DavCard(DavResourceLocator locator,
-                   DavResourceFactory factory,
-                   IdGenerator idGenerator)
+                   DavResourceFactory factory)
         throws CosmoDavException {
-        this(new HibCardItem(), locator, factory, idGenerator);
+        this(new HibCardItem(), locator, factory);
     }
 
     // WebDavResource

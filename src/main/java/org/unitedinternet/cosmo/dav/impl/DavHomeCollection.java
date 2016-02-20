@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import carldav.service.generator.IdGenerator;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -33,10 +32,9 @@ public class DavHomeCollection extends DavCollectionBase {
 
     public DavHomeCollection(HibHomeCollectionItem collection,
                              DavResourceLocator locator,
-                             DavResourceFactory factory,
-                             IdGenerator idGenerator)
+                             DavResourceFactory factory)
             throws CosmoDavException {
-        super(collection, locator, factory, idGenerator);
+        super(collection, locator, factory);
     }
 
     public String getSupportedMethods() {

@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import carldav.service.generator.IdGenerator;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -91,19 +90,16 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     private HibCollectionItem item;
     private DavCollection parent;
-    private IdGenerator idGenerator;
 
-    public DavCollectionBase(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory, IdGenerator idGenerator) throws CosmoDavException {
+    public DavCollectionBase(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
         this.item = collection;
-        this.idGenerator = idGenerator;
         members = new ArrayList<>();
     }
 
-    public DavCollectionBase(DavResourceLocator locator,
-            DavResourceFactory factory, IdGenerator idGenerator)
+    public DavCollectionBase(DavResourceLocator locator, DavResourceFactory factory)
             throws CosmoDavException {
-        this(new HibCollectionItem(), locator, factory, idGenerator);
+        this(new HibCollectionItem(), locator, factory);
     }
 
     public HibCollectionItem getItem() {
@@ -228,8 +224,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
                         + parentLocator.getPath() + " is not a collection");
             }
             if (parent == null)
-                parent = new DavCollectionBase(parentLocator,
-                        getResourceFactory(), idGenerator);
+                parent = new DavCollectionBase(parentLocator, getResourceFactory());
         }
 
         return parent;

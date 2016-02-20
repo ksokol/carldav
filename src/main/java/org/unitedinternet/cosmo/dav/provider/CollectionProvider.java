@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import carldav.service.generator.IdGenerator;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -37,12 +36,9 @@ import java.io.IOException;
  */
 public class CollectionProvider extends BaseProvider {
 
-    public CollectionProvider(DavResourceFactory resourceFactory,
-            IdGenerator idGenerator) {
-        super(resourceFactory, idGenerator);
+    public CollectionProvider(DavResourceFactory resourceFactory) {
+        super(resourceFactory);
     }
-
-    // DavProvider methods
 
     public void put(DavRequest request,
                     DavResponse response,

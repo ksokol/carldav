@@ -42,9 +42,6 @@
 			<ref bean="securityManager" />
 		</constructor-arg>
 		<constructor-arg>
-			<ref bean="idGenerator" />
-		</constructor-arg>
-		<constructor-arg>
 			<ref bean="calendarQueryProcessor" />
 		</constructor-arg>
         <constructor-arg>
@@ -75,8 +72,7 @@
 	<bean id="dav" class="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler">
         <constructor-arg index="0" ref="davResourceLocatorFactory" />
         <constructor-arg index="1" ref="davResourceFactory" />
-        <constructor-arg index="2" ref="idGenerator" />
-        <constructor-arg index="3" ref="exceptionResolverHandler" />
+        <constructor-arg index="2" ref="exceptionResolverHandler" />
 	</bean>
 
 

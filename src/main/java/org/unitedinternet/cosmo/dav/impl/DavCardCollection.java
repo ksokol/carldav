@@ -3,7 +3,6 @@ package org.unitedinternet.cosmo.dav.impl;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.SUPPORTEDADDRESSDATA;
 
 import carldav.card.CardQueryProcessor;
-import carldav.service.generator.IdGenerator;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
@@ -32,8 +31,8 @@ public class DavCardCollection extends DavCollectionBase {
     private final CardQueryProcessor cardQueryProcessor;
 
     public DavCardCollection(final HibCollectionItem collection, final DavResourceLocator locator, final DavResourceFactory factory,
-            final IdGenerator idGenerator, final CardQueryProcessor cardQueryProcessor) throws CosmoDavException {
-        super(collection, locator, factory, idGenerator);
+            final CardQueryProcessor cardQueryProcessor) throws CosmoDavException {
+        super(collection, locator, factory);
         registerLiveProperty(SUPPORTEDADDRESSDATA);
 
         this.cardQueryProcessor = cardQueryProcessor;

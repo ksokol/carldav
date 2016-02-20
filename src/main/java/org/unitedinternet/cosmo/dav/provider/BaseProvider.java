@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dav.provider;
 
 import carldav.jackrabbit.webdav.CustomMultiStatus;
-import carldav.service.generator.IdGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.webdav.DavConstants;
@@ -55,12 +54,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
     private static final Log LOG = LogFactory.getLog(BaseProvider.class);
 
     private DavResourceFactory resourceFactory;
-    private IdGenerator idGenerator;
-
-    public BaseProvider(DavResourceFactory resourceFactory,
-            IdGenerator idGenerator) {
+    public BaseProvider(DavResourceFactory resourceFactory) {
         this.resourceFactory = resourceFactory;
-        this.idGenerator = idGenerator;
     }
 
     // DavProvider methods
@@ -279,9 +274,5 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
 
     public DavResourceFactory getResourceFactory() {
         return resourceFactory;
-    }
-    
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
     }
 }

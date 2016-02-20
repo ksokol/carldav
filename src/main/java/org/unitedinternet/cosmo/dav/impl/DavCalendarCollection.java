@@ -1,6 +1,5 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import carldav.service.generator.IdGenerator;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
@@ -40,10 +39,9 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     public DavCalendarCollection(HibCollectionItem collection,
                                  DavResourceLocator locator,
-                                 DavResourceFactory factory,
-                                 IdGenerator idGenerator)
+                                 DavResourceFactory factory)
         throws CosmoDavException {
-        super(collection, locator, factory, idGenerator);
+        super(collection, locator, factory);
 
         registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
         registerLiveProperty(SUPPORTEDCALENDARDATA);

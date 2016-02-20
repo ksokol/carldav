@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import carldav.service.generator.IdGenerator;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -75,14 +74,10 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     private static final Log log = LogFactory.getLog(DavItemResourceBase.class);
 
-
     private HibItem hibItem;
     private DavCollection parent;
-    private IdGenerator idGenerator;
 
-    public DavItemResourceBase(HibItem hibItem, DavResourceLocator locator,
-            DavResourceFactory factory, IdGenerator idGenerator)
-            throws CosmoDavException {
+    public DavItemResourceBase(HibItem hibItem, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
         registerLiveProperty(DavPropertyName.GETLASTMODIFIED);
@@ -92,7 +87,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(DavPropertyName.RESOURCETYPE);
 
         this.hibItem = hibItem;
-        this.idGenerator = idGenerator;
     }
 
     // WebDavResource methods
@@ -158,8 +152,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
                         + parentLocator.getPath() + " is not a collection");
             }
             if (parent == null)
-                parent = new DavCollectionBase(parentLocator,
-                        getResourceFactory(), idGenerator);
+                parent = new DavCollectionBase(parentLocator, getResourceFactory());
         }
 
         return parent;
@@ -188,12 +181,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         this.hibItem = hibItem;
         loadProperties();
     }
-
-    public IdGenerator getIdGenerator() {
-        return idGenerator;
-    }
-
-    // our methods
 
     protected ContentService getContentService() {
         return getResourceFactory().getContentService();

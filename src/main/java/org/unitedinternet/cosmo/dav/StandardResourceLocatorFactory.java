@@ -15,7 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.server.ServerConstants;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -97,6 +99,18 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
         throws CosmoDavException {
         String path = TEMPLATE_HOME.bind(user.getEmail());
         return new StandardResourceLocator(context, path, this);
+    }
+
+    @Override
+    public DavResourceLocator createPrincipalLocator(final URL context, final User user) throws CosmoDavException {
+        try {
+            final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUri(context.toURI());
+            uriComponentsBuilder.replacePath(ServerConstants.SVC_DAV);
+            final URI uri = uriComponentsBuilder.build().toUri();
+            return createHomeLocator(uri.toURL(), user);
+        } catch (Exception e) {
+            throw new CosmoDavException(e);
+        }
     }
 
     private int translatePort(String protocol, int port) {

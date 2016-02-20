@@ -77,4 +77,6 @@ public interface DavResourceLocatorFactory {
     DavResourceLocator createHomeLocator(URL context,
                                                 User user)
         throws CosmoDavException;
+
+    DavResourceLocator createPrincipalLocator(URL context, User user) throws CosmoDavException;
 }

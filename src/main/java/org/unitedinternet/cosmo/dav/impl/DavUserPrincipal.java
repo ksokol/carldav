@@ -6,9 +6,7 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -26,23 +24,12 @@ import org.unitedinternet.cosmo.server.ServerConstants;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-/**
- * <p>
- * Models a WebDAV principal resource (as described in RFC 3744) that represents a user account.
- * </p>
- *
- * @see DavContent
- * @see DavResourceBase
- * @see User
- */
 public class DavUserPrincipal extends DavResourceBase implements CaldavConstants, DavContent {
 
     private final User user;
@@ -142,19 +129,10 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
             writer.write("</dl>\n");
             writer.write("<p>\n");
 
-            final DavResourceLocator homeLocator;
-
-            try {
-                final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUri(getResourceLocator().getContext().toURI());
-                uriComponentsBuilder.replacePath(ServerConstants.SVC_DAV);
-                final URI uri = uriComponentsBuilder.build().toUri();
-                homeLocator = getResourceLocator().getFactory().createHomeLocator(uri.toURL(), user);
-            } catch (URISyntaxException e) {
-                throw new RuntimeException(e.getMessage(), e);
-            }
+            final DavResourceLocator principalLocator = getResourceLocator().getFactory().createPrincipalLocator(getResourceLocator().getContext(), user);
 
             writer.write("<a href=\"");
-            writer.write(homeLocator.getHref(true));
+            writer.write(principalLocator.getHref(true));
             writer.write("\">");
             writer.write("Home collection");
             writer.write("</a><br>\n");

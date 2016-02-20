@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
+import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.lock.ActiveLock;
 import org.apache.jackrabbit.webdav.lock.LockInfo;
@@ -173,6 +174,10 @@ public abstract class DavResourceBase implements ExtendedDavConstants, DeltaVRes
     }
 
     public MultiStatusResponse alterProperties(List<? extends PropEntry> changeList) throws DavException{
+        throw new UnsupportedOperationException();
+    }
+
+    public void addMember(org.apache.jackrabbit.webdav.DavResource member, InputContext inputContext) throws org.apache.jackrabbit.webdav.DavException {
         throw new UnsupportedOperationException();
     }
 

@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
@@ -102,10 +101,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     public void writeTo(OutputContext context) throws CosmoDavException, IOException {
         writeHtmlRepresentation(context);
-    }
-
-    public void addMember(org.apache.jackrabbit.webdav.DavResource member, InputContext inputContext) throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
     }
 
     public DavResourceIterator getMembers() {

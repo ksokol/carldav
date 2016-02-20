@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -62,13 +61,6 @@ public abstract class DavContentBase extends DavItemResourceBase implements DavC
     /** */
     public String getSupportedMethods() {
         return "OPTIONS, GET, HEAD, TRACE, PROPFIND, COPY, PUT, DELETE, MOVE";
-    }
-    
-
-    public void addMember(org.apache.jackrabbit.webdav.DavResource member,
-                          InputContext inputContext)
-        throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
     }
 
     public DavResourceIterator getMembers() {

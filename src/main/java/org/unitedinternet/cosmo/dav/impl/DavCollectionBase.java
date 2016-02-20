@@ -141,13 +141,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     public DavResource getCollection() {
         return null;
     }
-
-    public void addMember(org.apache.jackrabbit.webdav.DavResource member,
-            InputContext inputContext)
-            throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
+    
     public DavResourceIterator getMembers() {
         try {
             for (HibItem memberHibItem : item.getItems()) {

@@ -26,11 +26,11 @@ import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -39,12 +39,14 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
 
     private static final Log LOG = LogFactory.getLog(CalendarDaoImpl.class);
 
-    private ItemFilterProcessor itemFilterProcessor;
+    private final ItemFilterProcessor itemFilterProcessor;
     private final EntityConverter entityConverter;
 
-    public CalendarDaoImpl(final EntityConverter entityConverter) {
+    public CalendarDaoImpl(final EntityConverter entityConverter, final ItemFilterProcessor itemFilterProcessor) {
         Assert.notNull(entityConverter, "entityConverter is null");
+        Assert.notNull(itemFilterProcessor, "itemFilterProcessor is null");
         this.entityConverter = entityConverter;
+        this.itemFilterProcessor = itemFilterProcessor;
     }
 
     public Set<HibICalendarItem> findCalendarItems(HibCollectionItem collection,
@@ -98,22 +100,6 @@ public class CalendarDaoImpl extends AbstractDaoImpl implements CalendarDao {
         } catch (HibernateException e) {
             getSession().clear();
             throw SessionFactoryUtils.convertHibernateAccessException(e);
-        }
-    }
-
-    public void setItemFilterProcessor(ItemFilterProcessor itemFilterProcessor) {
-        this.itemFilterProcessor = itemFilterProcessor;
-    }
-
-
-    /**
-     * Initializes the DAO, sanity checking required properties and defaulting
-     * optional properties.
-     */
-    public void init() {
-
-        if (itemFilterProcessor == null) {
-            throw new IllegalStateException("itemFilterProcessor is required");
         }
     }
 }

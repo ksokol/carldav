@@ -15,49 +15,28 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="secureRandom" class="java.security.SecureRandom" factory-bean="secureRandomFactoryBean"/>
-
-    <bean id="secureRandomFactoryBean" class="org.springframework.security.core.token.SecureRandomFactoryBean"/>
-
-    <bean id="tokenGenerator"
-          class="org.springframework.security.core.token.KeyBasedPersistenceTokenService" >
-        <property name="serverSecret" value="${cosmo.tikets.serverSecret}"/>
-        <property name="serverInteger" value="${cosmo.tikets.serverInteger}"/>
-        <property name="pseudoRandomNumberBytes" value="16"/>
-        <property name="secureRandom" ref="secureRandom"/>
-    </bean>
-
     <bean id="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl" abstract="true">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-    <bean id="contentDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl"
-        init-method="init">
-        <property name="itemPathTranslator" ref="itemPathTranslator" />
-        <property name="idGenerator">
-            <ref bean="idGenerator" />
-        </property>
-        <property name="ticketKeyGenerator">
-            <ref bean="tokenGenerator" />
-        </property>
-        <property name="itemFilterProcessor">
-            <ref bean="itemFilterProcessor" />
-        </property>
+    <bean id="contentDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl">
+        <constructor-arg index="0" ref="idGenerator" />
+        <constructor-arg index="1" ref="itemPathTranslator" />
     </bean>
 
     <bean id="itemFilterProcessor" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor" />
 
     <bean id="itemPathTranslator" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.DefaultItemPathTranslator" />
 
-    <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" init-method="init" />
+    <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" />
 
-    <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" init-method="init">
+    <bean id="calendarDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl">
         <constructor-arg>
             <ref bean="entityConverter" />
         </constructor-arg>
-        <property name="itemFilterProcessor">
+        <constructor-arg>
             <ref bean="itemFilterProcessor" />
-        </property>
+        </constructor-arg>
     </bean>
 
     <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter" />

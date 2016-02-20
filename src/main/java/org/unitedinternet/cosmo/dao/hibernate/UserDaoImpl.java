@@ -150,8 +150,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         }
     }
 
-    public void init() {}
-
     private User findUserByEmailIgnoreCaseAndId(Long userId, String email) {
         Session session = getSession();
         Query hibQuery = session.getNamedQuery(

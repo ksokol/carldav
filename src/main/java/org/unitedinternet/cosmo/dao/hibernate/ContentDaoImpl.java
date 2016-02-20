@@ -15,11 +15,13 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
 import org.unitedinternet.cosmo.dao.ContentDao;
+import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -32,10 +34,11 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 
-/**
- * Implementation of ContentDao using hibernate persistence objects
- */
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
+
+    public ContentDaoImpl(final IdGenerator idGenerator, final ItemPathTranslator itemPathTranslator) {
+        super(idGenerator, itemPathTranslator);
+    }
 
     public HibCollectionItem createCollection(HibCollectionItem parent,
                                            HibCollectionItem collection) {

@@ -23,12 +23,11 @@ import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
 import org.hibernate.UnresolvableObjectException;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
-import org.springframework.security.core.token.TokenService;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
-import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -43,16 +42,17 @@ import java.util.Set;
 
 import javax.validation.ConstraintViolationException;
 
-
-/**
- * Implementation of ItemDao using Hibernate persistent objects.
- */
 public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
-    private IdGenerator idGenerator = null;
-    private TokenService ticketKeyGenerator = null;
-    private ItemPathTranslator itemPathTranslator = null;
-    private ItemFilterProcessor itemFilterProcessor = null;
+    private final IdGenerator idGenerator;
+    private final ItemPathTranslator itemPathTranslator;
+
+    public ItemDaoImpl(final IdGenerator idGenerator, final ItemPathTranslator itemPathTranslator) {
+        Assert.notNull(idGenerator, "idGenerator is null");
+        Assert.notNull(itemPathTranslator, "itemPathTranslator is null");
+        this.idGenerator = idGenerator;
+        this.itemPathTranslator = itemPathTranslator;
+    }
 
     public HibItem findItemByPath(String path) {
         return itemPathTranslator.findItemByPath(path);
@@ -185,63 +185,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             children.add(content);
         }
         return children;
-    }
-
-    /**
-     * Set the unique ID generator for new items
-     *
-     * @param idGenerator
-     */
-    public void setIdGenerator(IdGenerator idGenerator) {
-        this.idGenerator = idGenerator;
-    }
-
-    /**
-     * Set the unique key generator for new tickets
-     *
-     * @param ticketKeyGenerator
-     */
-    public void setTicketKeyGenerator(TokenService ticketKeyGenerator) {
-        this.ticketKeyGenerator = ticketKeyGenerator;
-    }
-
-    /**
-     * Set the path translator. The path translator is responsible for
-     * translating a path to an item in the database.
-     *
-     * @param itemPathTranslator
-     */
-    public void setItemPathTranslator(ItemPathTranslator itemPathTranslator) {
-        this.itemPathTranslator = itemPathTranslator;
-    }
-
-
-    public void setItemFilterProcessor(ItemFilterProcessor itemFilterProcessor) {
-        this.itemFilterProcessor = itemFilterProcessor;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.unitedinternet.cosmo.dao.Dao#init()
-     */
-    public void init() {
-        if (idGenerator == null) {
-            throw new IllegalStateException("idGenerator is required");
-        }
-
-        if (ticketKeyGenerator == null) {
-            throw new IllegalStateException("ticketKeyGenerator is required");
-        }
-
-        if (itemPathTranslator == null) {
-            throw new IllegalStateException("itemPathTranslator is required");
-        }
-
-        if (itemFilterProcessor == null) {
-            throw new IllegalStateException("itemFilterProcessor is required");
-        }
-
     }
 
     /**

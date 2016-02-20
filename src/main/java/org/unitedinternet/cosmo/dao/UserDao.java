@@ -26,7 +26,7 @@ import java.util.Set;
  * the root collection for an account's shared data (its "home
  * directory").
  */
-public interface UserDao extends Dao {
+public interface UserDao {
 
     /**
      * Returns an unordered set of all user accounts in the repository.

@@ -16,9 +16,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
@@ -27,7 +24,6 @@ import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -61,22 +57,7 @@ import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
-/**
- * Extends <code>DavResourceBase</code> to adapt the Cosmo
- * <code>CollectionItem</code> to the DAV resource model.
- * 
- * This class defines the following live properties:
- *
- * <ul>
- * <li><code>DAV:supported-report-set</code> (protected)</li>
- * </ul>
- *
- * @see DavResourceBase
- * @see HibCollectionItem
- */
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
-
-    private static final Log LOG = LogFactory.getLog(DavCollectionBase.class);
 
     protected final Set<ReportType> reportTypes = new HashSet<>();
 
@@ -91,24 +72,12 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         members = new ArrayList<>();
     }
 
-    public DavCollectionBase(DavResourceLocator locator, DavResourceFactory factory)
-            throws CosmoDavException {
+    public DavCollectionBase(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         this(new HibCollectionItem(), locator, factory);
     }
 
     public HibCollectionItem getItem() {
         return item;
-    }
-
-    // Jackrabbit WebDavResource
-
-    public String getSupportedMethods() {
-        // If resource doesn't exist, then options are limited
-        if (!exists()) {
-            return "OPTIONS, TRACE, PUT";
-        } else {
-            return "OPTIONS, GET, HEAD, PROPFIND, TRACE, DELETE, REPORT";
-        }
     }
 
     @Override
@@ -130,52 +99,29 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return item.getModifiedDate() == null ? 0 : item.getModifiedDate().getTime();
     }
 
-    public void spool(OutputContext outputContext) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     public DavResource getCollection() {
         return null;
     }
 
     public DavResourceIterator getMembers() {
-        try {
-            for (HibItem memberHibItem : item.getItems()) {
-                WebDavResource resource = memberToResource(memberHibItem);
-                if (resource != null) {
-                    members.add(resource);
-                }
-            }
-
-            return new DavResourceIteratorImpl(members);
-        } catch (CosmoDavException e) {
-            throw new CosmoException(e);
+        for (HibItem memberHibItem : item.getItems()) {
+            WebDavResource resource = memberToResource(memberHibItem);
+            members.add(resource);
         }
+        return new DavResourceIteratorImpl(members);
     }
 
     public DavResourceIterator getCollectionMembers() {
-        try {
-            Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems(item);
-            for (HibItem memberHibItem : hibCollectionItems) {
-                WebDavResource resource = memberToResource(memberHibItem);
-                if (resource != null) {
-                    members.add(resource);
-                }
-            }
-            return new DavResourceIteratorImpl(members);
-        } catch (CosmoDavException e) {
-            throw new CosmoException(e);
+        Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems(item);
+        for (HibItem memberHibItem : hibCollectionItems) {
+            WebDavResource resource = memberToResource(memberHibItem);
+            members.add(resource);
         }
+        return new DavResourceIteratorImpl(members);
     }
     
-    public void removeMember(org.apache.jackrabbit.webdav.DavResource member)
-            throws org.apache.jackrabbit.webdav.DavException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("removing resource '" + member.getDisplayName()
-                    + "' from '" + getDisplayName() + "'");
-        }
-
+    public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
         HibItem hibItem;
 
         if(member instanceof DavCollectionBase) {
@@ -225,15 +171,8 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public String getETag() {
-        if (getItem() == null)
-            return null;
-        // an item that is about to be created does not yet have an etag
-        if (StringUtils.isBlank(getItem().getEntityTag()))
-            return null;
         return "\"" + getItem().getEntityTag() + "\"";
     }
-
-    // DavCollection
 
     public void addContent(DavContent content, InputContext context) throws CosmoDavException {
         if(!(content instanceof DavItemResourceBase)) {
@@ -267,10 +206,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     protected void loadLiveProperties(DavPropertySet properties) {
-        if (item == null) {
-            return;
-        }
-
         properties.add(new LastModified(item.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));
@@ -286,18 +221,9 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         HibItem content = member.getItem();
 
         if (content.getId() != null) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("updating member " + member.getResourcePath());
-            }
-
             content = getContentService().updateContent(content);
         } else {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("creating member " + member.getResourcePath());
-            }
-
-            content = getContentService()
-                    .createContent(collection, content);
+            content = getContentService().createContent(collection, content);
         }
 
         member.setItem(content);

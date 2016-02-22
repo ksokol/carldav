@@ -15,11 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import org.apache.jackrabbit.webdav.DavResource;
+import org.apache.jackrabbit.webdav.DavResourceIterator;
+import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * An interface providing resource functionality required by WebDAV
@@ -102,4 +106,19 @@ public interface WebDavResource
     DavResourceLocator getResourceLocator();
     
     String getETag();
+
+    /**
+     * Returns an iterator over all internal members.
+     *
+     * @return a {@link List<WebDavResource>} over all internal members.
+     */
+    //TODO rename me as soon as jackrabbit has been replaced with custom code
+    List<WebDavResource> getMembers2();
+
+    //TODO remove me as soon as jackrabbit has been replaced with custom code
+    @Deprecated
+    default DavResourceIterator getMembers() {
+        List ll = getMembers2();
+        return new DavResourceIteratorImpl((List<DavResource>)ll);
+    }
 }

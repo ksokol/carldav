@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dav.report;
 
 import carldav.jackrabbit.webdav.CustomReportInfo;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
@@ -138,8 +137,7 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
      * provided collection that are themselves collections.
      */
     protected void doQueryDescendents(DavCollection collection) throws CosmoDavException {
-        for (DavResourceIterator i = collection.getCollectionMembers(); i.hasNext(); ) {
-            WebDavResource member = (WebDavResource) i.nextResource();
+        for (final WebDavResource member : collection.getCollectionMembers()) {
             if (member.isCollection()) {
                 DavCollection dc = (DavCollection) member;
                 doQuerySelf(dc);

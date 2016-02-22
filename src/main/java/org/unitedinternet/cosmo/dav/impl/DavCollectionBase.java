@@ -17,8 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
@@ -48,6 +46,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +59,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     protected final Set<ReportType> reportTypes = new HashSet<>();
 
-    private List<org.apache.jackrabbit.webdav.DavResource> members;
+    private List<WebDavResource> members;
 
     private HibCollectionItem item;
     private DavCollection parent;
@@ -98,21 +97,22 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return item.getModifiedDate() == null ? 0 : item.getModifiedDate().getTime();
     }
 
-    public DavResourceIterator getMembers() {
+    @Override
+    public List<WebDavResource> getMembers2() {
         for (HibItem memberHibItem : item.getItems()) {
             WebDavResource resource = memberToResource(memberHibItem);
             members.add(resource);
         }
-        return new DavResourceIteratorImpl(members);
+        return Collections.unmodifiableList(members);
     }
 
-    public DavResourceIterator getCollectionMembers() {
+    public List<WebDavResource> getCollectionMembers() {
         Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems(item);
         for (HibItem memberHibItem : hibCollectionItems) {
             WebDavResource resource = memberToResource(memberHibItem);
             members.add(resource);
         }
-        return new DavResourceIteratorImpl(members);
+        return Collections.unmodifiableList(members);
     }
     
     public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
@@ -271,8 +271,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
             writer.write("<h2>Members</h2>\n");
             writer.write("<ul>\n");
 
-            for (DavResourceIterator i = getMembers(); i.hasNext();) {
-                WebDavResource child = (WebDavResource) i.nextResource();
+            for (final WebDavResource child : getMembers2()) {
                 writer.write("<li><a href=\"");
                 writer.write(child.getResourceLocator().getHref(child.isCollection()));
                 writer.write("\">");

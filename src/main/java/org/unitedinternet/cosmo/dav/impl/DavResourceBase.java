@@ -15,11 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
@@ -114,12 +113,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return false;
     }
 
-    public DavResourceIterator getMembers() {
-        // while it would be ideal to throw an UnsupportedOperationException,
-        // MultiStatus tries to add a MultiStatusResponse for every member
-        // of a WebDavResource regardless of whether or not it's a collection,
-        // so we need to return an empty iterator.
-        return new DavResourceIteratorImpl(new ArrayList());
+    public List<WebDavResource> getMembers2() {
+        return new ArrayList<>();
     }
 
     public String getComplianceClass() {
@@ -346,7 +341,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     public void move(final org.apache.jackrabbit.webdav.DavResource destination) throws DavException {
         throw new UnsupportedOperationException();
     }
-    
+
     public void copy(final org.apache.jackrabbit.webdav.DavResource destination, final boolean shallow) throws DavException {
         throw new UnsupportedOperationException();
     }

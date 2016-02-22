@@ -343,12 +343,10 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      */
     protected abstract void loadLiveProperties(DavPropertySet properties);
 
-    @Override
     public void move(final org.apache.jackrabbit.webdav.DavResource destination) throws DavException {
         throw new UnsupportedOperationException();
     }
-
-    @Override
+    
     public void copy(final org.apache.jackrabbit.webdav.DavResource destination, final boolean shallow) throws DavException {
         throw new UnsupportedOperationException();
     }

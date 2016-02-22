@@ -26,7 +26,8 @@ import java.io.IOException;
  * extensions implemented by Cosmo.
  */
 public interface WebDavResource
-    extends org.apache.jackrabbit.webdav.DavResource {
+    extends org.apache.jackrabbit.webdav.DavResource
+{
 
     /**
      * String constant representing the WebDAV 1 compliance
@@ -34,6 +35,51 @@ public interface WebDavResource
      */
     // see bug 5137 for why we don't include class 2
     String COMPLIANCE_CLASS = "1, 3, addressbook, calendar-access";
+
+    /**
+     * Returns a comma separated list of all compliance classes the given
+     * resource is fulfilling.
+     *
+     * @return compliance classes
+     */
+    String getComplianceClass();
+
+    /**
+     * Returns a comma separated list of all METHODS supported by the given
+     * resource.
+     *
+     * @return METHODS supported by this resource.
+     */
+    String getSupportedMethods();
+
+    /**
+     * Returns true if this webdav resource represents an existing repository item.
+     *
+     * @return true, if the resource represents an existing repository item.
+     */
+    boolean exists();
+
+    /**
+     * Returns true if this webdav resource has the resourcetype 'collection'.
+     *
+     * @return true if the resource represents a collection resource.
+     */
+    boolean isCollection();
+
+    /**
+     * Returns the display name of this resource.
+     *
+     * @return display name.
+     */
+     String getDisplayName();
+
+    /**
+     * Returns the path of the hierarchy element defined by this <code>DavResource</code>.
+     * This method is a shortcut for <code>DavResource.getLocator().getResourcePath()</code>.
+     *
+     * @return path of the element defined by this <code>DavResource</code>.
+     */
+    String getResourcePath();
 
     /**
      * @return Returns the parent collection for this resource.

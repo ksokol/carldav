@@ -15,10 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
-import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
@@ -34,7 +32,6 @@ import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.springframework.util.ReflectionUtils;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -344,14 +341,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
 
     public void copy(final org.apache.jackrabbit.webdav.DavResource destination, final boolean shallow) throws DavException {
         throw new UnsupportedOperationException();
-    }
-
-    public DavResource getCollection() {
-        try {
-            return getParent();
-        } catch (CosmoDavException e) {
-            throw new CosmoException(e);
-        }
     }
 
     public DavCollection getParent() throws CosmoDavException {

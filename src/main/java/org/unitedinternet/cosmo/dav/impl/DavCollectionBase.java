@@ -92,7 +92,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return item.getDisplayName();
     }
 
-    @Override
     public long getModificationTime() {
         return item.getModifiedDate() == null ? 0 : item.getModifiedDate().getTime();
     }

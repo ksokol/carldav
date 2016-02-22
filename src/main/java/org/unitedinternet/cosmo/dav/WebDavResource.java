@@ -21,6 +21,7 @@ import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
+import org.unitedinternet.cosmo.CosmoException;
 
 import java.io.IOException;
 import java.util.List;
@@ -86,6 +87,14 @@ public interface WebDavResource
     String getResourcePath();
 
     /**
+     * Return the time of the last modification or -1 if the modification time
+     * could not be retrieved.
+     *
+     * @return time of last modification or -1.
+     */
+    long getModificationTime();
+
+    /**
      * @return Returns the parent collection for this resource.
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
@@ -120,5 +129,11 @@ public interface WebDavResource
     default DavResourceIterator getMembers() {
         List ll = getMembers2();
         return new DavResourceIteratorImpl((List<DavResource>)ll);
+    }
+
+    //TODO remove me as soon as jackrabbit has been replaced with custom code
+    @Deprecated
+    default DavResource getCollection() {
+        throw new UnsupportedOperationException();
     }
 }

@@ -16,11 +16,10 @@
 package org.unitedinternet.cosmo.dav;
 
 import org.apache.jackrabbit.webdav.WebdavRequest;
-import org.unitedinternet.cosmo.dav.report.ReportRequest;
 
 /**
  * A marker interface that collects the functionality defined by
  * the various WebDAV extensions implemented by the DAV service.
  */
-public interface DavRequest extends WebdavRequest, ReportRequest {
+public interface DavRequest extends WebdavRequest {
 }

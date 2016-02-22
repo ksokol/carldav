@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.dav;
 import carldav.card.CardQueryProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
@@ -39,6 +40,8 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 import org.unitedinternet.cosmo.util.UriTemplate;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
     private static final Log LOG =  LogFactory.getLog(StandardResourceFactory.class);
@@ -79,8 +82,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
      * {@link DavCard}</li>
      * </ul>
      */
-    public WebDavResource resolve(DavResourceLocator locator,
-                               DavRequest request)
+    public WebDavResource resolve(DavResourceLocator locator, HttpServletRequest request)
         throws CosmoDavException {
         WebDavResource resource = resolve(locator);
         if (resource != null) {

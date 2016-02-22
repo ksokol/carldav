@@ -28,7 +28,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
@@ -39,7 +38,6 @@ import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
-import org.unitedinternet.cosmo.dav.impl.StandardDavRequest;
 import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
 import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
 import org.unitedinternet.cosmo.dav.provider.DavProvider;
@@ -81,7 +79,7 @@ public class StandardRequestHandler extends AbstractController implements Server
 
     @Override
     protected ModelAndView handleRequestInternal(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
-        final DavRequest wreq = createDavRequest(request);
+        final HttpServletRequest wreq = request;
         final WebdavResponse wres = createDavResponse(response);
 
         try {
@@ -122,7 +120,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * <li>The <code>If-Unmodified-Since</code> request header</li>
      * </ul>
      */
-    protected void preconditions(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
+    protected void preconditions(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         ifMatch(request, response, resource);
         ifNoneMatch(request, response, resource);
         ifModifiedSince(request, resource);
@@ -136,7 +134,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * specific provider method is chosen by examining the request method.
      * </p>
      */
-    protected void process(DavRequest request, WebdavResponse response, WebDavResource resource) throws IOException, CosmoDavException {
+    protected void process(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws IOException, CosmoDavException {
         DavProvider provider = createProvider(resource);
 
         if (request.getMethod().equals("OPTIONS")) {
@@ -201,23 +199,6 @@ public class StandardRequestHandler extends AbstractController implements Server
 
     /**
      * <p>
-     * Creates an instance of <code>DavRequest</code> based on the
-     * provided <code>HttpServletRequest</code>.
-     * </p>
-     */
-    protected DavRequest createDavRequest(HttpServletRequest request) {
-        // Create buffered request if method is PUT so we can retry
-        // on concurrency exceptions
-        if (request.getMethod().equals("PUT")) {
-            return new StandardDavRequest(request, true);
-        }
-        else {
-            return new StandardDavRequest(request);
-        }
-    }
-
-    /**
-     * <p>
      * Creates an instance of <code>DavResponse</code> based on the
      * provided <code>HttpServletResponse</code>.
      * </p>
@@ -232,11 +213,11 @@ public class StandardRequestHandler extends AbstractController implements Server
      * resource targeted by the request.
      * </p>
      */
-    protected WebDavResource resolveTarget(DavRequest request) throws CosmoDavException {
+    protected WebDavResource resolveTarget(HttpServletRequest request) throws CosmoDavException {
         return resourceFactory.resolve(locatorFactory.createResourceLocatorFromRequest(request), request);
     }
 
-    private void ifMatch(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
+    private void ifMatch(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         EntityTag[] requestEtags = EntityTag.parseTags(request.getHeader("If-Match"));
         if (requestEtags.length == 0) {
             return;
@@ -256,7 +237,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         throw new PreconditionFailedException("If-Match disallows conditional request");
     }
 
-    private void ifNoneMatch(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
+    private void ifNoneMatch(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
         EntityTag[] requestEtags = EntityTag.parseTags(request.getHeader("If-None-Match"));
         if (requestEtags.length == 0) {
             return;
@@ -280,7 +261,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         throw new PreconditionFailedException("If-None-Match disallows conditional request");
     }
 
-    private void ifModifiedSince(DavRequest request, WebDavResource resource) throws CosmoDavException, IOException {
+    private void ifModifiedSince(HttpServletRequest request, WebDavResource resource) throws CosmoDavException, IOException {
         long mod = resource.getModificationTime();
         if (mod == -1) {
             return;
@@ -299,7 +280,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         throw new NotModifiedException();
     }
 
-    private void ifUnmodifiedSince(DavRequest request, WebDavResource resource) throws CosmoDavException, IOException {
+    private void ifUnmodifiedSince(HttpServletRequest request, WebDavResource resource) throws CosmoDavException, IOException {
 
         long mod = resource.getModificationTime();
         if (mod == -1) {
@@ -331,7 +312,7 @@ public class StandardRequestHandler extends AbstractController implements Server
         return new EntityTag(etag);
     }
 
-    private boolean deservesNotModified(DavRequest request) {
+    private boolean deservesNotModified(HttpServletRequest request) {
         return "GET".equals(request.getMethod()) || "HEAD".equals(request.getMethod());
     }
 

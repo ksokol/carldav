@@ -18,22 +18,23 @@ package org.unitedinternet.cosmo.dav.provider;
 import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface DavProvider {
 
-    void get(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void get(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void head(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void head(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void propfind(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void propfind(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void put(DavRequest request, WebdavResponse response, DavContent content) throws CosmoDavException, IOException;
+    void put(HttpServletRequest request, WebdavResponse response, DavContent content) throws CosmoDavException, IOException;
 
-    void delete(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void delete(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void report(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void report(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 }

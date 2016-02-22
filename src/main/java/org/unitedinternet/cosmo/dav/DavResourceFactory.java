@@ -20,6 +20,8 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Interface for components that create dav resources to represent
  * persisted items.
@@ -41,8 +43,7 @@ public interface DavResourceFactory {
      * {@link NotFoundException} is thrown.
      * </p>
      */
-    WebDavResource resolve(DavResourceLocator locator,
-                               DavRequest request)
+    WebDavResource resolve(DavResourceLocator locator, HttpServletRequest request)
         throws CosmoDavException;
 
     /**

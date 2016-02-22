@@ -19,11 +19,12 @@ import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -40,7 +41,7 @@ public class CollectionProvider extends BaseProvider {
         super(resourceFactory);
     }
 
-    public void put(DavRequest request,
+    public void put(HttpServletRequest request,
                     WebdavResponse response,
                     DavContent content)
         throws CosmoDavException, IOException {

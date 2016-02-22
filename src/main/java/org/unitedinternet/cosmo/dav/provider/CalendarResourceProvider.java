@@ -21,7 +21,6 @@ import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
@@ -35,6 +34,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class CalendarResourceProvider extends FileProvider {
 
     private static final List<String> SUPPORTED_COMPONENT_TYPES = new ArrayList<String>() {{
@@ -47,7 +48,7 @@ public class CalendarResourceProvider extends FileProvider {
         super(resourceFactory);
     }
 
-    public void put(DavRequest request,
+    public void put(HttpServletRequest request,
                     WebdavResponse response,
                     DavContent content)
         throws CosmoDavException, IOException {

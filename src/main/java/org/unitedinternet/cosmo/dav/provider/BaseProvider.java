@@ -38,7 +38,6 @@ import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavRequest;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
@@ -83,7 +82,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * 
      * {@inheritDoc}
      */
-    public void get(DavRequest request,
+    public void get(HttpServletRequest request,
                     WebdavResponse response,
                     WebDavResource resource)
         throws CosmoDavException, IOException {
@@ -94,7 +93,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * 
      * {@inheritDoc}
      */
-    public void head(DavRequest request,
+    public void head(HttpServletRequest request,
                      WebdavResponse response,
                      WebDavResource resource)
         throws CosmoDavException, IOException {
@@ -105,7 +104,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * 
      * {@inheritDoc}
      */
-    public void propfind(DavRequest request,
+    public void propfind(HttpServletRequest request,
                          WebdavResponse response,
                          WebDavResource resource)
         throws CosmoDavException, IOException {
@@ -129,7 +128,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * 
      * {@inheritDoc}
      */
-    public void delete(DavRequest request,
+    public void delete(HttpServletRequest request,
                        WebdavResponse response,
                        WebDavResource resource)
         throws CosmoDavException, IOException {
@@ -156,7 +155,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * 
      * {@inheritDoc}
      */
-    public void report(DavRequest request,
+    public void report(HttpServletRequest request,
                        WebdavResponse response,
                        WebDavResource resource)
         throws CosmoDavException, IOException {
@@ -181,7 +180,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         }
     }
 
-    protected void spool(DavRequest request,
+    protected void spool(HttpServletRequest request,
                          WebdavResponse response,
                          WebDavResource resource,
                          boolean withEntity)
@@ -230,10 +229,10 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         return new OutputContextImpl(response, out);
     }
 
-    protected void checkNoRequestBody(DavRequest request) throws CosmoDavException {
+    protected void checkNoRequestBody(HttpServletRequest request) throws CosmoDavException {
         boolean hasBody;
         try {
-            hasBody = request.getRequestDocument() != null;
+            hasBody = getRequestDocument(request) != null;
         } catch (IllegalArgumentException e) {
             // parse error indicates that there was a body to parse
             hasBody = true;

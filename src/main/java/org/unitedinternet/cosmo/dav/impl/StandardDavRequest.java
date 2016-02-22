@@ -15,33 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import carldav.jackrabbit.webdav.CustomReportInfo;
-import org.apache.abdera.util.EntityTag;
-import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.WebdavRequestImpl;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
-import org.springframework.http.MediaType;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.unitedinternet.cosmo.dav.BadRequestException;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavRequest;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.util.BufferedServletInputStream;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -61,16 +41,8 @@ import javax.servlet.http.Part;
 
 public class StandardDavRequest extends WebdavRequestImpl implements DavRequest, ExtendedDavConstants, CaldavConstants {
 
-    private static final MediaType APPLICATION_XML = MediaType.APPLICATION_XML;
-    private static final MediaType TEXT_XML = MediaType.TEXT_XML;
-
-    private int propfindType = PROPFIND_ALL_PROP;
-    private DavPropertyNameSet propfindProps;
-    private ReportInfo reportInfo;
     private boolean bufferRequestContent = false;
     private long bufferedContentLength = -1;
-    private DavResourceLocatorFactory locatorFactory;
-    private DavResourceLocator locator;
     private HttpServletRequest originalHttpServletRequest;
     
     /**
@@ -146,225 +118,20 @@ public class StandardDavRequest extends WebdavRequestImpl implements DavRequest,
      * @param request HttpServletRequest
      * @param factory DavResourceLocatorFactory
      */
-    public StandardDavRequest(HttpServletRequest request,
-            DavResourceLocatorFactory factory) {
-        this(request, factory, false);
+    public StandardDavRequest(HttpServletRequest request) {
+        this(request, false);
     }
 
     /**
      * 
      * @param request HttpServletRequest
-     * @param factory DavResourceLocatorFactory
      * @param bufferRequestContent boolean
      */
     public StandardDavRequest(HttpServletRequest request,
-            DavResourceLocatorFactory factory,
-            boolean bufferRequestContent) {
+                              boolean bufferRequestContent) {
         super(request, null);
         originalHttpServletRequest = request;
-        this.locatorFactory = factory;
         this.bufferRequestContent = bufferRequestContent;
-    }
-
-    // DavRequest methods
-
-    public EntityTag[] getIfMatch() {
-        return EntityTag.parseTags(getHeader("If-Match"));
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public EntityTag[] getIfNoneMatch() {
-        return EntityTag.parseTags(getHeader("If-None-Match"));
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public int getPropFindType() throws CosmoDavException {
-        if (propfindProps == null) {
-            parsePropFindRequest();
-        }
-        return propfindType;
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public DavPropertyNameSet getPropFindProperties() throws CosmoDavException {
-        if (propfindProps == null) {
-            parsePropFindRequest();
-        }
-        return propfindProps;
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public DavResourceLocator getResourceLocator() {
-        if (locator == null) {
-            URL context;
-            try {
-
-                final ServletUriComponentsBuilder servletUriComponentsBuilder = ServletUriComponentsBuilder.fromRequest(originalHttpServletRequest);
-                final String firstPathSegment = servletUriComponentsBuilder.build().getPathSegments().get(0);
-                final String basePath = "/" + firstPathSegment;
-
-                context = new URL(getScheme(), getServerName(), getServerPort(), basePath);
-
-                locator = locatorFactory.createResourceLocatorByUri(context, getRequestURI());
-            } catch (CosmoDavException|MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        return locator;
-    }
-
-    /**
-     * 
-     * {@inheritDoc}
-     */
-    public ReportInfo getReportInfo() throws CosmoDavException {
-        if (reportInfo == null) {
-            reportInfo = parseReportRequest();
-        }
-        return reportInfo;
-    }
-
-    // private methods
-    /**
-     * 
-     * @return Document
-     * @throws CosmoDavException 
-     */
-    private Document getSafeRequestDocument() throws CosmoDavException {
-        return getSafeRequestDocument(true);
-    }
-    /**
-     * 
-     * @param requireDocument boolean 
-     * @return Document
-     * @throws CosmoDavException 
-     */
-    private Document getSafeRequestDocument(boolean requireDocument)
-            throws CosmoDavException {
-        try {
-            if (StringUtils.isBlank(getContentType()) && requireDocument) {
-                throw new BadRequestException("No Content-Type specified");
-            }
-
-            final MediaType mediaType = MediaType.valueOf(getContentType());
-            if (!(mediaType.equals(APPLICATION_XML) || mediaType.equals(TEXT_XML))) {
-                throw new UnsupportedMediaTypeException(
-                        "Expected Content-Type " + APPLICATION_XML + " or "
-                                + TEXT_XML);
-            }
-
-            return getRequestDocument();
-
-        } catch (IllegalArgumentException e) {
-            throwBadRequestExceptionFrom(e);
-        } catch (DavException e) {
-            throwBadRequestExceptionFrom(e);
-        }
-
-        return null;
-    }
-    
-    /**
-     * 
-     * @param e 
-     * @throws BadRequestException 
-     */
-    private void throwBadRequestExceptionFrom(Exception e)
-            throws BadRequestException {
-        Throwable cause = e.getCause();
-        String msg = cause != null ? cause.getMessage()
-                : "Unknown error parsing request document";
-        throw new BadRequestException(msg);
-    }
-
-    /**
-     * 
-     * @throws CosmoDavException 
-     */
-    private void parsePropFindRequest() throws CosmoDavException {
-        Document requestDocument = getSafeRequestDocument();
-        if (requestDocument == null) {
-            // treat as allprop
-            propfindType = PROPFIND_ALL_PROP;
-            propfindProps = new DavPropertyNameSet();
-            return;
-        }
-
-        Element root = requestDocument.getDocumentElement();
-        if (!DomUtil.matches(root, XML_PROPFIND, NAMESPACE)) {
-            throw new BadRequestException("Expected " + QN_PROPFIND
-                    + " root element");
-        }
-
-        Element prop = DomUtil.getChildElement(root, XML_PROP, NAMESPACE);
-        if (prop != null) {
-            propfindType = PROPFIND_BY_PROPERTY;
-            propfindProps = new DavPropertyNameSet(prop);
-            return;
-        }
-
-        if (DomUtil.getChildElement(root, XML_PROPNAME, NAMESPACE) != null) {
-            propfindType = PROPFIND_PROPERTY_NAMES;
-            propfindProps = new DavPropertyNameSet();
-            return;
-        }
-
-        if (DomUtil.getChildElement(root, XML_ALLPROP, NAMESPACE) != null) {
-            propfindType = PROPFIND_ALL_PROP;
-            propfindProps = new DavPropertyNameSet();
-
-            Element include = DomUtil.getChildElement(root, "include",
-                    NAMESPACE);
-            if (include != null) {
-                ElementIterator included = DomUtil.getChildren(include);
-                while (included.hasNext()) {
-                    DavPropertyName name = DavPropertyName
-                            .createFromXml(included.nextElement());
-                    propfindProps.add(name);
-                }
-            }
-
-            return;
-        }
-
-        throw new BadRequestException("Expected one of " + XML_PROP + ", "
-                + XML_PROPNAME + ", or " + XML_ALLPROP + " as child of "
-                + QN_PROPFIND);
-    }
-
-    /**
-     *  
-     * @return ReportInfo
-     * @throws CosmoDavException 
-     */
-    private ReportInfo parseReportRequest() throws CosmoDavException {
-        Document requestDocument = getSafeRequestDocument();
-        if (requestDocument == null) { // reports with no bodies are supported
-                                        // for collections
-            return null;
-        }
-
-        try {
-            return new CustomReportInfo(requestDocument.getDocumentElement(),
-                    getDepth(DEPTH_0));
-        } catch (DavException e) {
-            throw new CosmoDavException(e);
-        } catch (IllegalArgumentException e) {
-            throw new BadRequestException(e.getMessage());
-        }
     }
 
     @Override

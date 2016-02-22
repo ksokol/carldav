@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.dav;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.net.URL;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -79,4 +80,6 @@ public interface DavResourceLocatorFactory {
         throws CosmoDavException;
 
     DavResourceLocator createPrincipalLocator(URL context, User user) throws CosmoDavException;
+
+    DavResourceLocator createResourceLocatorFromRequest(final HttpServletRequest request);
 }

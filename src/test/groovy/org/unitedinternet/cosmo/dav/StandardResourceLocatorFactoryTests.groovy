@@ -1,6 +1,9 @@
 package org.unitedinternet.cosmo.dav
 
 import org.junit.Test
+import org.springframework.mock.web.MockHttpServletRequest
+
+import javax.servlet.http.HttpServletRequest
 
 /**
  * @author Kamill Sokol
@@ -62,6 +65,28 @@ class StandardResourceLocatorFactoryTests {
         def locator = createResourceLocatorByUri(contextPath, path)
 
         assert locator.getPath() == "/"
+    }
+
+    @Test
+    void "principalsUri"() {
+        HttpServletRequest httpRequest = new MockHttpServletRequest()
+        httpRequest.setRequestURI("/principals/users")
+
+        def locator = uut.createResourceLocatorFromRequest(httpRequest)
+
+        assert locator.getPath() == "/users"
+        assert locator.getBaseHref() == "/principals"
+    }
+
+    @Test
+    void "davUri"() {
+        HttpServletRequest httpRequest = new MockHttpServletRequest()
+        httpRequest.setRequestURI("/dav/test01@localhost.de/calendar")
+
+        def locator = uut.createResourceLocatorFromRequest(httpRequest)
+
+        assert locator.getPath() == "/test01@localhost.de/calendar"
+        assert locator.getBaseHref() == "/dav"
     }
 
     def createResourceLocatorByUri(String contextPath, String path) {

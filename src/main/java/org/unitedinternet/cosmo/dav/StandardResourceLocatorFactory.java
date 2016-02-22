@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.server.ServerConstants;
@@ -25,6 +26,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Standard implementation of {@link DavResourceLocatorFactory}.
@@ -111,6 +114,23 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
         } catch (Exception e) {
             throw new CosmoDavException(e);
         }
+    }
+
+    @Override
+    public DavResourceLocator createResourceLocatorFromRequest(final HttpServletRequest request) {
+        DavResourceLocator locator;
+        URL context;
+        try {
+            final ServletUriComponentsBuilder servletUriComponentsBuilder = ServletUriComponentsBuilder.fromRequest(request);
+            final String firstPathSegment = servletUriComponentsBuilder.build().getPathSegments().get(0);
+            final String basePath = "/" + firstPathSegment;
+
+            context = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), basePath);
+            locator = createResourceLocatorByUri(context, request.getRequestURI());
+        } catch (CosmoDavException|MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        return locator;
     }
 
     private int translatePort(String protocol, int port) {

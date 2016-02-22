@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.apache.abdera.util.EntityTag;
 import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.unitedinternet.cosmo.dav.report.ReportRequest;
 
@@ -24,10 +23,4 @@ import org.unitedinternet.cosmo.dav.report.ReportRequest;
  * the various WebDAV extensions implemented by the DAV service.
  */
 public interface DavRequest extends WebdavRequest, ReportRequest {
-
-    EntityTag[] getIfMatch();
-
-    EntityTag[] getIfNoneMatch();
-
-    DavResourceLocator getResourceLocator();
 }

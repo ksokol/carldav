@@ -209,10 +209,10 @@ public class StandardRequestHandler extends AbstractController implements Server
         // Create buffered request if method is PUT so we can retry
         // on concurrency exceptions
         if (request.getMethod().equals("PUT")) {
-            return new StandardDavRequest(request, locatorFactory, true);
+            return new StandardDavRequest(request, true);
         }
         else {
-            return new StandardDavRequest(request, locatorFactory);
+            return new StandardDavRequest(request);
         }
     }
 
@@ -233,11 +233,11 @@ public class StandardRequestHandler extends AbstractController implements Server
      * </p>
      */
     protected WebDavResource resolveTarget(DavRequest request) throws CosmoDavException {
-        return resourceFactory.resolve(request.getResourceLocator(), request);
+        return resourceFactory.resolve(locatorFactory.createResourceLocatorFromRequest(request), request);
     }
 
     private void ifMatch(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
-        EntityTag[] requestEtags = request.getIfMatch();
+        EntityTag[] requestEtags = EntityTag.parseTags(request.getHeader("If-Match"));
         if (requestEtags.length == 0) {
             return;
         }
@@ -257,7 +257,7 @@ public class StandardRequestHandler extends AbstractController implements Server
     }
 
     private void ifNoneMatch(DavRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException {
-        EntityTag[] requestEtags = request.getIfNoneMatch();
+        EntityTag[] requestEtags = EntityTag.parseTags(request.getHeader("If-None-Match"));
         if (requestEtags.length == 0) {
             return;
         }

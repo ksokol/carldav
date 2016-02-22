@@ -15,18 +15,26 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import static org.unitedinternet.cosmo.dav.ExtendedDavConstants.QN_PROPFIND;
+
 import carldav.jackrabbit.webdav.CustomMultiStatus;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import carldav.jackrabbit.webdav.CustomReportInfo;
+import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
+import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.WebdavResponse;
+import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
+import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
+import org.apache.jackrabbit.webdav.xml.DomUtil;
+import org.apache.jackrabbit.webdav.xml.ElementIterator;
+import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -37,10 +45,17 @@ import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * <p>
@@ -51,9 +66,14 @@ import java.io.OutputStream;
  */
 public abstract class BaseProvider implements DavProvider, DavConstants {
 
-    private static final Log LOG = LogFactory.getLog(BaseProvider.class);
+    private static final MediaType APPLICATION_XML = MediaType.APPLICATION_XML;
+    private static final MediaType TEXT_XML = MediaType.TEXT_XML;
 
     private DavResourceFactory resourceFactory;
+    private int propfindType = PROPFIND_ALL_PROP;
+    private DavPropertyNameSet propfindProps;
+    private ReportInfo reportInfo;
+
     public BaseProvider(DavResourceFactory resourceFactory) {
         this.resourceFactory = resourceFactory;
     }
@@ -97,19 +117,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new BadRequestException("Depth must be 0 for non-collection resources");
         }
 
-        DavPropertyNameSet props;
-        int type;
-        
-        try{
-            
-            props = request.getPropFindProperties();
-            
-            type =request.getPropFindType();
-            
-        }catch(DavException de){
-            throw new CosmoDavException(de);
-        }
-
+        DavPropertyNameSet props = getPropFindProperties(request);
+        int type = getPropFindType(request);
         MultiStatus ms = new CustomMultiStatus();
         ms.addResourceProperties(resource, props, type, depth);
         
@@ -155,7 +164,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new NotFoundException();
         }
         try {
-            ReportInfo info = request.getReportInfo();
+            ReportInfo info = getReportInfo(request);
             if (info == null){
                 if(resource.isCollection()){
                     return;
@@ -165,8 +174,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             }
 
             ((ReportBase) resource.getReport(info)).run(response);
-        } catch (DavException exception) {
-            throw new CosmoDavException(exception.getErrorCode(),exception.getMessage(),exception.getCause());
         } catch (CosmoDavException exception) {
             throw exception;
         } catch (Exception exception) {
@@ -174,15 +181,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         }
     }
 
-    /**
-     * 
-     * @param request 
-     * @param response 
-     * @param resource 
-     * @param withEntity 
-     * @throws CosmoDavException 
-     * @throws IOException 
-     */
     protected void spool(DavRequest request,
                          WebdavResponse response,
                          WebDavResource resource,
@@ -192,10 +190,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new NotFoundException();
         }
         checkNoRequestBody(request);
-
-        if (LOG.isDebugEnabled()){
-            LOG.debug("spooling resource " + resource.getResourcePath());
-        }
         resource.writeTo(createOutputContext(response, withEntity));
         response.flushBuffer();
     }
@@ -206,7 +200,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * @throws CosmoDavException 
      * @throws IOException 
      */
-    protected InputContext createInputContext(DavRequest request)
+    protected InputContext createInputContext(final HttpServletRequest request)
         throws CosmoDavException, IOException {
         String xfer = request.getHeader("Transfer-Encoding");
         boolean chunked = xfer != null && xfer.equals("chunked");
@@ -236,11 +230,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         return new OutputContextImpl(response, out);
     }
 
-    /**
-     * 
-     * @param request DavRequest
-     * @throws CosmoDavException 
-     */
     protected void checkNoRequestBody(DavRequest request) throws CosmoDavException {
         boolean hasBody;
         try {
@@ -257,19 +246,159 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         }
     }
 
-    /**
-     * 
-     * @param request DavRequest
-     * @return depth
-     * @throws CosmoDavException 
-     */
-    protected int getDepth(DavRequest request)
-        throws CosmoDavException {
+    protected int getDepth(final HttpServletRequest request) {
+        return DepthHeader.parse(request, DEPTH_INFINITY).getDepth();
+    }
+
+    private ReportInfo getReportInfo(final HttpServletRequest request) throws CosmoDavException {
+        if (reportInfo == null) {
+            reportInfo = parseReportRequest(request);
+        }
+        return reportInfo;
+    }
+
+    private ReportInfo parseReportRequest(final HttpServletRequest request) throws CosmoDavException {
+        Document requestDocument = getSafeRequestDocument(request);
+        if (requestDocument == null) { // reports with no bodies are supported
+            // for collections
+            return null;
+        }
+
         try {
-            return request.getDepth();
-        } catch (IllegalArgumentException e) {    
+            return new CustomReportInfo(requestDocument.getDocumentElement(), getDepth(request));
+        } catch (DavException e) {
+            throw new CosmoDavException(e);
+        } catch (IllegalArgumentException e) {
             throw new BadRequestException(e.getMessage());
         }
+    }
+
+    private int getPropFindType(final HttpServletRequest request) throws CosmoDavException {
+        if (propfindProps == null) {
+            parsePropFindRequest(request);
+        }
+        return propfindType;
+    }
+
+    private DavPropertyNameSet getPropFindProperties(final HttpServletRequest request) throws CosmoDavException {
+        if (propfindProps == null) {
+            parsePropFindRequest(request);
+        }
+        return propfindProps;
+    }
+
+    private void parsePropFindRequest(final HttpServletRequest request) throws CosmoDavException {
+        Document requestDocument = getSafeRequestDocument(request);
+
+        if (requestDocument == null) {
+            // treat as allprop
+            propfindType = PROPFIND_ALL_PROP;
+            propfindProps = new DavPropertyNameSet();
+            return;
+        }
+
+        Element root = requestDocument.getDocumentElement();
+        if (!DomUtil.matches(root, XML_PROPFIND, NAMESPACE)) {
+            throw new BadRequestException("Expected " + QN_PROPFIND
+                    + " root element");
+        }
+
+        Element prop = DomUtil.getChildElement(root, XML_PROP, NAMESPACE);
+        if (prop != null) {
+            propfindType = PROPFIND_BY_PROPERTY;
+            propfindProps = new DavPropertyNameSet(prop);
+            return;
+        }
+
+        if (DomUtil.getChildElement(root, XML_PROPNAME, NAMESPACE) != null) {
+            propfindType = PROPFIND_PROPERTY_NAMES;
+            propfindProps = new DavPropertyNameSet();
+            return;
+        }
+
+        if (DomUtil.getChildElement(root, XML_ALLPROP, NAMESPACE) != null) {
+            propfindType = PROPFIND_ALL_PROP;
+            propfindProps = new DavPropertyNameSet();
+
+            Element include = DomUtil.getChildElement(root, "include",
+                    NAMESPACE);
+            if (include != null) {
+                ElementIterator included = DomUtil.getChildren(include);
+                while (included.hasNext()) {
+                    DavPropertyName name = DavPropertyName
+                            .createFromXml(included.nextElement());
+                    propfindProps.add(name);
+                }
+            }
+
+            return;
+        }
+
+        throw new BadRequestException("Expected one of " + XML_PROP + ", "
+                + XML_PROPNAME + ", or " + XML_ALLPROP + " as child of "
+                + QN_PROPFIND);
+    }
+
+    private Document getSafeRequestDocument(final HttpServletRequest request)
+            throws CosmoDavException {
+        try {
+            if (StringUtils.isBlank(request.getContentType())) {
+                throw new BadRequestException("No Content-Type specified");
+            }
+
+            final MediaType mediaType = MediaType.valueOf(request.getContentType());
+            if (!(mediaType.equals(APPLICATION_XML) || mediaType.equals(TEXT_XML))) {
+                throw new UnsupportedMediaTypeException("Expected Content-Type " + APPLICATION_XML + " or " + TEXT_XML);
+            }
+
+            return getRequestDocument(request);
+
+        } catch (IllegalArgumentException|DavException e) {
+            throwBadRequestExceptionFrom(e);
+        }
+
+        return null;
+    }
+
+    private Document getRequestDocument(final HttpServletRequest request) throws DavException {
+        Document requestDocument = null;
+        /*
+        Don't attempt to parse the body if the content length header is 0.
+        NOTE: a value of -1 indicates that the length is unknown, thus we have
+        to parse the body. Note that http1.1 request using chunked transfer
+        coding will therefore not be detected here.
+        */
+        if (request.getContentLength() == 0) {
+            return requestDocument;
+        }
+        // try to parse the request body
+        try {
+            InputStream in = request.getInputStream();
+            if (in != null) {
+                // use a buffered input stream to find out whether there actually
+                // is a request body
+                InputStream bin = new BufferedInputStream(in);
+                bin.mark(1);
+                boolean isEmpty = -1 == bin.read();
+                bin.reset();
+                if (!isEmpty) {
+                    requestDocument = DomUtil.parseDocument(bin);
+                }
+            }
+        } catch (IOException|SAXException e) {
+            throw new DavException(DavServletResponse.SC_BAD_REQUEST);
+        } catch (ParserConfigurationException e) {
+            throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+        return requestDocument;
+    }
+
+    private void throwBadRequestExceptionFrom(Exception e)
+            throws BadRequestException {
+        Throwable cause = e.getCause();
+        String msg = cause != null ? cause.getMessage()
+                : "Unknown error parsing request document";
+        throw new BadRequestException(msg);
     }
 
     public DavResourceFactory getResourceFactory() {

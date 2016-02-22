@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -99,11 +98,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return item.getModifiedDate() == null ? 0 : item.getModifiedDate().getTime();
     }
 
-    @Override
-    public DavResource getCollection() {
-        return null;
-    }
-
     public DavResourceIterator getMembers() {
         for (HibItem memberHibItem : item.getItems()) {
             WebDavResource resource = memberToResource(memberHibItem);
@@ -175,10 +169,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     public void addContent(DavContent content, InputContext context) throws CosmoDavException {
-        if(!(content instanceof DavItemResourceBase)) {
-            throw new IllegalArgumentException("Expected instance of : [" + DavItemResourceBase.class.getName() + "]");
-        }
-
         DavItemResourceBase base = (DavItemResourceBase) content;
         base.populateItem(context);
         saveContent(base);

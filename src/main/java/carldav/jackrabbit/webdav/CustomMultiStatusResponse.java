@@ -59,7 +59,7 @@ public class CustomMultiStatusResponse extends MultiStatusResponse implements Xm
     private HashMap<Integer, PropContainer> statusMap = new HashMap<Integer, PropContainer>();
 
     public CustomMultiStatusResponse(final WebDavResource resource, final DavPropertyNameSet propNameSet, final int propFindType) {
-        super(resource, propNameSet, propFindType);
+        super(new DummyDavResource(resource), propNameSet, propFindType);
         customMultiStatusResponse(resource, propNameSet, propFindType);
     }
 

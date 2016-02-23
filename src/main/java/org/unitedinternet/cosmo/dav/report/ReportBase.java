@@ -32,6 +32,7 @@ import org.w3c.dom.Element;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
@@ -130,7 +131,7 @@ public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
     /**
      * Writes the report result to the response.
      */
-    protected abstract void output(DavServletResponse response)
+    protected abstract void output(HttpServletResponse response)
             throws CosmoDavException;
 
     /**

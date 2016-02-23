@@ -17,13 +17,20 @@ package org.unitedinternet.cosmo.dav.report;
 
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
+import org.apache.jackrabbit.webdav.xml.DomUtil;
+import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Base class for WebDAV reports that return multistatus responses.
@@ -41,11 +48,11 @@ public abstract class MultiStatusReport extends ReportBase {
     /**
      * Generates and writes the multistatus response.
      */
-    protected void output(DavServletResponse response)
+    protected void output(HttpServletResponse response)
             throws CosmoDavException {
         try {
             buildMultistatus();
-            response.sendXmlResponse(multistatus, 207);
+            sendXmlResponse(response, multistatus, 207);
         } catch (Exception e) {
             throw new CosmoDavException(e);
         }
@@ -102,5 +109,31 @@ public abstract class MultiStatusReport extends ReportBase {
 
     public void setPropFindProps(DavPropertyNameSet props) {
         this.propfindProps = props;
+    }
+
+    private void sendXmlResponse(HttpServletResponse httpResponse, XmlSerializable serializable, int status) {
+        httpResponse.setStatus(status);
+
+        if (serializable != null) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try {
+                Document doc = DomUtil.createDocument();
+                doc.appendChild(serializable.toXml(doc));
+
+                // JCR-2636: Need to use an explicit OutputStreamWriter
+                // instead of relying on the built-in UTF-8 serialization
+                // to avoid problems with surrogate pairs on Sun JRE 1.5.
+                Writer writer = new OutputStreamWriter(out, "UTF-8");
+                DomUtil.transformDocument(doc, writer);
+                writer.flush();
+
+                // TODO: Should this be application/xml? See JCR-1621
+                httpResponse.setContentType("text/xml; charset=UTF-8");
+                httpResponse.setContentLength(out.size());
+                out.writeTo(httpResponse.getOutputStream());
+            } catch (Exception e) {
+                throw new CosmoDavException(e);
+            }
+        }
     }
 }

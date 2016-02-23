@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import static org.apache.jackrabbit.webdav.DavConstants.NAMESPACE;
 import static org.apache.jackrabbit.webdav.DavConstants.XML_MULTISTATUS;
 
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -31,7 +30,7 @@ public class CustomMultiStatus implements XmlSerializable {
         responses.put(response.getHref(), response);
     }
 
-    public void addResourceProperties(WebDavResource resource, DavPropertyNameSet propNameSet, int propFindType, int depth) {
+    public void addResourceProperties(WebDavResource resource, CustomDavPropertyNameSet propNameSet, int propFindType, int depth) {
         addResponse(new CustomMultiStatusResponse(resource, propNameSet, propFindType));
         if (depth > 0 && resource.isCollection()) {
             final List<WebDavResource> members2 = resource.getMembers();

@@ -5,7 +5,6 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -54,7 +53,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
      */
     private HashMap<Integer, PropContainer> statusMap = new HashMap<>();
 
-    public CustomMultiStatusResponse(final WebDavResource resource, final DavPropertyNameSet propNameSet, final int propFindType) {
+    public CustomMultiStatusResponse(final WebDavResource resource, final CustomDavPropertyNameSet propNameSet, final int propFindType) {
         customMultiStatusResponse(resource, propNameSet, propFindType);
     }
 
@@ -92,7 +91,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
      * #PROPFIND_PROPERTY_NAMES}, {@link #PROPFIND_ALL_PROP_INCLUDE}
      */
     public void customMultiStatusResponse(
-            WebDavResource resource, DavPropertyNameSet propNameSet,
+            WebDavResource resource, CustomDavPropertyNameSet propNameSet,
             int propFindType) {
         customMultiStatusResponse(resource.getHref(), TYPE_PROPSTAT);
 
@@ -161,7 +160,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
         PropContainer propContainer = statusMap.get(status);
         if (propContainer == null) {
             if (forNames) {
-                propContainer = new DavPropertyNameSet();
+                propContainer = new CustomDavPropertyNameSet();
             } else {
                 propContainer = new DavPropertySet();
             }

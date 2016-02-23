@@ -15,11 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -54,8 +54,8 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
      * Removes <code>CALDAV:calendar-data</code> from the property spec
      * since it doesn't represent a real property.
      */
-    protected DavPropertyNameSet createResultPropSpec() {
-        DavPropertyNameSet spec = super.createResultPropSpec();
+    protected CustomDavPropertyNameSet createResultPropSpec() {
+        CustomDavPropertyNameSet spec = super.createResultPropSpec();
         spec.remove(CALENDARDATA);
         return spec;
     }
@@ -65,7 +65,7 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
      * <code>CALDAV:calendar-data</code> property if it was requested. The
      * calendar data is filtered if a filter was included in the request.
      */
-    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) {
+    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, CustomDavPropertyNameSet props) {
         CustomMultiStatusResponse msr = super.buildMultiStatusResponse(resource, props);
 
         DavCalendarResource dcr = (DavCalendarResource) resource;

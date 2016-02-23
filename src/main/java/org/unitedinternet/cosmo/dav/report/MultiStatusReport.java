@@ -16,9 +16,9 @@
 package org.unitedinternet.cosmo.dav.report;
 
 import carldav.exception.resolver.ResponseUtils;
+import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
@@ -33,7 +33,7 @@ public abstract class MultiStatusReport extends ReportBase {
 
     private CustomMultiStatus multistatus = new CustomMultiStatus();
     protected int propfindType = PROPFIND_ALL_PROP;
-    private DavPropertyNameSet propfindProps;
+    private CustomDavPropertyNameSet propfindProps;
 
     protected void output(HttpServletResponse response)
             throws CosmoDavException {
@@ -47,7 +47,7 @@ public abstract class MultiStatusReport extends ReportBase {
 
     public final void buildMultistatus() throws CosmoDavException {
 
-        DavPropertyNameSet resultProps = createResultPropSpec();
+        CustomDavPropertyNameSet resultProps = createResultPropSpec();
 
         for (WebDavResource result : getResults()) {
             CustomMultiStatusResponse msr = buildMultiStatusResponse(result, resultProps);
@@ -55,15 +55,15 @@ public abstract class MultiStatusReport extends ReportBase {
         }
     }
 
-    protected DavPropertyNameSet createResultPropSpec() {
-        return new DavPropertyNameSet(propfindProps);
+    protected CustomDavPropertyNameSet createResultPropSpec() {
+        return new CustomDavPropertyNameSet(propfindProps);
     }
 
     /**
      * Returns a <code>MultiStatusResponse</code> describing the
      * specified resource including the specified properties.
      */
-    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) {
+    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, CustomDavPropertyNameSet props) {
         if (props.isEmpty()) {
             String href = resource.getResourceLocator().
                     getHref(resource.isCollection());
@@ -90,11 +90,11 @@ public abstract class MultiStatusReport extends ReportBase {
         this.propfindType = type;
     }
 
-    public DavPropertyNameSet getPropFindProps() {
+    public CustomDavPropertyNameSet getPropFindProps() {
         return propfindProps;
     }
 
-    public void setPropFindProps(DavPropertyNameSet props) {
+    public void setPropFindProps(CustomDavPropertyNameSet props) {
         this.propfindProps = props;
     }
 }

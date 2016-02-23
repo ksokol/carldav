@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.dav.provider;
 import static org.unitedinternet.cosmo.dav.ExtendedDavConstants.QN_PROPFIND;
 
 import carldav.exception.resolver.ResponseUtils;
+import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
@@ -29,7 +30,6 @@ import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.springframework.http.MediaType;
@@ -69,7 +69,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
 
     private DavResourceFactory resourceFactory;
     private int propfindType = PROPFIND_ALL_PROP;
-    private DavPropertyNameSet propfindProps;
+    private CustomDavPropertyNameSet propfindProps;
     private CustomReportInfo reportInfo;
 
     public BaseProvider(DavResourceFactory resourceFactory) {
@@ -115,7 +115,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new BadRequestException("Depth must be 0 for non-collection resources");
         }
 
-        DavPropertyNameSet props = getPropFindProperties(request);
+        CustomDavPropertyNameSet props = getPropFindProperties(request);
         int type = getPropFindType(request);
         CustomMultiStatus ms = new CustomMultiStatus();
         ms.addResourceProperties(resource, props, type, depth);
@@ -278,7 +278,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         return propfindType;
     }
 
-    private DavPropertyNameSet getPropFindProperties(final HttpServletRequest request) throws CosmoDavException {
+    private CustomDavPropertyNameSet getPropFindProperties(final HttpServletRequest request) throws CosmoDavException {
         if (propfindProps == null) {
             parsePropFindRequest(request);
         }
@@ -291,7 +291,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         if (requestDocument == null) {
             // treat as allprop
             propfindType = PROPFIND_ALL_PROP;
-            propfindProps = new DavPropertyNameSet();
+            propfindProps = new CustomDavPropertyNameSet();
             return;
         }
 
@@ -304,19 +304,19 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         Element prop = DomUtil.getChildElement(root, XML_PROP, NAMESPACE);
         if (prop != null) {
             propfindType = PROPFIND_BY_PROPERTY;
-            propfindProps = new DavPropertyNameSet(prop);
+            propfindProps = new CustomDavPropertyNameSet(prop);
             return;
         }
 
         if (DomUtil.getChildElement(root, XML_PROPNAME, NAMESPACE) != null) {
             propfindType = PROPFIND_PROPERTY_NAMES;
-            propfindProps = new DavPropertyNameSet();
+            propfindProps = new CustomDavPropertyNameSet();
             return;
         }
 
         if (DomUtil.getChildElement(root, XML_ALLPROP, NAMESPACE) != null) {
             propfindType = PROPFIND_ALL_PROP;
-            propfindProps = new DavPropertyNameSet();
+            propfindProps = new CustomDavPropertyNameSet();
 
             Element include = DomUtil.getChildElement(root, "include",
                     NAMESPACE);

@@ -15,12 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.springframework.web.util.UriUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
@@ -163,14 +163,14 @@ public class MultigetReport extends CaldavMultiStatusReport {
      */
     protected void runQuery()
         throws CosmoDavException {
-        DavPropertyNameSet propspec = createResultPropSpec();
+        CustomDavPropertyNameSet propspec = createResultPropSpec();
 
         if (getResource() instanceof DavCollection) {
             DavCollection collection = (DavCollection) getResource();
             for (String href : hrefs) {
                 WebDavResource target = collection.findMember(href);
 
-                final CustomMultiStatus multiStatus = (CustomMultiStatus) getMultiStatus();
+                final CustomMultiStatus multiStatus = getMultiStatus();
                 if (target != null) {
                     multiStatus.addResponse(buildMultiStatusResponse(target, propspec));
                 }

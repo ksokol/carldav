@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
@@ -25,7 +24,7 @@ public class CustomReportInfo implements XmlSerializable {
     private final String typeLocalName;
     private final Namespace typeNamespace;
     private final int depth;
-    private final DavPropertyNameSet propertyNames;
+    private final CustomDavPropertyNameSet propertyNames;
     private final List<Element> content = new ArrayList<>();
     private Element documentElement;
 
@@ -49,10 +48,10 @@ public class CustomReportInfo implements XmlSerializable {
         this.depth = depth;
         Element propElement = DomUtil.getChildElement(reportElement, DavConstants.XML_PROP, DavConstants.NAMESPACE);
         if (propElement != null) {
-            propertyNames = new DavPropertyNameSet(propElement);
+            propertyNames = new CustomDavPropertyNameSet(propElement);
             reportElement.removeChild(propElement);
         } else {
-            propertyNames = new DavPropertyNameSet();
+            propertyNames = new CustomDavPropertyNameSet();
         }
 
         ElementIterator it = DomUtil.getChildren(reportElement);
@@ -130,10 +129,10 @@ public class CustomReportInfo implements XmlSerializable {
      * in an eventual {@link DavConstants#XML_PROP} child element. If no such
      * child element is present an empty set is returned.
      *
-     * @return {@link DavPropertyNameSet} providing the property names present
+     * @return {@link CustomDavPropertyNameSet} providing the property names present
      * in an eventual {@link DavConstants#XML_PROP DAV:prop} child element or an empty set.
      */
-    public DavPropertyNameSet getPropertyNameSet() {
+    public CustomDavPropertyNameSet getPropertyNameSet() {
         return propertyNames;
     }
 

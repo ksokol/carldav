@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav;
 
 import org.apache.jackrabbit.webdav.DavConstants;
+import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
@@ -103,6 +104,13 @@ public interface WebDavResource
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
     DavCollection getParent() throws CosmoDavException;
+
+    /**
+     * Removes the specified member from this resource.
+     *
+     * @throws DavException
+     */
+    void removeMember(DavResource member) throws DavException;
 
     /**
      * Returns the absolute href of this resource as returned in the

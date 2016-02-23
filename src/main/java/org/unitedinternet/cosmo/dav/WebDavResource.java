@@ -22,9 +22,8 @@ import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.io.IOException;
 import java.util.List;
@@ -132,10 +131,10 @@ public interface WebDavResource {
      * Return the webdav property with the specified name.
      *
      * @param name name of the webdav property
-     * @return the {@link DavProperty} with the given name or <code>null</code>
+     * @return the {@link WebDavProperty} with the given name or <code>null</code>
      * if the property does not exist.
      */
-    DavProperty<?> getProperty(DavPropertyName name);
+    WebDavProperty<?> getProperty(DavPropertyName name);
 
     /**
      * Returns an array of all {@link DavPropertyName property names} available

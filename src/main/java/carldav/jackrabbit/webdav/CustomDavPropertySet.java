@@ -8,6 +8,7 @@ import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,10 +20,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
 
     private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertySet.class);
 
-    /**
-     * the set of property
-     */
-    private final Map<DavPropertyName, DavProperty<?>> map = new HashMap<DavPropertyName, DavProperty<?>>();
+    private final Map<DavPropertyName, WebDavProperty<?>> map = new HashMap<>();
 
     /**
      * Adds a new property to this set.
@@ -31,7 +29,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The previously assigned property or <code>null</code>.
      */
-    public DavProperty<?> add(DavProperty<?> property) {
+    public WebDavProperty<?> add(WebDavProperty<?> property) {
         return map.put(property.getName(), property);
     }
 
@@ -75,7 +73,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The desired property or <code>null</code>
      */
-    public DavProperty<?> get(DavPropertyName name) {
+    public WebDavProperty<?> get(DavPropertyName name) {
         return map.get(name);
     }
 
@@ -169,8 +167,8 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      */
     @Override
     public boolean addContent(PropEntry contentEntry) {
-        if (contentEntry instanceof DavProperty) {
-            add((DavProperty<?>) contentEntry);
+        if (contentEntry instanceof WebDavProperty) {
+            add((WebDavProperty<?>) contentEntry);
             return true;
         }
         LOG.debug("DavProperty object expected. Found: " + contentEntry.getClass().toString());
@@ -212,7 +210,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
         private final Namespace namespace;
 
         /** the internal iterator */
-        private final Iterator<DavProperty<?>> iterator;
+        private final Iterator<WebDavProperty<?>> iterator;
 
         /** the next property to return */
         private DavProperty<?> next;

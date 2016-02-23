@@ -8,6 +8,7 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -111,7 +112,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
             if (propFindType == PROPFIND_BY_PROPERTY) {
                 // add explicitly requested properties (proptected or non-protected)
                 for (DavPropertyName propName : propNameSet.getContent()) {
-                    DavProperty<?> prop = resource.getProperty(propName);
+                    WebDavProperty<?> prop = resource.getProperty(propName);
                     if (prop != null) {
                         status200.addContent(prop);
                         missing.remove(propName);
@@ -135,8 +136,8 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
                 // try if missing properties specified in the include section
                 // can be obtained using resource.getProperty
                 if (propFindType == PROPFIND_ALL_PROP_INCLUDE && !missing.isEmpty()) {
-                    for (DavPropertyName propName : new HashSet<DavPropertyName>(missing)) {
-                        DavProperty<?> prop = resource.getProperty(propName);
+                    for (DavPropertyName propName : new HashSet<>(missing)) {
+                        WebDavProperty<?> prop = resource.getProperty(propName);
                         if (prop != null) {
                             status200.addContent(prop);
                             missing.remove(propName);
@@ -180,7 +181,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
      *
      * @param property the property to add
      */
-    public void add(DavProperty<?> property) {
+    public void add(WebDavProperty<?> property) {
         checkType(TYPE_PROPSTAT);
         CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, false);
         status200.addContent(property);
@@ -207,7 +208,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
      * @param property the property to add
      * @param status the status of the response set to select
      */
-    public void add(DavProperty<?> property, int status) {
+    public void add(WebDavProperty<?> property, int status) {
         checkType(TYPE_PROPSTAT);
         CustomPropContainer propCont = getPropContainer(status, false);
         propCont.addContent(property);

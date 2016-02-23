@@ -118,8 +118,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return properties.getPropertyNames();
     }
 
-    public org.apache.jackrabbit.webdav.property.DavProperty<?>
-        getProperty(DavPropertyName name) {
+    public WebDavProperty<?> getProperty(DavPropertyName name) {
         loadProperties();
         return properties.get(name);
     }
@@ -142,7 +141,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return sorted;
     }
 
-    public void setProperty(org.apache.jackrabbit.webdav.property.DavProperty<?> property) throws DavException {
+    public void setProperty(WebDavProperty<?> property) throws DavException {
         throw new UnsupportedOperationException();
     }
 

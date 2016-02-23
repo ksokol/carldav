@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
@@ -30,7 +31,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.springframework.util.ReflectionUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -85,7 +85,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     protected static final EntityConverter converter = new EntityConverter();
 
     private final HashSet<DavPropertyName> liveProperties = new HashSet<>(10);
-    private final Set<ReportType> reportTypes = new HashSet<>(10);
+    protected final Set<CustomReportType> reportTypes = new HashSet<>(10);
 
     private DavResourceLocator locator;
     private DavResourceFactory factory;
@@ -251,7 +251,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         try {
 
             //TODO workaround for ReportType.createReport(DeltaVResource, ReportInfo)
-            final ReportType type = ReportType.getType(reportInfo);
+            final CustomReportType type = CustomReportType.getType(reportInfo);
             final Field reportClassField = ReflectionUtils.findField(type.getClass(), "reportClass");
             reportClassField.setAccessible(true);
             final Class<? extends Report> reportClass = (Class<? extends Report>) ReflectionUtils.getField(reportClassField, type);
@@ -286,7 +286,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * report info is supported by this collection.
      */
     protected boolean isSupportedReport(ReportInfo info) {
-        for (Iterator<ReportType> i=getReportTypes().iterator(); i.hasNext();) {
+        for (Iterator<CustomReportType> i=getReportTypes().iterator(); i.hasNext();) {
             if (i.next().isRequestedReportType(info)) {
                 return true;
             }
@@ -294,7 +294,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return false;
     }
 
-    protected Set<ReportType> getReportTypes() {
+    protected Set<CustomReportType> getReportTypes() {
      return reportTypes;
     }
 

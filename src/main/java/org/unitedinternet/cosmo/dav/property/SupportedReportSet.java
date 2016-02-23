@@ -15,33 +15,31 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import java.util.TreeSet;
-import java.util.Set;
-
+import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringUtils;
-
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Represents the DAV:supported-report-set property.
  */
 public class SupportedReportSet extends StandardDavProperty {
 
-    public SupportedReportSet(Set<ReportType> reports) {
+    public SupportedReportSet(Set<CustomReportType> reports) {
         super(SUPPORTEDREPORTSET, reports, true);
     }
 
-    public Set<ReportType> getReportTypes() {
-        return (Set<ReportType>) getValue();
+    public Set<CustomReportType> getReportTypes() {
+        return (Set<CustomReportType>) getValue();
     }
 
     public String getValueText() {
         TreeSet<String> types = new TreeSet<String>();
-        for (ReportType rt : getReportTypes()) {
+        for (CustomReportType rt : getReportTypes()) {
             types.add(rt.getReportName());
         }
         return StringUtils.join(types, ", ");
@@ -50,7 +48,7 @@ public class SupportedReportSet extends StandardDavProperty {
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
-        for (ReportType rt : getReportTypes()) {
+        for (CustomReportType rt : getReportTypes()) {
             Element sr = DomUtil.addChildElement(name, "supported-report", NAMESPACE);
             Element r = DomUtil.addChildElement(sr, "report", NAMESPACE);
             r.appendChild(rt.toXml(document));

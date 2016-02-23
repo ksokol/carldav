@@ -15,12 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -57,7 +57,7 @@ import javax.xml.namespace.QName;
 
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
 
-    protected final Set<ReportType> reportTypes = new HashSet<>();
+    protected final Set<CustomReportType> reportTypes = new HashSet<>();
 
     private List<WebDavResource> members;
 
@@ -190,7 +190,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return rt;
     }
 
-    public Set<ReportType> getReportTypes() {
+    public Set<CustomReportType> getReportTypes() {
         return reportTypes;
     }
 

@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.jackrabbit.webdav.CustomReportType;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
@@ -43,15 +43,15 @@ import java.text.ParseException;
  */
 public class QueryReport extends CaldavMultiStatusReport {
 
-    public static final ReportType REPORT_TYPE_CALDAV_QUERY =
-        ReportType.register(ELEMENT_CALDAV_CALENDAR_QUERY,
+    public static final CustomReportType REPORT_TYPE_CALDAV_QUERY =
+            CustomReportType.register(ELEMENT_CALDAV_CALENDAR_QUERY,
                             NAMESPACE_CALDAV, QueryReport.class);
 
     private CalendarFilter queryFilter;
 
     // Report methods
 
-    public ReportType getType() {
+    public CustomReportType getType2() {
         return REPORT_TYPE_CALDAV_QUERY;
     }
 
@@ -63,8 +63,8 @@ public class QueryReport extends CaldavMultiStatusReport {
      */
     protected void parseReport(ReportInfo info)
         throws CosmoDavException {
-        if (! getType().isRequestedReportType(info)) {
-            throw new CosmoDavException("Report not of type " + getType());
+        if (! getType2().isRequestedReportType(info)) {
+            throw new CosmoDavException("Report not of type " + getType2());
         }
 
         setPropFindProps(info.getPropertyNameSet());

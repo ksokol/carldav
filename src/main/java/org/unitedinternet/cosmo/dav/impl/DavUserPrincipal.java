@@ -1,11 +1,11 @@
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -83,7 +83,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         return Collections.emptySet();
     }
 
-    public Set<ReportType> getReportTypes() {
+    public Set<CustomReportType> getReportTypes() {
         return Collections.emptySet();
     }
 

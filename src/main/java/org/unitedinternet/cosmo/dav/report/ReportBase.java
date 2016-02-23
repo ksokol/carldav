@@ -19,6 +19,7 @@ import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
+import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -177,5 +178,11 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
 
     public Set<WebDavResource> getResults() {
         return results;
+    }
+
+    @Deprecated
+    @Override
+    public ReportType getType() {
+        throw new UnsupportedOperationException();
     }
 }

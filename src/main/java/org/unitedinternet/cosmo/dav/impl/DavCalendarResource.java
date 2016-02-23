@@ -15,12 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -43,7 +43,7 @@ import java.util.Set;
 
 public class DavCalendarResource extends DavItemResourceBase implements DavContent, ICalendarConstants {
 
-    private final Set<ReportType> reportTypes = new HashSet<>();
+    //private final Set<CustomReportType> reportTypes = new HashSet<>();
 
     public DavCalendarResource(HibItem item,
                                DavResourceLocator locator,
@@ -102,7 +102,7 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         IOUtil.spool(bois, outputContext.getOutputStream());
     }
 
-    public Set<ReportType> getReportTypes() {
+    public Set<CustomReportType> getReportTypes() {
         return reportTypes;
     }
 

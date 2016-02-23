@@ -17,11 +17,10 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
+import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.springframework.web.util.UriUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
@@ -58,15 +57,15 @@ public class MultigetReport extends CaldavMultiStatusReport {
     private static final Pattern RESOURCE_UUID_PATTERN = Pattern.compile("/\\{?\\p{XDigit}{8}-\\p{XDigit}" +
             "{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}\\}?");
 
-    public static final ReportType REPORT_TYPE_CALDAV_MULTIGET =
-        ReportType.register(ELEMENT_CALDAV_CALENDAR_MULTIGET,
+    public static final CustomReportType REPORT_TYPE_CALDAV_MULTIGET =
+            CustomReportType.register(ELEMENT_CALDAV_CALENDAR_MULTIGET,
                             NAMESPACE_CALDAV, MultigetReport.class);
 
     private Set<String> hrefs;
 
     // Report methods
 
-    public ReportType getType() {
+    public CustomReportType getType2() {
         return REPORT_TYPE_CALDAV_MULTIGET;
     }
 
@@ -85,8 +84,8 @@ public class MultigetReport extends CaldavMultiStatusReport {
      * @throws CosmoDavException if the report info is not of the correct type
      */
     protected void parseReport(ReportInfo info) throws CosmoDavException {
-        if (! getType().isRequestedReportType(info)) {
-            throw new CosmoDavException("Report not of type " + getType().getReportName());
+        if (! getType2().isRequestedReportType(info)) {
+            throw new CosmoDavException("Report not of type " + getType2().getReportName());
         }
 
         setPropFindProps(info.getPropertyNameSet());

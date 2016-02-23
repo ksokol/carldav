@@ -3,8 +3,8 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CARDDAV_ADDRESSBOOK_QUERY;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NAMESPACE_CARDDAV;
 
+import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
@@ -25,7 +25,7 @@ import java.text.ParseException;
  */
 public class AddressbookQueryReport extends MultiStatusReport {
 
-    public static final ReportType REPORT_TYPE_CARDDAV_QUERY = ReportType.register(ELEMENT_CARDDAV_ADDRESSBOOK_QUERY, NAMESPACE_CARDDAV,
+    public static final CustomReportType REPORT_TYPE_CARDDAV_QUERY = CustomReportType.register(ELEMENT_CARDDAV_ADDRESSBOOK_QUERY, NAMESPACE_CARDDAV,
             AddressbookQueryReport.class);
 
     private AddressbookFilter queryFilter;
@@ -33,8 +33,8 @@ public class AddressbookQueryReport extends MultiStatusReport {
 
     @Override
     protected void parseReport(final ReportInfo info) throws CosmoDavException {
-        if (!getType().isRequestedReportType(info)) {
-            throw new CosmoDavException("Report not of type " + getType());
+        if (!getType2().isRequestedReportType(info)) {
+            throw new CosmoDavException("Report not of type " + getType2());
         }
 
         setPropFindProps(info.getPropertyNameSet());
@@ -63,8 +63,7 @@ public class AddressbookQueryReport extends MultiStatusReport {
         }
     }
 
-    @Override
-    public ReportType getType() {
+    public CustomReportType getType2() {
         return REPORT_TYPE_CARDDAV_QUERY;
     }
 

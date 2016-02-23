@@ -18,8 +18,6 @@ package org.unitedinternet.cosmo.dav;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
@@ -34,9 +32,7 @@ import java.util.List;
  * An interface providing resource functionality required by WebDAV
  * extensions implemented by Cosmo.
  */
-public interface WebDavResource
-    extends org.apache.jackrabbit.webdav.DavResource
-{
+public interface WebDavResource {
 
     /**
      * String constant representing the WebDAV 1 compliance
@@ -174,20 +170,7 @@ public interface WebDavResource
 
     //TODO remove me as soon as jackrabbit has been replaced with custom code
     @Deprecated
-    default DavResourceIterator getMembers() {
-        List ll = getMembers2();
-        return new DavResourceIteratorImpl((List<DavResource>)ll);
-    }
-
-    //TODO remove me as soon as jackrabbit has been replaced with custom code
-    @Deprecated
     default DavResource getCollection() {
-        throw new UnsupportedOperationException();
-    }
-
-    //TODO remove me as soon as jackrabbit has been replaced with custom code
-    @Deprecated
-    default void removeMember(DavResource resource)  throws DavException {
         throw new UnsupportedOperationException();
     }
 }

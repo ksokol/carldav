@@ -3,6 +3,7 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceFactory;
+import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavSession;
 import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -154,8 +155,18 @@ public class DummyDavResource implements DavResource, WebDavResource {
     }
 
     @Override
+    public DavResource getCollection() {
+        return null;
+    }
+
+    @Override
     public void addMember(final DavResource resource, final InputContext inputContext) throws DavException {
 
+    }
+
+    @Override
+    public DavResourceIterator getMembers() {
+        return null;
     }
 
     @Override

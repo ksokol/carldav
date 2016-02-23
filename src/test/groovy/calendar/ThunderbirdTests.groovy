@@ -431,7 +431,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${currentEtag}</D:getetag>
-                                        <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
+                                        <D:getcontenttype>text/calendar;charset=UTF-8</D:getcontenttype>
                                         <D:resourcetype/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
@@ -734,7 +734,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
+                                            <D:getcontenttype>text/calendar;charset=UTF-8</D:getcontenttype>
                                             <D:resourcetype/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
@@ -750,7 +750,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
+                                            <D:getcontenttype>text/calendar;charset=UTF-8</D:getcontenttype>
                                             <D:resourcetype/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>

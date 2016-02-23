@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav.provider;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -35,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class CalendarResourceProvider extends FileProvider {
 
@@ -49,7 +49,7 @@ public class CalendarResourceProvider extends FileProvider {
     }
 
     public void put(HttpServletRequest request,
-                    WebdavResponse response,
+                    HttpServletResponse response,
                     DavContent content)
         throws CosmoDavException, IOException {
 

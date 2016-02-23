@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CustomDavPropertyNameSet extends PropContainer {
+public class CustomDavPropertyNameSet extends CustomPropContainer {
 
     private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertyNameSet.class);
     private final Set<DavPropertyName> set = new HashSet<>();

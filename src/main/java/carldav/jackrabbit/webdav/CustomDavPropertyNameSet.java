@@ -2,7 +2,6 @@ package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameIterator;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -17,7 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class CustomDavPropertyNameSet extends DavPropertyNameSet {
+public class CustomDavPropertyNameSet extends PropContainer implements Iterable<DavPropertyName> {
 
     private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertyNameSet.class);
     private final Set<DavPropertyName> set = new HashSet<DavPropertyName>();

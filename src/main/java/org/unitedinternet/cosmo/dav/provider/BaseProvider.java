@@ -83,7 +83,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void get(HttpServletRequest request,
-                    WebdavResponse response,
+                    HttpServletResponse response,
                     WebDavResource resource)
         throws CosmoDavException, IOException {
         spool(request, response, resource, true);
@@ -181,7 +181,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
     }
 
     protected void spool(HttpServletRequest request,
-                         WebdavResponse response,
+                         HttpServletResponse response,
                          WebDavResource resource,
                          boolean withEntity)
         throws CosmoDavException, IOException {
@@ -222,7 +222,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * @return OutputContext
      * @throws IOException 
      */
-    protected OutputContext createOutputContext(WebdavResponse response,
+    protected OutputContext createOutputContext(HttpServletResponse response,
                                                 boolean withEntity)
         throws IOException {
         OutputStream out = withEntity ? response.getOutputStream() : null;

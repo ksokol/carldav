@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface DavProvider {
 
-    void get(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void get(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
     void head(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 

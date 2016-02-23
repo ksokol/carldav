@@ -5,7 +5,6 @@ import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.apache.jackrabbit.webdav.xml.Namespace;
@@ -29,65 +28,6 @@ public class CustomReportInfo implements XmlSerializable {
     private final DavPropertyNameSet propertyNames;
     private final List<Element> content = new ArrayList<>();
     private Element documentElement;
-
-    /**
-     * Create a new <code>ReportInfo</code>
-     *
-     * @param type
-     */
-    public CustomReportInfo(ReportType type) {
-        this(type, DavConstants.DEPTH_0, null);
-    }
-
-    /**
-     * Create a new <code>ReportInfo</code>
-     *
-     * @param type
-     * @param depth
-     */
-    public CustomReportInfo(ReportType type, int depth) {
-        this(type, depth, null);
-    }
-
-    /**
-     * Create a new <code>ReportInfo</code>
-     *
-     * @param type
-     * @param depth
-     * @param propertyNames
-     */
-    public CustomReportInfo(ReportType type, int depth, DavPropertyNameSet propertyNames) {
-        this(type.getLocalName(), type.getNamespace(), depth, propertyNames);
-    }
-
-    /**
-     * Create a new <code>ReportInfo</code>
-     *
-     * @param typeLocalName
-     * @param typeNamespace
-     */
-    public CustomReportInfo(String typeLocalName, Namespace typeNamespace) {
-        this(typeLocalName, typeNamespace, DavConstants.DEPTH_0, null);
-    }
-
-    /**
-     * Create a new <code>ReportInfo</code>
-     *
-     * @param typelocalName
-     * @param typeNamespace
-     * @param depth
-     * @param propertyNames
-     */
-    public CustomReportInfo(String typelocalName, Namespace typeNamespace, int depth, DavPropertyNameSet propertyNames) {
-        this.typeLocalName = typelocalName;
-        this.typeNamespace = typeNamespace;
-        this.depth = depth;
-        if (propertyNames != null) {
-            this.propertyNames = new DavPropertyNameSet(propertyNames);
-        } else {
-            this.propertyNames = new DavPropertyNameSet();
-        }
-    }
 
     /**
      * Create a new <code>ReportInfo</code> object from the given Xml element.
@@ -166,24 +106,6 @@ public class CustomReportInfo implements XmlSerializable {
     }
 
     /**
-     * Retrieves the Xml element with the given name/namespace that is a child
-     * of this info. If no such child exists <code>null</code> is returned. If
-     * multiple elements with the same name exist, the first one is returned.
-     *
-     * @param localName
-     * @param namespace
-     * @return Xml element with the given name/namespace or <code>null</code>
-     */
-    public Element getContentElement(String localName, Namespace namespace) {
-        List<Element> values = getContentElements(localName, namespace);
-        if (values.isEmpty()) {
-            return null;
-        } else {
-            return values.get(0);
-        }
-    }
-
-    /**
      * Returns a list containing all child Xml elements of this info that have
      * the specified name/namespace. If this info contains no such element,
      * an empty list is returned.
@@ -201,15 +123,6 @@ public class CustomReportInfo implements XmlSerializable {
             }
         }
         return l;
-    }
-
-    /**
-     * Add the specified Xml element as child of this info.
-     *
-     * @param contentElement
-     */
-    public void setContentElement(Element contentElement) {
-        content.add(contentElement);
     }
 
     /**

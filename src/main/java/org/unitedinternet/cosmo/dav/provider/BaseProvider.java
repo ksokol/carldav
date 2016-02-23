@@ -94,7 +94,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void head(HttpServletRequest request,
-                     WebdavResponse response,
+                     HttpServletResponse response,
                      WebDavResource resource)
         throws CosmoDavException, IOException {
         spool(request, response, resource, false);

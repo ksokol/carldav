@@ -16,9 +16,9 @@
 package org.unitedinternet.cosmo.dav.report;
 
 import carldav.jackrabbit.webdav.CustomMultiStatus;
+import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.MultiStatus;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -30,7 +30,7 @@ import org.w3c.dom.Element;
  */
 public abstract class MultiStatusReport extends ReportBase {
 
-    private MultiStatus multistatus = new CustomMultiStatus();
+    private CustomMultiStatus multistatus = new CustomMultiStatus();
     protected int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
 
@@ -56,9 +56,8 @@ public abstract class MultiStatusReport extends ReportBase {
         DavPropertyNameSet resultProps = createResultPropSpec();
 
         for (WebDavResource result : getResults()) {
-            MultiStatusResponse msr =
-                    buildMultiStatusResponse(result, resultProps);
-            multistatus.addResponse(msr);
+            CustomMultiStatusResponse msr = buildMultiStatusResponse(result, resultProps);
+            multistatus.addResponse2(msr);
         }
     }
 
@@ -70,16 +69,13 @@ public abstract class MultiStatusReport extends ReportBase {
      * Returns a <code>MultiStatusResponse</code> describing the
      * specified resource including the specified properties.
      */
-    protected MultiStatusResponse
-    buildMultiStatusResponse(WebDavResource resource,
-                             DavPropertyNameSet props)
-            throws CosmoDavException {
+    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) {
         if (props.isEmpty()) {
             String href = resource.getResourceLocator().
                     getHref(resource.isCollection());
-            return new MultiStatusResponse(href, 200);
+            return new CustomMultiStatusResponse(href, 200);
         }
-        return new MultiStatusResponse(resource, props, propfindType);
+        return new CustomMultiStatusResponse(resource, props, propfindType);
     }
 
     protected MultiStatus getMultiStatus() {

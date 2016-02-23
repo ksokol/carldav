@@ -15,8 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.jackrabbit.webdav.CustomMultiStatus;
+import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
+import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
@@ -168,18 +170,21 @@ public class MultigetReport extends CaldavMultiStatusReport {
             DavCollection collection = (DavCollection) getResource();
             for (String href : hrefs) {
                 WebDavResource target = collection.findMember(href);
+
+                final CustomMultiStatus multiStatus = (CustomMultiStatus) getMultiStatus();
                 if (target != null) {
-                    getMultiStatus().addResponse(buildMultiStatusResponse(target, propspec));
+                    multiStatus.addResponse2(buildMultiStatusResponse(target, propspec));
                 }
                 else {
-                    getMultiStatus().addResponse(new MultiStatusResponse(href,404));
+                    multiStatus.addResponse2(new CustomMultiStatusResponse(href, 404));
                 }
             }
             return;
         }
 
         if (getResource() instanceof DavCalendarResource) {
-            getMultiStatus().addResponse(buildMultiStatusResponse(getResource(), propspec));
+            final CustomMultiStatus multiStatus = (CustomMultiStatus) getMultiStatus();
+            multiStatus.addResponse2(buildMultiStatusResponse(getResource(), propspec));
             return;
         }
 

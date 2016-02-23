@@ -1,6 +1,6 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
+import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
@@ -10,7 +10,6 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavCard;
-import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 /**
@@ -45,14 +44,14 @@ public class AddressbookMultigetReport extends MultigetReport {
     }
 
     @Override
-    protected MultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) throws CosmoDavException {
-        MultiStatusResponse msr;
+    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) throws CosmoDavException {
+        CustomMultiStatusResponse msr;
 
         if (props.isEmpty()) {
             final String href = resource.getResourceLocator().getHref(resource.isCollection());
-            msr = new MultiStatusResponse(href, 200);
+            msr = new CustomMultiStatusResponse(href, 200);
         } else {
-            msr = new MultiStatusResponse(resource, props, propfindType);
+            msr = new CustomMultiStatusResponse(resource, props, propfindType);
         }
 
         final DavCard file = (DavCard) resource;

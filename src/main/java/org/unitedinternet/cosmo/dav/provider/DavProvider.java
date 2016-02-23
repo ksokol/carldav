@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -37,5 +36,5 @@ public interface DavProvider {
 
     void delete(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void report(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void report(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 }

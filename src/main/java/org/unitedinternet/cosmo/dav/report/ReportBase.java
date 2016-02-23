@@ -77,7 +77,7 @@ public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
      * Calls {@link runQuery())} to execute the report and
      * {@link #output(DavServletResponse)} to write the result.
      */
-    public void run(DavServletResponse response) throws CosmoDavException {
+    public void run(HttpServletResponse response) throws CosmoDavException {
         runQuery();
         output(response);
     }

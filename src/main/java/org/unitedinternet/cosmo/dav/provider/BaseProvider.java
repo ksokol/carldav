@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
@@ -157,7 +156,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void report(HttpServletRequest request,
-                       WebdavResponse response,
+                       HttpServletResponse response,
                        WebDavResource resource)
         throws CosmoDavException, IOException {
         if (! resource.exists()){

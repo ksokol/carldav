@@ -17,11 +17,11 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 
+import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -195,7 +195,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return reportTypes;
     }
 
-    protected void loadLiveProperties(DavPropertySet properties) {
+    protected void loadLiveProperties(CustomDavPropertySet properties) {
         properties.add(new LastModified(item.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));

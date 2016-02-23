@@ -17,10 +17,10 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
 
+import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -66,7 +66,7 @@ public class DavCard extends DavItemResourceBase implements DavContent {
         converter.convertCard(file);
     }
 
-    protected void loadLiveProperties(DavPropertySet properties) {
+    protected void loadLiveProperties(CustomDavPropertySet properties) {
         super.loadLiveProperties(properties);
         properties.add(new ContentType(CARD_MEDIA_TYPE, null));
     }

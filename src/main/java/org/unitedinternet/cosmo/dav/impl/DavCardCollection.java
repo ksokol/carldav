@@ -3,7 +3,7 @@ package org.unitedinternet.cosmo.dav.impl;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.SUPPORTEDADDRESSDATA;
 
 import carldav.card.CardQueryProcessor;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -60,7 +60,7 @@ public class DavCardCollection extends DavCollectionBase {
     }
 
     @Override
-    protected void loadLiveProperties(final DavPropertySet properties) {
+    protected void loadLiveProperties(final CustomDavPropertySet properties) {
         super.loadLiveProperties(properties);
         properties.add(new SupportedAddressData());
     }

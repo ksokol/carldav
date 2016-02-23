@@ -15,13 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -76,7 +76,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
 
     private DavResourceLocator locator;
     private DavResourceFactory factory;
-    private DavPropertySet properties;
+    private CustomDavPropertySet properties;
     private boolean initialized;
 
     public DavResourceBase(DavResourceLocator locator,
@@ -85,7 +85,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         registerLiveProperty(SUPPORTEDREPORTSET);
         this.locator = locator;
         this.factory = factory;
-        this.properties = new DavPropertySet();
+        this.properties = new CustomDavPropertySet();
         this.initialized = false;
     }
 
@@ -125,13 +125,13 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     }
 
     @Deprecated
-    public DavPropertySet getProperties() {
+    public CustomDavPropertySet getProperties() {
         loadProperties();
         return properties;
     }
 
     public Map<String, WebDavProperty> getWebDavProperties() {
-        final DavPropertySet properties = getProperties();
+        final CustomDavPropertySet properties = getProperties();
         final DavPropertyName[] propertyNames = properties.getPropertyNames();
         final Map<String, WebDavProperty> sorted = new TreeMap<>();
 
@@ -229,7 +229,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     /**
      * Loads the live DAV properties for the resource.
      */
-    protected abstract void loadLiveProperties(DavPropertySet properties);
+    protected abstract void loadLiveProperties(CustomDavPropertySet properties);
 
     public DavCollection getParent() throws CosmoDavException {
         return null;

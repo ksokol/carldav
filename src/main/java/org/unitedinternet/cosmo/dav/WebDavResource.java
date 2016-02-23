@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.jackrabbit.webdav.DavConstants;
@@ -24,7 +25,6 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.Report;
 
 import java.io.IOException;
 import java.util.List;
@@ -123,10 +123,10 @@ public interface WebDavResource {
      * properties which should be marked accordingly (see also
      * {@link org.apache.jackrabbit.webdav.property.DavProperty#isInvisibleInAllprop()}.
      *
-     * @return a {@link DavPropertySet} containing at least all properties
+     * @return a {@link CustomDavPropertySet} containing at least all properties
      * of this resource that are exposed in 'allprop' PROPFIND request.
      */
-    DavPropertySet getProperties();
+    CustomDavPropertySet getProperties();
 
     /**
      * Return the webdav property with the specified name.

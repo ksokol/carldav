@@ -17,10 +17,10 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
+import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.springframework.web.util.UriUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
@@ -83,7 +83,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
      *
      * @throws CosmoDavException if the report info is not of the correct type
      */
-    protected void parseReport(ReportInfo info) throws CosmoDavException {
+    protected void parseReport(CustomReportInfo info) throws CosmoDavException {
         if (! getType2().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType2().getReportName());
         }

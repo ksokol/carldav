@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
@@ -23,7 +24,6 @@ import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 
 import java.io.IOException;
 import java.util.List;
@@ -153,7 +153,7 @@ public interface WebDavResource {
      * @param info The given report info.
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
-    Report getReport(ReportInfo info)
+    Report getReport(CustomReportInfo info)
         throws CosmoDavException;
 
     DavResourceLocator getResourceLocator();

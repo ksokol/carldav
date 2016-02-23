@@ -15,13 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -150,7 +150,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         throw new UnsupportedOperationException();
     }
 
-    public Report getReport(ReportInfo reportInfo) throws CosmoDavException {
+    public Report getReport(CustomReportInfo reportInfo) throws CosmoDavException {
         if (! exists()) {
             throw new NotFoundException();
         }
@@ -185,7 +185,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * Determines whether or not the report indicated by the given
      * report info is supported by this collection.
      */
-    protected boolean isSupportedReport(ReportInfo info) {
+    protected boolean isSupportedReport(CustomReportInfo info) {
         for (Iterator<CustomReportType> i=getReportTypes().iterator(); i.hasNext();) {
             if (i.next().isRequestedReportType(info)) {
                 return true;

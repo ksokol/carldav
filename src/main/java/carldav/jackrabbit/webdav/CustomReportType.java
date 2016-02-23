@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
@@ -29,7 +28,7 @@ public class CustomReportType implements XmlSerializable {
         this.reportClass = reportClass;
     }
 
-    public Report createReport(WebDavResource resource, ReportInfo info) throws DavException {
+    public Report createReport(WebDavResource resource, CustomReportInfo info) throws DavException {
         try {
             CustomReport report = reportClass.newInstance();
             report.init(resource, info);
@@ -47,7 +46,7 @@ public class CustomReportType implements XmlSerializable {
         return DomUtil.createElement(document, localName, namespace);
     }
 
-    public boolean isRequestedReportType(ReportInfo reqInfo) {
+    public boolean isRequestedReportType(CustomReportInfo reqInfo) {
         if (reqInfo != null) {
             return getReportName().equals(reqInfo.getReportName());
         }
@@ -107,7 +106,7 @@ public class CustomReportType implements XmlSerializable {
      * @throws IllegalArgumentException if the reportInfo is <code>null</code> or
      *                                  if the requested report type has not been registered yet.
      */
-    public static CustomReportType getType(ReportInfo reportInfo) {
+    public static CustomReportType getType(CustomReportInfo reportInfo) {
         if (reportInfo == null) {
             throw new IllegalArgumentException("ReportInfo must not be null.");
         }

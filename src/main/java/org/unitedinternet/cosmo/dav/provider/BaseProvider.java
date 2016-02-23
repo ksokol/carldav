@@ -30,7 +30,6 @@ import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.springframework.http.MediaType;
@@ -71,7 +70,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
     private DavResourceFactory resourceFactory;
     private int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
-    private ReportInfo reportInfo;
+    private CustomReportInfo reportInfo;
 
     public BaseProvider(DavResourceFactory resourceFactory) {
         this.resourceFactory = resourceFactory;
@@ -163,7 +162,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new NotFoundException();
         }
         try {
-            ReportInfo info = getReportInfo(request);
+            CustomReportInfo info = getReportInfo(request);
             if (info == null){
                 if(resource.isCollection()){
                     return;
@@ -249,14 +248,14 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         return DepthHeader.parse(request, DEPTH_INFINITY).getDepth();
     }
 
-    private ReportInfo getReportInfo(final HttpServletRequest request) throws CosmoDavException {
+    private CustomReportInfo getReportInfo(final HttpServletRequest request) throws CosmoDavException {
         if (reportInfo == null) {
             reportInfo = parseReportRequest(request);
         }
         return reportInfo;
     }
 
-    private ReportInfo parseReportRequest(final HttpServletRequest request) throws CosmoDavException {
+    private CustomReportInfo parseReportRequest(final HttpServletRequest request) throws CosmoDavException {
         Document requestDocument = getSafeRequestDocument(request);
         if (requestDocument == null) { // reports with no bodies are supported
             // for collections

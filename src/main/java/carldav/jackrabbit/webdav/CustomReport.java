@@ -1,6 +1,7 @@
 package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.DavException;
+import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -21,5 +22,9 @@ public interface CustomReport extends Report {
      * @param info
      * @throws DavException
      */
-    void init(WebDavResource resource, ReportInfo info) throws DavException;
+    void init(WebDavResource resource, CustomReportInfo info) throws DavException;
+
+    default void init(DavResource resource, ReportInfo info) throws DavException {
+        throw new UnsupportedOperationException();
+    }
 }

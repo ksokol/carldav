@@ -3,13 +3,14 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.MultiStatus;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -81,13 +82,14 @@ public class CustomMultiStatus extends MultiStatus {
      * @param propFindType
      * @param depth
      */
-    public void addResourceProperties(DavResource resource, DavPropertyNameSet propNameSet,
-                                      int propFindType, int depth) {
+    public void addResourceProperties2(WebDavResource resource, DavPropertyNameSet propNameSet,
+                                       int propFindType, int depth) {
         addResponse2(new CustomMultiStatusResponse(resource, propNameSet, propFindType));
         if (depth > 0 && resource.isCollection()) {
-            DavResourceIterator iter = resource.getMembers();
-            while (iter.hasNext()) {
-                addResourceProperties(iter.nextResource(), propNameSet, propFindType, depth-1);
+            final List<WebDavResource> members2 = resource.getMembers2();
+
+            for (final WebDavResource webDavResource : members2) {
+                addResourceProperties2(webDavResource, propNameSet, propFindType, depth - 1);
             }
         }
     }

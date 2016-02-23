@@ -11,6 +11,7 @@ import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,7 +58,7 @@ public class CustomMultiStatusResponse extends MultiStatusResponse implements Xm
      */
     private HashMap<Integer, PropContainer> statusMap = new HashMap<Integer, PropContainer>();
 
-    public CustomMultiStatusResponse(final DavResource resource, final DavPropertyNameSet propNameSet, final int propFindType) {
+    public CustomMultiStatusResponse(final WebDavResource resource, final DavPropertyNameSet propNameSet, final int propFindType) {
         super(resource, propNameSet, propFindType);
         customMultiStatusResponse(resource, propNameSet, propFindType);
     }
@@ -92,7 +93,7 @@ public class CustomMultiStatusResponse extends MultiStatusResponse implements Xm
      * #PROPFIND_PROPERTY_NAMES}, {@link #PROPFIND_ALL_PROP_INCLUDE}
      */
     public void customMultiStatusResponse(
-            DavResource resource, DavPropertyNameSet propNameSet,
+            WebDavResource resource, DavPropertyNameSet propNameSet,
             int propFindType) {
         customMultiStatusResponse(resource.getHref(), null, TYPE_PROPSTAT);
 

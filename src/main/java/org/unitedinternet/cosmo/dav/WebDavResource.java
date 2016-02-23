@@ -15,10 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
 import org.apache.jackrabbit.webdav.io.OutputContext;
+import org.apache.jackrabbit.webdav.property.DavProperty;
+import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.CosmoException;
@@ -99,6 +103,43 @@ public interface WebDavResource
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
     DavCollection getParent() throws CosmoDavException;
+
+    /**
+     * Returns the absolute href of this resource as returned in the
+     * multistatus response body.
+     *
+     * @return href
+     */
+    String getHref();
+
+    /**
+     * Returns all webdav properties present on this resource that will be
+     * return upon a {@link DavConstants#PROPFIND_ALL_PROP} request. The
+     * implementation may in addition expose other (protected or calculated)
+     * properties which should be marked accordingly (see also
+     * {@link org.apache.jackrabbit.webdav.property.DavProperty#isInvisibleInAllprop()}.
+     *
+     * @return a {@link DavPropertySet} containing at least all properties
+     * of this resource that are exposed in 'allprop' PROPFIND request.
+     */
+    DavPropertySet getProperties();
+
+    /**
+     * Return the webdav property with the specified name.
+     *
+     * @param name name of the webdav property
+     * @return the {@link DavProperty} with the given name or <code>null</code>
+     * if the property does not exist.
+     */
+    DavProperty<?> getProperty(DavPropertyName name);
+
+    /**
+     * Returns an array of all {@link DavPropertyName property names} available
+     * on this resource.
+     *
+     * @return an array of property names.
+     */
+    DavPropertyName[] getPropertyNames();
 
     void writeTo(OutputContext out)
         throws CosmoDavException, IOException;

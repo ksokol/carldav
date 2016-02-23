@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.WebdavResponse;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -118,8 +117,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
 
         DavPropertyNameSet props = getPropFindProperties(request);
         int type = getPropFindType(request);
-        MultiStatus ms = new CustomMultiStatus();
-        ms.addResourceProperties(resource, props, type, depth);
+        CustomMultiStatus ms = new CustomMultiStatus();
+        ms.addResourceProperties2(resource, props, type, depth);
         
         response.sendMultiStatus(ms);
     }

@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.TEXT_CALENDAR;
+
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContext;
@@ -38,7 +40,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashSet;
 import java.util.Set;
 
 public class DavCalendarResource extends DavItemResourceBase implements DavContent, ICalendarConstants {
@@ -81,8 +82,7 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
     }
 
     public void writeTo(OutputContext outputContext) throws CosmoDavException, IOException {
-        String contentType = IOUtil.buildContentType(ICALENDAR_MEDIA_TYPE, "UTF-8");
-        outputContext.setContentType(contentType);
+        outputContext.setContentType(TEXT_CALENDAR);
   
         // Get calendar
         String calendar = getCalendar();

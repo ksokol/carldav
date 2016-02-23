@@ -49,11 +49,11 @@ public class CustomResultMatchers {
     }
 
     public static ResultMatcher textHtmlContentType() {
-        return contentType(is(TEXT_HTML_VALUE + "; charset=UTF-8"));
+        return contentType(is(TEXT_HTML_VALUE + ";charset=UTF-8"));
     }
 
     public static ResultMatcher textCalendarContentType() {
-        return contentType(is("text/calendar; charset=UTF-8"));
+        return contentType(is("text/calendar;charset=UTF-8"));
     }
 
     public static ResultMatcher textCardContentType() {

@@ -15,9 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.TEXT_HTML;
+
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
@@ -239,7 +240,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     private void writeHtmlDirectoryIndex(OutputContext context) throws CosmoDavException, IOException {
-        context.setContentType(IOUtil.buildContentType("text/html", "UTF-8"));
+        context.setContentType(TEXT_HTML);
         context.setModificationTime(getModificationTime());
         context.setETag(getETag());
 

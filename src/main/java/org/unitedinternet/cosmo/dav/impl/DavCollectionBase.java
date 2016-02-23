@@ -114,7 +114,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return Collections.unmodifiableList(members);
     }
     
-    public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
+    public void removeMember2(WebDavResource member) {
         HibItem hibItem;
 
         if(member instanceof DavCollectionBase) {

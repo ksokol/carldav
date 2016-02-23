@@ -143,7 +143,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         }
 
         try {
-            resource.getParent().removeMember(resource);
+            resource.getParent().removeMember2(resource);
             response.setStatus(204);
         } catch (DavException e) {
             throw new CosmoDavException(e);

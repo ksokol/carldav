@@ -178,7 +178,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         throw new UnsupportedOperationException();
     }
 
-    public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
+    public void removeMember2(WebDavResource member) {
         throw new UnsupportedOperationException();
     }
 

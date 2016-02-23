@@ -26,7 +26,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.unitedinternet.cosmo.CosmoException;
 
 import java.io.IOException;
 import java.util.List;
@@ -110,7 +109,7 @@ public interface WebDavResource
      *
      * @throws DavException
      */
-    void removeMember(DavResource member) throws DavException;
+    void removeMember2(WebDavResource member) throws DavException;
 
     /**
      * Returns the absolute href of this resource as returned in the
@@ -183,6 +182,12 @@ public interface WebDavResource
     //TODO remove me as soon as jackrabbit has been replaced with custom code
     @Deprecated
     default DavResource getCollection() {
+        throw new UnsupportedOperationException();
+    }
+
+    //TODO remove me as soon as jackrabbit has been replaced with custom code
+    @Deprecated
+    default void removeMember(DavResource resource)  throws DavException {
         throw new UnsupportedOperationException();
     }
 }

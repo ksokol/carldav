@@ -44,6 +44,11 @@ public class DummyDavResource implements DavResource, WebDavResource {
     }
 
     @Override
+    public void removeMember2(final WebDavResource member) throws DavException {
+
+    }
+
+    @Override
     public void writeTo(final OutputContext out) throws CosmoDavException, IOException {
 
     }

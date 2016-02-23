@@ -31,7 +31,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.springframework.util.ReflectionUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -51,7 +50,6 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -249,21 +247,10 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         }
 
         try {
-
-            //TODO workaround for ReportType.createReport(DeltaVResource, ReportInfo)
             final CustomReportType type = CustomReportType.getType(reportInfo);
-            final Field reportClassField = ReflectionUtils.findField(type.getClass(), "reportClass");
-            reportClassField.setAccessible(true);
-            final Class<? extends Report> reportClass = (Class<? extends Report>) ReflectionUtils.getField(reportClassField, type);
-            Report report = reportClass.newInstance();
-            report.init(this, reportInfo);
-            return report;
+            return type.createReport(this, reportInfo);
         } catch (DavException exception){
             throw new CosmoDavException(exception.getErrorCode(),exception.getMessage(),exception.getCause());
-        } catch (CosmoDavException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            throw new CosmoDavException(exception);
         }
     }
 

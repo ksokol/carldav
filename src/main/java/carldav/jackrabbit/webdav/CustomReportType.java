@@ -3,15 +3,12 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.DeltaVConstants;
-import org.apache.jackrabbit.webdav.version.DeltaVResource;
-import org.apache.jackrabbit.webdav.version.report.ExpandPropertyReport;
-import org.apache.jackrabbit.webdav.version.report.LocateByHistoryReport;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.VersionTreeReport;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -21,21 +18,17 @@ public class CustomReportType implements DeltaVConstants, XmlSerializable {
 
     private static final HashMap<String, CustomReportType> types = new HashMap<>();
 
-    public static final CustomReportType VERSION_TREE = register(XML_VERSION_TREE, NAMESPACE, VersionTreeReport.class);
-    public static final CustomReportType EXPAND_PROPERTY = register(XML_EXPAND_PROPERTY, NAMESPACE, ExpandPropertyReport.class);
-    public static final CustomReportType LOCATE_BY_HISTORY = register(XML_LOCATE_BY_HISTORY, NAMESPACE, LocateByHistoryReport.class);
-
     private final String key;
     private final String localName;
     private final Namespace namespace;
-    private final Class<? extends Report> reportClass;
+    private final Class<? extends CustomReport> reportClass;
 
     /**
      * Private constructor
      *
      * @see CustomReportType#register(String, org.apache.jackrabbit.webdav.xml.Namespace, Class)
      */
-    private CustomReportType(String localName, Namespace namespace, String key, Class<? extends Report> reportClass) {
+    private CustomReportType(String localName, Namespace namespace, String key, Class<? extends CustomReport> reportClass) {
         this.localName = localName;
         this.namespace = namespace;
         this.key = key;
@@ -48,9 +41,9 @@ public class CustomReportType implements DeltaVConstants, XmlSerializable {
      * @return
      * @throws DavException
      */
-    public Report createReport(DeltaVResource resource, ReportInfo info) throws DavException {
+    public Report createReport(WebDavResource resource, ReportInfo info) throws DavException {
         try {
-            Report report = reportClass.newInstance();
+            CustomReport report = reportClass.newInstance();
             report.init(resource, info);
             return report;
         } catch (IllegalAccessException e) {
@@ -123,7 +116,7 @@ public class CustomReportType implements DeltaVConstants, XmlSerializable {
      *                                  if the given class does not implement the {@link Report} interface or if
      *                                  it does not provide an empty constructor.
      */
-    public static CustomReportType register(String localName, Namespace namespace, Class<? extends Report> reportClass) {
+    public static CustomReportType register(String localName, Namespace namespace, Class<? extends CustomReport> reportClass) {
         if (localName == null || namespace == null || reportClass == null) {
             throw new IllegalArgumentException("A ReportType cannot be registered with a null name, namespace or report class");
         }

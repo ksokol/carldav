@@ -1,6 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.DavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 
 public interface CustomReport {
@@ -16,7 +15,6 @@ public interface CustomReport {
      *
      * @param resource
      * @param info
-     * @throws DavException
      */
-    void init(WebDavResource resource, CustomReportInfo info) throws DavException;
+    void init(WebDavResource resource, CustomReportInfo info);
 }

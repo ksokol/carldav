@@ -22,7 +22,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.Report;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -160,12 +159,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
             throw new UnprocessableEntityException("Unknown report " + reportInfo.getReportName());
         }
 
-        try {
-            final CustomReportType type = CustomReportType.getType(reportInfo);
-            return type.createReport(this, reportInfo);
-        } catch (DavException exception){
-            throw new CosmoDavException(exception.getErrorCode(),exception.getMessage(),exception.getCause());
-        }
+        final CustomReportType type = CustomReportType.getType(reportInfo);
+        return type.createReport(this, reportInfo);
     }
 
     public DavResourceFactory getResourceFactory() {

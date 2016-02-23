@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
+import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -39,7 +39,7 @@ import javax.xml.parsers.ParserConfigurationException;
  * Base class for WebDAV reports.
  * </p>
  */
-public abstract class ReportBase implements Report, ExtendedDavConstants {
+public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
 
     private WebDavResource resource;
     private ReportInfo info;
@@ -53,6 +53,19 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
                      ReportInfo info)
             throws CosmoDavException {
         this.resource = (WebDavResource) resource;
+        this.info = info;
+        this.results = new HashSet<>();
+        parseReport(info);
+    }
+
+    /**
+     * Puts the report into a state where it can be run. Parses the given
+     * report info by calling {@link #parseReport(ReportInfo)}.
+     */
+    public void init(WebDavResource resource,
+                     ReportInfo info)
+            throws CosmoDavException {
+        this.resource = resource;
         this.info = info;
         this.results = new HashSet<>();
         parseReport(info);

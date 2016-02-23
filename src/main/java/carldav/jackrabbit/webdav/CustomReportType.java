@@ -2,7 +2,6 @@ package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.version.DeltaVConstants;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -14,7 +13,7 @@ import org.w3c.dom.Element;
 
 import java.util.HashMap;
 
-public class CustomReportType implements DeltaVConstants, XmlSerializable {
+public class CustomReportType implements XmlSerializable {
 
     private static final HashMap<String, CustomReportType> types = new HashMap<>();
 
@@ -23,11 +22,6 @@ public class CustomReportType implements DeltaVConstants, XmlSerializable {
     private final Namespace namespace;
     private final Class<? extends CustomReport> reportClass;
 
-    /**
-     * Private constructor
-     *
-     * @see CustomReportType#register(String, org.apache.jackrabbit.webdav.xml.Namespace, Class)
-     */
     private CustomReportType(String localName, Namespace namespace, String key, Class<? extends CustomReport> reportClass) {
         this.localName = localName;
         this.namespace = namespace;
@@ -35,12 +29,6 @@ public class CustomReportType implements DeltaVConstants, XmlSerializable {
         this.reportClass = reportClass;
     }
 
-    /**
-     * Creates a new {@link Report} with this type.
-     *
-     * @return
-     * @throws DavException
-     */
     public Report createReport(WebDavResource resource, ReportInfo info) throws DavException {
         try {
             CustomReport report = reportClass.newInstance();
@@ -55,25 +43,10 @@ public class CustomReportType implements DeltaVConstants, XmlSerializable {
         }
     }
 
-    /**
-     * Returns an Xml element representing this report type. It may be used to
-     * build the body for a REPORT request.
-     *
-     * @param document
-     * @return Xml representation
-     * @see XmlSerializable#toXml(org.w3c.dom.Document)
-     */
     public Element toXml(Document document) {
         return DomUtil.createElement(document, localName, namespace);
     }
 
-    /**
-     * Returns true if this <code>ReportType</code> is requested by the given
-     * <code>ReportInfo</code>
-     *
-     * @param reqInfo
-     * @return
-     */
     public boolean isRequestedReportType(ReportInfo reqInfo) {
         if (reqInfo != null) {
             return getReportName().equals(reqInfo.getReportName());
@@ -81,25 +54,10 @@ public class CustomReportType implements DeltaVConstants, XmlSerializable {
         return false;
     }
 
-    /**
-     * Return the qualified name of this <code>ReportType</code>.
-     *
-     * @return qualified name
-     */
     public String getReportName() {
         return key;
     }
 
-    /**
-     * @return
-     */
-    public String getLocalName() {
-        return localName;
-    }
-
-    /**
-     * @return
-     */
     public Namespace getNamespace() {
         return namespace;
     }

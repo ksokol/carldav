@@ -1,17 +1,18 @@
 package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.DavConstants;
-import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
 import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.jackrabbit.webdav.property.PropContainer;
+import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ import java.util.Set;
  * &lt;!ELEMENT prop ANY &gt;
  * </pre>
  */
-public class CustomMultiStatusResponse extends MultiStatusResponse implements XmlSerializable, DavConstants {
+public class CustomMultiStatusResponse implements XmlSerializable, DavConstants {
 
     private static final int TYPE_PROPSTAT = 0;
     private static final int TYPE_HREFSTATUS = 1;
@@ -44,11 +45,6 @@ public class CustomMultiStatusResponse extends MultiStatusResponse implements Xm
     private String href;
 
     /**
-     * An optional response description.
-     */
-    private String responseDescription;
-
-    /**
      * Type of MultiStatus response: Href + Status
      */
     private Status status;
@@ -56,23 +52,26 @@ public class CustomMultiStatusResponse extends MultiStatusResponse implements Xm
     /**
      * Type of MultiStatus response: PropStat Hashmap containing all status
      */
-    private HashMap<Integer, PropContainer> statusMap = new HashMap<Integer, PropContainer>();
+    private HashMap<Integer, PropContainer> statusMap = new HashMap<>();
 
     public CustomMultiStatusResponse(final WebDavResource resource, final DavPropertyNameSet propNameSet, final int propFindType) {
-        super(new DummyDavResource(resource), propNameSet, propFindType);
         customMultiStatusResponse(resource, propNameSet, propFindType);
     }
 
     public CustomMultiStatusResponse(final String href, final int i) {
-        super(href, i);
-    }
-
-    private void customMultiStatusResponse(String href, String responseDescription, int type) {
         if (!isValidHref(href)) {
             throw new IllegalArgumentException("Invalid href ('" + href + "')");
         }
         this.href = href;
-        this.responseDescription = responseDescription;
+        this.status = new Status(i);
+        this.type = TYPE_HREFSTATUS;
+    }
+
+    private void customMultiStatusResponse(String href, int type) {
+        if (!isValidHref(href)) {
+            throw new IllegalArgumentException("Invalid href ('" + href + "')");
+        }
+        this.href = href;
         this.type = type;
     }
 
@@ -95,7 +94,7 @@ public class CustomMultiStatusResponse extends MultiStatusResponse implements Xm
     public void customMultiStatusResponse(
             WebDavResource resource, DavPropertyNameSet propNameSet,
             int propFindType) {
-        customMultiStatusResponse(resource.getHref(), null, TYPE_PROPSTAT);
+        customMultiStatusResponse(resource.getHref(), TYPE_PROPSTAT);
 
         if (propFindType == PROPFIND_PROPERTY_NAMES) {
             // only property names requested
@@ -177,5 +176,86 @@ public class CustomMultiStatusResponse extends MultiStatusResponse implements Xm
      */
     private static boolean isValidHref(String href) {
         return href != null && !"".equals(href);
+    }
+
+    /**
+     * Adds a property to this response '200' propstat set.
+     *
+     * @param property the property to add
+     */
+    public void add(DavProperty<?> property) {
+        checkType(TYPE_PROPSTAT);
+        PropContainer status200 = getPropContainer(DavServletResponse.SC_OK, false);
+        status200.addContent(property);
+    }
+
+    public String getHref() {
+        return href;
+    }
+
+    /**
+     * Adds a property name to this response '200' propstat set.
+     *
+     * @param propertyName the property name to add
+     */
+    public void add(DavPropertyName propertyName) {
+        checkType(TYPE_PROPSTAT);
+        PropContainer status200 = getPropContainer(DavServletResponse.SC_OK, true);
+        status200.addContent(propertyName);
+    }
+
+    /**
+     * Adds a property to this response
+     *
+     * @param property the property to add
+     * @param status the status of the response set to select
+     */
+    public void add(DavProperty<?> property, int status) {
+        checkType(TYPE_PROPSTAT);
+        PropContainer propCont = getPropContainer(status, false);
+        propCont.addContent(property);
+    }
+
+    /**
+     * Adds a property name to this response
+     *
+     * @param propertyName the property name to add
+     * @param status the status of the response set to select
+     */
+    public void add(DavPropertyName propertyName, int status) {
+        checkType(TYPE_PROPSTAT);
+        PropContainer propCont = getPropContainer(status, true);
+        propCont.addContent(propertyName);
+    }
+
+    private void checkType(int type) {
+        if (this.type != type) {
+            throw new IllegalStateException("The given MultiStatusResponse is not of the required type.");
+        }
+    }
+
+    @Override
+    public Element toXml(final Document document) {
+        Element response = DomUtil.createElement(document, XML_RESPONSE, NAMESPACE);
+        // add '<href>'
+        response.appendChild(DomUtil.hrefToXml(href, document));
+        if (type == TYPE_PROPSTAT) {
+            // add '<propstat>' elements
+            for (Integer statusKey : statusMap.keySet()) {
+                Status st = new Status(statusKey);
+                PropContainer propCont = statusMap.get(statusKey);
+                if (!propCont.isEmpty()) {
+                    Element propstat = DomUtil.createElement(document, XML_PROPSTAT, NAMESPACE);
+                    propstat.appendChild(propCont.toXml(document));
+                    propstat.appendChild(st.toXml(document));
+                    response.appendChild(propstat);
+                }
+            }
+        } else {
+            // add a single '<status>' element
+            // NOTE: a href+status response cannot be created with 'null' status
+            response.appendChild(status.toXml(document));
+        }
+        return response;
     }
 }

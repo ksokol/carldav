@@ -1,7 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.DavResource;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
 import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -31,7 +29,7 @@ public class CustomMultiStatus extends MultiStatus {
     @Override
     public Element toXml(Document document) {
         final Element multistatus = DomUtil.createElement(document, XML_MULTISTATUS, NAMESPACE);
-        final CustomMultiStatusResponse[] responses = getResponses();
+        final CustomMultiStatusResponse[] responses = getResponses2();
         final Map<String, CustomMultiStatusResponse> sorted = new TreeMap<>();
 
         for (final CustomMultiStatusResponse response : responses) {
@@ -69,7 +67,7 @@ public class CustomMultiStatus extends MultiStatus {
      * @return array of all {@link CustomMultiStatusResponse responses} present in this
      * multistatus.
      */
-    public CustomMultiStatusResponse[] getResponses() {
+    public CustomMultiStatusResponse[] getResponses2() {
         return responses.values().toArray(new CustomMultiStatusResponse[responses.size()]);
     }
 

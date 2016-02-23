@@ -120,7 +120,7 @@ public interface WebDavResource {
      * return upon a {@link DavConstants#PROPFIND_ALL_PROP} request. The
      * implementation may in addition expose other (protected or calculated)
      * properties which should be marked accordingly (see also
-     * {@link org.apache.jackrabbit.webdav.property.DavProperty#isInvisibleInAllprop()}.
+     * {@link WebDavProperty#isInvisibleInAllprop()}.
      *
      * @return a {@link CustomDavPropertySet} containing at least all properties
      * of this resource that are exposed in 'allprop' PROPFIND request.

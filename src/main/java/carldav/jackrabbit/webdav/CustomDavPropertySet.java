@@ -1,6 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.PropContainer;
@@ -16,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-public class CustomDavPropertySet extends CustomPropContainer implements Iterable<DavProperty<?>> {
+public class CustomDavPropertySet extends CustomPropContainer implements Iterable<WebDavProperty<?>> {
 
     private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertySet.class);
 
@@ -49,7 +48,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The desired property or <code>null</code>
      */
-    public DavProperty<?> get(String name) {
+    public WebDavProperty<?> get(String name) {
         return get(DavPropertyName.create(name));
     }
 
@@ -62,7 +61,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The desired property or <code>null</code>
      */
-    public DavProperty<?> get(String name, Namespace namespace) {
+    public WebDavProperty<?> get(String name, Namespace namespace) {
         return get(DavPropertyName.create(name, namespace));
     }
 
@@ -85,7 +84,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The removed property or <code>null</code>
      */
-    public DavProperty<?> remove(DavPropertyName name) {
+    public WebDavProperty<?> remove(DavPropertyName name) {
         return map.remove(name);
     }
 
@@ -97,7 +96,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The removed property or <code>null</code>
      */
-    public DavProperty<?> remove(String name) {
+    public WebDavProperty<?> remove(String name) {
         return remove(DavPropertyName.create(name));
     }
 
@@ -110,16 +109,16 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The removed property or <code>null</code>
      */
-    public DavProperty<?> remove(String name, Namespace namespace) {
+    public WebDavProperty<?> remove(String name, Namespace namespace) {
         return remove(DavPropertyName.create(name, namespace));
     }
 
     /**
      * Returns an iterator over all property in this set.
      *
-     * @return An iterator over {@link DavProperty}.
+     * @return An iterator over {@link WebDavProperty}.
      */
-    public DavPropertyIterator iterator() {
+    public PropIter iterator() {
         return new PropIter();
     }
 
@@ -129,9 +128,9 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @param namespace The namespace of the property in the iteration.
      *
-     * @return An iterator over {@link DavProperty}.
+     * @return An iterator over {@link WebDavProperty}.
      */
-    public DavPropertyIterator iterator(Namespace namespace) {
+    public PropIter iterator(Namespace namespace) {
         return new PropIter(namespace);
     }
 
@@ -204,7 +203,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * Implementation of a DavPropertyIterator that returns webdav property.
      * Additionally, it can only return property with the given namespace.
      */
-    private class PropIter implements DavPropertyIterator {
+    public class PropIter implements Iterator<WebDavProperty<?>> {
 
         /** the namespace to match against */
         private final Namespace namespace;
@@ -213,7 +212,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
         private final Iterator<WebDavProperty<?>> iterator;
 
         /** the next property to return */
-        private DavProperty<?> next;
+        private WebDavProperty<?> next;
 
         /**
          * Creates a new property iterator.
@@ -235,11 +234,11 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
         /**
          * @see DavPropertyIterator#nextProperty();
          */
-        public DavProperty<?> nextProperty() throws NoSuchElementException {
+        public WebDavProperty<?> nextProperty() throws NoSuchElementException {
             if (next==null) {
                 throw new NoSuchElementException();
             }
-            DavProperty<?> ret = next;
+            WebDavProperty<?> ret = next;
             seek();
             return ret;
         }
@@ -254,7 +253,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
         /**
          * @see DavPropertyIterator#next();
          */
-        public DavProperty<?> next() {
+        public WebDavProperty<?> next() {
             return nextProperty();
         }
 

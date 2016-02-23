@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.Status;
-import org.apache.jackrabbit.webdav.property.DavProperty;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
@@ -120,7 +119,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
                 }
             } else {
                 // add all non-protected properties
-                for (DavProperty<?> property : resource.getProperties()) {
+                for (WebDavProperty<?> property : resource.getProperties()) {
                     boolean allDeadPlusRfc4918LiveProperties =
                             propFindType == PROPFIND_ALL_PROP
                                     || propFindType == PROPFIND_ALL_PROP_INCLUDE;

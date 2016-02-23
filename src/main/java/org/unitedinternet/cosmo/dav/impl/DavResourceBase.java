@@ -20,7 +20,6 @@ import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -139,10 +138,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         }
 
         return sorted;
-    }
-
-    public void setProperty(WebDavProperty<?> property) throws DavException {
-        throw new UnsupportedOperationException();
     }
 
     public void removeMember2(WebDavResource member) {

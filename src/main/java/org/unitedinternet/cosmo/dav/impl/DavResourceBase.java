@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -150,7 +151,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         throw new UnsupportedOperationException();
     }
 
-    public Report getReport(CustomReportInfo reportInfo) throws CosmoDavException {
+    public CustomReport getReport(CustomReportInfo reportInfo) throws CosmoDavException {
         if (! exists()) {
             throw new NotFoundException();
         }

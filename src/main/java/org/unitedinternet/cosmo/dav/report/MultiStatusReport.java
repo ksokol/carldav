@@ -35,13 +35,6 @@ public abstract class MultiStatusReport extends ReportBase {
     protected int propfindType = PROPFIND_ALL_PROP;
     private DavPropertyNameSet propfindProps;
 
-    public final boolean isMultiStatusReport() {
-        return true;
-    }
-
-    /**
-     * Generates and writes the multistatus response.
-     */
     protected void output(HttpServletResponse response)
             throws CosmoDavException {
         try {

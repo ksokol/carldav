@@ -28,7 +28,7 @@ public class CustomReportType implements XmlSerializable {
         this.reportClass = reportClass;
     }
 
-    public Report createReport(WebDavResource resource, CustomReportInfo info) throws DavException {
+    public CustomReport createReport(WebDavResource resource, CustomReportInfo info) throws DavException {
         try {
             CustomReport report = reportClass.newInstance();
             report.init(resource, info);
@@ -83,7 +83,7 @@ public class CustomReportType implements XmlSerializable {
         } else {
             try {
                 Object report = reportClass.newInstance();
-                if (!(report instanceof Report)) {
+                if (!(report instanceof CustomReport)) {
                     throw new IllegalArgumentException("Unable to register Report class: " + reportClass + " does not implement the Report interface.");
                 }
             } catch (IllegalAccessException e) {

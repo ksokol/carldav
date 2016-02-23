@@ -65,7 +65,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
 
     // Report methods
 
-    public CustomReportType getType2() {
+    public CustomReportType getType() {
         return REPORT_TYPE_CALDAV_MULTIGET;
     }
 
@@ -84,8 +84,8 @@ public class MultigetReport extends CaldavMultiStatusReport {
      * @throws CosmoDavException if the report info is not of the correct type
      */
     protected void parseReport(CustomReportInfo info) throws CosmoDavException {
-        if (! getType2().isRequestedReportType(info)) {
-            throw new CosmoDavException("Report not of type " + getType2().getReportName());
+        if (! getType().isRequestedReportType(info)) {
+            throw new CosmoDavException("Report not of type " + getType().getReportName());
         }
 
         setPropFindProps(info.getPropertyNameSet());
@@ -182,7 +182,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
         }
 
         if (getResource() instanceof DavCalendarResource) {
-            final CustomMultiStatus multiStatus = (CustomMultiStatus) getMultiStatus();
+            final CustomMultiStatus multiStatus = getMultiStatus();
             multiStatus.addResponse(buildMultiStatusResponse(getResource(), propspec));
             return;
         }

@@ -51,7 +51,7 @@ public class QueryReport extends CaldavMultiStatusReport {
 
     // Report methods
 
-    public CustomReportType getType2() {
+    public CustomReportType getType() {
         return REPORT_TYPE_CALDAV_QUERY;
     }
 
@@ -63,8 +63,8 @@ public class QueryReport extends CaldavMultiStatusReport {
      */
     protected void parseReport(CustomReportInfo info)
         throws CosmoDavException {
-        if (! getType2().isRequestedReportType(info)) {
-            throw new CosmoDavException("Report not of type " + getType2());
+        if (! getType().isRequestedReportType(info)) {
+            throw new CosmoDavException("Report not of type " + getType());
         }
 
         setPropFindProps(info.getPropertyNameSet());

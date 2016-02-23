@@ -74,7 +74,7 @@ public class AddressbookMultigetReport extends MultigetReport {
         return builder.toString();
     }
 
-    public CustomReportType getType2() {
+    public CustomReportType getType() {
         return REPORT_TYPE_CARDDAV_MULTIGET;
     }
 }

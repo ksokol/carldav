@@ -33,8 +33,8 @@ public class AddressbookQueryReport extends MultiStatusReport {
 
     @Override
     protected void parseReport(final CustomReportInfo info) throws CosmoDavException {
-        if (!getType2().isRequestedReportType(info)) {
-            throw new CosmoDavException("Report not of type " + getType2());
+        if (!getType().isRequestedReportType(info)) {
+            throw new CosmoDavException("Report not of type " + getType());
         }
 
         setPropFindProps(info.getPropertyNameSet());
@@ -63,7 +63,7 @@ public class AddressbookQueryReport extends MultiStatusReport {
         }
     }
 
-    public CustomReportType getType2() {
+    public CustomReportType getType() {
         return REPORT_TYPE_CARDDAV_QUERY;
     }
 

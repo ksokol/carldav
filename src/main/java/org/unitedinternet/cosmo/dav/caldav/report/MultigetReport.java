@@ -172,10 +172,10 @@ public class MultigetReport extends CaldavMultiStatusReport {
 
                 final CustomMultiStatus multiStatus = (CustomMultiStatus) getMultiStatus();
                 if (target != null) {
-                    multiStatus.addResponse2(buildMultiStatusResponse(target, propspec));
+                    multiStatus.addResponse(buildMultiStatusResponse(target, propspec));
                 }
                 else {
-                    multiStatus.addResponse2(new CustomMultiStatusResponse(href, 404));
+                    multiStatus.addResponse(new CustomMultiStatusResponse(href, 404));
                 }
             }
             return;
@@ -183,7 +183,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
 
         if (getResource() instanceof DavCalendarResource) {
             final CustomMultiStatus multiStatus = (CustomMultiStatus) getMultiStatus();
-            multiStatus.addResponse2(buildMultiStatusResponse(getResource(), propspec));
+            multiStatus.addResponse(buildMultiStatusResponse(getResource(), propspec));
             return;
         }
 

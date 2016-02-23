@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dav.report;
 import carldav.exception.resolver.ResponseUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import org.apache.jackrabbit.webdav.MultiStatus;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -59,7 +58,7 @@ public abstract class MultiStatusReport extends ReportBase {
 
         for (WebDavResource result : getResults()) {
             CustomMultiStatusResponse msr = buildMultiStatusResponse(result, resultProps);
-            multistatus.addResponse2(msr);
+            multistatus.addResponse(msr);
         }
     }
 
@@ -80,7 +79,7 @@ public abstract class MultiStatusReport extends ReportBase {
         return new CustomMultiStatusResponse(resource, props, propfindType);
     }
 
-    protected MultiStatus getMultiStatus() {
+    protected CustomMultiStatus getMultiStatus() {
         return multistatus;
     }
 

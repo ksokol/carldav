@@ -1,93 +1,43 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.MultiStatus;
+import static org.apache.jackrabbit.webdav.DavConstants.NAMESPACE;
+import static org.apache.jackrabbit.webdav.DavConstants.XML_MULTISTATUS;
+
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
+import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * @author Kamill Sokol
- */
-public class CustomMultiStatus extends MultiStatus {
+public class CustomMultiStatus implements XmlSerializable {
 
-    /**
-     * Map collecting the responses for this multistatus, where every href must
-     * only occur one single time.
-     */
-    private Map<String, CustomMultiStatusResponse> responses = new LinkedHashMap<>();
+    private final Map<String, CustomMultiStatusResponse> responses = new TreeMap<>();
 
-    /*
-     * sort nodes based on href in order to allow deterministic unit tests
-     */
     @Override
     public Element toXml(Document document) {
-        final Element multistatus = DomUtil.createElement(document, XML_MULTISTATUS, NAMESPACE);
-        final CustomMultiStatusResponse[] responses = getResponses2();
-        final Map<String, CustomMultiStatusResponse> sorted = new TreeMap<>();
-
-        for (final CustomMultiStatusResponse response : responses) {
-            sorted.put(response.getHref(), response);
+        final Element multiStatus = DomUtil.createElement(document, XML_MULTISTATUS, NAMESPACE);
+        for (Map.Entry<String, CustomMultiStatusResponse> resp : responses.entrySet()) {
+            multiStatus.appendChild(resp.getValue().toXml(document));
         }
-
-        for (Map.Entry<String, CustomMultiStatusResponse> resp : sorted.entrySet()) {
-            multistatus.appendChild(resp.getValue().toXml(document));
-        }
-        if (getResponseDescription() != null) {
-            Element respDesc = DomUtil.createElement(document, XML_RESPONSEDESCRIPTION, NAMESPACE, getResponseDescription());
-            multistatus.appendChild(respDesc);
-        }
-        return multistatus;
+        return multiStatus;
     }
 
-    /**
-     * Add a <code>MultiStatusResponse</code> element to this <code>MultiStatus</code>
-     * <p>
-     * This method is synchronized to avoid the problem described in
-     * <a href="https://issues.apache.org/jira/browse/JCR-2755">JCR-2755</a>.
-     *
-     * @param response
-     */
-    public void addResponse2(CustomMultiStatusResponse response) {
+    public void addResponse(CustomMultiStatusResponse response) {
         responses.put(response.getHref(), response);
     }
 
-    /**
-     * Returns the multistatus responses present as array.
-     * <p>
-     * This method is synchronized to avoid the problem described in
-     * <a href="https://issues.apache.org/jira/browse/JCR-2755">JCR-2755</a>.
-     *
-     * @return array of all {@link CustomMultiStatusResponse responses} present in this
-     * multistatus.
-     */
-    public CustomMultiStatusResponse[] getResponses2() {
-        return responses.values().toArray(new CustomMultiStatusResponse[responses.size()]);
-    }
-
-    /**
-     * Add response(s) to this multistatus, in order to build a multistatus for
-     * responding to a PROPFIND request.
-     *
-     * @param resource The resource to add property from
-     * @param propNameSet The requested property names of the PROPFIND request
-     * @param propFindType
-     * @param depth
-     */
-    public void addResourceProperties2(WebDavResource resource, DavPropertyNameSet propNameSet,
-                                       int propFindType, int depth) {
-        addResponse2(new CustomMultiStatusResponse(resource, propNameSet, propFindType));
+    public void addResourceProperties(WebDavResource resource, DavPropertyNameSet propNameSet, int propFindType, int depth) {
+        addResponse(new CustomMultiStatusResponse(resource, propNameSet, propFindType));
         if (depth > 0 && resource.isCollection()) {
             final List<WebDavResource> members2 = resource.getMembers2();
 
             for (final WebDavResource webDavResource : members2) {
-                addResourceProperties2(webDavResource, propNameSet, propFindType, depth - 1);
+                addResourceProperties(webDavResource, propNameSet, propFindType, depth - 1);
             }
         }
     }

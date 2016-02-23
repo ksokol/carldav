@@ -119,7 +119,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         DavPropertyNameSet props = getPropFindProperties(request);
         int type = getPropFindType(request);
         CustomMultiStatus ms = new CustomMultiStatus();
-        ms.addResourceProperties2(resource, props, type, depth);
+        ms.addResourceProperties(resource, props, type, depth);
 
         ResponseUtils.sendXmlResponse(response, ms, 207);
     }

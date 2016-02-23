@@ -160,13 +160,7 @@ public interface WebDavResource {
     
     String getETag();
 
-    /**
-     * Returns an iterator over all internal members.
-     *
-     * @return a {@link List<WebDavResource>} over all internal members.
-     */
-    //TODO rename me as soon as jackrabbit has been replaced with custom code
-    List<WebDavResource> getMembers2();
+    List<WebDavResource> getMembers();
 
     //TODO remove me as soon as jackrabbit has been replaced with custom code
     @Deprecated

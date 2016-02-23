@@ -34,7 +34,7 @@ public class CustomMultiStatus implements XmlSerializable {
     public void addResourceProperties(WebDavResource resource, DavPropertyNameSet propNameSet, int propFindType, int depth) {
         addResponse(new CustomMultiStatusResponse(resource, propNameSet, propFindType));
         if (depth > 0 && resource.isCollection()) {
-            final List<WebDavResource> members2 = resource.getMembers2();
+            final List<WebDavResource> members2 = resource.getMembers();
 
             for (final WebDavResource webDavResource : members2) {
                 addResourceProperties(webDavResource, propNameSet, propFindType, depth - 1);

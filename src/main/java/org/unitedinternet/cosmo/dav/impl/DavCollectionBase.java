@@ -98,7 +98,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     @Override
-    public List<WebDavResource> getMembers2() {
+    public List<WebDavResource> getMembers() {
         for (HibItem memberHibItem : item.getItems()) {
             WebDavResource resource = memberToResource(memberHibItem);
             members.add(resource);
@@ -271,7 +271,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
             writer.write("<h2>Members</h2>\n");
             writer.write("<ul>\n");
 
-            for (final WebDavResource child : getMembers2()) {
+            for (final WebDavResource child : getMembers()) {
                 writer.write("<li><a href=\"");
                 writer.write(child.getResourceLocator().getHref(child.isCollection()));
                 writer.write("\">");

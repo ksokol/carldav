@@ -97,7 +97,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return false;
     }
 
-    public List<WebDavResource> getMembers2() {
+    public List<WebDavResource> getMembers() {
         return new ArrayList<>();
     }
 

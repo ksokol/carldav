@@ -112,7 +112,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
             // or non-protected properties plus requested properties (allprop/include)
             if (propFindType == PROPFIND_BY_PROPERTY) {
                 // add explicitly requested properties (proptected or non-protected)
-                for (DavPropertyName propName : propNameSet) {
+                for (DavPropertyName propName : propNameSet.getContent()) {
                     DavProperty<?> prop = resource.getProperty(propName);
                     if (prop != null) {
                         status200.addContent(prop);

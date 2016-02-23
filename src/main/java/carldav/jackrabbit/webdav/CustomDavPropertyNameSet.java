@@ -1,7 +1,6 @@
 package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameIterator;
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -13,13 +12,12 @@ import org.w3c.dom.Element;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
-public class CustomDavPropertyNameSet extends PropContainer implements Iterable<DavPropertyName> {
+public class CustomDavPropertyNameSet extends PropContainer {
 
     private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertyNameSet.class);
-    private final Set<DavPropertyName> set = new HashSet<DavPropertyName>();
+    private final Set<DavPropertyName> set = new HashSet<>();
 
     /**
      * Create a new empty set.
@@ -101,14 +99,6 @@ public class CustomDavPropertyNameSet extends PropContainer implements Iterable<
         return set.remove(propertyName);
     }
 
-    /**
-     * @return Iterator over all <code>DavPropertyName</code>s contained in this
-     * set.
-     */
-    public DavPropertyNameIterator iterator() {
-        return new PropertyNameIterator();
-    }
-
     //------------------------------------------------------< PropContainer >---
     /**
      * @see PropContainer#contains(DavPropertyName)
@@ -156,31 +146,5 @@ public class CustomDavPropertyNameSet extends PropContainer implements Iterable<
     @Override
     public Collection<DavPropertyName> getContent() {
         return set;
-    }
-
-    //--------------------------------------------------------< inner class >---
-    private class PropertyNameIterator implements DavPropertyNameIterator {
-
-        private Iterator<DavPropertyName> iter;
-
-        private PropertyNameIterator() {
-            this.iter = set.iterator();
-        }
-
-        public DavPropertyName nextPropertyName() {
-            return iter.next();
-        }
-
-        public void remove() {
-            iter.remove();
-        }
-
-        public boolean hasNext() {
-            return iter.hasNext();
-        }
-
-        public DavPropertyName next() {
-            return iter.next();
-        }
     }
 }

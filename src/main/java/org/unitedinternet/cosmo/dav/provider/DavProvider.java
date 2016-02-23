@@ -31,7 +31,7 @@ public interface DavProvider {
 
     void head(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void propfind(HttpServletRequest request, WebdavResponse response, WebDavResource resource) throws CosmoDavException, IOException;
+    void propfind(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
     void put(HttpServletRequest request, HttpServletResponse response, DavContent content) throws CosmoDavException, IOException;
 

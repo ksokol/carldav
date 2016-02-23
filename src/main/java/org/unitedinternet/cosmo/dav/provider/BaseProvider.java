@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.dav.provider;
 
 import static org.unitedinternet.cosmo.dav.ExtendedDavConstants.QN_PROPFIND;
 
+import carldav.exception.resolver.ResponseUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
@@ -105,7 +106,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
      * {@inheritDoc}
      */
     public void propfind(HttpServletRequest request,
-                         WebdavResponse response,
+                         HttpServletResponse response,
                          WebDavResource resource)
         throws CosmoDavException, IOException {
         if (! resource.exists()){
@@ -120,8 +121,8 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         int type = getPropFindType(request);
         CustomMultiStatus ms = new CustomMultiStatus();
         ms.addResourceProperties2(resource, props, type, depth);
-        
-        response.sendMultiStatus(ms);
+
+        ResponseUtils.sendXmlResponse(response, ms, 207);
     }
 
     /**

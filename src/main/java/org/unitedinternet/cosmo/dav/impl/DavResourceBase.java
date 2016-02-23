@@ -18,17 +18,8 @@ package org.unitedinternet.cosmo.dav.impl;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.DavException;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.lock.ActiveLock;
-import org.apache.jackrabbit.webdav.lock.LockInfo;
-import org.apache.jackrabbit.webdav.lock.LockManager;
-import org.apache.jackrabbit.webdav.lock.Scope;
-import org.apache.jackrabbit.webdav.lock.Type;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.version.report.Report;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -37,7 +28,6 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.NotFoundException;
-import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
@@ -48,7 +38,6 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -116,21 +105,12 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return WebDavResource.COMPLIANCE_CLASS;
     }
 
-    public org.apache.jackrabbit.webdav.DavResourceLocator getLocator() {
-        return null;
-    }
-
     public String getResourcePath() {
         return locator.getPath();
     }
 
     public String getHref() {
         return locator.getHref(isCollection());
-    }
-
-    public void spool(OutputContext outputContext)
-        throws IOException {
-        throw new UnsupportedOperationException();
     }
 
     public DavPropertyName[] getPropertyNames() {
@@ -166,75 +146,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         throw new UnsupportedOperationException();
     }
 
-    public void removeProperty(DavPropertyName propertyName) throws DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    public MultiStatusResponse alterProperties(List<? extends PropEntry> changeList) throws DavException{
-        throw new UnsupportedOperationException();
-    }
-
-    public void addMember(org.apache.jackrabbit.webdav.DavResource member, InputContext inputContext) throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
     public void removeMember2(WebDavResource member) {
         throw new UnsupportedOperationException();
-    }
-
-    public boolean isLockable(Type type,
-                              Scope scope) {
-        // nothing is lockable at the moment
-        return false;
-    }
-
-    public boolean hasLock(Type type,
-                           Scope scope) {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public ActiveLock getLock(Type type,
-                              Scope scope) {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public ActiveLock[] getLocks() {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public ActiveLock lock(LockInfo reqLockInfo)
-        throws DavException {
-        // nothing is lockable at the moment
-        throw new PreconditionFailedException("Resource not lockable");
-    }
-
-    public ActiveLock refreshLock(LockInfo reqLockInfo,
-                                  String lockToken)
-        throws DavException {
-        // nothing is lockable at the moment
-        throw new PreconditionFailedException("Resource not lockable");
-    }
-
-    public void unlock(String lockToken)
-        throws DavException {
-        // nothing is lockable at the moment
-        throw new PreconditionFailedException("Resource not lockable");
-    }
-
-    public void addLockManager(LockManager lockmgr) {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public org.apache.jackrabbit.webdav.DavResourceFactory getFactory() {
-        return null;
-    }
-
-    public org.apache.jackrabbit.webdav.DavSession getSession() {
-        return null;
     }
 
     public Report getReport(ReportInfo reportInfo) throws CosmoDavException {
@@ -321,14 +234,6 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * Loads the live DAV properties for the resource.
      */
     protected abstract void loadLiveProperties(DavPropertySet properties);
-
-    public void move(final org.apache.jackrabbit.webdav.DavResource destination) throws DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    public void copy(final org.apache.jackrabbit.webdav.DavResource destination, final boolean shallow) throws DavException {
-        throw new UnsupportedOperationException();
-    }
 
     public DavCollection getParent() throws CosmoDavException {
         return null;

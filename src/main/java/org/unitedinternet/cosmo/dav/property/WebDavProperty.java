@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
+import org.apache.jackrabbit.webdav.DavConstants;
+import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 
 /**
@@ -22,8 +24,12 @@ import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
  * Extends the jcr-server WebDavProperty interface.
  * </p>
  */
-public interface WebDavProperty extends org.apache.jackrabbit.webdav.property.DavProperty,
-    ExtendedDavConstants {
+public interface WebDavProperty<T>
+
+        extends org.apache.jackrabbit.webdav.property.DavProperty,
+
+
+        ExtendedDavConstants {
 
     /**
      * <p>
@@ -41,4 +47,27 @@ public interface WebDavProperty extends org.apache.jackrabbit.webdav.property.Da
      * </p>
      */
     String getLanguage();
+
+    /**
+     * Returns the name of this property
+     *
+     * @return the name of this property
+     */
+    DavPropertyName getName();
+
+    /**
+     * Returns the value of this property
+     *
+     * @return the value of this property
+     */
+    T getValue();
+
+    /**
+     * Return <code>true</code> if this property should be suppressed
+     * in a PROPFIND/{@link DavConstants#PROPFIND_ALL_PROP DAV:allprop}
+     * response. See RFC 4918, Section 9.1.
+     *
+     * @return true, if this property should be suppressed in a PROPFIND/allprop response
+     */
+    boolean isInvisibleInAllprop();
 }

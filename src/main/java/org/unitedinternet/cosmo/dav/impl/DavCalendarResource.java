@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import static carldav.CarldavConstants.TEXT_CALENDAR;
+import static carldav.CarldavConstants.TEXT_CALENDAR_VALUE;
 
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.io.IOUtils;
@@ -82,7 +82,7 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
     }
 
     public void writeTo(OutputContext outputContext) throws CosmoDavException, IOException {
-        outputContext.setContentType(TEXT_CALENDAR);
+        outputContext.setContentType(TEXT_CALENDAR_VALUE);
   
         // Get calendar
         String calendar = getCalendar();

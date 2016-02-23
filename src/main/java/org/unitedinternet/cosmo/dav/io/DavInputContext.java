@@ -15,12 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav.io;
 
+import static carldav.CarldavConstants.TEXT_CALENDAR;
+import static carldav.CarldavConstants.TEXT_VCARD;
+
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
-import org.apache.jackrabbit.server.io.IOUtil;
 import org.apache.jackrabbit.webdav.io.InputContextImpl;
+import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -28,7 +31,6 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarDataException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
-import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,9 +80,10 @@ public class DavInputContext extends InputContextImpl implements CaldavConstants
         if (getContentType() == null) {
             throw new BadRequestException("No media type specified");
         }
-        String mediaType = IOUtil.getMimeType(getContentType());
-        if (!IOUtil.getMimeType(mediaType).equals(CT_ICALENDAR) && !IOUtil.getMimeType(mediaType).equals(ICalendarConstants.CARD_MEDIA_TYPE)) {
-            throw new UnsupportedCalendarDataException(mediaType);
+
+        final MediaType mediaType = MediaType.parseMediaType(getContentType());
+        if (!mediaType.isCompatibleWith(TEXT_CALENDAR) && !mediaType.isCompatibleWith(TEXT_VCARD)) {
+            throw new UnsupportedCalendarDataException(mediaType.toString());
         }
 
         try {

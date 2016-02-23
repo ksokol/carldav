@@ -16,8 +16,6 @@
 package org.unitedinternet.cosmo.icalendar;
 
 
-import java.nio.charset.Charset;
-
 /**
  * Provides constants for values specified by iCalendar that are not
  * otherwise defined by iCal4J.
@@ -35,8 +33,6 @@ public interface ICalendarConstants {
      * data formatted with iCalendar.
      */
     String ICALENDAR_MEDIA_TYPE = "text/calendar";
-
-
 
     String CARD_MEDIA_TYPE = "text/vcard";
 

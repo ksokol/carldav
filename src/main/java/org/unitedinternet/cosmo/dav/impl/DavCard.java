@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
 
-import org.apache.jackrabbit.server.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertySet;
@@ -54,7 +54,7 @@ public class DavCard extends DavItemResourceBase implements DavContent {
         outputContext.setModificationTime(getModificationTime());
         outputContext.setETag(getETag());
 
-        IOUtil.spool(new ByteArrayInputStream(calendar), outputContext.getOutputStream());
+        IOUtils.copy(new ByteArrayInputStream(calendar), outputContext.getOutputStream());
     }
 
     protected void populateItem(InputContext inputContext) throws CosmoDavException {

@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dav.impl;
 import static carldav.CarldavConstants.TEXT_CALENDAR;
 
 import carldav.jackrabbit.webdav.CustomReportType;
-import org.apache.jackrabbit.server.io.IOUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.property.DavPropertyName;
@@ -99,7 +99,7 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
 
         // spool calendar bytes
         ByteArrayInputStream bois = new ByteArrayInputStream(calendarBytes);
-        IOUtil.spool(bois, outputContext.getOutputStream());
+        IOUtils.copy(bois, outputContext.getOutputStream());
     }
 
     public Set<CustomReportType> getReportTypes() {

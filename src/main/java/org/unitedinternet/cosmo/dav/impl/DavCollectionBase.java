@@ -16,11 +16,12 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -239,10 +240,10 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     public void writeHead(final HttpServletResponse response) throws IOException {
         response.setContentType(TEXT_HTML_VALUE);
         if (getModificationTime() >= 0) {
-            response.addDateHeader(DavConstants.HEADER_LAST_MODIFIED, getModificationTime());
+            response.addDateHeader(LAST_MODIFIED, getModificationTime());
         }
         if (getETag() != null) {
-            response.setHeader(DavConstants.HEADER_ETAG, getETag());
+            response.setHeader(ETAG, getETag());
         }
     }
 

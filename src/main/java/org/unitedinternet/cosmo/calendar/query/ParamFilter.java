@@ -15,8 +15,8 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -54,7 +54,7 @@ import java.text.ParseException;
  * name value: a property parameter name (e.g., "PARTSTAT")
  * 
  */
-public class ParamFilter implements DavConstants, CaldavConstants {
+public class ParamFilter implements CustomDavConstants, CaldavConstants {
 
     private IsNotDefinedFilter isNotDefinedFilter = null;
 

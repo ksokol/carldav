@@ -15,8 +15,8 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -60,7 +60,7 @@ import java.util.List;
  * name (e.g., "ATTENDEE")
  * 
  */
-public class PropertyFilter implements DavConstants, CaldavConstants {
+public class PropertyFilter implements CustomDavConstants, CaldavConstants {
     private IsNotDefinedFilter isNotDefinedFilter = null;
 
     private TimeRangeFilter timeRangeFilter = null;

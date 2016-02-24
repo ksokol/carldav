@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import org.apache.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -38,7 +38,7 @@ import java.text.ParseException;
  * 
  * <!ATTLIST text-match collation CDATA "i;ascii-casemap" negate-condition (yes | no) "no">
  */
-public class TextMatchFilter implements DavConstants, CaldavConstants {
+public class TextMatchFilter implements CustomDavConstants, CaldavConstants {
 
     private static final String COLLATION_IASCII = "i;ascii-casemap";
     public static final String COLLATION_OCTET = "i;octet";

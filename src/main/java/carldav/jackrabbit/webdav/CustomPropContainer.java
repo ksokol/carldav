@@ -1,6 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
@@ -11,7 +10,7 @@ import org.w3c.dom.Element;
 
 import java.util.Collection;
 
-public abstract class CustomPropContainer implements XmlSerializable, DavConstants {
+public abstract class CustomPropContainer implements XmlSerializable, CustomDavConstants {
 
     private static Logger log = LoggerFactory.getLogger(CustomPropContainer.class);
 

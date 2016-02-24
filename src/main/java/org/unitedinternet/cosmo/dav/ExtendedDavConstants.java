@@ -17,8 +17,8 @@ package org.unitedinternet.cosmo.dav;
 
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NAMESPACE_CARDDAV;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.util.CosmoQName;
@@ -27,7 +27,7 @@ import org.unitedinternet.cosmo.util.UriTemplate;
 /**
  * Provides constants defined by Cosmo proprietary *DAV extensions.
  */
-public interface ExtendedDavConstants extends DavConstants {
+public interface ExtendedDavConstants extends CustomDavConstants {
 
     String PRE_COSMO = "cosmo";
     String NS_COSMO = "http://osafoundation.org/cosmo/DAV";

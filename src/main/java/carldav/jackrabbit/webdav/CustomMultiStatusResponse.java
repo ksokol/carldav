@@ -1,6 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -25,7 +24,7 @@ import java.util.Set;
  * &lt;!ELEMENT prop ANY &gt;
  * </pre>
  */
-public class CustomMultiStatusResponse implements XmlSerializable, DavConstants {
+public class CustomMultiStatusResponse implements XmlSerializable, CustomDavConstants {
 
     private static final int TYPE_PROPSTAT = 0;
     private static final int TYPE_HREFSTATUS = 1;

@@ -18,12 +18,12 @@ package org.unitedinternet.cosmo.dav.provider;
 import static org.unitedinternet.cosmo.dav.ExtendedDavConstants.QN_PROPFIND;
 
 import carldav.exception.resolver.ResponseUtils;
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
@@ -59,7 +59,7 @@ import javax.xml.parsers.ParserConfigurationException;
  *
  * @see DavProvider
  */
-public abstract class BaseProvider implements DavProvider, DavConstants {
+public abstract class BaseProvider implements DavProvider, CustomDavConstants {
 
     private static final MediaType APPLICATION_XML = MediaType.APPLICATION_XML;
     private static final MediaType TEXT_XML = MediaType.TEXT_XML;

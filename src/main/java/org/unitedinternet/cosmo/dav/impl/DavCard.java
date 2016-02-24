@@ -15,11 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
 
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.apache.commons.io.IOUtils;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -53,10 +54,10 @@ public class DavCard extends DavItemResourceBase implements DavContent {
         response.setContentType(CARD_MEDIA_TYPE);
         response.setContentLength(calendar.length);
         if (getModificationTime() >= 0) {
-            response.addDateHeader(DavConstants.HEADER_LAST_MODIFIED, getModificationTime());
+            response.addDateHeader(LAST_MODIFIED, getModificationTime());
         }
         if (getETag() != null) {
-            response.setHeader(DavConstants.HEADER_ETAG, getETag());
+            response.setHeader(ETAG, getETag());
         }
     }
 

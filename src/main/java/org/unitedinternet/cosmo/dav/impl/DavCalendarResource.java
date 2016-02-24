@@ -16,12 +16,13 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.TEXT_CALENDAR_VALUE;
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.io.IOUtils;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -94,10 +95,10 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         byte[] calendarBytes = calendar.getBytes(StandardCharsets.UTF_8);
         response.setContentLength(calendarBytes.length);
         if (getModificationTime() >= 0) {
-            response.addDateHeader(DavConstants.HEADER_LAST_MODIFIED, getModificationTime());
+            response.addDateHeader(LAST_MODIFIED, getModificationTime());
         }
         if (getETag() != null) {
-            response.setHeader(DavConstants.HEADER_ETAG, getETag());
+            response.setHeader(ETAG, getETag());
         }
     }
 

@@ -1,6 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
@@ -11,7 +10,7 @@ import org.w3c.dom.Element;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CustomDavPropertyName implements DavConstants, XmlSerializable, PropEntry {
+public class CustomDavPropertyName implements CustomDavConstants, XmlSerializable, PropEntry {
 
     /** internal 'cache' of created property names */
     private static final Map<Namespace, Map<String, CustomDavPropertyName>> cache = new HashMap<>();
@@ -72,7 +71,7 @@ public class CustomDavPropertyName implements DavConstants, XmlSerializable, Pro
 
     /**
      * Creates a new <code>CustomDavPropertyName</code> with the given local name
-     * and the default WebDAV {@link DavConstants#NAMESPACE namespace}.
+     * and the default WebDAV {@link CustomDavConstants#NAMESPACE namespace}.
      *
      * @param name The local name of the new property name
      *

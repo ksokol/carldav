@@ -1,7 +1,7 @@
 package carldav.jackrabbit.webdav;
 
-import static org.apache.jackrabbit.webdav.DavConstants.NAMESPACE;
-import static org.apache.jackrabbit.webdav.DavConstants.XML_MULTISTATUS;
+import static carldav.jackrabbit.webdav.CustomDavConstants.NAMESPACE;
+import static carldav.jackrabbit.webdav.CustomDavConstants.XML_MULTISTATUS;
 
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;

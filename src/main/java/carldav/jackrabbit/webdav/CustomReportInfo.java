@@ -1,6 +1,8 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.DavConstants;
+import static carldav.jackrabbit.webdav.CustomDavConstants.NAMESPACE;
+import static carldav.jackrabbit.webdav.CustomDavConstants.XML_PROP;
+
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
@@ -32,7 +34,7 @@ public class CustomReportInfo implements XmlSerializable {
      * Create a new <code>ReportInfo</code> object from the given Xml element.
      *
      * @param reportElement
-     * @param depth Depth value as retrieved from the {@link DavConstants#HEADER_DEPTH}.
+     * @param depth Depth value as retrieved from the {@link CustomDavConstants#HEADER_DEPTH}.
      * @throws DavException if the report element is <code>null</code>.
      */
     public CustomReportInfo(Element reportElement, int depth) throws DavException {
@@ -46,7 +48,7 @@ public class CustomReportInfo implements XmlSerializable {
         this.typeLocalName = reportElement.getLocalName();
         this.typeNamespace = DomUtil.getNamespace(reportElement);
         this.depth = depth;
-        Element propElement = DomUtil.getChildElement(reportElement, DavConstants.XML_PROP, DavConstants.NAMESPACE);
+        Element propElement = DomUtil.getChildElement(reportElement, XML_PROP, NAMESPACE);
         if (propElement != null) {
             propertyNames = new CustomDavPropertyNameSet(propElement);
             reportElement.removeChild(propElement);
@@ -57,7 +59,7 @@ public class CustomReportInfo implements XmlSerializable {
         ElementIterator it = DomUtil.getChildren(reportElement);
         while (it.hasNext()) {
             Element el = it.nextElement();
-            if (!DavConstants.XML_PROP.equals(el.getLocalName())) {
+            if (!CustomDavConstants.XML_PROP.equals(el.getLocalName())) {
                 content.add(el);
             }
         }
@@ -126,11 +128,11 @@ public class CustomReportInfo implements XmlSerializable {
 
     /**
      * Returns a <code>DavPropertyNameSet</code> providing the property names present
-     * in an eventual {@link DavConstants#XML_PROP} child element. If no such
+     * in an eventual {@link CustomDavConstants#XML_PROP} child element. If no such
      * child element is present an empty set is returned.
      *
      * @return {@link CustomDavPropertyNameSet} providing the property names present
-     * in an eventual {@link DavConstants#XML_PROP DAV:prop} child element or an empty set.
+     * in an eventual {@link CustomDavConstants#XML_PROP DAV:prop} child element or an empty set.
      */
     public CustomDavPropertyNameSet getPropertyNameSet() {
         return propertyNames;

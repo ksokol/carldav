@@ -41,7 +41,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
 
     /**
      * Retrieves the property with the specified <code>name</code> and the
-     * default WebDAV {@link org.apache.jackrabbit.webdav.DavConstants#NAMESPACE namespace}.
+     * default WebDAV {@link org.apache.jackrabbit.webdav.CustomDavConstants#NAMESPACE namespace}.
      *
      * @param name The name of the property to retrieve
      *
@@ -89,7 +89,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
 
     /**
      * Removes the property with the specified <code>name</code> and the
-     * default WebDAV {@link org.apache.jackrabbit.webdav.DavConstants#NAMESPACE namespace}.
+     * default WebDAV {@link org.apache.jackrabbit.webdav.CustomDavConstants#NAMESPACE namespace}.
      *
      * @param name The name of the property to remove
      *

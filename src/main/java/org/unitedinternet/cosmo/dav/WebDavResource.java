@@ -15,11 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
@@ -118,7 +118,7 @@ public interface WebDavResource {
 
     /**
      * Returns all webdav properties present on this resource that will be
-     * return upon a {@link DavConstants#PROPFIND_ALL_PROP} request. The
+     * return upon a {@link CustomDavConstants#PROPFIND_ALL_PROP} request. The
      * implementation may in addition expose other (protected or calculated)
      * properties which should be marked accordingly (see also
      * {@link WebDavProperty#isInvisibleInAllprop()}.

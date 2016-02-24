@@ -15,10 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
-import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
@@ -34,7 +34,7 @@ import java.text.ParseException;
 /**
  * A utility for parsing an {@link OutputFilter} from XML.
  */
-public class CaldavOutputFilter implements DavConstants, CaldavConstants, ICalendarConstants {
+public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, ICalendarConstants {
 
     /**
      * Returns an <code>OutputFilter</code> representing the given

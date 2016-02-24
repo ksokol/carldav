@@ -122,7 +122,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:propstat>
                                         <D:prop>
                                             <D:current-user-privilege-set/>
-                                            <C:calendar-home-set xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:calendar-home-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <D:current-user-principal/>
                                             <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                             <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>

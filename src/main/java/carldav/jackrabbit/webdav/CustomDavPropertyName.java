@@ -12,9 +12,6 @@ import java.util.Map;
 
 public class CustomDavPropertyName implements CustomDavConstants, XmlSerializable, PropEntry {
 
-    /** internal 'cache' of created property names */
-    private static final Map<Namespace, Map<String, CustomDavPropertyName>> cache = new HashMap<>();
-
     /* some standard webdav property (that have #PCDATA) */
     public static final CustomDavPropertyName CREATIONDATE = CustomDavPropertyName.create(PROPERTY_CREATIONDATE);
     public static final CustomDavPropertyName DISPLAYNAME = CustomDavPropertyName.create(PROPERTY_DISPLAYNAME);
@@ -48,14 +45,10 @@ public class CustomDavPropertyName implements CustomDavConstants, XmlSerializabl
      *
      * @return The WebDAV property name
      */
-    public synchronized static CustomDavPropertyName create(String name, Namespace namespace) {
+    public static CustomDavPropertyName create(String name, Namespace namespace) {
 
         // get (or create) map for the given namespace
-        Map<String, CustomDavPropertyName> map = cache.get(namespace);
-        if (map == null) {
-            map = new HashMap<String, CustomDavPropertyName>();
-            cache.put(namespace, map);
-        }
+        Map<String, CustomDavPropertyName> map = new HashMap<>();
         // get (or create) property name object
         CustomDavPropertyName ret = map.get(name);
         if (ret == null) {
@@ -77,7 +70,7 @@ public class CustomDavPropertyName implements CustomDavConstants, XmlSerializabl
      *
      * @return The WebDAV property name
      */
-    public synchronized static CustomDavPropertyName create(String name) {
+    public static CustomDavPropertyName create(String name) {
         return create(name, NAMESPACE);
     }
 
@@ -88,7 +81,7 @@ public class CustomDavPropertyName implements CustomDavConstants, XmlSerializabl
      * @param nameElement
      * @return <code>CustomDavPropertyName</code> instance
      */
-    public synchronized static CustomDavPropertyName createFromXml(Element nameElement) {
+    public static CustomDavPropertyName createFromXml(Element nameElement) {
         if (nameElement == null) {
             throw new IllegalArgumentException("Cannot build CustomDavPropertyName from a 'null' element.");
         }

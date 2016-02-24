@@ -142,8 +142,8 @@ class IosTests extends IntegrationTestSupport {
                                             <D:current-user-privilege-set/>
                                             <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
                                             <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                            <CAL:supported-calendar-component-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x1:getctag xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <x1:subscribed-strip-attachments xmlns:x1="http://calendarserver.org/ns/"/>
                                         </D:prop>
@@ -219,8 +219,8 @@ class IosTests extends IntegrationTestSupport {
                                             <D:current-user-privilege-set/>
                                             <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
                                             <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                            <CAL:supported-calendar-component-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x1:getctag xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <x1:subscribed-strip-attachments xmlns:x1="http://calendarserver.org/ns/"/>
                                         </D:prop>
@@ -655,7 +655,7 @@ class IosTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 404 Not Found</D:status>
                                 </D:propstat>
@@ -728,7 +728,7 @@ class IosTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 404 Not Found</D:status>
                                 </D:propstat>
@@ -976,7 +976,7 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                            <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -1045,7 +1045,7 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <CARD:address-data xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                            <B:address-data xmlns:B="urn:ietf:params:xml:ns:carddav"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>

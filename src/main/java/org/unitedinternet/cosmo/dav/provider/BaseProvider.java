@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.dav.provider;
 import static org.unitedinternet.cosmo.dav.ExtendedDavConstants.QN_PROPFIND;
 
 import carldav.exception.resolver.ResponseUtils;
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
@@ -29,7 +30,6 @@ import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.springframework.http.MediaType;
@@ -323,7 +323,7 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             if (include != null) {
                 ElementIterator included = DomUtil.getChildren(include);
                 while (included.hasNext()) {
-                    DavPropertyName name = DavPropertyName
+                    CustomDavPropertyName name = CustomDavPropertyName
                             .createFromXml(included.nextElement());
                     propfindProps.add(name);
                 }

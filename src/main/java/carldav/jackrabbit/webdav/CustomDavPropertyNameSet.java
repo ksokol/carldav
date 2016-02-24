@@ -1,6 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -17,7 +16,7 @@ import java.util.Set;
 public class CustomDavPropertyNameSet extends CustomPropContainer {
 
     private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertyNameSet.class);
-    private final Set<DavPropertyName> set = new HashSet<>();
+    private final Set<CustomDavPropertyName> set = new HashSet<>();
 
     /**
      * Create a new empty set.
@@ -50,19 +49,19 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
         // fill the set
         ElementIterator it = DomUtil.getChildren(propElement);
         while (it.hasNext()) {
-            add(DavPropertyName.createFromXml(it.nextElement()));
+            add(CustomDavPropertyName.createFromXml(it.nextElement()));
         }
     }
 
     /**
-     * Adds the specified {@link DavPropertyName} object to this
+     * Adds the specified {@link CustomDavPropertyName} object to this
      * set if it is not already present.
      *
      * @param propertyName element to be added to this set.
      * @return <tt>true</tt> if the set did not already contain the specified
      * element.
      */
-    public boolean add(DavPropertyName propertyName) {
+    public boolean add(CustomDavPropertyName propertyName) {
         return set.add(propertyName);
     }
 
@@ -75,7 +74,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * property name.
      */
     public boolean add(String localName, Namespace namespace) {
-        return set.add(DavPropertyName.create(localName, namespace));
+        return set.add(CustomDavPropertyName.create(localName, namespace));
     }
 
     /**
@@ -89,22 +88,22 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
     }
 
     /**
-     * Removes the specified {@link DavPropertyName} object from this set.
+     * Removes the specified {@link CustomDavPropertyName} object from this set.
      *
      * @param propertyName
      * @return true if the given property name could be removed.
      * @see HashSet#remove(Object)
      */
-    public boolean remove(DavPropertyName propertyName) {
+    public boolean remove(CustomDavPropertyName propertyName) {
         return set.remove(propertyName);
     }
 
     //------------------------------------------------------< PropContainer >---
     /**
-     * @see PropContainer#contains(DavPropertyName)
+     * @see PropContainer#contains(CustomDavPropertyName)
      */
     @Override
-    public boolean contains(DavPropertyName name) {
+    public boolean contains(CustomDavPropertyName name) {
         return set.contains(name);
     }
 
@@ -117,8 +116,8 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      */
     @Override
     public boolean addContent(PropEntry contentEntry) {
-        if (contentEntry instanceof DavPropertyName) {
-            return add((DavPropertyName) contentEntry);
+        if (contentEntry instanceof CustomDavPropertyName) {
+            return add((CustomDavPropertyName) contentEntry);
         }
         LOG.debug("DavPropertyName object expected. Found: " + contentEntry.getClass().toString());
         return false;
@@ -144,7 +143,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * @see PropContainer#getContent()
      */
     @Override
-    public Collection<DavPropertyName> getContent() {
+    public Collection<CustomDavPropertyName> getContent() {
         return set;
     }
 }

@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.Status;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -96,7 +95,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
         if (propFindType == PROPFIND_PROPERTY_NAMES) {
             // only property names requested
             CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, true);
-            for (DavPropertyName propName : resource.getPropertyNames()) {
+            for (CustomDavPropertyName propName : resource.getPropertyNames()) {
                 status200.addContent(propName);
             }
         } else {
@@ -104,13 +103,13 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
             CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, false);
 
             // Collection of missing property names for 404 responses
-            Set<DavPropertyName> missing = new HashSet<DavPropertyName>(propNameSet.getContent());
+            Set<CustomDavPropertyName> missing = new HashSet<>(propNameSet.getContent());
 
             // Add requested properties or all non-protected properties,
             // or non-protected properties plus requested properties (allprop/include)
             if (propFindType == PROPFIND_BY_PROPERTY) {
                 // add explicitly requested properties (proptected or non-protected)
-                for (DavPropertyName propName : propNameSet.getContent()) {
+                for (CustomDavPropertyName propName : propNameSet.getContent()) {
                     WebDavProperty<?> prop = resource.getProperty(propName);
                     if (prop != null) {
                         status200.addContent(prop);
@@ -135,7 +134,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
                 // try if missing properties specified in the include section
                 // can be obtained using resource.getProperty
                 if (propFindType == PROPFIND_ALL_PROP_INCLUDE && !missing.isEmpty()) {
-                    for (DavPropertyName propName : new HashSet<>(missing)) {
+                    for (CustomDavPropertyName propName : new HashSet<>(missing)) {
                         WebDavProperty<?> prop = resource.getProperty(propName);
                         if (prop != null) {
                             status200.addContent(prop);
@@ -147,7 +146,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
 
             if (!missing.isEmpty() && propFindType != PROPFIND_ALL_PROP) {
                 CustomPropContainer status404 = getPropContainer(DavServletResponse.SC_NOT_FOUND, true);
-                for (DavPropertyName propName : missing) {
+                for (CustomDavPropertyName propName : missing) {
                     status404.addContent(propName);
                 }
             }
@@ -195,7 +194,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
      *
      * @param propertyName the property name to add
      */
-    public void add(DavPropertyName propertyName) {
+    public void add(CustomDavPropertyName propertyName) {
         checkType(TYPE_PROPSTAT);
         CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, true);
         status200.addContent(propertyName);
@@ -219,7 +218,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, DavConstants 
      * @param propertyName the property name to add
      * @param status the status of the response set to select
      */
-    public void add(DavPropertyName propertyName, int status) {
+    public void add(CustomDavPropertyName propertyName, int status) {
         checkType(TYPE_PROPSTAT);
         CustomPropContainer propCont = getPropContainer(status, true);
         propCont.addContent(propertyName);

@@ -1,7 +1,6 @@
 package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.Namespace;
@@ -19,7 +18,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
 
     private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertySet.class);
 
-    private final Map<DavPropertyName, WebDavProperty<?>> map = new HashMap<>();
+    private final Map<CustomDavPropertyName, WebDavProperty<?>> map = new HashMap<>();
 
     /**
      * Adds a new property to this set.
@@ -49,7 +48,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @return The desired property or <code>null</code>
      */
     public WebDavProperty<?> get(String name) {
-        return get(DavPropertyName.create(name));
+        return get(CustomDavPropertyName.create(name));
     }
 
     /**
@@ -62,7 +61,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @return The desired property or <code>null</code>
      */
     public WebDavProperty<?> get(String name, Namespace namespace) {
-        return get(DavPropertyName.create(name, namespace));
+        return get(CustomDavPropertyName.create(name, namespace));
     }
 
     /**
@@ -72,7 +71,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The desired property or <code>null</code>
      */
-    public WebDavProperty<?> get(DavPropertyName name) {
+    public WebDavProperty<?> get(CustomDavPropertyName name) {
         return map.get(name);
     }
 
@@ -84,7 +83,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The removed property or <code>null</code>
      */
-    public WebDavProperty<?> remove(DavPropertyName name) {
+    public WebDavProperty<?> remove(CustomDavPropertyName name) {
         return map.remove(name);
     }
 
@@ -97,7 +96,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @return The removed property or <code>null</code>
      */
     public WebDavProperty<?> remove(String name) {
-        return remove(DavPropertyName.create(name));
+        return remove(CustomDavPropertyName.create(name));
     }
 
     /**
@@ -110,7 +109,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @return The removed property or <code>null</code>
      */
     public WebDavProperty<?> remove(String name, Namespace namespace) {
-        return remove(DavPropertyName.create(name, namespace));
+        return remove(CustomDavPropertyName.create(name, namespace));
     }
 
     /**
@@ -137,10 +136,10 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     /**
      * Return the names of all properties present in this set.
      *
-     * @return array of {@link DavPropertyName property names} present in this set.
+     * @return array of {@link CustomDavPropertyName property names} present in this set.
      */
-    public DavPropertyName[] getPropertyNames() {
-        return map.keySet().toArray(new DavPropertyName[map.keySet().size()]);
+    public CustomDavPropertyName[] getPropertyNames() {
+        return map.keySet().toArray(new CustomDavPropertyName[map.keySet().size()]);
     }
 
     //------------------------------------------------------< PropContainer >---
@@ -150,10 +149,10 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @param name The name of the property
      * @return <code>true</code> if this set contains the property;
      *         <code>false</code> otherwise.
-     * @see PropContainer#contains(DavPropertyName)
+     * @see PropContainer#contains(CustomDavPropertyName)
      */
     @Override
-    public boolean contains(DavPropertyName name) {
+    public boolean contains(CustomDavPropertyName name) {
         return map.containsKey(name);
     }
 

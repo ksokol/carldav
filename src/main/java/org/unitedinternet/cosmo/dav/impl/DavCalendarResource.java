@@ -17,12 +17,12 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.TEXT_CALENDAR_VALUE;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.io.IOUtils;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -52,8 +52,8 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         throws CosmoDavException {
         super(item, locator, factory);
 
-        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
-        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
+        registerLiveProperty(CustomDavPropertyName.GETCONTENTLENGTH);
+        registerLiveProperty(CustomDavPropertyName.GETCONTENTTYPE);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);

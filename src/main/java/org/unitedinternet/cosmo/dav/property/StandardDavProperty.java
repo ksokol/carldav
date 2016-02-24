@@ -15,13 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -39,29 +38,29 @@ import java.util.TreeSet;
  */
 public class StandardDavProperty implements WebDavProperty, XmlSerializable {
 
-    private DavPropertyName name;
+    private CustomDavPropertyName name;
     private Object value;
     private String lang;
     private boolean isProtected;
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value) {
         this(name, value, null, false);
     }
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value,
                                String lang) {
         this(name, value, lang, false);
     }
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value,
                                boolean isProtected) {
         this(name, value, null, isProtected);
     }
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value,
                                String lang,
                                boolean isProtected) {
@@ -75,7 +74,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
 
     // org.apache.jackrabbit.webdav.property.DavProperty methods
 
-    public DavPropertyName getName() {
+    public CustomDavPropertyName getName() {
         return name;
     }
 

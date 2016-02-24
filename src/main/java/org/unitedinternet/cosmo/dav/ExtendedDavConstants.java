@@ -17,8 +17,8 @@ package org.unitedinternet.cosmo.dav;
 
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NAMESPACE_CARDDAV;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import org.apache.jackrabbit.webdav.DavConstants;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.util.CosmoQName;
@@ -37,8 +37,8 @@ public interface ExtendedDavConstants extends DavConstants {
     Namespace NAMESPACE_XML =
             Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
-    DavPropertyName SUPPORTEDREPORTSET =
-        DavPropertyName.create("supported-report-set", NAMESPACE);
+    CustomDavPropertyName SUPPORTEDREPORTSET =
+            CustomDavPropertyName.create("supported-report-set", NAMESPACE);
 
     String QN_PROPFIND =
         DomUtil.getQualifiedName(XML_PROPFIND, NAMESPACE);

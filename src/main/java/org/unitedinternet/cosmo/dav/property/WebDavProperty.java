@@ -15,8 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import org.apache.jackrabbit.webdav.DavConstants;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 
@@ -49,7 +49,7 @@ public interface WebDavProperty<T> extends PropEntry, ExtendedDavConstants {
      *
      * @return the name of this property
      */
-    DavPropertyName getName();
+    CustomDavPropertyName getName();
 
     /**
      * Returns the value of this property

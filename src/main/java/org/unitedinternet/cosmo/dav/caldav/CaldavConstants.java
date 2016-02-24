@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.util.CosmoQName;
@@ -127,21 +127,21 @@ public interface CaldavConstants {
     String PROPERTY_CS_GET_CTAG = "getctag";
 
     /** The CalDAV property CALDAV:calendar-data */
-    DavPropertyName CALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DATA, NAMESPACE_CALDAV);
+    CustomDavPropertyName CALENDARDATA = CustomDavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DATA, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:calendar-data */
-    DavPropertyName ADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_ADDRESS_DATA, NAMESPACE_CARDDAV);
+    CustomDavPropertyName ADDRESSDATA = CustomDavPropertyName.create(PROPERTY_CARDDAV_ADDRESS_DATA, NAMESPACE_CARDDAV);
 
     /** The CalDAV property CALDAV:supported-calendar-component-set */
-    DavPropertyName SUPPORTEDCALENDARCOMPONENTSET = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_COMPONENT_SET,
+    CustomDavPropertyName SUPPORTEDCALENDARCOMPONENTSET = CustomDavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_COMPONENT_SET,
             NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:supported-collation-component-set */
-    DavPropertyName SUPPORTEDCOLLATIONSET = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_COLLATION_SET, NAMESPACE_CALDAV);
+    CustomDavPropertyName SUPPORTEDCOLLATIONSET = CustomDavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_COLLATION_SET, NAMESPACE_CALDAV);
     /** The CalDAV property CALDAV:supported-calendar-data */
-    DavPropertyName SUPPORTEDCALENDARDATA = DavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
+    CustomDavPropertyName SUPPORTEDCALENDARDATA = CustomDavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
     /** The CalDAV property CARDDAV:supported-address-data */
-    DavPropertyName SUPPORTEDADDRESSDATA = DavPropertyName.create(PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA, NAMESPACE_CARDDAV);
+    CustomDavPropertyName SUPPORTEDADDRESSDATA = CustomDavPropertyName.create(PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA, NAMESPACE_CARDDAV);
     /** The CardDAV property CARDDAV:addressbook-home-set */
-    DavPropertyName ADDRESSBOOKHOMESET = DavPropertyName.create(PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET, NAMESPACE_CARDDAV);
+    CustomDavPropertyName ADDRESSBOOKHOMESET = CustomDavPropertyName.create(PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET, NAMESPACE_CARDDAV);
 
     CosmoQName RESOURCE_TYPE_CALENDAR = new CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
 
@@ -149,13 +149,13 @@ public interface CaldavConstants {
     String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
 
     /** The CalDAV property CALDAV:calendar-home-set */
-    DavPropertyName CALENDARHOMESET = DavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
+    CustomDavPropertyName CALENDARHOMESET = CustomDavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
 
     /** The Calendar Server property CS:getctag */
-    DavPropertyName GET_CTAG = DavPropertyName.create(PROPERTY_CS_GET_CTAG, NAMESPACE_CS);
+    CustomDavPropertyName GET_CTAG = CustomDavPropertyName.create(PROPERTY_CS_GET_CTAG, NAMESPACE_CS);
 
     /** The ACL property name DAV:principal-URL-set */
     String PROPERTY_ACL_PRINCIPAL_URL = "principal-URL";
     /** The ACL property DAV:principal-URL */
-    DavPropertyName PRINCIPALURL = DavPropertyName.create(PROPERTY_ACL_PRINCIPAL_URL);
+    CustomDavPropertyName PRINCIPALURL = CustomDavPropertyName.create(PROPERTY_ACL_PRINCIPAL_URL);
 }

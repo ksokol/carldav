@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
@@ -22,7 +23,6 @@ import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.io.IOException;
@@ -134,15 +134,15 @@ public interface WebDavResource {
      * @return the {@link WebDavProperty} with the given name or <code>null</code>
      * if the property does not exist.
      */
-    WebDavProperty<?> getProperty(DavPropertyName name);
+    WebDavProperty<?> getProperty(CustomDavPropertyName name);
 
     /**
-     * Returns an array of all {@link DavPropertyName property names} available
+     * Returns an array of all {@link CustomDavPropertyName property names} available
      * on this resource.
      *
      * @return an array of property names.
      */
-    DavPropertyName[] getPropertyNames();
+    CustomDavPropertyName[] getPropertyNames();
 
     void writeTo(OutputContext out)
         throws CosmoDavException, IOException;

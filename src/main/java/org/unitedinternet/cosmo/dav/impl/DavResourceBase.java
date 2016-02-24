@@ -15,12 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -70,7 +70,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
 
     protected static final EntityConverter converter = new EntityConverter();
 
-    private final HashSet<DavPropertyName> liveProperties = new HashSet<>(10);
+    private final HashSet<CustomDavPropertyName> liveProperties = new HashSet<>(10);
     protected final Set<CustomReportType> reportTypes = new HashSet<>(10);
 
     private DavResourceLocator locator;
@@ -112,12 +112,12 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return locator.getHref(isCollection());
     }
 
-    public DavPropertyName[] getPropertyNames() {
+    public CustomDavPropertyName[] getPropertyNames() {
         loadProperties();
         return properties.getPropertyNames();
     }
 
-    public WebDavProperty<?> getProperty(DavPropertyName name) {
+    public WebDavProperty<?> getProperty(CustomDavPropertyName name) {
         loadProperties();
         return properties.get(name);
     }
@@ -130,10 +130,10 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
 
     public Map<String, WebDavProperty> getWebDavProperties() {
         final CustomDavPropertySet properties = getProperties();
-        final DavPropertyName[] propertyNames = properties.getPropertyNames();
+        final CustomDavPropertyName[] propertyNames = properties.getPropertyNames();
         final Map<String, WebDavProperty> sorted = new TreeMap<>();
 
-        for (final DavPropertyName propertyName : propertyNames) {
+        for (final CustomDavPropertyName propertyName : propertyNames) {
             sorted.put(propertyName.getName(), (WebDavProperty) properties.get(propertyName));
         }
 
@@ -197,7 +197,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * of live properties for the resource.
      * </p>
      */
-    protected void registerLiveProperty(DavPropertyName name) {
+    protected void registerLiveProperty(CustomDavPropertyName name) {
         liveProperties.add(name);
     }
 

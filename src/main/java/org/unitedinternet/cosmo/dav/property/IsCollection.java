@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 
 /**
  * Represents the Windows DAV:iscollection property.
@@ -23,6 +23,6 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 public class IsCollection extends StandardDavProperty {
 
     public IsCollection(boolean is) {
-        super(DavPropertyName.ISCOLLECTION, is ? "1" : "0", true);
+        super(CustomDavPropertyName.ISCOLLECTION, is ? "1" : "0", true);
     }
 }

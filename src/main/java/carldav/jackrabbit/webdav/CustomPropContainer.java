@@ -1,7 +1,6 @@
 package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.DavConstants;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
@@ -74,7 +73,7 @@ public abstract class CustomPropContainer implements XmlSerializable, DavConstan
      * @return true if any of the content elements (be it a DavProperty or a
      * DavPropertyName only) matches the given name.
      */
-    public abstract boolean contains(DavPropertyName name);
+    public abstract boolean contains(CustomDavPropertyName name);
 
     /**
      * Returns the xml representation of a property related set with the

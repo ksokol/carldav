@@ -2,11 +2,11 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -38,11 +38,11 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     public DavUserPrincipal(User user, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
-        registerLiveProperty(DavPropertyName.GETLASTMODIFIED);
-        registerLiveProperty(DavPropertyName.DISPLAYNAME);
-        registerLiveProperty(DavPropertyName.ISCOLLECTION);
-        registerLiveProperty(DavPropertyName.RESOURCETYPE);
-        registerLiveProperty(DavPropertyName.GETETAG);
+        registerLiveProperty(CustomDavPropertyName.GETLASTMODIFIED);
+        registerLiveProperty(CustomDavPropertyName.DISPLAYNAME);
+        registerLiveProperty(CustomDavPropertyName.ISCOLLECTION);
+        registerLiveProperty(CustomDavPropertyName.RESOURCETYPE);
+        registerLiveProperty(CustomDavPropertyName.GETETAG);
         registerLiveProperty(CALENDARHOMESET);
         registerLiveProperty(PRINCIPALURL);
         registerLiveProperty(ADDRESSBOOKHOMESET);

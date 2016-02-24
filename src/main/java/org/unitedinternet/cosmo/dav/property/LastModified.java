@@ -15,11 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import org.apache.jackrabbit.webdav.util.HttpDateFormat;
+
 import java.text.DateFormat;
 import java.util.Date;
-
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.util.HttpDateFormat;
 
 /**
  * Represents the DAV:getlastmodified property.
@@ -36,7 +36,7 @@ public class LastModified extends StandardDavProperty {
     };
     
     public LastModified(Date date) {
-        super(DavPropertyName.GETLASTMODIFIED, dateFormatLocal(date), false);
+        super(CustomDavPropertyName.GETLASTMODIFIED, dateFormatLocal(date), false);
     }
 
     private static String dateFormatLocal(Date date) {

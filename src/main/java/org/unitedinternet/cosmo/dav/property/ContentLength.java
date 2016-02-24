@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.CustomDavPropertyName;
 
 /**
  * Represents the DAV:getcontentlength property.
@@ -23,7 +23,7 @@ import org.apache.jackrabbit.webdav.property.DavPropertyName;
 public class ContentLength extends StandardDavProperty {
 
     public ContentLength(Long length) {
-        super(DavPropertyName.GETCONTENTLENGTH, len(length), false);
+        super(CustomDavPropertyName.GETCONTENTLENGTH, len(length), false);
     }
 
     public static String len(Long length) {

@@ -43,6 +43,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.namespace.QName;
+
 /**
  * <p>
  * Represents the <code>CALDAV:calendar-multiget</code> report that
@@ -58,8 +60,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
             "{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}\\}?");
 
     public static final CustomReportType REPORT_TYPE_CALDAV_MULTIGET =
-            CustomReportType.register(ELEMENT_CALDAV_CALENDAR_MULTIGET,
-                            NAMESPACE_CALDAV, MultigetReport.class);
+            CustomReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_MULTIGET, PRE_CALDAV), MultigetReport.class);
 
     private Set<String> hrefs;
 

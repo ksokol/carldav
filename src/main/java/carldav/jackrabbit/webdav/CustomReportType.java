@@ -2,8 +2,6 @@ package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -12,17 +10,17 @@ import org.w3c.dom.Element;
 
 import java.util.HashMap;
 
+import javax.xml.namespace.QName;
+
 public class CustomReportType implements XmlSerializable {
 
     private static final HashMap<String, CustomReportType> types = new HashMap<>();
 
     private final String key;
-    private final String localName;
-    private final Namespace namespace;
+    private final QName namespace;
     private final Class<? extends CustomReport> reportClass;
 
-    private CustomReportType(String localName, Namespace namespace, String key, Class<? extends CustomReport> reportClass) {
-        this.localName = localName;
+    private CustomReportType(QName namespace, String key, Class<? extends CustomReport> reportClass) {
         this.namespace = namespace;
         this.key = key;
         this.reportClass = reportClass;
@@ -43,7 +41,8 @@ public class CustomReportType implements XmlSerializable {
     }
 
     public Element toXml(Document document) {
-        return DomUtil.createElement(document, localName, namespace);
+        return CustomDomUtils.createElement(document, namespace.getLocalPart(), namespace);
+        //return DomUtil.createElement(document, localName, namespace);
     }
 
     public boolean isRequestedReportType(CustomReportInfo reqInfo) {
@@ -57,15 +56,10 @@ public class CustomReportType implements XmlSerializable {
         return key;
     }
 
-    public Namespace getNamespace() {
-        return namespace;
-    }
-
     /**
      * Register the report type with the given name, namespace and class, that can
      * run that report.
      *
-     * @param localName
      * @param namespace
      * @param reportClass
      * @return
@@ -73,11 +67,11 @@ public class CustomReportType implements XmlSerializable {
      *                                  if the given class does not implement the {@link Report} interface or if
      *                                  it does not provide an empty constructor.
      */
-    public static CustomReportType register(String localName, Namespace namespace, Class<? extends CustomReport> reportClass) {
-        if (localName == null || namespace == null || reportClass == null) {
+    public static CustomReportType register(QName namespace, Class<? extends CustomReport> reportClass) {
+        if (namespace == null || reportClass == null) {
             throw new IllegalArgumentException("A ReportType cannot be registered with a null name, namespace or report class");
         }
-        String key = DomUtil.getExpandedName(localName, namespace);
+        String key = namespace.toString();
         if (types.containsKey(key)) {
             return types.get(key);
         } else {
@@ -92,7 +86,7 @@ public class CustomReportType implements XmlSerializable {
                 throw new IllegalArgumentException("Error while validating Report class.: " + e.getMessage());
             }
 
-            CustomReportType type = new CustomReportType(localName, namespace, key, reportClass);
+            CustomReportType type = new CustomReportType(namespace, key, reportClass);
             types.put(key, type);
             return type;
         }

@@ -7,10 +7,11 @@ import carldav.jackrabbit.webdav.CustomReportType;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavCard;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+
+import javax.xml.namespace.QName;
 
 /**
  * @author Kamill Sokol
@@ -18,7 +19,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 public class AddressbookMultigetReport extends MultigetReport {
 
     public static final CustomReportType REPORT_TYPE_CARDDAV_MULTIGET =
-            CustomReportType.register(CaldavConstants.ELEMENT_CARDDAV_ADDRESSBOOK_MULTIGET, NAMESPACE_CARDDAV, AddressbookMultigetReport.class);
+            CustomReportType.register(new QName(NS_CARDDAV, ELEMENT_CARDDAV_ADDRESSBOOK_MULTIGET, PRE_CARD), AddressbookMultigetReport.class);
 
     @Override
     protected OutputFilter findOutputFilter(CustomReportInfo info) throws CosmoDavException {

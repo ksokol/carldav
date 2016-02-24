@@ -1,7 +1,8 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CARDDAV_ADDRESSBOOK_QUERY;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NAMESPACE_CARDDAV;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NS_CARDDAV;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CARD;
 
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
@@ -20,13 +21,15 @@ import org.w3c.dom.Element;
 
 import java.text.ParseException;
 
+import javax.xml.namespace.QName;
+
 /**
  * @author Kamill Sokol
  */
 public class AddressbookQueryReport extends MultiStatusReport {
 
-    public static final CustomReportType REPORT_TYPE_CARDDAV_QUERY = CustomReportType.register(ELEMENT_CARDDAV_ADDRESSBOOK_QUERY, NAMESPACE_CARDDAV,
-            AddressbookQueryReport.class);
+    public static final CustomReportType REPORT_TYPE_CARDDAV_QUERY =
+        CustomReportType.register(new QName(NS_CARDDAV, ELEMENT_CARDDAV_ADDRESSBOOK_QUERY, PRE_CARD), AddressbookQueryReport.class);
 
     private AddressbookFilter queryFilter;
     private OutputFilter outputFilter;

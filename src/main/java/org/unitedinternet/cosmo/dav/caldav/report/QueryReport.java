@@ -34,6 +34,8 @@ import org.w3c.dom.Element;
 
 import java.text.ParseException;
 
+import javax.xml.namespace.QName;
+
 /**
  * <p>
  * Represents the <code>CALDAV:calendar-query</code> report that
@@ -44,8 +46,7 @@ import java.text.ParseException;
 public class QueryReport extends CaldavMultiStatusReport {
 
     public static final CustomReportType REPORT_TYPE_CALDAV_QUERY =
-            CustomReportType.register(ELEMENT_CALDAV_CALENDAR_QUERY,
-                            NAMESPACE_CALDAV, QueryReport.class);
+            CustomReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_QUERY, PRE_CALDAV), QueryReport.class);
 
     private CalendarFilter queryFilter;
 

@@ -19,12 +19,14 @@ import org.w3c.dom.Node;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 public class CustomReportInfo implements XmlSerializable {
 
     private static Logger LOG = LoggerFactory.getLogger(ReportInfo.class);
 
     private final String typeLocalName;
-    private final Namespace typeNamespace;
+    private final QName typeNamespace;
     private final int depth;
     private final CustomDavPropertyNameSet propertyNames;
     private final List<Element> content = new ArrayList<>();
@@ -46,7 +48,7 @@ public class CustomReportInfo implements XmlSerializable {
         this.documentElement = (Element) reportElement.cloneNode(true);
 
         this.typeLocalName = reportElement.getLocalName();
-        this.typeNamespace = DomUtil.getNamespace(reportElement);
+        this.typeNamespace = CustomDomUtils.getNamespace(reportElement);
         this.depth = depth;
         Element propElement = DomUtil.getChildElement(reportElement, XML_PROP, NAMESPACE);
         if (propElement != null) {
@@ -82,7 +84,7 @@ public class CustomReportInfo implements XmlSerializable {
      * @return Name of the report type
      */
     public String getReportName() {
-        return DomUtil.getExpandedName(typeLocalName, typeNamespace);
+        return typeNamespace.toString(); //DomUtil.getExpandedName(typeLocalName, typeNamespace);
     }
 
     /**
@@ -144,7 +146,7 @@ public class CustomReportInfo implements XmlSerializable {
      * @param document
      */
     public Element toXml(Document document) {
-        Element reportElement = DomUtil.createElement(document, typeLocalName, typeNamespace);
+        Element reportElement = CustomDomUtils.createElement(document, typeLocalName, typeNamespace);
         if (!content.isEmpty()) {
             for (Element contentEntry : content) {
                 Node n = document.importNode(contentEntry, true);

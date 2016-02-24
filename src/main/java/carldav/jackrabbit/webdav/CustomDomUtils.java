@@ -29,4 +29,14 @@ public class CustomDomUtils {
         buf.append(localName);
         return buf.toString();
     }
+
+    public static QName getNamespace(Element element) {
+        String uri = element.getNamespaceURI();
+        String prefix = element.getPrefix();
+        if (uri == null) {
+            return new QName("");
+        } else {
+            return new QName(uri, element.getLocalName(), prefix);
+        }
+    }
 }

@@ -2,6 +2,8 @@ package carldav.jackrabbit.webdav;
 
 import org.apache.jackrabbit.webdav.xml.Namespace;
 
+import javax.xml.namespace.QName;
+
 /**
  * <code>DavConstants</code> provide constants for request and response
  * headers, XML elements and property names defined by
@@ -29,6 +31,9 @@ public interface CustomDavConstants {
     String XML_PROPNAME = "propname";
     String XML_PROPSTAT = "propstat";
     String XML_RESPONSE = "response";
+
+    QName ALLPROP = new QName("DAV:", XML_ALLPROP, "D");
+    QName PROPNAME = new QName("DAV:", XML_PROPNAME, "D");
 
     //-----------------------------------------------------< Property Names >---
     /*

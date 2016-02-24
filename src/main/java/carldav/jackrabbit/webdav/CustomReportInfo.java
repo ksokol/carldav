@@ -90,18 +90,17 @@ public class CustomReportInfo implements XmlSerializable {
     /**
      * Indicates whether this info contains an element with the given name/namespace.
      *
-     * @param localName
      * @param namespace
      * @return true if an element with the given name/namespace is present in the
      * body of the request info.
      */
-    public boolean containsContentElement(String localName, Namespace namespace) {
+    public boolean containsContentElement(QName namespace) {
         if (content.isEmpty()) {
             return false;
         }
         for (Element elem : content) {
-            boolean sameNamespace = (namespace == null) ? elem.getNamespaceURI() == null : namespace.isSame(elem.getNamespaceURI());
-            if (sameNamespace && elem.getLocalName().equals(localName)) {
+            boolean sameNamespace = (namespace == null) ? elem.getNamespaceURI() == null : namespace.getNamespaceURI().equals(elem.getNamespaceURI());
+            if (sameNamespace && elem.getLocalName().equals(namespace.getLocalPart())) {
                 return true;
             }
         }

@@ -4,6 +4,7 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CARDDA
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NS_CARDDAV;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CARD;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -41,9 +42,9 @@ public class AddressbookQueryReport extends MultiStatusReport {
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(XML_ALLPROP, NAMESPACE)) {
+        if (info.containsContentElement(CustomDavConstants.ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(XML_PROPNAME, NAMESPACE)) {
+        } else if (info.containsContentElement(CustomDavConstants.PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);

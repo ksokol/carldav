@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
@@ -90,9 +91,9 @@ public class MultigetReport extends CaldavMultiStatusReport {
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(XML_ALLPROP, NAMESPACE)) {
+        if (info.containsContentElement(CustomDavConstants.ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(XML_PROPNAME, NAMESPACE)) {
+        } else if (info.containsContentElement(CustomDavConstants.PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);

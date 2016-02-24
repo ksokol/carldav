@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav.property;
 
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
@@ -24,6 +25,7 @@ import org.w3c.dom.Element;
 
 import java.util.Set;
 import java.util.TreeSet;
+import javax.xml.namespace.QName;
 
 /**
  * <p>
@@ -145,7 +147,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
      * </p>
      */
     public Element toXml(Document document) {
-        Element e = null;
+        Element e;
 
         if (value != null && value instanceof Element) {
             e = (Element) document.importNode((Element) value, true);
@@ -164,7 +166,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
         }
 
         if (lang != null) {
-            DomUtil.setAttribute(e, XML_LANG, NAMESPACE_XML, lang);
+            CustomDomUtils.setAttribute(e, XML_LANG, new QName(""), lang);
         }
 
         return e;

@@ -20,7 +20,6 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NAMESPACE_CARD
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.util.CosmoQName;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
@@ -33,9 +32,6 @@ public interface ExtendedDavConstants extends CustomDavConstants {
     String NS_COSMO = "http://osafoundation.org/cosmo/DAV";
     String XML_LANG = "lang";
     String ADDRESSBOOK = "addressbook";
-
-    Namespace NAMESPACE_XML =
-            Namespace.getNamespace("xml", "http://www.w3.org/XML/1998/namespace");
 
     CustomDavPropertyName SUPPORTEDREPORTSET =
             CustomDavPropertyName.create("supported-report-set", NAMESPACE);

@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.property;
 
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import net.fortuna.ical4j.model.Component;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
@@ -28,41 +28,28 @@ import org.w3c.dom.Element;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Represents the CalDAV supported-calendar-component-set
- * property. Valid component types are defined by
- * {@link ComponentTypes}.
- */
-public class SupportedCalendarComponentSet extends StandardDavProperty
-    implements CaldavConstants, ICalendarConstants {
-    private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT,
-        Component.VTODO, Component.VJOURNAL };
-    /**
-     * Constructor.
-     */
+import javax.xml.namespace.QName;
+
+public class SupportedCalendarComponentSet extends StandardDavProperty implements CaldavConstants, ICalendarConstants {
+    private static String[] SUPPORTED_COMPONENT_TYPES = { Component.VEVENT, Component.VTODO, Component.VJOURNAL };
+
     public SupportedCalendarComponentSet() {
         this(SUPPORTED_COMPONENT_TYPES);
     }
 
-    /**
-     * Constructor.
-     * @param componentTypes The componene type.
-     */
     public SupportedCalendarComponentSet(String[] componentTypes) {
-        super(SUPPORTEDCALENDARCOMPONENTSET, componentTypes(componentTypes),
-                true);
+        super(SUPPORTEDCALENDARCOMPONENTSET, componentTypes(componentTypes), true);
         for (String type : componentTypes) {
             if (!CalendarUtils.isSupportedComponent(type)) {
-                throw new IllegalArgumentException("Invalid component type '"
-                        + type + "'.");
+                throw new IllegalArgumentException("Invalid component type '" + type + "'.");
             }
         }
     }
-    
+
     private static HashSet<String> componentTypes(String[] types) {
-        HashSet<String> typesSet = new HashSet<String>();
-        
-        for (String t: types) {
+        HashSet<String> typesSet = new HashSet<>();
+
+        for (String t : types) {
             typesSet.add(t);
         }
         return typesSet;
@@ -72,18 +59,12 @@ public class SupportedCalendarComponentSet extends StandardDavProperty
         return (Set<String>) getValue();
     }
 
-    /**
-     * 
-     * {@inheritDoc}
-     */
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
         for (String type : getComponentTypes()) {
-            Element e = DomUtil.createElement(document,
-                    ELEMENT_CALDAV_COMP, NAMESPACE_CALDAV);
-            DomUtil.setAttribute(e, ATTR_CALDAV_NAME,  Namespace.EMPTY_NAMESPACE, 
-                    type);
+            Element e = DomUtil.createElement(document, ELEMENT_CALDAV_COMP, NAMESPACE_CALDAV);
+            CustomDomUtils.setAttribute(e, ATTR_CALDAV_NAME, new QName(""), type);
             name.appendChild(e);
         }
 

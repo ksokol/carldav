@@ -1,5 +1,7 @@
 package carldav.jackrabbit.webdav;
 
+import org.apache.jackrabbit.webdav.xml.Namespace;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -37,6 +39,18 @@ public class CustomDomUtils {
             return new QName("");
         } else {
             return new QName(uri, element.getLocalName(), prefix);
+        }
+    }
+
+    public static void setAttribute(Element element, String attrLocalName, QName attrNamespace, String attrValue) {
+        if (attrNamespace == null) {
+            Attr attr = element.getOwnerDocument().createAttribute(attrLocalName);
+            attr.setValue(attrValue);
+            element.setAttributeNode(attr);
+        } else {
+            Attr attr = element.getOwnerDocument().createAttributeNS(attrNamespace.getNamespaceURI(), getPrefixedName(attrLocalName, attrNamespace));
+            attr.setValue(attrValue);
+            element.setAttributeNodeNS(attr);
         }
     }
 }

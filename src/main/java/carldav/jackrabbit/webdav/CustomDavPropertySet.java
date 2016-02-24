@@ -52,19 +52,6 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * Retrieves the property with the specified <code>name</code> and
-     * <code>namespace</code>.
-     *
-     * @param name The name of the property to retrieve
-     * @param namespace The namespace of the property to retrieve
-     *
-     * @return The desired property or <code>null</code>
-     */
-    public WebDavProperty<?> get(String name, Namespace namespace) {
-        return get(CustomDavPropertyName.create(name, namespace));
-    }
-
-    /**
      * Retrieves the property with the specified <code>name</code>
      *
      * @param name The webdav property name of the property to retrieve
@@ -100,37 +87,12 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * Removes the property with the specified <code>name</code> and
-     * <code>namespace</code> from this set.
-     *
-     * @param name The name of the property to remove
-     * @param namespace The namespace of the property to remove
-     *
-     * @return The removed property or <code>null</code>
-     */
-    public WebDavProperty<?> remove(String name, Namespace namespace) {
-        return remove(CustomDavPropertyName.create(name, namespace));
-    }
-
-    /**
      * Returns an iterator over all property in this set.
      *
      * @return An iterator over {@link WebDavProperty}.
      */
     public PropIter iterator() {
         return new PropIter();
-    }
-
-    /**
-     * Returns an iterator over all those property in this set, that have the
-     * indicated <code>namespace</code>.
-     *
-     * @param namespace The namespace of the property in the iteration.
-     *
-     * @return An iterator over {@link WebDavProperty}.
-     */
-    public PropIter iterator(Namespace namespace) {
-        return new PropIter(namespace);
     }
 
     /**

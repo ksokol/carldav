@@ -4,7 +4,6 @@ import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -63,18 +62,6 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      */
     public boolean add(CustomDavPropertyName propertyName) {
         return set.add(propertyName);
-    }
-
-    /**
-     * Creates a DavPropertyName from the given parameters and add it to this set.
-     *
-     * @param localName
-     * @param namespace
-     * @return <tt>true</tt> if the set did not already contain the specified
-     * property name.
-     */
-    public boolean add(String localName, Namespace namespace) {
-        return set.add(CustomDavPropertyName.create(localName, namespace));
     }
 
     /**

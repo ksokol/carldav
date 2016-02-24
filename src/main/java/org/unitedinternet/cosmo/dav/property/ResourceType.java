@@ -16,8 +16,7 @@
 package org.unitedinternet.cosmo.dav.property;
 
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.Namespace;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -42,10 +41,7 @@ public class ResourceType extends StandardDavProperty {
         Element name = getName().toXml(document);
 
         for (QName qn : getQnames()) {
-            Namespace ns =
-                Namespace.getNamespace(qn.getPrefix(), qn.getNamespaceURI());
-            Element e =
-                DomUtil.createElement(document, qn.getLocalPart(), ns);
+            Element e = CustomDomUtils.createElement(document, qn.getLocalPart(), qn);
             name.appendChild(e);
         }
 

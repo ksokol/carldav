@@ -19,8 +19,8 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_T
 
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.apache.commons.io.IOUtils;
+import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -34,6 +34,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
+import javax.servlet.http.HttpServletResponse;
+
 public class DavCard extends DavItemResourceBase implements DavContent {
 
     public DavCard(HibCardItem item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
@@ -44,17 +46,24 @@ public class DavCard extends DavItemResourceBase implements DavContent {
         this(new HibCardItem(), locator, factory);
     }
 
-    public void writeTo(OutputContext outputContext) throws CosmoDavException, IOException {
-
+    public void writeHead(final HttpServletResponse response) throws IOException {
         HibICalendarItem content = (HibICalendarItem) getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
-        outputContext.setContentType(CARD_MEDIA_TYPE);
-        outputContext.setContentLength(calendar.length);
-        outputContext.setModificationTime(getModificationTime());
-        outputContext.setETag(getETag());
+        response.setContentType(CARD_MEDIA_TYPE);
+        response.setContentLength(calendar.length);
+        if (getModificationTime() >= 0) {
+            response.addDateHeader(DavConstants.HEADER_LAST_MODIFIED, getModificationTime());
+        }
+        if (getETag() != null) {
+            response.setHeader(DavConstants.HEADER_ETAG, getETag());
+        }
+    }
 
-        IOUtils.copy(new ByteArrayInputStream(calendar), outputContext.getOutputStream());
+    public void writeBody(final HttpServletResponse response) throws IOException {
+        HibICalendarItem content = (HibICalendarItem) getItem();
+        final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
+        IOUtils.copy(new ByteArrayInputStream(calendar), response.getOutputStream());
     }
 
     protected void populateItem(InputContext inputContext) throws CosmoDavException {

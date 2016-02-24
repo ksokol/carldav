@@ -21,8 +21,8 @@ import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.io.IOUtils;
+import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -40,7 +40,10 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class DavCalendarResource extends DavItemResourceBase implements DavContent, ICalendarConstants {
 
@@ -81,25 +84,32 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         item.setCalendar(calendar);
     }
 
-    public void writeTo(OutputContext outputContext) throws CosmoDavException, IOException {
-        outputContext.setContentType(TEXT_CALENDAR_VALUE);
-  
+    public void writeHead(final HttpServletResponse response) throws IOException {
+        response.setContentType(TEXT_CALENDAR_VALUE);
+
         // Get calendar
         String calendar = getCalendar();
-        
-        // convert Calendar object to String, then to bytes (UTF-8)    
-        byte[] calendarBytes = calendar.getBytes("UTF-8");
-        outputContext.setContentLength(calendarBytes.length);
-        outputContext.setModificationTime(getModificationTime());
-        outputContext.setETag(getETag());
-        
-        if (! outputContext.hasStream()) {
-            return;
+
+        // convert Calendar object to String, then to bytes (UTF-8)
+        byte[] calendarBytes = calendar.getBytes(StandardCharsets.UTF_8);
+        response.setContentLength(calendarBytes.length);
+        if (getModificationTime() >= 0) {
+            response.addDateHeader(DavConstants.HEADER_LAST_MODIFIED, getModificationTime());
         }
+        if (getETag() != null) {
+            response.setHeader(DavConstants.HEADER_ETAG, getETag());
+        }
+    }
+
+    public void writeBody(final HttpServletResponse response) throws IOException {
+        // Get calendar
+        String calendar = getCalendar();
+        // convert Calendar object to String, then to bytes (UTF-8)
+        byte[] calendarBytes = calendar.getBytes(StandardCharsets.UTF_8);
 
         // spool calendar bytes
         ByteArrayInputStream bois = new ByteArrayInputStream(calendarBytes);
-        IOUtils.copy(bois, outputContext.getOutputStream());
+        IOUtils.copy(bois, response.getOutputStream());
     }
 
     public Set<CustomReportType> getReportTypes() {

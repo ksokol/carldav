@@ -28,8 +28,6 @@ import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.io.OutputContextImpl;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.springframework.http.MediaType;
@@ -49,7 +47,6 @@ import org.xml.sax.SAXException;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -188,7 +185,10 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
             throw new NotFoundException();
         }
         checkNoRequestBody(request);
-        resource.writeTo(createOutputContext(response, withEntity));
+        resource.writeHead(response);
+        if(withEntity) {
+            resource.writeBody(response);
+        }
         response.flushBuffer();
     }
     /**
@@ -212,20 +212,6 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         InputStream in = request.getContentLength() > 0 || chunked ?
             request.getInputStream() : null;
         return new DavInputContext(request, in);
-    }
-    
-    /**
-     * 
-     * @param response DavResponse
-     * @param withEntity boolean 
-     * @return OutputContext
-     * @throws IOException 
-     */
-    protected OutputContext createOutputContext(HttpServletResponse response,
-                                                boolean withEntity)
-        throws IOException {
-        OutputStream out = withEntity ? response.getOutputStream() : null;
-        return new OutputContextImpl(response, out);
     }
 
     protected void checkNoRequestBody(HttpServletRequest request) throws CosmoDavException {

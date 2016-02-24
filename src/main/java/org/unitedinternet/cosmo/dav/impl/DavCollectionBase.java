@@ -20,8 +20,8 @@ import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -46,6 +46,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -54,6 +55,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
@@ -158,11 +160,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return parent;
     }
 
-    public void writeTo(OutputContext out) throws CosmoDavException,
-            IOException {
-        writeHtmlDirectoryIndex(out);
-    }
-
     @Override
     public String getETag() {
         return "\"" + getItem().getEntityTag() + "\"";
@@ -239,17 +236,19 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return getResourceFactory().resolve(locator);
     }
 
-    private void writeHtmlDirectoryIndex(OutputContext context) throws CosmoDavException, IOException {
-        context.setContentType(TEXT_HTML_VALUE);
-        context.setModificationTime(getModificationTime());
-        context.setETag(getETag());
-
-        if(!context.hasStream()) {
-            return;
+    public void writeHead(final HttpServletResponse response) throws IOException {
+        response.setContentType(TEXT_HTML_VALUE);
+        if (getModificationTime() >= 0) {
+            response.addDateHeader(DavConstants.HEADER_LAST_MODIFIED, getModificationTime());
         }
+        if (getETag() != null) {
+            response.setHeader(DavConstants.HEADER_ETAG, getETag());
+        }
+    }
 
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(context.getOutputStream(), "utf8"));
-        try{
+    public void writeBody(final HttpServletResponse response) throws IOException {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8));
+        try {
             writer.write("<html>\n<head><title>");
             String colName = StringEscapeUtils.escapeHtml(getDisplayName());
             writer.write(colName);

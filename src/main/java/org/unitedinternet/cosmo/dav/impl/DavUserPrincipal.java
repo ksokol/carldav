@@ -6,7 +6,7 @@ import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.webdav.io.OutputContext;
+import org.apache.jackrabbit.webdav.DavConstants;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -25,10 +25,12 @@ import org.unitedinternet.cosmo.server.ServerConstants;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 
 public class DavUserPrincipal extends DavResourceBase implements CaldavConstants, DavContent {
@@ -76,10 +78,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         //TODO"\"" + user.getEntityTag() + "\"";
     }
 
-    public void writeTo(OutputContext context) throws CosmoDavException, IOException {
-        writeHtmlRepresentation(context);
-    }
-
     protected Set<QName> getResourceTypes() {
         return Collections.emptySet();
     }
@@ -99,12 +97,18 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new AddressbookHomeSet("/" + ServerConstants.SVC_DAV, user));
     }
 
-    private void writeHtmlRepresentation(OutputContext context) throws CosmoDavException, IOException {
-        context.setContentType(TEXT_HTML_VALUE);
-        context.setModificationTime(getModificationTime());
-        context.setETag(getETag());
+    public void writeHead(final HttpServletResponse response) throws IOException {
+        response.setContentType(TEXT_HTML_VALUE);
+        if (getModificationTime() >= 0) {
+            response.addDateHeader(DavConstants.HEADER_LAST_MODIFIED, getModificationTime());
+        }
+        if (getETag() != null) {
+            response.setHeader(DavConstants.HEADER_ETAG, getETag());
+        }
+    }
 
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(context.getOutputStream(), "utf8"));
+    public void writeBody(final HttpServletResponse response) throws IOException {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8));
         try {
             writer.write("<html>\n<head><title>");
             writer.write(StringEscapeUtils.escapeHtml(getDisplayName()));

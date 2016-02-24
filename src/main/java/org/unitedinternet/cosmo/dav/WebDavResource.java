@@ -22,11 +22,12 @@ import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
-import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.io.IOException;
 import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * An interface providing resource functionality required by WebDAV
@@ -144,8 +145,9 @@ public interface WebDavResource {
      */
     CustomDavPropertyName[] getPropertyNames();
 
-    void writeTo(OutputContext out)
-        throws CosmoDavException, IOException;
+    void writeHead(HttpServletResponse response) throws IOException;
+
+    void writeBody(HttpServletResponse response) throws IOException;
 
     /**
      * @return Return the report that matches the given report info if it is

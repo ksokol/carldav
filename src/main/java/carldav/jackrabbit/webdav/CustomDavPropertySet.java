@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.property.PropEntry;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
@@ -13,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+
+import javax.xml.namespace.QName;
 
 public class CustomDavPropertySet extends CustomPropContainer implements Iterable<WebDavProperty<?>> {
 
@@ -167,7 +168,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     public class PropIter implements Iterator<WebDavProperty<?>> {
 
         /** the namespace to match against */
-        private final Namespace namespace;
+        private final QName namespace;
 
         /** the internal iterator */
         private final Iterator<WebDavProperty<?>> iterator;
@@ -186,7 +187,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
          * Creates a new iterator with the given namespace
          * @param namespace The namespace to match against
          */
-        private PropIter(Namespace namespace) {
+        private PropIter(QName namespace) {
             this.namespace = namespace;
             iterator = map.values().iterator();
             seek();

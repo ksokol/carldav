@@ -100,8 +100,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
             setOutputFilter(findOutputFilter(info));
         }
 
-        List<Element> hrefElements =
-            info.getContentElements(XML_HREF, NAMESPACE);
+        List<Element> hrefElements = info.getContentElements(CustomDavConstants.HREF);
         if (hrefElements.size() == 0) {
             throw new BadRequestException("Expected at least one " + QN_HREF);
         }
@@ -109,14 +108,14 @@ public class MultigetReport extends CaldavMultiStatusReport {
             throw new BadRequestException("Expected at most one " + QN_HREF);
         }
 
-        URL resourceUrl = ((WebDavResource)getResource()). getResourceLocator().
+        URL resourceUrl = getResource(). getResourceLocator().
             getUrl(true, getResource().isCollection());
         String resourceUUID = null;
         Matcher resourceUUIDMatcher = RESOURCE_UUID_PATTERN.matcher(resourceUrl.getPath());
         if (resourceUUIDMatcher.find()) {
             resourceUUID = resourceUUIDMatcher.group(0);
         }        
-        hrefs = new HashSet<String>();
+        hrefs = new HashSet<>();
         for (Element element : hrefElements) { 
             String href = DomUtil.getTextTrim(element);
             href = updateHrefElementWithRequestUrlUUID(element, href, resourceUUID);

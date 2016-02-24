@@ -34,6 +34,7 @@ public interface CustomDavConstants {
 
     QName ALLPROP = new QName("DAV:", XML_ALLPROP, "D");
     QName PROPNAME = new QName("DAV:", XML_PROPNAME, "D");
+    QName HREF = new QName("DAV:", XML_HREF, "D");
 
     //-----------------------------------------------------< Property Names >---
     /*

@@ -1,9 +1,9 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import javax.xml.namespace.QName;
 
@@ -51,6 +51,32 @@ public class CustomDomUtils {
             Attr attr = element.getOwnerDocument().createAttributeNS(attrNamespace.getNamespaceURI(), getPrefixedName(attrLocalName, attrNamespace));
             attr.setValue(attrValue);
             element.setAttributeNodeNS(attr);
+        }
+    }
+
+
+    public static boolean matches(Node node, String requiredLocalName, QName requiredNamespace) {
+        if (node == null) {
+            return false;
+        }
+        boolean matchingNamespace = matchingNamespace(node, requiredNamespace);
+        return matchingNamespace && matchingLocalName(node, requiredLocalName);
+    }
+
+    private static boolean matchingNamespace(Node node, QName requiredNamespace) {
+        if (requiredNamespace == null) {
+            return true;
+        } else {
+            return requiredNamespace.getNamespaceURI().equals(node.getNamespaceURI());
+        }
+    }
+
+    private static boolean matchingLocalName(Node node, String requiredLocalName) {
+        if (requiredLocalName == null) {
+            return true;
+        } else {
+            String localName = node.getLocalName();
+            return requiredLocalName.equals(localName);
         }
     }
 }

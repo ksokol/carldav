@@ -8,7 +8,6 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,15 +111,14 @@ public class CustomReportInfo implements XmlSerializable {
      * the specified name/namespace. If this info contains no such element,
      * an empty list is returned.
      *
-     * @param localName
      * @param namespace
      * @return List contain all child elements with the given name/namespace
      * or an empty list.
      */
-    public List<Element> getContentElements(String localName, Namespace namespace) {
-        List<Element> l = new ArrayList<Element>();
+    public List<Element> getContentElements(QName namespace) {
+        List<Element> l = new ArrayList<>();
         for (Element elem : content) {
-            if (DomUtil.matches(elem, localName, namespace)) {
+            if (CustomDomUtils.matches(elem, namespace.getLocalPart(), namespace)) {
                 l.add(elem);
             }
         }

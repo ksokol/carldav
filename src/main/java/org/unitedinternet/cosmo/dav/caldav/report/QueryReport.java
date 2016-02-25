@@ -23,7 +23,6 @@ import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -146,7 +145,7 @@ public class QueryReport extends CaldavMultiStatusReport {
             return null;
         }
 
-        Element tzdata = DomUtil.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
+        Element tzdata = CustomDomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
         if (tzdata == null) {
             return null;
         }

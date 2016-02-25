@@ -331,7 +331,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
             }
 
             final MediaType mediaType = MediaType.valueOf(request.getContentType());
-            if (!(mediaType.equals(APPLICATION_XML) || mediaType.equals(TEXT_XML))) {
+            if (!(mediaType.isCompatibleWith(APPLICATION_XML) || mediaType.isCompatibleWith(TEXT_XML))) {
                 throw new UnsupportedMediaTypeException("Expected Content-Type " + APPLICATION_XML + " or " + TEXT_XML);
             }
 

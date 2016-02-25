@@ -1,10 +1,17 @@
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.ADDRESSBOOK_HOME_SET;
+import static carldav.CarldavConstants.CALENDAR_HOME_SET;
+import static carldav.CarldavConstants.DISPLAY_NAME;
+import static carldav.CarldavConstants.GET_ETAG;
+import static carldav.CarldavConstants.GET_LAST_MODIFIED;
+import static carldav.CarldavConstants.IS_COLLECTION;
+import static carldav.CarldavConstants.PRINCIPAL_URL;
+import static carldav.CarldavConstants.RESOURCE_TYPE;
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -41,14 +48,14 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     public DavUserPrincipal(User user, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
-        registerLiveProperty(CustomDavPropertyName.GETLASTMODIFIED);
-        registerLiveProperty(CustomDavPropertyName.DISPLAYNAME);
-        registerLiveProperty(CustomDavPropertyName.ISCOLLECTION);
-        registerLiveProperty(CustomDavPropertyName.RESOURCETYPE);
-        registerLiveProperty(CustomDavPropertyName.GETETAG);
-        registerLiveProperty(CALENDARHOMESET);
-        registerLiveProperty(PRINCIPALURL);
-        registerLiveProperty(ADDRESSBOOKHOMESET);
+        registerLiveProperty(GET_LAST_MODIFIED);
+        registerLiveProperty(DISPLAY_NAME);
+        registerLiveProperty(IS_COLLECTION);
+        registerLiveProperty(RESOURCE_TYPE);
+        registerLiveProperty(GET_ETAG);
+        registerLiveProperty(CALENDAR_HOME_SET);
+        registerLiveProperty(PRINCIPAL_URL);
+        registerLiveProperty(ADDRESSBOOK_HOME_SET);
 
         this.user = user;
     }

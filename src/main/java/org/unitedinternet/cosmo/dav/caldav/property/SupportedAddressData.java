@@ -1,5 +1,7 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
+import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
+
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
@@ -13,7 +15,7 @@ import org.w3c.dom.Element;
 public class SupportedAddressData extends StandardDavProperty implements ICalendarConstants, CaldavConstants {
 
     public SupportedAddressData() {
-        super(SUPPORTEDADDRESSDATA, null, true);
+        super(SUPPORTED_ADDRESS_DATA, null, true);
     }
 
     public Element toXml(Document document) {

@@ -1,5 +1,7 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
+import static carldav.CarldavConstants.ADDRESSBOOK_HOME_SET;
+
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -14,11 +16,11 @@ import org.w3c.dom.Element;
 public class AddressbookHomeSet extends StandardDavProperty implements CaldavConstants {
 
     public AddressbookHomeSet(DavResourceLocator locator, User user) {
-        super(ADDRESSBOOKHOMESET, href(locator.getBaseHref(), user), true);
+        super(ADDRESSBOOK_HOME_SET, href(locator.getBaseHref(), user), true);
     }
 
     public AddressbookHomeSet(String baseHref, User user) {
-        super(ADDRESSBOOKHOMESET, href(baseHref, user), true);
+        super(ADDRESSBOOK_HOME_SET, href(baseHref, user), true);
     }
 
     public String getHref() {

@@ -1,5 +1,10 @@
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.GET_CTAG;
+import static carldav.CarldavConstants.SUPPORTED_CALENDAR_COMPONENT_SET;
+import static carldav.CarldavConstants.SUPPORTED_CALENDAR_DATA;
+
+import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +39,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     public DavCalendarCollection(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(collection, locator, factory);
 
-        registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
-        registerLiveProperty(SUPPORTEDCALENDARDATA);
+        registerLiveProperty(SUPPORTED_CALENDAR_COMPONENT_SET);
+        registerLiveProperty(SUPPORTED_CALENDAR_DATA);
         registerLiveProperty(GET_CTAG);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);

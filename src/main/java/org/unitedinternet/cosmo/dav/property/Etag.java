@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import static carldav.CarldavConstants.GET_ETAG;
 
 /**
  * Represents the DAV:getetag property.
@@ -23,6 +23,6 @@ import carldav.jackrabbit.webdav.CustomDavPropertyName;
 public class Etag extends StandardDavProperty {
 
     public Etag(String etag) {
-        super(CustomDavPropertyName.GETETAG, etag, false);
+        super(GET_ETAG, etag, false);
     }
 }

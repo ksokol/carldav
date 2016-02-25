@@ -15,11 +15,12 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.GET_CONTENT_LENGTH;
+import static carldav.CarldavConstants.GET_CONTENT_TYPE;
 import static carldav.CarldavConstants.TEXT_CALENDAR_VALUE;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.io.IOUtils;
@@ -56,8 +57,8 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         throws CosmoDavException {
         super(item, locator, factory);
 
-        registerLiveProperty(CustomDavPropertyName.GETCONTENTLENGTH);
-        registerLiveProperty(CustomDavPropertyName.GETCONTENTTYPE);
+        registerLiveProperty(GET_CONTENT_LENGTH);
+        registerLiveProperty(GET_CONTENT_TYPE);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);

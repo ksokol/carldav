@@ -1,5 +1,7 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import static carldav.CarldavConstants.ADDRESS_DATA;
+
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import carldav.jackrabbit.webdav.CustomReportInfo;
@@ -56,7 +58,7 @@ public class AddressbookMultigetReport extends MultigetReport {
         }
 
         final DavCard file = (DavCard) resource;
-        if (getPropFindProps().contains(ADDRESSDATA)) {
+        if (getPropFindProps().contains(ADDRESS_DATA)) {
             msr.add(new AddressData(readCardData(file)));
         }
 

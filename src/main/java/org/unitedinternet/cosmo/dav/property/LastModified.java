@@ -15,7 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import static carldav.CarldavConstants.GET_LAST_MODIFIED;
+
 import org.apache.jackrabbit.webdav.util.HttpDateFormat;
 
 import java.text.DateFormat;
@@ -36,7 +37,7 @@ public class LastModified extends StandardDavProperty {
     };
     
     public LastModified(Date date) {
-        super(CustomDavPropertyName.GETLASTMODIFIED, dateFormatLocal(date), false);
+        super(GET_LAST_MODIFIED, dateFormatLocal(date), false);
     }
 
     private static String dateFormatLocal(Date date) {

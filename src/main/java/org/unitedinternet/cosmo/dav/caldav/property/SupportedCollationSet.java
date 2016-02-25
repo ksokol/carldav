@@ -15,8 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.property;
 
-import java.util.HashSet;
-import java.util.Set;
+import static carldav.CarldavConstants.SUPPORTED_COLLATION_SET;
 
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
@@ -25,6 +24,9 @@ import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents the CalDAV supported-collation-set
@@ -47,7 +49,7 @@ public class SupportedCollationSet extends StandardDavProperty
      * @param collations The CalDAV supported collations.
      */
     public SupportedCollationSet(String[] collations) {
-        super(SUPPORTEDCOLLATIONSET, collations(collations), true);
+        super(SUPPORTED_COLLATION_SET, collations(collations), true);
         for (String collation :collations) {
             if (! CalendarUtils.isSupportedCollation(collation)) {
                 throw new IllegalArgumentException("Invalid collation '" +

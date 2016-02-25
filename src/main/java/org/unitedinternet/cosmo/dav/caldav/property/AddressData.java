@@ -1,11 +1,10 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import static carldav.CarldavConstants.ADDRESS_DATA;
+
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * @author Kamill Sokol
@@ -13,7 +12,7 @@ import org.w3c.dom.Element;
 public class AddressData extends StandardDavProperty implements CaldavConstants, ICalendarConstants {
 
     public AddressData(String calendarData) {
-        super(ADDRESSDATA, calendarData, true);
+        super(ADDRESS_DATA, calendarData, true);
     }
 
 //    public Element toXml(Document document) {

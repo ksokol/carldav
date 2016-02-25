@@ -33,26 +33,6 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     *
-     * @param pset Properties to add
-     */
-    public void addAll(CustomDavPropertySet pset) {
-        map.putAll(pset.map);
-    }
-
-    /**
-     * Retrieves the property with the specified <code>name</code> and the
-     * default WebDAV {@link org.apache.jackrabbit.webdav.CustomDavConstants#NAMESPACE namespace}.
-     *
-     * @param name The name of the property to retrieve
-     *
-     * @return The desired property or <code>null</code>
-     */
-    public WebDavProperty<?> get(String name) {
-        return get(CustomDavPropertyName.create(name));
-    }
-
-    /**
      * Retrieves the property with the specified <code>name</code>
      *
      * @param name The webdav property name of the property to retrieve
@@ -73,18 +53,6 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      */
     public WebDavProperty<?> remove(CustomDavPropertyName name) {
         return map.remove(name);
-    }
-
-    /**
-     * Removes the property with the specified <code>name</code> and the
-     * default WebDAV {@link org.apache.jackrabbit.webdav.CustomDavConstants#NAMESPACE namespace}.
-     *
-     * @param name The name of the property to remove
-     *
-     * @return The removed property or <code>null</code>
-     */
-    public WebDavProperty<?> remove(String name) {
-        return remove(CustomDavPropertyName.create(name));
     }
 
     /**
@@ -232,7 +200,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
         private void seek() {
             while (iterator.hasNext()) {
                 next = iterator.next();
-                if (namespace == null || namespace.equals(next.getName().getNamespace())) {
+                if (namespace == null || namespace.getNamespaceURI().equals(next.getName().getNamespace())) {
                     return;
                 }
             }

@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
+import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
+
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -30,7 +32,7 @@ import java.util.TreeSet;
 public class SupportedReportSet extends StandardDavProperty {
 
     public SupportedReportSet(Set<CustomReportType> reports) {
-        super(SUPPORTEDREPORTSET, reports, true);
+        super(SUPPORTED_REPORT_SET, reports, true);
     }
 
     public Set<CustomReportType> getReportTypes() {

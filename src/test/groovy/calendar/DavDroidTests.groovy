@@ -2,6 +2,7 @@ package calendar
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
@@ -52,18 +53,18 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:current-user-privilege-set/>
-                                            <D:current-user-principal/>
+                                            <current-user-privilege-set xmlns="DAV:"/>
+                                            <current-user-principal xmlns="DAV:"/>
                                             <CARD:addressbook-description xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:displayname>calendarDisplayName</D:displayname>
                                             <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
                                                 <D:href>/dav/test01@localhost.de/contacts</D:href>
                                             </CARD:addressbook-home-set>
+                                            <D:displayname>calendarDisplayName</D:displayname>
                                             <D:resourcetype>
                                                 <D:collection/>
                                                 <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
@@ -121,27 +122,27 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:current-user-privilege-set/>
-                                            <CAL:calendar-home-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <D:current-user-principal/>
-                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
+                                            <current-user-privilege-set xmlns="DAV:"/>
                                             <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <current-user-principal xmlns="DAV:"/>
+                                            <CAL:calendar-home-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:displayname>calendarDisplayName</D:displayname>
-                                            <D:resourcetype>
-                                                <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                <D:collection/>
-                                            </D:resourcetype>
                                             <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                                 <C:comp name="VEVENT"/>
                                                 <C:comp name="VJOURNAL"/>
                                                 <C:comp name="VTODO"/>
                                             </C:supported-calendar-component-set>
+                                            <D:displayname>calendarDisplayName</D:displayname>
+                                            <D:resourcetype>
+                                                <D:collection/>
+                                                <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                            </D:resourcetype>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>

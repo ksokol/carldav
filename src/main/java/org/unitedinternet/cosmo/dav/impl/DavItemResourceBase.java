@@ -15,7 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import static carldav.CarldavConstants.DISPLAY_NAME;
+import static carldav.CarldavConstants.GET_CONTENT_LENGTH;
+import static carldav.CarldavConstants.GET_CONTENT_TYPE;
+import static carldav.CarldavConstants.GET_ETAG;
+import static carldav.CarldavConstants.GET_LAST_MODIFIED;
+import static carldav.CarldavConstants.IS_COLLECTION;
+import static carldav.CarldavConstants.RESOURCE_TYPE;
+
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
@@ -66,13 +73,13 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     public DavItemResourceBase(HibItem hibItem, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
-        registerLiveProperty(CustomDavPropertyName.GETLASTMODIFIED);
-        registerLiveProperty(CustomDavPropertyName.GETETAG);
-        registerLiveProperty(CustomDavPropertyName.DISPLAYNAME);
-        registerLiveProperty(CustomDavPropertyName.ISCOLLECTION);
-        registerLiveProperty(CustomDavPropertyName.RESOURCETYPE);
-        registerLiveProperty(CustomDavPropertyName.GETCONTENTLENGTH);
-        registerLiveProperty(CustomDavPropertyName.GETCONTENTTYPE);
+        registerLiveProperty(GET_LAST_MODIFIED);
+        registerLiveProperty(GET_ETAG);
+        registerLiveProperty(DISPLAY_NAME);
+        registerLiveProperty(IS_COLLECTION);
+        registerLiveProperty(RESOURCE_TYPE);
+        registerLiveProperty(GET_CONTENT_LENGTH);
+        registerLiveProperty(GET_CONTENT_TYPE);
 
         this.hibItem = hibItem;
     }

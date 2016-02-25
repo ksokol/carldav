@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import static carldav.CarldavConstants.DISPLAY_NAME;
 
 /**
  * Represents the DAV:displayname property.
@@ -23,7 +23,7 @@ import carldav.jackrabbit.webdav.CustomDavPropertyName;
 public class DisplayName extends StandardDavProperty {
 
     public DisplayName(String name) {
-        super(CustomDavPropertyName.DISPLAYNAME, name, false);
+        super(DISPLAY_NAME, name, false);
     }
 
     public String getDisplayName() {

@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.util.CosmoQName;
@@ -38,11 +37,6 @@ public interface CaldavConstants {
 
     Namespace NAMESPACE_CALDAV = Namespace.getNamespace(PRE_CALDAV, NS_CALDAV);
     Namespace NAMESPACE_CARDDAV = Namespace.getNamespace(PRE_CARD, NS_CARDDAV);
-
-    /** The Calendar Server XML namespace */
-    String PRE_CS = "CS";
-    String NS_CS = "http://calendarserver.org/ns/";
-    Namespace NAMESPACE_CS = Namespace.getNamespace(PRE_CS, NS_CS);
 
     /** The CalDAV XML element name <CALDAV:calendar> */
     String ELEMENT_CALDAV_CALENDAR = "calendar";
@@ -109,53 +103,9 @@ public interface CaldavConstants {
     /** The CalDAV XML attribute name CALDAV:end */
     String ATTR_CALDAV_END = "end";
 
-    /** The CalDAV property name CALDAV:calendar-data */
-    String PROPERTY_CALDAV_CALENDAR_DATA = "calendar-data";
-    /** The CalDAV property name CALDAV:supported-calendar-component-set */
-    String PROPERTY_CALDAV_SUPPORTED_CALENDAR_COMPONENT_SET = "supported-calendar-component-set";
-    /** The CalDAV property name CALDAV:supported-collation-set */
-    String PROPERTY_CALDAV_SUPPORTED_COLLATION_SET = "supported-collation-set";
-    /** The CalDAV property name CALDAV:supported-calendar-data */
-    String PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA = "supported-calendar-data";
-    /** The CalDAV property name CARDDAV:supported-address-data */
-    String PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA = "supported-address-data";
-
-    String PROPERTY_CARDDAV_ADDRESS_DATA = "address-data";
-    /** The CardDAV property name CARDDAV:addressbook-home-set */
-    String PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET = "addressbook-home-set";
-    /** The Calendar Server property name CS:getctag */
-    String PROPERTY_CS_GET_CTAG = "getctag";
-
-    /** The CalDAV property CALDAV:calendar-data */
-    CustomDavPropertyName CALENDARDATA = CustomDavPropertyName.create(PROPERTY_CALDAV_CALENDAR_DATA, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:calendar-data */
-    CustomDavPropertyName ADDRESSDATA = CustomDavPropertyName.create(PROPERTY_CARDDAV_ADDRESS_DATA, NAMESPACE_CARDDAV);
-
-    /** The CalDAV property CALDAV:supported-calendar-component-set */
-    CustomDavPropertyName SUPPORTEDCALENDARCOMPONENTSET = CustomDavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_COMPONENT_SET,
-            NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:supported-collation-component-set */
-    CustomDavPropertyName SUPPORTEDCOLLATIONSET = CustomDavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_COLLATION_SET, NAMESPACE_CALDAV);
-    /** The CalDAV property CALDAV:supported-calendar-data */
-    CustomDavPropertyName SUPPORTEDCALENDARDATA = CustomDavPropertyName.create(PROPERTY_CALDAV_SUPPORTED_CALENDAR_DATA, NAMESPACE_CALDAV);
-    /** The CalDAV property CARDDAV:supported-address-data */
-    CustomDavPropertyName SUPPORTEDADDRESSDATA = CustomDavPropertyName.create(PROPERTY_CARDDAV_SUPPORTED_ADDRESS_DATA, NAMESPACE_CARDDAV);
-    /** The CardDAV property CARDDAV:addressbook-home-set */
-    CustomDavPropertyName ADDRESSBOOKHOMESET = CustomDavPropertyName.create(PROPERTY_CALDAV_ADDRESSBOOK_HOME_SET, NAMESPACE_CARDDAV);
-
     CosmoQName RESOURCE_TYPE_CALENDAR = new CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
 
-    /** The CalDAV property name CALDAV:calendar-home-set */
-    String PROPERTY_CALDAV_CALENDAR_HOME_SET = "calendar-home-set";
 
-    /** The CalDAV property CALDAV:calendar-home-set */
-    CustomDavPropertyName CALENDARHOMESET = CustomDavPropertyName.create(PROPERTY_CALDAV_CALENDAR_HOME_SET, NAMESPACE_CALDAV);
 
-    /** The Calendar Server property CS:getctag */
-    CustomDavPropertyName GET_CTAG = CustomDavPropertyName.create(PROPERTY_CS_GET_CTAG, NAMESPACE_CS);
 
-    /** The ACL property name DAV:principal-URL-set */
-    String PROPERTY_ACL_PRINCIPAL_URL = "principal-URL";
-    /** The ACL property DAV:principal-URL */
-    CustomDavPropertyName PRINCIPALURL = CustomDavPropertyName.create(PROPERTY_ACL_PRINCIPAL_URL);
 }

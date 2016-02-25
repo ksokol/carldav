@@ -16,7 +16,6 @@ public interface CustomDavConstants {
 
     //-------------------------------------------------------< Depth Header >---
     String HEADER_DEPTH = "Depth";
-    String DEPTH_INFINITY_S = "infinity";
     int DEPTH_INFINITY = Integer.MAX_VALUE;
     int DEPTH_0 = 0;
     int DEPTH_1 = 1;
@@ -35,26 +34,6 @@ public interface CustomDavConstants {
     QName ALLPROP = new QName("DAV:", XML_ALLPROP, "D");
     QName PROPNAME = new QName("DAV:", XML_PROPNAME, "D");
     QName HREF = new QName("DAV:", XML_HREF, "D");
-
-    //-----------------------------------------------------< Property Names >---
-    /*
-     * Webdav property names as defined by RFC 2518<br>
-     * Note: Microsoft webdav clients as well as Webdrive request additional
-     * property (e.g. href, name, owner, isRootLocation, isCollection)  within the
-     * default namespace, which are are ignored by this implementation, except
-     * for the 'isCollection' property, needed for XP built-in clients.
-     */
-    String PROPERTY_CREATIONDATE = "creationdate";
-    String PROPERTY_DISPLAYNAME = "displayname";
-    String PROPERTY_GETCONTENTLANGUAGE = "getcontentlanguage";
-    String PROPERTY_GETCONTENTLENGTH = "getcontentlength";
-    String PROPERTY_GETCONTENTTYPE = "getcontenttype";
-    String PROPERTY_GETETAG = "getetag";
-    String PROPERTY_GETLASTMODIFIED = "getlastmodified";
-    String PROPERTY_LOCKDISCOVERY = "lockdiscovery";
-    String PROPERTY_RESOURCETYPE = "resourcetype";
-    String PROPERTY_SOURCE = "source";
-    String PROPERTY_SUPPORTEDLOCK = "supportedlock";
 
     //-------------------------------------------------< PropFind Constants >---
     int PROPFIND_BY_PROPERTY = 0;

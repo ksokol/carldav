@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import static carldav.CarldavConstants.CALENDAR_DATA;
+
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import carldav.jackrabbit.webdav.CustomReportInfo;
@@ -56,7 +58,7 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
      */
     protected CustomDavPropertyNameSet createResultPropSpec() {
         CustomDavPropertyNameSet spec = super.createResultPropSpec();
-        spec.remove(CALENDARDATA);
+        spec.remove(CALENDAR_DATA);
         return spec;
     }
 
@@ -69,7 +71,7 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
         CustomMultiStatusResponse msr = super.buildMultiStatusResponse(resource, props);
 
         DavCalendarResource dcr = (DavCalendarResource) resource;
-        if (getPropFindProps().contains(CALENDARDATA)) {
+        if (getPropFindProps().contains(CALENDAR_DATA)) {
             msr.add(new CalendarData(readCalendarData(dcr)));
         }
 

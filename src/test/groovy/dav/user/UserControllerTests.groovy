@@ -56,9 +56,6 @@ class UserControllerTests extends IntegrationTestSupport {
                                 <CARD:addressbook-home-set/>
                                 <resourcetype/>
                                 <displayname/>
-                                <CARD:addressbook-description/>
-                                <current-user-privilege-set/>
-                                <current-user-principal/>
                             </prop>
                         </propfind>"""
 
@@ -68,18 +65,10 @@ class UserControllerTests extends IntegrationTestSupport {
                                     <D:href>/dav/new_user01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:current-user-privilege-set/>
-                                            <D:current-user-principal/>
-                                            <CARD:addressbook-description xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
-                                        </D:prop>
-                                        <D:status>HTTP/1.1 404 Not Found</D:status>
-                                    </D:propstat>
-                                    <D:propstat>
-                                        <D:prop>
-                                            <D:displayname>calendarDisplayName</D:displayname>
                                             <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
                                                 <D:href>/dav/new_user01@localhost.de/contacts</D:href>
                                             </CARD:addressbook-home-set>
+                                            <D:displayname>calendarDisplayName</D:displayname>
                                             <D:resourcetype>
                                                 <D:collection/>
                                                 <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>

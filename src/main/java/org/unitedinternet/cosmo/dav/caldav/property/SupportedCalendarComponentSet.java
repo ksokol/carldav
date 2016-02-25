@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.property;
 
+import static carldav.CarldavConstants.SUPPORTED_CALENDAR_COMPONENT_SET;
+
 import carldav.jackrabbit.webdav.CustomDomUtils;
 import net.fortuna.ical4j.model.Component;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -38,7 +40,7 @@ public class SupportedCalendarComponentSet extends StandardDavProperty implement
     }
 
     public SupportedCalendarComponentSet(String[] componentTypes) {
-        super(SUPPORTEDCALENDARCOMPONENTSET, componentTypes(componentTypes), true);
+        super(SUPPORTED_CALENDAR_COMPONENT_SET, componentTypes(componentTypes), true);
         for (String type : componentTypes) {
             if (!CalendarUtils.isSupportedComponent(type)) {
                 throw new IllegalArgumentException("Invalid component type '" + type + "'.");

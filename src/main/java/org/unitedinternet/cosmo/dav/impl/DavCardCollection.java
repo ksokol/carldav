@@ -1,6 +1,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.SUPPORTEDADDRESSDATA;
+import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
 
 import carldav.card.CardQueryProcessor;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
@@ -30,7 +30,7 @@ public class DavCardCollection extends DavCollectionBase {
     public DavCardCollection(final HibCollectionItem collection, final DavResourceLocator locator, final DavResourceFactory factory,
             final CardQueryProcessor cardQueryProcessor) throws CosmoDavException {
         super(collection, locator, factory);
-        registerLiveProperty(SUPPORTEDADDRESSDATA);
+        registerLiveProperty(SUPPORTED_ADDRESS_DATA);
 
         this.cardQueryProcessor = cardQueryProcessor;
 

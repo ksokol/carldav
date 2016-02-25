@@ -15,7 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import static carldav.CarldavConstants.GET_CONTENT_TYPE;
+
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 
@@ -27,7 +28,7 @@ import java.nio.charset.Charset;
 public class ContentType extends StandardDavProperty {
 
     public ContentType(String type, String encoding) {
-        super(CustomDavPropertyName.GETCONTENTTYPE, mt(type, encoding), false);
+        super(GET_CONTENT_TYPE, mt(type, encoding), false);
     }
 
     private static String mt(String type, String encoding) {

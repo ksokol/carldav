@@ -1,6 +1,6 @@
 package org.unitedinternet.cosmo.dav.property;
 
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRINCIPALURL;
+import static carldav.CarldavConstants.PRINCIPAL_URL;
 
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
 public class PrincipalUrl extends StandardDavProperty {
 
     public PrincipalUrl(DavResourceLocator locator, User user) {
-        super(PRINCIPALURL, href(locator, user), true);
+        super(PRINCIPAL_URL, href(locator, user), true);
     }
 
     public String getHref() {

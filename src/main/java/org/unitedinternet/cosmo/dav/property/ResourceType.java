@@ -15,7 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import static carldav.CarldavConstants.RESOURCE_TYPE;
+
 import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -30,7 +31,7 @@ import javax.xml.namespace.QName;
 public class ResourceType extends StandardDavProperty {
 
     public ResourceType(Set<QName> qnames) {
-        super(CustomDavPropertyName.RESOURCETYPE, qnames, true);
+        super(RESOURCE_TYPE, qnames, true);
     }
 
     public Set<QName> getQnames() {

@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
+
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
@@ -81,7 +83,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     public DavResourceBase(DavResourceLocator locator,
                            DavResourceFactory factory)
         throws CosmoDavException {
-        registerLiveProperty(SUPPORTEDREPORTSET);
+        registerLiveProperty(SUPPORTED_REPORT_SET);
         this.locator = locator;
         this.factory = factory;
         this.properties = new CustomDavPropertySet();

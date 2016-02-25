@@ -3,7 +3,7 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.caldav;
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_MULTISTATUS;
 
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class CustomMultiStatus implements XmlSerializable {
+public class CustomMultiStatus implements CustomXmlSerializable {
 
     private final Map<String, CustomMultiStatusResponse> responses = new TreeMap<>();
 

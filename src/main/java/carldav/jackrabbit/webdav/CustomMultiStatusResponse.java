@@ -2,10 +2,10 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.w3c.dom.Document;
@@ -26,7 +26,7 @@ import java.util.Set;
  * &lt;!ELEMENT prop ANY &gt;
  * </pre>
  */
-public class CustomMultiStatusResponse implements XmlSerializable, CustomDavConstants {
+public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomDavConstants {
 
     private static final int TYPE_PROPSTAT = 0;
     private static final int TYPE_HREFSTATUS = 1;

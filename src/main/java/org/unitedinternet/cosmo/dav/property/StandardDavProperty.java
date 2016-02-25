@@ -17,9 +17,9 @@ package org.unitedinternet.cosmo.dav.property;
 
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -39,7 +39,7 @@ import javax.xml.namespace.QName;
  * is included in "allprop" <code>PROFIND</code> responses.
  * </p>
  */
-public class StandardDavProperty implements WebDavProperty, XmlSerializable {
+public class StandardDavProperty implements WebDavProperty, CustomXmlSerializable {
 
     private CustomDavPropertyName name;
     private Object value;
@@ -134,7 +134,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
      * </p>
      * <p>
      * If the property value is an <code>XmlSerializable</code>, the element
-     * returned by calling {@link XmlSerializable.toXml(Document)} on the
+     * returned by calling {@link CustomXmlSerializable.toXml(Document)} on the
      * value is appended as a child of an element representing the property.
      * </p>
      * <p>
@@ -157,8 +157,8 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
             e = getName().toXml(document);
             Object v = getValue();
             if (v != null) {
-                if (v instanceof XmlSerializable) {
-                    e.appendChild(((XmlSerializable)v).toXml(document));
+                if (v instanceof CustomXmlSerializable) {
+                    e.appendChild(((CustomXmlSerializable)v).toXml(document));
                 }
                 else {
                     DomUtil.setText(e, v.toString());

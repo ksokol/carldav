@@ -3,12 +3,12 @@ package carldav.jackrabbit.webdav;
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_PROP;
 
 import carldav.CarldavConstants;
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-public class CustomReportInfo implements XmlSerializable {
+public class CustomReportInfo implements CustomXmlSerializable {
 
     private static Logger LOG = LoggerFactory.getLogger(ReportInfo.class);
 
@@ -139,7 +139,7 @@ public class CustomReportInfo implements XmlSerializable {
 
 
     /**
-     * @see org.apache.jackrabbit.webdav.xml.XmlSerializable#toXml(Document)
+     * @see CustomXmlSerializable#toXml(Document)
      * @param document
      */
     public Element toXml(Document document) {

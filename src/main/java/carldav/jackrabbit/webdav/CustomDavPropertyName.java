@@ -1,15 +1,15 @@
 package carldav.jackrabbit.webdav;
 
 import carldav.CarldavConstants;
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.property.PropEntry;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 
-public class CustomDavPropertyName implements CustomDavConstants, XmlSerializable, PropEntry {
+public class CustomDavPropertyName implements CustomDavConstants, CustomXmlSerializable, PropEntry {
 
     private QName name;
 

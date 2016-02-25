@@ -1,7 +1,7 @@
 package carldav.exception.resolver;
 
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.w3c.dom.Document;
 
@@ -53,7 +53,7 @@ public final class ResponseUtils {
         }
     }
 
-    public static void sendXmlResponse(HttpServletResponse httpResponse, XmlSerializable serializable, int status) {
+    public static void sendXmlResponse(HttpServletResponse httpResponse, CustomXmlSerializable serializable, int status) {
         httpResponse.setStatus(status);
 
         if (serializable != null) {

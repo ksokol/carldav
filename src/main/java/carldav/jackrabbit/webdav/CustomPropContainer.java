@@ -2,8 +2,8 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.property.PropEntry;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -11,7 +11,7 @@ import org.w3c.dom.Element;
 
 import java.util.Collection;
 
-public abstract class CustomPropContainer implements XmlSerializable, CustomDavConstants {
+public abstract class CustomPropContainer implements CustomXmlSerializable, CustomDavConstants {
 
     private static Logger log = LoggerFactory.getLogger(CustomPropContainer.class);
 
@@ -84,13 +84,13 @@ public abstract class CustomPropContainer implements XmlSerializable, CustomDavC
      * representation of the entries returned by {@link #getContent()}.
      * </pre>
      *
-     * @see XmlSerializable#toXml(Document)
+     * @see CustomXmlSerializable#toXml(Document)
      */
     public Element toXml(Document document) {
         Element prop = CustomDomUtils.createElement(document, XML_PROP, caldav(XML_PROP));
         for (Object content : getContent()) {
-            if (content instanceof XmlSerializable) {
-                prop.appendChild(((XmlSerializable) content).toXml(document));
+            if (content instanceof CustomXmlSerializable) {
+                prop.appendChild(((CustomXmlSerializable) content).toXml(document));
             } else {
                 log.debug("Unexpected content in PropContainer: should be XmlSerializable.");
             }

@@ -1,8 +1,8 @@
 package carldav.jackrabbit.webdav;
 
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 
 import javax.xml.namespace.QName;
 
-public class CustomReportType implements XmlSerializable {
+public class CustomReportType implements CustomXmlSerializable {
 
     private static final HashMap<String, CustomReportType> types = new HashMap<>();
 

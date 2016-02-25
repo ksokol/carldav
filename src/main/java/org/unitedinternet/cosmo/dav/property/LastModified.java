@@ -17,36 +17,29 @@ package org.unitedinternet.cosmo.dav.property;
 
 import static carldav.CarldavConstants.GET_LAST_MODIFIED;
 
-import org.apache.jackrabbit.webdav.util.HttpDateFormat;
-
-import java.text.DateFormat;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-/**
- * Represents the DAV:getlastmodified property.
- */
 public class LastModified extends StandardDavProperty {
-    //ThreadLocal used as recommended in DateFormat
-    private static ThreadLocal<DateFormat> dateFormatLocal = new ThreadLocal<DateFormat>(){
 
-        @Override
-        protected DateFormat initialValue() {
-            return new HttpDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
-        }
-        
-    };
-    
+    private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
+
     public LastModified(Date date) {
         super(GET_LAST_MODIFIED, dateFormatLocal(date), false);
     }
 
     private static String dateFormatLocal(Date date) {
-        // need one DateFormat instance per thread
-        DateFormat df = dateFormatLocal.get();           
+        ZonedDateTime d;
+
         if (date == null) {
-            date = new Date();
+            d = ZonedDateTime.now();
+        } else {
+            d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault());
         }
-        
-        return df.format(date);
+
+        return formatter.format(d);
     }
 }

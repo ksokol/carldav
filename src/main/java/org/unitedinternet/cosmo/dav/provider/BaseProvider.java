@@ -23,13 +23,13 @@ import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.CustomElementIterator;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
@@ -291,7 +291,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
 
             Element include = CustomDomUtils.getChildElement(root, caldav("include"));
             if (include != null) {
-                ElementIterator included = DomUtil.getChildren(include);
+                CustomElementIterator included = CustomDomUtils.getChildren(include);
                 while (included.hasNext()) {
                     CustomDavPropertyName name = CustomDavPropertyName
                             .createFromXml(included.nextElement());

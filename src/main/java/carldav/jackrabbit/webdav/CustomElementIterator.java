@@ -31,6 +31,10 @@ public class CustomElementIterator implements Iterator<Element> {
         seek(parent);
     }
 
+    public CustomElementIterator(Element parent) {
+        this(parent, null);
+    }
+
     /**
      * Not implemented
      *

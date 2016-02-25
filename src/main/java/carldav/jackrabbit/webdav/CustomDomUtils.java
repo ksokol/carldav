@@ -113,6 +113,10 @@ public class CustomDomUtils {
         return new CustomElementIterator(parent, name);
     }
 
+    public static CustomElementIterator getChildren(Element parent) {
+        return new CustomElementIterator(parent);
+    }
+
     public static void setText(Element element, String text) {
         if (text == null || "".equals(text)) {
             // ignore null/empty string text

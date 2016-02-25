@@ -3,8 +3,6 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.property.CustomPropEntry;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -47,7 +45,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
         }
 
         // fill the set
-        ElementIterator it = DomUtil.getChildren(propElement);
+        CustomElementIterator it = CustomDomUtils.getChildren(propElement);
         while (it.hasNext()) {
             add(CustomDavPropertyName.createFromXml(it.nextElement()));
         }

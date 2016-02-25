@@ -17,9 +17,8 @@ package org.unitedinternet.cosmo.calendar.query;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.CustomElementIterator;
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
 
@@ -87,7 +86,7 @@ public class ParamFilter implements CustomDavConstants, CaldavConstants {
         }
 
         // Can only have a single ext-match element
-        ElementIterator i = DomUtil.getChildren(element);
+        CustomElementIterator i = CustomDomUtils.getChildren(element);
         
         if(i.hasNext()) {
             

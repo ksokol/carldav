@@ -18,11 +18,10 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.CustomElementIterator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -61,7 +60,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
         }
 
         // Look at each child element of calendar-data
-        for (ElementIterator iter = DomUtil.getChildren(cdata); iter.hasNext();) {
+        for (CustomElementIterator iter = CustomDomUtils.getChildren(cdata); iter.hasNext();) {
 
             Element child = iter.nextElement();
             if (ELEMENT_CALDAV_COMP.equals(child.getLocalName())) {
@@ -120,7 +119,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
         OutputFilter result = new OutputFilter(name);
 
         // Look at each child element
-        ElementIterator i = DomUtil.getChildren(comp);
+        CustomElementIterator i = CustomDomUtils.getChildren(comp);
         while (i.hasNext()) {
             Element child = i.nextElement();
             if (ELEMENT_CALDAV_ALLCOMP.equals(child.getLocalName())) {

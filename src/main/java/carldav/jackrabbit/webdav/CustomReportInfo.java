@@ -6,8 +6,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -57,7 +55,7 @@ public class CustomReportInfo implements CustomXmlSerializable {
             propertyNames = new CustomDavPropertyNameSet();
         }
 
-        ElementIterator it = DomUtil.getChildren(reportElement);
+        CustomElementIterator it = CustomDomUtils.getChildren(reportElement);
         while (it.hasNext()) {
             Element el = it.nextElement();
             if (!CustomDavConstants.XML_PROP.equals(el.getLocalName())) {

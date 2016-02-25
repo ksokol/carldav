@@ -25,8 +25,8 @@ import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomElementIterator;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
@@ -35,7 +35,6 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -213,7 +212,35 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
     }
 
     protected int getDepth(final HttpServletRequest request) {
-        return DepthHeader.parse(request, DEPTH_INFINITY).getDepth();
+        return parseDepth(request);
+    }
+
+    private static int parseDepth(HttpServletRequest request) {
+        String headerValue = request.getHeader(HEADER_DEPTH);
+        int depth;
+        if (headerValue == null || "".equals(headerValue)) {
+            depth = DEPTH_INFINITY;
+        } else {
+            depth = depthToInt(headerValue);
+        }
+        if (depth == DEPTH_0 || depth == DEPTH_1 || depth == DEPTH_INFINITY) {
+            return depth;
+        }
+        throw new IllegalArgumentException("Invalid depth: " + depth);
+    }
+
+    private static int depthToInt(String depth) {
+        int d;
+        if (depth.equalsIgnoreCase(DEPTH_INFINITY_S)) {
+            d = CustomDavConstants.DEPTH_INFINITY;
+        } else if (depth.equals(CustomDavConstants.DEPTH_0+"")) {
+            d = CustomDavConstants.DEPTH_0;
+        } else if (depth.equals(CustomDavConstants.DEPTH_1+"")) {
+            d = CustomDavConstants.DEPTH_1;
+        } else {
+            throw new IllegalArgumentException("Invalid depth value: " + depth);
+        }
+        return d;
     }
 
     private CustomReportInfo getReportInfo(final HttpServletRequest request) throws CosmoDavException {

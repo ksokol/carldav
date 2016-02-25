@@ -15,6 +15,7 @@ public interface CustomDavConstants {
     int DEPTH_INFINITY = Integer.MAX_VALUE;
     int DEPTH_0 = 0;
     int DEPTH_1 = 1;
+    String DEPTH_INFINITY_S = "infinity";
 
     //---< XML Element, Attribute Names >---------------------------------------
     String XML_ALLPROP = "allprop";

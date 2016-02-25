@@ -15,7 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import static carldav.CarldavConstants.c;
+
 import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -144,27 +147,21 @@ public class QueryReport extends CaldavMultiStatusReport {
             return null;
         }
 
-        Element tzdata =
-            DomUtil.getChildElement(propdata, ELEMENT_CALDAV_TIMEZONE,
-                                    NAMESPACE_CALDAV);
+        Element tzdata = DomUtil.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
         if (tzdata == null) {
             return null;
         }
 
         String icaltz = DomUtil.getTextTrim(tzdata);
         if (icaltz == null) {
-            throw new UnprocessableEntityException("Expected text content for " + QN_CALDAV_TIMEZONE);
+            throw new UnprocessableEntityException("Expected text content for " + ELEMENT_CALDAV_TIMEZONE);
         }
 
         return TimeZoneExtractor.extract(icaltz);
     }
 
-    private static CalendarFilter findQueryFilter(CustomReportInfo info,
-                                                  VTimeZone tz)
-        throws CosmoDavException {
-        Element filterdata =
-            DomUtil.getChildElement(getReportElementFrom(info),
-                                    ELEMENT_CALDAV_FILTER, NAMESPACE_CALDAV);
+    private static CalendarFilter findQueryFilter(CustomReportInfo info, VTimeZone tz) throws CosmoDavException {
+        Element filterdata =  CustomDomUtils.getChildElement(getReportElementFrom(info), c(ELEMENT_CALDAV_FILTER));
         if (filterdata == null) {
             return null;
         }

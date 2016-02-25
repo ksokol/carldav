@@ -2,6 +2,8 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.EMPTY;
 
+import org.apache.jackrabbit.webdav.xml.ElementIterator;
+import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -75,6 +77,33 @@ public class CustomDomUtils {
             }
         }
         return null;
+    }
+
+    public static Element addChildElement(Element parent, QName Name) {
+        Element elem = createElement(parent.getOwnerDocument(), Name.getLocalPart(), Name);
+        parent.appendChild(elem);
+        return elem;
+    }
+
+    public static String getAttribute(Element parent, QName name) {
+        if (parent == null) {
+            return null;
+        }
+        Attr attribute;
+        if (name.getNamespaceURI() == null) {
+            attribute = parent.getAttributeNode(name.getLocalPart());
+        } else {
+            attribute = parent.getAttributeNodeNS(name.getNamespaceURI(), name.getLocalPart());
+        }
+        if (attribute != null) {
+            return attribute.getValue();
+        } else {
+            return null;
+        }
+    }
+
+    public static CustomElementIterator getChildren(Element parent, QName name) {
+        return new CustomElementIterator(parent, name);
     }
 
     private static boolean isElement(Node node) {

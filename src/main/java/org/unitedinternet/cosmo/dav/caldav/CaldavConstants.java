@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.unitedinternet.cosmo.util.CosmoQName;
 
 /**
@@ -35,8 +33,6 @@ public interface CaldavConstants {
     String NS_CALDAV = "urn:ietf:params:xml:ns:caldav";
     String NS_CARDDAV = "urn:ietf:params:xml:ns:carddav";
 
-    Namespace NAMESPACE_CALDAV = Namespace.getNamespace(PRE_CALDAV, NS_CALDAV);
-
     /** The CalDAV XML element name <CALDAV:calendar> */
     String ELEMENT_CALDAV_CALENDAR = "calendar";
     /** The CalDAV XML element name <CALDAV:comp> */
@@ -49,7 +45,6 @@ public interface CaldavConstants {
     String ELEMENT_CARDDAV_ADDRESS_DATA_TYPE = "address-data-type";
     /** The CalDAV XML element name <CALDAV:timezone> */
     String ELEMENT_CALDAV_TIMEZONE = "timezone";
-    String QN_CALDAV_TIMEZONE = DomUtil.getQualifiedName(ELEMENT_CALDAV_TIMEZONE, NAMESPACE_CALDAV);
     /** The CalDAV XML element name <CALDAV:allcomp> */
     String ELEMENT_CALDAV_ALLCOMP = "allcomp";
     /** The CalDAV XML element name <CALDAV:allprop> */

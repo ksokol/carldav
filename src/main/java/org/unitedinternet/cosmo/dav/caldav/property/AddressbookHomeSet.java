@@ -1,7 +1,9 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
 import static carldav.CarldavConstants.ADDRESSBOOK_HOME_SET;
+import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -30,7 +32,7 @@ public class AddressbookHomeSet extends StandardDavProperty implements CaldavCon
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
-        Element e = DomUtil.createElement(document, XML_HREF, NAMESPACE);
+        Element e = CustomDomUtils.createElement(document, XML_HREF, caldav(XML_HREF));
         DomUtil.setText(e, getHref());
         name.appendChild(e);
 

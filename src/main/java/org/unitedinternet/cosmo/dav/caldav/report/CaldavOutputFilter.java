@@ -15,7 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
@@ -48,12 +50,12 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
         Period expand = null;
         Period limit = null;
 
-        String contentType = DomUtil.getAttribute(cdata, ATTR_CALDAV_CONTENT_TYPE, NAMESPACE_CALDAV);
+        String contentType = CustomDomUtils.getAttribute(cdata, CarldavConstants.c(ATTR_CALDAV_CONTENT_TYPE));
         if (contentType != null && ! contentType.equals(ICALENDAR_MEDIA_TYPE)) {
             throw new UnsupportedCalendarDataException(contentType);
         }
 
-        String version = DomUtil.getAttribute(cdata, ATTR_CALDAV_VERSION, NAMESPACE_CALDAV);
+        String version = CustomDomUtils.getAttribute(cdata, CarldavConstants.c(ATTR_CALDAV_VERSION));
         if (version != null && ! version.equals(ICALENDAR_VERSION)) {
                 throw new UnsupportedCalendarDataException();
         }

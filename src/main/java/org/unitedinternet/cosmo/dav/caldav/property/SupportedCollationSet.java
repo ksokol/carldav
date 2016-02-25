@@ -16,7 +16,9 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
 import static carldav.CarldavConstants.SUPPORTED_COLLATION_SET;
+import static carldav.CarldavConstants.c;
 
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -25,62 +27,41 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Represents the CalDAV supported-collation-set
- * property.
- */
-public class SupportedCollationSet extends StandardDavProperty
-    implements CaldavConstants, ICalendarConstants {
-    private static String[] SUPPORTED_COLLATIONS = {
-        "i;ascii-casemap", "i;octet"
-    };
-    /**
-     * Constructor.
-     */
+public class SupportedCollationSet extends StandardDavProperty implements CaldavConstants, ICalendarConstants {
+    private static final String[] SUPPORTED_COLLATIONS = { "i;ascii-casemap", "i;octet" };
+
     public SupportedCollationSet() {
         this(SUPPORTED_COLLATIONS);
     }
 
-    /**
-     * Constructor.
-     * @param collations The CalDAV supported collations.
-     */
     public SupportedCollationSet(String[] collations) {
         super(SUPPORTED_COLLATION_SET, collations(collations), true);
-        for (String collation :collations) {
-            if (! CalendarUtils.isSupportedCollation(collation)) {
-                throw new IllegalArgumentException("Invalid collation '" +
-                                                   collation + "'.");
+        for (String collation : collations) {
+            if (!CalendarUtils.isSupportedCollation(collation)) {
+                throw new IllegalArgumentException("Invalid collation '" + collation + "'.");
             }
         }
     }
 
     private static HashSet<String> collations(String[] collations) {
-        HashSet<String> collationSet = new HashSet<String>();
-        
-        for (String c : collations) {
-            collationSet.add(c);
-        }
+        HashSet<String> collationSet = new HashSet<>();
+        Collections.addAll(collationSet, collations);
         return collationSet;
     }
 
     public Set<String> getCollations() {
         return (Set<String>) getValue();
     }
-    
-    /**
-     * 
-     * {@inheritDoc}
-     */
+
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
         for (String collation : getCollations()) {
-            Element e = DomUtil.createElement(document,
-                    ELEMENT_CALDAV_SUPPORTEDCOLLATION, NAMESPACE_CALDAV);
+            Element e = CustomDomUtils.createElement(document, ELEMENT_CALDAV_SUPPORTEDCOLLATION, c(ELEMENT_CALDAV_SUPPORTEDCOLLATION));
             DomUtil.setText(e, collation);
             name.appendChild(e);
         }

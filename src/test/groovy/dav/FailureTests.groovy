@@ -493,7 +493,7 @@ class FailureTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>Expected at least one {DAV:}href</cosmo:bad-request>
+                                <cosmo:bad-request>Expected at least one href</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)

@@ -2,8 +2,6 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.EMPTY;
 
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

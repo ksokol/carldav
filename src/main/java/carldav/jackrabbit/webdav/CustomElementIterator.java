@@ -1,8 +1,6 @@
 package carldav.jackrabbit.webdav;
 
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -14,7 +12,6 @@ import javax.xml.namespace.QName;
 
 public class CustomElementIterator implements Iterator<Element> {
 
-    private final Namespace namespace;
     private final String localName;
     private final QName qName;
 
@@ -30,7 +27,6 @@ public class CustomElementIterator implements Iterator<Element> {
      */
     public CustomElementIterator(Element parent, QName qname) {
         this.localName = null;
-        this.namespace = null;
         this.qName = qname;
         seek(parent);
     }
@@ -114,11 +110,8 @@ public class CustomElementIterator implements Iterator<Element> {
     private boolean matchesName(Node n) {
         if (n.getNodeType() != Node.ELEMENT_NODE) {
             return false;
-        } else if (qName != null) {
-            return DomUtil.matches(n, qName);
-        } else {
-            return DomUtil.matches(n, localName, namespace);
         }
+        return CustomDomUtils.matches(n, localName, qName);
     }
 }
 

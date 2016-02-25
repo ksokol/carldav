@@ -27,7 +27,6 @@ import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
@@ -36,7 +35,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.io.DavInputContext;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -190,7 +189,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
      * @throws CosmoDavException 
      * @throws IOException 
      */
-    protected InputContext createInputContext(final HttpServletRequest request)
+    protected DavInputContext createInputContext(final HttpServletRequest request)
         throws CosmoDavException, IOException {
         String xfer = request.getHeader("Transfer-Encoding");
         boolean chunked = xfer != null && xfer.equals("chunked");

@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.apache.jackrabbit.webdav.io.InputContext;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 
 import java.util.List;
 
@@ -28,7 +28,7 @@ public interface DavCollection extends WebDavResource {
      * Adds a new content item to this resource.
      */
     void addContent(DavContent content,
-                           InputContext input)
+                    DavInputContext input)
         throws CosmoDavException;
 
     /**

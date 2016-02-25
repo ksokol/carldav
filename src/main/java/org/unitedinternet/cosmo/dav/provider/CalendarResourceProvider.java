@@ -24,7 +24,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import org.unitedinternet.cosmo.dav.io.DavInputContext;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;

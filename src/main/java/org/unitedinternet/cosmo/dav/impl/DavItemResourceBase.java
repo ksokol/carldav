@@ -26,12 +26,12 @@ import static carldav.CarldavConstants.RESOURCE_TYPE;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
@@ -127,7 +127,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return getResourceFactory().getCalendarQueryProcessor();
     }
 
-    protected void populateItem(InputContext inputContext) throws CosmoDavException {
+    protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
         if (hibItem.getId() == null) {
             try {
                 hibItem.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));

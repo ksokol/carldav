@@ -21,11 +21,11 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_T
 
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import org.apache.commons.io.IOUtils;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -67,7 +67,7 @@ public class DavCard extends DavItemResourceBase implements DavContent {
         IOUtils.copy(new ByteArrayInputStream(calendar), response.getOutputStream());
     }
 
-    protected void populateItem(InputContext inputContext) throws CosmoDavException {
+    protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
         super.populateItem(inputContext);
 
         HibICalendarItem file = (HibICalendarItem) getItem();

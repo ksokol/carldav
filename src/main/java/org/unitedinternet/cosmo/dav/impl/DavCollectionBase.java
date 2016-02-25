@@ -23,7 +23,6 @@ import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -32,6 +31,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
@@ -167,7 +167,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return "\"" + getItem().getEntityTag() + "\"";
     }
 
-    public void addContent(DavContent content, InputContext context) throws CosmoDavException {
+    public void addContent(DavContent content, DavInputContext context) throws CosmoDavException {
         DavItemResourceBase base = (DavItemResourceBase) content;
         base.populateItem(context);
         saveContent(base);

@@ -24,7 +24,6 @@ import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.io.IOUtils;
-import org.apache.jackrabbit.webdav.io.InputContext;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -32,7 +31,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
-import org.unitedinternet.cosmo.dav.io.DavInputContext;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
@@ -65,10 +64,10 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
     }
 
     @Override
-    protected void populateItem(InputContext inputContext) throws CosmoDavException {
+    protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
         super.populateItem(inputContext);
 
-        DavInputContext dic = (DavInputContext) inputContext;
+        DavInputContext dic = inputContext;
         setCalendar(dic.getCalendarString());
     }
 

@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
+import static carldav.CarldavConstants.caldav;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
@@ -51,10 +52,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
@@ -184,8 +185,8 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     // our methods
 
     protected Set<QName> getResourceTypes() {
-        Set<QName> rt = new TreeSet<>();
-        rt.add(RESOURCE_TYPE_COLLECTION);
+        Set<QName> rt = new LinkedHashSet<>();
+        rt.add(caldav(XML_COLLECTION));
         return rt;
     }
 

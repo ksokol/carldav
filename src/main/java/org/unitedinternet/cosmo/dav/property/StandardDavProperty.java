@@ -23,8 +23,9 @@ import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
+
 import javax.xml.namespace.QName;
 
 /**
@@ -118,7 +119,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
             }
         }
         if (value instanceof Set) {
-            TreeSet<Object> sorted = new TreeSet<Object>((Set)value);
+            Set<Object> sorted = new LinkedHashSet<>((Set)value);
             return StringUtils.join(sorted, ", ");
         }
         return value.toString();

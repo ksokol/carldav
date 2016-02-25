@@ -36,7 +36,6 @@ public interface CaldavConstants {
     String NS_CARDDAV = "urn:ietf:params:xml:ns:carddav";
 
     Namespace NAMESPACE_CALDAV = Namespace.getNamespace(PRE_CALDAV, NS_CALDAV);
-    Namespace NAMESPACE_CARDDAV = Namespace.getNamespace(PRE_CARD, NS_CARDDAV);
 
     /** The CalDAV XML element name <CALDAV:calendar> */
     String ELEMENT_CALDAV_CALENDAR = "calendar";

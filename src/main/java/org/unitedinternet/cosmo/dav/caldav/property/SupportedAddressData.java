@@ -1,8 +1,9 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
 import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
+import static carldav.CarldavConstants.carddav;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
@@ -20,10 +21,10 @@ public class SupportedAddressData extends StandardDavProperty implements ICalend
 
     public Element toXml(Document document) {
         final Element name = getName().toXml(document);
-        final Element element = DomUtil.createElement(document, ELEMENT_CARDDAV_ADDRESS_DATA_TYPE, NAMESPACE_CARDDAV);
+        final Element element = CustomDomUtils.createElement(document, ELEMENT_CARDDAV_ADDRESS_DATA_TYPE, carddav(ELEMENT_CARDDAV_ADDRESS_DATA_TYPE));
 
-        DomUtil.setAttribute(element, ATTR_CALDAV_CONTENT_TYPE, NAMESPACE_CARDDAV, CARD_MEDIA_TYPE);
-        DomUtil.setAttribute(element, ATTR_CALDAV_VERSION, NAMESPACE_CARDDAV, CARD_VERSION);
+        CustomDomUtils.setAttribute(element, ATTR_CALDAV_CONTENT_TYPE, carddav(ATTR_CALDAV_CONTENT_TYPE), CARD_MEDIA_TYPE);
+        CustomDomUtils.setAttribute(element, ATTR_CALDAV_VERSION, carddav(ATTR_CALDAV_VERSION), CARD_VERSION);
         name.appendChild(element);
 
         return name;

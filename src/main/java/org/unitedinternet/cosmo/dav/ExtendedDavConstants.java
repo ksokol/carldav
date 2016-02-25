@@ -15,11 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NAMESPACE_CARDDAV;
-
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.unitedinternet.cosmo.util.CosmoQName;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
 /**
@@ -36,12 +33,6 @@ public interface ExtendedDavConstants extends CustomDavConstants {
         DomUtil.getQualifiedName(XML_PROPFIND, NAMESPACE);
     String QN_HREF =
         DomUtil.getQualifiedName(XML_HREF, NAMESPACE);
-
-    CosmoQName RESOURCE_TYPE_COLLECTION =
-        new CosmoQName(NAMESPACE.getURI(), XML_COLLECTION, NAMESPACE.getPrefix());
-
-    CosmoQName RESOURCE_TYPE_ADDRESSBOOK =
-            new CosmoQName(NAMESPACE_CARDDAV.getURI(), ADDRESSBOOK, NAMESPACE_CARDDAV.getPrefix());
 
     UriTemplate TEMPLATE_HOME = new UriTemplate("/{username}/*");
     UriTemplate CARD_HOME = new UriTemplate("/{username}/contacts");

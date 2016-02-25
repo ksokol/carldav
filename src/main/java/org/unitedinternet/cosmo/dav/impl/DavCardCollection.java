@@ -1,6 +1,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
+import static carldav.CarldavConstants.carddav;
 
 import carldav.card.CardQueryProcessor;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
@@ -41,7 +42,7 @@ public class DavCardCollection extends DavCollectionBase {
     @Override
     protected Set<QName> getResourceTypes() {
         final Set<QName> resourceTypes = super.getResourceTypes();
-        resourceTypes.add(RESOURCE_TYPE_ADDRESSBOOK);
+        resourceTypes.add(carddav(ADDRESSBOOK));
         return resourceTypes;
     }
 

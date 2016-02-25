@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dav.caldav.property;
 import static carldav.CarldavConstants.CALENDAR_DATA;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;

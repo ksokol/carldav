@@ -1,9 +1,13 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.version.report;
 
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_PROP;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import carldav.CarldavConstants;
+import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomElementIterator;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

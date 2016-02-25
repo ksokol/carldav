@@ -1,6 +1,7 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.xml;
 
 
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

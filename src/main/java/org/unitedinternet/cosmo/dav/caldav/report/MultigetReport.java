@@ -16,12 +16,12 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import carldav.jackrabbit.webdav.CustomReportInfo;
-import carldav.jackrabbit.webdav.CustomReportType;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.util.UriUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;

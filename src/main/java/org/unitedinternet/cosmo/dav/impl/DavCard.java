@@ -19,7 +19,7 @@ import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
 
-import carldav.jackrabbit.webdav.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.apache.commons.io.IOUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;

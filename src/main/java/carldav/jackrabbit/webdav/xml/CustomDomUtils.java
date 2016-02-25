@@ -1,4 +1,4 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.xml;
 
 import static carldav.CarldavConstants.EMPTY;
 import static carldav.CarldavConstants.caldav;

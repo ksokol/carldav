@@ -1,4 +1,4 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.version.report;
 
 import org.unitedinternet.cosmo.dav.WebDavResource;
 

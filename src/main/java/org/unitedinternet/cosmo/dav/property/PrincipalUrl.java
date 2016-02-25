@@ -3,7 +3,7 @@ package org.unitedinternet.cosmo.dav.property;
 import static carldav.CarldavConstants.PRINCIPAL_URL;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.w3c.dom.Document;

@@ -2,6 +2,11 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.CustomPropContainer;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;

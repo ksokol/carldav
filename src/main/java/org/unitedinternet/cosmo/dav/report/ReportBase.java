@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
-import carldav.jackrabbit.webdav.CustomReport;
-import carldav.jackrabbit.webdav.CustomReportInfo;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.version.report.CustomReport;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;

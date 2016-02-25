@@ -6,9 +6,9 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CARD;
 
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomDomUtils;
-import carldav.jackrabbit.webdav.CustomReportInfo;
-import carldav.jackrabbit.webdav.CustomReportType;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;

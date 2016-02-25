@@ -18,8 +18,8 @@ package org.unitedinternet.cosmo.dav.property;
 import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
-import carldav.jackrabbit.webdav.CustomReportType;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

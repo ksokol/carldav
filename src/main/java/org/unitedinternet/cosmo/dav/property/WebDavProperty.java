@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dav.property;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.property.CustomPropEntry;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 

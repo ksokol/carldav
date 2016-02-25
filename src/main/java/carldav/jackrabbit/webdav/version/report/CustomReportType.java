@@ -1,5 +1,6 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.version.report;
 
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;

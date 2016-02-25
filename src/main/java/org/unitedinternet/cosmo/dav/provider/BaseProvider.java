@@ -19,12 +19,12 @@ import static carldav.CarldavConstants.caldav;
 
 import carldav.exception.resolver.ResponseUtils;
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.CustomDomUtils;
-import carldav.jackrabbit.webdav.CustomElementIterator;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomElementIterator;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
-import carldav.jackrabbit.webdav.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;

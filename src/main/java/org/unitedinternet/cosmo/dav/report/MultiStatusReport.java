@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dav.report;
 
 import carldav.exception.resolver.ResponseUtils;
-import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;

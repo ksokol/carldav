@@ -1,6 +1,6 @@
 package carldav.exception.resolver;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.w3c.dom.Document;

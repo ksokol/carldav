@@ -20,8 +20,8 @@ import static carldav.CarldavConstants.caldav;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
-import carldav.jackrabbit.webdav.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.CustomReportType;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;

@@ -19,7 +19,7 @@ import static carldav.CarldavConstants.EMPTY;
 import static carldav.CarldavConstants.SUPPORTED_CALENDAR_COMPONENT_SET;
 import static carldav.CarldavConstants.c;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;

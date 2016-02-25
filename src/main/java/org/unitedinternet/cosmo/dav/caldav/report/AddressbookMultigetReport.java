@@ -2,10 +2,10 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 
 import static carldav.CarldavConstants.ADDRESS_DATA;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import carldav.jackrabbit.webdav.CustomReportInfo;
-import carldav.jackrabbit.webdav.CustomReportType;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;

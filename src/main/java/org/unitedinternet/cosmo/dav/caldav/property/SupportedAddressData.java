@@ -3,7 +3,7 @@ package org.unitedinternet.cosmo.dav.caldav.property;
 import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
 import static carldav.CarldavConstants.carddav;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;

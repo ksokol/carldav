@@ -16,8 +16,8 @@
 package org.unitedinternet.cosmo.calendar.query;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomDomUtils;
-import carldav.jackrabbit.webdav.CustomElementIterator;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomElementIterator;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;

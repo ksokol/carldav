@@ -1,4 +1,4 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author Kamill Sokol
  */
-public class CustomSerializingContentHandler extends DefaultHandler {
+class CustomSerializingContentHandler extends DefaultHandler {
 
     private static final String XML = "http://www.w3.org/XML/1998/namespace";
 

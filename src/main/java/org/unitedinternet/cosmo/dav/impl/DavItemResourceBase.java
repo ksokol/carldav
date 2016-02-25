@@ -23,7 +23,7 @@ import static carldav.CarldavConstants.GET_LAST_MODIFIED;
 import static carldav.CarldavConstants.IS_COLLECTION;
 import static carldav.CarldavConstants.RESOURCE_TYPE;
 
-import carldav.jackrabbit.webdav.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;

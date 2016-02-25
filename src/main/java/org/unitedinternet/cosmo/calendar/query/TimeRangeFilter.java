@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VTimeZone;

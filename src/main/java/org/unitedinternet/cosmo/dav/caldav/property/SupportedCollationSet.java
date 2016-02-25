@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dav.caldav.property;
 import static carldav.CarldavConstants.SUPPORTED_COLLATION_SET;
 import static carldav.CarldavConstants.c;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;

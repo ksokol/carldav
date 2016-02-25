@@ -1,8 +1,9 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.property;
 
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.property.CustomPropEntry;
+import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

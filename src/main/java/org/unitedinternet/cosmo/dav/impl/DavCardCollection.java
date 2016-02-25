@@ -4,7 +4,7 @@ import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
 import static carldav.CarldavConstants.carddav;
 
 import carldav.card.CardQueryProcessor;
-import carldav.jackrabbit.webdav.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;

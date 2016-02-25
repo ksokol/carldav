@@ -1,8 +1,8 @@
 package carldav;
 
-import static carldav.jackrabbit.webdav.CustomDavPropertyName.create;
+import static carldav.jackrabbit.webdav.property.CustomDavPropertyName.create;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
 import org.springframework.http.MediaType;
 
 import java.nio.charset.Charset;

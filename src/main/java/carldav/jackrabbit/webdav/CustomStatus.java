@@ -3,6 +3,7 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.XML_STATUS;
 import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

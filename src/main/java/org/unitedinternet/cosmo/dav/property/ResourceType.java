@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav.property;
 
 import static carldav.CarldavConstants.RESOURCE_TYPE;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

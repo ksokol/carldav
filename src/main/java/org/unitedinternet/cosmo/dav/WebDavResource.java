@@ -16,10 +16,10 @@
 package org.unitedinternet.cosmo.dav;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.CustomReport;
-import carldav.jackrabbit.webdav.CustomReportInfo;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.version.report.CustomReport;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.io.IOException;

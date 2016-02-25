@@ -1,6 +1,5 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.property;
 
-import carldav.jackrabbit.webdav.property.CustomPropEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;

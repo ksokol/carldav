@@ -19,10 +19,10 @@ import static carldav.CarldavConstants.CALENDAR_DATA;
 import static carldav.CarldavConstants.c;
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import carldav.jackrabbit.webdav.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;

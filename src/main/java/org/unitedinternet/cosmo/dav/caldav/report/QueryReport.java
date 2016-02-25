@@ -19,9 +19,9 @@ import static carldav.CarldavConstants.c;
 import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomDomUtils;
-import carldav.jackrabbit.webdav.CustomReportInfo;
-import carldav.jackrabbit.webdav.CustomReportType;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;

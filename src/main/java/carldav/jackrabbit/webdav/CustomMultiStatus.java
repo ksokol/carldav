@@ -3,6 +3,8 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.caldav;
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_MULTISTATUS;
 
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;

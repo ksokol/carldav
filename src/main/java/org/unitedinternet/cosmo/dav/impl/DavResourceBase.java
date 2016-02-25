@@ -17,11 +17,11 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
 
-import carldav.jackrabbit.webdav.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.CustomReport;
-import carldav.jackrabbit.webdav.CustomReportInfo;
-import carldav.jackrabbit.webdav.CustomReportType;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.version.report.CustomReport;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;

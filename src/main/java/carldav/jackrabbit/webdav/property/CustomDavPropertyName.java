@@ -1,7 +1,8 @@
-package carldav.jackrabbit.webdav;
+package carldav.jackrabbit.webdav.property;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.property.CustomPropEntry;
+import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;

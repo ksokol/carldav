@@ -3,7 +3,7 @@ package org.unitedinternet.cosmo.dav.caldav.property;
 import static carldav.CarldavConstants.ADDRESSBOOK_HOME_SET;
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;

@@ -4,8 +4,7 @@ import static carldav.CarldavConstants.GET_CTAG;
 import static carldav.CarldavConstants.SUPPORTED_CALENDAR_COMPONENT_SET;
 import static carldav.CarldavConstants.SUPPORTED_CALENDAR_DATA;
 
-import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;

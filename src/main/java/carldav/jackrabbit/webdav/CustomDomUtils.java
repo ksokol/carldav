@@ -5,7 +5,6 @@ import static carldav.CarldavConstants.caldav;
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_HREF;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import org.apache.jackrabbit.webdav.xml.ResultHelper;
 import org.slf4j.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
@@ -15,10 +14,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.xml.XMLConstants;
@@ -26,10 +27,16 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.sax.SAXResult;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 /**
@@ -39,8 +46,17 @@ public class CustomDomUtils {
 
     private static final Logger LOG = getLogger(CustomDomUtils.class);
 
-    private static TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
+    // Note that the cast from below is strictly speaking only valid when
+    // the factory instance supports the SAXTransformerFactory.FEATURE
+    // feature. But since this class would be useless without this feature,
+    // it's no problem to fail with a ClassCastException here and prevent
+    // this class from even being loaded. AFAIK all common JAXP
+    // implementations do support this feature.
+    private static final SAXTransformerFactory TRANSFORMER_FACTORY = (SAXTransformerFactory) TransformerFactory.newInstance();
+
     private static DocumentBuilderFactory BUILDER_FACTORY = createFactory();
+
+    private static final boolean NEEDS_XMLNS_ATTRIBUTES = needsXmlnsAttributes();
 
     public static Element createElement(Document factory, String localName, QName namespace) {
         if (namespace != null) {
@@ -207,7 +223,7 @@ public class CustomDomUtils {
     public static void transformDocument(Document xmlDoc, Writer writer) {
         try {
             Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
-            transformer.transform(new DOMSource(xmlDoc), ResultHelper.getResult(new StreamResult(writer)));
+            transformer.transform(new DOMSource(xmlDoc), getResult(new StreamResult(writer)));
         } catch (SAXException|TransformerException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -251,5 +267,54 @@ public class CustomDomUtils {
             LOG.warn("Secure XML processing is not supported", e);
         }
         return factory;
+    }
+
+    private static Result getResult(Result result) throws SAXException {
+        try {
+            TransformerHandler handler = TRANSFORMER_FACTORY.newTransformerHandler();
+            handler.setResult(result);
+
+            // Specify the output properties to avoid surprises especially in
+            // character encoding or the output method (might be html for some
+            // documents!)
+            Transformer transformer = handler.getTransformer();
+            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(OutputKeys.INDENT, "no");
+
+            if (NEEDS_XMLNS_ATTRIBUTES) {
+                // The serializer does not output xmlns declarations,
+                // so we need to do it explicitly with this wrapper
+                return new SAXResult(new CustomSerializingContentHandler(handler));
+            } else {
+                return result;
+            }
+        } catch (TransformerConfigurationException e) {
+            throw new SAXException("Failed to initialize XML serializer", e);
+        }
+    }
+
+
+    /**
+     * Probes the available XML serializer for xmlns support. Used to set
+     * the value of the {@link #NEEDS_XMLNS_ATTRIBUTES} flag.
+     *
+     * @return whether the XML serializer needs explicit xmlns attributes
+     */
+    private static boolean needsXmlnsAttributes() {
+        try {
+            StringWriter writer = new StringWriter();
+            TransformerHandler probe = TRANSFORMER_FACTORY.newTransformerHandler();
+            probe.setResult(new StreamResult(writer));
+            probe.startDocument();
+            probe.startPrefixMapping("p", "uri");
+            probe.startElement("uri", "e", "p:e", new AttributesImpl());
+            probe.endElement("uri", "e", "p:e");
+            probe.endPrefixMapping("p");
+            probe.endDocument();
+            return writer.toString().indexOf("xmlns") == -1;
+        } catch (Exception e) {
+            throw new UnsupportedOperationException("XML serialization fails");
+        }
     }
 }

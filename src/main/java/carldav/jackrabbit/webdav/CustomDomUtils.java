@@ -5,6 +5,7 @@ import static carldav.CarldavConstants.caldav;
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_HREF;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import org.apache.jackrabbit.webdav.xml.ResultHelper;
 import org.slf4j.Logger;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CharacterData;
@@ -18,11 +19,18 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * @author Kamill Sokol
@@ -31,6 +39,7 @@ public class CustomDomUtils {
 
     private static final Logger LOG = getLogger(CustomDomUtils.class);
 
+    private static TransformerFactory TRANSFORMER_FACTORY = TransformerFactory.newInstance();
     private static DocumentBuilderFactory BUILDER_FACTORY = createFactory();
 
     public static Element createElement(Document factory, String localName, QName namespace) {
@@ -191,6 +200,15 @@ public class CustomDomUtils {
 
             return docBuilder.parse(stream);
         } catch (ParserConfigurationException|SAXException|IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    public static void transformDocument(Document xmlDoc, Writer writer) {
+        try {
+            Transformer transformer = TRANSFORMER_FACTORY.newTransformer();
+            transformer.transform(new DOMSource(xmlDoc), ResultHelper.getResult(new StreamResult(writer)));
+        } catch (SAXException|TransformerException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
     }

@@ -2,7 +2,6 @@ package carldav.exception.resolver;
 
 import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.w3c.dom.Document;
 
@@ -67,7 +66,7 @@ public final class ResponseUtils {
                 // instead of relying on the built-in UTF-8 serialization
                 // to avoid problems with surrogate pairs on Sun JRE 1.5.
                 Writer writer = new OutputStreamWriter(out, "UTF-8");
-                DomUtil.transformDocument(doc, writer);
+                CustomDomUtils.transformDocument(doc, writer);
                 writer.flush();
 
                 // TODO: Should this be application/xml? See JCR-1621

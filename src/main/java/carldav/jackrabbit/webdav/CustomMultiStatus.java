@@ -1,9 +1,8 @@
 package carldav.jackrabbit.webdav;
 
-import static carldav.jackrabbit.webdav.CustomDavConstants.NAMESPACE;
+import static carldav.CarldavConstants.caldav;
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_MULTISTATUS;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
@@ -19,7 +18,7 @@ public class CustomMultiStatus implements XmlSerializable {
 
     @Override
     public Element toXml(Document document) {
-        final Element multiStatus = DomUtil.createElement(document, XML_MULTISTATUS, NAMESPACE);
+        final Element multiStatus = CustomDomUtils.createElement(document, XML_MULTISTATUS, caldav(XML_MULTISTATUS));
         for (Map.Entry<String, CustomMultiStatusResponse> resp : responses.entrySet()) {
             multiStatus.appendChild(resp.getValue().toXml(document));
         }

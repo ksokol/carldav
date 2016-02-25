@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
 import static carldav.CarldavConstants.c;
+import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDomUtils;
@@ -140,9 +141,7 @@ public class QueryReport extends CaldavMultiStatusReport {
     }
 
     private static VTimeZone findTimeZone(CustomReportInfo info) throws CosmoDavException {
-        Element propdata =
-            DomUtil.getChildElement(getReportElementFrom(info),
-                                    XML_PROP, NAMESPACE);
+        Element propdata = CustomDomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
         if (propdata == null) {
             return null;
         }

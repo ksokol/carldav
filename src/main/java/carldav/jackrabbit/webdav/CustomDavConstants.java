@@ -1,7 +1,5 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.xml.Namespace;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -11,8 +9,6 @@ import javax.xml.namespace.QName;
  * common date formats (creation date and modification time) are included.
  */
 public interface CustomDavConstants {
-
-    Namespace NAMESPACE = Namespace.getNamespace("D", "DAV:");
 
     //-------------------------------------------------------< Depth Header >---
     String HEADER_DEPTH = "Depth";

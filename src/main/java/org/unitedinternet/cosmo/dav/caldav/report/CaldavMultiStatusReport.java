@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 
 import static carldav.CarldavConstants.CALENDAR_DATA;
 import static carldav.CarldavConstants.c;
+import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomDomUtils;
@@ -24,7 +25,6 @@ import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -84,11 +84,8 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
         this.outputFilter = outputFilter;
     }
 
-    protected OutputFilter findOutputFilter(CustomReportInfo info)
-        throws CosmoDavException {
-        Element propdata =
-            DomUtil.getChildElement(getReportElementFrom(info),
-                                    XML_PROP, NAMESPACE);
+    protected OutputFilter findOutputFilter(CustomReportInfo info) throws CosmoDavException {
+        Element propdata = CustomDomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
         if (propdata == null) {
             return null;
         }

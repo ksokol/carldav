@@ -1,5 +1,7 @@
 package carldav.jackrabbit.webdav;
 
+import static carldav.CarldavConstants.caldav;
+
 import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -41,7 +43,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * or is not a DAV:prop element.
      */
     public CustomDavPropertyNameSet(Element propElement) {
-        if (!DomUtil.matches(propElement, XML_PROP, NAMESPACE)) {
+        if (!CustomDomUtils.matches(propElement, XML_PROP, caldav(XML_PROP))) {
             throw new IllegalArgumentException("'DAV:prop' element expected.");
         }
 

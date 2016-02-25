@@ -1,8 +1,8 @@
 package carldav.jackrabbit.webdav;
 
-import static carldav.jackrabbit.webdav.CustomDavConstants.NAMESPACE;
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_PROP;
 
+import carldav.CarldavConstants;
 import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
@@ -49,7 +49,7 @@ public class CustomReportInfo implements XmlSerializable {
         this.typeLocalName = reportElement.getLocalName();
         this.typeNamespace = CustomDomUtils.getNamespace(reportElement);
         this.depth = depth;
-        Element propElement = DomUtil.getChildElement(reportElement, XML_PROP, NAMESPACE);
+        Element propElement = CustomDomUtils.getChildElement(reportElement, CarldavConstants.caldav(XML_PROP));
         if (propElement != null) {
             propertyNames = new CustomDavPropertyNameSet(propElement);
             reportElement.removeChild(propElement);

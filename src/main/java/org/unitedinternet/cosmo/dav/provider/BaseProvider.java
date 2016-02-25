@@ -15,12 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import static org.unitedinternet.cosmo.dav.ExtendedDavConstants.QN_PROPFIND;
+import static carldav.CarldavConstants.caldav;
 
 import carldav.exception.resolver.ResponseUtils;
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
@@ -282,30 +283,29 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
         }
 
         Element root = requestDocument.getDocumentElement();
-        if (!DomUtil.matches(root, XML_PROPFIND, NAMESPACE)) {
-            throw new BadRequestException("Expected " + QN_PROPFIND
+        if (!CustomDomUtils.matches(root, XML_PROPFIND, caldav(XML_PROPFIND))) {
+            throw new BadRequestException("Expected " + XML_PROPFIND
                     + " root element");
         }
 
-        Element prop = DomUtil.getChildElement(root, XML_PROP, NAMESPACE);
+        Element prop = CustomDomUtils.getChildElement(root, caldav(XML_PROP));
         if (prop != null) {
             propfindType = PROPFIND_BY_PROPERTY;
             propfindProps = new CustomDavPropertyNameSet(prop);
             return;
         }
 
-        if (DomUtil.getChildElement(root, XML_PROPNAME, NAMESPACE) != null) {
+        if (CustomDomUtils.getChildElement(root, caldav(XML_PROPNAME)) != null) {
             propfindType = PROPFIND_PROPERTY_NAMES;
             propfindProps = new CustomDavPropertyNameSet();
             return;
         }
 
-        if (DomUtil.getChildElement(root, XML_ALLPROP, NAMESPACE) != null) {
+        if (CustomDomUtils.getChildElement(root, caldav(XML_ALLPROP)) != null) {
             propfindType = PROPFIND_ALL_PROP;
             propfindProps = new CustomDavPropertyNameSet();
 
-            Element include = DomUtil.getChildElement(root, "include",
-                    NAMESPACE);
+            Element include = CustomDomUtils.getChildElement(root, caldav("include"));
             if (include != null) {
                 ElementIterator included = DomUtil.getChildren(include);
                 while (included.hasNext()) {
@@ -320,7 +320,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
 
         throw new BadRequestException("Expected one of " + XML_PROP + ", "
                 + XML_PROPNAME + ", or " + XML_ALLPROP + " as child of "
-                + QN_PROPFIND);
+                + XML_PROPFIND);
     }
 
     private Document getSafeRequestDocument(final HttpServletRequest request)

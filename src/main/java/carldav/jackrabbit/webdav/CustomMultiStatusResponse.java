@@ -1,5 +1,7 @@
 package carldav.jackrabbit.webdav;
 
+import static carldav.CarldavConstants.caldav;
+
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -231,7 +233,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, CustomDavCons
 
     @Override
     public Element toXml(final Document document) {
-        Element response = DomUtil.createElement(document, XML_RESPONSE, NAMESPACE);
+        Element response = CustomDomUtils.createElement(document, XML_RESPONSE, caldav(XML_RESPONSE));
         // add '<href>'
         response.appendChild(DomUtil.hrefToXml(href, document));
         if (type == TYPE_PROPSTAT) {
@@ -240,7 +242,7 @@ public class CustomMultiStatusResponse implements XmlSerializable, CustomDavCons
                 Status st = new Status(statusKey);
                 CustomPropContainer propCont = statusMap.get(statusKey);
                 if (!propCont.isEmpty()) {
-                    Element propstat = DomUtil.createElement(document, XML_PROPSTAT, NAMESPACE);
+                    Element propstat = CustomDomUtils.createElement(document, XML_PROPSTAT, caldav(XML_PROPSTAT));
                     propstat.appendChild(propCont.toXml(document));
                     propstat.appendChild(st.toXml(document));
                     response.appendChild(propstat);

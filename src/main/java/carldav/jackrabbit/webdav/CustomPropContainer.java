@@ -1,7 +1,8 @@
 package carldav.jackrabbit.webdav;
 
+import static carldav.CarldavConstants.caldav;
+
 import org.apache.jackrabbit.webdav.property.PropEntry;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,7 +87,7 @@ public abstract class CustomPropContainer implements XmlSerializable, CustomDavC
      * @see XmlSerializable#toXml(Document)
      */
     public Element toXml(Document document) {
-        Element prop = DomUtil.createElement(document, XML_PROP, NAMESPACE);
+        Element prop = CustomDomUtils.createElement(document, XML_PROP, caldav(XML_PROP));
         for (Object content : getContent()) {
             if (content instanceof XmlSerializable) {
                 prop.appendChild(((XmlSerializable) content).toXml(document));

@@ -1,16 +1,30 @@
 package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.EMPTY;
+import static org.slf4j.LoggerFactory.getLogger;
 
-import org.apache.jackrabbit.webdav.xml.Namespace;
-import org.w3c.dom.*;
+import org.slf4j.Logger;
+import org.w3c.dom.Attr;
+import org.w3c.dom.CharacterData;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * @author Kamill Sokol
  */
 public class CustomDomUtils {
+
+    private static final Logger LOG = getLogger(CustomDomUtils.class);
+
+    private static DocumentBuilderFactory BUILDER_FACTORY = createFactory();
 
     public static Element createElement(Document factory, String localName, QName namespace) {
         if (namespace != null) {
@@ -146,6 +160,14 @@ public class CustomDomUtils {
         return (txt == null) ? txt : txt.trim();
     }
 
+    public static Document createDocument() {
+        try {
+            return BUILDER_FACTORY.newDocumentBuilder().newDocument();
+        } catch (ParserConfigurationException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
     private static boolean isElement(Node node) {
         return node.getNodeType() == Node.ELEMENT_NODE;
     }
@@ -170,5 +192,19 @@ public class CustomDomUtils {
     private static boolean isText(Node node) {
         int ntype = node.getNodeType();
         return ntype == Node.TEXT_NODE || ntype == Node.CDATA_SECTION_NODE;
+    }
+
+    private static DocumentBuilderFactory createFactory() {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+        factory.setIgnoringComments(true);
+        factory.setIgnoringElementContentWhitespace(true);
+        factory.setCoalescing(true);
+        try {
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (AbstractMethodError|ParserConfigurationException e) {
+            LOG.warn("Secure XML processing is not supported", e);
+        }
+        return factory;
     }
 }

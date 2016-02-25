@@ -1,5 +1,6 @@
 package carldav.exception.resolver;
 
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -59,7 +60,7 @@ public final class ResponseUtils {
         if (serializable != null) {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             try {
-                Document doc = DomUtil.createDocument();
+                Document doc = CustomDomUtils.createDocument();
                 doc.appendChild(serializable.toXml(doc));
 
                 // JCR-2636: Need to use an explicit OutputStreamWriter

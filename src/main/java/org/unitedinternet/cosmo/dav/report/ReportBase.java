@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * <p>
@@ -139,13 +138,7 @@ public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
             return customReportInfo.getDocumentElement();
         }
 
-        Document document;
-        try {
-            document = DomUtil.createDocument();
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-
+        Document document = CustomDomUtils.createDocument();
         return reportInfo.toXml(document);
     }
 

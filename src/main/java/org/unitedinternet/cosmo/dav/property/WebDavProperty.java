@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav.property;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyName;
-import org.apache.jackrabbit.webdav.property.PropEntry;
+import carldav.jackrabbit.webdav.property.CustomPropEntry;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 
 /**
@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
  * Extends the jcr-server WebDavProperty interface.
  * </p>
  */
-public interface WebDavProperty<T> extends PropEntry, ExtendedDavConstants {
+public interface WebDavProperty<T> extends CustomPropEntry, ExtendedDavConstants {
 
     /**
      * <p>

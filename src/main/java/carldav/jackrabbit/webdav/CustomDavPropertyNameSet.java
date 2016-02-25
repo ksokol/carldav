@@ -2,8 +2,8 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.property.CustomPropEntry;
 import org.apache.jackrabbit.webdav.property.PropContainer;
-import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.slf4j.Logger;
@@ -104,7 +104,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * @see PropContainer#addContent(Object)
      */
     @Override
-    public boolean addContent(PropEntry contentEntry) {
+    public boolean addContent(CustomPropEntry contentEntry) {
         if (contentEntry instanceof CustomDavPropertyName) {
             return add((CustomDavPropertyName) contentEntry);
         }

@@ -2,8 +2,8 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.property.CustomPropEntry;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
-import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -22,11 +22,11 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      *
      * @param contentEntry
      * @return true if the object could be added; false otherwise
-     * @deprecated Use {@link #addContent(PropEntry)} instead.
+     * @deprecated Use {@link #addContent(CustomPropEntry)} instead.
      */
     public boolean addContent(Object contentEntry) {
-        if (contentEntry instanceof PropEntry) {
-            return addContent((PropEntry) contentEntry);
+        if (contentEntry instanceof CustomPropEntry) {
+            return addContent(contentEntry);
         } else {
             return false;
         }
@@ -40,7 +40,7 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      * @param contentEntry
      * @return true if the object could be added; false otherwise
      */
-    public abstract boolean addContent(PropEntry contentEntry);
+    public abstract boolean addContent(CustomPropEntry contentEntry);
 
     /**
      * Returns true if the PropContainer does not yet contain any content elements.
@@ -63,7 +63,7 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      *
      * @return collection representing the contents of this <code>PropContainer</code>.
      */
-    public abstract Collection<? extends PropEntry> getContent();
+    public abstract Collection<? extends CustomPropEntry> getContent();
 
     /**
      * Returns true if this <code>PropContainer</code> contains a content element

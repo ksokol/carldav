@@ -1,8 +1,8 @@
 package carldav.jackrabbit.webdav;
 
+import carldav.jackrabbit.webdav.property.CustomPropEntry;
 import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
 import org.apache.jackrabbit.webdav.property.PropContainer;
-import org.apache.jackrabbit.webdav.property.PropEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
@@ -92,10 +92,10 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * <code>DavProperty</code> in order to be successfully added to this set.
      * @return true if the specified object is an instance of <code>DavProperty</code>
      * and false otherwise.
-     * @see PropContainer#addContent(PropEntry)
+     * @see PropContainer#addContent(CustomPropEntry)
      */
     @Override
-    public boolean addContent(PropEntry contentEntry) {
+    public boolean addContent(CustomPropEntry contentEntry) {
         if (contentEntry instanceof WebDavProperty) {
             add((WebDavProperty<?>) contentEntry);
             return true;
@@ -124,7 +124,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @see PropContainer#getContent()
      */
     @Override
-    public Collection<? extends PropEntry> getContent() {
+    public Collection<? extends CustomPropEntry> getContent() {
         return map.values();
     }
 

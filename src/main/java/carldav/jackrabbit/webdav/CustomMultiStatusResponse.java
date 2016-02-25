@@ -4,7 +4,6 @@ import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.jackrabbit.webdav.Status;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.w3c.dom.Document;
@@ -234,7 +233,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
     public Element toXml(final Document document) {
         Element response = CustomDomUtils.createElement(document, XML_RESPONSE, caldav(XML_RESPONSE));
         // add '<href>'
-        response.appendChild(DomUtil.hrefToXml(href, document));
+        response.appendChild(CustomDomUtils.hrefToXml(href, document));
         if (type == TYPE_PROPSTAT) {
             // add '<propstat>' elements
             for (Integer statusKey : statusMap.keySet()) {

@@ -1,6 +1,8 @@
 package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.EMPTY;
+import static carldav.CarldavConstants.caldav;
+import static carldav.jackrabbit.webdav.CustomDavConstants.XML_HREF;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.slf4j.Logger;
@@ -166,6 +168,12 @@ public class CustomDomUtils {
         } catch (ParserConfigurationException e) {
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    public static Element hrefToXml(String href, Document factory) {
+        final Element element = createElement(factory, XML_HREF, caldav(XML_HREF));
+        setText(element, href);
+        return element;
     }
 
     private static boolean isElement(Node node) {

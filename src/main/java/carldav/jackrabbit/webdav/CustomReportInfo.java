@@ -5,7 +5,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -20,7 +19,7 @@ import javax.xml.namespace.QName;
 
 public class CustomReportInfo implements CustomXmlSerializable {
 
-    private static Logger LOG = LoggerFactory.getLogger(ReportInfo.class);
+    private static Logger LOG = LoggerFactory.getLogger(CustomReportInfo.class);
 
     private final String typeLocalName;
     private final QName typeNamespace;

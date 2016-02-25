@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
-import org.apache.jackrabbit.webdav.Status;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.w3c.dom.Document;
@@ -42,7 +41,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
     /**
      * Type of MultiStatus response: Href + Status
      */
-    private Status status;
+    private CustomStatus status;
 
     /**
      * Type of MultiStatus response: PropStat Hashmap containing all status
@@ -58,7 +57,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
             throw new IllegalArgumentException("Invalid href ('" + href + "')");
         }
         this.href = href;
-        this.status = new Status(i);
+        this.status = new CustomStatus(i);
         this.type = TYPE_HREFSTATUS;
     }
 
@@ -237,7 +236,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
         if (type == TYPE_PROPSTAT) {
             // add '<propstat>' elements
             for (Integer statusKey : statusMap.keySet()) {
-                Status st = new Status(statusKey);
+                CustomStatus st = new CustomStatus(statusKey);
                 CustomPropContainer propCont = statusMap.get(statusKey);
                 if (!propCont.isEmpty()) {
                     Element propstat = CustomDomUtils.createElement(document, XML_PROPSTAT, caldav(XML_PROPSTAT));

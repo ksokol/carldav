@@ -38,6 +38,8 @@ public final class CarldavConstants {
 
     public static QName EMPTY = new QName("");
 
+    public static final String XML_STATUS = "status";
+
     public static final CustomDavPropertyName DISPLAY_NAME = create(caldav("displayname"));
     public static final CustomDavPropertyName GET_CONTENT_LENGTH = create(caldav("getcontentlength"));
     public static final CustomDavPropertyName GET_CONTENT_TYPE = create(caldav("getcontenttype"));

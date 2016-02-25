@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
-import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.Status;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -95,13 +94,13 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
 
         if (propFindType == PROPFIND_PROPERTY_NAMES) {
             // only property names requested
-            CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, true);
+            CustomPropContainer status200 = getPropContainer(200, true);
             for (CustomDavPropertyName propName : resource.getPropertyNames()) {
                 status200.addContent(propName);
             }
         } else {
             // all or a specified set of property and their values requested.
-            CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, false);
+            CustomPropContainer status200 = getPropContainer(200, false);
 
             // Collection of missing property names for 404 responses
             Set<CustomDavPropertyName> missing = new HashSet<>(propNameSet.getContent());
@@ -146,7 +145,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
             }
 
             if (!missing.isEmpty() && propFindType != PROPFIND_ALL_PROP) {
-                CustomPropContainer status404 = getPropContainer(DavServletResponse.SC_NOT_FOUND, true);
+                CustomPropContainer status404 = getPropContainer(404, true);
                 for (CustomDavPropertyName propName : missing) {
                     status404.addContent(propName);
                 }
@@ -182,7 +181,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
      */
     public void add(WebDavProperty<?> property) {
         checkType(TYPE_PROPSTAT);
-        CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, false);
+        CustomPropContainer status200 = getPropContainer(200, false);
         status200.addContent(property);
     }
 
@@ -197,7 +196,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
      */
     public void add(CustomDavPropertyName propertyName) {
         checkType(TYPE_PROPSTAT);
-        CustomPropContainer status200 = getPropContainer(DavServletResponse.SC_OK, true);
+        CustomPropContainer status200 = getPropContainer(200, true);
         status200.addContent(propertyName);
     }
 

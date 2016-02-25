@@ -1,8 +1,6 @@
 package carldav.jackrabbit.webdav;
 
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
-import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.version.report.Report;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
@@ -33,10 +31,10 @@ public class CustomReportType implements CustomXmlSerializable {
             return report;
         } catch (IllegalAccessException e) {
             // should never occur
-            throw new CosmoDavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create new report (" + reportClass.getName() + ") from class: " + e.getMessage());
+            throw new CosmoDavException("Failed to create new report (" + reportClass.getName() + ") from class: " + e.getMessage());
         } catch (InstantiationException e) {
             // should never occur
-            throw new CosmoDavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to create new report (" + reportClass.getName() + ") from class: " + e.getMessage());
+            throw new CosmoDavException("Failed to create new report (" + reportClass.getName() + ") from class: " + e.getMessage());
         }
     }
 
@@ -64,7 +62,7 @@ public class CustomReportType implements CustomXmlSerializable {
      * @param reportClass
      * @return
      * @throws IllegalArgumentException if either parameter is <code>null</code> or
-     *                                  if the given class does not implement the {@link Report} interface or if
+     *                                  if the given class does not implement the {@link CustomReport} interface or if
      *                                  it does not provide an empty constructor.
      */
     public static CustomReportType register(QName namespace, Class<? extends CustomReport> reportClass) {

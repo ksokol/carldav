@@ -20,7 +20,6 @@ import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
-import org.apache.jackrabbit.webdav.DavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.io.IOException;
@@ -161,10 +160,4 @@ public interface WebDavResource {
     String getETag();
 
     List<WebDavResource> getMembers();
-
-    //TODO remove me as soon as jackrabbit has been replaced with custom code
-    @Deprecated
-    default DavResource getCollection() {
-        throw new UnsupportedOperationException();
-    }
 }

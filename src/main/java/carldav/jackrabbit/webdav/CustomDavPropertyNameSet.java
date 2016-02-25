@@ -3,7 +3,6 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.caldav;
 
 import carldav.jackrabbit.webdav.property.CustomPropEntry;
-import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.slf4j.Logger;
@@ -89,7 +88,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
 
     //------------------------------------------------------< PropContainer >---
     /**
-     * @see PropContainer#contains(CustomDavPropertyName)
+     * @see CustomPropContainer#contains(CustomDavPropertyName)
      */
     @Override
     public boolean contains(CustomDavPropertyName name) {
@@ -101,7 +100,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * in order to successfully add the given entry.
      * @return true if contentEntry is an instance of <code>DavPropertyName</code>
      * that could be added to this set. False otherwise.
-     * @see PropContainer#addContent(Object)
+     * @see CustomPropContainer#addContent(Object)
      */
     @Override
     public boolean addContent(CustomPropEntry contentEntry) {
@@ -113,7 +112,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
     }
 
     /**
-     * @see PropContainer#isEmpty()
+     * @see CustomPropContainer#isEmpty()
      */
     @Override
     public boolean isEmpty() {
@@ -121,7 +120,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
     }
 
     /**
-     * @see PropContainer#getContentSize()
+     * @see CustomPropContainer#getContentSize()
      */
     @Override
     public int getContentSize() {
@@ -129,7 +128,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
     }
 
     /**
-     * @see PropContainer#getContent()
+     * @see CustomPropContainer#getContent()
      */
     @Override
     public Collection<CustomDavPropertyName> getContent() {

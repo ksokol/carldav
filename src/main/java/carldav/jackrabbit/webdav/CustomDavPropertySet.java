@@ -1,8 +1,6 @@
 package carldav.jackrabbit.webdav;
 
 import carldav.jackrabbit.webdav.property.CustomPropEntry;
-import org.apache.jackrabbit.webdav.property.DavPropertyIterator;
-import org.apache.jackrabbit.webdav.property.PropContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
@@ -80,7 +78,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @param name The name of the property
      * @return <code>true</code> if this set contains the property;
      *         <code>false</code> otherwise.
-     * @see PropContainer#contains(CustomDavPropertyName)
+     * @see CustomPropContainer#contains(CustomDavPropertyName)
      */
     @Override
     public boolean contains(CustomDavPropertyName name) {
@@ -92,7 +90,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * <code>DavProperty</code> in order to be successfully added to this set.
      * @return true if the specified object is an instance of <code>DavProperty</code>
      * and false otherwise.
-     * @see PropContainer#addContent(CustomPropEntry)
+     * @see CustomPropContainer#addContent(CustomPropEntry)
      */
     @Override
     public boolean addContent(CustomPropEntry contentEntry) {
@@ -105,7 +103,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * @see PropContainer#isEmpty()
+     * @see CustomPropContainer#isEmpty()
      */
     @Override
     public boolean isEmpty() {
@@ -113,7 +111,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * @see PropContainer#getContentSize()
+     * @see CustomPropContainer#getContentSize()
      */
     @Override
     public int getContentSize() {
@@ -121,7 +119,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * @see PropContainer#getContent()
+     * @see CustomPropContainer#getContent()
      */
     @Override
     public Collection<? extends CustomPropEntry> getContent() {
@@ -161,9 +159,6 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
             seek();
         }
 
-        /**
-         * @see DavPropertyIterator#nextProperty();
-         */
         public WebDavProperty<?> nextProperty() throws NoSuchElementException {
             if (next==null) {
                 throw new NoSuchElementException();
@@ -173,23 +168,14 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
             return ret;
         }
 
-        /**
-         * @see DavPropertyIterator#hasNext();
-         */
         public boolean hasNext() {
             return next!=null;
         }
 
-        /**
-         * @see DavPropertyIterator#next();
-         */
         public WebDavProperty<?> next() {
             return nextProperty();
         }
 
-        /**
-         * @see DavPropertyIterator#remove();
-         */
         public void remove() {
             throw new UnsupportedOperationException();
         }

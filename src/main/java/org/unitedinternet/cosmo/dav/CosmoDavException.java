@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.apache.jackrabbit.webdav.DavServletResponse;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +31,7 @@ public class CosmoDavException extends RuntimeException implements ExtendedDavCo
     private static final long serialVersionUID = 2980452139790396998L;
     private transient DavNamespaceContext nsc;
 
-    private int errorCode = DavServletResponse.SC_INTERNAL_SERVER_ERROR;
+    private int errorCode = INTERNAL_SERVER_ERROR.value();
 
     public CosmoDavException(int code) {
         this(code, null, null);

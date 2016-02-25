@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav.provider;
 
 import static carldav.CarldavConstants.caldav;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import carldav.exception.resolver.ResponseUtils;
 import carldav.jackrabbit.webdav.CustomDavConstants;
@@ -25,8 +26,6 @@ import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.DavException;
-import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
@@ -140,12 +139,8 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
             throw new BadRequestException("Depth for DELETE must be infinity");
         }
 
-        try {
-            resource.getParent().removeMember2(resource);
-            response.setStatus(204);
-        } catch (DavException e) {
-            throw new CosmoDavException(e);
-        }
+        resource.getParent().removeMember2(resource);
+        response.setStatus(204);
     }
 
     /**
@@ -216,16 +211,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
     }
 
     protected void checkNoRequestBody(HttpServletRequest request) throws CosmoDavException {
-        boolean hasBody;
-        try {
-            hasBody = getRequestDocument(request) != null;
-        } catch (IllegalArgumentException e) {
-            // parse error indicates that there was a body to parse
-            hasBody = true;
-        } catch (DavException e) {
-            throw new CosmoDavException(e);
-        }
-        
+        boolean hasBody = getRequestDocument(request) != null;
         if (hasBody){
             throw new UnsupportedMediaTypeException("Body not expected for method " + request.getMethod());
         }
@@ -251,8 +237,6 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
 
         try {
             return new CustomReportInfo(requestDocument.getDocumentElement(), getDepth(request));
-        } catch (DavException e) {
-            throw new CosmoDavException(e);
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -323,28 +307,20 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
                 + XML_PROPFIND);
     }
 
-    private Document getSafeRequestDocument(final HttpServletRequest request)
-            throws CosmoDavException {
-        try {
-            if (StringUtils.isBlank(request.getContentType())) {
-                throw new BadRequestException("No Content-Type specified");
-            }
-
-            final MediaType mediaType = MediaType.valueOf(request.getContentType());
-            if (!(mediaType.isCompatibleWith(APPLICATION_XML) || mediaType.isCompatibleWith(TEXT_XML))) {
-                throw new UnsupportedMediaTypeException("Expected Content-Type " + APPLICATION_XML + " or " + TEXT_XML);
-            }
-
-            return getRequestDocument(request);
-
-        } catch (IllegalArgumentException|DavException e) {
-            throwBadRequestExceptionFrom(e);
+    private Document getSafeRequestDocument(final HttpServletRequest request) {
+        if (StringUtils.isBlank(request.getContentType())) {
+            throw new BadRequestException("No Content-Type specified");
         }
 
-        return null;
+        final MediaType mediaType = MediaType.valueOf(request.getContentType());
+        if (!(mediaType.isCompatibleWith(APPLICATION_XML) || mediaType.isCompatibleWith(TEXT_XML))) {
+            throw new UnsupportedMediaTypeException("Expected Content-Type " + APPLICATION_XML + " or " + TEXT_XML);
+        }
+
+        return getRequestDocument(request);
     }
 
-    private Document getRequestDocument(final HttpServletRequest request) throws DavException {
+    private Document getRequestDocument(final HttpServletRequest request) {
         Document requestDocument = null;
         /*
         Don't attempt to parse the body if the content length header is 0.
@@ -370,19 +346,11 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
                 }
             }
         } catch (IOException|SAXException e) {
-            throw new DavException(DavServletResponse.SC_BAD_REQUEST);
+            throw new BadRequestException(e.getMessage());
         } catch (ParserConfigurationException e) {
-            throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR);
+            throw new CosmoDavException(INTERNAL_SERVER_ERROR.value());
         }
         return requestDocument;
-    }
-
-    private void throwBadRequestExceptionFrom(Exception e)
-            throws BadRequestException {
-        Throwable cause = e.getCause();
-        String msg = cause != null ? cause.getMessage()
-                : "Unknown error parsing request document";
-        throw new BadRequestException(msg);
     }
 
     public DavResourceFactory getResourceFactory() {

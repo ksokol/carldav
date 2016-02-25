@@ -30,7 +30,7 @@ class FailureTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>Unknown error parsing request document</cosmo:bad-request>
+                                <cosmo:bad-request>Element type "D:pro" must be followed by either attribute specifications, "&gt;" or "/&gt;".</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(report("/dav/{email}/calendar/", USER01)
@@ -286,7 +286,7 @@ class FailureTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:internal-server-error>Bad Request</cosmo:internal-server-error>
+                                <cosmo:bad-request>Element type "C:calendar-data" must be followed by either attribute specifications, ">" or "/>".</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)

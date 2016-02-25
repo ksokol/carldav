@@ -20,7 +20,6 @@ import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.CustomReport;
 import carldav.jackrabbit.webdav.CustomReportInfo;
-import org.apache.jackrabbit.webdav.DavException;
 import org.apache.jackrabbit.webdav.DavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
@@ -104,9 +103,8 @@ public interface WebDavResource {
     /**
      * Removes the specified member from this resource.
      *
-     * @throws DavException
      */
-    void removeMember2(WebDavResource member) throws DavException;
+    void removeMember2(WebDavResource member);
 
     /**
      * Returns the absolute href of this resource as returned in the

@@ -46,10 +46,6 @@ public class CosmoDavException extends RuntimeException implements ExtendedDavCo
         this(code, message, null);
     }
 
-    public CosmoDavException(org.apache.jackrabbit.webdav.DavException e) {
-        this(e.getErrorCode(), e.getMessage(), e);
-    }
-
     public CosmoDavException(Throwable t) {
         this(500, t.getMessage(), t);
     }

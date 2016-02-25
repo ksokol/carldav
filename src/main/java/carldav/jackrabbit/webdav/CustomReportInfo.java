@@ -1,16 +1,16 @@
 package carldav.jackrabbit.webdav;
 
 import static carldav.jackrabbit.webdav.CustomDavConstants.XML_PROP;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
-import org.apache.jackrabbit.webdav.DavException;
-import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,12 +36,12 @@ public class CustomReportInfo implements CustomXmlSerializable {
      *
      * @param reportElement
      * @param depth Depth value as retrieved from the {@link CustomDavConstants#HEADER_DEPTH}.
-     * @throws DavException if the report element is <code>null</code>.
+     * @throws CosmoDavException if the report element is <code>null</code>.
      */
-    public CustomReportInfo(Element reportElement, int depth) throws DavException {
+    public CustomReportInfo(Element reportElement, int depth) {
         if (reportElement == null) {
             LOG.warn("Report request body must not be null.");
-            throw new DavException(DavServletResponse.SC_BAD_REQUEST);
+            throw new CosmoDavException(BAD_REQUEST.value());
         }
 
         this.documentElement = (Element) reportElement.cloneNode(true);

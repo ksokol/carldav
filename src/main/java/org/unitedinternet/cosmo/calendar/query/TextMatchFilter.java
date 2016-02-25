@@ -63,7 +63,7 @@ public class TextMatchFilter implements CustomDavConstants, CaldavConstants {
     public TextMatchFilter(Element element) throws ParseException {
         // Element data is string to match
         // TODO: do we need to do this replacing??
-        value = DomUtil.getTextTrim(element).replaceAll("'", "''");
+        value = CustomDomUtils.getTextTrim(element).replaceAll("'", "''");
 
         // Check attribute for collation
         collation = CustomDomUtils.getAttribute(element, ATTR_CALDAV_COLLATION);

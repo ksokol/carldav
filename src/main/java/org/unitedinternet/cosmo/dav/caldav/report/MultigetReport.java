@@ -17,12 +17,12 @@ package org.unitedinternet.cosmo.dav.caldav.report;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
 import carldav.jackrabbit.webdav.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.springframework.web.util.UriUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -117,7 +117,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
         }        
         hrefs = new HashSet<>();
         for (Element element : hrefElements) { 
-            String href = DomUtil.getTextTrim(element);
+            String href = CustomDomUtils.getTextTrim(element);
             href = updateHrefElementWithRequestUrlUUID(element, href, resourceUUID);
             // validate and absolutize submitted href
             URL memberUrl = normalizeHref(resourceUrl, href); 

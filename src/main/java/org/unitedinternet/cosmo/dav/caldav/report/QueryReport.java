@@ -151,7 +151,7 @@ public class QueryReport extends CaldavMultiStatusReport {
             return null;
         }
 
-        String icaltz = DomUtil.getTextTrim(tzdata);
+        String icaltz = CustomDomUtils.getTextTrim(tzdata);
         if (icaltz == null) {
             throw new UnprocessableEntityException("Expected text content for " + ELEMENT_CALDAV_TIMEZONE);
         }

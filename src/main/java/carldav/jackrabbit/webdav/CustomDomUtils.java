@@ -3,12 +3,7 @@ package carldav.jackrabbit.webdav;
 import static carldav.CarldavConstants.EMPTY;
 
 import org.apache.jackrabbit.webdav.xml.Namespace;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
+import org.w3c.dom.*;
 
 import javax.xml.namespace.QName;
 
@@ -127,6 +122,26 @@ public class CustomDomUtils {
         element.appendChild(txt);
     }
 
+    public static String getText(Element element) {
+        StringBuffer content = new StringBuffer();
+        if (element != null) {
+            NodeList nodes = element.getChildNodes();
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node child = nodes.item(i);
+                if (isText(child)) {
+                    // cast to super class that contains Text and CData
+                    content.append(((CharacterData) child).getData());
+                }
+            }
+        }
+        return (content.length()==0) ? null : content.toString();
+    }
+
+    public static String getTextTrim(Element element) {
+        String txt = getText(element);
+        return (txt == null) ? txt : txt.trim();
+    }
+
     private static boolean isElement(Node node) {
         return node.getNodeType() == Node.ELEMENT_NODE;
     }
@@ -146,5 +161,10 @@ public class CustomDomUtils {
             String localName = node.getLocalName();
             return requiredLocalName.equals(localName);
         }
+    }
+
+    private static boolean isText(Node node) {
+        int ntype = node.getNodeType();
+        return ntype == Node.TEXT_NODE || ntype == Node.CDATA_SECTION_NODE;
     }
 }

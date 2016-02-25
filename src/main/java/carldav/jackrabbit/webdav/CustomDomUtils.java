@@ -6,6 +6,7 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.namespace.QName;
 
@@ -61,6 +62,23 @@ public class CustomDomUtils {
         }
         boolean matchingNamespace = matchingNamespace(node, requiredNamespace);
         return matchingNamespace && matchingLocalName(node, requiredLocalName);
+    }
+
+    public static Element getChildElement(Node parent, QName childNamespace) {
+        if (parent != null) {
+            NodeList children = parent.getChildNodes();
+            for (int i = 0; i < children.getLength(); i++) {
+                Node child = children.item(i);
+                if (isElement(child) && matches(child, childNamespace.getLocalPart(), childNamespace)) {
+                    return (Element)child;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean isElement(Node node) {
+        return node.getNodeType() == Node.ELEMENT_NODE;
     }
 
     private static boolean matchingNamespace(Node node, QName requiredNamespace) {

@@ -4,10 +4,11 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CARDDA
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NS_CARDDAV;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CARD;
 
+import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomReportInfo;
 import carldav.jackrabbit.webdav.CustomReportType;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
@@ -72,7 +73,7 @@ public class AddressbookQueryReport extends MultiStatusReport {
     }
 
     private AddressbookFilter findQueryFilter(CustomReportInfo info) throws CosmoDavException {
-        Element filterdata = DomUtil.getChildElement(getReportElementFrom(info), CaldavConstants.ELEMENT_CALDAV_FILTER, CaldavConstants.NAMESPACE_CARDDAV);
+        Element filterdata = CustomDomUtils.getChildElement(getReportElementFrom(info), CarldavConstants.carddav(CaldavConstants.ELEMENT_CALDAV_FILTER));
 
         if (filterdata == null) {
             return null;

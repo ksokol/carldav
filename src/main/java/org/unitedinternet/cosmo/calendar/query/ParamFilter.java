@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.calendar.query;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
@@ -77,7 +78,7 @@ public class ParamFilter implements CustomDavConstants, CaldavConstants {
      */
     public ParamFilter(Element element) throws ParseException {
         // Get name which must be present
-        name = DomUtil.getAttribute(element, ATTR_CALDAV_NAME, null);
+        name = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NAME);
 
         if (name == null) {
             throw new ParseException(

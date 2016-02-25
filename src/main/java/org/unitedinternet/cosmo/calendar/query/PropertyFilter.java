@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.calendar.query;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.apache.jackrabbit.webdav.xml.ElementIterator;
@@ -93,7 +94,7 @@ public class PropertyFilter implements CustomDavConstants, CaldavConstants {
      */
     public PropertyFilter(Element element, VTimeZone timezone) throws ParseException {
         // Name must be present
-        name = DomUtil.getAttribute(element, ATTR_CALDAV_NAME, null);
+        name = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NAME);
         if (name == null) {
             throw new ParseException("CALDAV:prop-filter a calendar property name (e.g., \"ATTENDEE\") is required", -1);
         }

@@ -2,11 +2,13 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.EMPTY;
 
+import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 
 import javax.xml.namespace.QName;
 
@@ -55,7 +57,6 @@ public class CustomDomUtils {
         }
     }
 
-
     public static boolean matches(Node node, String requiredLocalName, QName requiredNamespace) {
         if (node == null) {
             return false;
@@ -100,8 +101,30 @@ public class CustomDomUtils {
         }
     }
 
+    public static String getAttribute(Element parent, String localName) {
+        if (parent == null) {
+            return null;
+        }
+        Attr attribute = parent.getAttributeNode(localName);
+
+        if (attribute != null) {
+            return attribute.getValue();
+        } else {
+            return null;
+        }
+    }
+
     public static CustomElementIterator getChildren(Element parent, QName name) {
         return new CustomElementIterator(parent, name);
+    }
+
+    public static void setText(Element element, String text) {
+        if (text == null || "".equals(text)) {
+            // ignore null/empty string text
+            return;
+        }
+        Text txt = element.getOwnerDocument().createTextNode(text);
+        element.appendChild(txt);
     }
 
     private static boolean isElement(Node node) {

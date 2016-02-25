@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -268,7 +269,7 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
     }
     
     private void validateName(Element element) throws ParseException {
-        name = DomUtil.getAttribute(element, ATTR_CALDAV_NAME, null);
+        name = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NAME);
 
         if (name == null) {
             throw new ParseException(

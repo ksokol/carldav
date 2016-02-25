@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.calendar.query;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.CustomDomUtils;
 import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -65,9 +66,9 @@ public class TextMatchFilter implements CustomDavConstants, CaldavConstants {
         value = DomUtil.getTextTrim(element).replaceAll("'", "''");
 
         // Check attribute for collation
-        collation = DomUtil.getAttribute(element, ATTR_CALDAV_COLLATION, null);
+        collation = CustomDomUtils.getAttribute(element, ATTR_CALDAV_COLLATION);
 
-        String negateCondition = DomUtil.getAttribute(element, ATTR_CALDAV_NEGATE_CONDITION, null);
+        String negateCondition = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NEGATE_CONDITION);
 
         if (VALUE_YES.equals(negateCondition)) {
             isNegateCondition = true;

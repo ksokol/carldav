@@ -74,7 +74,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
                 }
 
                 // Get required name attribute and verify it is VCALENDAR
-                String name = DomUtil.getAttribute(child, ATTR_CALDAV_NAME, null);
+                String name = CustomDomUtils.getAttribute(child, ATTR_CALDAV_NAME);
                 if (!Calendar.VCALENDAR.equals(name)) {
                     throw new UnsupportedOperationException("only top-level comp name " + Calendar.VCALENDAR + " supported");
                 }
@@ -111,7 +111,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
     private static OutputFilter parseCalendarDataComp(Element comp) {
         // Get required name attribute
         String name =
-            DomUtil.getAttribute(comp, ATTR_CALDAV_NAME, null);
+                CustomDomUtils.getAttribute(comp, ATTR_CALDAV_NAME);
         if (name == null) {
             return null;
         }
@@ -161,7 +161,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
 
                 // Get required name attribute
                 String propname =
-                    DomUtil.getAttribute(child, ATTR_CALDAV_NAME, null);
+                        CustomDomUtils.getAttribute(child, ATTR_CALDAV_NAME);
                 if (propname == null) {
                     result = null;
                     return null;
@@ -170,7 +170,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
                 // Get optional novalue attribute
                 boolean novalue = false;
                 String novaluetxt =
-                    DomUtil.getAttribute(child, ATTR_CALDAV_NOVALUE, null);
+                        CustomDomUtils.getAttribute(child, ATTR_CALDAV_NOVALUE);
                 if (novaluetxt != null) {
                     if (VALUE_YES.equals(novaluetxt)) {
                         novalue = true;
@@ -195,7 +195,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
     private static Period parsePeriod(Element node) throws CosmoDavException {
         DateTime trstart;
         DateTime trend;
-        String start = DomUtil.getAttribute(node, ATTR_CALDAV_START, null);
+        String start = CustomDomUtils.getAttribute(node, ATTR_CALDAV_START);
         if (start == null) {
             throw new BadRequestException("Expected timerange attribute " + ATTR_CALDAV_START);
         }
@@ -209,7 +209,7 @@ public class CaldavOutputFilter implements CustomDavConstants, CaldavConstants, 
         }
 
         String end =
-            DomUtil.getAttribute(node, ATTR_CALDAV_END, null);
+                CustomDomUtils.getAttribute(node, ATTR_CALDAV_END);
         if (end == null) {
             throw new BadRequestException("Expected timerange attribute " + ATTR_CALDAV_END);
         }

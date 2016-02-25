@@ -19,7 +19,6 @@ import static carldav.CarldavConstants.SUPPORTED_COLLATION_SET;
 import static carldav.CarldavConstants.c;
 
 import carldav.jackrabbit.webdav.CustomDomUtils;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
@@ -62,7 +61,7 @@ public class SupportedCollationSet extends StandardDavProperty implements Caldav
 
         for (String collation : getCollations()) {
             Element e = CustomDomUtils.createElement(document, ELEMENT_CALDAV_SUPPORTEDCOLLATION, c(ELEMENT_CALDAV_SUPPORTEDCOLLATION));
-            DomUtil.setText(e, collation);
+            CustomDomUtils.setText(e, collation);
             name.appendChild(e);
         }
 

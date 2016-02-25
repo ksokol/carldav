@@ -19,7 +19,6 @@ import carldav.jackrabbit.webdav.CustomDavPropertyName;
 import carldav.jackrabbit.webdav.CustomDomUtils;
 import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -113,7 +112,7 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
             return null;
         }
         if (value instanceof Element) {
-            String text = DomUtil.getText((Element) value);
+            String text = CustomDomUtils.getText((Element) value);
             if (text != null) {
                 return text;
             }
@@ -161,7 +160,7 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
                     e.appendChild(((CustomXmlSerializable)v).toXml(document));
                 }
                 else {
-                    DomUtil.setText(e, v.toString());
+                    CustomDomUtils.setText(e, v.toString());
                 }
             }
         }

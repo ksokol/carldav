@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dav.provider;
 
 import static carldav.CarldavConstants.caldav;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 import carldav.exception.resolver.ResponseUtils;
 import carldav.jackrabbit.webdav.CustomDavConstants;
@@ -29,7 +28,6 @@ import carldav.jackrabbit.webdav.CustomReportInfo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.webdav.header.DepthHeader;
 import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
@@ -42,7 +40,6 @@ import org.unitedinternet.cosmo.dav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.xml.sax.SAXException;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -50,7 +47,6 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  * <p>
@@ -342,13 +338,11 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
                 boolean isEmpty = -1 == bin.read();
                 bin.reset();
                 if (!isEmpty) {
-                    requestDocument = DomUtil.parseDocument(bin);
+                    requestDocument = CustomDomUtils.parseDocument(bin);
                 }
             }
-        } catch (IOException|SAXException e) {
+        } catch (Exception e) {
             throw new BadRequestException(e.getMessage());
-        } catch (ParserConfigurationException e) {
-            throw new CosmoDavException(INTERNAL_SERVER_ERROR.value());
         }
         return requestDocument;
     }

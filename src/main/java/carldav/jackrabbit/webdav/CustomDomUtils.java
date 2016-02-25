@@ -13,9 +13,14 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
+import java.io.IOException;
+import java.io.InputStream;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -174,6 +179,20 @@ public class CustomDomUtils {
         final Element element = createElement(factory, XML_HREF, caldav(XML_HREF));
         setText(element, href);
         return element;
+    }
+
+    public static Document parseDocument(InputStream stream)  {
+        try {
+            DocumentBuilder docBuilder = BUILDER_FACTORY.newDocumentBuilder();
+
+            // Set an error handler to prevent parsers from printing error messages
+            // to standard output!
+            docBuilder.setErrorHandler(new DefaultHandler());
+
+            return docBuilder.parse(stream);
+        } catch (ParserConfigurationException|SAXException|IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private static boolean isElement(Node node) {

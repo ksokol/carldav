@@ -1,35 +1,20 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import static carldav.CarldavConstants.ADDRESSBOOK_HOME_SET;
-import static carldav.CarldavConstants.CALENDAR_HOME_SET;
-import static carldav.CarldavConstants.DISPLAY_NAME;
-import static carldav.CarldavConstants.GET_ETAG;
-import static carldav.CarldavConstants.GET_LAST_MODIFIED;
-import static carldav.CarldavConstants.IS_COLLECTION;
-import static carldav.CarldavConstants.PRINCIPAL_URL;
-import static carldav.CarldavConstants.RESOURCE_TYPE;
-import static carldav.CarldavConstants.TEXT_HTML_VALUE;
-import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
-
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
-import org.unitedinternet.cosmo.dav.property.DisplayName;
-import org.unitedinternet.cosmo.dav.property.IsCollection;
-import org.unitedinternet.cosmo.dav.property.PrincipalUrl;
-import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
+import org.unitedinternet.cosmo.dav.property.*;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -38,10 +23,11 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.namespace.QName;
+import static carldav.CarldavConstants.*;
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
-public class DavUserPrincipal extends DavResourceBase implements CaldavConstants, DavContent {
+public class DavUserPrincipal extends DavResourceBase implements CaldavConstants {
 
     private final User user;
 

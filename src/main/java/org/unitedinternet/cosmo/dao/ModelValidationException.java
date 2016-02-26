@@ -26,15 +26,8 @@ public class ModelValidationException
 
     public Object offendingObject = null;
 
-    /**
-     */
-    public ModelValidationException(String message) {
-        super(message);
-    }
-
-    /**
-     */
     public ModelValidationException(Object offendingObject, String message) {
         super(message);
         this.offendingObject = offendingObject;
-    }}
+    }
+}

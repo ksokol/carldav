@@ -20,7 +20,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.io.UnsupportedEncodingException;
@@ -39,24 +38,7 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
      * @return item The expected item.
      */
     public HibItem findItemByPath(final String path) {
-
-        return (HibItem) findItemByPath(getSession(), path);
-
-    }
-    
-    /* (non-Javadoc)
-     * @see org.unitedinternet.cosmo.dao.query.ItemPathTranslator#findItemByPath(java.lang.String, org.unitedinternet.cosmo.model.CollectionItem)
-     */
-
-    /**
-     * Finds item by the given path.
-     *
-     * @param path The given path.
-     * @param root The collection item.
-     * @return The expected item.
-     */
-    public HibItem findItemByPath(final String path, final HibCollectionItem root) {
-        return (HibItem) findItemByPath(getSession(), path, root);
+        return findItemByPath(getSession(), path);
     }
 
     /**
@@ -116,44 +98,6 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
 
         HibItem parentHibItem = rootHibItem;
         for (int i = 1; i < segments.length; i++) {
-            HibItem nextHibItem = findItemByParentAndName(session, parentHibItem,
-                    decode(segments[i]));
-            parentHibItem = nextHibItem;
-            // if any parent item doesn't exist then bail now
-            if (parentHibItem == null) {
-                return null;
-            }
-        }
-
-        return parentHibItem;
-    }
-
-    /**
-     * Finds item by path.
-     *
-     * @param session The current session.
-     * @param path    The given path.
-     * @param root    The collection root.
-     * @return The expected item.
-     */
-    protected HibItem findItemByPath(Session session, String path, HibCollectionItem root) {
-
-        if (path == null || "".equals(path)) {
-            return null;
-        }
-
-        if (path.charAt(0) == '/') {
-            path = path.substring(1, path.length());
-        }
-
-        String[] segments = path.split("/");
-
-        if (segments.length == 0) {
-            return null;
-        }
-
-        HibItem parentHibItem = root;
-        for (int i = 0; i < segments.length; i++) {
             HibItem nextHibItem = findItemByParentAndName(session, parentHibItem,
                     decode(segments[i]));
             parentHibItem = nextHibItem;

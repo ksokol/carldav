@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.query;
 
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
@@ -23,8 +22,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
  */
 public interface ItemPathTranslator {
     HibItem findItemByPath(String path);
-
-    HibItem findItemByPath(String path, HibCollectionItem root);
 
     HibItem findItemParent(String path);
 }

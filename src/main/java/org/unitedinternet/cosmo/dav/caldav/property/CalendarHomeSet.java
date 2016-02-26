@@ -13,7 +13,7 @@ import org.w3c.dom.Element;
 public class CalendarHomeSet extends StandardDavProperty implements CaldavConstants {
 
     public CalendarHomeSet(String baseHref, User user) {
-        super(CALENDAR_HOME_SET, href(baseHref, user), true);
+        super(CALENDAR_HOME_SET, href(baseHref, user));
     }
 
     public String getHref() {

@@ -28,7 +28,7 @@ public class LastModified extends StandardDavProperty {
     private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
 
     public LastModified(Date date) {
-        super(GET_LAST_MODIFIED, dateFormatLocal(date), false);
+        super(GET_LAST_MODIFIED, dateFormatLocal(date));
     }
 
     private static String dateFormatLocal(Date date) {

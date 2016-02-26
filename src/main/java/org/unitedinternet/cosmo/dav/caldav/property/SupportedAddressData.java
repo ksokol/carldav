@@ -16,7 +16,7 @@ import org.w3c.dom.Element;
 public class SupportedAddressData extends StandardDavProperty implements ICalendarConstants, CaldavConstants {
 
     public SupportedAddressData() {
-        super(SUPPORTED_ADDRESS_DATA, null, true);
+        super(SUPPORTED_ADDRESS_DATA, null);
     }
 
     public Element toXml(Document document) {

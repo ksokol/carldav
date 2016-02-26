@@ -39,7 +39,7 @@ public class SupportedCalendarComponentSet extends StandardDavProperty implement
     }
 
     public SupportedCalendarComponentSet(String[] componentTypes) {
-        super(SUPPORTED_CALENDAR_COMPONENT_SET, componentTypes(componentTypes), true);
+        super(SUPPORTED_CALENDAR_COMPONENT_SET, componentTypes(componentTypes));
         for (String type : componentTypes) {
             if (!CalendarUtils.isSupportedComponent(type)) {
                 throw new IllegalArgumentException("Invalid component type '" + type + "'.");

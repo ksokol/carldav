@@ -38,7 +38,7 @@ public class SupportedCollationSet extends StandardDavProperty implements Caldav
     }
 
     public SupportedCollationSet(String[] collations) {
-        super(SUPPORTED_COLLATION_SET, collations(collations), true);
+        super(SUPPORTED_COLLATION_SET, collations(collations));
         for (String collation : collations) {
             if (!CalendarUtils.isSupportedCollation(collation)) {
                 throw new IllegalArgumentException("Invalid collation '" + collation + "'.");

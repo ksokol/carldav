@@ -30,7 +30,7 @@ import java.util.TreeSet;
 public class SupportedReportSet extends StandardDavProperty {
 
     public SupportedReportSet(Set<CustomReportType> reports) {
-        super(SUPPORTED_REPORT_SET, reports, true);
+        super(SUPPORTED_REPORT_SET, reports);
     }
 
     public Set<CustomReportType> getReportTypes() {

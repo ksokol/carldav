@@ -25,8 +25,6 @@ import org.w3c.dom.Element;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
 /**
  * <p>
  * The standard implementation of {@link} WebDavProperty.
@@ -42,39 +40,12 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
 
     private CustomDavPropertyName name;
     private Object value;
-    private String lang;
-    private boolean isProtected;
 
     public StandardDavProperty(CustomDavPropertyName name,
                                Object value) {
-        this(name, value, null, false);
-    }
-
-    public StandardDavProperty(CustomDavPropertyName name,
-                               Object value,
-                               String lang) {
-        this(name, value, lang, false);
-    }
-
-    public StandardDavProperty(CustomDavPropertyName name,
-                               Object value,
-                               boolean isProtected) {
-        this(name, value, null, isProtected);
-    }
-
-    public StandardDavProperty(CustomDavPropertyName name,
-                               Object value,
-                               String lang,
-                               boolean isProtected) {
         this.name = name;
         this.value = value;
-        this.isProtected = isProtected;
-        if (! StringUtils.isBlank(lang)) {
-            this.lang = lang;
-        }
     }
-
-    // org.apache.jackrabbit.webdav.property.DavProperty methods
 
     public CustomDavPropertyName getName() {
         return name;
@@ -82,16 +53,6 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
 
     public Object getValue() {
         return value;
-    }
-
-    public boolean isProtected() {
-        return isProtected;
-    }
-
-    // WebDavProperty methods
-
-    public String getLanguage() {
-        return lang;
     }
 
     /**
@@ -164,34 +125,7 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
                 }
             }
         }
-
-        if (lang != null) {
-            CustomDomUtils.setAttribute(e, XML_LANG, new QName(""), lang);
-        }
-
         return e;
-    }
-
-    // our methods
-
-    public int hashCode() {
-        int hashCode = getName().hashCode();
-        if (getValue() != null) {
-            hashCode += getValue().hashCode(); 
-        }
-        return hashCode % Integer.MAX_VALUE;
-    }
-
-    public boolean equals(Object obj) {
-        if (! (obj instanceof WebDavProperty)) {
-            return false;
-        }
-        WebDavProperty prop = (WebDavProperty) obj;
-        if (! getName().equals(prop.getName())) {
-            return false;
-        }
-        return getValue() == null ? prop.getValue() == null :
-            value.equals(prop.getValue());
     }
 
 	@Override

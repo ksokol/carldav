@@ -17,11 +17,11 @@ import org.w3c.dom.Element;
 public class AddressbookHomeSet extends StandardDavProperty implements CaldavConstants {
 
     public AddressbookHomeSet(DavResourceLocator locator, User user) {
-        super(ADDRESSBOOK_HOME_SET, href(locator.getBaseHref(), user), true);
+        super(ADDRESSBOOK_HOME_SET, href(locator.getBaseHref(), user));
     }
 
     public AddressbookHomeSet(String baseHref, User user) {
-        super(ADDRESSBOOK_HOME_SET, href(baseHref, user), true);
+        super(ADDRESSBOOK_HOME_SET, href(baseHref, user));
     }
 
     public String getHref() {

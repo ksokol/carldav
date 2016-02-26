@@ -12,7 +12,7 @@ import org.w3c.dom.Element;
 public class PrincipalUrl extends StandardDavProperty {
 
     public PrincipalUrl(DavResourceLocator locator, User user) {
-        super(PRINCIPAL_URL, href(locator, user), true);
+        super(PRINCIPAL_URL, href(locator, user));
     }
 
     public String getHref() {

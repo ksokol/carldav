@@ -37,14 +37,6 @@ public interface WebDavProperty<T> extends CustomPropEntry, ExtendedDavConstants
     String getValueText();
 
     /**
-     * <p>
-     * Returns the language of the property value's text content as specified
-     * by the <code>xml:lang</code> attribute. Example: <code>en_US</code>.
-     * </p>
-     */
-    String getLanguage();
-
-    /**
      * Returns the name of this property
      *
      * @return the name of this property

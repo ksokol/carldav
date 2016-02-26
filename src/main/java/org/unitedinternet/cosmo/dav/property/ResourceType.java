@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 public class ResourceType extends StandardDavProperty {
 
     public ResourceType(Set<QName> qnames) {
-        super(RESOURCE_TYPE, qnames, true);
+        super(RESOURCE_TYPE, qnames);
     }
 
     public Set<QName> getQnames() {

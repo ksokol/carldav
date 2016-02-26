@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 public class CalendarData extends StandardDavProperty implements CaldavConstants, ICalendarConstants {
 
     public CalendarData(String calendarData) {
-        super(CALENDAR_DATA, calendarData, true);
+        super(CALENDAR_DATA, calendarData);
     }
 
     public Element toXml(Document document) {

@@ -12,7 +12,7 @@ import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 public class AddressData extends StandardDavProperty implements CaldavConstants, ICalendarConstants {
 
     public AddressData(String calendarData) {
-        super(ADDRESS_DATA, calendarData, true);
+        super(ADDRESS_DATA, calendarData);
     }
 
 //    public Element toXml(Document document) {

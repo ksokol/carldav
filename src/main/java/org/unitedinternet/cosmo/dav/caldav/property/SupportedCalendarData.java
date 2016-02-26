@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 public class SupportedCalendarData extends StandardDavProperty implements ICalendarConstants, CaldavConstants {
 
     public SupportedCalendarData() {
-        super(SUPPORTED_CALENDAR_DATA, null, true);
+        super(SUPPORTED_CALENDAR_DATA, null);
     }
 
     public Element toXml(Document document) {

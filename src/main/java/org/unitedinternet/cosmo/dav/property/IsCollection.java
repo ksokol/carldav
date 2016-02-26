@@ -23,6 +23,6 @@ import carldav.CarldavConstants;
 public class IsCollection extends StandardDavProperty {
 
     public IsCollection(boolean is) {
-        super(CarldavConstants.IS_COLLECTION, is ? "1" : "0", true);
+        super(CarldavConstants.IS_COLLECTION, is ? "1" : "0");
     }
 }

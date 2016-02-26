@@ -16,13 +16,11 @@
 package org.unitedinternet.cosmo.dav.provider;
 
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-
-import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public interface DavProvider {
 
@@ -32,7 +30,7 @@ public interface DavProvider {
 
     void propfind(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 
-    void put(HttpServletRequest request, HttpServletResponse response, DavContent content) throws CosmoDavException, IOException;
+    void put(HttpServletRequest request, HttpServletResponse response, WebDavResource content) throws CosmoDavException, IOException;
 
     void delete(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws CosmoDavException, IOException;
 

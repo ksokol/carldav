@@ -17,11 +17,7 @@ package org.unitedinternet.cosmo.dav.provider;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import org.unitedinternet.cosmo.dav.ConflictException;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import carldav.jackrabbit.webdav.io.DavInputContext;
@@ -50,7 +46,7 @@ public class CalendarResourceProvider extends FileProvider {
 
     public void put(HttpServletRequest request,
                     HttpServletResponse response,
-                    DavContent content)
+                    WebDavResource content)
         throws CosmoDavException, IOException {
 
         // do content.getCollection() check only for normal auth only, ticket auth is on the item only, not its parent.
@@ -59,7 +55,7 @@ public class CalendarResourceProvider extends FileProvider {
         }
 
         int status = content.exists() ? 204 : 201;
-        DavInputContext ctx = (DavInputContext) createInputContext(request);
+        DavInputContext ctx = createInputContext(request);
         if (! content.exists()) {
             content = createCalendarResource(
                     content.getResourceLocator(),

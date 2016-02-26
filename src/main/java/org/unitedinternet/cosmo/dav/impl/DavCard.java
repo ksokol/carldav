@@ -15,29 +15,27 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
-import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
-
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.apache.commons.io.IOUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-import javax.servlet.http.HttpServletResponse;
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
+import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
 
-public class DavCard extends DavItemResourceBase implements DavContent {
+public class DavCard extends DavItemResourceBase {
 
     public DavCard(HibCardItem item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(item, locator, factory);

@@ -27,7 +27,7 @@ public interface DavCollection extends WebDavResource {
     /**
      * Adds a new content item to this resource.
      */
-    void addContent(DavContent content,
+    void addContent(WebDavResource content,
                     DavInputContext input)
         throws CosmoDavException;
 

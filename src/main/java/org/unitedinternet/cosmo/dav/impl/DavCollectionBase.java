@@ -15,50 +15,32 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import static carldav.CarldavConstants.TEXT_HTML_VALUE;
-import static carldav.CarldavConstants.caldav;
-import static org.springframework.http.HttpHeaders.ETAG;
-import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
-
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ForbiddenException;
-import org.unitedinternet.cosmo.dav.WebDavResource;
-import carldav.jackrabbit.webdav.io.DavInputContext;
-import org.unitedinternet.cosmo.dav.property.DisplayName;
-import org.unitedinternet.cosmo.dav.property.Etag;
-import org.unitedinternet.cosmo.dav.property.IsCollection;
-import org.unitedinternet.cosmo.dav.property.LastModified;
-import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
+import org.unitedinternet.cosmo.dav.*;
+import org.unitedinternet.cosmo.dav.property.*;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.namespace.QName;
+import static carldav.CarldavConstants.TEXT_HTML_VALUE;
+import static carldav.CarldavConstants.caldav;
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
 
@@ -167,7 +149,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return "\"" + getItem().getEntityTag() + "\"";
     }
 
-    public void addContent(DavContent content, DavInputContext context) throws CosmoDavException {
+    public void addContent(WebDavResource content, DavInputContext context) throws CosmoDavException {
         DavItemResourceBase base = (DavItemResourceBase) content;
         base.populateItem(context);
         saveContent(base);

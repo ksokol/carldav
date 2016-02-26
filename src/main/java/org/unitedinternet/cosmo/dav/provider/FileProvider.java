@@ -17,14 +17,13 @@ package org.unitedinternet.cosmo.dav.provider;
 
 import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.impl.DavItemResourceBase;
-
-import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * <p>
@@ -44,7 +43,7 @@ public class FileProvider extends BaseProvider {
 
     public void put(HttpServletRequest request,
                     HttpServletResponse response,
-                    DavContent content)
+                    WebDavResource content)
         throws CosmoDavException, IOException {
         if (! content.getParent().exists()) {
             throw new ConflictException("One or more intermediate collections must be created");

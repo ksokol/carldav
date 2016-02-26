@@ -21,14 +21,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
-import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.model.hibernate.*;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 
@@ -83,15 +78,7 @@ public class StandardUserService implements UserService {
 
         user.setPassword(digestPassword(user.getPassword()));
 
-        try {
-            userDao.createUser(user);
-            LOG.info("created new user:" + user.getEmail());
-        } catch (DataIntegrityViolationException e) {
-            if (userDao.getUserByEmail(user.getEmail()) != null) {
-                throw new DuplicateEmailException(user.getEmail());
-            }
-            throw e;
-        }
+        userDao.createUser(user);
 
         User newUser = userDao.getUserByEmail(user.getEmail());
 

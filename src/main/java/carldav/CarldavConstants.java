@@ -1,13 +1,12 @@
 package carldav;
 
-import static carldav.jackrabbit.webdav.property.CustomDavPropertyName.create;
-
 import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
 import org.springframework.http.MediaType;
 
+import javax.xml.namespace.QName;
 import java.nio.charset.Charset;
 
-import javax.xml.namespace.QName;
+import static carldav.jackrabbit.webdav.property.CustomDavPropertyName.create;
 
 /**
  * @author Kamill Sokol
@@ -40,6 +39,8 @@ public final class CarldavConstants {
 
     public static final String XML_STATUS = "status";
 
+    public static final String ELEMENT_CALDAV_CALENDAR = "calendar";
+
     public static final CustomDavPropertyName DISPLAY_NAME = create(caldav("displayname"));
     public static final CustomDavPropertyName GET_CONTENT_LENGTH = create(caldav("getcontentlength"));
     public static final CustomDavPropertyName GET_CONTENT_TYPE = create(caldav("getcontenttype"));
@@ -61,6 +62,8 @@ public final class CarldavConstants {
     public static final CustomDavPropertyName SUPPORTED_ADDRESS_DATA = create(carddav("supported-address-data"));
 
     public static final CustomDavPropertyName GET_CTAG = create(cs("getctag"));
+
+    public static final QName RESOURCE_TYPE_CALENDAR = c(ELEMENT_CALDAV_CALENDAR); // CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
 
     public static QName caldav(String localName) {
         return new QName(NS_CALDAV, localName, PRE_CALDAV);

@@ -1,9 +1,5 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import static carldav.CarldavConstants.GET_CTAG;
-import static carldav.CarldavConstants.SUPPORTED_CALENDAR_COMPONENT_SET;
-import static carldav.CarldavConstants.SUPPORTED_CALENDAR_DATA;
-
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,11 +9,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
-import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
-import org.unitedinternet.cosmo.dav.caldav.property.GetCTag;
-import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarComponentSet;
-import org.unitedinternet.cosmo.dav.caldav.property.SupportedCalendarData;
-import org.unitedinternet.cosmo.dav.caldav.property.SupportedCollationSet;
+import org.unitedinternet.cosmo.dav.caldav.property.*;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
@@ -26,10 +18,11 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
+import javax.xml.namespace.QName;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
+import static carldav.CarldavConstants.*;
 
 public class DavCalendarCollection extends DavCollectionBase implements CaldavConstants, ICalendarConstants {
 

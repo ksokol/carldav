@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.dav.caldav;
 
-import org.unitedinternet.cosmo.util.CosmoQName;
-
 /**
  * Provides constants for media types, XML namespaces, names and values, DAV properties and resource types defined by the CalDAV spec.
  */
@@ -96,10 +94,4 @@ public interface CaldavConstants {
     String ATTR_CALDAV_START = "start";
     /** The CalDAV XML attribute name CALDAV:end */
     String ATTR_CALDAV_END = "end";
-
-    CosmoQName RESOURCE_TYPE_CALENDAR = new CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
-
-
-
-
 }

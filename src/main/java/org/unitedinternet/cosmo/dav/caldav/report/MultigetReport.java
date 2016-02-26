@@ -16,23 +16,20 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.util.UriUtils;
-import org.unitedinternet.cosmo.dav.BadRequestException;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.DavContent;
-import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
+import org.unitedinternet.cosmo.dav.impl.DavItemResource;
 import org.w3c.dom.Element;
 
+import javax.xml.namespace.QName;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -43,8 +40,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.xml.namespace.QName;
 
 /**
  * <p>
@@ -104,7 +99,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
         if (hrefElements.size() == 0) {
             throw new BadRequestException("Expected at least one " + XML_HREF);
         }
-        if (getResource() instanceof DavContent && hrefElements.size() > 1) {
+        if (getResource() instanceof DavItemResource && hrefElements.size() > 1) {
             throw new BadRequestException("Expected at most one " + XML_HREF);
         }
 

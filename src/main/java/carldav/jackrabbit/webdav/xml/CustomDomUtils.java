@@ -1,43 +1,32 @@
 package carldav.jackrabbit.webdav.xml;
 
-import static carldav.CarldavConstants.EMPTY;
-import static carldav.CarldavConstants.caldav;
-import static carldav.jackrabbit.webdav.CustomDavConstants.XML_HREF;
-import static org.slf4j.LoggerFactory.getLogger;
-
 import org.slf4j.Logger;
-import org.w3c.dom.Attr;
+import org.w3c.dom.*;
 import org.w3c.dom.CharacterData;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.DefaultHandler;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.io.Writer;
 
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.sax.SAXTransformerFactory;
 import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import static carldav.CarldavConstants.EMPTY;
+import static carldav.CarldavConstants.caldav;
+import static carldav.jackrabbit.webdav.CustomDavConstants.XML_HREF;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author Kamill Sokol
@@ -285,7 +274,7 @@ public class CustomDomUtils {
             if (NEEDS_XMLNS_ATTRIBUTES) {
                 // The serializer does not output xmlns declarations,
                 // so we need to do it explicitly with this wrapper
-                return new SAXResult(new CustomSerializingContentHandler(handler));
+                return new SAXResult(handler);
             } else {
                 return result;
             }

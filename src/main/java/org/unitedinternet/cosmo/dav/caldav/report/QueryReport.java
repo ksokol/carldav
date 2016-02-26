@@ -15,19 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import static carldav.CarldavConstants.c;
-import static carldav.CarldavConstants.caldav;
-
 import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.DavContent;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCollationException;
@@ -36,9 +32,11 @@ import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.w3c.dom.Element;
 
+import javax.xml.namespace.QName;
 import java.text.ParseException;
 
-import javax.xml.namespace.QName;
+import static carldav.CarldavConstants.c;
+import static carldav.CarldavConstants.caldav;
 
 /**
  * <p>
@@ -109,9 +107,6 @@ public class QueryReport extends CaldavMultiStatusReport {
                 getResults().add(dcr);
             }
             return;
-        }
-        if (resource instanceof DavContent) {
-            throw new UnprocessableEntityException(getType() + " report not supported for non-calendar resources");
         }
         // if the resource is a collection, it will not match a calendar
         // query, which only matches calendar resource, so we can ignore it

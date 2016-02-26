@@ -40,18 +40,6 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
         return map.get(name);
     }
 
-
-    /**
-     * Removes the indicated property from this set.
-     *
-     * @param name The webdav property name to remove
-     *
-     * @return The removed property or <code>null</code>
-     */
-    public WebDavProperty<?> remove(CustomDavPropertyName name) {
-        return map.remove(name);
-    }
-
     /**
      * Returns an iterator over all property in this set.
      *

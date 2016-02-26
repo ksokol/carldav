@@ -15,22 +15,21 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
 import org.unitedinternet.cosmo.model.hibernate.HibJournalItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class CalendarResourceProvider extends FileProvider {
 
@@ -72,7 +71,7 @@ public class CalendarResourceProvider extends FileProvider {
         response.setHeader("ETag", content.getETag());
     }
 
-    protected DavContent createCalendarResource(DavResourceLocator locator, Calendar calendar) throws CosmoDavException {
+    protected WebDavResource createCalendarResource(DavResourceLocator locator, Calendar calendar) throws CosmoDavException {
 
         if (!calendar.getComponents(Component.VEVENT).isEmpty()) {
             return new DavCalendarResource(new HibEventItem(), locator, getResourceFactory());

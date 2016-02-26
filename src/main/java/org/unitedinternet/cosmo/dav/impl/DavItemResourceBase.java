@@ -95,9 +95,9 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     }
 
     public String getETag() {
-        if (StringUtils.isBlank(getItem().getEntityTag()))
+        if (StringUtils.isBlank(getItem().getETag()))
             return null;
-        return "\"" + getItem().getEntityTag() + "\"";
+        return "\"" + getItem().getETag() + "\"";
     }
 
     public long getModificationTime() {

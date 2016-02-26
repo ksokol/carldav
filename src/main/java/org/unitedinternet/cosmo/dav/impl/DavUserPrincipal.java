@@ -69,7 +69,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     public String getETag() {
         return null;
-        //TODO"\"" + user.getEntityTag() + "\"";
+        //TODO"\"" + user.getETag() + "\"";
     }
 
     protected Set<QName> getResourceTypes() {
@@ -84,7 +84,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));
-    //TODO    properties.add(new Etag(user.getEntityTag()));
+    //TODO    properties.add(new Etag(user.getETag()));
     //TODO    properties.add(new LastModified(user.getModifiedDate()));
         properties.add(new CalendarHomeSet("/" + ServerConstants.SVC_DAV, user));
         properties.add(new PrincipalUrl(getResourceLocator(), user));

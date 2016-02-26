@@ -107,7 +107,7 @@ public abstract class HibAuditableObject implements Serializable {
         modifiedDate = new Date();
     }
 
-    public String getEntityTag() {
+    public String getETag() {
         return etag;
     }
 

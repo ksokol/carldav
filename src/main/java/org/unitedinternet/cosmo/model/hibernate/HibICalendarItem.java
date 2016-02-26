@@ -44,38 +44,18 @@ public abstract class HibICalendarItem extends HibItem {
         VEVENT, VJOURNAL, VTODO, VCARD
     }
 
-    @Column(name = "calendar", columnDefinition = "CLOB")
-    @Lob
     private String calendar;
-
-    @Column(name = "remindertime")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date remindertime;
-
-    @Column(name = "startdate")
     private Date startDate;
-
-    @Column(name = "enddate")
     private Date endDate;
-
-    @Column(name = "floating")
     private Boolean floating;
-
-    @Column(name = "recurring")
     private Boolean recurring;
-
-    @Column(name = "clientcreatedate")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date clientCreationDate;
-
-    @Column(name = "clientmodifieddate")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date clientModifiedDate;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name ="type")
     private Type type;
 
+    @Column(name = "calendar", columnDefinition = "CLOB")
+    @Lob
     public String getCalendar() {
         return calendar;
     }
@@ -84,6 +64,8 @@ public abstract class HibICalendarItem extends HibItem {
         this.calendar = calendar;
     }
 
+    @Column(name = "remindertime")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getRemindertime() {
         return remindertime;
     }
@@ -92,6 +74,7 @@ public abstract class HibICalendarItem extends HibItem {
         this.remindertime = remindertime;
     }
 
+    @Column(name = "startdate")
     public Date getStartDate() {
         return startDate;
     }
@@ -100,6 +83,7 @@ public abstract class HibICalendarItem extends HibItem {
         this.startDate = startDate;
     }
 
+    @Column(name = "enddate")
     public Date getEndDate() {
         return endDate;
     }
@@ -108,6 +92,7 @@ public abstract class HibICalendarItem extends HibItem {
         this.endDate = endDate;
     }
 
+    @Column(name = "floating")
     public Boolean getFloating() {
         return floating;
     }
@@ -116,6 +101,7 @@ public abstract class HibICalendarItem extends HibItem {
         this.floating = floating;
     }
 
+    @Column(name = "recurring")
     public Boolean getRecurring() {
         return recurring;
     }
@@ -124,6 +110,8 @@ public abstract class HibICalendarItem extends HibItem {
         this.recurring = recurring;
     }
 
+    @Column(name = "clientcreatedate")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getClientCreationDate() {
         return clientCreationDate;
     }
@@ -132,6 +120,8 @@ public abstract class HibICalendarItem extends HibItem {
         this.clientCreationDate = clientCreationDate;
     }
 
+    @Column(name = "clientmodifieddate")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getClientModifiedDate() {
         return clientModifiedDate;
     }
@@ -140,6 +130,8 @@ public abstract class HibICalendarItem extends HibItem {
         this.clientModifiedDate = clientModifiedDate;
     }
 
+    @Enumerated(EnumType.STRING)
+    @Column(name ="type")
     public Type getType() {
         return type;
     }

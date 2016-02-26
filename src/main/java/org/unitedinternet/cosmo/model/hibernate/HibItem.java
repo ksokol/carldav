@@ -17,18 +17,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Index;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -44,14 +33,11 @@ import javax.persistence.Table;
         length=32)
 public abstract class HibItem extends HibAuditableObject {
 
-    @Column(name = "uid", nullable = false)
-    @NotEmpty
     private String uid;
-
-    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "collectionid")
     private HibCollectionItem collection;
 
+    @Column(name = "uid", nullable = false)
+    @NotEmpty
     public String getUid() {
         return uid;
     }
@@ -64,6 +50,8 @@ public abstract class HibItem extends HibAuditableObject {
         collection = parent;
     }
 
+    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "collectionid")
     public HibCollectionItem getCollection() {
         return collection;
     }

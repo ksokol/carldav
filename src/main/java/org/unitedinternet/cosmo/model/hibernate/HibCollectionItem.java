@@ -27,10 +27,14 @@ import javax.persistence.OneToMany;
 @DiscriminatorValue("collection")
 public class HibCollectionItem extends HibItem {
 
-    @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
     private Set<HibItem> items = new HashSet<>();
 
+    @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
     public Set<HibItem> getItems() {
         return items;
+    }
+
+    public void setItems(Set<HibItem> items) {
+        this.items = items;
     }
 }

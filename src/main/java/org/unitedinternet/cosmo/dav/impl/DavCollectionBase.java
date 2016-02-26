@@ -146,7 +146,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public String getETag() {
-        return "\"" + getItem().getETag() + "\"";
+        return "\"" + getItem().getEtag() + "\"";
     }
 
     public void addContent(WebDavResource content, DavInputContext context) throws CosmoDavException {

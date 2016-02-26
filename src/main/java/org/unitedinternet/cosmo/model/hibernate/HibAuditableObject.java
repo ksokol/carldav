@@ -39,30 +39,15 @@ public abstract class HibAuditableObject implements Serializable {
 
     private static final long serialVersionUID = 8396186357498363587L;
 
-    @Id
-    @GeneratedValue
     private Long id;
-
-    @ManyToOne(targetEntity=User.class, fetch= FetchType.LAZY)
-    @JoinColumn(name="ownerid", nullable = false)
     private User owner;
-
-    @Column(name = "modifydate")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date modifiedDate;
-
-    @Column(name = "displayname")
-    @NotEmpty
     private String displayName;
-    
-    @Column(name="etag")
     private String etag;
-
-    @Column(name = "itemname", nullable = false, length=255)
-    @NotNull
-    @Length(min = 1, max = 255)
     private String name;
 
+    @Id
+    @GeneratedValue
     public Long getId() {
         return id;
     }
@@ -71,6 +56,8 @@ public abstract class HibAuditableObject implements Serializable {
         this.id = id;
     }
 
+    @ManyToOne(targetEntity=User.class, fetch= FetchType.LAZY)
+    @JoinColumn(name="ownerid", nullable = false)
     public User getOwner() {
         return owner;
     }
@@ -79,6 +66,8 @@ public abstract class HibAuditableObject implements Serializable {
         this.owner = owner;
     }
 
+    @Column(name = "modifydate")
+    @Temporal(TemporalType.TIMESTAMP)
     public Date getModifiedDate() {
         return modifiedDate;
     }
@@ -86,7 +75,9 @@ public abstract class HibAuditableObject implements Serializable {
     public void setModifiedDate(Date modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
-    
+
+    @Column(name = "displayname")
+    @NotEmpty
     public String getDisplayName() {
         return displayName;
     }
@@ -95,6 +86,9 @@ public abstract class HibAuditableObject implements Serializable {
         this.displayName = displayName;
     }
 
+    @Column(name = "itemname", nullable = false, length=255)
+    @NotNull
+    @Length(min = 1, max = 255)
     public String getName() {
         return name;
     }
@@ -107,8 +101,13 @@ public abstract class HibAuditableObject implements Serializable {
         modifiedDate = new Date();
     }
 
-    public String getETag() {
+    @Column(name="etag")
+    public String getEtag() {
         return etag;
+    }
+
+    public void setEtag(String etag) {
+        this.etag = etag;
     }
 
     public String calculateEntityTag() {

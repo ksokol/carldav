@@ -15,15 +15,10 @@
  */
 package carldav.jackrabbit.webdav.io;
 
-import static carldav.CarldavConstants.TEXT_CALENDAR;
-import static carldav.CarldavConstants.TEXT_VCARD;
-import static org.slf4j.LoggerFactory.getLogger;
-
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
-import org.slf4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
@@ -35,19 +30,18 @@ import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarDataException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
+import static carldav.CarldavConstants.TEXT_CALENDAR;
+import static carldav.CarldavConstants.TEXT_VCARD;
 
 /**
  * An <code>InputContext</code> that supports the semantics of DAV extensions like CalDAV.
  *
  */
 public class DavInputContext implements CaldavConstants {
-
-    private static final Logger LOG = getLogger(DavInputContext.class);
 
     private final HttpServletRequest request;
     private final InputStream in;
@@ -126,34 +120,7 @@ public class DavInputContext implements CaldavConstants {
         return in;
     }
 
-    public long getModificationTime() {
-        return new Date().getTime();
-    }
-
-    public String getContentLanguage() {
-        return request.getHeader(HttpHeaders.CONTENT_LANGUAGE);
-    }
-
-    public long getContentLength() {
-        String length = request.getHeader(HttpHeaders.CONTENT_LENGTH);
-        if (length == null) {
-            // header not present
-            return -1;
-        } else {
-            try {
-                return Long.parseLong(length);
-            } catch (NumberFormatException ex) {
-                LOG.error("broken Content-Length header: " + length);
-                return -1;
-            }
-        }
-    }
-
     public String getContentType() {
         return request.getHeader(HttpHeaders.CONTENT_TYPE);
-    }
-
-    public String getProperty(final String propertyName) {
-        return request.getHeader(propertyName);
     }
 }

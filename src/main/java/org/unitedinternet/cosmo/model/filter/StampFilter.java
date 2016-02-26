@@ -96,24 +96,8 @@ public class StampFilter {
         updateFloatingTimes();
     }
 
-    public String getUTCStart() {
-        return dstart.toString();
-    }
-
-    public String getUTCEnd() {
-        return dend.toString();
-    }
-
     public TimeZone getTimezone() {
         return timezone;
-    }
-
-    public String getFloatStart() {
-        return fstart.toString();
-    }
-
-    public String getFloatEnd() {
-        return fend.toString();
     }
 
     public Date getEnd() {

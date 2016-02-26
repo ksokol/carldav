@@ -90,14 +90,6 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
     }
 
     /**
-     * Constructor.
-     * @param element The element.
-     * @throws ParseException - if something is wrong this exception is thrown.
-     */
-    public ComponentFilter(Element element) throws ParseException {
-        this(element, null);
-    }
-    /**
      * 
      * @author cdobrota
      *
@@ -121,7 +113,7 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
      * @author cdobrota
      *
      */
-    private static enum Initializers implements InitializationOperation {
+    private enum Initializers implements InitializationOperation {
         /**
          * time range initialier.
          */
@@ -347,14 +339,6 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
     }
 
     /**
-     * Sets component filter.
-     * @param componentFilters The component filter.
-     */
-    public void setComponentFilters(List componentFilters) {
-        this.componentFilters = componentFilters;
-    }
-
-    /**
      * Gets time range filter.
      * @return The time range filter.
      */
@@ -376,14 +360,6 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
      */
     public List getPropFilters() {
         return propFilters;
-    }
-
-    /**
-     * Sets prop filters.
-     * @param propFilters The prop filters.
-     */
-    public void setPropFilters(List propFilters) {
-        this.propFilters = propFilters;
     }
 
     /**

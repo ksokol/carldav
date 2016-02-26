@@ -16,21 +16,16 @@
 package org.unitedinternet.cosmo.calendar.util;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringWriter;
 
 /**
  * Utility methods for working with icalendar data.
@@ -43,39 +38,6 @@ public class CalendarUtils implements ICalendarConstants {
     private static String[] SUPPORTED_COLLATIONS = {
         "i;ascii-casemap", "i;octet"
     };
-    /**
-     * Convert Calendar object to String
-     * @param calendar
-     * @return string representation of calendar
-     * @throws ValidationException - if something is wrong this exception is thrown.
-     * @throws IOException - if something is wrong this exception is thrown.
-     */
-    public static String outputCalendar(Calendar calendar) 
-        throws ValidationException, IOException {
-        if (calendar == null) {
-            return null;
-        }
-        CalendarOutputter outputter = new CalendarOutputter();
-        StringWriter sw = new StringWriter();
-        outputter.output(calendar, sw);
-        return sw.toString();
-    }
-
-    /**
-     * Parse icalendar data from Reader into Calendar object.
-     * @param reader icalendar data reader
-     * @return Calendar object
-     * @throws ParserException - if something is wrong this exception is thrown.
-     * @throws IOException - if something is wrong this exception is thrown.
-     */
-    public static Calendar parseCalendar(Reader reader) throws ParserException, IOException {
-        if (reader == null) {
-            return null;
-        }
-        CalendarBuilder builder = CalendarBuilderDispenser.getCalendarBuilder();
-        clearTZRegistry(builder);
-        return builder.build(reader);
-    }
 
     /**
      * Parse icalendar data from InputStream
@@ -88,17 +50,6 @@ public class CalendarUtils implements ICalendarConstants {
         CalendarBuilder builder = CalendarBuilderDispenser.getCalendarBuilder();
         clearTZRegistry(builder);
         return builder.build(is);
-    }
-    
-    public static Calendar copyCalendar(Calendar calendar) {
-        if (calendar == null) {
-            return null;
-        }
-        try {
-            return new Calendar(calendar);
-        } catch (Exception e) {
-           throw new CosmoException("error copying calendar: " + calendar, e);
-        } 
     }
 
     public static boolean isSupportedComponent(String type) {
@@ -136,15 +87,6 @@ public class CalendarUtils implements ICalendarConstants {
         return false;
     }
 
-    public static boolean hasSupportedComponent(Calendar calendar) {
-        for (Object component: calendar.getComponents()) {
-            if (isSupportedComponent(((CalendarComponent)component).getName())) {
-                 return true;
-            }
-         }
-         return false;
-    }
-    
     private static void clearTZRegistry(CalendarBuilder cb) {
         // clear timezone registry if present
         TimeZoneRegistry tzr = cb.getRegistry();

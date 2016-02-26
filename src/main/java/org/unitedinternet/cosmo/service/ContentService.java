@@ -63,15 +63,6 @@ public interface ContentService {
     void removeCollection(HibCollectionItem collection);
 
     /**
-     * Update collection item
-     * 
-     * @param collection
-     *            collection item to update
-     * @return updated collection
-     */
-    HibCollectionItem updateCollection(HibCollectionItem collection);
-    
-    /**
      * Create new content item. A content item represents a piece of content or
      * file.
      * 

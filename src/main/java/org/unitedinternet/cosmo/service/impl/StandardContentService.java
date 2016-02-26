@@ -73,17 +73,6 @@ public class StandardContentService implements ContentService {
     }
 
     /**
-     * Update collection item
-     * 
-     * @param collection
-     *            collection item to update
-     * @return updated collection
-     */
-    public HibCollectionItem updateCollection(HibCollectionItem collection) {
-        return contentDao.updateCollection(collection);
-    }
-
-    /**
      * Remove collection item
      * 
      * @param collection

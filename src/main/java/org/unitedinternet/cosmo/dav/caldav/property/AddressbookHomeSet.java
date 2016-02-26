@@ -1,6 +1,9 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import static carldav.CarldavConstants.ADDRESSBOOK_HOME_SET;
+import static carldav.CarldavConstants.caldav;
+
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
@@ -14,11 +17,11 @@ import org.w3c.dom.Element;
 public class AddressbookHomeSet extends StandardDavProperty implements CaldavConstants {
 
     public AddressbookHomeSet(DavResourceLocator locator, User user) {
-        super(ADDRESSBOOKHOMESET, href(locator.getBaseHref(), user), true);
+        super(ADDRESSBOOK_HOME_SET, href(locator.getBaseHref(), user), true);
     }
 
     public AddressbookHomeSet(String baseHref, User user) {
-        super(ADDRESSBOOKHOMESET, href(baseHref, user), true);
+        super(ADDRESSBOOK_HOME_SET, href(baseHref, user), true);
     }
 
     public String getHref() {
@@ -28,8 +31,8 @@ public class AddressbookHomeSet extends StandardDavProperty implements CaldavCon
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
-        Element e = DomUtil.createElement(document, XML_HREF, NAMESPACE);
-        DomUtil.setText(e, getHref());
+        Element e = CustomDomUtils.createElement(document, XML_HREF, caldav(XML_HREF));
+        CustomDomUtils.setText(e, getHref());
         name.appendChild(e);
 
         return name;

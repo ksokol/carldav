@@ -15,8 +15,8 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import org.apache.jackrabbit.webdav.DavConstants;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
@@ -38,7 +38,7 @@ import java.text.ParseException;
  * 
  * <!ATTLIST text-match collation CDATA "i;ascii-casemap" negate-condition (yes | no) "no">
  */
-public class TextMatchFilter implements DavConstants, CaldavConstants {
+public class TextMatchFilter implements CustomDavConstants, CaldavConstants {
 
     private static final String COLLATION_IASCII = "i;ascii-casemap";
     public static final String COLLATION_OCTET = "i;octet";
@@ -62,12 +62,12 @@ public class TextMatchFilter implements DavConstants, CaldavConstants {
     public TextMatchFilter(Element element) throws ParseException {
         // Element data is string to match
         // TODO: do we need to do this replacing??
-        value = DomUtil.getTextTrim(element).replaceAll("'", "''");
+        value = CustomDomUtils.getTextTrim(element).replaceAll("'", "''");
 
         // Check attribute for collation
-        collation = DomUtil.getAttribute(element, ATTR_CALDAV_COLLATION, null);
+        collation = CustomDomUtils.getAttribute(element, ATTR_CALDAV_COLLATION);
 
-        String negateCondition = DomUtil.getAttribute(element, ATTR_CALDAV_NEGATE_CONDITION, null);
+        String negateCondition = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NEGATE_CONDITION);
 
         if (VALUE_YES.equals(negateCondition)) {
             isNegateCondition = true;

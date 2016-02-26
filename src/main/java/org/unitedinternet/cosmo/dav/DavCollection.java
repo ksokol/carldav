@@ -15,8 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.io.InputContext;
+import carldav.jackrabbit.webdav.io.DavInputContext;
+
+import java.util.List;
 
 /**
  * An interface for DAV collection resources.
@@ -27,7 +28,7 @@ public interface DavCollection extends WebDavResource {
      * Adds a new content item to this resource.
      */
     void addContent(DavContent content,
-                           InputContext input)
+                    DavInputContext input)
         throws CosmoDavException;
 
     /**
@@ -35,12 +36,7 @@ public interface DavCollection extends WebDavResource {
      */
     WebDavResource findMember(String href)
         throws CosmoDavException;
-    
-    /**
-     * Returns an iterator over all internal members which are themselves collection.
-     *
-     * @return a {@link DavResourceIterator} over all internal members.
-     */
-    DavResourceIterator getCollectionMembers();
+
+    List<WebDavResource> getCollectionMembers();
     
 }

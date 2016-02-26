@@ -15,18 +15,23 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
+import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.version.report.CustomReport;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
 import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * An interface providing resource functionality required by WebDAV
  * extensions implemented by Cosmo.
  */
-public interface WebDavResource
-    extends org.apache.jackrabbit.webdav.DavResource {
+public interface WebDavResource {
 
     /**
      * String constant representing the WebDAV 1 compliance
@@ -36,13 +41,110 @@ public interface WebDavResource
     String COMPLIANCE_CLASS = "1, 3, addressbook, calendar-access";
 
     /**
+     * Returns a comma separated list of all compliance classes the given
+     * resource is fulfilling.
+     *
+     * @return compliance classes
+     */
+    String getComplianceClass();
+
+    /**
+     * Returns a comma separated list of all METHODS supported by the given
+     * resource.
+     *
+     * @return METHODS supported by this resource.
+     */
+    String getSupportedMethods();
+
+    /**
+     * Returns true if this webdav resource represents an existing repository item.
+     *
+     * @return true, if the resource represents an existing repository item.
+     */
+    boolean exists();
+
+    /**
+     * Returns true if this webdav resource has the resourcetype 'collection'.
+     *
+     * @return true if the resource represents a collection resource.
+     */
+    boolean isCollection();
+
+    /**
+     * Returns the display name of this resource.
+     *
+     * @return display name.
+     */
+     String getDisplayName();
+
+    /**
+     * Returns the path of the hierarchy element defined by this <code>DavResource</code>.
+     * This method is a shortcut for <code>DavResource.getLocator().getResourcePath()</code>.
+     *
+     * @return path of the element defined by this <code>DavResource</code>.
+     */
+    String getResourcePath();
+
+    /**
+     * Return the time of the last modification or -1 if the modification time
+     * could not be retrieved.
+     *
+     * @return time of last modification or -1.
+     */
+    long getModificationTime();
+
+    /**
      * @return Returns the parent collection for this resource.
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
     DavCollection getParent() throws CosmoDavException;
 
-    void writeTo(OutputContext out)
-        throws CosmoDavException, IOException;
+    /**
+     * Removes the specified member from this resource.
+     *
+     */
+    void removeMember2(WebDavResource member);
+
+    /**
+     * Returns the absolute href of this resource as returned in the
+     * multistatus response body.
+     *
+     * @return href
+     */
+    String getHref();
+
+    /**
+     * Returns all webdav properties present on this resource that will be
+     * return upon a {@link CustomDavConstants#PROPFIND_ALL_PROP} request. The
+     * implementation may in addition expose other (protected or calculated)
+     * properties which should be marked accordingly (see also
+     * {@link WebDavProperty#isInvisibleInAllprop()}.
+     *
+     * @return a {@link CustomDavPropertySet} containing at least all properties
+     * of this resource that are exposed in 'allprop' PROPFIND request.
+     */
+    CustomDavPropertySet getProperties();
+
+    /**
+     * Return the webdav property with the specified name.
+     *
+     * @param name name of the webdav property
+     * @return the {@link WebDavProperty} with the given name or <code>null</code>
+     * if the property does not exist.
+     */
+    WebDavProperty<?> getProperty(CustomDavPropertyName name);
+
+    /**
+     * Returns an array of all {@link CustomDavPropertyName property names} available
+     * on this resource.
+     *
+     * @return an array of property names.
+     */
+    CustomDavPropertyName[] getPropertyNames();
+
+    void writeHead(HttpServletResponse response) throws IOException;
+
+    void writeBody(HttpServletResponse response) throws IOException;
 
     /**
      * @return Return the report that matches the given report info if it is
@@ -50,10 +152,12 @@ public interface WebDavResource
      * @param info The given report info.
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
-    Report getReport(ReportInfo info)
+    CustomReport getReport(CustomReportInfo info)
         throws CosmoDavException;
 
     DavResourceLocator getResourceLocator();
     
     String getETag();
+
+    List<WebDavResource> getMembers();
 }

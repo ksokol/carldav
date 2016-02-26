@@ -15,47 +15,45 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import java.util.TreeSet;
-import java.util.Set;
+import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
+import static carldav.CarldavConstants.caldav;
 
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringUtils;
-
-import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * Represents the DAV:supported-report-set property.
- */
+import java.util.Set;
+import java.util.TreeSet;
+
 public class SupportedReportSet extends StandardDavProperty {
 
-    public SupportedReportSet(Set<ReportType> reports) {
-        super(SUPPORTEDREPORTSET, reports, true);
+    public SupportedReportSet(Set<CustomReportType> reports) {
+        super(SUPPORTED_REPORT_SET, reports, true);
     }
 
-    public Set<ReportType> getReportTypes() {
-        return (Set<ReportType>) getValue();
+    public Set<CustomReportType> getReportTypes() {
+        return (Set<CustomReportType>) getValue();
     }
 
     public String getValueText() {
-        TreeSet<String> types = new TreeSet<String>();
-        for (ReportType rt : getReportTypes()) {
+        TreeSet<String> types = new TreeSet<>();
+        for (CustomReportType rt : getReportTypes()) {
             types.add(rt.getReportName());
         }
         return StringUtils.join(types, ", ");
     }
 
     public Element toXml(Document document) {
-        Element name = getName().toXml(document);
+        Element element = getName().toXml(document);
 
-        for (ReportType rt : getReportTypes()) {
-            Element sr = DomUtil.addChildElement(name, "supported-report", NAMESPACE);
-            Element r = DomUtil.addChildElement(sr, "report", NAMESPACE);
+        for (CustomReportType rt : getReportTypes()) {
+            Element sr = CustomDomUtils.addChildElement(element, caldav("supported-report"));
+            Element r = CustomDomUtils.addChildElement(sr, caldav("report"));
             r.appendChild(rt.toXml(document));
         }
 
-        return name;
+        return element;
     }
 }

@@ -15,12 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
+import static carldav.CarldavConstants.GET_CONTENT_LENGTH;
+import static carldav.CarldavConstants.GET_CONTENT_TYPE;
+import static carldav.CarldavConstants.TEXT_CALENDAR_VALUE;
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
+
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import org.apache.commons.io.IOUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavContent;
@@ -28,7 +31,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
-import org.unitedinternet.cosmo.dav.io.DavInputContext;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
@@ -38,12 +41,14 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.HashSet;
+import java.nio.charset.StandardCharsets;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class DavCalendarResource extends DavItemResourceBase implements DavContent, ICalendarConstants {
 
-    private final Set<ReportType> reportTypes = new HashSet<>();
+    //private final Set<CustomReportType> reportTypes = new HashSet<>();
 
     public DavCalendarResource(HibItem item,
                                DavResourceLocator locator,
@@ -51,18 +56,18 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         throws CosmoDavException {
         super(item, locator, factory);
 
-        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
-        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
+        registerLiveProperty(GET_CONTENT_LENGTH);
+        registerLiveProperty(GET_CONTENT_TYPE);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
     }
 
     @Override
-    protected void populateItem(InputContext inputContext) throws CosmoDavException {
+    protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
         super.populateItem(inputContext);
 
-        DavInputContext dic = (DavInputContext) inputContext;
+        DavInputContext dic = inputContext;
         setCalendar(dic.getCalendarString());
     }
 
@@ -80,33 +85,39 @@ public class DavCalendarResource extends DavItemResourceBase implements DavConte
         item.setCalendar(calendar);
     }
 
-    public void writeTo(OutputContext outputContext) throws CosmoDavException, IOException {
-        String contentType = IOUtil.buildContentType(ICALENDAR_MEDIA_TYPE, "UTF-8");
-        outputContext.setContentType(contentType);
-  
+    public void writeHead(final HttpServletResponse response) throws IOException {
+        response.setContentType(TEXT_CALENDAR_VALUE);
+
         // Get calendar
         String calendar = getCalendar();
-        
-        // convert Calendar object to String, then to bytes (UTF-8)    
-        byte[] calendarBytes = calendar.getBytes("UTF-8");
-        outputContext.setContentLength(calendarBytes.length);
-        outputContext.setModificationTime(getModificationTime());
-        outputContext.setETag(getETag());
-        
-        if (! outputContext.hasStream()) {
-            return;
+
+        // convert Calendar object to String, then to bytes (UTF-8)
+        byte[] calendarBytes = calendar.getBytes(StandardCharsets.UTF_8);
+        response.setContentLength(calendarBytes.length);
+        if (getModificationTime() >= 0) {
+            response.addDateHeader(LAST_MODIFIED, getModificationTime());
         }
+        if (getETag() != null) {
+            response.setHeader(ETAG, getETag());
+        }
+    }
+
+    public void writeBody(final HttpServletResponse response) throws IOException {
+        // Get calendar
+        String calendar = getCalendar();
+        // convert Calendar object to String, then to bytes (UTF-8)
+        byte[] calendarBytes = calendar.getBytes(StandardCharsets.UTF_8);
 
         // spool calendar bytes
         ByteArrayInputStream bois = new ByteArrayInputStream(calendarBytes);
-        IOUtil.spool(bois, outputContext.getOutputStream());
+        IOUtils.copy(bois, response.getOutputStream());
     }
 
-    public Set<ReportType> getReportTypes() {
+    public Set<CustomReportType> getReportTypes() {
         return reportTypes;
     }
 
-    protected void loadLiveProperties(DavPropertySet properties) {
+    protected void loadLiveProperties(CustomDavPropertySet properties) {
         super.loadLiveProperties(properties);
         byte[] calendarBytes = getCalendar().getBytes(Charset.forName("UTF-8"));
 

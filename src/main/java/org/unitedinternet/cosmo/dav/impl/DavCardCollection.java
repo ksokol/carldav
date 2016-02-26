@@ -1,9 +1,10 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.SUPPORTEDADDRESSDATA;
+import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
+import static carldav.CarldavConstants.carddav;
 
 import carldav.card.CardQueryProcessor;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -30,7 +31,7 @@ public class DavCardCollection extends DavCollectionBase {
     public DavCardCollection(final HibCollectionItem collection, final DavResourceLocator locator, final DavResourceFactory factory,
             final CardQueryProcessor cardQueryProcessor) throws CosmoDavException {
         super(collection, locator, factory);
-        registerLiveProperty(SUPPORTEDADDRESSDATA);
+        registerLiveProperty(SUPPORTED_ADDRESS_DATA);
 
         this.cardQueryProcessor = cardQueryProcessor;
 
@@ -41,7 +42,7 @@ public class DavCardCollection extends DavCollectionBase {
     @Override
     protected Set<QName> getResourceTypes() {
         final Set<QName> resourceTypes = super.getResourceTypes();
-        resourceTypes.add(RESOURCE_TYPE_ADDRESSBOOK);
+        resourceTypes.add(carddav(ADDRESSBOOK));
         return resourceTypes;
     }
 
@@ -60,7 +61,7 @@ public class DavCardCollection extends DavCollectionBase {
     }
 
     @Override
-    protected void loadLiveProperties(final DavPropertySet properties) {
+    protected void loadLiveProperties(final CustomDavPropertySet properties) {
         super.loadLiveProperties(properties);
         properties.add(new SupportedAddressData());
     }

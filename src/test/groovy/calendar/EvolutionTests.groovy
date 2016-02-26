@@ -1069,7 +1069,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         mockMvc.perform(get("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
                 .andExpect(status().isOk())
-                .andExpect(header().string(CONTENT_TYPE, is("text/calendar; charset=UTF-8")))
+                .andExpect(textCalendarContentType())
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
                 .andExpect(header().string(CONTENT_LENGTH, "549"))
                 .andExpect(etag(is(currentEtag)))

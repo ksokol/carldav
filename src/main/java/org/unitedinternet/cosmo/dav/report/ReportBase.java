@@ -15,12 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
-import carldav.jackrabbit.webdav.CustomReportInfo;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.version.report.CustomReport;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -32,51 +29,34 @@ import org.w3c.dom.Element;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.parsers.ParserConfigurationException;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
  * Base class for WebDAV reports.
  * </p>
  */
-public abstract class ReportBase implements Report, ExtendedDavConstants {
+public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
 
     private WebDavResource resource;
-    private ReportInfo info;
+    private CustomReportInfo info;
     private HashSet<WebDavResource> results;
 
-    /**
-     * Puts the report into a state where it can be run. Parses the given
-     * report info by calling {@link #parseReport(ReportInfo)}.
-     */
-    public void init(org.apache.jackrabbit.webdav.DavResource resource,
-                     ReportInfo info)
+    public void init(WebDavResource resource,
+                     CustomReportInfo info)
             throws CosmoDavException {
-        this.resource = (WebDavResource) resource;
+        this.resource = resource;
         this.info = info;
         this.results = new HashSet<>();
         parseReport(info);
     }
 
-    /**
-     * Executes the report and writes the output to the response.
-     * Calls {@link runQuery())} to execute the report and
-     * {@link #output(DavServletResponse)} to write the result.
-     */
-    public void run(DavServletResponse response) throws CosmoDavException {
+    public void run(HttpServletResponse response) throws CosmoDavException {
         runQuery();
         output(response);
     }
 
-    // our methods
-
-    /**
-     * Parses information from the given report info needed to execute
-     * the report. For example, a report request might include a query
-     * filter that constrains the set of resources to be returned from
-     * the report.
-     */
-    protected abstract void parseReport(ReportInfo info)
+    protected abstract void parseReport(CustomReportInfo info)
             throws CosmoDavException;
 
     /**
@@ -117,7 +97,7 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
     /**
      * Writes the report result to the response.
      */
-    protected abstract void output(DavServletResponse response)
+    protected abstract void output(HttpServletResponse response)
             throws CosmoDavException;
 
     /**
@@ -138,8 +118,7 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
      * provided collection that are themselves collections.
      */
     protected void doQueryDescendents(DavCollection collection) throws CosmoDavException {
-        for (DavResourceIterator i = collection.getCollectionMembers(); i.hasNext(); ) {
-            WebDavResource member = (WebDavResource) i.nextResource();
+        for (final WebDavResource member : collection.getCollectionMembers()) {
             if (member.isCollection()) {
                 DavCollection dc = (DavCollection) member;
                 doQuerySelf(dc);
@@ -149,23 +128,17 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
         }
     }
 
-    protected static Element getReportElementFrom(ReportInfo reportInfo) {
+    protected static Element getReportElementFrom(CustomReportInfo reportInfo) {
         if (reportInfo == null) {
             return null;
         }
 
         if(reportInfo instanceof CustomReportInfo) {
-            CustomReportInfo customReportInfo = (CustomReportInfo) reportInfo;
+            CustomReportInfo customReportInfo = reportInfo;
             return customReportInfo.getDocumentElement();
         }
 
-        Document document;
-        try {
-            document = DomUtil.createDocument();
-        } catch (ParserConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-
+        Document document = CustomDomUtils.createDocument();
         return reportInfo.toXml(document);
     }
 
@@ -173,7 +146,7 @@ public abstract class ReportBase implements Report, ExtendedDavConstants {
         return resource;
     }
 
-    public ReportInfo getInfo() {
+    public CustomReportInfo getInfo() {
         return info;
     }
 

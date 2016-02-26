@@ -1,22 +1,18 @@
 package org.unitedinternet.cosmo.dav.property;
 
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRINCIPALURL;
+import static carldav.CarldavConstants.PRINCIPAL_URL;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import carldav.CarldavConstants;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * Represents the DAV:principal-URL property.
- *
- * The property is protected. The value is a single DAV:href element containing the URL of the home collection.
- */
 public class PrincipalUrl extends StandardDavProperty {
 
     public PrincipalUrl(DavResourceLocator locator, User user) {
-        super(PRINCIPALURL, href(locator, user), true);
+        super(PRINCIPAL_URL, href(locator, user), true);
     }
 
     public String getHref() {
@@ -30,8 +26,8 @@ public class PrincipalUrl extends StandardDavProperty {
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
-        Element href = DomUtil.createElement(document, XML_HREF, NAMESPACE);
-        DomUtil.setText(href, getHref());
+        Element href = CustomDomUtils.createElement(document, XML_HREF, CarldavConstants.caldav(XML_HREF));
+        CustomDomUtils.setText(href, getHref());
         name.appendChild(href);
 
         return name;

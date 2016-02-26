@@ -260,7 +260,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:displayname>all entities meeting</D:displayname>
                                         <D:getlastmodified>${lastModified}</D:getlastmodified>
                                         <D:iscollection>0</D:iscollection>
-                                        <D:getcontenttype>text/calendar; charset=UTF-8</D:getcontenttype>
+                                        <D:getcontenttype>text/calendar;charset=UTF-8</D:getcontenttype>
                                         <D:supported-report-set>
                                             <D:supported-report>
                                               <D:report>

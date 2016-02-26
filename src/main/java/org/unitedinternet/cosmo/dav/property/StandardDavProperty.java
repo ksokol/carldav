@@ -15,16 +15,17 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.XmlSerializable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
+
+import javax.xml.namespace.QName;
 
 /**
  * <p>
@@ -37,31 +38,31 @@ import java.util.TreeSet;
  * is included in "allprop" <code>PROFIND</code> responses.
  * </p>
  */
-public class StandardDavProperty implements WebDavProperty, XmlSerializable {
+public class StandardDavProperty implements WebDavProperty, CustomXmlSerializable {
 
-    private DavPropertyName name;
+    private CustomDavPropertyName name;
     private Object value;
     private String lang;
     private boolean isProtected;
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value) {
         this(name, value, null, false);
     }
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value,
                                String lang) {
         this(name, value, lang, false);
     }
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value,
                                boolean isProtected) {
         this(name, value, null, isProtected);
     }
 
-    public StandardDavProperty(DavPropertyName name,
+    public StandardDavProperty(CustomDavPropertyName name,
                                Object value,
                                String lang,
                                boolean isProtected) {
@@ -75,7 +76,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
 
     // org.apache.jackrabbit.webdav.property.DavProperty methods
 
-    public DavPropertyName getName() {
+    public CustomDavPropertyName getName() {
         return name;
     }
 
@@ -111,13 +112,13 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
             return null;
         }
         if (value instanceof Element) {
-            String text = DomUtil.getText((Element) value);
+            String text = CustomDomUtils.getText((Element) value);
             if (text != null) {
                 return text;
             }
         }
         if (value instanceof Set) {
-            TreeSet<Object> sorted = new TreeSet<Object>((Set)value);
+            Set<Object> sorted = new LinkedHashSet<>((Set)value);
             return StringUtils.join(sorted, ", ");
         }
         return value.toString();
@@ -132,7 +133,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
      * </p>
      * <p>
      * If the property value is an <code>XmlSerializable</code>, the element
-     * returned by calling {@link XmlSerializable.toXml(Document)} on the
+     * returned by calling {@link CustomXmlSerializable.toXml(Document)} on the
      * value is appended as a child of an element representing the property.
      * </p>
      * <p>
@@ -146,7 +147,7 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
      * </p>
      */
     public Element toXml(Document document) {
-        Element e = null;
+        Element e;
 
         if (value != null && value instanceof Element) {
             e = (Element) document.importNode((Element) value, true);
@@ -155,17 +156,17 @@ public class StandardDavProperty implements WebDavProperty, XmlSerializable {
             e = getName().toXml(document);
             Object v = getValue();
             if (v != null) {
-                if (v instanceof XmlSerializable) {
-                    e.appendChild(((XmlSerializable)v).toXml(document));
+                if (v instanceof CustomXmlSerializable) {
+                    e.appendChild(((CustomXmlSerializable)v).toXml(document));
                 }
                 else {
-                    DomUtil.setText(e, v.toString());
+                    CustomDomUtils.setText(e, v.toString());
                 }
             }
         }
 
         if (lang != null) {
-            DomUtil.setAttribute(e, XML_LANG, NAMESPACE_XML, lang);
+            CustomDomUtils.setAttribute(e, XML_LANG, new QName(""), lang);
         }
 
         return e;

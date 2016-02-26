@@ -15,13 +15,13 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomElementIterator;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.ElementIterator;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
@@ -253,7 +253,7 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
         // Name must be present
         validateName(element);
 
-        final ElementIterator i = DomUtil.getChildren(element);
+        final CustomElementIterator i = CustomDomUtils.getChildren(element);
         int childCount = 0;
         
         while (i.hasNext()) {
@@ -268,7 +268,7 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
     }
     
     private void validateName(Element element) throws ParseException {
-        name = DomUtil.getAttribute(element, ATTR_CALDAV_NAME, null);
+        name = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NAME);
 
         if (name == null) {
             throw new ParseException(

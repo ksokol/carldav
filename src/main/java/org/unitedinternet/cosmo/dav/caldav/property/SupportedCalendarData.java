@@ -15,43 +15,32 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.property;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import static carldav.CarldavConstants.SUPPORTED_CALENDAR_DATA;
+import static carldav.CarldavConstants.c;
+
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * Represents the CalDAV supported-calendar-data property.
- */
-public class SupportedCalendarData extends StandardDavProperty
-    implements ICalendarConstants, CaldavConstants {
+public class SupportedCalendarData extends StandardDavProperty implements ICalendarConstants, CaldavConstants {
 
-    /**
-     */
     public SupportedCalendarData() {
-        super(SUPPORTEDCALENDARDATA, null, true);
+        super(SUPPORTED_CALENDAR_DATA, null, true);
     }
 
-    /**
-     * 
-     * {@inheritDoc}
-     */
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
-        
-        Element element =
-            DomUtil.createElement(document, ELEMENT_CALDAV_CALENDAR_DATA,
-                                  NAMESPACE_CALDAV);
-        DomUtil.setAttribute(element, ATTR_CALDAV_CONTENT_TYPE,
-                             NAMESPACE_CALDAV, ICALENDAR_MEDIA_TYPE);
-        DomUtil.setAttribute(element, ATTR_CALDAV_VERSION,
-                             NAMESPACE_CALDAV, ICALENDAR_VERSION);
-        
+
+        Element element = CustomDomUtils.createElement(document, ELEMENT_CALDAV_CALENDAR_DATA, c(ELEMENT_CALDAV_CALENDAR_DATA));
+        CustomDomUtils.setAttribute(element, ATTR_CALDAV_CONTENT_TYPE, c(ATTR_CALDAV_CONTENT_TYPE), ICALENDAR_MEDIA_TYPE);
+        CustomDomUtils.setAttribute(element, ATTR_CALDAV_VERSION, c(ATTR_CALDAV_VERSION), ICALENDAR_VERSION);
+
         name.appendChild(element);
-        
+
         return name;
     }
-   
+
 }

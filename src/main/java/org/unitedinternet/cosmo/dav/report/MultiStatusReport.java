@@ -15,37 +15,31 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
+import carldav.exception.resolver.ResponseUtils;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatus;
-import org.apache.jackrabbit.webdav.DavServletResponse;
-import org.apache.jackrabbit.webdav.MultiStatus;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Base class for WebDAV reports that return multistatus responses.
  */
 public abstract class MultiStatusReport extends ReportBase {
 
-    private MultiStatus multistatus = new CustomMultiStatus();
+    private CustomMultiStatus multistatus = new CustomMultiStatus();
     protected int propfindType = PROPFIND_ALL_PROP;
-    private DavPropertyNameSet propfindProps;
+    private CustomDavPropertyNameSet propfindProps;
 
-    public final boolean isMultiStatusReport() {
-        return true;
-    }
-
-    /**
-     * Generates and writes the multistatus response.
-     */
-    protected void output(DavServletResponse response)
+    protected void output(HttpServletResponse response)
             throws CosmoDavException {
         try {
             buildMultistatus();
-            response.sendXmlResponse(multistatus, 207);
+            ResponseUtils.sendXmlResponse(response, multistatus, 207);
         } catch (Exception e) {
             throw new CosmoDavException(e);
         }
@@ -53,36 +47,32 @@ public abstract class MultiStatusReport extends ReportBase {
 
     public final void buildMultistatus() throws CosmoDavException {
 
-        DavPropertyNameSet resultProps = createResultPropSpec();
+        CustomDavPropertyNameSet resultProps = createResultPropSpec();
 
         for (WebDavResource result : getResults()) {
-            MultiStatusResponse msr =
-                    buildMultiStatusResponse(result, resultProps);
+            CustomMultiStatusResponse msr = buildMultiStatusResponse(result, resultProps);
             multistatus.addResponse(msr);
         }
     }
 
-    protected DavPropertyNameSet createResultPropSpec() {
-        return new DavPropertyNameSet(propfindProps);
+    protected CustomDavPropertyNameSet createResultPropSpec() {
+        return new CustomDavPropertyNameSet(propfindProps);
     }
 
     /**
      * Returns a <code>MultiStatusResponse</code> describing the
      * specified resource including the specified properties.
      */
-    protected MultiStatusResponse
-    buildMultiStatusResponse(WebDavResource resource,
-                             DavPropertyNameSet props)
-            throws CosmoDavException {
+    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, CustomDavPropertyNameSet props) {
         if (props.isEmpty()) {
             String href = resource.getResourceLocator().
                     getHref(resource.isCollection());
-            return new MultiStatusResponse(href, 200);
+            return new CustomMultiStatusResponse(href, 200);
         }
-        return new MultiStatusResponse(resource, props, propfindType);
+        return new CustomMultiStatusResponse(resource, props, propfindType);
     }
 
-    protected MultiStatus getMultiStatus() {
+    protected CustomMultiStatus getMultiStatus() {
         return multistatus;
     }
 
@@ -100,11 +90,11 @@ public abstract class MultiStatusReport extends ReportBase {
         this.propfindType = type;
     }
 
-    public DavPropertyNameSet getPropFindProps() {
+    public CustomDavPropertyNameSet getPropFindProps() {
         return propfindProps;
     }
 
-    public void setPropFindProps(DavPropertyNameSet props) {
+    public void setPropFindProps(CustomDavPropertyNameSet props) {
         this.propfindProps = props;
     }
 }

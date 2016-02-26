@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dav;
 import carldav.card.CardQueryProcessor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.jackrabbit.webdav.WebdavRequest;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;

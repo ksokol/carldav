@@ -15,10 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import static carldav.CarldavConstants.c;
+import static carldav.CarldavConstants.caldav;
+
+import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import net.fortuna.ical4j.model.component.VTimeZone;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -34,6 +38,8 @@ import org.w3c.dom.Element;
 
 import java.text.ParseException;
 
+import javax.xml.namespace.QName;
+
 /**
  * <p>
  * Represents the <code>CALDAV:calendar-query</code> report that
@@ -43,15 +49,14 @@ import java.text.ParseException;
  */
 public class QueryReport extends CaldavMultiStatusReport {
 
-    public static final ReportType REPORT_TYPE_CALDAV_QUERY =
-        ReportType.register(ELEMENT_CALDAV_CALENDAR_QUERY,
-                            NAMESPACE_CALDAV, QueryReport.class);
+    public static final CustomReportType REPORT_TYPE_CALDAV_QUERY =
+            CustomReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_QUERY, PRE_CALDAV), QueryReport.class);
 
     private CalendarFilter queryFilter;
 
     // Report methods
 
-    public ReportType getType() {
+    public CustomReportType getType() {
         return REPORT_TYPE_CALDAV_QUERY;
     }
 
@@ -61,16 +66,16 @@ public class QueryReport extends CaldavMultiStatusReport {
      * Parses the report info, extracting the properties, filters and time
      * zone.
      */
-    protected void parseReport(ReportInfo info)
+    protected void parseReport(CustomReportInfo info)
         throws CosmoDavException {
         if (! getType().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType());
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(XML_ALLPROP, NAMESPACE)) {
+        if (info.containsContentElement(CustomDavConstants.ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(XML_PROPNAME, NAMESPACE)) {
+        } else if (info.containsContentElement(CustomDavConstants.PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
@@ -134,35 +139,27 @@ public class QueryReport extends CaldavMultiStatusReport {
         // within it to match the query
     }
 
-    private static VTimeZone findTimeZone(ReportInfo info) throws CosmoDavException {
-        Element propdata =
-            DomUtil.getChildElement(getReportElementFrom(info),
-                                    XML_PROP, NAMESPACE);
+    private static VTimeZone findTimeZone(CustomReportInfo info) throws CosmoDavException {
+        Element propdata = CustomDomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
         if (propdata == null) {
             return null;
         }
 
-        Element tzdata =
-            DomUtil.getChildElement(propdata, ELEMENT_CALDAV_TIMEZONE,
-                                    NAMESPACE_CALDAV);
+        Element tzdata = CustomDomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
         if (tzdata == null) {
             return null;
         }
 
-        String icaltz = DomUtil.getTextTrim(tzdata);
+        String icaltz = CustomDomUtils.getTextTrim(tzdata);
         if (icaltz == null) {
-            throw new UnprocessableEntityException("Expected text content for " + QN_CALDAV_TIMEZONE);
+            throw new UnprocessableEntityException("Expected text content for " + ELEMENT_CALDAV_TIMEZONE);
         }
 
         return TimeZoneExtractor.extract(icaltz);
     }
 
-    private static CalendarFilter findQueryFilter(ReportInfo info,
-                                                  VTimeZone tz)
-        throws CosmoDavException {
-        Element filterdata =
-            DomUtil.getChildElement(getReportElementFrom(info),
-                                    ELEMENT_CALDAV_FILTER, NAMESPACE_CALDAV);
+    private static CalendarFilter findQueryFilter(CustomReportInfo info, VTimeZone tz) throws CosmoDavException {
+        Element filterdata =  CustomDomUtils.getChildElement(getReportElementFrom(info), c(ELEMENT_CALDAV_FILTER));
         if (filterdata == null) {
             return null;
         }

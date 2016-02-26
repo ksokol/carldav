@@ -15,14 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.TEXT_HTML_VALUE;
+import static carldav.CarldavConstants.caldav;
+import static org.springframework.http.HttpHeaders.ETAG;
+import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
+
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
-import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -31,6 +31,7 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ForbiddenException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
@@ -47,20 +48,23 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
 
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
 
-    protected final Set<ReportType> reportTypes = new HashSet<>();
+    protected final Set<CustomReportType> reportTypes = new HashSet<>();
 
-    private List<org.apache.jackrabbit.webdav.DavResource> members;
+    private List<WebDavResource> members;
 
     private HibCollectionItem item;
     private DavCollection parent;
@@ -93,29 +97,29 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return item.getDisplayName();
     }
 
-    @Override
     public long getModificationTime() {
         return item.getModifiedDate() == null ? 0 : item.getModifiedDate().getTime();
     }
 
-    public DavResourceIterator getMembers() {
+    @Override
+    public List<WebDavResource> getMembers() {
         for (HibItem memberHibItem : item.getItems()) {
             WebDavResource resource = memberToResource(memberHibItem);
             members.add(resource);
         }
-        return new DavResourceIteratorImpl(members);
+        return Collections.unmodifiableList(members);
     }
 
-    public DavResourceIterator getCollectionMembers() {
+    public List<WebDavResource> getCollectionMembers() {
         Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems(item);
         for (HibItem memberHibItem : hibCollectionItems) {
             WebDavResource resource = memberToResource(memberHibItem);
             members.add(resource);
         }
-        return new DavResourceIteratorImpl(members);
+        return Collections.unmodifiableList(members);
     }
     
-    public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
+    public void removeMember2(WebDavResource member) {
         HibItem hibItem;
 
         if(member instanceof DavCollectionBase) {
@@ -158,17 +162,12 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return parent;
     }
 
-    public void writeTo(OutputContext out) throws CosmoDavException,
-            IOException {
-        writeHtmlDirectoryIndex(out);
-    }
-
     @Override
     public String getETag() {
         return "\"" + getItem().getEntityTag() + "\"";
     }
 
-    public void addContent(DavContent content, InputContext context) throws CosmoDavException {
+    public void addContent(DavContent content, DavInputContext context) throws CosmoDavException {
         DavItemResourceBase base = (DavItemResourceBase) content;
         base.populateItem(context);
         saveContent(base);
@@ -186,16 +185,16 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     // our methods
 
     protected Set<QName> getResourceTypes() {
-        Set<QName> rt = new TreeSet<>();
-        rt.add(RESOURCE_TYPE_COLLECTION);
+        Set<QName> rt = new LinkedHashSet<>();
+        rt.add(caldav(XML_COLLECTION));
         return rt;
     }
 
-    public Set<ReportType> getReportTypes() {
+    public Set<CustomReportType> getReportTypes() {
         return reportTypes;
     }
 
-    protected void loadLiveProperties(DavPropertySet properties) {
+    protected void loadLiveProperties(CustomDavPropertySet properties) {
         properties.add(new LastModified(item.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));
@@ -239,17 +238,19 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return getResourceFactory().resolve(locator);
     }
 
-    private void writeHtmlDirectoryIndex(OutputContext context) throws CosmoDavException, IOException {
-        context.setContentType(IOUtil.buildContentType("text/html", "UTF-8"));
-        context.setModificationTime(getModificationTime());
-        context.setETag(getETag());
-
-        if(!context.hasStream()) {
-            return;
+    public void writeHead(final HttpServletResponse response) throws IOException {
+        response.setContentType(TEXT_HTML_VALUE);
+        if (getModificationTime() >= 0) {
+            response.addDateHeader(LAST_MODIFIED, getModificationTime());
         }
+        if (getETag() != null) {
+            response.setHeader(ETAG, getETag());
+        }
+    }
 
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(context.getOutputStream(), "utf8"));
-        try{
+    public void writeBody(final HttpServletResponse response) throws IOException {
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8));
+        try {
             writer.write("<html>\n<head><title>");
             String colName = StringEscapeUtils.escapeHtml(getDisplayName());
             writer.write(colName);
@@ -271,8 +272,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
             writer.write("<h2>Members</h2>\n");
             writer.write("<ul>\n");
 
-            for (DavResourceIterator i = getMembers(); i.hasNext();) {
-                WebDavResource child = (WebDavResource) i.nextResource();
+            for (final WebDavResource child : getMembers()) {
                 writer.write("<li><a href=\"");
                 writer.write(child.getResourceLocator().getHref(child.isCollection()));
                 writer.write("\">");

@@ -15,34 +15,20 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
+
+import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.version.report.CustomReport;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.jackrabbit.webdav.DavException;
-import org.apache.jackrabbit.webdav.DavResource;
-import org.apache.jackrabbit.webdav.DavResourceIterator;
-import org.apache.jackrabbit.webdav.DavResourceIteratorImpl;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.io.OutputContext;
-import org.apache.jackrabbit.webdav.lock.ActiveLock;
-import org.apache.jackrabbit.webdav.lock.LockInfo;
-import org.apache.jackrabbit.webdav.lock.LockManager;
-import org.apache.jackrabbit.webdav.lock.Scope;
-import org.apache.jackrabbit.webdav.lock.Type;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
-import org.apache.jackrabbit.webdav.property.PropEntry;
-import org.apache.jackrabbit.webdav.version.report.Report;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.springframework.util.ReflectionUtils;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 import org.unitedinternet.cosmo.dav.NotFoundException;
-import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
@@ -53,9 +39,7 @@ import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -88,21 +72,21 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
 
     protected static final EntityConverter converter = new EntityConverter();
 
-    private final HashSet<DavPropertyName> liveProperties = new HashSet<>(10);
-    private final Set<ReportType> reportTypes = new HashSet<>(10);
+    private final HashSet<CustomDavPropertyName> liveProperties = new HashSet<>(10);
+    protected final Set<CustomReportType> reportTypes = new HashSet<>(10);
 
     private DavResourceLocator locator;
     private DavResourceFactory factory;
-    private DavPropertySet properties;
+    private CustomDavPropertySet properties;
     private boolean initialized;
 
     public DavResourceBase(DavResourceLocator locator,
                            DavResourceFactory factory)
         throws CosmoDavException {
-        registerLiveProperty(SUPPORTEDREPORTSET);
+        registerLiveProperty(SUPPORTED_REPORT_SET);
         this.locator = locator;
         this.factory = factory;
-        this.properties = new DavPropertySet();
+        this.properties = new CustomDavPropertySet();
         this.initialized = false;
     }
 
@@ -114,20 +98,12 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return false;
     }
 
-    public DavResourceIterator getMembers() {
-        // while it would be ideal to throw an UnsupportedOperationException,
-        // MultiStatus tries to add a MultiStatusResponse for every member
-        // of a WebDavResource regardless of whether or not it's a collection,
-        // so we need to return an empty iterator.
-        return new DavResourceIteratorImpl(new ArrayList());
+    public List<WebDavResource> getMembers() {
+        return new ArrayList<>();
     }
 
     public String getComplianceClass() {
         return WebDavResource.COMPLIANCE_CLASS;
-    }
-
-    public org.apache.jackrabbit.webdav.DavResourceLocator getLocator() {
-        return null;
     }
 
     public String getResourcePath() {
@@ -138,116 +114,39 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return locator.getHref(isCollection());
     }
 
-    public void spool(OutputContext outputContext)
-        throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
-    public DavPropertyName[] getPropertyNames() {
+    public CustomDavPropertyName[] getPropertyNames() {
         loadProperties();
         return properties.getPropertyNames();
     }
 
-    public org.apache.jackrabbit.webdav.property.DavProperty<?>
-        getProperty(DavPropertyName name) {
+    public WebDavProperty<?> getProperty(CustomDavPropertyName name) {
         loadProperties();
         return properties.get(name);
     }
 
     @Deprecated
-    public DavPropertySet getProperties() {
+    public CustomDavPropertySet getProperties() {
         loadProperties();
         return properties;
     }
 
     public Map<String, WebDavProperty> getWebDavProperties() {
-        final DavPropertySet properties = getProperties();
-        final DavPropertyName[] propertyNames = properties.getPropertyNames();
+        final CustomDavPropertySet properties = getProperties();
+        final CustomDavPropertyName[] propertyNames = properties.getPropertyNames();
         final Map<String, WebDavProperty> sorted = new TreeMap<>();
 
-        for (final DavPropertyName propertyName : propertyNames) {
+        for (final CustomDavPropertyName propertyName : propertyNames) {
             sorted.put(propertyName.getName(), (WebDavProperty) properties.get(propertyName));
         }
 
         return sorted;
     }
 
-    public void setProperty(org.apache.jackrabbit.webdav.property.DavProperty<?> property) throws DavException {
+    public void removeMember2(WebDavResource member) {
         throw new UnsupportedOperationException();
     }
 
-    public void removeProperty(DavPropertyName propertyName) throws DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    public MultiStatusResponse alterProperties(List<? extends PropEntry> changeList) throws DavException{
-        throw new UnsupportedOperationException();
-    }
-
-    public void addMember(org.apache.jackrabbit.webdav.DavResource member, InputContext inputContext) throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    public void removeMember(org.apache.jackrabbit.webdav.DavResource member) throws org.apache.jackrabbit.webdav.DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    public boolean isLockable(Type type,
-                              Scope scope) {
-        // nothing is lockable at the moment
-        return false;
-    }
-
-    public boolean hasLock(Type type,
-                           Scope scope) {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public ActiveLock getLock(Type type,
-                              Scope scope) {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public ActiveLock[] getLocks() {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public ActiveLock lock(LockInfo reqLockInfo)
-        throws DavException {
-        // nothing is lockable at the moment
-        throw new PreconditionFailedException("Resource not lockable");
-    }
-
-    public ActiveLock refreshLock(LockInfo reqLockInfo,
-                                  String lockToken)
-        throws DavException {
-        // nothing is lockable at the moment
-        throw new PreconditionFailedException("Resource not lockable");
-    }
-
-    public void unlock(String lockToken)
-        throws DavException {
-        // nothing is lockable at the moment
-        throw new PreconditionFailedException("Resource not lockable");
-    }
-
-    public void addLockManager(LockManager lockmgr) {
-        // nothing is lockable at the moment
-        throw new UnsupportedOperationException();
-    }
-
-    public org.apache.jackrabbit.webdav.DavResourceFactory getFactory() {
-        return null;
-    }
-
-    public org.apache.jackrabbit.webdav.DavSession getSession() {
-        return null;
-    }
-
-    public Report getReport(ReportInfo reportInfo) throws CosmoDavException {
+    public CustomReport getReport(CustomReportInfo reportInfo) throws CosmoDavException {
         if (! exists()) {
             throw new NotFoundException();
         }
@@ -256,23 +155,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
             throw new UnprocessableEntityException("Unknown report " + reportInfo.getReportName());
         }
 
-        try {
-
-            //TODO workaround for ReportType.createReport(DeltaVResource, ReportInfo)
-            final ReportType type = ReportType.getType(reportInfo);
-            final Field reportClassField = ReflectionUtils.findField(type.getClass(), "reportClass");
-            reportClassField.setAccessible(true);
-            final Class<? extends Report> reportClass = (Class<? extends Report>) ReflectionUtils.getField(reportClassField, type);
-            Report report = reportClass.newInstance();
-            report.init(this, reportInfo);
-            return report;
-        } catch (DavException exception){
-            throw new CosmoDavException(exception.getErrorCode(),exception.getMessage(),exception.getCause());
-        } catch (CosmoDavException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            throw new CosmoDavException(exception);
-        }
+        final CustomReportType type = CustomReportType.getType(reportInfo);
+        return type.createReport(this, reportInfo);
     }
 
     public DavResourceFactory getResourceFactory() {
@@ -293,8 +177,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * Determines whether or not the report indicated by the given
      * report info is supported by this collection.
      */
-    protected boolean isSupportedReport(ReportInfo info) {
-        for (Iterator<ReportType> i=getReportTypes().iterator(); i.hasNext();) {
+    protected boolean isSupportedReport(CustomReportInfo info) {
+        for (Iterator<CustomReportType> i=getReportTypes().iterator(); i.hasNext();) {
             if (i.next().isRequestedReportType(info)) {
                 return true;
             }
@@ -302,7 +186,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return false;
     }
 
-    protected Set<ReportType> getReportTypes() {
+    protected Set<CustomReportType> getReportTypes() {
      return reportTypes;
     }
 
@@ -315,7 +199,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * of live properties for the resource.
      * </p>
      */
-    protected void registerLiveProperty(DavPropertyName name) {
+    protected void registerLiveProperty(CustomDavPropertyName name) {
         liveProperties.add(name);
     }
 
@@ -341,25 +225,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     /**
      * Loads the live DAV properties for the resource.
      */
-    protected abstract void loadLiveProperties(DavPropertySet properties);
-
-    @Override
-    public void move(final org.apache.jackrabbit.webdav.DavResource destination) throws DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void copy(final org.apache.jackrabbit.webdav.DavResource destination, final boolean shallow) throws DavException {
-        throw new UnsupportedOperationException();
-    }
-
-    public DavResource getCollection() {
-        try {
-            return getParent();
-        } catch (CosmoDavException e) {
-            throw new CosmoException(e);
-        }
-    }
+    protected abstract void loadLiveProperties(CustomDavPropertySet properties);
 
     public DavCollection getParent() throws CosmoDavException {
         return null;

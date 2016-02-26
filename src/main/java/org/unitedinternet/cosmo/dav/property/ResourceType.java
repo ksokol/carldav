@@ -15,16 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
+import static carldav.CarldavConstants.RESOURCE_TYPE;
+
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import java.util.Set;
 
 import javax.xml.namespace.QName;
-
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
-import org.apache.jackrabbit.webdav.xml.Namespace;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  * Represents the DAV:resourcetype property.
@@ -32,7 +31,7 @@ import org.w3c.dom.Element;
 public class ResourceType extends StandardDavProperty {
 
     public ResourceType(Set<QName> qnames) {
-        super(DavPropertyName.RESOURCETYPE, qnames, true);
+        super(RESOURCE_TYPE, qnames, true);
     }
 
     public Set<QName> getQnames() {
@@ -43,10 +42,7 @@ public class ResourceType extends StandardDavProperty {
         Element name = getName().toXml(document);
 
         for (QName qn : getQnames()) {
-            Namespace ns =
-                Namespace.getNamespace(qn.getPrefix(), qn.getNamespaceURI());
-            Element e =
-                DomUtil.createElement(document, qn.getLocalPart(), ns);
+            Element e = CustomDomUtils.createElement(document, qn.getLocalPart(), qn);
             name.appendChild(e);
         }
 

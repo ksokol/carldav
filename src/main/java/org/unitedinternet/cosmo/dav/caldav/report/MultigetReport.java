@@ -15,12 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
+import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.CustomMultiStatus;
+import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
+import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
-import org.apache.jackrabbit.webdav.version.report.ReportInfo;
-import org.apache.jackrabbit.webdav.version.report.ReportType;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
 import org.springframework.web.util.UriUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -42,6 +44,8 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.namespace.QName;
+
 /**
  * <p>
  * Represents the <code>CALDAV:calendar-multiget</code> report that
@@ -56,15 +60,14 @@ public class MultigetReport extends CaldavMultiStatusReport {
     private static final Pattern RESOURCE_UUID_PATTERN = Pattern.compile("/\\{?\\p{XDigit}{8}-\\p{XDigit}" +
             "{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}\\}?");
 
-    public static final ReportType REPORT_TYPE_CALDAV_MULTIGET =
-        ReportType.register(ELEMENT_CALDAV_CALENDAR_MULTIGET,
-                            NAMESPACE_CALDAV, MultigetReport.class);
+    public static final CustomReportType REPORT_TYPE_CALDAV_MULTIGET =
+            CustomReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_MULTIGET, PRE_CALDAV), MultigetReport.class);
 
     private Set<String> hrefs;
 
     // Report methods
 
-    public ReportType getType() {
+    public CustomReportType getType() {
         return REPORT_TYPE_CALDAV_MULTIGET;
     }
 
@@ -82,40 +85,39 @@ public class MultigetReport extends CaldavMultiStatusReport {
      *
      * @throws CosmoDavException if the report info is not of the correct type
      */
-    protected void parseReport(ReportInfo info) throws CosmoDavException {
+    protected void parseReport(CustomReportInfo info) throws CosmoDavException {
         if (! getType().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType().getReportName());
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(XML_ALLPROP, NAMESPACE)) {
+        if (info.containsContentElement(CustomDavConstants.ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(XML_PROPNAME, NAMESPACE)) {
+        } else if (info.containsContentElement(CustomDavConstants.PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
             setOutputFilter(findOutputFilter(info));
         }
 
-        List<Element> hrefElements =
-            info.getContentElements(XML_HREF, NAMESPACE);
+        List<Element> hrefElements = info.getContentElements(CustomDavConstants.HREF);
         if (hrefElements.size() == 0) {
-            throw new BadRequestException("Expected at least one " + QN_HREF);
+            throw new BadRequestException("Expected at least one " + XML_HREF);
         }
         if (getResource() instanceof DavContent && hrefElements.size() > 1) {
-            throw new BadRequestException("Expected at most one " + QN_HREF);
+            throw new BadRequestException("Expected at most one " + XML_HREF);
         }
 
-        URL resourceUrl = ((WebDavResource)getResource()). getResourceLocator().
+        URL resourceUrl = getResource(). getResourceLocator().
             getUrl(true, getResource().isCollection());
         String resourceUUID = null;
         Matcher resourceUUIDMatcher = RESOURCE_UUID_PATTERN.matcher(resourceUrl.getPath());
         if (resourceUUIDMatcher.find()) {
             resourceUUID = resourceUUIDMatcher.group(0);
         }        
-        hrefs = new HashSet<String>();
+        hrefs = new HashSet<>();
         for (Element element : hrefElements) { 
-            String href = DomUtil.getTextTrim(element);
+            String href = CustomDomUtils.getTextTrim(element);
             href = updateHrefElementWithRequestUrlUUID(element, href, resourceUUID);
             // validate and absolutize submitted href
             URL memberUrl = normalizeHref(resourceUrl, href); 
@@ -162,24 +164,27 @@ public class MultigetReport extends CaldavMultiStatusReport {
      */
     protected void runQuery()
         throws CosmoDavException {
-        DavPropertyNameSet propspec = createResultPropSpec();
+        CustomDavPropertyNameSet propspec = createResultPropSpec();
 
         if (getResource() instanceof DavCollection) {
             DavCollection collection = (DavCollection) getResource();
             for (String href : hrefs) {
                 WebDavResource target = collection.findMember(href);
+
+                final CustomMultiStatus multiStatus = getMultiStatus();
                 if (target != null) {
-                    getMultiStatus().addResponse(buildMultiStatusResponse(target, propspec));
+                    multiStatus.addResponse(buildMultiStatusResponse(target, propspec));
                 }
                 else {
-                    getMultiStatus().addResponse(new MultiStatusResponse(href,404));
+                    multiStatus.addResponse(new CustomMultiStatusResponse(href, 404));
                 }
             }
             return;
         }
 
         if (getResource() instanceof DavCalendarResource) {
-            getMultiStatus().addResponse(buildMultiStatusResponse(getResource(), propspec));
+            final CustomMultiStatus multiStatus = getMultiStatus();
+            multiStatus.addResponse(buildMultiStatusResponse(getResource(), propspec));
             return;
         }
 

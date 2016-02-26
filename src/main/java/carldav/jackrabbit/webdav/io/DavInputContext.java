@@ -13,14 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unitedinternet.cosmo.dav.io;
+package carldav.jackrabbit.webdav.io;
+
+import static carldav.CarldavConstants.TEXT_CALENDAR;
+import static carldav.CarldavConstants.TEXT_VCARD;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.ValidationException;
-import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.webdav.io.InputContextImpl;
+import org.slf4j.Logger;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -28,24 +34,29 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarDataException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
-import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * An <code>InputContext</code> that supports the semantics of DAV extensions like CalDAV.
  *
- * @see org.apache.jackrabbit.webdav.io.InputContext
  */
-public class DavInputContext extends InputContextImpl implements CaldavConstants {
+public class DavInputContext implements CaldavConstants {
 
+    private static final Logger LOG = getLogger(DavInputContext.class);
+
+    private final HttpServletRequest request;
+    private final InputStream in;
     private Calendar calendar;
 
     public DavInputContext(HttpServletRequest request, InputStream in) {
-        super(request, in);
+        Assert.notNull(request, "request is null");
+        this.request = request;
+        this.in = in;
     }
 
     @Deprecated
@@ -78,9 +89,10 @@ public class DavInputContext extends InputContextImpl implements CaldavConstants
         if (getContentType() == null) {
             throw new BadRequestException("No media type specified");
         }
-        String mediaType = IOUtil.getMimeType(getContentType());
-        if (!IOUtil.getMimeType(mediaType).equals(CT_ICALENDAR) && !IOUtil.getMimeType(mediaType).equals(ICalendarConstants.CARD_MEDIA_TYPE)) {
-            throw new UnsupportedCalendarDataException(mediaType);
+
+        final MediaType mediaType = MediaType.parseMediaType(getContentType());
+        if (!mediaType.isCompatibleWith(TEXT_CALENDAR) && !mediaType.isCompatibleWith(TEXT_VCARD)) {
+            throw new UnsupportedCalendarDataException(mediaType.toString());
         }
 
         try {
@@ -104,5 +116,44 @@ public class DavInputContext extends InputContextImpl implements CaldavConstants
         }
 
         return calendar;
+    }
+
+    public boolean hasStream() {
+        return in != null;
+    }
+
+    public InputStream getInputStream() {
+        return in;
+    }
+
+    public long getModificationTime() {
+        return new Date().getTime();
+    }
+
+    public String getContentLanguage() {
+        return request.getHeader(HttpHeaders.CONTENT_LANGUAGE);
+    }
+
+    public long getContentLength() {
+        String length = request.getHeader(HttpHeaders.CONTENT_LENGTH);
+        if (length == null) {
+            // header not present
+            return -1;
+        } else {
+            try {
+                return Long.parseLong(length);
+            } catch (NumberFormatException ex) {
+                LOG.error("broken Content-Length header: " + length);
+                return -1;
+            }
+        }
+    }
+
+    public String getContentType() {
+        return request.getHeader(HttpHeaders.CONTENT_TYPE);
+    }
+
+    public String getProperty(final String propertyName) {
+        return request.getHeader(propertyName);
     }
 }

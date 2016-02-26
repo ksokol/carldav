@@ -1,6 +1,10 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
+import static carldav.CarldavConstants.GET_CTAG;
+import static carldav.CarldavConstants.SUPPORTED_CALENDAR_COMPONENT_SET;
+import static carldav.CarldavConstants.SUPPORTED_CALENDAR_DATA;
+
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
@@ -34,8 +38,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     public DavCalendarCollection(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(collection, locator, factory);
 
-        registerLiveProperty(SUPPORTEDCALENDARCOMPONENTSET);
-        registerLiveProperty(SUPPORTEDCALENDARDATA);
+        registerLiveProperty(SUPPORTED_CALENDAR_COMPONENT_SET);
+        registerLiveProperty(SUPPORTED_CALENDAR_DATA);
         registerLiveProperty(GET_CTAG);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
@@ -64,7 +68,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         return rt;
     }
 
-    protected void loadLiveProperties(DavPropertySet properties) {
+    protected void loadLiveProperties(CustomDavPropertySet properties) {
         super.loadLiveProperties(properties);
 
         properties.add(new GetCTag(getItem().getEntityTag()));

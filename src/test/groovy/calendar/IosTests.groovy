@@ -55,13 +55,13 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/principals/users/test01@localhost.de</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:principal-collection-set/>
-                                            <CAL:dropbox-home-URL xmlns:CAL="http://calendarserver.org/ns/"/>
-                                            <x1:schedule-outbox-URL xmlns:x1="urn:ietf:params:xml:ns:caldav"/>
-                                            <x1:calendar-user-address-set xmlns:x1="urn:ietf:params:xml:ns:caldav"/>
-                                            <n0:user-state xmlns:n0="http://cal.me.com/_namespace/"/>
+                                            <x0:principal-collection-set xmlns:x0="DAV:"/>
                                             <x1:schedule-inbox-URL xmlns:x1="urn:ietf:params:xml:ns:caldav"/>
                                             <CAL:notification-URL xmlns:CAL="http://calendarserver.org/ns/"/>
+                                            <x1:calendar-user-address-set xmlns:x1="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:dropbox-home-URL xmlns:CAL="http://calendarserver.org/ns/"/>
+                                            <x1:schedule-outbox-URL xmlns:x1="urn:ietf:params:xml:ns:caldav"/>
+                                            <n0:user-state xmlns:n0="http://cal.me.com/_namespace/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -127,25 +127,25 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <D:quota-used-bytes/>
-                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
-                                            <D:quota-available-bytes/>
-                                            <D:owner/>
-                                            <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
-                                            <CAL:schedule-default-calendar-URL xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <CAL:schedule-calendar-transp xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-free-busy-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <D:current-user-privilege-set/>
-                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                            <x0:owner xmlns:x0="DAV:"/>
+                                            <x1:getctag xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <CAL:schedule-calendar-transp xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x0:quota-used-bytes xmlns:x0="DAV:"/>
+                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:schedule-default-calendar-URL xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x0:quota-available-bytes xmlns:x0="DAV:"/>
+                                            <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
+                                            <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x0:current-user-privilege-set xmlns:x0="DAV:"/>
+                                            <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:supported-calendar-component-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <x1:subscribed-strip-attachments xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -163,39 +163,39 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <D:quota-used-bytes/>
-                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
-                                            <D:quota-available-bytes/>
-                                            <D:owner/>
-                                            <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
-                                            <CAL:schedule-default-calendar-URL xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <CAL:schedule-calendar-transp xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-free-busy-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <D:current-user-privilege-set/>
-                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x0:owner xmlns:x0="DAV:"/>
+                                            <CAL:schedule-calendar-transp xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x0:quota-used-bytes xmlns:x0="DAV:"/>
+                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:schedule-default-calendar-URL xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x0:quota-available-bytes xmlns:x0="DAV:"/>
+                                            <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
+                                            <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x0:current-user-privilege-set xmlns:x0="DAV:"/>
+                                            <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <x1:subscribed-strip-attachments xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:displayname>calendarDisplayName</D:displayname>
-                                            <D:resourcetype>
-                                                <D:collection/>
-                                                <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            </D:resourcetype>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/">NVy57RJot0LhdYELkMDJ9gQZjOM=</CS:getctag>
                                             <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                                 <C:comp name="VEVENT"/>
                                                 <C:comp name="VJOURNAL"/>
                                                 <C:comp name="VTODO"/>
                                             </C:supported-calendar-component-set>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/">NVy57RJot0LhdYELkMDJ9gQZjOM=</CS:getctag>
+                                            <D:displayname>calendarDisplayName</D:displayname>
+                                            <D:resourcetype>
+                                                <D:collection/>
+                                                <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                            </D:resourcetype>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -204,25 +204,25 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <D:quota-used-bytes/>
-                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
-                                            <D:quota-available-bytes/>
-                                            <D:owner/>
-                                            <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
-                                            <CAL:schedule-default-calendar-URL xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <CAL:schedule-calendar-transp xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-free-busy-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <D:current-user-privilege-set/>
-                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                            <x0:owner xmlns:x0="DAV:"/>
+                                            <x1:getctag xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <CAL:schedule-calendar-transp xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x0:quota-used-bytes xmlns:x0="DAV:"/>
+                                            <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:schedule-default-calendar-URL xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <x0:quota-available-bytes xmlns:x0="DAV:"/>
+                                            <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
+                                            <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x0:current-user-privilege-set xmlns:x0="DAV:"/>
+                                            <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
+                                            <CAL:supported-calendar-component-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <x1:subscribed-strip-attachments xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
+                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -655,7 +655,7 @@ class IosTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 404 Not Found</D:status>
                                 </D:propstat>
@@ -728,7 +728,7 @@ class IosTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                        <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 404 Not Found</D:status>
                                 </D:propstat>
@@ -792,7 +792,7 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/principals/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:current-user-principal/>
+                                            <A:current-user-principal xmlns:A="DAV:"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -836,22 +836,22 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/principals/users/test01@localhost.de</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:principal-collection-set/>
-                                            <B:email-address-set xmlns:B="http://calendarserver.org/ns/"/>
+                                            <A:principal-collection-set xmlns:A="DAV:"/>
                                             <C:directory-gateway xmlns:C="urn:ietf:params:xml:ns:carddav"/>
-                                            <D:resource-id/>
+                                            <B:email-address-set xmlns:B="http://calendarserver.org/ns/"/>
+                                            <A:resource-id xmlns:A="DAV:"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:displayname>test01@localhost.de</D:displayname>
-                                            <D:principal-URL>
-                                                <D:href>/principals/users/test01@localhost.de</D:href>
-                                            </D:principal-URL>
                                             <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
                                                 <D:href>/dav/test01@localhost.de/contacts</D:href>
                                             </CARD:addressbook-home-set>
+                                            <D:principal-URL>
+                                                <D:href>/principals/users/test01@localhost.de</D:href>
+                                            </D:principal-URL>
+                                            <D:displayname>test01@localhost.de</D:displayname>
                                             <D:supported-report-set/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
@@ -895,14 +895,14 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:current-user-privilege-set/>
+                                            <A:current-user-privilege-set xmlns:A="DAV:"/>
+                                            <A:owner xmlns:A="DAV:"/>
                                             <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <D:quota-used-bytes/>
+                                            <A:quota-used-bytes xmlns:A="DAV:"/>
+                                            <A:quota-available-bytes xmlns:A="DAV:"/>
+                                            <A:add-member xmlns:A="DAV:"/>
+                                            <A:resource-id xmlns:A="DAV:"/>
                                             <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <D:quota-available-bytes/>
-                                            <D:owner/>
-                                            <D:add-member/>
-                                            <D:resource-id/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -912,12 +912,12 @@ class IosTests extends IntegrationTestSupport {
                                             <D:supported-report-set>
                                                 <D:supported-report>
                                                     <D:report>
-                                                        <CARD:addressbook-multiget xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                                        <CARD:addressbook-query xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                                     </D:report>
                                                 </D:supported-report>
                                                 <D:supported-report>
                                                     <D:report>
-                                                        <CARD:addressbook-query xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                                        <CARD:addressbook-multiget xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                                     </D:report>
                                                 </D:supported-report>
                                             </D:supported-report-set>
@@ -933,14 +933,14 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:current-user-privilege-set/>
+                                            <A:current-user-privilege-set xmlns:A="DAV:"/>
+                                            <A:owner xmlns:A="DAV:"/>
                                             <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <D:quota-used-bytes/>
+                                            <A:quota-used-bytes xmlns:A="DAV:"/>
+                                            <A:quota-available-bytes xmlns:A="DAV:"/>
+                                            <A:add-member xmlns:A="DAV:"/>
+                                            <A:resource-id xmlns:A="DAV:"/>
                                             <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <D:quota-available-bytes/>
-                                            <D:owner/>
-                                            <D:add-member/>
-                                            <D:resource-id/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -976,7 +976,7 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/contacts/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
+                                            <C:getctag xmlns:C="http://calendarserver.org/ns/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -1045,7 +1045,7 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <CARD:address-data xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
+                                            <B:address-data xmlns:B="urn:ietf:params:xml:ns:carddav"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>

@@ -1,39 +1,44 @@
 package carldav.jackrabbit.webdav;
 
-import org.apache.jackrabbit.webdav.MultiStatus;
-import org.apache.jackrabbit.webdav.MultiStatusResponse;
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import static carldav.CarldavConstants.caldav;
+import static carldav.jackrabbit.webdav.CustomDavConstants.XML_MULTISTATUS;
+
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * @author Kamill Sokol
- */
-public class CustomMultiStatus extends MultiStatus {
+public class CustomMultiStatus implements CustomXmlSerializable {
 
-    /*
-     * sort nodes based on href in order to allow deterministic unit tests
-     */
+    private final Map<String, CustomMultiStatusResponse> responses = new TreeMap<>();
+
     @Override
     public Element toXml(Document document) {
-        final Element multistatus = DomUtil.createElement(document, XML_MULTISTATUS, NAMESPACE);
-        final MultiStatusResponse[] responses = getResponses();
-        final Map<String, MultiStatusResponse> sorted = new TreeMap<>();
+        final Element multiStatus = CustomDomUtils.createElement(document, XML_MULTISTATUS, caldav(XML_MULTISTATUS));
+        for (Map.Entry<String, CustomMultiStatusResponse> resp : responses.entrySet()) {
+            multiStatus.appendChild(resp.getValue().toXml(document));
+        }
+        return multiStatus;
+    }
 
-        for (final MultiStatusResponse response : responses) {
-            sorted.put(response.getHref(), response);
-        }
+    public void addResponse(CustomMultiStatusResponse response) {
+        responses.put(response.getHref(), response);
+    }
 
-        for (Map.Entry<String, MultiStatusResponse> resp : sorted.entrySet()) {
-            multistatus.appendChild(resp.getValue().toXml(document));
+    public void addResourceProperties(WebDavResource resource, CustomDavPropertyNameSet propNameSet, int propFindType, int depth) {
+        addResponse(new CustomMultiStatusResponse(resource, propNameSet, propFindType));
+        if (depth > 0 && resource.isCollection()) {
+            final List<WebDavResource> members2 = resource.getMembers();
+
+            for (final WebDavResource webDavResource : members2) {
+                addResourceProperties(webDavResource, propNameSet, propFindType, depth - 1);
+            }
         }
-        if (getResponseDescription() != null) {
-            Element respDesc = DomUtil.createElement(document, XML_RESPONSEDESCRIPTION, NAMESPACE, getResponseDescription());
-            multistatus.appendChild(respDesc);
-        }
-        return multistatus;
     }
 }

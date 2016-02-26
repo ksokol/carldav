@@ -15,42 +15,27 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.property;
 
-import org.apache.jackrabbit.webdav.xml.DomUtil;
+import static carldav.CarldavConstants.CALENDAR_DATA;
 
-import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
+import carldav.CarldavConstants;
+import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
-
+import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * Represents the <code>CALDAV:calendar-data</code> property as used
- * to transmit a set of icalendar objects in the body of a report
- * response.
- */
-public class CalendarData extends StandardDavProperty
-    implements CaldavConstants, ICalendarConstants {
+public class CalendarData extends StandardDavProperty implements CaldavConstants, ICalendarConstants {
 
-    /**
-     * Constructor.
-     * @param calendarData The calendar data used to transmit a set of icalendar object
-     * in the report's body.
-     */
     public CalendarData(String calendarData) {
-        super(CALENDARDATA, calendarData, true);
+        super(CALENDAR_DATA, calendarData, true);
     }
-    /**
-     * 
-     * {@inheritDoc}
-     */
+
     public Element toXml(Document document) {
         Element e = super.toXml(document);
 
-        DomUtil.setAttribute(e, ATTR_CALDAV_CONTENT_TYPE,
-                             NAMESPACE_CALDAV, ICALENDAR_MEDIA_TYPE);
-        DomUtil.setAttribute(e, ATTR_CALDAV_VERSION,
-                             NAMESPACE_CALDAV, ICALENDAR_VERSION);
+        CustomDomUtils.setAttribute(e, ATTR_CALDAV_CONTENT_TYPE, CarldavConstants.c(ATTR_CALDAV_CONTENT_TYPE), ICALENDAR_MEDIA_TYPE);
+        CustomDomUtils.setAttribute(e, ATTR_CALDAV_VERSION, CarldavConstants.c(ATTR_CALDAV_VERSION), ICALENDAR_VERSION);
 
         return e;
     }

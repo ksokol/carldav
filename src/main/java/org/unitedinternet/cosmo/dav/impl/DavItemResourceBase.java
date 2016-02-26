@@ -15,16 +15,23 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import static carldav.CarldavConstants.DISPLAY_NAME;
+import static carldav.CarldavConstants.GET_CONTENT_LENGTH;
+import static carldav.CarldavConstants.GET_CONTENT_TYPE;
+import static carldav.CarldavConstants.GET_ETAG;
+import static carldav.CarldavConstants.GET_LAST_MODIFIED;
+import static carldav.CarldavConstants.IS_COLLECTION;
+import static carldav.CarldavConstants.RESOURCE_TYPE;
+
+import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.webdav.io.InputContext;
-import org.apache.jackrabbit.webdav.property.DavPropertyName;
-import org.apache.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
@@ -66,13 +73,13 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     public DavItemResourceBase(HibItem hibItem, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
-        registerLiveProperty(DavPropertyName.GETLASTMODIFIED);
-        registerLiveProperty(DavPropertyName.GETETAG);
-        registerLiveProperty(DavPropertyName.DISPLAYNAME);
-        registerLiveProperty(DavPropertyName.ISCOLLECTION);
-        registerLiveProperty(DavPropertyName.RESOURCETYPE);
-        registerLiveProperty(DavPropertyName.GETCONTENTLENGTH);
-        registerLiveProperty(DavPropertyName.GETCONTENTTYPE);
+        registerLiveProperty(GET_LAST_MODIFIED);
+        registerLiveProperty(GET_ETAG);
+        registerLiveProperty(DISPLAY_NAME);
+        registerLiveProperty(IS_COLLECTION);
+        registerLiveProperty(RESOURCE_TYPE);
+        registerLiveProperty(GET_CONTENT_LENGTH);
+        registerLiveProperty(GET_CONTENT_TYPE);
 
         this.hibItem = hibItem;
     }
@@ -120,7 +127,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return getResourceFactory().getCalendarQueryProcessor();
     }
 
-    protected void populateItem(InputContext inputContext) throws CosmoDavException {
+    protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
         if (hibItem.getId() == null) {
             try {
                 hibItem.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));
@@ -140,7 +147,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());
     }
 
-    protected void loadLiveProperties(DavPropertySet properties) {
+    protected void loadLiveProperties(CustomDavPropertySet properties) {
         properties.add(new LastModified(hibItem.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));

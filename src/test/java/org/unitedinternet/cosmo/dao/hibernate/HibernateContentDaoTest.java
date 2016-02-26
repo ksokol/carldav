@@ -15,9 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
@@ -33,19 +30,16 @@ import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.UidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.model.hibernate.*;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.UUID;
 
-import javax.validation.ConstraintViolationException;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for HibernateContentDao
@@ -426,39 +420,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
         helper.verifyItem(a, queryItem);
-    }
-
-    /**
-     * Test content dao update collection.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoUpdateCollection() throws Exception {
-        User user = getUser(userDao, "testuser2");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setDisplayName("displayName");
-        a.setOwner(user);
-
-        a = contentDao.createCollection(root, a);
-
-
-
-        Assert.assertTrue(getHibItem(a).getId() != null);
-        Assert.assertNotNull(a.getUid());
-
-        HibCollectionItem queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        helper.verifyItem(a, queryItem);
-
-        queryItem.setName("b");
-        contentDao.updateCollection(queryItem);
-
-
-
-        queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        Assert.assertEquals("b", queryItem.getName());
     }
 
     /**

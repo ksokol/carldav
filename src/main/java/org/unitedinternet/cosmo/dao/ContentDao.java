@@ -41,16 +41,6 @@ public interface ContentDao extends ItemDao {
             HibCollectionItem collection);
 
     /**
-     * Update an existing collection.
-     * 
-     * @param collection
-     *            collection to update
-     * @return updated collection
-     */
-    public HibCollectionItem updateCollection(HibCollectionItem collection);
-
-
-    /**
      * Create new content item. A content item represents a piece of content or
      * file.
      * 

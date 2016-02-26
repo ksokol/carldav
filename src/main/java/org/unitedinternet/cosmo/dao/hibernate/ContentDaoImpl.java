@@ -82,12 +82,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         return collection;
     }
 
-    public HibCollectionItem updateCollection(HibCollectionItem collection) {
-        updateCollectionInternal(collection);
-        getSession().flush();
-        return collection;
-    }
-
     public HibItem updateContent(HibItem content) {
         updateContentInternal(content);
         getSession().flush();
@@ -254,19 +248,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         content.updateTimestamp();
-    }
-
-    protected void updateCollectionInternal(HibCollectionItem collection) {
-        if (collection == null) {
-            throw new IllegalArgumentException("collection cannot be null");
-        }
-
-        getSession().update(collection);
-
-        if (collection.getOwner() == null) {
-            throw new IllegalArgumentException("collection must have owner");
-        }
-        collection.updateTimestamp();
     }
 
     /**

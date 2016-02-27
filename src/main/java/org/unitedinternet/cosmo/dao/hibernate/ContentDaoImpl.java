@@ -21,11 +21,7 @@ import org.hibernate.Query;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.model.hibernate.*;
 
 import java.util.List;
 
@@ -94,7 +90,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         getSession().refresh(collection);
-        removeCollectionRecursive(collection);
         getSession().delete(collection);
         getSession().flush();
     }
@@ -105,7 +100,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
 
         getSession().refresh(content);
-        removeContentRecursive(content);
+        content.setCollection(null);
+        getSession().delete(content);
         getSession().flush();
     }
 
@@ -159,31 +155,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     private void removeContentRecursive(HibItem content) {
         content.setCollection(null);
         getSession().delete(content);
-    }
-
-    private void removeCollectionRecursive(HibCollectionItem collection) {
-        // Removing a collection does not automatically remove
-        // its children.  Instead, the association to all the
-        // children is removed, and any children who have no
-        // parent collection are then removed.
-        removeItemsFromCollection(collection);
-
-        getSession().delete(collection);
-    }
-
-    @Override
-    public void removeItemsFromCollection(HibCollectionItem collection) {
-       for (HibItem hibItem : collection.getItems()) {
-            if (hibItem instanceof HibCollectionItem) {
-                removeCollectionRecursive((HibCollectionItem) hibItem);
-            } else if (hibItem instanceof HibItem) {
-                hibItem.setCollection(null);
-                getSession().delete(hibItem);
-            } else {
-                hibItem.setCollection(null);
-                getSession().delete(hibItem);
-            }
-        }
     }
 
     private void removeNoteItemFromCollectionInternal(HibNoteItem note, HibCollectionItem collection) {

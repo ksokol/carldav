@@ -93,10 +93,4 @@ public interface ContentDao extends ItemDao {
      * @return updated collection
      */
     public HibCollectionItem updateCollectionTimestamp(HibCollectionItem collection);
-
-    /**
-     * Removes all items from a given collection.
-     * @param collection The collection which contains all items which will be deleted.
-     */
-    public void removeItemsFromCollection(HibCollectionItem collection);
 }

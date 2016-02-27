@@ -563,55 +563,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertNull(queryD);
     }
 
-
-    /**
-     * Tests content dao advanced.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testDeleteItemsFromCollection() throws Exception {
-        User testuser2 = getUser(userDao, "testuser2");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(testuser2);
-
-        HibCollectionItem collection = new HibCollectionItem();
-        collection.setName("collection");
-        collection.setDisplayName("displayName");
-        collection.setOwner(getUser(userDao, "testuser2"));
-
-        collection = contentDao.createCollection(root, collection);
-
-        HibItem item1 = generateTestContent("item1", "testuser2");
-
-        item1 = contentDao.createContent(collection, item1);
-
-        HibItem item2 = generateTestContent("item2", "testuser2");
-
-        item2 = contentDao.createContent(collection, item2);
-
-        session.clear();
-
-        collection = (HibCollectionItem) contentDao.findItemByUid(collection.getUid());
-        item1 = contentDao.findItemByUid(item1.getUid());
-        item2 = contentDao.findItemByUid(item2.getUid());
-        root = contentDao.getRootItem(testuser2);
-
-        Assert.assertNotNull(collection);
-        Assert.assertNotNull(item2);
-        Assert.assertNotNull(root);
-
-        // test delete
-
-        contentDao.removeItemsFromCollection(collection);
-
-        session.flush();
-
-        HibCollectionItem queryA = (HibCollectionItem) contentDao.findItemByUid(collection.getUid());
-        Assert.assertNotNull(queryA);
-
-        HibItem queryD = contentDao.findItemByUid(item2.getUid());
-        Assert.assertNull(queryD);
-    }
-
     /**
      * Tests home collection.
      * @throws Exception - if something is wrong this exception is thrown.

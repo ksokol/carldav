@@ -294,36 +294,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     /**
-     * Test content dao delete user content.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoDeleteUserContent() throws Exception {
-        User user1 = getUser(userDao, "testuser1");
-        User user2 = getUser(userDao, "testuser2");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user1);
-
-        // Create test content, with owner of user2
-        HibItem item = generateTestContent();
-        item.setOwner(user2);
-
-        // create content in user1's home collection
-        contentDao.createContent(root, item);
-
-
-
-        user1 = getUser(userDao, "testuser1");
-        user2 = getUser(userDao, "testuser2");
-
-        // remove user2's content, which should include the item created
-        // in user1's home collections
-        contentDao.removeUserContent(user2);
-
-        root = (HibCollectionItem) contentDao.getRootItem(user1);
-        Assert.assertEquals(0, root.getItems().size());
-    }
-
-    /**
      * Test delete content by path.
      * @throws Exception - if something is wrong this exception is thrown.
      */

@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
 
 /**
  * Interface for DAO that provides base operations for content items.
@@ -70,14 +69,6 @@ public interface ContentDao extends ItemDao {
      *            content item to remove
      */
     public void removeContent(HibItem content);
-    
-    /**
-     * Remove all content owned by a user
-     * 
-     * @param user
-     *            user to remove content for
-     */
-    public void removeUserContent(User user);
 
     /**
      * Remove collection item

@@ -18,12 +18,16 @@ package org.unitedinternet.cosmo.dao.hibernate;
 import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.hibernate.*;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
-import java.util.List;
+import java.util.Date;
 
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
@@ -73,7 +77,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         if (!getSession().contains(collection)) {
             collection = (HibCollectionItem) getSession().merge(collection);
         }
-        collection.updateTimestamp();
+        collection.setModifiedDate(new Date());
         getSession().flush();
         return collection;
     }
@@ -85,63 +89,33 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     public void removeCollection(HibCollectionItem collection) {
-        if (collection == null) {
-            throw new IllegalArgumentException("collection cannot be null");
-        }
-
-        getSession().refresh(collection);
-        getSession().delete(collection);
-        getSession().flush();
+        removeContent(collection);
     }
 
     public void removeContent(HibItem content) {
-        if (content == null) {
-            throw new IllegalArgumentException("content cannot be null");
-        }
-
+        Assert.notNull(content, "content is null");
         getSession().refresh(content);
         content.setCollection(null);
         getSession().delete(content);
         getSession().flush();
     }
 
-    public void removeUserContent(User user) {
-        Query query = getSession().getNamedQuery("contentItem.by.owner").setParameter("owner", user);
-
-        List<HibItem> results = query.list();
-        for (HibItem content : results) {
-            removeContentRecursive(content);
-        }
-        getSession().flush();
-    }
-
     @Override
     public void removeItem(HibItem hibItem) {
-        if (hibItem instanceof HibItem) {
-            removeContent(hibItem);
-        } else if (hibItem instanceof HibCollectionItem) {
-            removeCollection((HibCollectionItem) hibItem);
-        } else {
-            super.removeItem(hibItem);
-        }
+        remove(hibItem);
     }
-
 
     @Override
     public void removeItemByPath(String path) {
-        HibItem hibItem = this.findItemByPath(path);
-        if (hibItem instanceof HibItem) {
-            removeContent(hibItem);
-        } else if (hibItem instanceof HibCollectionItem) {
-            removeCollection((HibCollectionItem) hibItem);
-        } else {
-            super.removeItem(hibItem);
-        }
+        remove(this.findItemByPath(path));
     }
 
     @Override
     public void removeItemByUid(String uid) {
-        HibItem hibItem = this.findItemByUid(uid);
+        remove(this.findItemByUid(uid));
+    }
+
+    private void remove(HibItem hibItem) {
         if (hibItem instanceof HibItem) {
             removeContent(hibItem);
         } else if (hibItem instanceof HibCollectionItem) {
@@ -149,12 +123,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         } else {
             super.removeItem(hibItem);
         }
-    }
-
-
-    private void removeContentRecursive(HibItem content) {
-        content.setCollection(null);
-        getSession().delete(content);
     }
 
     private void removeNoteItemFromCollectionInternal(HibNoteItem note, HibCollectionItem collection) {
@@ -185,10 +153,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw new IllegalArgumentException("invalid content id (expected -1)");
         }
 
-        if (content.getOwner() == null) {
-            throw new IllegalArgumentException("content must have owner");
-        }
-
         // verify uid not in use
         checkForDuplicateUid(content);
 
@@ -207,18 +171,8 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     protected void updateContentInternal(HibItem content) {
-
-        if (content == null) {
-            throw new IllegalArgumentException("content cannot be null");
-        }
-
         getSession().update(content);
-
-        if (content.getOwner() == null) {
-            throw new IllegalArgumentException("content must have owner");
-        }
-
-        content.updateTimestamp();
+        content.setModifiedDate(new Date());
     }
 
     /**

@@ -19,20 +19,11 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public abstract class HibAuditableObject implements Serializable {
@@ -95,10 +86,6 @@ public abstract class HibAuditableObject implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void updateTimestamp() {
-        modifiedDate = new Date();
     }
 
     @Column(name="etag")

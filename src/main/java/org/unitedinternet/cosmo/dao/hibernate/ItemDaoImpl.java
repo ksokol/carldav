@@ -95,6 +95,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         //newItem.setDisplayName(newItem.getName());
         setBaseItemProps(newItem);
         getSession().save(newItem);
+        getSession().refresh(user);
         getSession().flush();
         return newItem;
     }

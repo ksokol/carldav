@@ -108,7 +108,7 @@ public class StandardUserService implements UserService {
      */
     public void removeUser(String username) {
         User user = userDao.getUser(username);
-        removeUserAndItems(user);
+        userDao.removeUser(user);
     }
 
     /**
@@ -117,7 +117,7 @@ public class StandardUserService implements UserService {
      * @param user the account to remove
      */
     public void removeUser(User user) {
-        removeUserAndItems(user);
+        userDao.removeUser(user);
     }
 
     /**
@@ -130,24 +130,6 @@ public class StandardUserService implements UserService {
         }
 
         return DigestUtils.md5Hex(password);
-    }
-
-    /**
-     * Remove all Items associated to User.
-     * This is done by removing the HomeCollectionItem, which is the root
-     * collection of all the user's items.
-     */
-    private void removeUserAndItems(User user) {
-        if(user==null) {
-            return;
-        }
-        HibHomeCollectionItem home = contentDao.getRootItem(user);
-        // remove collections/subcollections
-        contentDao.removeCollection(home);
-        // remove dangling items 
-        // (items that only exist in other user's collections)
-        contentDao.removeUserContent(user);
-        userDao.removeUser(user);
     }
 
     private static void validateRawPassword(final User user) {

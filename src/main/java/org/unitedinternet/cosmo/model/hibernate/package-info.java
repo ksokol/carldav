@@ -42,7 +42,6 @@
         @NamedQuery(name = "icalendarItem.by.parent.icaluid", query = "select item.id from "
                 + "HibICalendarItem item join item.collection pd where"
                 + " pd.id=:parentid and item.uid=:icaluid"),
-        @NamedQuery(name = "contentItem.by.owner", query = "from HibItem i where i.owner=:owner"),
 
         // User Queries
         @NamedQuery(name="user.byEmail", query="from User where email=:email"),

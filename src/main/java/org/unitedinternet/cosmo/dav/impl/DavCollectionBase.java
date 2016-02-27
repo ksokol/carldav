@@ -94,8 +94,8 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     public List<WebDavResource> getCollectionMembers() {
         Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems(item);
-        for (HibItem memberHibItem : hibCollectionItems) {
-            WebDavResource resource = memberToResource(memberHibItem);
+        for (HibCollectionItem memberHibItem : hibCollectionItems) {
+            WebDavResource resource = collectionToResource(memberHibItem);
             members.add(resource);
         }
         return Collections.unmodifiableList(members);
@@ -201,6 +201,19 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     protected WebDavResource memberToResource(HibItem hibItem) throws CosmoDavException {
+        String path;
+        try {
+            path = getResourcePath() + "/" + URLEncoder.encode(hibItem.getName(), "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new CosmoDavException(e);
+        }
+        DavResourceLocator locator = getResourceLocator().getFactory()
+                .createResourceLocatorByPath(getResourceLocator().getContext(),
+                        path);
+        return getResourceFactory().createResource(locator, hibItem);
+    }
+
+    protected WebDavResource collectionToResource(HibCollectionItem hibItem) {
         String path;
         try {
             path = getResourcePath() + "/" + URLEncoder.encode(hibItem.getName(), "UTF-8");

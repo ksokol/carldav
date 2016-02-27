@@ -47,7 +47,7 @@ public class CalendarUtils implements ICalendarConstants {
      * @throws IOException - if something is wrong this exception is thrown.
      */
     public static Calendar parseCalendar(InputStream is) throws ParserException, IOException {
-        CalendarBuilder builder = CalendarBuilderDispenser.getCalendarBuilder();
+        CalendarBuilder builder = new CalendarBuilder();
         clearTZRegistry(builder);
         return builder.build(is);
     }

@@ -21,7 +21,6 @@ import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
 import java.util.Date;
 
@@ -118,20 +117,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         }
     }
 
-    private void removeNoteItemFromCollectionInternal(HibNoteItem note, HibCollectionItem collection) {
-        getSession().update(collection);
-        getSession().update(note);
-
-        // do nothing if item doesn't belong to collection
-        if (note.getCollection().getId() != collection.getId()) {
-            return;
-        }
-
-        note.setCollection(null);
-        getSession().delete(note);
-    }
-
-
     protected void createContentInternal(HibCollectionItem parent, HibItem content) {
 
         if (parent == null) {
@@ -158,14 +143,5 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     protected void updateContentInternal(HibItem content) {
         getSession().update(content);
         content.setModifiedDate(new Date());
-    }
-
-    @Override
-    protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
-        if (hibItem instanceof HibNoteItem) {
-            removeNoteItemFromCollectionInternal((HibNoteItem) hibItem, collection);
-        } else {
-            super.removeItemFromCollectionInternal(hibItem, collection);
-        }
     }
 }

@@ -30,23 +30,7 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     public HibCollectionItem createCollection(HibCollectionItem parent,
-                                           HibCollectionItem collection) {
-
-        if (parent == null) {
-            throw new IllegalArgumentException("parent cannot be null");
-        }
-
-        if (collection == null) {
-            throw new IllegalArgumentException("collection cannot be null");
-        }
-
-        if (collection.getOwner() == null) {
-            throw new IllegalArgumentException("collection must have owner");
-        }
-
-        if (getBaseModelObject(collection).getId() != null) {
-            throw new IllegalArgumentException("invalid collection id (expected -1)");
-        }
+                                              HibCollectionItem collection) {
 
         setBaseItemProps(collection);
         collection.setCollection(parent);
@@ -59,31 +43,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
-        createContentInternal(parent, content);
-        getSession().flush();
-        return content;
-    }
-
-    public HibItem updateContent(HibItem content) {
-        updateContentInternal(content);
-        getSession().flush();
-        return content;
-    }
-
-    protected void createContentInternal(HibCollectionItem parent, HibItem content) {
-
-        if (parent == null) {
-            throw new IllegalArgumentException("parent cannot be null");
-        }
-
-        if (content == null) {
-            throw new IllegalArgumentException("content cannot be null");
-        }
-
-        if (getBaseModelObject(content).getId() != null) {
-            throw new IllegalArgumentException("invalid content id (expected -1)");
-        }
-
         setBaseItemProps(content);
 
         // add parent to new content
@@ -91,10 +50,13 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
         getSession().save(content);
         getSession().refresh(parent);
+        getSession().flush();
+        return content;
     }
 
-    protected void updateContentInternal(HibItem content) {
-        getSession().update(content);
+    public HibItem updateContent(HibItem content) {
         content.setModifiedDate(new Date());
+        getSession().flush();
+        return content;
     }
 }

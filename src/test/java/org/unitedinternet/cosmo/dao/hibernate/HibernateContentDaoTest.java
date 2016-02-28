@@ -316,31 +316,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     /**
-     * Test content dao update collection timestamp.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoUpdateCollectionTimestamp() throws Exception {
-        User user = getUser(userDao, "testuser2");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setDisplayName("displayName");
-        a.setOwner(user);
-
-        a = contentDao.createCollection(root, a);
-        Date timestamp = a.getModifiedDate();
-
-
-        // FIXME this test is timing dependant!
-        Thread.sleep(3);
-
-        a = contentDao.updateCollectionTimestamp(a);
-        Assert.assertTrue(timestamp.before(a.getModifiedDate()));
-    }
-
-    /**
      * Tests content dao delete collection.
      * @throws Exception - if something is wrong this exception is thrown.
      */

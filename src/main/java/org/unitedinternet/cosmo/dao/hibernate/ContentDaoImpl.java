@@ -65,15 +65,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         return content;
     }
 
-    public HibCollectionItem updateCollectionTimestamp(HibCollectionItem collection) {
-        if (!getSession().contains(collection)) {
-            collection = (HibCollectionItem) getSession().merge(collection);
-        }
-        collection.setModifiedDate(new Date());
-        getSession().flush();
-        return collection;
-    }
-
     public HibItem updateContent(HibItem content) {
         updateContentInternal(content);
         getSession().flush();

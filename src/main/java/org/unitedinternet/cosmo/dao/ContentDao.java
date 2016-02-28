@@ -77,11 +77,4 @@ public interface ContentDao extends ItemDao {
      *            collection item to remove
      */
     public void removeCollection(HibCollectionItem collection);
-    
-    /**
-     * Update timestamp on collection.
-     * @param collection collection to update
-     * @return updated collection
-     */
-    public HibCollectionItem updateCollectionTimestamp(HibCollectionItem collection);
 }

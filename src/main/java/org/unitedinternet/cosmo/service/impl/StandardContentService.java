@@ -22,6 +22,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.service.ContentService;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -55,7 +56,7 @@ public class StandardContentService implements ContentService {
      */
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
         contentDao.removeItemFromCollection(hibItem, collection);
-        contentDao.updateCollectionTimestamp(collection);
+        collection.setModifiedDate(new Date());
     }
 
     /**
@@ -100,7 +101,7 @@ public class StandardContentService implements ContentService {
      */
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
         content = contentDao.createContent(parent, content);
-        contentDao.updateCollectionTimestamp(content.getCollection());
+        content.getCollection().setModifiedDate(new Date());
         return content;
     }
 
@@ -113,7 +114,7 @@ public class StandardContentService implements ContentService {
      */
     public HibItem updateContent(HibItem content) {
         content = contentDao.updateContent(content);
-        contentDao.updateCollectionTimestamp(content.getCollection());
+        content.getCollection().setModifiedDate(new Date());
         return content;
     }
 

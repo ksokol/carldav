@@ -22,6 +22,4 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
  */
 public interface ItemPathTranslator {
     HibItem findItemByPath(String path);
-
-    HibItem findItemParent(String path);
 }

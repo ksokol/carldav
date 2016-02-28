@@ -88,16 +88,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         remove(hibItem);
     }
 
-    @Override
-    public void removeItemByPath(String path) {
-        remove(this.findItemByPath(path));
-    }
-
-    @Override
-    public void removeItemByUid(String uid) {
-        remove(this.findItemByUid(uid));
-    }
-
     private void remove(HibItem hibItem) {
         if (hibItem instanceof HibItem) {
             removeContent(hibItem);

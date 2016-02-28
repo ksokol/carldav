@@ -42,28 +42,6 @@ public class DefaultItemPathTranslator extends AbstractDaoImpl implements ItemPa
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public HibItem findItemParent(String path) {
-        if (path == null) {
-            return null;
-        }
-
-        int lastIndex = path.lastIndexOf("/");
-        if (lastIndex == -1) {
-            return null;
-        }
-
-        if ((lastIndex + 1) >= path.length()) {
-            return null;
-        }
-
-        String parentPath = path.substring(0, lastIndex);
-
-        return findItemByPath(parentPath);
-    }
-
-    /**
      * Finds item by the given path.
      *
      * @param session The current session.

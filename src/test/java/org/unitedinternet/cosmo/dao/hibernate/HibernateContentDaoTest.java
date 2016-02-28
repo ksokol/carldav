@@ -144,12 +144,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         queryHibItem = contentDao.findItemByPath("/testuser2@testem/a/test");
         Assert.assertNotNull(queryHibItem);
         Assert.assertTrue(queryHibItem instanceof HibItem);
-
-
-
-        queryHibItem = contentDao.findItemParentByPath("/testuser2@testem/a/test");
-        Assert.assertNotNull(queryHibItem);
-        Assert.assertEquals(a.getUid(), queryHibItem.getUid());
     }
 
     /**
@@ -214,49 +208,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         root = contentDao.getRootItem(user);
         Assert.assertTrue(root.getItems().size() == 0);
 
-    }
-
-    /**
-     * Test delete content by path.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testDeleteContentByPath() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibItem item = generateTestContent();
-
-        HibItem newItem = contentDao.createContent(root, item);
-
-        HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
-        helper.verifyItem(newItem, queryItem);
-
-        contentDao.removeItemByPath("/testuser@testem/test");
-
-        queryItem = contentDao.findItemByUid(queryItem.getUid());
-        Assert.assertNull(queryItem);
-    }
-
-    /**
-     * Test delete content by uid.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testDeleteContentByUid() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibItem item = generateTestContent();
-        HibItem newItem = contentDao.createContent(root, item);
-
-        HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
-        helper.verifyItem(newItem, queryItem);
-
-        contentDao.removeItemByUid(queryItem.getUid());
-
-        queryItem = contentDao.findItemByUid(queryItem.getUid());
-        Assert.assertNull(queryItem);
     }
 
     /**

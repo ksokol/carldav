@@ -50,16 +50,6 @@ public interface ItemDao {
     HibItem findItemByPath(String path);
 
     /**
-     * Find the parent item of the item with the specified path. 
-     * The return type will be of type CollectionItem.
-     *
-     * @param path
-     *            path of item
-     * @return parent item of item represented by path
-     */
-    HibItem findItemParentByPath(String path);
-
-    /**
      * Get the root item for a user
      *
      * @param user The user for get the root item.
@@ -81,18 +71,6 @@ public interface ItemDao {
      *            item to remove
      */
     void removeItem(HibItem hibItem);
-
-    /**
-     * Remove an item give the item's path
-     * @param path path of item to remove
-     */
-    void removeItemByPath(String path);
-
-    /**
-     * Remove an item given the item's uid
-     * @param uid the uid of the item to remove
-     */
-    void removeItemByUid(String uid);
 
     /**
      * Adds item to a collection.

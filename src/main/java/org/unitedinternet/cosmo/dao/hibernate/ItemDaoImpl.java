@@ -22,7 +22,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ItemDao;
-import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
@@ -48,10 +47,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
     public HibItem findItemByPath(String path) {
         return itemPathTranslator.findItemByPath(path);
-    }
-
-    public HibItem findItemParentByPath(String path) {
-        return itemPathTranslator.findItemParent(path);
     }
 
     public HibItem findItemByUid(String uid) {
@@ -107,24 +102,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
         removeItemFromCollectionInternal(hibItem, collection);
         getSession().flush();
-    }
-
-    public void removeItemByPath(String path) {
-        HibItem hibItem = itemPathTranslator.findItemByPath(path);
-        if (hibItem == null) {
-            throw new ItemNotFoundException("item at " + path
-                    + " not found");
-        }
-        removeItem(hibItem);
-     }
-
-    public void removeItemByUid(String uid) {
-        HibItem hibItem = findItemByUid(uid);
-        if (hibItem == null) {
-            throw new ItemNotFoundException("item with uid " + uid
-                    + " not found");
-        }
-        removeItem(hibItem);
     }
 
     /**

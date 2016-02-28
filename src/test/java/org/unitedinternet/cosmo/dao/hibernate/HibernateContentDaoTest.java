@@ -200,7 +200,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
         helper.verifyItem(newItem, queryItem);
 
-        contentDao.removeContent(queryItem);
+        contentDao.removeItem(queryItem);
 
         queryItem = contentDao.findItemByUid(queryItem.getUid());
         Assert.assertNull(queryItem);
@@ -224,7 +224,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
         helper.verifyItem(newItem, queryItem);
 
-        contentDao.removeContent(queryItem);
+        contentDao.removeItem(queryItem);
 
         queryItem = contentDao.findItemByUid(newItem.getUid());
         Assert.assertNull(queryItem);
@@ -287,7 +287,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibCollectionItem queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
         Assert.assertNotNull(queryItem);
 
-        contentDao.removeCollection(queryItem);
+        contentDao.removeItem(queryItem);
 
 
 
@@ -369,11 +369,11 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertTrue(queryHibItem instanceof HibCollectionItem);
 
         // test delete
-        contentDao.removeContent(c);
+        contentDao.removeItem(c);
         queryC = contentDao.findItemByUid(c.getUid());
         Assert.assertNull(queryC);
 
-        contentDao.removeCollection(a);
+        contentDao.removeItem(a);
 
         HibCollectionItem queryA = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
         Assert.assertNull(queryA);

@@ -60,21 +60,4 @@ public interface ContentDao extends ItemDao {
      * @return updated content item
      */
     public HibItem updateContent(HibItem content);
-
-   
-    /**
-     * Remove content item
-     * 
-     * @param content
-     *            content item to remove
-     */
-    public void removeContent(HibItem content);
-
-    /**
-     * Remove collection item
-     * 
-     * @param collection
-     *            collection item to remove
-     */
-    public void removeCollection(HibCollectionItem collection);
 }

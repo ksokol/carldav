@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.service.generator.IdGenerator;
-import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -69,33 +68,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         updateContentInternal(content);
         getSession().flush();
         return content;
-    }
-
-    public void removeCollection(HibCollectionItem collection) {
-        removeContent(collection);
-    }
-
-    public void removeContent(HibItem content) {
-        Assert.notNull(content, "content is null");
-        getSession().refresh(content);
-        content.setCollection(null);
-        getSession().delete(content);
-        getSession().flush();
-    }
-
-    @Override
-    public void removeItem(HibItem hibItem) {
-        remove(hibItem);
-    }
-
-    private void remove(HibItem hibItem) {
-        if (hibItem instanceof HibItem) {
-            removeContent(hibItem);
-        } else if (hibItem instanceof HibCollectionItem) {
-            removeCollection((HibCollectionItem) hibItem);
-        } else {
-            super.removeItem(hibItem);
-        }
     }
 
     protected void createContentInternal(HibCollectionItem parent, HibItem content) {

@@ -63,6 +63,8 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             throw new IllegalArgumentException("cannot remove root item");
         }
 
+        getSession().refresh(hibItem);
+        hibItem.setCollection(null);
         getSession().delete(hibItem);
         getSession().flush();
     }

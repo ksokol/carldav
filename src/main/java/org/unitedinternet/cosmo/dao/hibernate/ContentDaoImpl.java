@@ -16,14 +16,10 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.service.generator.IdGenerator;
-import org.hibernate.FlushMode;
-import org.hibernate.Query;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.IcalUidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.HibNoteItem;
 
@@ -53,9 +49,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         if (getBaseModelObject(collection).getId() != null) {
             throw new IllegalArgumentException("invalid collection id (expected -1)");
         }
-
-        // verify uid not in use
-        checkForDuplicateUid(collection);
 
         setBaseItemProps(collection);
         collection.setCollection(parent);
@@ -153,14 +146,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
             throw new IllegalArgumentException("invalid content id (expected -1)");
         }
 
-        // verify uid not in use
-        checkForDuplicateUid(content);
-
-        // verify icaluid not in use for collection
-        if (content instanceof HibICalendarItem) {
-            checkForDuplicateICalUid((HibICalendarItem) content, parent);
-        }
-
         setBaseItemProps(content);
 
         // add parent to new content
@@ -175,68 +160,12 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         content.setModifiedDate(new Date());
     }
 
-    /**
-     * Override so we can handle NoteItems. Adding a note to a collection
-     * requires verifying that the icaluid is unique within the collection.
-     */
-    @Override
-    protected void addItemToCollectionInternal(HibItem hibItem,
-                                               HibCollectionItem collection) {
-
-        if (hibItem instanceof HibICalendarItem) {
-            // verify icaluid is unique within collection
-            checkForDuplicateICalUid((HibICalendarItem) hibItem, collection);
-        }
-
-        super.addItemToCollectionInternal(hibItem, collection);
-    }
-
     @Override
     protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
         if (hibItem instanceof HibNoteItem) {
             removeNoteItemFromCollectionInternal((HibNoteItem) hibItem, collection);
         } else {
             super.removeItemFromCollectionInternal(hibItem, collection);
-        }
-    }
-
-    protected void checkForDuplicateICalUid(HibICalendarItem item, HibCollectionItem parent) {
-        if (item.getUid() == null) {
-            return;
-        }
-
-        // Lookup item by parent/icaluid
-        Query hibQuery = null;
-        if (item instanceof HibNoteItem) {
-            hibQuery = getSession().getNamedQuery(
-                    "noteItemId.by.parent.icaluid").setParameter("parentid",
-                    getBaseModelObject(parent).getId()).setParameter("icaluid", item.getUid());
-        } else {
-            hibQuery = getSession().getNamedQuery(
-                    "icalendarItem.by.parent.icaluid").setParameter("parentid",
-                    getBaseModelObject(parent).getId()).setParameter("icaluid", item.getUid());
-        }
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-
-        Long itemId = (Long) hibQuery.uniqueResult();
-
-        // if icaluid is in use throw exception
-        if (itemId != null) {
-            // If the note is new, then its a duplicate icaluid
-            if (getBaseModelObject(item).getId() == null) {
-                HibItem dup = (HibItem) getSession().load(HibItem.class, itemId);
-                throw new IcalUidInUseException("iCal uid" + item.getUid()
-                        + " already in use for collection " + parent.getUid(),
-                        item.getUid(), dup.getUid());
-            }
-            // If the note exists and there is another note with the same
-            // icaluid, then its a duplicate icaluid
-            if (getBaseModelObject(item).getId().equals(itemId)) {
-                HibItem dup = (HibItem) getSession().load(HibItem.class, itemId);
-                throw new IcalUidInUseException("iCal uid" + item.getUid()
-                        + " already in use for collection " + parent.getUid(),
-                        item.getUid(), dup.getUid());
-            }
         }
     }
 }

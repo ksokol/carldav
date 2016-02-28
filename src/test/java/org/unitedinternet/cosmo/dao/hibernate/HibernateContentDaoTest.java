@@ -28,11 +28,8 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.IcalUidInUseException;
-import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.*;
 
-import javax.validation.ConstraintViolationException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
@@ -93,80 +90,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
 
         helper.verifyItem(newItem, queryItem);
-    }
-
-    /**
-     * Test content dao create content duplicate uid.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoCreateContentDuplicateUid() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibItem item1 = generateTestContent();
-        item1.setName("test");
-        item1.setUid("uid");
-
-        contentDao.createContent(root, item1);
-
-        HibItem item2 = generateTestContent();
-        item2.setName("test2");
-        item2.setUid("uid");
-
-        try {
-            contentDao.createContent(root, item2);
-
-            Assert.fail("able to create duplicate uid");
-        } catch (UidInUseException e) {
-        }
-    }
-
-    /**
-     * Test content dao create note duplicate Ical uid.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoCreateNoteDuplicateUid() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibNoteItem note1 = generateTestNote("note1", "testuser");
-        note1.setUid("icaluid");
-
-        contentDao.createContent(root, note1);
-
-        HibNoteItem note2 = generateTestNote("note2", "testuser");
-        note2.setUid("icaluid");
-
-        try {
-            contentDao.createContent(root, note2);
-            Assert.fail("able to create duplicate icaluid");
-        } catch (IcalUidInUseException e) {}
-
-    }
-
-    /**
-     * Test content dao invalid content empty name.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoInvalidContentEmptyName() throws Exception {
-
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-        HibItem item = generateTestContent();
-        item.setName("");
-
-        try {
-            contentDao.createContent(root, item);
-            Assert.fail("able to create invalid content.");
-        } catch (ConstraintViolationException e) {
-            // FIXME catched InvalidStateException and tested Assert.assertEquals
-            //("name", e.getInvalidValues()[0].getPropertyName());
-            // before migration to Hibernate 4, does any code depend on the old Exception?
-            Assert.assertEquals("name", e.getConstraintViolations().iterator().next().getPropertyPath().toString());
-       }
     }
 
     /**

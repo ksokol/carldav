@@ -25,7 +25,8 @@ import javax.persistence.*;
         indexes={@Index(name = "idx_itemtype",columnList = "itemtype" ),
                  @Index(name = "idx_itemuid",columnList = "uid" ),
                  @Index(name = "idx_itemname",columnList = "itemname" ),
-        }
+        },
+        uniqueConstraints = @UniqueConstraint(name = "uid", columnNames = "uid")
 )
 @DiscriminatorColumn(
         name="itemtype",

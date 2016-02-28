@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.ItemNotFoundException;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.UidInUseException;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -198,24 +197,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         hibQuery.setFlushMode(FlushMode.MANUAL);
 
         return (HibHomeCollectionItem) hibQuery.uniqueResult();
-    }
-
-    protected void checkForDuplicateUid(HibItem hibItem) {
-        // verify uid not in use
-        if (hibItem.getUid() != null) {
-
-            // Lookup item by uid
-            Query hibQuery = getSession().getNamedQuery("itemid.by.uid")
-                    .setParameter("uid", hibItem.getUid());
-            hibQuery.setFlushMode(FlushMode.MANUAL);
-
-            Long itemId = (Long) hibQuery.uniqueResult();
-
-            // if uid is in use throw exception
-            if (itemId != null) {
-                throw new UidInUseException("uid " + hibItem.getUid() + " already in use");
-            }
-        }
     }
 
     protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {

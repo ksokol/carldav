@@ -2,7 +2,6 @@ package calendar
 
 import org.junit.Test
 import org.springframework.security.test.context.support.WithUserDetails
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
@@ -16,8 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static testutil.TestUser.USER01
 import static testutil.TestUser.USER01_PASSWORD
 import static testutil.helper.Base64Helper.user
-import static testutil.helper.XmlHelper.conflictinguuid
-import static testutil.helper.XmlHelper.existinguuid
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static testutil.mockmvc.CustomRequestBuilders.propfind
@@ -1014,21 +1011,18 @@ class DavDroidTests extends IntegrationTestSupport {
     void conflict() {
         addVEvent()
 
-        def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be11a873deae.ics", USER01)
+        def response1 = """\
+                        <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                            <C:no-uid-conflict>
+                                <cosmo:existing-uuid></cosmo:existing-uuid>
+                            </C:no-uid-conflict>
+                        </D:error>"""
+
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be11a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1)
                 .header("If-None-Match", "*"))
                 .andExpect(status().isConflict())
-                .andReturn().getResponse().getContentAsString()
-
-        def response1 = """\
-                        <D:error xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                            <C:no-uid-conflict>
-                                <cosmo:existing-uuid>${existinguuid(result1)}</cosmo:existing-uuid>
-                                <cosmo:conflicting-uuid>${conflictinguuid(result1)}</cosmo:conflicting-uuid>
-                            </C:no-uid-conflict>
-                        </D:error>"""
-
-        assertThat(result1, equalXml(response1))
+                .andExpect(xml(response1))
     }
 }

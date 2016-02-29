@@ -36,7 +36,7 @@ class CollectionDaoImpl implements CollectionDao {
     @Override
     public void remove(HibCollectionItem item) {
         sessionFactory.getCurrentSession().refresh(item);
-        item.setCollection(null);
+        item.setParent(null);
         sessionFactory.getCurrentSession().delete(item);
         sessionFactory.getCurrentSession().flush();
     }

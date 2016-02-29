@@ -18,10 +18,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 @Entity
 @DiscriminatorValue("collection")
@@ -36,5 +33,15 @@ public class HibCollectionItem extends HibItem {
 
     public void setItems(Set<HibItem> items) {
         this.items = items;
+    }
+
+    //TODO remove @Transient as soon as HibCollectionItem does not derive from HibItem
+    @Transient
+    public HibCollectionItem getParent() {
+        return getCollection();
+    }
+
+    public void setParent(final HibCollectionItem item) {
+        setCollection(item);
     }
 }

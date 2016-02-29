@@ -68,7 +68,7 @@ public class StandardContentService implements ContentService {
      * @return newly created collection
      */
     public HibCollectionItem createCollection(HibCollectionItem parent, HibCollectionItem collection) {
-        collection.setCollection(parent);
+        collection.setParent(parent);
         collectionDao.save(collection);
         return collection;
     }

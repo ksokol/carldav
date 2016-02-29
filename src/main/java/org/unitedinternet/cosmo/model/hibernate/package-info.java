@@ -20,7 +20,7 @@
 @NamedQueries({
         // Item Queries
         @NamedQuery(name = "collection.items", query = "select item from HibItem item join"
-                + " item.collection pd where item.collection=:parent and (item.type=:type or item.type is null)"),
+                + " item.collection pd where item.collection.id=:parent and (item.type=:type or item.type is null)"),
         @NamedQuery(name = "item.by.parent.name", query = "select item from HibItem item join"
                 + " item.collection pd where item.collection=:parent and item.name=:name"),
         // FIXME stfl .and.nullparent is not the correct name anymore!

@@ -124,7 +124,7 @@ public class StandardContentService implements ContentService {
      * @return set of children collection items or empty list of parent collection has no children
      */
     public List<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem) {
-        return itemDao.findCollectionItems(hibCollectionItem);
+        return itemDao.findCollectionItems(hibCollectionItem.getId());
     }
 
     @Override

@@ -62,11 +62,11 @@ public interface ItemDao {
      * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    List<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
+    List<HibCollectionItem> findCollectionItems(Long id);
 
     HibItem save(HibItem item);
 
-    List<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem);
+    List<HibItem> findCollectionFileItems(Long id);
 
     Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter);
 }

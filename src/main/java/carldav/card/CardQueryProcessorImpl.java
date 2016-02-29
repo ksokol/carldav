@@ -29,6 +29,6 @@ class CardQueryProcessorImpl implements CardQueryProcessor {
     public List<HibItem> filterQuery(final HibCollectionItem collection, final AddressbookFilter filter) {
         LOG.debug("finding vacards in collection {} by filter {}", collection.getUid(), filter);
         //TODO filter is not in use yet
-        return itemDao.findCollectionFileItems(collection);
+        return itemDao.findCollectionFileItems(collection.getId());
     }
 }

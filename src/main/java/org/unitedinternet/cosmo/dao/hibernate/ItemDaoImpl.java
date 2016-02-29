@@ -15,14 +15,15 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.hibernate.*;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,10 +56,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         hibItem.setCollection(null);
         getSession().delete(hibItem);
         getSession().flush();
-    }
-
-    public HibHomeCollectionItem getRootItem(User user) {
-        return findRootItem(user.getId());
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
@@ -96,16 +93,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             children.add(content);
         }
         return children;
-    }
-
-    protected HibHomeCollectionItem findRootItem(Long dbUserId) {
-        Query hibQuery = getSession().getNamedQuery(
-                "homeCollection.by.ownerId").setParameter("ownerid",
-                dbUserId);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-
-        return (HibHomeCollectionItem) hibQuery.uniqueResult();
     }
 
     protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {

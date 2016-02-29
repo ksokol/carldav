@@ -16,7 +16,9 @@
 package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.hibernate.*;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.Set;
 
@@ -36,14 +38,6 @@ public interface ItemDao {
      * @return item represented by path
      */
     HibItem findItemByPath(String path);
-
-    /**
-     * Get the root item for a user
-     *
-     * @param user The user for get the root item.
-     * @return home collection item.
-     */
-    HibHomeCollectionItem getRootItem(User user);
 
     /**
      * Remove an item.

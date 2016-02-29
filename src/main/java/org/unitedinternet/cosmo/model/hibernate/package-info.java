@@ -19,7 +19,6 @@
  */
 @NamedQueries({
         // Item Queries
-        @NamedQuery(name = "homeCollection.by.ownerId", query = "from HibHomeCollectionItem where owner.id=:ownerid"),
         @NamedQuery(name = "collections.children.by.parent", query = "select item from HibItem item join"
                 + " item.collection pd where item.collection=:parent and item.type is null"), //TODO item.class=HibCollectionItem => item.type is null
         @NamedQuery(name = "collections.files.by.parent", query = "select item from HibItem item join"

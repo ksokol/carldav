@@ -64,69 +64,15 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         SessionFactoryUtils.closeSession(s);
     }
 
-    /**
-     * Test content dao create collection.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoCreateCollection() throws Exception {
-        User user = getUser(userDao, "testuser2");
-        HibCollectionItem root = itemDao.getRootItem(user);
-
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setDisplayName("displayName");
-        a.setOwner(user);
-        a.setCollection(root);
-
-        itemDao.save(a);
-
-        Assert.assertTrue(getHibItem(a).getId() != null);
-        Assert.assertNotNull(a.getUid());
-
-        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByPath("/testuser2@testem/a");
-        helper.verifyItem(a, queryItem);
-    }
-
-    /**
-     * Tests content dao delete collection.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoDeleteCollection() throws Exception {
-        User user = getUser(userDao, "testuser2");
-        HibCollectionItem root = itemDao.getRootItem(user);
-
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setDisplayName("displayName");
-        a.setOwner(user);
-        a.setCollection(root);
-
-        itemDao.save(a);
-
-        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByPath("/testuser2@testem/a");
-        Assert.assertNotNull(queryItem);
-
-        itemDao.removeItem(queryItem);
-
-        queryItem = (HibCollectionItem) itemDao.findItemByPath("/testuser2@testem/a");
-        Assert.assertNull(queryItem);
-    }
-
-    /**
-     * Tests home collection.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
     @Test
     public void testHomeCollection() throws Exception {
-        User testuser2 = getUser(userDao, "testuser2");
-        HibHomeCollectionItem root = itemDao.getRootItem(testuser2);
+        final HibHomeCollectionItem root = new HibHomeCollectionItem();
 
-        Assert.assertNotNull(root);
-        root.setName("alsfjal;skfjasd");
-        Assert.assertEquals(root.getName(), "testuser2@testem");
+        root.setName("1");
+        Assert.assertEquals(root.getName(), "1");
 
+        root.setName("2");
+        Assert.assertEquals(root.getName(), "1");
     }
 
     /**
@@ -136,7 +82,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void testItemInMutipleCollectionsError() throws Exception {
         User user = getUser(userDao, "testuser");
-        HibCollectionItem root = itemDao.getRootItem(user);
+        session.refresh(user);
+
+        HibCollectionItem root = (HibCollectionItem) user.getItems().iterator().next();
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
@@ -190,9 +138,4 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setOwner(getUser(userDao, owner));
         return content;
     }
-
-    private HibItem getHibItem(HibItem hibItem) {
-        return hibItem;
-    }
-
 }

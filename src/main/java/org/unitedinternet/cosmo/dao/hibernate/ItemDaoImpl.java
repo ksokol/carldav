@@ -25,8 +25,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -69,18 +67,11 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem){
-        HashSet<HibCollectionItem> children = new HashSet<HibCollectionItem>();
+    public List<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem){
         Query hibQuery = getSession().getNamedQuery("collection.items")
                 .setParameter("parent", hibCollectionItem)
                 .setParameter("type", null);
-
-        List<?> results = hibQuery.list();
-        for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
-            HibCollectionItem content = (HibCollectionItem) it.next();
-            children.add(content);
-        }
-        return children;
+        return hibQuery.list();
     }
 
     public List<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem) {

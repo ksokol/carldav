@@ -93,8 +93,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     public List<WebDavResource> getCollectionMembers() {
-        Set<HibCollectionItem> hibCollectionItems = getContentService().findCollectionItems(item);
-        for (HibCollectionItem memberHibItem : hibCollectionItems) {
+        for (HibCollectionItem memberHibItem : getContentService().findCollectionItems(item)) {
             WebDavResource resource = collectionToResource(memberHibItem);
             members.add(resource);
         }

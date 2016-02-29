@@ -62,7 +62,7 @@ public interface ItemDao {
      * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
+    List<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
 
     HibItem save(HibItem item);
 

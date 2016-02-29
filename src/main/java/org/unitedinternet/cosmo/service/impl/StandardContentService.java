@@ -24,7 +24,7 @@ import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
 import java.util.Date;
-import java.util.Set;
+import java.util.List;
 
 public class StandardContentService implements ContentService {
 
@@ -123,7 +123,7 @@ public class StandardContentService implements ContentService {
      * @param hibCollectionItem parent collection item
      * @return set of children collection items or empty list of parent collection has no children
      */
-    public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem) {
+    public List<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem) {
         return itemDao.findCollectionItems(hibCollectionItem);
     }
 

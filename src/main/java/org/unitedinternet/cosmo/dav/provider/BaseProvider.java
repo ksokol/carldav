@@ -35,6 +35,8 @@ import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
+import org.unitedinternet.cosmo.dav.impl.DavItemResource;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -114,10 +116,6 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
         ResponseUtils.sendXmlResponse(response, ms, 207);
     }
 
-    /**
-     * 
-     * {@inheritDoc}
-     */
     public void delete(HttpServletRequest request,
                        HttpServletResponse response,
                        WebDavResource resource)
@@ -133,7 +131,16 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
             throw new BadRequestException("Depth for DELETE must be infinity");
         }
 
-        resource.getParent().removeMember2(resource);
+        if(resource instanceof DavCollectionBase) {
+            DavCollectionBase collection = (DavCollectionBase) resource;
+            collection.getParent().removeCollection(collection);
+        } else if(resource instanceof DavItemResource) {
+            resource.getParent().removeItem(resource);
+        } else {
+            throw new IllegalArgumentException(String.format("Expected 'member' as instance of: [%s or %s]", DavItemResource.class.getName(), DavCollectionBase.class.getName()));
+        }
+
+
         response.setStatus(204);
     }
 

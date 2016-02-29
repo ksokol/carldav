@@ -100,29 +100,17 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return Collections.unmodifiableList(members);
     }
     
-    public void removeMember2(WebDavResource member) {
-        HibItem hibItem;
-
-        if(member instanceof DavCollectionBase) {
-            hibItem = ((DavCollectionBase) member).getItem();
-        } else if(member instanceof DavItemResource) {
-            hibItem = ((DavItemResource) member).getItem();
-        } else {
-            throw new IllegalArgumentException("Expected 'member' as instance of: [" + DavItemResource.class.getName() +"]");
-        }
-
-        HibCollectionItem collection = item;
-
-        if (hibItem instanceof HibCollectionItem) {
-            getContentService().removeCollection((HibCollectionItem) hibItem);
-        } else {
-            getContentService().removeItemFromCollection(hibItem, collection);
-        }
-
+    public void removeItem(WebDavResource member) {
+        HibItem hibItem = ((DavItemResource) member).getItem();
+        getContentService().removeItemFromCollection(hibItem, item);
         members.remove(member);
     }
 
-    // WebDavResource
+    public void removeCollection(DavCollectionBase member) {
+        HibCollectionItem hibItem = member.getItem();
+        getContentService().removeCollection(hibItem);
+        members.remove(member);
+    }
 
     @Override
     public DavCollection getParent() throws CosmoDavException {

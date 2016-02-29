@@ -142,7 +142,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return sorted;
     }
 
-    public void removeMember2(WebDavResource member) {
+    public void removeItem(WebDavResource member) {
         throw new UnsupportedOperationException();
     }
 

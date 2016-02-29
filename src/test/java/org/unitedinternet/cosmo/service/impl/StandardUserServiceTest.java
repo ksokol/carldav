@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
+import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private StandardUserService service;
+
+    @Autowired
+    private SessionFactory sessionFactory;
 
     private TestHelper testHelper = new TestHelper();
 
@@ -106,6 +110,8 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         User u1 = testHelper.makeDummyUser();
         service.createUser(u1);
 
+        sessionFactory.getCurrentSession().refresh(u1);
+
         service.removeUser(u1);
 
         Assert.assertFalse("User not removed", userDao.getUsers().contains(u1));
@@ -119,6 +125,8 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     public void testRemoveUserByEmail() throws Exception {
         User u1 = testHelper.makeDummyUser();
         service.createUser(u1);
+
+        sessionFactory.getCurrentSession().refresh(u1);
 
         service.removeUser(u1.getEmail());
 

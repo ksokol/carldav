@@ -46,13 +46,6 @@ public interface ItemDao {
     HibHomeCollectionItem getRootItem(User user);
 
     /**
-     * Create the root item for a user.
-     * @param user The user for create the root item.
-     * @return Home collection item.
-     */
-    HibHomeCollectionItem createRootItem(User user);
-
-    /**
      * Remove an item.
      *
      * @param hibItem

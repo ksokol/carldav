@@ -19,6 +19,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.UserDao;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
@@ -73,8 +74,16 @@ public class HibernateTestHelper {
 
             user = userDao.getUser(email);
 
+            HibHomeCollectionItem newItem = new HibHomeCollectionItem();
+
+            newItem.setOwner(user);
+            //TODO
+            newItem.setName(user.getEmail());
+            newItem.setDisplayName("homeCollection");
+            itemDao.save(newItem);
+
             // create root item
-            itemDao.createRootItem(user);
+            itemDao.save(newItem);
         }
         return user;
     }

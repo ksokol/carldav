@@ -65,20 +65,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     /**
-     * Test create duplicate root item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testCreateDuplicateRootItem() throws Exception {
-        User testuser = getUser(userDao, "testuser");
-        try {
-            itemDao.createRootItem(testuser);
-            Assert.fail("able to create duplicate root item");
-        } catch (RuntimeException re) {
-        }
-    }
-
-    /**
      * Test content dao create collection.
      * @throws Exception - if something is wrong this exception is thrown.
      */

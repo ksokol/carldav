@@ -129,6 +129,13 @@ public class StandardContentService implements ContentService {
 
     @Override
     public HibHomeCollectionItem createRootItem(User user) {
-        return itemDao.createRootItem(user);
+        HibHomeCollectionItem newItem = new HibHomeCollectionItem();
+
+        newItem.setOwner(user);
+        //TODO
+        newItem.setName(user.getEmail());
+        newItem.setDisplayName("homeCollection");
+        itemDao.save(newItem);
+        return newItem;
     }
 }

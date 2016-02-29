@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dao.hibernate;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
@@ -60,23 +59,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
     public HibHomeCollectionItem getRootItem(User user) {
         return findRootItem(user.getId());
-    }
-
-    public HibHomeCollectionItem createRootItem(User user) {
-        if (findRootItem(user.getId()) != null) {
-            throw new CosmoException("user already has root item", new CosmoException());
-        }
-
-        HibHomeCollectionItem newItem = new HibHomeCollectionItem();
-
-        newItem.setOwner(user);
-        newItem.setName(user.getEmail());
-        newItem.setDisplayName("homeCollection");
-
-        getSession().save(newItem);
-        getSession().refresh(user);
-        getSession().flush();
-        return newItem;
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {

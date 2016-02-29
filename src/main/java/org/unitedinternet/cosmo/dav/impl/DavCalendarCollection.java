@@ -47,7 +47,9 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         Set<DavCalendarResource> members = new HashSet<>();
 
         HibCollectionItem collection = getItem();
-        for (HibItem memberItem : getCalendarQueryProcesor().filterQuery(collection, filter)) {
+        filter.setParent(collection.getId());
+
+        for (HibItem memberItem : getCalendarQueryProcesor().filterQuery(filter)) {
             WebDavResource resource = memberToResource(memberItem);
             members.add((DavCalendarResource) resource);
         }

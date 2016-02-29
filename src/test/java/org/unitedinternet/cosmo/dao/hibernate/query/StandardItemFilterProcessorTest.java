@@ -32,12 +32,7 @@ import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
-import org.unitedinternet.cosmo.model.filter.EventStampFilter;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
-import org.unitedinternet.cosmo.model.filter.Restrictions;
-import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.filter.*;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Calendar;
@@ -136,11 +131,10 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testParentQuery() throws Exception {
         ItemFilter filter = new ItemFilter();
-        HibCollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
+        filter.setParent(1L);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd where "
-                + "pd=:parent", query.getQueryString());
+                + "pd.id=:parent", query.getQueryString());
     }
 
     /**
@@ -150,12 +144,11 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Test
     public void testDisplayNameAndParentQuery() throws Exception {
         ItemFilter filter = new ItemFilter();
-        HibCollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
+        filter.setParent(0L);
         filter.setDisplayName(Restrictions.eq("test"));
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd where "
-                + "pd=:parent and i.displayName=:param1", query.getQueryString());
+                + "pd.id=:parent and i.displayName=:param1", query.getQueryString());
     }
 
     /**
@@ -180,21 +173,20 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     public void testEventStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
         EventStampFilter eventFilter = new EventStampFilter();
-        HibCollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
+        filter.setParent(0L);
         filter.setDisplayName(Restrictions.eq("test"));
         filter.setIcalUid(Restrictions.eq("icaluid"));
         //filter.setBody("body");
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
-                + "where pd=:parent and "
+                + "where pd.id=:parent and "
                 + "i.displayName=:param1 and i.class=:clazz and i.uid=:param3", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
-                + "where pd=:parent and i.displayName=:param1 and "
+                + "where pd.id=:parent and i.displayName=:param1 and "
                 + "i.class=:clazz and (i.recurring=true) "
                 + "and i.uid=:param3", query.getQueryString());
     }
@@ -211,12 +203,11 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         eventFilter.setPeriod(period);
         eventFilter.setTimezone(registry.getTimeZone("America/Chicago"));
 
-        HibCollectionItem parent = new HibCollectionItem();
-        filter.setParent(parent);
+        filter.setParent(0L);
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd " +
-                "where pd=:parent and i.class=:clazz and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
+                "where pd.id=:parent and i.class=:clazz and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
                 "or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate)))"
                 ,query.getQueryString());
     }

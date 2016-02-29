@@ -15,8 +15,6 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +28,7 @@ import java.util.List;
 public class ItemFilter {
    
     private FilterCriteria displayName = null;
-    private HibCollectionItem parent = null;
+    private Long parent = null;
     private FilterCriteria uid = null;
     private Integer maxResults = null;
 
@@ -71,7 +69,7 @@ public class ItemFilter {
         this.displayName = displayName;
     }
 
-    public HibCollectionItem getParent() {
+    public Long getParent() {
         return parent;
     }
 
@@ -79,7 +77,7 @@ public class ItemFilter {
      * Match items by parent
      * @param parent parent to match
      */
-    public void setParent(HibCollectionItem parent) {
+    public void setParent(Long parent) {
         this.parent = parent;
     }
 

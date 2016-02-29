@@ -19,20 +19,9 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import org.junit.Assert;
 import org.junit.Test;
-import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
-import org.unitedinternet.cosmo.calendar.query.ComponentFilter;
-import org.unitedinternet.cosmo.calendar.query.PropertyFilter;
-import org.unitedinternet.cosmo.calendar.query.TextMatchFilter;
-import org.unitedinternet.cosmo.calendar.query.TimeRangeFilter;
+import org.unitedinternet.cosmo.calendar.query.*;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
-import org.unitedinternet.cosmo.model.filter.EventStampFilter;
-import org.unitedinternet.cosmo.model.filter.FilterCriteria;
-import org.unitedinternet.cosmo.model.filter.FilterExpression;
-import org.unitedinternet.cosmo.model.filter.ILikeExpression;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.filter.LikeExpression;
-import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
-import org.unitedinternet.cosmo.model.filter.StampFilter;
+import org.unitedinternet.cosmo.model.filter.*;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
@@ -52,11 +41,13 @@ public class CalendarFilterConverterTest {
     @Test
     public void testTranslateItemToFilter() throws Exception {
         HibCollectionItem calendar = new HibCollectionItem();
+        calendar.setId(1L);
         calendar.setUid("calendar");
         CalendarFilter calFilter = new CalendarFilter();
         ComponentFilter rootComp = new ComponentFilter();
         rootComp.setName("VCALENDAR");
         calFilter.setFilter(rootComp);
+        calFilter.setParent(calendar.getId());
         ComponentFilter eventComp = new ComponentFilter();
         eventComp.setName("VEVENT");
         rootComp.getComponentFilters().add(eventComp);
@@ -89,11 +80,11 @@ public class CalendarFilterConverterTest {
         descFilter.setTextMatchFilter(descMatch);
         eventComp.getPropFilters().add(descFilter);
         
-        ItemFilter itemFilter = converter.translateToItemFilter(calendar, calFilter);
+        ItemFilter itemFilter = converter.translateToItemFilter(calFilter);
         
         Assert.assertTrue(itemFilter instanceof NoteItemFilter);
         NoteItemFilter noteFilter = (NoteItemFilter) itemFilter;
-        Assert.assertEquals(calendar.getUid(), noteFilter.getParent().getUid());
+        Assert.assertEquals(calendar.getId(), noteFilter.getParent());
         Assert.assertTrue(noteFilter.getDisplayName() instanceof LikeExpression);
         verifyFilterExpressionValue(noteFilter.getDisplayName(), "summary");
         Assert.assertTrue(noteFilter.getIcalUid() instanceof LikeExpression);
@@ -125,7 +116,7 @@ public class CalendarFilterConverterTest {
         taskComp.setName("VTODO");
         rootComp.getComponentFilters().add(taskComp);
 
-        ItemFilter itemFilter = converter.getFirstPassFilter(calendar, calFilter);
+        ItemFilter itemFilter = converter.getFirstPassFilter(1L, calFilter);
         Assert.assertNotNull(itemFilter);
         Assert.assertTrue(itemFilter instanceof NoteItemFilter);
         NoteItemFilter noteFilter = (NoteItemFilter) itemFilter;

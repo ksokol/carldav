@@ -116,7 +116,7 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
         // filter on parent
         if (filter.getParent() != null) {
             selectBuf.append(" join i.collection pd");
-            appendWhere(whereBuf, "pd=:parent");
+            appendWhere(whereBuf, "pd.id=:parent");
             params.put("parent", filter.getParent());
         }
 

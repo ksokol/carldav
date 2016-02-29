@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Set;
@@ -48,7 +47,7 @@ public interface CalendarQueryProcessor {
      * @param filter The calendar filter.
      * @return All members that match the provided filter.
      */
-    Set<HibICalendarItem> filterQuery(HibCollectionItem collection, CalendarFilter filter);
+    Set<HibICalendarItem> filterQuery(CalendarFilter filter);
 
     /**
      * <p>

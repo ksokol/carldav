@@ -16,19 +16,8 @@
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
 import net.fortuna.ical4j.model.TimeZone;
-import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
-import org.unitedinternet.cosmo.calendar.query.ComponentFilter;
-import org.unitedinternet.cosmo.calendar.query.ParamFilter;
-import org.unitedinternet.cosmo.calendar.query.PropertyFilter;
-import org.unitedinternet.cosmo.calendar.query.TextMatchFilter;
-import org.unitedinternet.cosmo.calendar.query.TimeRangeFilter;
-import org.unitedinternet.cosmo.model.filter.EventStampFilter;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
-import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
-import org.unitedinternet.cosmo.model.filter.Restrictions;
-import org.unitedinternet.cosmo.model.filter.StampFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.calendar.query.*;
+import org.unitedinternet.cosmo.model.filter.*;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Iterator;
@@ -57,9 +46,9 @@ public class CalendarFilterConverter {
      * @param calendarFilter filter to translate
      * @return equivalent ItemFilter
      */
-    public ItemFilter translateToItemFilter(HibCollectionItem calendar, CalendarFilter calendarFilter) {
+    public ItemFilter translateToItemFilter(CalendarFilter calendarFilter) {
         NoteItemFilter itemFilter = new NoteItemFilter();
-        itemFilter.setParent(calendar);
+        itemFilter.setParent(calendarFilter.getParent());
         ComponentFilter rootFilter = calendarFilter.getFilter();
         if (!COMP_VCALENDAR.equalsIgnoreCase(rootFilter.getName())) {
             throw new IllegalArgumentException("unsupported component filter: " + rootFilter.getName());
@@ -84,7 +73,7 @@ public class CalendarFilterConverter {
      *         not all items are guaranteed to match the CalendarFilter.
      *         Further processing is required.
      */
-    public ItemFilter getFirstPassFilter(HibCollectionItem calendar, CalendarFilter calendarFilter) {
+    public ItemFilter getFirstPassFilter(Long calendar, CalendarFilter calendarFilter) {
         ComponentFilter rootFilter = calendarFilter.getFilter();
         if (!COMP_VCALENDAR.equalsIgnoreCase(rootFilter.getName())) {
             return null;
@@ -105,7 +94,7 @@ public class CalendarFilterConverter {
         return null;
     }
 
-    private ItemFilter createFirstPassTaskFilter(HibCollectionItem collection) {
+    private ItemFilter createFirstPassTaskFilter(Long collection) {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
         filter.getStampFilters().add(new StampFilter(HibICalendarItem.class));

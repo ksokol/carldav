@@ -21,7 +21,6 @@ import org.unitedinternet.cosmo.dao.CalendarDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.util.Set;
@@ -35,11 +34,11 @@ public class CalendarDaoImpl implements CalendarDao {
         this.itemFilterProcessor = itemFilterProcessor;
     }
 
-    public Set<HibICalendarItem> findCalendarItems(HibCollectionItem collection, CalendarFilter filter) {
+    public Set<HibICalendarItem> findCalendarItems(CalendarFilter filter) {
         CalendarFilterConverter filterConverter = new CalendarFilterConverter();
 
         // translate CalendarFilter to ItemFilter and execute filter
-        ItemFilter itemFilter = filterConverter.translateToItemFilter(collection, filter);
+        ItemFilter itemFilter = filterConverter.translateToItemFilter(filter);
         Set results = itemFilterProcessor.processFilter(itemFilter);
         return (Set<HibICalendarItem>) results;
     }

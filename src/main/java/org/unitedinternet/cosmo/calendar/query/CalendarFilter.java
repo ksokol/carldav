@@ -32,6 +32,7 @@ import java.text.ParseException;
 public class CalendarFilter implements CaldavConstants {
 
     private ComponentFilter filter;
+    private Long parent;
 
     public CalendarFilter() {
     }
@@ -78,6 +79,14 @@ public class CalendarFilter implements CaldavConstants {
 
     public void setFilter(ComponentFilter filter) {
         this.filter = filter;
+    }
+
+    public Long getParent() {
+        return parent;
+    }
+
+    public void setParent(Long parent) {
+        this.parent = parent;
     }
 
     public void validate() {

@@ -20,7 +20,6 @@ import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -138,26 +137,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         return children;
     }
 
-    /**
-     * Verifies that name is unique in collection, meaning no item exists
-     * in collection with the same item name.
-     *
-     * @param hibItem       item name to check
-     * @param collection collection to check against
-     * @throws org.unitedinternet.cosmo.dao.DuplicateItemNameException if item with same name exists
-     *                                    in collection
-     */
-    protected void verifyItemNameUnique(HibItem hibItem, HibCollectionItem collection) {
-        Query hibQuery = getSession().getNamedQuery("itemId.by.parentId.name");
-        hibQuery.setParameter("name", hibItem.getName()).setParameter("parentid",
-                ((HibItem) collection).getId());
-        List<Long> results = hibQuery.list();
-        if (results.size() > 0) {
-            throw new DuplicateItemNameException(hibItem, "item name " + hibItem.getName() +
-                    " already exists in collection " + collection.getUid());
-        }
-    }
-
     // Set server generated item properties
     protected void setBaseItemProps(HibItem hibItem) {
         if (hibItem.getUid() == null) {
@@ -193,12 +172,10 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         getSession().refresh(collection);
     }
 
-    protected void addItemToCollectionInternal(HibItem hibItem,
-                                               HibCollectionItem collection) {
-        verifyItemNameUnique(hibItem, collection);
+    protected void addItemToCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
         getSession().update(hibItem);
         getSession().update(collection);
-        ((HibItem) hibItem).setCollection(collection);
+        hibItem.setCollection(collection);
     }
 
     @Override

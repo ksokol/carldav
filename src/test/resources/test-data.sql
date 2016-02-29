@@ -18,4 +18,4 @@ INSERT INTO item (collectionid, itemtype, id, etag, modifydate, displayname, ite
 VALUES (4, 'calendarcollection', 5, 'NVy57RJot0LhdYELkMDJ9gQZjOM=', to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'calendarDisplayName', 'calendar', 'a172ed34-0106-4616-bb40-a416a8305463', 3);
 
 INSERT INTO item (collectionid, itemtype, id, etag, modifydate, displayname, itemname, uid, ownerid)
-VALUES (5, 'calendarcollection', 6, 'NVy57RJot0LhdYELkMDJ9gQZjOM=', to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'calendarDisplayName', 'subcalendar', 'a172ed34-0106-4616-bb40-a416a8305468', 3);
+VALUES (5, 'calendarcollection', 6, 'NVy57RJot0LhdYELkMDJ9gQZjOM=', to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'subcalendarDisplayName', 'subcalendar', 'a172ed34-0106-4616-bb40-a416a8305468', 3);

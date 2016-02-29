@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import org.unitedinternet.cosmo.dao.DuplicateItemNameException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.*;
 
@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -274,7 +275,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
-        b.setDisplayName("displayName");
+        b.setDisplayName("bdisplayName");
         b.setOwner(getUser(userDao, "testuser2"));
 
         b = contentDao.createCollection(a, b);
@@ -364,7 +365,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void testItemInMutipleCollectionsError() throws Exception {
         User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = contentDao.getRootItem(user);
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
@@ -376,29 +377,25 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         HibItem item = generateTestContent();
         item.setName("test");
 
-        HibItem newItem = contentDao.createContent(a, item);
-
-
-
-        HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
-        Assert.assertNotNull(queryItem.getCollection());
+        contentDao.createContent(a, item);
 
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
-        b.setDisplayName("displayName");
+        b.setDisplayName("bdisplayName");
         b.setOwner(user);
 
         b = contentDao.createCollection(root, b);
 
         HibItem item2 = generateTestContent();
         item2.setName("test");
-        contentDao.createContent(b, item2);
+        item2.setDisplayName("test");
 
         // should get DuplicateItemName here
         try {
-            contentDao.addItemToCollection(queryItem, b);
+            contentDao.createContent(b, item2);
             Assert.fail("able to add item with same name to collection");
-        } catch (DuplicateItemNameException e) {
+        } catch (ConstraintViolationException e) {
+            assertEquals("DISPLAYNAME_OWNER", e.getConstraintName());
         }
     }
 

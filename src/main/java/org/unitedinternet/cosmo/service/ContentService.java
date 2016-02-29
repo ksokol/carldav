@@ -16,7 +16,9 @@
 package org.unitedinternet.cosmo.service;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.Set;
 
@@ -92,4 +94,6 @@ public interface ContentService {
      * @return set of children collection items or empty list of parent collection has no children
      */
     Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
+
+    HibHomeCollectionItem createRootItem(User user);
 }

@@ -89,4 +89,6 @@ public interface ItemDao {
     Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
 
     HibItem save(HibItem item);
+
+    Set<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem);
 }

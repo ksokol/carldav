@@ -41,7 +41,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Autowired
     private UserDaoImpl userDao;
     @Autowired
-    private ContentDaoImpl contentDao;
+    private ItemDaoImpl itemDao;
     @Autowired
     protected SessionFactory sessionFactory;
 
@@ -72,7 +72,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     public void testCreateDuplicateRootItem() throws Exception {
         User testuser = getUser(userDao, "testuser");
         try {
-            contentDao.createRootItem(testuser);
+            itemDao.createRootItem(testuser);
             Assert.fail("able to create duplicate root item");
         } catch (RuntimeException re) {
         }
@@ -85,21 +85,20 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void testContentDaoCreateCollection() throws Exception {
         User user = getUser(userDao, "testuser2");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = itemDao.getRootItem(user);
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
         a.setDisplayName("displayName");
         a.setOwner(user);
+        a.setCollection(root);
 
-        a = contentDao.createCollection(root, a);
+        itemDao.save(a);
 
         Assert.assertTrue(getHibItem(a).getId() != null);
         Assert.assertNotNull(a.getUid());
 
-
-
-        HibCollectionItem queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
+        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByUid(a.getUid());
         helper.verifyItem(a, queryItem);
     }
 
@@ -110,25 +109,22 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void testContentDaoDeleteCollection() throws Exception {
         User user = getUser(userDao, "testuser2");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
+        HibCollectionItem root = itemDao.getRootItem(user);
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
         a.setDisplayName("displayName");
         a.setOwner(user);
+        a.setCollection(root);
 
-        a = contentDao.createCollection(root, a);
+        itemDao.save(a);
 
-
-
-        HibCollectionItem queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
+        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByUid(a.getUid());
         Assert.assertNotNull(queryItem);
 
-        contentDao.removeItem(queryItem);
+        itemDao.removeItem(queryItem);
 
-
-
-        queryItem = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
+        queryItem = (HibCollectionItem) itemDao.findItemByUid(a.getUid());
         Assert.assertNull(queryItem);
     }
 
@@ -139,7 +135,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void testHomeCollection() throws Exception {
         User testuser2 = getUser(userDao, "testuser2");
-        HibHomeCollectionItem root = contentDao.getRootItem(testuser2);
+        HibHomeCollectionItem root = itemDao.getRootItem(testuser2);
 
         Assert.assertNotNull(root);
         root.setName("alsfjal;skfjasd");
@@ -154,27 +150,29 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void testItemInMutipleCollectionsError() throws Exception {
         User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
+        HibCollectionItem root = itemDao.getRootItem(user);
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
         a.setDisplayName("displayName");
         a.setOwner(user);
+        a.setCollection(root);
 
-        a = contentDao.createCollection(root, a);
+        itemDao.save(a);
 
         HibItem item = generateTestContent();
         item.setName("test");
         item.setCollection(a);
 
-        contentDao.save(item);
+        itemDao.save(item);
 
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
         b.setDisplayName("bdisplayName");
         b.setOwner(user);
+        b.setCollection(root);
 
-        b = contentDao.createCollection(root, b);
+        itemDao.save(b);
 
         HibItem item2 = generateTestContent();
         item2.setName("test");
@@ -182,7 +180,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         // should get DuplicateItemName here
         try {
-            contentDao.save(item2);
+            itemDao.save(item2);
             Assert.fail("able to add item with same name to collection");
         } catch (ConstraintViolationException e) {
             assertEquals("DISPLAYNAME_OWNER", e.getConstraintName());
@@ -190,7 +188,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     private User getUser(UserDao userDao, String username) {
-        return helper.getUser(userDao, contentDao, username);
+        return helper.getUser(userDao, itemDao, username);
     }
 
     private HibCardItem generateTestContent() throws Exception {

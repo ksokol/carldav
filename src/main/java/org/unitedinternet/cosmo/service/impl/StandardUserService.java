@@ -16,11 +16,8 @@
 package org.unitedinternet.cosmo.service.impl;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.*;
@@ -29,23 +26,15 @@ import org.unitedinternet.cosmo.service.UserService;
 
 import java.util.Set;
 
-/**
- * Standard implementation of {@link UserService}.
- */
 public class StandardUserService implements UserService {
 
-    private static final Log LOG = LogFactory.getLog(StandardUserService.class);
-
-    private final ContentDao contentDao;
     private final ContentService contentService;
     private final UserDao userDao;
 
-    public StandardUserService(final ContentDao contentDao, final ContentService contentService, final UserDao userDao) {
-        Assert.notNull(contentDao, "contentDao is null");
-        Assert.notNull(contentDao, "contentDao is null");
+    public StandardUserService(final ContentService contentService, final UserDao userDao) {
+        Assert.notNull(contentService, "contentService is null");
         Assert.notNull(userDao, "userDao is null");
         this.contentService = contentService;
-        this.contentDao = contentDao;
         this.userDao = userDao;
     }
 
@@ -87,7 +76,7 @@ public class StandardUserService implements UserService {
         calendar.setName("calendar");
         calendar.setDisplayName("calendarDisplayName");
 
-        final HibHomeCollectionItem homeCollection = contentDao.createRootItem(newUser);
+        final HibHomeCollectionItem homeCollection = contentService.createRootItem(newUser);
         contentService.createCollection(homeCollection, calendar);
 
         HibCardCollectionItem addressbook = new HibCardCollectionItem();

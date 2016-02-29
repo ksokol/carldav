@@ -16,28 +16,23 @@
 package org.unitedinternet.cosmo.service.impl;
 
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.dao.ContentDao;
+import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
 import java.util.Date;
 import java.util.Set;
 
-/**
- * Standard implementation of <code>ContentService</code>.
- *
- * @see ContentService
- * @see ContentDao
- */
 public class StandardContentService implements ContentService {
 
-    private final ContentDao contentDao;
+    private final ItemDao itemDao;
 
-    public StandardContentService(final ContentDao contentDao) {
-        Assert.notNull(contentDao, "contentDao is null");
-        this.contentDao = contentDao;
+    public StandardContentService(final ItemDao itemDao) {
+        Assert.notNull(itemDao, "itemDao is null");
+        this.itemDao = itemDao;
     }
 
     /**
@@ -45,7 +40,7 @@ public class StandardContentService implements ContentService {
      * /username/parent1/parent2/itemname.
      */
     public HibItem findItemByPath(String path) {
-        return contentDao.findItemByPath(path);
+        return itemDao.findItemByPath(path);
     }
 
     /**
@@ -55,7 +50,7 @@ public class StandardContentService implements ContentService {
      * @param collection item to remove item from
      */
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        contentDao.removeItemFromCollection(hibItem, collection);
+        itemDao.removeItemFromCollection(hibItem, collection);
         collection.setModifiedDate(new Date());
     }
 
@@ -68,9 +63,10 @@ public class StandardContentService implements ContentService {
      *            collection to create
      * @return newly created collection
      */
-    public HibCollectionItem createCollection(HibCollectionItem parent,
-                                           HibCollectionItem collection) {
-        return contentDao.createCollection(parent, collection);
+    public HibCollectionItem createCollection(HibCollectionItem parent, HibCollectionItem collection) {
+        collection.setCollection(parent);
+        itemDao.save(collection);
+        return collection;
     }
 
     /**
@@ -85,7 +81,7 @@ public class StandardContentService implements ContentService {
         if(collection instanceof HibHomeCollectionItem) {
             throw new IllegalArgumentException("cannot remove home collection");
         }
-        contentDao.removeItem(collection);
+        itemDao.removeItem(collection);
     }
 
     /**
@@ -102,7 +98,7 @@ public class StandardContentService implements ContentService {
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
         content.setCollection(parent);
         content.getCollection().setModifiedDate(new Date());
-        contentDao.save(content);
+        itemDao.save(content);
         return content;
     }
 
@@ -117,7 +113,7 @@ public class StandardContentService implements ContentService {
         final Date date = new Date();
         content.setModifiedDate(date);
         content.getCollection().setModifiedDate(date);
-        contentDao.save(content);
+        itemDao.save(content);
         return content;
     }
 
@@ -128,6 +124,11 @@ public class StandardContentService implements ContentService {
      * @return set of children collection items or empty list of parent collection has no children
      */
     public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem) {
-        return contentDao.findCollectionItems(hibCollectionItem);
+        return itemDao.findCollectionItems(hibCollectionItem);
+    }
+
+    @Override
+    public HibHomeCollectionItem createRootItem(User user) {
+        return itemDao.createRootItem(user);
     }
 }

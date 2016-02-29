@@ -16,13 +16,12 @@
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 
 	<bean id="userService" class="org.unitedinternet.cosmo.service.impl.StandardUserService">
-        <constructor-arg index="0" ref="contentDao" />
-        <constructor-arg index="1" ref="contentService" />
-        <constructor-arg index="2" ref="userDao" />
+        <constructor-arg index="0" ref="contentService" />
+        <constructor-arg index="1" ref="userDao" />
 	</bean>
 
 	<bean id="contentService" class="org.unitedinternet.cosmo.service.impl.StandardContentService">
-        <constructor-arg index="0" ref="contentDao" />
+        <constructor-arg index="0" ref="itemDao" />
 	</bean>
 
 	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
@@ -47,7 +46,7 @@
         <constructor-arg>
             <bean class="carldav.card.CardQueryProcessorImpl">
                 <constructor-arg>
-                    <ref bean="contentDao" />
+                    <ref bean="itemDao" />
                 </constructor-arg>
             </bean>
         </constructor-arg>

@@ -15,11 +15,9 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import net.fortuna.ical4j.model.Calendar;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
-import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
-import org.unitedinternet.cosmo.dao.ContentDao;
+import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -58,24 +56,13 @@ public class HibernateTestHelper {
     }
 
     /**
-     * Gets calendar.
-     * @param name The name.
-     * @return The calendar.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public Calendar getCalendar(String name) throws Exception {
-        InputStream in = getClass().getClassLoader().getResourceAsStream(name);
-        return CalendarUtils.parseCalendar(in);
-    }
-
-    /**
      * Gets user.
      * @param userDao UserDao.
-     * @param contentDao ContentDao.
+     * @param itemDao ContentDao.
      * @param username The username.
      * @return The user.
      */
-    public User getUser(UserDao userDao, ContentDao contentDao, String username) {
+    public User getUser(UserDao userDao, ItemDao itemDao, String username) {
         final String email = username + "@testem";
         User user = userDao.getUser(email);
         if (user == null) {
@@ -87,7 +74,7 @@ public class HibernateTestHelper {
             user = userDao.getUser(email);
 
             // create root item
-            contentDao.createRootItem(user);
+            itemDao.createRootItem(user);
         }
         return user;
     }

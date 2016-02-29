@@ -41,14 +41,6 @@ public interface ItemDao {
     HibItem findItemByPath(String path);
 
     /**
-     * Remove an item.
-     *
-     * @param hibItem
-     *            item to remove
-     */
-    void removeItem(HibItem hibItem);
-
-    /**
      * Remove item from a collection.
      *
      * @param hibItem the item

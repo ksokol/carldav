@@ -38,22 +38,10 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         Assert.notNull(itemFilterProcessor, "itemFilterProcessor is null");
         this.itemPathTranslator = itemPathTranslator;
         this.itemFilterProcessor = itemFilterProcessor;
-
     }
 
     public HibItem findItemByPath(String path) {
         return itemPathTranslator.findItemByPath(path);
-    }
-
-    public void removeItem(HibItem hibItem) {
-        if (hibItem == null) {
-            throw new IllegalArgumentException("item cannot be null");
-        }
-
-        getSession().refresh(hibItem);
-        hibItem.setCollection(null);
-        getSession().delete(hibItem);
-        getSession().flush();
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {

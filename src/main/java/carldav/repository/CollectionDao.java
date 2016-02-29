@@ -11,4 +11,8 @@ public interface CollectionDao {
 
     List<HibCollectionItem> findByParentId(Long id);
 
+    HibCollectionItem save(HibCollectionItem item);
+
+    void remove(HibCollectionItem item);
+
 }

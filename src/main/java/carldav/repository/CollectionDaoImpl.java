@@ -25,4 +25,19 @@ class CollectionDaoImpl implements CollectionDao {
                 .setParameter("parent", id);
         return hibQuery.list();
     }
+
+    @Override
+    public HibCollectionItem save(HibCollectionItem item) {
+        sessionFactory.getCurrentSession().saveOrUpdate(item);
+        sessionFactory.getCurrentSession().flush();
+        return item;
+    }
+
+    @Override
+    public void remove(HibCollectionItem item) {
+        sessionFactory.getCurrentSession().refresh(item);
+        item.setCollection(null);
+        sessionFactory.getCurrentSession().delete(item);
+        sessionFactory.getCurrentSession().flush();
+    }
 }

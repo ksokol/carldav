@@ -69,7 +69,7 @@ public class StandardContentService implements ContentService {
      */
     public HibCollectionItem createCollection(HibCollectionItem parent, HibCollectionItem collection) {
         collection.setCollection(parent);
-        itemDao.save(collection);
+        collectionDao.save(collection);
         return collection;
     }
 
@@ -85,7 +85,7 @@ public class StandardContentService implements ContentService {
         if(collection instanceof HibHomeCollectionItem) {
             throw new IllegalArgumentException("cannot remove home collection");
         }
-        itemDao.removeItem(collection);
+        collectionDao.remove(collection);
     }
 
     /**
@@ -139,7 +139,7 @@ public class StandardContentService implements ContentService {
         //TODO
         newItem.setName(user.getEmail());
         newItem.setDisplayName("homeCollection");
-        itemDao.save(newItem);
+        collectionDao.save(newItem);
         return newItem;
     }
 }

@@ -19,10 +19,8 @@
  */
 @NamedQueries({
         // Item Queries
-        @NamedQuery(name = "collections.children.by.parent", query = "select item from HibItem item join"
-                + " item.collection pd where item.collection=:parent and item.type is null"), //TODO item.class=HibCollectionItem => item.type is null
-        @NamedQuery(name = "collections.files.by.parent", query = "select item from HibItem item join"
-                + " item.collection pd where item.collection=:parent and item.class=HibCardItem"),
+        @NamedQuery(name = "collection.items", query = "select item from HibItem item join"
+                + " item.collection pd where item.collection=:parent and (item.type=:type or item.type is null)"),
         @NamedQuery(name = "item.by.parent.name", query = "select item from HibItem item join"
                 + " item.collection pd where item.collection=:parent and item.name=:name"),
         // FIXME stfl .and.nullparent is not the correct name anymore!

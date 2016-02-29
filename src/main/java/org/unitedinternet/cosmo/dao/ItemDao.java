@@ -20,6 +20,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -65,7 +66,7 @@ public interface ItemDao {
 
     HibItem save(HibItem item);
 
-    Set<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem);
+    List<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem);
 
     Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter);
 }

@@ -71,8 +71,9 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
      */
     public Set<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem){
         HashSet<HibCollectionItem> children = new HashSet<HibCollectionItem>();
-        Query hibQuery = getSession().getNamedQuery("collections.children.by.parent")
-                .setParameter("parent", hibCollectionItem);
+        Query hibQuery = getSession().getNamedQuery("collection.items")
+                .setParameter("parent", hibCollectionItem)
+                .setParameter("type", null);
 
         List<?> results = hibQuery.list();
         for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
@@ -82,17 +83,11 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         return children;
     }
 
-    public Set<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem){
-        HashSet<HibItem> children = new HashSet<HibItem>();
-        Query hibQuery = getSession().getNamedQuery("collections.files.by.parent")
-                .setParameter("parent", hibCollectionItem);
-
-        List<?> results = hibQuery.list();
-        for (Iterator<?> it = results.iterator(); it.hasNext(); ) {
-            HibItem content = (HibItem) it.next();
-            children.add(content);
-        }
-        return children;
+    public List<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem) {
+        Query hibQuery = getSession().getNamedQuery("collection.items")
+                .setParameter("parent", hibCollectionItem)
+                .setParameter("type", HibICalendarItem.Type.VCARD);
+        return hibQuery.list();
     }
 
     protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {

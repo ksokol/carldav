@@ -57,7 +57,12 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        removeItemFromCollectionInternal(hibItem, collection);
+        getSession().update(collection);
+        getSession().update(hibItem);
+
+        hibItem.setCollection(null);
+        getSession().delete(hibItem);
+        getSession().refresh(collection);
         getSession().flush();
     }
 
@@ -79,21 +84,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 .setParameter("parent", hibCollectionItem)
                 .setParameter("type", HibICalendarItem.Type.VCARD);
         return hibQuery.list();
-    }
-
-    protected void removeItemFromCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
-
-        getSession().update(collection);
-        getSession().update(hibItem);
-
-        // do nothing if item doesn't belong to collection
-        if (hibItem.getCollection().getId() != collection.getId()) {
-            return;
-        }
-
-        hibItem.setCollection(null);
-        getSession().delete(hibItem);
-        getSession().refresh(collection);
     }
 
     @Override

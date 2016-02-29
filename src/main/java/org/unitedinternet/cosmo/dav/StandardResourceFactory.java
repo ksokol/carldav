@@ -20,21 +20,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
-import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import org.unitedinternet.cosmo.dav.impl.DavCard;
-import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
-import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
-import org.unitedinternet.cosmo.dav.impl.DavHomeCollection;
-import org.unitedinternet.cosmo.dav.impl.DavUserPrincipal;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibCardCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.dav.impl.*;
+import org.unitedinternet.cosmo.model.hibernate.*;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -158,27 +145,27 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     public WebDavResource createResource(DavResourceLocator locator, HibItem hibItem)  throws CosmoDavException {
         Assert.notNull(hibItem, "item cannot be null");
 
-        if (hibItem instanceof HibHomeCollectionItem) {
-            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator, this);
-        }
-
-        if (hibItem instanceof HibCollectionItem) {
-            if (hibItem instanceof HibCalendarCollectionItem) {
-                return new DavCalendarCollection((HibCollectionItem) hibItem, locator, this);
-            }
-            else if(hibItem instanceof HibCardCollectionItem) {
-                return new DavCardCollection((HibCollectionItem) hibItem, locator, this, getCardQueryProcessor());
-            }
-            else {
-                return new DavCollectionBase((HibCollectionItem) hibItem, locator, this);
-            }
-        }
-
         if(hibItem instanceof HibCardItem) {
             return new DavCard((HibCardItem) hibItem, locator, this);
         }
 
         return new DavCalendarResource(hibItem, locator, this);
+    }
+
+    public WebDavResource createCollectionResource(DavResourceLocator locator, HibCollectionItem hibItem) {
+        Assert.notNull(hibItem, "item cannot be null");
+
+        if (hibItem instanceof HibHomeCollectionItem) {
+            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator, this);
+        }
+        if (hibItem instanceof HibCalendarCollectionItem) {
+            return new DavCalendarCollection(hibItem, locator, this);
+        }
+        else if(hibItem instanceof HibCardCollectionItem) {
+            return new DavCardCollection(hibItem, locator, this, getCardQueryProcessor());
+        }
+
+        return new DavCollectionBase(hibItem, locator, this);
     }
 
 
@@ -196,7 +183,16 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
                                                 String uri)
         throws CosmoDavException {
         HibItem hibItem = contentService.findItemByPath(uri);
-        return hibItem != null ? createResource(locator, hibItem) : null;
+
+        if(hibItem == null) {
+            return null;
+        }
+
+        if(hibItem instanceof HibCollectionItem) {
+            return createCollectionResource(locator, (HibCollectionItem) hibItem);
+        }
+
+        return createResource(locator, hibItem);
     }
 
     public ContentService getContentService() {

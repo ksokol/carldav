@@ -197,6 +197,11 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         DavResourceLocator locator = getResourceLocator().getFactory()
                 .createResourceLocatorByPath(getResourceLocator().getContext(),
                         path);
+
+        if(hibItem instanceof HibCollectionItem) {
+            return getResourceFactory().createCollectionResource(locator, (HibCollectionItem) hibItem);
+        }
+
         return getResourceFactory().createResource(locator, hibItem);
     }
 
@@ -210,7 +215,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         DavResourceLocator locator = getResourceLocator().getFactory()
                 .createResourceLocatorByPath(getResourceLocator().getContext(),
                         path);
-        return getResourceFactory().createResource(locator, hibItem);
+        return getResourceFactory().createCollectionResource(locator, hibItem);
     }
 
     protected WebDavResource memberToResource(String uri) throws CosmoDavException {

@@ -30,5 +30,9 @@
 
     <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" />
 
+    <bean id="collectionDao" class="carldav.repository.CollectionDaoImpl">
+        <constructor-arg index="0" ref="sessionFactory" />
+    </bean>
+
     <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter" />
 </beans>

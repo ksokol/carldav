@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
+import carldav.repository.CollectionDao;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -29,10 +30,13 @@ import java.util.List;
 public class StandardContentService implements ContentService {
 
     private final ItemDao itemDao;
+    private final CollectionDao collectionDao;
 
-    public StandardContentService(final ItemDao itemDao) {
+    public StandardContentService(final ItemDao itemDao, CollectionDao collectionDao) {
         Assert.notNull(itemDao, "itemDao is null");
+        Assert.notNull(collectionDao, "collectionDao is null");
         this.itemDao = itemDao;
+        this.collectionDao = collectionDao;
     }
 
     /**
@@ -124,7 +128,7 @@ public class StandardContentService implements ContentService {
      * @return set of children collection items or empty list of parent collection has no children
      */
     public List<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem) {
-        return itemDao.findCollectionItems(hibCollectionItem.getId());
+        return collectionDao.findByParentId(hibCollectionItem.getId());
     }
 
     @Override

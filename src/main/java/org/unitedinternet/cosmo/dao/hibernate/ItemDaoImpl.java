@@ -63,13 +63,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         getSession().flush();
     }
 
-    public List<HibCollectionItem> findCollectionItems(Long id){
-        Query hibQuery = getSession().getNamedQuery("collection.items")
-                .setParameter("parent", id)
-                .setParameter("type", null);
-        return hibQuery.list();
-    }
-
     public List<HibItem> findCollectionFileItems(Long id) {
         Query hibQuery = getSession().getNamedQuery("collection.items")
                 .setParameter("parent", id)

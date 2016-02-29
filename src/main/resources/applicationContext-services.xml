@@ -22,6 +22,7 @@
 
 	<bean id="contentService" class="org.unitedinternet.cosmo.service.impl.StandardContentService">
         <constructor-arg index="0" ref="itemDao" />
+        <constructor-arg index="1" ref="collectionDao" />
 	</bean>
 
 	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">

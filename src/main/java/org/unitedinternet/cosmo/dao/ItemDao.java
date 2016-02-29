@@ -73,14 +73,6 @@ public interface ItemDao {
     void removeItem(HibItem hibItem);
 
     /**
-     * Adds item to a collection.
-     *
-     * @param hibItem the item
-     * @param collection the collection to add to
-     */
-    void addItemToCollection(HibItem hibItem, HibCollectionItem collection);
-
-    /**
      * Remove item from a collection.
      *
      * @param hibItem the item

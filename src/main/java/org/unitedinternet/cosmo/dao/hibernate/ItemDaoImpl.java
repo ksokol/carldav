@@ -95,11 +95,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         return newItem;
     }
 
-    public void addItemToCollection(HibItem hibItem, HibCollectionItem collection) {
-        addItemToCollectionInternal(hibItem, collection);
-        getSession().flush();
-    }
-
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
         removeItemFromCollectionInternal(hibItem, collection);
         getSession().flush();
@@ -170,12 +165,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         hibItem.setCollection(null);
         getSession().delete(hibItem);
         getSession().refresh(collection);
-    }
-
-    protected void addItemToCollectionInternal(HibItem hibItem, HibCollectionItem collection) {
-        getSession().update(hibItem);
-        getSession().update(collection);
-        hibItem.setCollection(collection);
     }
 
     @Override

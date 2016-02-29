@@ -49,10 +49,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             throw new IllegalArgumentException("item cannot be null");
         }
 
-        if (hibItem instanceof HibHomeCollectionItem) {
-            throw new IllegalArgumentException("cannot remove root item");
-        }
-
         getSession().refresh(hibItem);
         hibItem.setCollection(null);
         getSession().delete(hibItem);
@@ -64,10 +60,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     public HibHomeCollectionItem createRootItem(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("invalid user");
-        }
-
         if (findRootItem(user.getId()) != null) {
             throw new CosmoException("user already has root item", new CosmoException());
         }

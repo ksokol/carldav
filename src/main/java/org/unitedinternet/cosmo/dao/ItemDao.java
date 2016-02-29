@@ -15,10 +15,8 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.model.filter.ItemFilter;
+import org.unitedinternet.cosmo.model.hibernate.*;
 
 import java.util.Set;
 
@@ -81,4 +79,6 @@ public interface ItemDao {
     HibItem save(HibItem item);
 
     Set<HibItem> findCollectionFileItems(HibCollectionItem hibCollectionItem);
+
+    Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter);
 }

@@ -21,6 +21,7 @@
 
     <bean id="itemDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ItemDaoImpl">
         <constructor-arg index="0" ref="itemPathTranslator" />
+        <constructor-arg index="1" ref="itemFilterProcessor" />
     </bean>
 
     <bean id="itemFilterProcessor" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor" />
@@ -28,12 +29,6 @@
     <bean id="itemPathTranslator" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.DefaultItemPathTranslator" />
 
     <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" />
-
-    <bean id="calendarDao" class="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl">
-        <constructor-arg>
-            <ref bean="itemFilterProcessor" />
-        </constructor-arg>
-    </bean>
 
     <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter" />
 </beans>

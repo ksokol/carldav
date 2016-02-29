@@ -25,8 +25,8 @@
 	</bean>
 
 	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
-        <constructor-arg index="0" ref="entityConverter" />
-		<property name="calendarDao" ref="calendarDao" />
+		<constructor-arg index="0" ref="itemDao" />
+        <constructor-arg index="1" ref="entityConverter" />
 	</bean>
 
 	<!-- general protocol/interface resources -->

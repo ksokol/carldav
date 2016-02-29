@@ -20,11 +20,10 @@ import org.hibernate.Query;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.CosmoException;
 import org.unitedinternet.cosmo.dao.ItemDao;
+import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.model.filter.ItemFilter;
+import org.unitedinternet.cosmo.model.hibernate.*;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,10 +33,14 @@ import java.util.Set;
 public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
     private final ItemPathTranslator itemPathTranslator;
+    private final ItemFilterProcessor itemFilterProcessor;
 
-    public ItemDaoImpl(final ItemPathTranslator itemPathTranslator) {
+    public ItemDaoImpl(final ItemPathTranslator itemPathTranslator, ItemFilterProcessor itemFilterProcessor) {
         Assert.notNull(itemPathTranslator, "itemPathTranslator is null");
+        Assert.notNull(itemFilterProcessor, "itemFilterProcessor is null");
         this.itemPathTranslator = itemPathTranslator;
+        this.itemFilterProcessor = itemFilterProcessor;
+
     }
 
     public HibItem findItemByPath(String path) {
@@ -143,5 +146,10 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         getSession().saveOrUpdate(item);
         getSession().flush();
         return item;
+    }
+
+    public Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter) {
+        Set results = itemFilterProcessor.processFilter(itemFilter);
+        return (Set<HibICalendarItem>) results;
     }
 }

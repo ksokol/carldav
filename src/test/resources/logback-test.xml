@@ -40,7 +40,6 @@
 -->
 
     <logger name="org.unitedinternet.cosmo.dav.servlet.StandardRequestHandler" level="OFF"/>
-    <logger name="org.unitedinternet.cosmo.dao.hibernate.CalendarDaoImpl" level="OFF"/>
     <logger name="org.unitedinternet.cosmo.hibernate.validator.EventExceptionValidator" level="OFF"/>
     <logger name="org.hibernate.tool.hbm2ddl.SchemaExport" level="OFF"/>
     <logger name="org.springframework" level="OFF"/>

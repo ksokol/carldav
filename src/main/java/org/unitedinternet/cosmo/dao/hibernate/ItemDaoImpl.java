@@ -201,7 +201,10 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         ((HibItem) hibItem).setCollection(collection);
     }
 
-    protected HibItem getBaseModelObject(Object obj) {
-        return (HibItem) obj;
+    @Override
+    public HibItem save(HibItem item) {
+        getSession().saveOrUpdate(item);
+        getSession().flush();
+        return item;
     }
 }

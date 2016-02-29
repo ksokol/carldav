@@ -51,13 +51,4 @@ public interface ContentDao extends ItemDao {
      * @return newly created content
      */
     public HibItem createContent(HibCollectionItem parent, HibItem content);
-
-    /**
-     * Update an existing content item.
-     * 
-     * @param content
-     *            content item to update
-     * @return updated content item
-     */
-    public HibItem updateContent(HibItem content);
 }

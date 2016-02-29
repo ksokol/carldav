@@ -53,10 +53,4 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         getSession().flush();
         return content;
     }
-
-    public HibItem updateContent(HibItem content) {
-        content.setModifiedDate(new Date());
-        getSession().flush();
-        return content;
-    }
 }

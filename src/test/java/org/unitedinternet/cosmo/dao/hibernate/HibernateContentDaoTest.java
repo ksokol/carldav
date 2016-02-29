@@ -31,7 +31,6 @@ import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.*;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -144,45 +143,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         queryHibItem = contentDao.findItemByPath("/testuser2@testem/a/test");
         Assert.assertNotNull(queryHibItem);
         Assert.assertTrue(queryHibItem instanceof HibItem);
-    }
-
-    /**
-     * Test content dao update content.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoUpdateContent() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = (HibCollectionItem) contentDao.getRootItem(user);
-
-        HibCardItem item = generateTestContent();
-
-        HibItem newItem = contentDao.createContent(root, item);
-        Date newItemModifyDate = newItem.getModifiedDate();
-
-
-
-        HibCardItem queryItem = (HibCardItem) contentDao.findItemByUid(newItem.getUid());
-
-        helper.verifyItem(newItem, queryItem);
-
-        queryItem.setName("test2");
-        queryItem.setDisplayName("this is a test item2");
-        queryItem.setCalendar(helper.getString("testdata/testdata2.txt"));
-
-        // Make sure modified date changes
-        Thread.sleep(1000);
-
-        queryItem = (HibCardItem) contentDao.updateContent(queryItem);
-
-
-        Thread.sleep(200);
-        HibItem queryItem2 = contentDao.findItemByUid(newItem.getUid());
-
-        helper.verifyItem(queryItem, queryItem2);
-
-        Assert.assertTrue(newItemModifyDate.before(
-                queryItem2.getModifiedDate()));
     }
 
     /**

@@ -113,8 +113,10 @@ public class StandardContentService implements ContentService {
      * @return updated content item
      */
     public HibItem updateContent(HibItem content) {
-        content = contentDao.updateContent(content);
-        content.getCollection().setModifiedDate(new Date());
+        final Date date = new Date();
+        content.setModifiedDate(date);
+        content.getCollection().setModifiedDate(date);
+        contentDao.save(content);
         return content;
     }
 

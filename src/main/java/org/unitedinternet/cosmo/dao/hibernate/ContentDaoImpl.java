@@ -18,7 +18,6 @@ package org.unitedinternet.cosmo.dao.hibernate;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
@@ -34,15 +33,5 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
         getSession().flush();
 
         return collection;
-    }
-
-    public HibItem createContent(HibCollectionItem parent, HibItem content) {
-        // add parent to new content
-        content.setCollection(parent);
-
-        getSession().save(content);
-        getSession().refresh(parent);
-        getSession().flush();
-        return content;
     }
 }

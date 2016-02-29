@@ -100,8 +100,9 @@ public class StandardContentService implements ContentService {
      * @return newly created content
      */
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
-        content = contentDao.createContent(parent, content);
+        content.setCollection(parent);
         content.getCollection().setModifiedDate(new Date());
+        contentDao.save(content);
         return content;
     }
 

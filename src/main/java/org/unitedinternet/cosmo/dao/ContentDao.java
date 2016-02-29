@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * Interface for DAO that provides base operations for content items.
@@ -38,17 +37,4 @@ public interface ContentDao extends ItemDao {
      */
     public HibCollectionItem createCollection(HibCollectionItem parent,
             HibCollectionItem collection);
-
-    /**
-     * Create new content item. A content item represents a piece of content or
-     * file.
-     * 
-     * @param parent
-     *            parent collection of content. If null, content is assumed to
-     *            live in the top-level user collection
-     * @param content
-     *            content to create
-     * @return newly created content
-     */
-    public HibItem createContent(HibCollectionItem parent, HibItem content);
 }

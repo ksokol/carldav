@@ -30,13 +30,7 @@ import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.*;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.UUID;
-
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Test for HibernateContentDao
@@ -71,28 +65,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     /**
-     * Test for content dao create content.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoCreateContent() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibItem item = generateTestContent();
-        item.setName("test");
-
-        HibItem newItem = contentDao.createContent(root, item);
-
-        Assert.assertTrue(getHibItem(newItem).getId() != null);
-        Assert.assertNotNull(newItem.getUid());
-
-        HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
-
-        helper.verifyItem(newItem, queryItem);
-    }
-
-    /**
      * Test create duplicate root item.
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -104,102 +76,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
             Assert.fail("able to create duplicate root item");
         } catch (RuntimeException re) {
         }
-    }
-
-    /**
-     * Test find item.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testFindItem() throws Exception {
-        User testuser2 = getUser(userDao, "testuser2");
-
-        HibCollectionItem root = (HibCollectionItem) contentDao
-                .getRootItem(testuser2);
-
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setDisplayName("displayName");
-        a.setOwner(getUser(userDao, "testuser2"));
-
-        a = contentDao.createCollection(root, a);
-
-
-
-        HibItem queryHibItem = contentDao.findItemByUid(a.getUid());
-        Assert.assertNotNull(queryHibItem);
-        Assert.assertTrue(queryHibItem instanceof HibCollectionItem);
-
-        queryHibItem = contentDao.findItemByPath("/testuser2@testem/a");
-        Assert.assertNotNull(queryHibItem);
-        Assert.assertTrue(queryHibItem instanceof HibCollectionItem);
-
-        HibItem item = generateTestContent();
-
-        a = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        item = contentDao.createContent(a, item);
-
-
-
-        queryHibItem = contentDao.findItemByPath("/testuser2@testem/a/test");
-        Assert.assertNotNull(queryHibItem);
-        Assert.assertTrue(queryHibItem instanceof HibItem);
-    }
-
-    /**
-     * Test content dao delete content.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoDeleteContent() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibItem item = generateTestContent();
-        HibItem newItem = contentDao.createContent(root, item);
-
-        HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
-        helper.verifyItem(newItem, queryItem);
-
-        contentDao.removeItem(queryItem);
-
-        queryItem = contentDao.findItemByUid(queryItem.getUid());
-        Assert.assertNull(queryItem);
-
-        root = contentDao.getRootItem(user);
-        Assert.assertTrue(root.getItems().size() == 0);
-
-    }
-
-    /**
-     * Test tombstone delete content.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testTombstoneDeleteContent() throws Exception {
-        User user = getUser(userDao, "testuser");
-        HibCollectionItem root = contentDao.getRootItem(user);
-
-        HibItem item = generateTestContent();
-        HibItem newItem = contentDao.createContent(root, item);
-        HibItem queryItem = contentDao.findItemByUid(newItem.getUid());
-        helper.verifyItem(newItem, queryItem);
-
-        contentDao.removeItem(queryItem);
-
-        queryItem = contentDao.findItemByUid(newItem.getUid());
-        Assert.assertNull(queryItem);
-
-        root = contentDao.getRootItem(user);
-
-        item = generateTestContent();
-        item.setUid(newItem.getUid());
-
-        contentDao.createContent(root, item);
-
-        queryItem = contentDao.findItemByUid(newItem.getUid());
-
-        Assert.assertNotNull(queryItem);
     }
 
     /**
@@ -257,93 +133,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     /**
-     * Tests content dao advanced.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testContentDaoAdvanced() throws Exception {
-        User testuser2 = getUser(userDao, "testuser2");
-        HibCollectionItem root = (HibCollectionItem) contentDao
-                .getRootItem(testuser2);
-
-        HibCollectionItem a = new HibCollectionItem();
-        a.setName("a");
-        a.setDisplayName("displayName");
-        a.setOwner(getUser(userDao, "testuser2"));
-
-        a = contentDao.createCollection(root, a);
-
-        HibCollectionItem b = new HibCollectionItem();
-        b.setName("b");
-        b.setDisplayName("bdisplayName");
-        b.setOwner(getUser(userDao, "testuser2"));
-
-        b = contentDao.createCollection(a, b);
-
-        HibItem c = generateTestContent("c", "testuser2");
-
-        c = contentDao.createContent(b, c);
-
-        HibItem d = generateTestContent("d", "testuser2");
-
-        d = contentDao.createContent(a, d);
-
-        session.clear();
-
-        a = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        b = (HibCollectionItem) contentDao.findItemByUid(b.getUid());
-        c = contentDao.findItemByUid(c.getUid());
-        d = contentDao.findItemByUid(d.getUid());
-        root = contentDao.getRootItem(testuser2);
-
-        Assert.assertNotNull(a);
-        Assert.assertNotNull(b);
-        Assert.assertNotNull(d);
-        Assert.assertNotNull(root);
-
-        // test children
-        @SuppressWarnings("rawtypes")
-        Collection children = a.getItems();
-        Assert.assertEquals(2, children.size());
-        verifyContains(children, b);
-        verifyContains(children, d);
-
-        children = root.getItems();
-        Assert.assertEquals(1, children.size());
-        verifyContains(children, a);
-
-        // test get by path
-        HibItem queryC = contentDao.findItemByPath("/testuser2@testem/a/b/c");
-        Assert.assertNotNull(queryC);
-        //helper.verifyInputStream(, ((HibFileItem) queryC).getContent());
-        assertThat(helper.getString("testdata/testdata1.txt"), is(((HibCardItem) queryC).getCalendar()));
-
-        Assert.assertEquals("c", queryC.getName());
-
-        // test get path/uid abstract
-        HibItem queryHibItem = contentDao.findItemByPath("/testuser2@testem/a/b/c");
-        Assert.assertNotNull(queryHibItem);
-        Assert.assertTrue(queryHibItem instanceof HibItem);
-
-        queryHibItem = contentDao.findItemByUid(a.getUid());
-        Assert.assertNotNull(queryHibItem);
-        Assert.assertTrue(queryHibItem instanceof HibCollectionItem);
-
-        // test delete
-        contentDao.removeItem(c);
-        queryC = contentDao.findItemByUid(c.getUid());
-        Assert.assertNull(queryC);
-
-        contentDao.removeItem(a);
-
-        HibCollectionItem queryA = (HibCollectionItem) contentDao.findItemByUid(a.getUid());
-        Assert.assertNull(queryA);
-
-        HibItem queryD = contentDao.findItemByUid(d.getUid());
-        Assert.assertNull(queryD);
-    }
-
-    /**
      * Tests home collection.
      * @throws Exception - if something is wrong this exception is thrown.
      */
@@ -376,8 +165,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         HibItem item = generateTestContent();
         item.setName("test");
+        item.setCollection(a);
 
-        contentDao.createContent(a, item);
+        contentDao.save(item);
 
         HibCollectionItem b = new HibCollectionItem();
         b.setName("b");
@@ -392,35 +182,11 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         // should get DuplicateItemName here
         try {
-            contentDao.createContent(b, item2);
+            contentDao.save(item2);
             Assert.fail("able to add item with same name to collection");
         } catch (ConstraintViolationException e) {
             assertEquals("DISPLAYNAME_OWNER", e.getConstraintName());
         }
-    }
-
-    private void verifyContains(@SuppressWarnings("rawtypes") Collection items, HibCollectionItem collection) {
-        for (@SuppressWarnings("rawtypes")
-        Iterator it = items.iterator(); it.hasNext();) {
-            HibItem hibItem = (HibItem) it.next();
-            if (hibItem instanceof HibCollectionItem
-                    && hibItem.getName().equals(collection.getName()))
-                return;
-        }
-        Assert.fail("collection not found");
-    }
-
-    private void verifyContains(@SuppressWarnings("rawtypes") Collection items, HibItem content) {
-        for (@SuppressWarnings("rawtypes")
-        Iterator it = items.iterator(); it.hasNext();) {
-            HibItem hibItem = (HibItem) it.next();
-            if (hibItem instanceof HibItem && hibItem.getName().equals(content.getName()))
-                return;
-        }
-        Assert.fail("content not found");
-
-
-
     }
 
     private User getUser(UserDao userDao, String username) {
@@ -437,16 +203,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setName(name);
         content.setDisplayName(name);
         content.setCalendar(helper.getString("testdata/testdata1.txt"));
-        content.setOwner(getUser(userDao, owner));
-        return content;
-    }
-
-    private HibNoteItem generateTestNote(String name, String owner)
-            throws Exception {
-        HibNoteItem content = new HibNoteItem();
-        content.setName(name);
-        content.setDisplayName(name);
-        content.setUid(UUID.randomUUID().toString());
         content.setOwner(getUser(userDao, owner));
         return content;
     }

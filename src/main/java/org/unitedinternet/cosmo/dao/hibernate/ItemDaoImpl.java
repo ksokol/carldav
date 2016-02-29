@@ -44,11 +44,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         return itemPathTranslator.findItemByPath(path);
     }
 
-    public HibItem findItemByUid(String uid) {
-        getSession().setFlushMode(FlushMode.MANUAL);
-        return (HibItem) getSession().createQuery("select item from HibItem item where item.uid = :uid").setParameter("uid", uid).uniqueResult();
-    }
-
     public void removeItem(HibItem hibItem) {
         if (hibItem == null) {
             throw new IllegalArgumentException("item cannot be null");

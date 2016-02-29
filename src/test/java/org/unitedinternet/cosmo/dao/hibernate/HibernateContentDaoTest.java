@@ -98,7 +98,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertTrue(getHibItem(a).getId() != null);
         Assert.assertNotNull(a.getUid());
 
-        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByUid(a.getUid());
+        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByPath("/testuser2@testem/a");
         helper.verifyItem(a, queryItem);
     }
 
@@ -119,12 +119,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         itemDao.save(a);
 
-        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByUid(a.getUid());
+        HibCollectionItem queryItem = (HibCollectionItem) itemDao.findItemByPath("/testuser2@testem/a");
         Assert.assertNotNull(queryItem);
 
         itemDao.removeItem(queryItem);
 
-        queryItem = (HibCollectionItem) itemDao.findItemByUid(a.getUid());
+        queryItem = (HibCollectionItem) itemDao.findItemByPath("/testuser2@testem/a");
         Assert.assertNull(queryItem);
     }
 

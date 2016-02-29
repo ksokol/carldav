@@ -15,7 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import carldav.service.generator.IdGenerator;
 import org.hibernate.FlushMode;
 import org.hibernate.Query;
 import org.springframework.util.Assert;
@@ -34,13 +33,10 @@ import java.util.Set;
 
 public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
-    private final IdGenerator idGenerator;
     private final ItemPathTranslator itemPathTranslator;
 
-    public ItemDaoImpl(final IdGenerator idGenerator, final ItemPathTranslator itemPathTranslator) {
-        Assert.notNull(idGenerator, "idGenerator is null");
+    public ItemDaoImpl(final ItemPathTranslator itemPathTranslator) {
         Assert.notNull(itemPathTranslator, "itemPathTranslator is null");
-        this.idGenerator = idGenerator;
         this.itemPathTranslator = itemPathTranslator;
     }
 
@@ -86,9 +82,7 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         newItem.setOwner(user);
         newItem.setName(user.getEmail());
         newItem.setDisplayName("homeCollection");
-        //do not set this, it might be sensitive or different than name
-        //newItem.setDisplayName(newItem.getName());
-        setBaseItemProps(newItem);
+
         getSession().save(newItem);
         getSession().refresh(user);
         getSession().flush();
@@ -130,16 +124,6 @@ public abstract class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
             children.add(content);
         }
         return children;
-    }
-
-    // Set server generated item properties
-    protected void setBaseItemProps(HibItem hibItem) {
-        if (hibItem.getUid() == null) {
-            hibItem.setUid(idGenerator.nextStringIdentifier());
-        }
-        if (hibItem.getName() == null) {
-            hibItem.setName(hibItem.getUid());
-        }
     }
 
     protected HibHomeCollectionItem findRootItem(Long dbUserId) {

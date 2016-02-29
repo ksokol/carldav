@@ -20,8 +20,7 @@
     </bean>
 
     <bean id="contentDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ContentDaoImpl">
-        <constructor-arg index="0" ref="idGenerator" />
-        <constructor-arg index="1" ref="itemPathTranslator" />
+        <constructor-arg index="0" ref="itemPathTranslator" />
     </bean>
 
     <bean id="itemFilterProcessor" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor" />

@@ -15,24 +15,18 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import carldav.service.generator.IdGenerator;
 import org.unitedinternet.cosmo.dao.ContentDao;
 import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
-import java.util.Date;
-
 public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
 
-    public ContentDaoImpl(final IdGenerator idGenerator, final ItemPathTranslator itemPathTranslator) {
-        super(idGenerator, itemPathTranslator);
+    public ContentDaoImpl(final ItemPathTranslator itemPathTranslator) {
+        super(itemPathTranslator);
     }
 
-    public HibCollectionItem createCollection(HibCollectionItem parent,
-                                              HibCollectionItem collection) {
-
-        setBaseItemProps(collection);
+    public HibCollectionItem createCollection(HibCollectionItem parent, HibCollectionItem collection) {
         collection.setCollection(parent);
 
         getSession().save(collection);
@@ -43,8 +37,6 @@ public class ContentDaoImpl extends ItemDaoImpl implements ContentDao {
     }
 
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
-        setBaseItemProps(content);
-
         // add parent to new content
         content.setCollection(parent);
 

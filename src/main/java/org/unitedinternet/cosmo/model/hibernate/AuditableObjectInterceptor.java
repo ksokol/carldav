@@ -16,12 +16,15 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.Date;
 
+import carldav.service.generator.IdGenerator;
 import org.hibernate.EmptyInterceptor;
 import org.hibernate.type.Type;
 import org.springframework.util.Assert;
 import carldav.service.time.TimeService;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * Hibernate Interceptor that updates creationDate, modifiedDate,
@@ -32,10 +35,14 @@ public class AuditableObjectInterceptor extends EmptyInterceptor {
     private static final long serialVersionUID = 2206186604411196082L;
 
     private final TimeService timeService;
+    private final IdGenerator idGenerator;
 
-    public AuditableObjectInterceptor(final TimeService timeService) {
+    public AuditableObjectInterceptor(final TimeService timeService, IdGenerator idGenerator) {
         Assert.notNull(timeService, "timeService is null");
+        Assert.notNull(idGenerator, "idGenerator is null");
         this.timeService = timeService;
+        this.idGenerator = idGenerator;
+
     }
 
     @Override
@@ -63,9 +70,21 @@ public class AuditableObjectInterceptor extends EmptyInterceptor {
                 state[i] = curDate;
             } else if("etag".equals( propertyNames[i] )) {
                 state[i] = ao.calculateEntityTag();
+            } else if("uid".equals(propertyNames[i])) {
+                setUid(state, ao, i);
             }
         }
         return true;
+    }
+
+    //TODO remove me as soon as HibCollectionItem does not derive from HibItem anymore
+    private void setUid(Object[] state, HibAuditableObject ao, int i) {
+        final Field field = ReflectionUtils.findField(HibItem.class, "uid");
+        ReflectionUtils.makeAccessible(field);
+        final Object field1 = ReflectionUtils.getField(field, ao);
+        if(field1 == null) {
+            state[i] = idGenerator.nextStringIdentifier();
+        }
     }
 
 }

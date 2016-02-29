@@ -57,9 +57,6 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        getSession().update(collection);
-        getSession().update(hibItem);
-
         hibItem.setCollection(null);
         getSession().delete(hibItem);
         getSession().refresh(collection);

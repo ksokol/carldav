@@ -6,5 +6,6 @@ public class JournalStampFilter extends StampFilter {
 
     public JournalStampFilter() {
         super(HibJournalItem.class);
+        setType("journal");
     }
 }

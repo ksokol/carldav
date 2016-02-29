@@ -187,8 +187,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
                 + "where pd.id=:parent and i.displayName=:param1 and "
-                + "i.class=:clazz and (i.recurring=true) "
-                + "and i.uid=:param3", query.getQueryString());
+                + "i.class=:clazz and (i.recurring=:recurring) "
+                + "and i.uid=:param4", query.getQueryString());
     }
 
     /**

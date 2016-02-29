@@ -15,32 +15,17 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
-import static java.util.Locale.ENGLISH;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.model.filter.BetweenExpression;
-import org.unitedinternet.cosmo.model.filter.EqualsExpression;
-import org.unitedinternet.cosmo.model.filter.EventStampFilter;
-import org.unitedinternet.cosmo.model.filter.FilterCriteria;
-import org.unitedinternet.cosmo.model.filter.FilterExpression;
-import org.unitedinternet.cosmo.model.filter.ILikeExpression;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.filter.JournalStampFilter;
-import org.unitedinternet.cosmo.model.filter.LikeExpression;
-import org.unitedinternet.cosmo.model.filter.NoteItemFilter;
-import org.unitedinternet.cosmo.model.filter.NullExpression;
-import org.unitedinternet.cosmo.model.filter.StampFilter;
+import org.unitedinternet.cosmo.model.filter.*;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
+
+import static java.util.Locale.ENGLISH;
 
 /**
  * Standard Implementation of <code>ItemFilterProcessor</code>.
@@ -124,59 +109,33 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
             formatExpression(whereBuf, params, "i.displayName", filter.getDisplayName());
         }
 
-        handleStampFilters(selectBuf, whereBuf, filter, params);
+        handleStampFilters(whereBuf, filter, params);
 
     }
 
-    private void handleStampFilters(StringBuffer selectBuf,
-                                    StringBuffer whereBuf,
+    private void handleStampFilters(StringBuffer whereBuf,
                                     ItemFilter filter,
                                     Map<String, Object> params) {
         for (StampFilter stampFilter : filter.getStampFilters()) {
-            if (stampFilter instanceof EventStampFilter) {
-                handleStampFilter(selectBuf, whereBuf, stampFilter, params);
-            } else if(stampFilter instanceof JournalStampFilter) {
-                handleJournalFilter(whereBuf, stampFilter, params);
-            }
+                handleStampFilter(whereBuf, stampFilter, params);
         }
     }
 
-    private void handleStampFilter(StringBuffer selectBuf,
-                                   StringBuffer whereBuf,
+    private void handleStampFilter(StringBuffer whereBuf,
                                    StampFilter filter,
                                    Map<String, Object> params) {
 
-        appendWhere(whereBuf, "i.class=:clazz");
-        params.put("clazz", filter.getType());
+        if(filter.getType() != null) {
+            appendWhere(whereBuf, "i.class=:clazz");
+            params.put("clazz", filter.getType());
+        }
 
         // handle recurring event filter
         if (filter.getIsRecurring() != null) {
-            if (filter.getIsRecurring() == true) {
-                appendWhere(whereBuf, "(i.recurring=true)");
-            } else {
-                appendWhere(whereBuf, "(i.recurring=false)");
-            }
+            appendWhere(whereBuf, "(i.recurring=:recurring)");
+            params.put("recurring", filter.getIsRecurring());
         }
 
-        if (filter.getPeriod() != null) {
-            whereBuf.append(" and ( ");
-            whereBuf.append("(i.startDate < :endDate)");
-            whereBuf.append(" and i.endDate > :startDate)");
-
-            // edge case where start==end
-            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
-
-            whereBuf.append(")");
-
-            params.put("startDate", filter.getStart());
-            params.put("endDate", filter.getEnd());
-        }
-    }
-
-    private void handleJournalFilter(StringBuffer whereBuf, StampFilter filter, Map<String, Object> params) {
-        appendWhere(whereBuf, "i.class = 'journal'");
-
-        // handle time range
         if (filter.getPeriod() != null) {
             whereBuf.append(" and ( ");
             whereBuf.append("(i.startDate < :endDate)");

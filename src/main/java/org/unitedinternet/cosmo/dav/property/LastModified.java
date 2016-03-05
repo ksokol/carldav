@@ -15,17 +15,18 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import static carldav.CarldavConstants.GET_LAST_MODIFIED;
-
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
+
+import static carldav.CarldavConstants.GET_LAST_MODIFIED;
 
 public class LastModified extends StandardDavProperty {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE, dd MMM yyyy HH:mm:ss 'GMT'").withLocale(Locale.ENGLISH);
 
     public LastModified(Date date) {
         super(GET_LAST_MODIFIED, dateFormatLocal(date));
@@ -37,7 +38,7 @@ public class LastModified extends StandardDavProperty {
         if (date == null) {
             d = ZonedDateTime.now();
         } else {
-            d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault());
+            d = Instant.ofEpochMilli(date.getTime()).atZone(ZoneOffset.UTC);
         }
 
         return formatter.format(d);

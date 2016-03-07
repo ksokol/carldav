@@ -37,6 +37,7 @@ public abstract class HibItem extends HibAuditableObject {
 
     private String uid;
     private HibCollectionItem collection;
+    private User owner;
 
     @Column(name = "uid", nullable = false)
     @NotEmpty
@@ -56,5 +57,15 @@ public abstract class HibItem extends HibAuditableObject {
     @JoinColumn(name = "collectionid")
     public HibCollectionItem getCollection() {
         return collection;
+    }
+
+    @ManyToOne(targetEntity=User.class, fetch= FetchType.LAZY)
+    @JoinColumn(name="ownerid", nullable = false)
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 }

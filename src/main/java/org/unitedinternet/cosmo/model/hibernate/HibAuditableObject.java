@@ -31,7 +31,6 @@ public abstract class HibAuditableObject implements Serializable {
     private static final long serialVersionUID = 8396186357498363587L;
 
     private Long id;
-    private User owner;
     private Date modifiedDate;
     private String displayName;
     private String etag;
@@ -45,16 +44,6 @@ public abstract class HibAuditableObject implements Serializable {
 
     public void setId(final Long id) {
         this.id = id;
-    }
-
-    @ManyToOne(targetEntity=User.class, fetch= FetchType.LAZY)
-    @JoinColumn(name="ownerid", nullable = false)
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
     }
 
     @Column(name = "modifydate")

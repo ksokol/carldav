@@ -15,36 +15,16 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import carldav.repository.CollectionDao;
 import org.apache.commons.io.IOUtils;
-import org.junit.Assert;
-import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-/**
- * Test Hibernate helper.
- *
- */
 public class HibernateTestHelper {
-
-    /**
-     * Verify item.
-     * @param hibItem1 Item1.
-     * @param hibItem2 Item2.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    public void verifyItem(HibItem hibItem1, HibItem hibItem2) throws Exception {
-        Assert.assertEquals(hibItem1.getName(), hibItem2.getName());
-        Assert.assertEquals(hibItem1.getModifiedDate(), hibItem2.getModifiedDate());
-        Assert.assertEquals(hibItem1.getDisplayName(), hibItem2.getDisplayName());
-        Assert.assertEquals(getHibItem(hibItem1).getId(), getHibItem(hibItem2).getId());
-        Assert.assertEquals(hibItem1.getUid(), hibItem2.getUid());
-    }
 
     public String getString(String name) throws Exception {
         InputStream in = getClass().getClassLoader().getResourceAsStream(name);
@@ -63,7 +43,7 @@ public class HibernateTestHelper {
      * @param username The username.
      * @return The user.
      */
-    public User getUser(UserDao userDao, ItemDao itemDao, String username) {
+    public User getUser(UserDao userDao, CollectionDao itemDao, String username) {
         final String email = username + "@testem";
         User user = userDao.getUser(email);
         if (user == null) {
@@ -86,14 +66,5 @@ public class HibernateTestHelper {
             itemDao.save(newItem);
         }
         return user;
-    }
-    
-    /**
-     * Gets Hib Item.
-     * @param hibItem The item.
-     * @return HibItem.
-     */
-    private HibItem getHibItem(HibItem hibItem) {
-        return hibItem;
     }
 }

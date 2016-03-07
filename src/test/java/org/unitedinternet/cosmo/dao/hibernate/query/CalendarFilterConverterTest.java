@@ -42,7 +42,7 @@ public class CalendarFilterConverterTest {
     public void testTranslateItemToFilter() throws Exception {
         HibCollectionItem calendar = new HibCollectionItem();
         calendar.setId(1L);
-        calendar.setUid("calendar");
+        calendar.setId(0L);
         CalendarFilter calFilter = new CalendarFilter();
         ComponentFilter rootComp = new ComponentFilter();
         rootComp.setName("VCALENDAR");
@@ -107,7 +107,7 @@ public class CalendarFilterConverterTest {
     @Test
     public void testGetFirstPassFilter() throws Exception {
         HibCollectionItem calendar = new HibCollectionItem();
-        calendar.setUid("calendar");
+        calendar.setId(0L);
         CalendarFilter calFilter = new CalendarFilter();
         ComponentFilter rootComp = new ComponentFilter();
         rootComp.setName("VCALENDAR");

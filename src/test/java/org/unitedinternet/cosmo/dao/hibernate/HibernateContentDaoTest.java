@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import carldav.repository.CollectionDao;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
@@ -32,16 +33,14 @@ import org.unitedinternet.cosmo.model.hibernate.*;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Test for HibernateContentDao
- *
- */
 public class HibernateContentDaoTest extends IntegrationTestSupport {
 
     @Autowired
     private UserDaoImpl userDao;
     @Autowired
     private ItemDaoImpl itemDao;
+    @Autowired
+    private CollectionDao collectionDao;
     @Autowired
     protected SessionFactory sessionFactory;
 
@@ -90,9 +89,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         a.setName("a");
         a.setDisplayName("displayName");
         a.setOwner(user);
-        a.setCollection(root);
+        a.setParent(root);
 
-        itemDao.save(a);
+        collectionDao.save(a);
 
         HibItem item = generateTestContent();
         item.setName("test");
@@ -104,9 +103,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         b.setName("b");
         b.setDisplayName("bdisplayName");
         b.setOwner(user);
-        b.setCollection(root);
+        b.setParent(root);
 
-        itemDao.save(b);
+        collectionDao.save(b);
 
         HibItem item2 = generateTestContent();
         item2.setName("test");
@@ -122,7 +121,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     }
 
     private User getUser(UserDao userDao, String username) {
-        return helper.getUser(userDao, itemDao, username);
+        return helper.getUser(userDao, collectionDao, username);
     }
 
     private HibCardItem generateTestContent() throws Exception {

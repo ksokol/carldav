@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 
-import java.util.Set;
+import java.util.List;
 
 public class StandardUserService implements UserService {
 
@@ -39,8 +39,8 @@ public class StandardUserService implements UserService {
         this.userDao = userDao;
     }
 
-    public Set<User> getUsers() {
-        return userDao.getUsers();
+    public List<User> getUsers() {
+        return userDao.findAll();
     }
 
     public User getUser(String username) {

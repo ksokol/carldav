@@ -38,7 +38,7 @@ public class UserController {
     @RequestMapping(method = GET)
     public Set<String> get() {
         final Set<String> users = new TreeSet<>();
-        for (final User user : userDao.getUsers()) {
+        for (final User user : userDao.findAll()) {
             users.add(user.getEmail());
         }
         return users;

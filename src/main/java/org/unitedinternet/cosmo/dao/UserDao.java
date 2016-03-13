@@ -17,22 +17,11 @@ package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.Set;
+import java.util.List;
 
-/**
- * Interface for DAOs that manage user resources.
- *
- * A user resource stores properties about a user account and acts as
- * the root collection for an account's shared data (its "home
- * directory").
- */
 public interface UserDao {
 
-    /**
-     * Returns an unordered set of all user accounts in the repository.
-     * @return All user accounts.
-     */
-    Set<User> getUsers();
+    List<User> findAll();
 
     /**
      * Returns the user account identified by the given username.

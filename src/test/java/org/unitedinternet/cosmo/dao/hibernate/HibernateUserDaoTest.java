@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 public class HibernateUserDaoTest extends IntegrationTestSupport {
     
@@ -34,7 +34,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
 
     @Before
     public void cleanup() {
-        final Set<User> usersToDelete = userDao.getUsers();
+        final List<User> usersToDelete = userDao.findAll();
         for (final User user : usersToDelete) {
             userDao.removeUser(user);
         }
@@ -61,8 +61,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         verifyUser(user1, queryUser1);
 
         // Get all
-        @SuppressWarnings("rawtypes")
-        Set users = userDao.getUsers();
+        List<User> users = userDao.findAll();
         Assert.assertNotNull(users);
         Assert.assertEquals(2, users.size());
         verifyUserInCollection(user1, users);

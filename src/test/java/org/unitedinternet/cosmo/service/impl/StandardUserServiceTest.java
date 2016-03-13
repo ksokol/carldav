@@ -24,7 +24,7 @@ import org.unitedinternet.cosmo.TestHelper;
 import org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.Set;
+import java.util.List;
 
 public class StandardUserServiceTest extends IntegrationTestSupport {
 
@@ -52,7 +52,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         User u3 = testHelper.makeDummyUser();
         userDao.createUser(u3);
 
-        Set<User> users = service.getUsers();
+        List<User> users = service.getUsers();
 
         Assert.assertTrue("User 1 not found in users", users.contains(u1));
         Assert.assertTrue("User 2 not found in users", users.contains(u2));
@@ -100,7 +100,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
 
         service.removeUser(u1);
 
-        Assert.assertFalse("User not removed", userDao.getUsers().contains(u1));
+        Assert.assertFalse("User not removed", userDao.findAll().contains(u1));
     }
 
     /**
@@ -116,7 +116,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
 
         service.removeUser(u1.getEmail());
 
-        Assert.assertFalse("User not removed", userDao.getUsers().contains(u1));
+        Assert.assertFalse("User not removed", userDao.findAll().contains(u1));
     }
 
     /**

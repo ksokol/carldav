@@ -17,17 +17,11 @@ package org.unitedinternet.cosmo.service;
 
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.Set;
+import java.util.List;
 
-/**
- * Interface for services that manage user accounts.
- */
 public interface UserService {
 
-    /**
-     * Returns an unordered set of all user accounts in the repository.
-     */
-    Set<User> getUsers();
+    List<User> getUsers();
 
 
     /**

@@ -22,10 +22,7 @@ import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
@@ -51,14 +48,8 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         return findUserByEmailIgnoreCase(email);
     }
 
-    public Set<User> getUsers() {
-        Set<User> users = new HashSet<>();
-        Iterator it = getSession().getNamedQuery("user.all").iterate();
-        while (it.hasNext()) {
-            users.add((User) it.next());
-        }
-
-        return users;
+    public List<User> findAll() {
+        return getSession().getNamedQuery("user.all").list();
     }
 
     public void removeUser(String email) {

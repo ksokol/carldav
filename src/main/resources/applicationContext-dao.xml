@@ -15,15 +15,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl" abstract="true">
-        <property name="sessionFactory" ref="sessionFactory" />
+    <bean id="itemDao" class="org.unitedinternet.cosmo.dao.hibernate.ItemDaoImpl">
+        <constructor-arg>
+            <ref bean="itemFilterProcessor" />
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
     </bean>
 
-    <bean id="itemDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ItemDaoImpl">
-        <constructor-arg index="0" ref="itemFilterProcessor" />
+    <bean id="itemFilterProcessor" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor">
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
     </bean>
-
-    <bean id="itemFilterProcessor" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor" />
 
     <bean id="userDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl">
         <constructor-arg>

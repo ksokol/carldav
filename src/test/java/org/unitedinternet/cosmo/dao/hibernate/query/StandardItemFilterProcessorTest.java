@@ -23,6 +23,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate4.SessionFactoryUtils;
@@ -43,7 +44,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     @Autowired
     private SessionFactory sessionFactory;
 
-    private StandardItemFilterProcessor queryBuilder = new StandardItemFilterProcessor();
+    private StandardItemFilterProcessor queryBuilder;
 
     private Session session;
 
@@ -62,6 +63,11 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Session s = holder.getSession();
         TransactionSynchronizationManager.unbindResource(sessionFactory);
         SessionFactoryUtils.closeSession(s);
+    }
+
+    @Before
+    public void before() {
+        queryBuilder = new StandardItemFilterProcessor(sessionFactory);
     }
 
     /**

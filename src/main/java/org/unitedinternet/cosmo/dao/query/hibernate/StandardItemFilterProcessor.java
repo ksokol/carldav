@@ -17,7 +17,8 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.unitedinternet.cosmo.dao.hibernate.AbstractDaoImpl;
+import org.hibernate.SessionFactory;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -32,10 +33,17 @@ import static java.util.Locale.ENGLISH;
  * Translates filter into HQL Query, executes
  * query and processes the results.
  */
-public class StandardItemFilterProcessor extends AbstractDaoImpl implements ItemFilterProcessor {
+public class StandardItemFilterProcessor implements ItemFilterProcessor {
+
+    private final SessionFactory sessionFactory;
+
+    public StandardItemFilterProcessor(SessionFactory sessionFactory) {
+        Assert.notNull(sessionFactory, "sessionFactory is null");
+        this.sessionFactory = sessionFactory;
+    }
 
     public Set<HibItem> processFilter(ItemFilter filter) {
-        Query hibQuery = buildQuery(getSession(), filter);
+        Query hibQuery = buildQuery(sessionFactory.getCurrentSession(), filter);
         List<HibItem> queryResults = hibQuery.list();
         return processResults(queryResults);
     }

@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
@@ -26,24 +27,27 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import java.util.List;
 import java.util.Set;
 
-public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
+public class ItemDaoImpl implements ItemDao {
 
     private final ItemFilterProcessor itemFilterProcessor;
+    private final SessionFactory sessionFactory;
 
-    public ItemDaoImpl(ItemFilterProcessor itemFilterProcessor) {
+    public ItemDaoImpl(ItemFilterProcessor itemFilterProcessor, SessionFactory sessionFactory) {
         Assert.notNull(itemFilterProcessor, "itemFilterProcessor is null");
+        Assert.notNull(sessionFactory, "sessionFactory is null");
         this.itemFilterProcessor = itemFilterProcessor;
+        this.sessionFactory = sessionFactory;
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
         hibItem.setCollection(null);
-        getSession().delete(hibItem);
-        getSession().refresh(collection);
-        getSession().flush();
+        sessionFactory.getCurrentSession().delete(hibItem);
+        sessionFactory.getCurrentSession().refresh(collection);
+        sessionFactory.getCurrentSession().flush();
     }
 
     public List<HibItem> findByCollectionIdAndMimetype(Long id, HibItem.Type type) {
-        Query hibQuery = getSession().getNamedQuery("item.findByCollectionIdAndMimetype")
+        Query hibQuery = sessionFactory.getCurrentSession().getNamedQuery("item.findByCollectionIdAndMimetype")
                 .setParameter("parent", id)
                 .setParameter("type", type);
         return hibQuery.list();
@@ -51,8 +55,8 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
     @Override
     public HibItem save(HibItem item) {
-        getSession().saveOrUpdate(item);
-        getSession().flush();
+        sessionFactory.getCurrentSession().saveOrUpdate(item);
+        sessionFactory.getCurrentSession().flush();
         return item;
     }
 
@@ -62,7 +66,7 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
     @Override
     public HibItem findByOwnerAndName(String owner, String name) {
-        return (HibItem) getSession().getNamedQuery("item.findByOwnerAndName")
+        return (HibItem) sessionFactory.getCurrentSession().getNamedQuery("item.findByOwnerAndName")
                 .setParameter("owner",owner)
                 .setParameter("name", name)
                 .uniqueResult();

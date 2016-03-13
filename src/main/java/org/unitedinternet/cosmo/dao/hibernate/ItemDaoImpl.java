@@ -39,15 +39,15 @@ public class ItemDaoImpl implements ItemDao {
         this.sessionFactory = sessionFactory;
     }
 
-    public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        hibItem.setCollection(null);
+    public void remove(HibItem hibItem) {
+        final HibCollectionItem collection = hibItem.getCollection();
         sessionFactory.getCurrentSession().delete(hibItem);
         sessionFactory.getCurrentSession().refresh(collection);
         sessionFactory.getCurrentSession().flush();
     }
 
-    public List<HibItem> findByCollectionIdAndMimetype(Long id, HibItem.Type type) {
-        Query hibQuery = sessionFactory.getCurrentSession().getNamedQuery("item.findByCollectionIdAndMimetype")
+    public List<HibItem> findByCollectionIdAndType(Long id, HibItem.Type type) {
+        Query hibQuery = sessionFactory.getCurrentSession().getNamedQuery("item.findByCollectionIdAndType")
                 .setParameter("parent", id)
                 .setParameter("type", type);
         return hibQuery.list();

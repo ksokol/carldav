@@ -46,7 +46,7 @@ public class StandardContentService implements ContentService {
      * @param collection item to remove item from
      */
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        itemDao.removeItemFromCollection(hibItem, collection);
+        itemDao.remove(hibItem);
         collection.setModifiedDate(new Date());
     }
 

@@ -23,6 +23,6 @@ class CardQueryProcessorImpl implements CardQueryProcessor {
     @Override
     public List<HibItem> filterQuery(final HibCollectionItem collection, final AddressbookFilter filter) {
         //TODO filter is not in use yet
-        return itemDao.findByCollectionIdAndMimetype(collection.getId(), HibItem.Type.VCARD);
+        return itemDao.findByCollectionIdAndType(collection.getId(), HibItem.Type.VCARD);
     }
 }

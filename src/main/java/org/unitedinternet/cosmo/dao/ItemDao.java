@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.List;
@@ -24,17 +23,11 @@ import java.util.Set;
 
 public interface ItemDao {
 
-    /**
-     * Remove item from a collection.
-     *
-     * @param hibItem the item
-     * @param collection the collection to remove from
-     */
-    void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection);
+    void remove(HibItem hibItem);
 
     HibItem save(HibItem item);
 
-    List<HibItem> findByCollectionIdAndMimetype(Long id, HibItem.Type type);
+    List<HibItem> findByCollectionIdAndType(Long id, HibItem.Type type);
 
     Set<HibItem> findCalendarItems(ItemFilter itemFilter);
 

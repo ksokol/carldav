@@ -71,7 +71,7 @@ public class HibItem extends HibAuditableObject {
         collection = parent;
     }
 
-    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY)
     @JoinColumn(name = "collectionid")
     public HibCollectionItem getCollection() {
         return collection;

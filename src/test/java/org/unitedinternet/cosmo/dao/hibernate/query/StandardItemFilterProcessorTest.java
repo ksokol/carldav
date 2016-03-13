@@ -20,17 +20,11 @@ import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
-import org.springframework.orm.hibernate4.SessionHolder;
-import org.springframework.test.context.transaction.AfterTransaction;
-import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
@@ -46,24 +40,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
 
     private StandardItemFilterProcessor queryBuilder;
 
-    private Session session;
-
     private TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-
-    @BeforeTransaction
-    public void onSetUpBeforeTransaction() throws Exception {
-        // Unbind session from TransactionManager
-        session = sessionFactory.openSession();
-        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-    }
-
-    @AfterTransaction
-    public void onTearDownAfterTransaction() throws Exception {
-        SessionHolder holder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
-        Session s = holder.getSession();
-        TransactionSynchronizationManager.unbindResource(sessionFactory);
-        SessionFactoryUtils.closeSession(s);
-    }
 
     @Before
     public void before() {
@@ -78,7 +55,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     public void testUidQuery() throws Exception {
         ItemFilter filter = new ItemFilter();
         filter.setUid(Restrictions.eq("abc"));
-        Query query =  queryBuilder.buildQuery(session, filter);
+        Query query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where i.uid=:param0", query.getQueryString());
     }
 
@@ -89,7 +66,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Date end = c.getTime();
         c.add(Calendar.YEAR, -1);
         filter.setModifiedSince(Restrictions.between(c.getTime(), end));
-        Query query = queryBuilder.buildQuery(session, filter);
+        Query query = queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where i.modifiedDate between :param0 and :param1", query.getQueryString());
     }
 
@@ -101,31 +78,31 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     public void testDisplayNameQuery() throws Exception {
         ItemFilter filter = new ItemFilter();
         filter.setDisplayName(Restrictions.eq("test"));
-        Query query =  queryBuilder.buildQuery(session, filter);
+        Query query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where i.displayName=:param0", query.getQueryString());
 
         filter.setDisplayName(Restrictions.neq("test"));
-        query =  queryBuilder.buildQuery(session, filter);
+        query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where i.displayName!=:param0", query.getQueryString());
 
         filter.setDisplayName(Restrictions.like("test"));
-        query =  queryBuilder.buildQuery(session, filter);
+        query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where i.displayName like :param0", query.getQueryString());
 
         filter.setDisplayName(Restrictions.nlike("test"));
-        query =  queryBuilder.buildQuery(session, filter);
+        query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where i.displayName not like :param0", query.getQueryString());
 
         filter.setDisplayName(Restrictions.isNull());
-        query =  queryBuilder.buildQuery(session, filter);
+        query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where i.displayName is null", query.getQueryString());
 
         filter.setDisplayName(Restrictions.ilike("test"));
-        query =  queryBuilder.buildQuery(session, filter);
+        query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where lower(i.displayName) like :param0", query.getQueryString());
 
         filter.setDisplayName(Restrictions.nilike("test"));
-        query =  queryBuilder.buildQuery(session, filter);
+        query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i where lower(i.displayName) not like :param0", query.getQueryString());
 
     }
@@ -138,7 +115,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     public void testParentQuery() throws Exception {
         ItemFilter filter = new ItemFilter();
         filter.setParent(1L);
-        Query query =  queryBuilder.buildQuery(session, filter);
+        Query query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd where "
                 + "pd.id=:parent", query.getQueryString());
     }
@@ -152,7 +129,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         ItemFilter filter = new ItemFilter();
         filter.setParent(0L);
         filter.setDisplayName(Restrictions.eq("test"));
-        Query query =  queryBuilder.buildQuery(session, filter);
+        Query query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd where "
                 + "pd.id=:parent and i.displayName=:param1", query.getQueryString());
     }
@@ -167,7 +144,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         StampFilter stampFilter = new StampFilter();
         stampFilter.setStampClass(HibItem.class);
         filter.getStampFilters().add(stampFilter);
-        Query query = queryBuilder.buildQuery(session, filter);
+        Query query = queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i", query.getQueryString());
     }
 
@@ -184,13 +161,13 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setIcalUid(Restrictions.eq("icaluid"));
         //filter.setBody("body");
         filter.getStampFilters().add(eventFilter);
-        Query query =  queryBuilder.buildQuery(session, filter);
+        Query query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd "
                 + "where pd.id=:parent and "
                 + "i.displayName=:param1 and i.type=:type and i.uid=:param3", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
-        query =  queryBuilder.buildQuery(session, filter);
+        query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd "
                 + "where pd.id=:parent and i.displayName=:param1 and "
                 + "i.type=:type and (i.recurring=:recurring) "
@@ -211,7 +188,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
 
         filter.setParent(0L);
         filter.getStampFilters().add(eventFilter);
-        Query query =  queryBuilder.buildQuery(session, filter);
+        Query query =  queryBuilder.buildQuery(sessionFactory.getCurrentSession(), filter);
         Assert.assertEquals("select i from HibItem i join i.collection pd " +
                 "where pd.id=:parent and i.type=:type and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
                 "or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate)))"

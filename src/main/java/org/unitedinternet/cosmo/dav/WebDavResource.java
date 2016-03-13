@@ -163,4 +163,6 @@ public interface WebDavResource {
     String getETag();
 
     List<WebDavResource> getMembers();
+
+    String getName();
 }

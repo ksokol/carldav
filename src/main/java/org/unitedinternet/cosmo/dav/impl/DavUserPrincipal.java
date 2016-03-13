@@ -142,4 +142,9 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
             writer.close();
         }
     }
+
+    @Override
+    public String getName() {
+        return user.getEmail();
+    }
 }

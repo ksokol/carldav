@@ -92,6 +92,11 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return Collections.unmodifiableList(members);
     }
 
+    @Override
+    public String getName() {
+        return item.getName();
+    }
+
     public List<WebDavResource> getCollectionMembers() {
         for (HibCollectionItem memberHibItem : getContentService().findCollectionItems(item)) {
             WebDavResource resource = collectionToResource(memberHibItem);

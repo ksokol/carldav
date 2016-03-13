@@ -100,6 +100,11 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return "\"" + getItem().getEtag() + "\"";
     }
 
+    @Override
+    public String getName() {
+        return hibItem.getName();
+    }
+
     public long getModificationTime() {
         if (getItem().getModifiedDate() == null)
             return new Date().getTime();

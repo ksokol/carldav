@@ -24,6 +24,7 @@ import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -37,7 +38,7 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_T
 
 public class DavCard extends DavItemResourceBase {
 
-    public DavCard(HibCardItem item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
+    public DavCard(HibItem item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(item, locator, factory);
     }
 

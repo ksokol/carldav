@@ -21,7 +21,10 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dav.impl.*;
-import org.unitedinternet.cosmo.model.hibernate.*;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibEventItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -83,25 +86,13 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             // will be replaced by the provider if a different resource
             // type is required
             WebDavResource parent = resolve(locator.getParentLocator());
-            if (parent instanceof DavCalendarCollection) {
+            //TODO
+            if(parent != null && "calendar".equals(parent.getName())) {
                 return new DavCalendarResource(new HibEventItem(), locator, this);
             }
-            if (parent instanceof DavCardCollection) {
+            //TODO
+            if(parent != null && "contacts".equals(parent.getName())) {
                 return new DavCard(locator, this);
-            }
-        }
-        
-        // handle OPTIONS for non-existent resource
-        if(request.getMethod().equals("OPTIONS")) { 
-            // ensure parent exists first
-            WebDavResource parent = resolve(locator.getParentLocator());
-            if(parent!=null && parent.exists()) {
-                if(parent instanceof DavCalendarCollection) {
-                    return new DavCalendarResource(new HibEventItem(), locator, this);
-                }
-                else {
-                    return new DavCollectionBase(locator, this);
-                }
             }
         }
 
@@ -146,8 +137,9 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     public WebDavResource createResource(DavResourceLocator locator, HibItem hibItem)  throws CosmoDavException {
         Assert.notNull(hibItem, "item cannot be null");
 
-        if(hibItem instanceof HibCardItem) {
-            return new DavCard((HibCardItem) hibItem, locator, this);
+        //TODO
+        if(hibItem.getName().endsWith(".vcf")) {
+            return new DavCard(hibItem, locator, this);
         }
 
         return new DavCalendarResource(hibItem, locator, this);
@@ -160,10 +152,12 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         if ("homeCollection".equals(hibItem.getDisplayName())) {
             return new DavHomeCollection(hibItem, locator, this);
         }
-        if (hibItem instanceof HibCalendarCollectionItem) {
+        //TODO
+        if ("calendar".equals(hibItem.getName())) {
             return new DavCalendarCollection(hibItem, locator, this);
         }
-        else if(hibItem instanceof HibCardCollectionItem) {
+        //TODO
+        if ("contacts".equals(hibItem.getName())) {
             return new DavCardCollection(hibItem, locator, this, getCardQueryProcessor());
         }
 

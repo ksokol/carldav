@@ -16,14 +16,13 @@
 package org.unitedinternet.cosmo.model.hibernate;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "collection", uniqueConstraints = {@UniqueConstraint(name = "displayname_owner", columnNames = {"displayname", "ownerid"})})
 public class HibCollectionItem extends HibAuditableObject {
 
-    private Set<HibItem> items = new HashSet<>();
+    private Set<HibItem> items;
     private User owner;
     private HibCollectionItem parent;
     private Set<HibCollectionItem> collections;

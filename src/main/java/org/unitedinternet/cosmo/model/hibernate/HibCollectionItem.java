@@ -20,10 +20,22 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("collection")
-public class HibCollectionItem extends HibItem {
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Table(name = "collection",
+        indexes={@Index(name = "idx_itemtype",columnList = "itemtype" ),
+                @Index(name = "idx_itemname",columnList = "itemname" ),
+        },
+        uniqueConstraints = {@UniqueConstraint(name = "displayname_owner", columnNames = {"displayname", "ownerid"})}
+)
+@DiscriminatorColumn(
+        name="itemtype",
+        discriminatorType=DiscriminatorType.STRING,
+        length=32)
+public class HibCollectionItem extends HibAuditableObject {
 
     private Set<HibItem> items = new HashSet<>();
+    private User owner;
+    private HibCollectionItem collection;
 
     @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
     public Set<HibItem> getItems() {
@@ -34,23 +46,23 @@ public class HibCollectionItem extends HibItem {
         this.items = items;
     }
 
-    //TODO remove @Transient as soon as HibCollectionItem does not derive from HibItem
-    @Transient
+    @ManyToOne(targetEntity=User.class, fetch= FetchType.LAZY)
+    @JoinColumn(name="ownerid", nullable = false)
     public User getOwner() {
-        return super.getOwner();
+        return owner;
     }
 
     public void setOwner(User owner) {
-        super.setOwner(owner);
+        this.owner = owner;
     }
 
-    //TODO remove @Transient as soon as HibCollectionItem does not derive from HibItem
-    @Transient
+    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "collectionid")
     public HibCollectionItem getParent() {
-        return getCollection();
+        return collection;
     }
 
-    public void setParent(final HibCollectionItem item) {
-        setCollection(item);
+    public void setParent(final HibCollectionItem collection) {
+        this.collection = collection;
     }
 }

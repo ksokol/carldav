@@ -16,19 +16,11 @@
 package org.unitedinternet.cosmo.dao.hibernate;
 
 import carldav.repository.CollectionDao;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate4.SessionFactoryUtils;
-import org.springframework.orm.hibernate4.SessionHolder;
-import org.springframework.test.context.transaction.AfterTransaction;
-import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.*;
 
 import static org.junit.Assert.assertEquals;
@@ -41,27 +33,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     private ItemDaoImpl itemDao;
     @Autowired
     private CollectionDao collectionDao;
-    @Autowired
-    protected SessionFactory sessionFactory;
-
-    private HibernateTestHelper helper = new HibernateTestHelper();
-
-    private Session session;
-
-    @BeforeTransaction
-    public void onSetUpBeforeTransaction() throws Exception {
-        // Unbind session from TransactionManager
-        session = sessionFactory.openSession();
-        TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
-    }
-
-    @AfterTransaction
-    public void onTearDownAfterTransaction() throws Exception {
-        SessionHolder holder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
-        Session s = holder.getSession();
-        TransactionSynchronizationManager.unbindResource(sessionFactory);
-        SessionFactoryUtils.closeSession(s);
-    }
 
     @Test
     public void testHomeCollection() throws Exception {
@@ -74,15 +45,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Assert.assertEquals(root.getName(), "1");
     }
 
-    /**
-     * Tests item in multiple collections error.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
     @Test
-    public void testItemInMutipleCollectionsError() throws Exception {
-        User user = getUser(userDao, "testuser");
-        session.refresh(user);
-
+    public void multipleItemsError() throws Exception {
+        User user = getUser("testuser");
         HibCollectionItem root = collectionDao.findByOwnerAndName(user.getEmail(), user.getEmail());
 
         HibCollectionItem a = new HibCollectionItem();
@@ -93,48 +58,84 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         collectionDao.save(a);
 
-        HibItem item = generateTestContent();
-        item.setName("test");
-        item.setCollection(a);
+        HibItem item1 = generateTestContent();
+        item1.setUid("1");
+        item1.setCollection(a);
+        itemDao.save(item1);
 
-        itemDao.save(item);
+        HibItem item2 = generateTestContent();
+        item2.setUid("1");
+        item2.setCollection(a);
+
+        try {
+            itemDao.save(item2);
+            Assert.fail("able to add item with same name to collection");
+        } catch (ConstraintViolationException e) {
+            assertEquals("UID_OWNER_COLLECTION", e.getConstraintName());
+        }
+    }
+
+    @Test
+    public void multipleCollectionsError() throws Exception {
+        User user = getUser("testuser");
+        HibCollectionItem root = collectionDao.findByOwnerAndName(user.getEmail(), user.getEmail());
+
+        HibCollectionItem a = new HibCollectionItem();
+        a.setName("a");
+        a.setDisplayName("displayName");
+        a.setOwner(user);
+        a.setParent(root);
+
+        collectionDao.save(a);
 
         HibCollectionItem b = new HibCollectionItem();
-        b.setName("b");
-        b.setDisplayName("bdisplayName");
+        b.setName("a");
+        b.setDisplayName("displayName");
         b.setOwner(user);
         b.setParent(root);
 
-        collectionDao.save(b);
-
-        HibItem item2 = generateTestContent();
-        item2.setName("test");
-        item2.setDisplayName("test");
-
-        // should get DuplicateItemName here
         try {
-            itemDao.save(item2);
+            collectionDao.save(b);
             Assert.fail("able to add item with same name to collection");
         } catch (ConstraintViolationException e) {
             assertEquals("DISPLAYNAME_OWNER", e.getConstraintName());
         }
     }
 
-    private User getUser(UserDao userDao, String username) {
-        return helper.getUser(userDao, collectionDao, username);
+    public User getUser(String username) {
+        final String email = username + "@testem";
+        User user = userDao.getUser(email);
+        if (user == null) {
+            user = new User();
+            user.setPassword(username);
+            user.setEmail(email);
+            userDao.createUser(user);
+
+            user = userDao.getUser(email);
+
+            HibHomeCollectionItem newItem = new HibHomeCollectionItem();
+
+            newItem.setOwner(user);
+            //TODO
+            newItem.setName(user.getEmail());
+            newItem.setDisplayName("homeCollection");
+            collectionDao.save(newItem);
+
+            // create root item
+            collectionDao.save(newItem);
+        }
+        return user;
     }
 
-    private HibCardItem generateTestContent() throws Exception {
+    private HibCardItem generateTestContent() {
         return generateTestContent("test", "testuser");
     }
 
-    private HibCardItem generateTestContent(String name, String owner)
-            throws Exception {
+    private HibCardItem generateTestContent(String name, String owner) {
         HibCardItem content = new HibCardItem();
         content.setName(name);
         content.setDisplayName(name);
-        content.setCalendar(helper.getString("testdata/testdata1.txt"));
-        content.setOwner(getUser(userDao, owner));
+        content.setOwner(getUser(owner));
         return content;
     }
 }

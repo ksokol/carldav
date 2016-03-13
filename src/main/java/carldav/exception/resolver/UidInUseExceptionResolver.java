@@ -12,7 +12,7 @@ public class UidInUseExceptionResolver implements ExceptionResolver {
     public CosmoDavException resolve(final Exception exception) {
         if(exception instanceof ConstraintViolationException) {
             ConstraintViolationException violationException = (ConstraintViolationException) exception;
-            if("UID".equals(violationException.getConstraintName())) {
+            if("UID_OWNER_COLLECTION".equals(violationException.getConstraintName())) {
                 return new UidConflictException(violationException.getMessage());
             }
         }

@@ -39,6 +39,7 @@ public class User {
     private String email;
     private boolean locked;
     private Set<HibItem> items;
+    private Set<HibCollectionItem> collections;
     private String role;
 
     @Id
@@ -66,6 +67,15 @@ public class User {
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     public Set<HibItem> getItems() {
         return items;
+    }
+
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    public Set<HibCollectionItem> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(Set<HibCollectionItem> collections) {
+        this.collections = collections;
     }
 
     public String getRole() {

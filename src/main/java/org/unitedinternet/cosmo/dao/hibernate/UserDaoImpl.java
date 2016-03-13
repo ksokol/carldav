@@ -51,13 +51,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         return findUserByEmailIgnoreCase(email);
     }
 
-    public User getUserByEmail(String email) {
-        if (email == null) {
-            throw new IllegalArgumentException("email required");
-        }
-        return findUserByEmailIgnoreCase(email);
-    }
-
     public Set<User> getUsers() {
         Set<User> users = new HashSet<>();
         Iterator it = getSession().getNamedQuery("user.all").iterate();

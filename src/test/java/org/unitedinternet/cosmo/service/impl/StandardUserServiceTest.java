@@ -74,20 +74,6 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     }
 
     /**
-     * Tests get user by email.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testGetUserByEmail() throws Exception {
-        User u1 = testHelper.makeDummyUser();
-        String email1 = u1.getEmail();
-        userDao.createUser(u1);
-
-        User user = service.getUserByEmail(email1);
-        Assert.assertNotNull("User " + email1 + " null", user);
-    }
-
-    /**
      * Tests create user.
      * @throws Exception - if something is wrong this exception is thrown.
      */

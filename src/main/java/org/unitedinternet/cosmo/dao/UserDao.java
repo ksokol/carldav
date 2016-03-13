@@ -44,14 +44,6 @@ public interface UserDao {
     User getUser(String username);
 
     /**
-     * Returns the user account identified by the given email address.
-     *
-     * @param email the email address of the account to return
-     * @return The user account identified by the given email address.
-     */
-    User getUserByEmail(String email);
-
-    /**
      * Creates a user account in the repository. Returns a new
      * instance of <code>User</code> after saving the original one.
      *

@@ -48,7 +48,7 @@ public class StandardUserService implements UserService {
     }
 
     public User getUserByEmail(String email) {
-        return userDao.getUserByEmail(email);
+        return userDao.getUser(email);
     }
 
     /**
@@ -70,7 +70,7 @@ public class StandardUserService implements UserService {
 
         userDao.createUser(user);
 
-        User newUser = userDao.getUserByEmail(user.getEmail());
+        User newUser = userDao.getUser(user.getEmail());
 
         HibCollectionItem calendar = new HibCollectionItem();
         calendar.setOwner(user);

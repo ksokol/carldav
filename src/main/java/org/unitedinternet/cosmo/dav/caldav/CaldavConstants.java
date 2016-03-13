@@ -94,4 +94,7 @@ public interface CaldavConstants {
     String ATTR_CALDAV_START = "start";
     /** The CalDAV XML attribute name CALDAV:end */
     String ATTR_CALDAV_END = "end";
+
+    String CONTACTS = "contacts";
+    String CALENDAR = "calendar";
 }

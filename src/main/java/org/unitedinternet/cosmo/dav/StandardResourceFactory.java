@@ -32,6 +32,9 @@ import org.unitedinternet.cosmo.util.UriTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CALENDAR;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CONTACTS;
+
 public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
 
     private ContentService contentService;
@@ -87,11 +90,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             // type is required
             WebDavResource parent = resolve(locator.getParentLocator());
             //TODO
-            if(parent != null && "calendar".equals(parent.getName())) {
+            if(parent != null && CALENDAR.equals(parent.getName())) {
                 return new DavCalendarResource(new HibEventItem(), locator, this);
             }
             //TODO
-            if(parent != null && "contacts".equals(parent.getName())) {
+            if(parent != null && CONTACTS.equals(parent.getName())) {
                 return new DavCard(locator, this);
             }
         }
@@ -153,11 +156,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             return new DavHomeCollection(hibItem, locator, this);
         }
         //TODO
-        if ("calendar".equals(hibItem.getName())) {
+        if (CALENDAR.equals(hibItem.getName())) {
             return new DavCalendarCollection(hibItem, locator, this);
         }
         //TODO
-        if ("contacts".equals(hibItem.getName())) {
+        if (CONTACTS.equals(hibItem.getName())) {
             return new DavCardCollection(hibItem, locator, this, getCardQueryProcessor());
         }
 

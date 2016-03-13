@@ -41,6 +41,8 @@ import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 import static carldav.CarldavConstants.caldav;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CALENDAR;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CONTACTS;
 
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
 
@@ -203,7 +205,8 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
                 .createResourceLocatorByPath(getResourceLocator().getContext(),
                         path);
 
-        if(hibItem instanceof HibCollectionItem) {
+        //TODO
+        if(CALENDAR.equals(hibItem.getName())|| CONTACTS.equals(hibItem.getName())) {
             return getResourceFactory().createCollectionResource(locator, (HibCollectionItem) hibItem);
         }
 

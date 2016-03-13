@@ -23,37 +23,9 @@ public interface UserDao {
 
     List<User> findAll();
 
-    /**
-     * Returns the user account identified by the given username.
-     *
-     * @param username the username of the account to return
-     * exist
-     * @return The user account.
-     */
-    User getUser(String username);
+    User findByEmailIgnoreCase(String email);
 
-    /**
-     * Creates a user account in the repository. Returns a new
-     * instance of <code>User</code> after saving the original one.
-     *
-     * @param user the account to create.
-     * @return The user account.
-     *
-     */
-    User createUser(User user);
+    User save(User user);
 
-    /**
-     * Removes the user account identified by the given username from
-     * the repository.
-     *
-     * @param username the username of the account to return
-     */
-    void removeUser(String username);
-
-    /**
-     * Removes a user account from the repository.
-     *
-     * @param user the user to remove
-     */
-    void removeUser(User user);
+    void remove(User user);
 }

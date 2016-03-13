@@ -31,7 +31,7 @@ class CosmoUserDetailsServiceTests {
 
         when(user.getEmail()).thenReturn(EMAIL)
         when(user.getPassword()).thenReturn(EMAIL)
-        when(userDao.getUser(EMAIL)).thenReturn(user)
+        when(userDao.findByEmailIgnoreCase(EMAIL)).thenReturn(user)
     }
 
     @Test

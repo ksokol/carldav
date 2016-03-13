@@ -95,14 +95,14 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
     public User getUser(String username) {
         final String email = username + "@testem";
-        User user = userDao.getUser(email);
+        User user = userDao.findByEmailIgnoreCase(email);
         if (user == null) {
             user = new User();
             user.setPassword(username);
             user.setEmail(email);
-            userDao.createUser(user);
+            userDao.save(user);
 
-            user = userDao.getUser(email);
+            user = userDao.findByEmailIgnoreCase(email);
 
             HibCollectionItem newItem = new HibCollectionItem();
 

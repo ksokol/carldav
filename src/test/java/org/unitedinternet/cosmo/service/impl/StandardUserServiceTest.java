@@ -46,11 +46,11 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     @Test
     public void testGetUsers() throws Exception {
         User u1 = testHelper.makeDummyUser();
-        userDao.createUser(u1);
+        userDao.save(u1);
         User u2 = testHelper.makeDummyUser();
-        userDao.createUser(u2);
+        userDao.save(u2);
         User u3 = testHelper.makeDummyUser();
-        userDao.createUser(u3);
+        userDao.save(u3);
 
         List<User> users = service.getUsers();
 
@@ -67,7 +67,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     public void testGetUser() throws Exception {
         User u1 = testHelper.makeDummyUser();
         String username1 = u1.getEmail();
-        userDao.createUser(u1);
+        userDao.save(u1);
 
         User user = service.getUser(username1);
         Assert.assertNotNull("User " + username1 + " null", user);
@@ -83,7 +83,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         String password = u1.getPassword();
 
         User user = service.createUser(u1);
-        Assert.assertNotNull("User not stored", userDao.getUser(u1.getEmail()));
+        Assert.assertNotNull("User not stored", userDao.findByEmailIgnoreCase(u1.getEmail()));
         Assert.assertFalse("Original and stored password are the same", user.getPassword().equals(password));
     }
 

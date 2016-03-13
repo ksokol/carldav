@@ -26,7 +26,7 @@ import java.util.List;
 
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
-    public User createUser(User user) {
+    public User save(User user) {
         if (user == null) {
             throw new IllegalArgumentException("user is required");
         }
@@ -44,7 +44,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         return user;
     }
 
-    public User getUser(String email) {
+    public User findByEmailIgnoreCase(String email) {
         return findUserByEmailIgnoreCase(email);
     }
 
@@ -52,15 +52,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
         return getSession().getNamedQuery("user.all").list();
     }
 
-    public void removeUser(String email) {
-        User user = findUserByEmailIgnoreCase(email);
-        // delete user
-        if (user != null) {
-            removeUser(user);
-        }
-    }
-
-    public void removeUser(User user) {
+    public void remove(User user) {
         getSession().delete(user);
         getSession().flush();
     }

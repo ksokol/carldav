@@ -44,7 +44,7 @@ public class StandardUserService implements UserService {
     }
 
     public User getUser(String username) {
-        return userDao.getUser(username);
+        return userDao.findByEmailIgnoreCase(username);
     }
 
     /**
@@ -64,9 +64,9 @@ public class StandardUserService implements UserService {
 
         user.setPassword(digestPassword(user.getPassword()));
 
-        userDao.createUser(user);
+        userDao.save(user);
 
-        User newUser = userDao.getUser(user.getEmail());
+        User newUser = userDao.findByEmailIgnoreCase(user.getEmail());
 
         HibCollectionItem calendar = new HibCollectionItem();
         calendar.setOwner(user);
@@ -93,8 +93,8 @@ public class StandardUserService implements UserService {
      * @param username the username of the account to return
      */
     public void removeUser(String username) {
-        User user = userDao.getUser(username);
-        userDao.removeUser(user);
+        User user = userDao.findByEmailIgnoreCase(username);
+        userDao.remove(user);
     }
 
     /**
@@ -103,7 +103,7 @@ public class StandardUserService implements UserService {
      * @param user the account to remove
      */
     public void removeUser(User user) {
-        userDao.removeUser(user);
+        userDao.remove(user);
     }
 
     /**

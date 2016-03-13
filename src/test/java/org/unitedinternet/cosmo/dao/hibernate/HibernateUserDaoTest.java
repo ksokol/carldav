@@ -36,7 +36,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
     public void cleanup() {
         final List<User> usersToDelete = userDao.findAll();
         for (final User user : usersToDelete) {
-            userDao.removeUser(user);
+            userDao.remove(user);
         }
     }
 
@@ -46,16 +46,16 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
-        user1 = userDao.createUser(user1);
+        user1 = userDao.save(user1);
 
         User user2 = new User();
         user2.setEmail("user2@user2.com");
         user2.setPassword("user2password");
 
-        user2 = userDao.createUser(user2);
+        user2 = userDao.save(user2);
 
         // find by username
-        User queryUser1 = userDao.getUser("user1@user1.com");
+        User queryUser1 = userDao.findByEmailIgnoreCase("user1@user1.com");
         Assert.assertNotNull(queryUser1);
         Assert.assertNotNull(queryUser1.getEmail());
         verifyUser(user1, queryUser1);
@@ -73,19 +73,19 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user3.setPassword("user1password");
 
         try {
-            userDao.createUser(user3);
+            userDao.save(user3);
             Assert.fail("able to create user with duplicate username");
         } catch (DuplicateEmailException due) {
         }
 
         try {
-            userDao.createUser(user3);
+            userDao.save(user3);
             Assert.fail("able to create user with duplicate email");
         } catch (DuplicateEmailException dee) {
         }
 
         // delete user
-        userDao.removeUser("user1@user1.com");
+        userDao.remove(user3);
     }
 
     /**
@@ -97,21 +97,21 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
-        user1 = userDao.createUser(user1);
+        user1 = userDao.save(user1);
 
         User user2 = new User();
         user2.setEmail("user1@user1.com");
         user2.setPassword("user2password");
 
         try {
-            user2 = userDao.createUser(user2);
+            user2 = userDao.save(user2);
             Assert.fail("able to create duplicate emails!");
         } catch (DuplicateEmailException e) {
         }
         
         
         user2.setEmail("user2@user1.com");
-        user2 = userDao.createUser(user2);
+        user2 = userDao.save(user2);
     }
 
     /**
@@ -124,13 +124,13 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
-        userDao.createUser(user1);
+        userDao.save(user1);
         
-        User queryUser1 = userDao.getUser("user1@user1.com");
+        User queryUser1 = userDao.findByEmailIgnoreCase("user1@user1.com");
         Assert.assertNotNull(queryUser1);
-        userDao.removeUser(queryUser1);
+        userDao.remove(queryUser1);
 
-        queryUser1 = userDao.getUser("user1");
+        queryUser1 = userDao.findByEmailIgnoreCase("user1");
         Assert.assertNull(queryUser1);
     }
 
@@ -144,13 +144,13 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
-        userDao.createUser(user1);
+        userDao.save(user1);
 
-        User queryUser1 = userDao.getUser("user1@user1.com");
+        User queryUser1 = userDao.findByEmailIgnoreCase("user1@user1.com");
         Assert.assertNotNull(queryUser1);
-        userDao.removeUser(user1.getEmail());
+        userDao.remove(user1);
 
-        queryUser1 = userDao.getUser("user1@user1.com");
+        queryUser1 = userDao.findByEmailIgnoreCase("user1@user1.com");
         Assert.assertNull(queryUser1);
     }
 

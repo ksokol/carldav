@@ -38,7 +38,7 @@ public class CosmoUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-        User user = userDao.getUser(username);
+        User user = userDao.findByEmailIgnoreCase(username);
         if (user == null) {
             throw new UsernameNotFoundException("user " + username + " not found");
         }

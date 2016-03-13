@@ -32,8 +32,7 @@ import org.unitedinternet.cosmo.util.UriTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CALENDAR;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CONTACTS;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.*;
 
 public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
 
@@ -152,7 +151,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         Assert.notNull(hibItem, "item cannot be null");
 
         //TODO
-        if ("homeCollection".equals(hibItem.getDisplayName())) {
+        if (HOME_COLLECTION.equals(hibItem.getDisplayName())) {
             return new DavHomeCollection(hibItem, locator, this);
         }
         //TODO

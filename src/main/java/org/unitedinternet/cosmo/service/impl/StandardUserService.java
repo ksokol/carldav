@@ -21,7 +21,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -78,7 +77,7 @@ public class StandardUserService implements UserService {
         calendar.setName("calendar");
         calendar.setDisplayName("calendarDisplayName");
 
-        final HibHomeCollectionItem homeCollection = contentService.createRootItem(newUser);
+        final HibCollectionItem homeCollection = contentService.createRootItem(newUser);
         contentService.createCollection(homeCollection, calendar);
 
         HibCollectionItem addressbook = new HibCollectionItem();

@@ -21,7 +21,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import org.unitedinternet.cosmo.model.hibernate.*;
+import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,17 +36,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     private ItemDaoImpl itemDao;
     @Autowired
     private CollectionDao collectionDao;
-
-    @Test
-    public void testHomeCollection() throws Exception {
-        final HibHomeCollectionItem root = new HibHomeCollectionItem();
-
-        root.setName("1");
-        Assert.assertEquals(root.getName(), "1");
-
-        root.setName("2");
-        Assert.assertEquals(root.getName(), "1");
-    }
 
     @Test
     public void multipleItemsError() throws Exception {
@@ -113,7 +105,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
             user = userDao.getUser(email);
 
-            HibHomeCollectionItem newItem = new HibHomeCollectionItem();
+            HibCollectionItem newItem = new HibCollectionItem();
 
             newItem.setOwner(user);
             //TODO

@@ -16,7 +16,6 @@
 package org.unitedinternet.cosmo.service;
 
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
@@ -76,5 +75,5 @@ public interface ContentService {
      */
     HibItem updateContent(HibItem content);
 
-    HibHomeCollectionItem createRootItem(User user);
+    HibCollectionItem createRootItem(User user);
 }

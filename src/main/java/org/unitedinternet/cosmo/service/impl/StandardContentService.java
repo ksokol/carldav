@@ -19,12 +19,13 @@ import carldav.repository.CollectionDao;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
 import java.util.Date;
+
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.HOME_COLLECTION;
 
 public class StandardContentService implements ContentService {
 
@@ -73,7 +74,8 @@ public class StandardContentService implements ContentService {
     public void removeCollection(HibCollectionItem collection) {
         // prevent HomeCollection from being removed (should only be removed
         // when user is removed)
-        if(collection instanceof HibHomeCollectionItem) {
+        //TODO
+        if(HOME_COLLECTION.equals(collection.getDisplayName())) {
             throw new IllegalArgumentException("cannot remove home collection");
         }
         collectionDao.remove(collection);
@@ -113,8 +115,8 @@ public class StandardContentService implements ContentService {
     }
 
     @Override
-    public HibHomeCollectionItem createRootItem(User user) {
-        HibHomeCollectionItem newItem = new HibHomeCollectionItem();
+    public HibCollectionItem createRootItem(User user) {
+        HibCollectionItem newItem = new HibCollectionItem();
 
         newItem.setOwner(user);
         //TODO

@@ -97,4 +97,5 @@ public interface CaldavConstants {
 
     String CONTACTS = "contacts";
     String CALENDAR = "calendar";
+    String HOME_COLLECTION = "homeCollection";
 }

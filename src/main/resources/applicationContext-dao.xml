@@ -25,7 +25,11 @@
 
     <bean id="itemFilterProcessor" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor" />
 
-    <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" />
+    <bean id="userDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl">
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
+    </bean>
 
     <bean id="collectionDao" class="carldav.repository.CollectionDaoImpl">
         <constructor-arg index="0" ref="sessionFactory" />

@@ -15,16 +15,25 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
+import org.hibernate.SessionFactory;
+import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 import java.util.List;
 
-public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
+public class UserDaoImpl implements UserDao {
+
+    private final SessionFactory sessionFactory;
+
+    public UserDaoImpl(SessionFactory sessionFactory) {
+        Assert.notNull(sessionFactory, "sessionFactory is null");
+        this.sessionFactory = sessionFactory;
+    }
 
     public User save(User user) {
-        getSession().saveOrUpdate(user);
-        getSession().flush();
+        sessionFactory.getCurrentSession().saveOrUpdate(user);
+        sessionFactory.getCurrentSession().flush();
         return user;
     }
 
@@ -33,14 +42,14 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
     }
 
     public List<User> findAll() {
-        return getSession().getNamedQuery("user.all").list();
+        return sessionFactory.getCurrentSession().getNamedQuery("user.all").list();
     }
 
     public void remove(User user) {
-        getSession().delete(user);
+        sessionFactory.getCurrentSession().delete(user);
     }
 
     private User findUserByEmailIgnoreCase(String email) {
-        return (User) getSession().getNamedQuery("user.byEmail.ignorecase").setParameter("email", email).uniqueResult();
+        return (User) sessionFactory.getCurrentSession().getNamedQuery("user.byEmail.ignorecase").setParameter("email", email).uniqueResult();
     }
 }

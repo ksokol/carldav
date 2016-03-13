@@ -58,16 +58,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
     }
 
     private User findUserByEmailIgnoreCase(String email) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery("user.byEmail.ignorecase").setParameter(
-                "email", email);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        List users = hibQuery.list();
-        if (users.size() > 0) {
-            return (User) users.get(0);
-        } else {
-            return null;
-        }
+        return (User) getSession().getNamedQuery("user.byEmail.ignorecase").setParameter("email", email).uniqueResult();
     }
 }

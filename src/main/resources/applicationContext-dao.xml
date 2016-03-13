@@ -20,13 +20,10 @@
     </bean>
 
     <bean id="itemDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.ItemDaoImpl">
-        <constructor-arg index="0" ref="itemPathTranslator" />
-        <constructor-arg index="1" ref="itemFilterProcessor" />
+        <constructor-arg index="0" ref="itemFilterProcessor" />
     </bean>
 
     <bean id="itemFilterProcessor" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor" />
-
-    <bean id="itemPathTranslator" parent="abstractDao" class="org.unitedinternet.cosmo.dao.query.hibernate.DefaultItemPathTranslator" />
 
     <bean id="userDao" parent="abstractDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl" />
 

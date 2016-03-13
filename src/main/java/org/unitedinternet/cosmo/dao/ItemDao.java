@@ -23,22 +23,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Interface for DAO that provides base functionality for items stored in the
- * server.
- *
- */
 public interface ItemDao {
-
-    /**
-     * Find an item with the specified path. The return type will be one of
-     * ContentItem, NoteItem, CollectionItem.
-     *
-     * @param path
-     *            path of item to find
-     * @return item represented by path
-     */
-    HibItem findItemByPath(String path);
 
     /**
      * Remove item from a collection.
@@ -53,4 +38,6 @@ public interface ItemDao {
     List<HibItem> findCollectionFileItems(Long id);
 
     Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter);
+
+    HibItem findByOwnerAndName(String owner, String uid);
 }

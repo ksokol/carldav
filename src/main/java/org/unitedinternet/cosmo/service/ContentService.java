@@ -28,15 +28,6 @@ import java.util.List;
 public interface ContentService {
 
     /**
-     * Find content item by path. Path is of the format:
-     * /username/parent1/parent2/itemname.
-     * @param path The given path.
-     * @return The content item.
-     *
-     */
-    HibItem findItemByPath(String path);
-
-    /**
      * Remove an item from a collection.  The item will be removed if
      * it belongs to no more collections.
      * @param hibItem item to remove from collection

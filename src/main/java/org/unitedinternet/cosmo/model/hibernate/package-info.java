@@ -19,15 +19,11 @@
  */
 @NamedQueries({
         // Item Queries
+        @NamedQuery(name = "item.findByOwnerAndName", query = "select item from HibItem item where item.owner.email = :owner and item.name = :name"),
         @NamedQuery(name = "collection.items", query = "select item from HibItem item join"
                 + " item.collection pd where item.collection.id=:parent and item.type=:type"),
         @NamedQuery(name = "collections", query = "select item from HibCollectionItem item where item.collection.id=:parent"),
-        @NamedQuery(name = "item.by.parent.name", query = "select item from HibItem item join"
-                + " item.collection pd where item.collection=:parent and item.name=:name"),
-        // FIXME stfl .and.nullparent is not the correct name anymore!
-        // FIXME check on class == HibCollectionItem  or select from HibCollectionItem
-        @NamedQuery(name = "item.by.ownerName.name.nullParent", query = "select i from "
-                + "HibCollectionItem i, User u where i.owner=u and u.email=:email and i.name=:name"),
+        @NamedQuery(name = "collection.findByOwnerAndName", query = "select item from HibCollectionItem item where item.owner.email = :owner and item.name = :name"),
 
         // User Queries
         @NamedQuery(name="user.byEmail", query="from User where email=:email"),

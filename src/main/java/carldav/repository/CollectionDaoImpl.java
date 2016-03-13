@@ -40,4 +40,12 @@ class CollectionDaoImpl implements CollectionDao {
         sessionFactory.getCurrentSession().delete(item);
         sessionFactory.getCurrentSession().flush();
     }
+
+    @Override
+    public HibCollectionItem findByOwnerAndName(String owner, String name) {
+        return (HibCollectionItem) sessionFactory.getCurrentSession().getNamedQuery("collection.findByOwnerAndName")
+                .setParameter("owner",owner)
+                .setParameter("name", name)
+                .uniqueResult();
+    }
 }

@@ -15,4 +15,5 @@ public interface CollectionDao {
 
     void remove(HibCollectionItem item);
 
+    HibCollectionItem findByOwnerAndName(String owner, String name);
 }

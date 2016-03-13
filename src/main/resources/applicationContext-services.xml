@@ -38,6 +38,12 @@
 		<constructor-arg>
 			<ref bean="contentService" />
 		</constructor-arg>
+        <constructor-arg>
+            <ref bean="itemDao" />
+        </constructor-arg>
+        <constructor-arg>
+            <ref bean="collectionDao" />
+        </constructor-arg>
 		<constructor-arg>
 			<ref bean="securityManager" />
 		</constructor-arg>

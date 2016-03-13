@@ -40,14 +40,6 @@ public class StandardContentService implements ContentService {
     }
 
     /**
-     * Find content item by path. Path is of the format:
-     * /username/parent1/parent2/itemname.
-     */
-    public HibItem findItemByPath(String path) {
-        return itemDao.findItemByPath(path);
-    }
-
-    /**
      * Remove an item from a collection.  The item will be deleted if
      * it belongs to no more collections.
      * @param hibItem item to remove from collection

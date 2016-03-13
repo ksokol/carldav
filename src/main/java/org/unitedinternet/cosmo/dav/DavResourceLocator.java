@@ -94,4 +94,10 @@ public interface DavResourceLocator {
      * Returns the factory that instantiated this locator.
      */
     DavResourceLocatorFactory getFactory();
+
+    String username();
+
+    String collection();
+
+    String itemUid();
 }

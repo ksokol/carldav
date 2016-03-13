@@ -1428,6 +1428,7 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andExpect(status().isNoContent())
     }
 
+    @Ignore("unsupported")
     @WithUserDetails(USER02)
     @Test
     void depthInfinity() {

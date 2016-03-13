@@ -19,7 +19,6 @@ import org.hibernate.Query;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.dao.query.ItemPathTranslator;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
@@ -30,18 +29,11 @@ import java.util.Set;
 
 public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
 
-    private final ItemPathTranslator itemPathTranslator;
     private final ItemFilterProcessor itemFilterProcessor;
 
-    public ItemDaoImpl(final ItemPathTranslator itemPathTranslator, ItemFilterProcessor itemFilterProcessor) {
-        Assert.notNull(itemPathTranslator, "itemPathTranslator is null");
+    public ItemDaoImpl(ItemFilterProcessor itemFilterProcessor) {
         Assert.notNull(itemFilterProcessor, "itemFilterProcessor is null");
-        this.itemPathTranslator = itemPathTranslator;
         this.itemFilterProcessor = itemFilterProcessor;
-    }
-
-    public HibItem findItemByPath(String path) {
-        return itemPathTranslator.findItemByPath(path);
     }
 
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
@@ -68,5 +60,13 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
     public Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter) {
         Set results = itemFilterProcessor.processFilter(itemFilter);
         return (Set<HibICalendarItem>) results;
+    }
+
+    @Override
+    public HibItem findByOwnerAndName(String owner, String name) {
+        return (HibItem) getSession().getNamedQuery("item.findByOwnerAndName")
+                .setParameter("owner",owner)
+                .setParameter("name", name)
+                .uniqueResult();
     }
 }

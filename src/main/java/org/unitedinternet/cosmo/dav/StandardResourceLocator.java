@@ -105,6 +105,24 @@ public class StandardResourceLocator implements DavResourceLocator {
         return factory;
     }
 
+    @Override
+    public String username() {
+        final String[] split = getPath().split("/");
+        return split[1];
+    }
+
+    @Override
+    public String collection() {
+        final String[] split = getPath().split("/");
+        return split.length > 2 ? split[2] : null;
+    }
+
+    @Override
+    public String itemUid() {
+        final String[] split = getPath().split("/");
+        return split.length > 3 ? split[3] : null;
+    }
+
     private String buildHref(URL context, boolean isCollection, boolean absolute) throws URISyntaxException {
         String protocol = context.getProtocol();
         String host = context.getHost();

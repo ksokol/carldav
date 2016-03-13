@@ -16,10 +16,10 @@
 package org.unitedinternet.cosmo.dav;
 
 import carldav.card.CardQueryProcessor;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import carldav.repository.CollectionDao;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
+import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dav.impl.*;
 import org.unitedinternet.cosmo.model.hibernate.*;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -30,20 +30,25 @@ import org.unitedinternet.cosmo.util.UriTemplate;
 import javax.servlet.http.HttpServletRequest;
 
 public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
-    private static final Log LOG =  LogFactory.getLog(StandardResourceFactory.class);
 
     private ContentService contentService;
+    private ItemDao itemDao;
+    private CollectionDao collectionDao;
     private CosmoSecurityManager securityManager;
     private CalendarQueryProcessor calendarQueryProcessor;
     private CardQueryProcessor cardQueryProcessor;
     private UserService userService;
 
     public StandardResourceFactory(ContentService contentService,
+                                   ItemDao itemDao,
+                                   CollectionDao collectionDao,
                                    CosmoSecurityManager securityManager,
                                    CalendarQueryProcessor calendarQueryProcessor,
                                    CardQueryProcessor cardQueryProcessor,
                                    UserService userService) {
         this.contentService = contentService;
+        this.itemDao = itemDao;
+        this.collectionDao = collectionDao;
         this.securityManager = securityManager;
         this.calendarQueryProcessor = calendarQueryProcessor;
         this.cardQueryProcessor = cardQueryProcessor;
@@ -68,8 +73,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
      * {@link DavCard}</li>
      * </ul>
      */
-    public WebDavResource resolve(DavResourceLocator locator, HttpServletRequest request)
-        throws CosmoDavException {
+    public WebDavResource resolve(DavResourceLocator locator, HttpServletRequest request) {
         WebDavResource resource = resolve(locator);
         if (resource != null) {
             return resource;
@@ -119,9 +123,6 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     public WebDavResource resolve(DavResourceLocator locator)
         throws CosmoDavException {
         String uri = locator.getPath();
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("resolving URI " + uri);
-        }
 
         UriTemplate.Match match = TEMPLATE_USER.match(uri);
         if (match != null) {
@@ -133,7 +134,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             return createUserPrincipalResource(locator);
         }
 
-        return createUnknownResource(locator, uri);
+        return createUnknownResource(locator);
     }
 
     /**
@@ -155,8 +156,9 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     public WebDavResource createCollectionResource(DavResourceLocator locator, HibCollectionItem hibItem) {
         Assert.notNull(hibItem, "item cannot be null");
 
-        if (hibItem instanceof HibHomeCollectionItem) {
-            return new DavHomeCollection((HibHomeCollectionItem) hibItem, locator, this);
+        //TODO
+        if ("homeCollection".equals(hibItem.getDisplayName())) {
+            return new DavHomeCollection(hibItem, locator, this);
         }
         if (hibItem instanceof HibCalendarCollectionItem) {
             return new DavCalendarCollection(hibItem, locator, this);
@@ -168,7 +170,6 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         return new DavCollectionBase(hibItem, locator, this);
     }
 
-
     protected WebDavResource createUserPrincipalResource(DavResourceLocator locator, UriTemplate.Match match) throws CosmoDavException {
         User user = userService.getUser(match.get("username"));
         return user != null ? new DavUserPrincipal(user, locator, this) : null;
@@ -179,20 +180,27 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         return user != null ? new DavUserPrincipal(user, locator, this) : null;
     }
 
-    protected WebDavResource createUnknownResource(DavResourceLocator locator,
-                                                String uri)
-        throws CosmoDavException {
-        HibItem hibItem = contentService.findItemByPath(uri);
-
-        if(hibItem == null) {
-            return null;
+    private WebDavResource createUnknownResource(DavResourceLocator locator) {
+        final String itemUid = locator.itemUid();
+        if(itemUid != null) {
+            final HibItem userItem = itemDao.findByOwnerAndName(locator.username(), locator.itemUid());
+            if(userItem == null) {
+                return null;
+            }
+            return createResource(locator, userItem);
         }
 
-        if(hibItem instanceof HibCollectionItem) {
-            return createCollectionResource(locator, (HibCollectionItem) hibItem);
+        final String collection = locator.collection();
+        if(collection != null) {
+            final HibCollectionItem userCollection = collectionDao.findByOwnerAndName(locator.username(), collection);
+            if(userCollection == null) {
+                return null;
+            }
+            return createCollectionResource(locator, userCollection);
         }
 
-        return createResource(locator, hibItem);
+        final HibCollectionItem homeCollection = collectionDao.findByOwnerAndName(locator.username(), locator.username());
+        return createCollectionResource(locator, homeCollection);
     }
 
     public ContentService getContentService() {

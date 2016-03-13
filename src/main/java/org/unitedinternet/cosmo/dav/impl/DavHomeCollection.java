@@ -19,6 +19,7 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 
 /**
@@ -30,7 +31,7 @@ import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
  */
 public class DavHomeCollection extends DavCollectionBase {
 
-    public DavHomeCollection(HibHomeCollectionItem collection,
+    public DavHomeCollection(HibCollectionItem collection,
                              DavResourceLocator locator,
                              DavResourceFactory factory)
             throws CosmoDavException {
@@ -38,7 +39,7 @@ public class DavHomeCollection extends DavCollectionBase {
     }
 
     public String getSupportedMethods() {
-        return "OPTIONS, GET, HEAD, TRACE, PROPFIND";
+        return "OPTIONS, GET, HEAD, PROPFIND";
     }
 
 }

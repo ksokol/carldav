@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -46,7 +46,7 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
         this.itemDao = itemDao;
     }
 
-    public Set<HibICalendarItem> filterQuery(CalendarFilter filter) {
+    public Set<HibItem> filterQuery(CalendarFilter filter) {
         return new HashSet<>(itemDao.findCalendarItems(filterConverter.translateToItemFilter(filter)));
     }
 
@@ -56,7 +56,7 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
      * @param filter The calendar filter.
      * @return The calendar filter evaluater.
      */
-    public boolean filterQuery(HibICalendarItem item, CalendarFilter filter) {
+    public boolean filterQuery(HibItem item, CalendarFilter filter) {
         LOG.debug("matching item {} to filter {}", item.getUid(), filter);
         Calendar calendar = entityConverter.convertContent(item);
         if(calendar != null) {

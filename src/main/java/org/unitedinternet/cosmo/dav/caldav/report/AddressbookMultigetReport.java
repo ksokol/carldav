@@ -1,9 +1,7 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import static carldav.CarldavConstants.ADDRESS_DATA;
-
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
+import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
 import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
 import carldav.jackrabbit.webdav.version.report.CustomReportType;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
@@ -11,9 +9,11 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavCard;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import javax.xml.namespace.QName;
+
+import static carldav.CarldavConstants.ADDRESS_DATA;
 
 /**
  * @author Kamill Sokol
@@ -70,7 +70,7 @@ public class AddressbookMultigetReport extends MultigetReport {
             return null;
         }
 
-        final HibICalendarItem item = (HibICalendarItem) resource.getItem();
+        final HibItem item = resource.getItem();
         final StringBuilder builder = new StringBuilder();
 
         builder.append(item.getCalendar());

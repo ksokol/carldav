@@ -33,7 +33,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -84,7 +84,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         c.add(Calendar.YEAR, -1);
         filter.setModifiedSince(Restrictions.between(c.getTime(), end));
         Query query = queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i where i.modifiedDate between :param0 and :param1", query.getQueryString());
+        Assert.assertEquals("select i from HibItem i where i.modifiedDate between :param0 and :param1", query.getQueryString());
     }
 
     /**
@@ -159,10 +159,10 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
     public void testBasicStampQuery() throws Exception {
         NoteItemFilter filter = new NoteItemFilter();
         StampFilter stampFilter = new StampFilter();
-        stampFilter.setStampClass(HibICalendarItem.class);
+        stampFilter.setStampClass(HibItem.class);
         filter.getStampFilters().add(stampFilter);
         Query query = queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i", query.getQueryString());
+        Assert.assertEquals("select i from HibItem i", query.getQueryString());
     }
 
     /**
@@ -179,13 +179,13 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         //filter.setBody("body");
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
+        Assert.assertEquals("select i from HibItem i join i.collection pd "
                 + "where pd.id=:parent and "
                 + "i.displayName=:param1 and i.type=:type and i.uid=:param3", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
+        Assert.assertEquals("select i from HibItem i join i.collection pd "
                 + "where pd.id=:parent and i.displayName=:param1 and "
                 + "i.type=:type and (i.recurring=:recurring) "
                 + "and i.uid=:param4", query.getQueryString());
@@ -206,7 +206,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(0L);
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
-        Assert.assertEquals("select i from HibICalendarItem i join i.collection pd " +
+        Assert.assertEquals("select i from HibItem i join i.collection pd " +
                 "where pd.id=:parent and i.type=:type and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
                 "or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate)))"
                 ,query.getQueryString());

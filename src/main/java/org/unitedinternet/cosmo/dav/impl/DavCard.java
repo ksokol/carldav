@@ -22,7 +22,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import javax.servlet.http.HttpServletResponse;
@@ -42,11 +41,11 @@ public class DavCard extends DavItemResourceBase {
     }
 
     public DavCard(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
-        this(new HibICalendarItem(HibICalendarItem.Type.VCARD), locator, factory);
+        this(new HibItem(HibItem.Type.VCARD), locator, factory);
     }
 
     public void writeHead(final HttpServletResponse response) throws IOException {
-        HibICalendarItem content = (HibICalendarItem) getItem();
+        HibItem content = (HibItem) getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
         response.setContentType(content.getMimetype());
@@ -60,7 +59,7 @@ public class DavCard extends DavItemResourceBase {
     }
 
     public void writeBody(final HttpServletResponse response) throws IOException {
-        HibICalendarItem content = (HibICalendarItem) getItem();
+        HibItem content = getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
         IOUtils.copy(new ByteArrayInputStream(calendar), response.getOutputStream());
     }
@@ -68,7 +67,7 @@ public class DavCard extends DavItemResourceBase {
     protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
         super.populateItem(inputContext);
 
-        HibICalendarItem file = (HibICalendarItem) getItem();
+        HibItem file = getItem();
         Scanner scanner = new Scanner(inputContext.getInputStream()).useDelimiter("\\A");
         file.setCalendar(scanner.next());
         converter.convertCard(file);

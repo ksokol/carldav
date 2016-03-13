@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 /**
  * Adds EventStamp specific criteria to StampFilter.
@@ -24,6 +24,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 public class EventStampFilter extends StampFilter {
 
     public EventStampFilter() {
-        setType(HibICalendarItem.Type.VEVENT);
+        setType(HibItem.Type.VEVENT);
     }
 }

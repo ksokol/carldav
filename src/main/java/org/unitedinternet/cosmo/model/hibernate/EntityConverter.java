@@ -36,7 +36,7 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.ICALENDAR_ME
 
 public class EntityConverter {
 
-    public HibItem convertCard(HibICalendarItem cardItem) {
+    public HibItem convertCard(HibItem cardItem) {
         try {
             VCard vcard = Ezvcard.parse(cardItem.getCalendar()).first();
             final String uidString = vcard.getUid().getValue();
@@ -55,7 +55,7 @@ public class EntityConverter {
         }
     }
 
-    public HibItem convert(HibICalendarItem calendarItem) {
+    public HibItem convert(HibItem calendarItem) {
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarItem.getCalendar()));
             Component component = getFirstComponent(calendar.getComponents(calendarItem.getType().name()));
@@ -68,7 +68,7 @@ public class EntityConverter {
         }
     }
 
-    public Calendar convertContent(HibICalendarItem item) {
+    public Calendar convertContent(HibItem item) {
         if(item.getCalendar() != null) {
             try {
                 return new CalendarBuilder().build(new StringReader(item.getCalendar()));
@@ -80,7 +80,7 @@ public class EntityConverter {
         return null;
     }
 
-    private void setCalendarAttributes(HibICalendarItem note, Component component) {
+    private void setCalendarAttributes(HibItem note, Component component) {
         final Property uid = component.getProperty(Property.UID);
         String uidString = null;
         if(uid != null) {
@@ -220,7 +220,7 @@ public class EntityConverter {
         return l;
     }
 
-    private void calculateEventStampIndexes(Calendar calendar, Component event, HibICalendarItem note) {
+    private void calculateEventStampIndexes(Calendar calendar, Component event, HibItem note) {
         final DtStart dtStart = ICalendarUtils.getStartDate(event);
         Date startDate = null;
 

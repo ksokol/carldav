@@ -15,7 +15,6 @@ import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import javax.xml.namespace.QName;
@@ -49,7 +48,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         HibCollectionItem collection = getItem();
         filter.setParent(collection.getId());
 
-        for (HibICalendarItem memberItem : getCalendarQueryProcesor().filterQuery(filter)) {
+        for (HibItem memberItem : getCalendarQueryProcesor().filterQuery(filter)) {
             WebDavResource resource = memberToResource(memberItem);
             members.add((DavCalendarResource) resource);
         }
@@ -75,7 +74,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     }
 
     protected void saveContent(DavItemResource member) throws CosmoDavException {
-        HibICalendarItem content = (HibICalendarItem) member.getItem();
+        HibItem content = member.getItem();
         final HibItem converted = converter.convert(content);
 
         if (content.getId() != null) {

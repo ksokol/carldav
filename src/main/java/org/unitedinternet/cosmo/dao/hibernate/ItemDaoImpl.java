@@ -21,7 +21,6 @@ import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.List;
@@ -43,7 +42,7 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         getSession().flush();
     }
 
-    public List<HibItem> findByCollectionIdAndMimetype(Long id, HibICalendarItem.Type type) {
+    public List<HibItem> findByCollectionIdAndMimetype(Long id, HibItem.Type type) {
         Query hibQuery = getSession().getNamedQuery("item.findByCollectionIdAndMimetype")
                 .setParameter("parent", id)
                 .setParameter("type", type);
@@ -57,9 +56,8 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
         return item;
     }
 
-    public Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter) {
-        Set results = itemFilterProcessor.processFilter(itemFilter);
-        return (Set<HibICalendarItem>) results;
+    public Set<HibItem> findCalendarItems(ItemFilter itemFilter) {
+        return itemFilterProcessor.processFilter(itemFilter);
     }
 
     @Override

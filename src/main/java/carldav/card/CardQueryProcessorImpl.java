@@ -4,7 +4,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.List;
@@ -24,6 +23,6 @@ class CardQueryProcessorImpl implements CardQueryProcessor {
     @Override
     public List<HibItem> filterQuery(final HibCollectionItem collection, final AddressbookFilter filter) {
         //TODO filter is not in use yet
-        return itemDao.findByCollectionIdAndMimetype(collection.getId(), HibICalendarItem.Type.VCARD);
+        return itemDao.findByCollectionIdAndMimetype(collection.getId(), HibItem.Type.VCARD);
     }
 }

@@ -15,14 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import static carldav.CarldavConstants.DISPLAY_NAME;
-import static carldav.CarldavConstants.GET_CONTENT_LENGTH;
-import static carldav.CarldavConstants.GET_CONTENT_TYPE;
-import static carldav.CarldavConstants.GET_ETAG;
-import static carldav.CarldavConstants.GET_LAST_MODIFIED;
-import static carldav.CarldavConstants.IS_COLLECTION;
-import static carldav.CarldavConstants.RESOURCE_TYPE;
-
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.apache.commons.lang.StringUtils;
@@ -31,13 +24,7 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import carldav.jackrabbit.webdav.io.DavInputContext;
-import org.unitedinternet.cosmo.dav.property.DisplayName;
-import org.unitedinternet.cosmo.dav.property.Etag;
-import org.unitedinternet.cosmo.dav.property.IsCollection;
-import org.unitedinternet.cosmo.dav.property.LastModified;
-import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.dav.property.*;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.util.PathUtil;
@@ -45,6 +32,8 @@ import org.unitedinternet.cosmo.util.PathUtil;
 import java.io.UnsupportedEncodingException;
 import java.util.Calendar;
 import java.util.Date;
+
+import static carldav.CarldavConstants.*;
 
 /**
  * <p>
@@ -147,7 +136,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             hibItem.setOwner(owner);
         }
 
-        HibICalendarItem hibICalendarItem = (HibICalendarItem) hibItem;
+        HibItem hibICalendarItem = hibItem;
         hibICalendarItem.setClientCreationDate(Calendar.getInstance().getTime());
         hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());
     }

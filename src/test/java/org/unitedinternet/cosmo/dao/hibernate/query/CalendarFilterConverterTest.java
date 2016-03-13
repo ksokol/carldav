@@ -23,7 +23,7 @@ import org.unitedinternet.cosmo.calendar.query.*;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.filter.*;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 
 /**
@@ -124,7 +124,7 @@ public class CalendarFilterConverterTest {
         Assert.assertEquals(1, noteFilter.getStampFilters().size());
         
         StampFilter sf = noteFilter.getStampFilters().get(0);
-        Assert.assertEquals(HibICalendarItem.class, sf.getStampClass());
+        Assert.assertEquals(HibItem.class, sf.getStampClass());
     }
     
     /**

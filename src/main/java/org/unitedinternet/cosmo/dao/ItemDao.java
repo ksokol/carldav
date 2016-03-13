@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dao;
 
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.List;
@@ -35,9 +34,9 @@ public interface ItemDao {
 
     HibItem save(HibItem item);
 
-    List<HibItem> findByCollectionIdAndMimetype(Long id, HibICalendarItem.Type type);
+    List<HibItem> findByCollectionIdAndMimetype(Long id, HibItem.Type type);
 
-    Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter);
+    Set<HibItem> findCalendarItems(ItemFilter itemFilter);
 
     HibItem findByOwnerAndName(String owner, String uid);
 

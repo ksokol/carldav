@@ -1,10 +1,10 @@
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 public class JournalStampFilter extends StampFilter {
 
     public JournalStampFilter() {
-        setType(HibICalendarItem.Type.VJOURNAL);
+        setType(HibItem.Type.VJOURNAL);
     }
 }

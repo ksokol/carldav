@@ -22,7 +22,6 @@ import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dav.impl.*;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -90,8 +89,8 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             WebDavResource parent = resolve(locator.getParentLocator());
             //TODO
             if(parent != null && CALENDAR.equals(parent.getName())) {
-                final HibICalendarItem item = new HibICalendarItem();
-                item.setType(HibICalendarItem.Type.VEVENT);
+                final HibItem item = new HibItem();
+                item.setType(HibItem.Type.VEVENT);
                 return new DavCalendarResource(item, locator, this);
             }
             //TODO

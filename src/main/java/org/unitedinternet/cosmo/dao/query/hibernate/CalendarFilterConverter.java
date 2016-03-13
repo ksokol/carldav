@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 import net.fortuna.ical4j.model.TimeZone;
 import org.unitedinternet.cosmo.calendar.query.*;
 import org.unitedinternet.cosmo.model.filter.*;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.Iterator;
 
@@ -97,7 +97,7 @@ public class CalendarFilterConverter {
     private ItemFilter createFirstPassTaskFilter(Long collection) {
         NoteItemFilter filter = new NoteItemFilter();
         filter.setParent(collection);
-        filter.getStampFilters().add(new StampFilter(HibICalendarItem.class));
+        filter.getStampFilters().add(new StampFilter(HibItem.class));
         return filter;
     }
 
@@ -109,7 +109,7 @@ public class CalendarFilterConverter {
             handleEventCompFilter(compFilter, itemFilter, new JournalStampFilter());
         } else if(COMP_VTODO.equalsIgnoreCase(compFilter.getName())) {
             final EventStampFilter eventStampFilter = new EventStampFilter();
-            eventStampFilter.setType(HibICalendarItem.Type.VTODO);
+            eventStampFilter.setType(HibItem.Type.VTODO);
             handleEventCompFilter(compFilter, itemFilter, eventStampFilter);
         } else {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());

@@ -28,7 +28,6 @@ import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import javax.servlet.http.HttpServletResponse;
@@ -69,15 +68,15 @@ public class DavCalendarResource extends DavItemResourceBase implements ICalenda
 
     public boolean matches(CalendarFilter filter)
         throws CosmoDavException {
-        return getCalendarQueryProcesor().filterQuery((HibICalendarItem)getItem(), filter);
+        return getCalendarQueryProcesor().filterQuery(getItem(), filter);
     }
 
     public String getCalendar() {
-        return ((HibICalendarItem)getItem()).getCalendar();
+        return getItem().getCalendar();
     }
 
     public void setCalendar(String calendar) throws CosmoDavException {
-        final HibICalendarItem item = (HibICalendarItem) getItem();
+        final HibItem item = getItem();
         item.setCalendar(calendar);
     }
 

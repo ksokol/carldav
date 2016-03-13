@@ -215,4 +215,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     public CosmoSecurityManager getSecurityManager() {
         return securityManager;
     }
+
+    @Override
+    public ItemDao getItemDao() {
+        return itemDao;
+    }
+
+    @Override
+    public CollectionDao getCollectionDao() {
+        return collectionDao;
+    }
 }

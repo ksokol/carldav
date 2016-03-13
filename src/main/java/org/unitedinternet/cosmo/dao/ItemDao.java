@@ -40,4 +40,6 @@ public interface ItemDao {
     Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter);
 
     HibItem findByOwnerAndName(String owner, String uid);
+
+    List<HibItem> findByCollectionId(Long id);
 }

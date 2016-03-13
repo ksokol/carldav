@@ -41,8 +41,6 @@ import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 import static carldav.CarldavConstants.caldav;
 import static org.springframework.http.HttpHeaders.ETAG;
 import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CALENDAR;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CONTACTS;
 
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
 
@@ -87,17 +85,17 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public List<WebDavResource> getMembers() {
-        for (HibItem memberHibItem : item.getItems()) {
-            WebDavResource resource;
+        final List<HibCollectionItem> collections = getResourceFactory().getCollectionDao().findByParentId(item.getId());
+        final List<HibItem> items = getResourceFactory().getItemDao().findByCollectionId(item.getId());
 
-            if(CALENDAR.equals(memberHibItem.getName())|| CONTACTS.equals(memberHibItem.getName())) {
-                resource = collectionToResource((HibCollectionItem) memberHibItem);
-            } else {
-                resource = memberToResource(memberHibItem);
-            }
-
-            members.add(resource);
+        for (HibCollectionItem collection : collections) {
+            members.add(collectionToResource(collection));
         }
+
+        for (HibItem item : items) {
+            members.add(memberToResource(item));
+        }
+
         return Collections.unmodifiableList(members);
     }
 

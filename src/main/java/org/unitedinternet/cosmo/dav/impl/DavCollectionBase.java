@@ -88,7 +88,14 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     @Override
     public List<WebDavResource> getMembers() {
         for (HibItem memberHibItem : item.getItems()) {
-            WebDavResource resource = memberToResource(memberHibItem);
+            WebDavResource resource;
+
+            if(CALENDAR.equals(memberHibItem.getName())|| CONTACTS.equals(memberHibItem.getName())) {
+                resource = collectionToResource((HibCollectionItem) memberHibItem);
+            } else {
+                resource = memberToResource(memberHibItem);
+            }
+
             members.add(resource);
         }
         return Collections.unmodifiableList(members);
@@ -204,11 +211,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         DavResourceLocator locator = getResourceLocator().getFactory()
                 .createResourceLocatorByPath(getResourceLocator().getContext(),
                         path);
-
-        //TODO
-        if(CALENDAR.equals(hibItem.getName())|| CONTACTS.equals(hibItem.getName())) {
-            return getResourceFactory().createCollectionResource(locator, (HibCollectionItem) hibItem);
-        }
 
         return getResourceFactory().createResource(locator, hibItem);
     }

@@ -50,7 +50,13 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         filter.setParent(collection.getId());
 
         for (HibItem memberItem : getCalendarQueryProcesor().filterQuery(filter)) {
-            WebDavResource resource = memberToResource(memberItem);
+            WebDavResource resource;
+
+            if(CALENDAR.equals(memberItem.getName())|| CONTACTS.equals(memberItem.getName())) {
+                resource = collectionToResource((HibCollectionItem) memberItem);
+            } else {
+                resource = memberToResource(memberItem);
+            }
             members.add((DavCalendarResource) resource);
         }
 

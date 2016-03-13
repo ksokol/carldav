@@ -2,6 +2,8 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
 import static carldav.CarldavConstants.carddav;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CALENDAR;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CONTACTS;
 
 import carldav.card.CardQueryProcessor;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
@@ -51,7 +53,14 @@ public class DavCardCollection extends DavCollectionBase {
 
         HibCollectionItem collection = getItem();
         for (HibItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
-            WebDavResource resource = memberToResource(memberHibItem);
+            WebDavResource resource;
+
+            if(CALENDAR.equals(memberHibItem.getName())|| CONTACTS.equals(memberHibItem.getName())) {
+                resource = collectionToResource((HibCollectionItem) memberHibItem);
+            } else {
+                resource = memberToResource(memberHibItem);
+            }
+
             if (resource != null) {
                 members.add((DavItemResourceBase) resource);
             }

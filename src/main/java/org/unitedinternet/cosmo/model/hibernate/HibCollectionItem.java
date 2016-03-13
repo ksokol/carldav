@@ -20,18 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("collection")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@Table(name = "collection",
-        indexes={@Index(name = "idx_itemtype",columnList = "itemtype" ),
-                @Index(name = "idx_itemname",columnList = "itemname" ),
-        },
-        uniqueConstraints = {@UniqueConstraint(name = "displayname_owner", columnNames = {"displayname", "ownerid"})}
-)
-@DiscriminatorColumn(
-        name="itemtype",
-        discriminatorType=DiscriminatorType.STRING,
-        length=32)
+@Table(name = "collection", uniqueConstraints = {@UniqueConstraint(name = "displayname_owner", columnNames = {"displayname", "ownerid"})})
 public class HibCollectionItem extends HibAuditableObject {
 
     private Set<HibItem> items = new HashSet<>();

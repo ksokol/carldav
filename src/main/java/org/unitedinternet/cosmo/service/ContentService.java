@@ -20,8 +20,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.List;
-
 /**
  * Interface for services that manage access to user content.
  */
@@ -77,14 +75,6 @@ public interface ContentService {
      * @return updated content item
      */
     HibItem updateContent(HibItem content);
-
-    /**
-     * find the set of collection items as children of the given collection item.
-     * 
-     * @param hibCollectionItem parent collection item
-     * @return set of children collection items or empty list of parent collection has no children
-     */
-    List<HibCollectionItem> findCollectionItems(HibCollectionItem hibCollectionItem);
 
     HibHomeCollectionItem createRootItem(User user);
 }

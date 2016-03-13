@@ -41,5 +41,4 @@ public interface ItemDao {
 
     HibItem findByOwnerAndName(String owner, String uid);
 
-    List<HibItem> findByCollectionId(Long id);
 }

@@ -85,15 +85,12 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public List<WebDavResource> getMembers() {
-        final List<HibCollectionItem> collections = getResourceFactory().getCollectionDao().findByParentId(item.getId());
-        final List<HibItem> items = getResourceFactory().getItemDao().findByCollectionId(item.getId());
-
-        for (HibCollectionItem collection : collections) {
+        for (HibCollectionItem collection : item.getCollections()) {
             members.add(collectionToResource(collection));
         }
 
-        for (HibItem item : items) {
-            members.add(memberToResource(item));
+        for (HibItem tmp : item.getItems()) {
+            members.add(memberToResource(tmp));
         }
 
         return Collections.unmodifiableList(members);
@@ -105,7 +102,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     public List<WebDavResource> getCollectionMembers() {
-        for (HibCollectionItem memberHibItem : getContentService().findCollectionItems(item)) {
+        for (HibCollectionItem memberHibItem : item.getCollections()) {
             WebDavResource resource = collectionToResource(memberHibItem);
             members.add(resource);
         }

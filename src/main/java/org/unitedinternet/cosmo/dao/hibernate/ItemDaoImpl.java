@@ -69,11 +69,4 @@ public class ItemDaoImpl extends AbstractDaoImpl implements ItemDao {
                 .setParameter("name", name)
                 .uniqueResult();
     }
-
-    @Override
-    public List<HibItem> findByCollectionId(Long id) {
-        Query hibQuery = getSession().getNamedQuery("item.findByCollectionId")
-                .setParameter("parent", id);
-        return hibQuery.list();
-    }
 }

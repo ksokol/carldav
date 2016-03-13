@@ -15,9 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import carldav.repository.CollectionDao;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -78,7 +76,4 @@ public interface DavResourceFactory {
 
     CosmoSecurityManager getSecurityManager();
 
-    ItemDao getItemDao();
-
-    CollectionDao getCollectionDao();
 }

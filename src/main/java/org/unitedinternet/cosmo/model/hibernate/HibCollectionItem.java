@@ -35,7 +35,8 @@ public class HibCollectionItem extends HibAuditableObject {
 
     private Set<HibItem> items = new HashSet<>();
     private User owner;
-    private HibCollectionItem collection;
+    private HibCollectionItem parent;
+    private Set<HibCollectionItem> collections;
 
     @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
     public Set<HibItem> getItems() {
@@ -56,13 +57,23 @@ public class HibCollectionItem extends HibAuditableObject {
         this.owner = owner;
     }
 
-    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY)
     @JoinColumn(name = "collectionid")
     public HibCollectionItem getParent() {
-        return collection;
+        return parent;
     }
 
-    public void setParent(final HibCollectionItem collection) {
-        this.collection = collection;
+    public void setParent(final HibCollectionItem parent) {
+        this.parent = parent;
+    }
+
+    @OneToMany(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "collectionid")
+    public Set<HibCollectionItem> getCollections() {
+        return collections;
+    }
+
+    public void setCollections(Set<HibCollectionItem> collections) {
+        this.collections = collections;
     }
 }

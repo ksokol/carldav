@@ -50,7 +50,7 @@ public class DavCard extends DavItemResourceBase {
         HibICalendarItem content = (HibICalendarItem) getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
-        response.setContentType(CARD_MEDIA_TYPE);
+        response.setContentType(content.getMimetype());
         response.setContentLength(calendar.length);
         if (getModificationTime() >= 0) {
             response.addDateHeader(LAST_MODIFIED, getModificationTime());

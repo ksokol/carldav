@@ -127,6 +127,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         content.setName(name);
         content.setDisplayName(name);
         content.setOwner(getUser(owner));
+        content.setMimetype("irrelevant");
         return content;
     }
 }

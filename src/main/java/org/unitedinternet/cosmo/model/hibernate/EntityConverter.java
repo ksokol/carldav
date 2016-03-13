@@ -18,26 +18,11 @@ package org.unitedinternet.cosmo.model.hibernate;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.Recur;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStamp;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.RDate;
-import net.fortuna.ical4j.model.property.RRule;
-import net.fortuna.ical4j.model.property.Trigger;
+import net.fortuna.ical4j.model.property.*;
 import org.unitedinternet.cosmo.calendar.ICalendarUtils;
 import org.unitedinternet.cosmo.calendar.RecurrenceExpander;
 
@@ -46,6 +31,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_TYPE;
+import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.ICALENDAR_MEDIA_TYPE;
+
 public class EntityConverter {
 
     public HibItem convertCard(HibICalendarItem cardItem) {
@@ -53,6 +41,7 @@ public class EntityConverter {
             VCard vcard = Ezvcard.parse(cardItem.getCalendar()).first();
             final String uidString = vcard.getUid().getValue();
             cardItem.setUid(uidString);
+            cardItem.setMimetype(CARD_MEDIA_TYPE);
 
             if(vcard.getFormattedName() != null) {
                 cardItem.setDisplayName(vcard.getFormattedName().getValue());
@@ -72,6 +61,7 @@ public class EntityConverter {
             Component component = getFirstComponent(calendar.getComponents(calendarItem.getType().name()));
             setCalendarAttributes(calendarItem, component);
             calculateEventStampIndexes(calendar, component, calendarItem);
+            calendarItem.setMimetype(ICALENDAR_MEDIA_TYPE);
             return calendarItem;
         } catch (Exception exception) {
             throw new RuntimeException(exception.getMessage(), exception);

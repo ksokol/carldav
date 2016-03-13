@@ -37,6 +37,7 @@ public class HibItem extends HibAuditableObject {
     private String uid;
     private HibCollectionItem collection;
     private User owner;
+    private String mimetype;
 
     @Column(name = "uid", nullable = false)
     @NotEmpty
@@ -66,5 +67,15 @@ public class HibItem extends HibAuditableObject {
 
     public void setOwner(User owner) {
         this.owner = owner;
+    }
+
+    @Column(name = "mimetype", nullable = false)
+    @NotEmpty
+    public String getMimetype() {
+        return mimetype;
+    }
+
+    public void setMimetype(String mimetype) {
+        this.mimetype = mimetype;
     }
 }

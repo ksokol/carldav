@@ -27,10 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-
-/**
- * Implemtation of UserDao using Hibernate persistence objects.
- */
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     public User createUser(User user) {
@@ -52,14 +48,14 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
     }
 
     public User getUser(String email) {
-        return findUserByEmail(email);
+        return findUserByEmailIgnoreCase(email);
     }
 
     public User getUserByEmail(String email) {
         if (email == null) {
             throw new IllegalArgumentException("email required");
         }
-        return findUserByEmail(email);
+        return findUserByEmailIgnoreCase(email);
     }
 
     public Set<User> getUsers() {
@@ -73,7 +69,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
     }
 
     public void removeUser(String email) {
-        User user = findUserByEmail(email);
+        User user = findUserByEmailIgnoreCase(email);
         // delete user
         if (user != null) {
             removeUser(user);
@@ -83,54 +79,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
     public void removeUser(User user) {
         getSession().delete(user);
         getSession().flush();
-    }
-
-    public User updateUser(User user) {
-        // prevent auto flushing when querying for existing users
-        getSession().setFlushMode(FlushMode.MANUAL);
-
-        User findUser = findUserByEmailIgnoreCaseAndId(user.getId(), user.getEmail());
-
-        if (findUser != null) {
-            if (findUser.getEmail().equals(user.getEmail())) {
-                throw new DuplicateEmailException(user.getEmail());
-            }
-        }
-
-        getSession().update(user);
-        getSession().flush();
-
-        return user;
-    }
-
-    private User findUserByEmailIgnoreCaseAndId(Long userId, String email) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery(
-                "user.byUsernameOrEmail.ignorecase.ingoreId")
-                .setParameter("email", email)
-                .setParameter("userid", userId);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        List users = hibQuery.list();
-        if (users.size() > 0) {
-            return (User) users.get(0);
-        } else {
-            return null;
-        }
-    }
-
-    private User findUserByEmail(String email) {
-        Session session = getSession();
-        Query hibQuery = session.getNamedQuery("user.byEmail").setParameter(
-                "email", email);
-        hibQuery.setCacheable(true);
-        hibQuery.setFlushMode(FlushMode.MANUAL);
-        List users = hibQuery.list();
-        if (users.size() > 0) {
-            return (User) users.get(0);
-        } else {
-            return null;
-        }
     }
 
     private User findUserByEmailIgnoreCase(String email) {

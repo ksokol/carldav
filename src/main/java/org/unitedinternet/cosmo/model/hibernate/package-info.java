@@ -25,9 +25,7 @@
         @NamedQuery(name = "collection.findByOwnerAndName", query = "select item from HibCollectionItem item where item.owner.email = :owner and item.name = :name"),
 
         // User Queries
-        @NamedQuery(name = "user.byEmail", query="from User where email=:email"),
         @NamedQuery(name = "user.byEmail.ignorecase", query="from User where lower(email)=lower(:email)"),
-        @NamedQuery(name = "user.byUsernameOrEmail.ignorecase.ingoreId", query = "from User where id!=:userid and lower(email)=lower(:email))"),
         @NamedQuery(name = "user.all", query = "from User")
 })
 package org.unitedinternet.cosmo.model.hibernate;

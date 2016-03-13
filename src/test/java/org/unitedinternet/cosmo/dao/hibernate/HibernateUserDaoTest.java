@@ -114,58 +114,6 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user2.setEmail("user2@user1.com");
         user2 = userDao.createUser(user2);
     }
-    
-    /**
-     * Tests update user.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testUpdateUser() throws Exception {
-        User user1 = new User();
-        user1.setEmail("user1@user1.com");
-        user1.setPassword("user1password");
-
-        user1 = userDao.createUser(user1);
-
-        // find by uid
-        User queryUser1 = userDao.getUserByEmail(user1.getEmail());
-        Assert.assertNotNull(queryUser1);
-        verifyUser(user1, queryUser1);
-        
-        queryUser1.setPassword("user2password");
-        userDao.updateUser(queryUser1);
-
-        queryUser1 = userDao.getUserByEmail(user1.getEmail());
-        Assert.assertEquals(queryUser1.getPassword(), "user2password");
-    }
-    
-    /**
-     * Tests update user duplicate.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testUpdateUserDuplicate() throws Exception {
-        User user1 = new User();
-        user1.setEmail("user1@user1.com");
-        user1.setPassword("user1password");
-
-        user1 = userDao.createUser(user1);
-        
-        User user2 = new User();
-        user2.setEmail("user2@user2.com");
-        user2.setPassword("user2password");
-
-        user2 = userDao.createUser(user2);
-
-        // find by uid
-        User queryUser1 = userDao.getUserByEmail(user1.getEmail());
-        queryUser1.setEmail("user2@user2.com");
-        try {
-            userDao.updateUser(queryUser1);
-            Assert.fail("able to update with duplicate email");
-        } catch (DuplicateEmailException e) {
-        }
-    }
 
     /**
      * Tests delete user.

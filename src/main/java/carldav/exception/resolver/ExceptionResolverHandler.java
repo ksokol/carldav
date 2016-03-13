@@ -19,6 +19,7 @@ public class ExceptionResolverHandler {
         exceptionResolvers = new ArrayList<>();
         exceptionResolvers.add(new ConstrainViolationExceptionResolver());
         exceptionResolvers.add(new UidInUseExceptionResolver());
+        exceptionResolvers.add(new DuplicateUserEmailExceptionResolver());
     }
 
     public CosmoDavException resolve(final Exception exception) {

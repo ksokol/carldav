@@ -47,6 +47,27 @@ class UserControllerTests extends IntegrationTestSupport {
     }
 
     @Test
+    public void createSameUserTwice() {
+        def request = """\
+                        {
+                            "email" : "${NEW_USER}",
+                            "password" : "${NEW_USER_PASSWORD}"
+                        }"""
+
+        mockMvc.perform(post("/user")
+                .contentType(APPLICATION_JSON)
+                .content(request)
+                .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
+                .andExpect(status().isCreated())
+
+        mockMvc.perform(post("/user")
+                .contentType(APPLICATION_JSON)
+                .content(request)
+                .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
+                .andExpect(status().isConflict())
+    }
+
+    @Test
     public void createUserCheckCollections() {
         createUser()
 

@@ -17,24 +17,15 @@ package org.unitedinternet.cosmo.model.hibernate;
 
 import org.hibernate.validator.constraints.Email;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 @Entity
-@Table(name="users")
+@Table(name="users", uniqueConstraints = {@UniqueConstraint(name = "user_email", columnNames = "email")})
 public class User {
 
-    private Long id = Long.valueOf(-1);
+    private Long id;
     private String password;
     private String email;
     private boolean locked;
@@ -43,7 +34,7 @@ public class User {
     private String role;
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue
     public Long getId() {
         return id;
     }
@@ -54,7 +45,7 @@ public class User {
     }
 
     @NotNull
-    @Column(name = "email", nullable=false, unique=true)
+    @Column(name = "email", nullable=false)
     @Email
     public String getEmail() {
         return email;

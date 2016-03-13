@@ -15,10 +15,6 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import org.hibernate.FlushMode;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.unitedinternet.cosmo.dao.DuplicateEmailException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
@@ -27,19 +23,7 @@ import java.util.List;
 public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     public User save(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("user is required");
-        }
-
-        if (user.getId() != -1) {
-            throw new IllegalArgumentException("new user is required");
-        }
-
-        if (findUserByEmailIgnoreCase(user.getEmail()) != null) {
-            throw new DuplicateEmailException(user.getEmail());
-        }
-
-        getSession().save(user);
+        getSession().saveOrUpdate(user);
         getSession().flush();
         return user;
     }
@@ -54,7 +38,6 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     public void remove(User user) {
         getSession().delete(user);
-      //  getSession().flush();
     }
 
     private User findUserByEmailIgnoreCase(String email) {

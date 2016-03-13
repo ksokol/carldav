@@ -35,16 +35,6 @@ public interface UserService {
     User getUser(String username);
 
     /**
-     * Returns the user account identified by the given email address.
-     *
-     * @param email the email address of the account to return
-     *
-     * @throws DataRetrievalFailureException if the account does not
-     * exist
-     */
-    User getUserByEmail(String email);
-
-    /**
      * Creates a user account in the repository. Digests the raw
      * password and uses the result to replace the raw
      * password. Returns a new instance of <code>User</code>

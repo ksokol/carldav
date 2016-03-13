@@ -47,10 +47,6 @@ public class StandardUserService implements UserService {
         return userDao.getUser(username);
     }
 
-    public User getUserByEmail(String email) {
-        return userDao.getUser(email);
-    }
-
     /**
      * Creates a user account in the repository. Digests the raw
      * password and uses the result to replace the raw

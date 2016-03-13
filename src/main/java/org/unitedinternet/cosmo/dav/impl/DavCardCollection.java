@@ -10,8 +10,8 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedAddressData;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookMultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookQueryReport;
-import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;
@@ -49,7 +49,7 @@ public class DavCardCollection extends DavCollectionBase {
         Set<DavItemResourceBase> members = new HashSet<>();
 
         HibCollectionItem collection = getItem();
-        for (HibCardItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
+        for (HibItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberHibItem);
             members.add((DavItemResourceBase) resource);
         }

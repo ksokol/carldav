@@ -32,7 +32,7 @@ import javax.persistence.*;
         name="itemtype",
         discriminatorType=DiscriminatorType.STRING,
         length=32)
-public abstract class HibItem extends HibAuditableObject {
+public class HibItem extends HibAuditableObject {
 
     private String uid;
     private HibCollectionItem collection;

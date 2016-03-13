@@ -21,7 +21,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -119,12 +118,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         return user;
     }
 
-    private HibCardItem generateTestContent() {
+    private HibItem generateTestContent() {
         return generateTestContent("test", "testuser");
     }
 
-    private HibCardItem generateTestContent(String name, String owner) {
-        HibCardItem content = new HibCardItem();
+    private HibItem generateTestContent(String name, String owner) {
+        HibItem content = new HibItem();
         content.setName(name);
         content.setDisplayName(name);
         content.setOwner(getUser(owner));

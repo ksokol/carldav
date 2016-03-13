@@ -109,7 +109,7 @@ public class CalendarFilterConverter {
             handleEventCompFilter(compFilter, itemFilter, new JournalStampFilter());
         } else if(COMP_VTODO.equalsIgnoreCase(compFilter.getName())) {
             final EventStampFilter eventStampFilter = new EventStampFilter();
-            eventStampFilter.setType("note");
+            eventStampFilter.setType(HibICalendarItem.Type.VTODO);
             handleEventCompFilter(compFilter, itemFilter, eventStampFilter);
         } else {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());

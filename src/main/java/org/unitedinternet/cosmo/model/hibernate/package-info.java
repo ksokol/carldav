@@ -20,8 +20,8 @@
 @NamedQueries({
         // Item Queries
         @NamedQuery(name = "item.findByOwnerAndName", query = "select item from HibItem item where item.owner.email = :owner and item.name = :name"),
+        @NamedQuery(name = "item.findByCollectionIdAndMimetype", query = "select item from HibItem item join item.collection pd where item.collection.id=:parent and item.type=:type"),
 
-        @NamedQuery(name = "collection.items", query = "select item from HibItem item join item.collection pd where item.collection.id=:parent and item.type=:type"),
         @NamedQuery(name = "collection.findByOwnerAndName", query = "select item from HibCollectionItem item where item.owner.email = :owner and item.name = :name"),
 
         // User Queries

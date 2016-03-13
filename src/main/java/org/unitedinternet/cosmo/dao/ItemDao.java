@@ -35,7 +35,7 @@ public interface ItemDao {
 
     HibItem save(HibItem item);
 
-    List<HibItem> findCollectionFileItems(Long id);
+    List<HibItem> findByCollectionIdAndMimetype(Long id, HibICalendarItem.Type type);
 
     Set<HibICalendarItem> findCalendarItems(ItemFilter itemFilter);
 

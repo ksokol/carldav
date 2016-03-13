@@ -79,10 +79,10 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         final HibItem converted = converter.convert(content);
 
         if (content.getId() != null) {
-            LOG.debug("updating {} {} ", content.getType(), member.getResourcePath());
+            LOG.debug("updating {} {} ", content.getMimetype(), member.getResourcePath());
             getContentService().updateContent(converted);
         } else {
-            LOG.debug("creating {} {}", content.getType(), member.getResourcePath());
+            LOG.debug("creating {} {}", content.getMimetype(), member.getResourcePath());
             getContentService().createContent(getItem(), converted);
         }
 

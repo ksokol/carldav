@@ -181,13 +181,13 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
                 + "where pd.id=:parent and "
-                + "i.displayName=:param1 and i.class=:clazz and i.uid=:param3", query.getQueryString());
+                + "i.displayName=:param1 and i.type=:type and i.uid=:param3", query.getQueryString());
 
         eventFilter.setIsRecurring(true);
         query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd "
                 + "where pd.id=:parent and i.displayName=:param1 and "
-                + "i.class=:clazz and (i.recurring=:recurring) "
+                + "i.type=:type and (i.recurring=:recurring) "
                 + "and i.uid=:param4", query.getQueryString());
     }
 
@@ -207,7 +207,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.getStampFilters().add(eventFilter);
         Query query =  queryBuilder.buildQuery(session, filter);
         Assert.assertEquals("select i from HibICalendarItem i join i.collection pd " +
-                "where pd.id=:parent and i.class=:clazz and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
+                "where pd.id=:parent and i.type=:type and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
                 "or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate)))"
                 ,query.getQueryString());
     }

@@ -23,6 +23,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -44,7 +45,7 @@ public class StampFilter {
     private Date fstart;
     private Date fend;
     private TimeZone timezone = null;
-    private String type;
+    private HibICalendarItem.Type type;
 
     public StampFilter() {}
     
@@ -108,11 +109,11 @@ public class StampFilter {
         return new Date(fstart.getTime());
     }
 
-    public String getType() {
+    public HibICalendarItem.Type getType() {
         return type;
     }
 
-    public void setType(final String type) {
+    public void setType(final HibICalendarItem.Type type) {
         this.type = type;
     }
 

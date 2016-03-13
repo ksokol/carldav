@@ -126,8 +126,8 @@ public class StandardItemFilterProcessor extends AbstractDaoImpl implements Item
                                    Map<String, Object> params) {
 
         if(filter.getType() != null) {
-            appendWhere(whereBuf, "i.class=:clazz");
-            params.put("clazz", filter.getType());
+            appendWhere(whereBuf, "i.type=:type");
+            params.put("type", filter.getType());
         }
 
         // handle recurring event filter

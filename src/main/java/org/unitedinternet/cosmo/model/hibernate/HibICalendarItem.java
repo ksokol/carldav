@@ -38,7 +38,7 @@ import javax.persistence.TemporalType;
 )
 @Entity
 @DiscriminatorValue("icalendar")
-public abstract class HibICalendarItem extends HibItem {
+public class HibICalendarItem extends HibItem {
 
     public enum Type {
         VEVENT, VJOURNAL, VTODO, VCARD
@@ -53,6 +53,12 @@ public abstract class HibICalendarItem extends HibItem {
     private Date clientCreationDate;
     private Date clientModifiedDate;
     private Type type;
+
+    public HibICalendarItem() {}
+
+    public HibICalendarItem(Type type) {
+        this.type = type;
+    }
 
     @Column(name = "calendar", columnDefinition = "CLOB")
     @Lob

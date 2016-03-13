@@ -58,6 +58,7 @@ public class EntityConverter {
     public HibItem convert(HibICalendarItem calendarItem) {
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarItem.getCalendar()));
+            System.out.println("calendarItem.getType() " + calendarItem.getType());
             Component component = getFirstComponent(calendar.getComponents(calendarItem.getType().name()));
             setCalendarAttributes(calendarItem, component);
             calculateEventStampIndexes(calendar, component, calendarItem);

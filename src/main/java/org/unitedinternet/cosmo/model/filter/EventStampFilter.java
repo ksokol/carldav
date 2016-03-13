@@ -24,7 +24,6 @@ import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 public class EventStampFilter extends StampFilter {
 
     public EventStampFilter() {
-        super(HibICalendarItem.class);
-        setType("event");
+        setType(HibICalendarItem.Type.VEVENT);
     }
 }

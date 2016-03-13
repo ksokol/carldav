@@ -22,7 +22,6 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
-import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibICalendarItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
@@ -43,7 +42,7 @@ public class DavCard extends DavItemResourceBase {
     }
 
     public DavCard(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
-        this(new HibCardItem(), locator, factory);
+        this(new HibICalendarItem(HibICalendarItem.Type.VCARD), locator, factory);
     }
 
     public void writeHead(final HttpServletResponse response) throws IOException {

@@ -83,7 +83,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         User user = getUser(userDao, "testuser");
         session.refresh(user);
 
-        HibCollectionItem root = (HibCollectionItem) user.getItems().iterator().next();
+        HibCollectionItem root = collectionDao.findByOwnerAndName(user.getEmail(), user.getEmail());
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");

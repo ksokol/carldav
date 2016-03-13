@@ -54,7 +54,7 @@ public class UserDaoImpl extends AbstractDaoImpl implements UserDao {
 
     public void remove(User user) {
         getSession().delete(user);
-        getSession().flush();
+      //  getSession().flush();
     }
 
     private User findUserByEmailIgnoreCase(String email) {

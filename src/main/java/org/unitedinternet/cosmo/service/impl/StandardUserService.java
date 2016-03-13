@@ -20,7 +20,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
@@ -74,7 +73,7 @@ public class StandardUserService implements UserService {
 
         User newUser = userDao.getUserByEmail(user.getEmail());
 
-        HibCollectionItem calendar = new HibCalendarCollectionItem();
+        HibCollectionItem calendar = new HibCollectionItem();
         calendar.setOwner(user);
         calendar.setName("calendar");
         calendar.setDisplayName("calendarDisplayName");

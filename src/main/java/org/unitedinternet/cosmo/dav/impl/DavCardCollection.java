@@ -1,10 +1,5 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
-import static carldav.CarldavConstants.carddav;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CALENDAR;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CONTACTS;
-
 import carldav.card.CardQueryProcessor;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
@@ -15,13 +10,15 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedAddressData;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookMultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookQueryReport;
+import org.unitedinternet.cosmo.model.hibernate.HibCardItem;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
+import javax.xml.namespace.QName;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
+import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
+import static carldav.CarldavConstants.carddav;
 
 /**
  * @author Kamill Sokol
@@ -52,18 +49,9 @@ public class DavCardCollection extends DavCollectionBase {
         Set<DavItemResourceBase> members = new HashSet<>();
 
         HibCollectionItem collection = getItem();
-        for (HibItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
-            WebDavResource resource;
-
-            if(CALENDAR.equals(memberHibItem.getName())|| CONTACTS.equals(memberHibItem.getName())) {
-                resource = collectionToResource((HibCollectionItem) memberHibItem);
-            } else {
-                resource = memberToResource(memberHibItem);
-            }
-
-            if (resource != null) {
-                members.add((DavItemResourceBase) resource);
-            }
+        for (HibCardItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
+            WebDavResource resource = memberToResource(memberHibItem);
+            members.add((DavItemResourceBase) resource);
         }
 
         return members;

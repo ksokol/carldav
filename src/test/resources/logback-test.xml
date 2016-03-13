@@ -45,7 +45,7 @@
     <logger name="org.springframework" level="OFF"/>
 
     <!-- ROOT logger setup -->
-    <root level="WARN">
+    <root level="OFF">
         <appender-ref ref="STDOUT"/>
     </root>
 

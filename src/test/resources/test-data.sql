@@ -9,7 +9,7 @@ INSERT INTO collection (collectionid, itemtype, id, etag, modifydate, displaynam
 VALUES (1, 'calendarcollection', 2, 'NVy57RJot0LhdYELkMDJ9gQZjOM=', to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'calendarDisplayName', 'calendar', 2);
 
 INSERT INTO collection (collectionid, itemtype, id, etag, modifydate, displayname, itemname, ownerid)
-VALUES (1, 'cardcollection', 3, 'njy57RJot0LhdYELkMDJ9gQZiOM=', to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'contactDisplayName', 'contacts', 2);
+VALUES (1, 'collection', 3, 'njy57RJot0LhdYELkMDJ9gQZiOM=', to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'contactDisplayName', 'contacts', 2);
 
 INSERT INTO collection (collectionid, itemtype, id, etag, modifydate, displayname, itemname, ownerid)
 VALUES (null, 'homecollection', 4, 'ghFexXxxU+9KC/of1jmJ82wMFig=', to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'homeCollection', 'test02@localhost.de', 3);

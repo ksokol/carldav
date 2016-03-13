@@ -20,7 +20,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.*;
+import org.unitedinternet.cosmo.model.hibernate.HibCalendarCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.HibHomeCollectionItem;
+import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 
@@ -79,7 +82,7 @@ public class StandardUserService implements UserService {
         final HibHomeCollectionItem homeCollection = contentService.createRootItem(newUser);
         contentService.createCollection(homeCollection, calendar);
 
-        HibCardCollectionItem addressbook = new HibCardCollectionItem();
+        HibCollectionItem addressbook = new HibCollectionItem();
         addressbook.setOwner(user);
         addressbook.setName("contacts");
         addressbook.setDisplayName("contactDisplayName");

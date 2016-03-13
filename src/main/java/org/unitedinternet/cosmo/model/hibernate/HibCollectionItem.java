@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@DiscriminatorValue("collection")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @Table(name = "collection",
         indexes={@Index(name = "idx_itemtype",columnList = "itemtype" ),

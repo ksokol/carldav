@@ -70,6 +70,8 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
         Map<String, Object> params = new TreeMap<>();
 
+        selectBuf.append("select i from Item i");
+
         if (filter instanceof NoteItemFilter) {
             handleNoteItemFilter(selectBuf, whereBuf, params, (NoteItemFilter) filter);
         } else {
@@ -95,10 +97,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
     private void handleItemFilter(StringBuffer selectBuf,
                                   StringBuffer whereBuf, Map<String, Object> params,
                                   ItemFilter filter) {
-
-        if ("".equals(selectBuf.toString())) {
-            selectBuf.append("select i from Item i");
-        }
 
         // filter on uid
         if (filter.getUid() != null) {
@@ -162,7 +160,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
     private void handleNoteItemFilter(StringBuffer selectBuf,
                                       StringBuffer whereBuf, Map<String, Object> params,
                                       NoteItemFilter filter) {
-        selectBuf.append("select i from Item i");
         handleItemFilter(selectBuf, whereBuf, params, filter);
         handleContentItemFilter(selectBuf, whereBuf, params, filter);
 

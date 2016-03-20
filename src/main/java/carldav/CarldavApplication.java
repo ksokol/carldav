@@ -1,9 +1,8 @@
-package org.unitedinternet.cosmo;
+package carldav;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -13,7 +12,6 @@ import java.util.TimeZone;
 /**
  * @author Kamill Sokol
  */
-@ComponentScan("carldav.controller")
 @ImportResource("applicationContext-cosmo.xml")
 @SpringBootApplication
 public class CarldavApplication {

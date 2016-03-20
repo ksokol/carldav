@@ -21,8 +21,8 @@ import org.apache.abdera.i18n.text.UrlEncoding;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.property.*;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.HibItem;
+import carldav.entity.User;
 import org.unitedinternet.cosmo.util.PathUtil;
 
 import java.io.UnsupportedEncodingException;

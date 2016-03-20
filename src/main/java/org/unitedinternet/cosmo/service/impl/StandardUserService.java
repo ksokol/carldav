@@ -18,11 +18,11 @@ package org.unitedinternet.cosmo.service.impl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.dao.CollectionDao;
+import carldav.repository.CollectionDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.repository.UserDao;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 

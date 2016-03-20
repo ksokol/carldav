@@ -10,8 +10,8 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedAddressData;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookMultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookQueryReport;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;

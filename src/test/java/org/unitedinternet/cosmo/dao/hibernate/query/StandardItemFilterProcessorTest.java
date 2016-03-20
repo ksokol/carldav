@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import javax.persistence.EntityManager;
 import java.util.Calendar;

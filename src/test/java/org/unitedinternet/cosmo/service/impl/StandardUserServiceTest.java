@@ -22,8 +22,8 @@ import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.repository.UserDao;
+import carldav.entity.User;
 import org.unitedinternet.cosmo.service.UserService;
 
 import java.util.ArrayList;

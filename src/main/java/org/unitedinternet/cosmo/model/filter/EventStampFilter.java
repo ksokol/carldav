@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 /**
  * Adds EventStamp specific criteria to StampFilter.

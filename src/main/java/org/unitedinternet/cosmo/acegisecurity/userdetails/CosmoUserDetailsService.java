@@ -23,8 +23,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.repository.UserDao;
+import carldav.entity.User;
 
 import java.util.List;
 

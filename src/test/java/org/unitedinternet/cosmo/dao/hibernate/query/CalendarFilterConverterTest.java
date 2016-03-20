@@ -22,8 +22,8 @@ import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.query.*;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.filter.*;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
 
 
 /**

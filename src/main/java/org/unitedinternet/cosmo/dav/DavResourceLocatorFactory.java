@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.User;
 
 import java.net.URL;
 import javax.servlet.http.HttpServletRequest;

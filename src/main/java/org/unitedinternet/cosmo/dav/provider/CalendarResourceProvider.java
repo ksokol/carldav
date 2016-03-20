@@ -21,7 +21,7 @@ import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

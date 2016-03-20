@@ -1,22 +1,22 @@
 <FindBugsFilter>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
+        <Class name="carldav.entity.HibAuditableObject" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibCollectionItem" />
+        <Class name="carldav.entity.HibCollectionItem" />
         <Bug pattern="SE_BAD_FIELD" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibAuditableObject" />
+        <Class name="carldav.entity.HibAuditableObject" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibItem" />
+        <Class name="carldav.entity.HibItem" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>
     <Match>
-        <Class name="org.unitedinternet.cosmo.model.hibernate.HibItem" />
+        <Class name="carldav.entity.HibItem" />
         <Bug pattern="EI_EXPOSE_REP2" />
     </Match>
 </FindBugsFilter>

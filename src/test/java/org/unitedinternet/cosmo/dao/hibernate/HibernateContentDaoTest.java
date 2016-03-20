@@ -20,12 +20,12 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import org.unitedinternet.cosmo.dao.CollectionDao;
-import org.unitedinternet.cosmo.dao.ItemDao;
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.repository.CollectionDao;
+import carldav.repository.ItemDao;
+import carldav.repository.UserDao;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
+import carldav.entity.User;
 
 public class HibernateContentDaoTest extends IntegrationTestSupport {
 

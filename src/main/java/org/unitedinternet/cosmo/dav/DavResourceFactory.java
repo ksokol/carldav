@@ -16,10 +16,10 @@
 package org.unitedinternet.cosmo.dav;
 
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dao.CollectionDao;
-import org.unitedinternet.cosmo.dao.ItemDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.repository.CollectionDao;
+import carldav.repository.ItemDao;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 

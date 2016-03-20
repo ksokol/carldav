@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dao.query;
 
 import java.util.Set;
 
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 
 /**

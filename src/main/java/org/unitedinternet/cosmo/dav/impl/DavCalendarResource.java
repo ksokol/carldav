@@ -28,7 +28,7 @@ import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;

@@ -22,10 +22,10 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dao.ItemDao;
+import carldav.repository.ItemDao;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import java.util.HashSet;
 import java.util.Set;

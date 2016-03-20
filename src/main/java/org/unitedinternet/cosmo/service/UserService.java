@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.service;
 
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.User;
 
 public interface UserService {
 

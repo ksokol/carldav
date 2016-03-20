@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.service;
 
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
+import carldav.entity.User;
 
 /**
  * Interface for services that manage access to user content.

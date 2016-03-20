@@ -19,8 +19,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import org.unitedinternet.cosmo.dao.UserDao;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.repository.UserDao;
+import carldav.entity.User;
 
 public class HibernateUserDaoTest extends IntegrationTestSupport {
     

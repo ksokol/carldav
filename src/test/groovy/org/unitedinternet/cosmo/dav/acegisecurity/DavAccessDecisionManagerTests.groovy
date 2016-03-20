@@ -9,7 +9,7 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.web.FilterInvocation
 import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails
-import org.unitedinternet.cosmo.model.hibernate.User
+import carldav.entity.User
 
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is

@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unitedinternet.cosmo.dao;
+package carldav.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import java.util.List;
 

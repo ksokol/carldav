@@ -1,16 +1,16 @@
-package org.unitedinternet.cosmo.dao;
+package carldav.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import java.util.Set;
 
 /**
  * @author Kamill Sokol
  */
-public class ItemDaoImpl implements ItemDaoCustom {
+class ItemDaoImpl implements ItemDaoCustom {
 
     private final ItemFilterProcessor itemFilterProcessor;
 

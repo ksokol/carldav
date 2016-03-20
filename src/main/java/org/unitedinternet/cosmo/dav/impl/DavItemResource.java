@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 /**
  * An interface for DAV resources that are backed by Cosmo content (e.g.

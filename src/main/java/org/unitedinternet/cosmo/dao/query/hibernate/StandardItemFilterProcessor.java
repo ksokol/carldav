@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

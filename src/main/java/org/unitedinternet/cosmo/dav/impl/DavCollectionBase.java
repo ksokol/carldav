@@ -22,9 +22,9 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.property.*;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
+import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
 import javax.servlet.http.HttpServletResponse;

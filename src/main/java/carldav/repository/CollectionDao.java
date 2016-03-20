@@ -1,7 +1,7 @@
-package org.unitedinternet.cosmo.dao;
+package carldav.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import carldav.entity.HibCollectionItem;
 
 import java.util.List;
 

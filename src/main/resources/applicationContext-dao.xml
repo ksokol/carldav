@@ -19,5 +19,4 @@
     </bean>
 
     <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter" />
-    <bean id="itemDaoCustomImpl" class="org.unitedinternet.cosmo.dao.ItemDaoImpl" />
 </beans>

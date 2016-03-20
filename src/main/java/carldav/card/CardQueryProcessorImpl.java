@@ -2,9 +2,9 @@ package carldav.card;
 
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
-import org.unitedinternet.cosmo.dao.ItemDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.repository.ItemDao;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
 
 import java.util.List;
 

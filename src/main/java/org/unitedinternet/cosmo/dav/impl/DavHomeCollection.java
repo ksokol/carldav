@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dav.impl;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
+import carldav.entity.HibCollectionItem;
 
 public class DavHomeCollection extends DavCollectionBase {
 

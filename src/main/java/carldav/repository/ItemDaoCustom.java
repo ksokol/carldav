@@ -1,14 +1,14 @@
-package org.unitedinternet.cosmo.dao;
+package carldav.repository;
 
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import java.util.Set;
 
 /**
  * @author Kamill Sokol
  */
-public interface ItemDaoCustom {
+interface ItemDaoCustom {
 
     Set<HibItem> findCalendarItems(ItemFilter itemFilter);
 }

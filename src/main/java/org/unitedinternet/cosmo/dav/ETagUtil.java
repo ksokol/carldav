@@ -1,7 +1,7 @@
 package org.unitedinternet.cosmo.dav;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.unitedinternet.cosmo.model.hibernate.HibAuditableObject;
+import carldav.entity.HibAuditableObject;
 
 import java.nio.charset.Charset;
 

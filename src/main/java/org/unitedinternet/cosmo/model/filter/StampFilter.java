@@ -23,7 +23,7 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import java.text.DateFormat;
 import java.text.ParseException;

@@ -1,6 +1,6 @@
 package org.unitedinternet.cosmo.model.filter;
 
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 public class JournalStampFilter extends StampFilter {
 

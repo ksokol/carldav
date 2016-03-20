@@ -11,8 +11,8 @@ import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;

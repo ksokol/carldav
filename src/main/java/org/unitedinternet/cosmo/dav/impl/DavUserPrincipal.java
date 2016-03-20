@@ -10,7 +10,7 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.property.*;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.User;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import javax.servlet.http.HttpServletResponse;

@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.User;
 
 import java.security.Principal;
 

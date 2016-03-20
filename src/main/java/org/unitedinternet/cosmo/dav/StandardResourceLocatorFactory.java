@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.entity.User;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import java.io.UnsupportedEncodingException;

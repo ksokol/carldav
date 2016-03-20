@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 import net.fortuna.ical4j.model.TimeZone;
 import org.unitedinternet.cosmo.calendar.query.*;
 import org.unitedinternet.cosmo.model.filter.*;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import java.util.Iterator;
 

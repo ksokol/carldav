@@ -16,11 +16,11 @@
 package org.unitedinternet.cosmo.service.impl;
 
 import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.dao.CollectionDao;
-import org.unitedinternet.cosmo.dao.ItemDao;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
-import org.unitedinternet.cosmo.model.hibernate.User;
+import carldav.repository.CollectionDao;
+import carldav.repository.ItemDao;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
+import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
 import java.util.Date;

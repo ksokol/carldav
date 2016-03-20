@@ -9,7 +9,7 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavCard;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import javax.xml.namespace.QName;
 

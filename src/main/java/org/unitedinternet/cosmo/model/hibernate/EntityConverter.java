@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
+import carldav.entity.HibItem;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import net.fortuna.ical4j.data.CalendarBuilder;

@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibItem;
 
 import java.util.Set;
 

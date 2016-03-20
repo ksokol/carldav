@@ -1,8 +1,8 @@
 package carldav.card;
 
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
-import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
-import org.unitedinternet.cosmo.model.hibernate.HibItem;
+import carldav.entity.HibCollectionItem;
+import carldav.entity.HibItem;
 
 import java.util.List;
 

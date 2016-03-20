@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.unitedinternet.cosmo.model.hibernate;
+package carldav.entity;
 
 import org.hibernate.validator.constraints.Email;
 

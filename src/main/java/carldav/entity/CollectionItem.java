@@ -24,7 +24,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "collection", uniqueConstraints = {@UniqueConstraint(name = "displayname_owner", columnNames = {"displayname", "ownerid"})})
-public class HibCollectionItem {
+public class CollectionItem {
 
     private Long id;
     private Date modifiedDate;
@@ -32,8 +32,8 @@ public class HibCollectionItem {
     private String name;
     private Set<HibItem> items;
     private User owner;
-    private HibCollectionItem parent;
-    private Set<HibCollectionItem> collections;
+    private CollectionItem parent;
+    private Set<CollectionItem> collections;
 
     @Id
     @GeneratedValue
@@ -95,23 +95,23 @@ public class HibCollectionItem {
         this.owner = owner;
     }
 
-    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY)
+    @ManyToOne(targetEntity=CollectionItem.class, fetch=FetchType.LAZY)
     @JoinColumn(name = "collectionid")
-    public HibCollectionItem getParent() {
+    public CollectionItem getParent() {
         return parent;
     }
 
-    public void setParent(final HibCollectionItem parent) {
+    public void setParent(final CollectionItem parent) {
         this.parent = parent;
     }
 
-    @OneToMany(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToMany(targetEntity=CollectionItem.class, fetch=FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "collectionid")
-    public Set<HibCollectionItem> getCollections() {
+    public Set<CollectionItem> getCollections() {
         return collections;
     }
 
-    public void setCollections(Set<HibCollectionItem> collections) {
+    public void setCollections(Set<CollectionItem> collections) {
         this.collections = collections;
     }
 }

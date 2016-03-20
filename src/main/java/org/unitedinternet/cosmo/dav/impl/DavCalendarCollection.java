@@ -11,7 +11,7 @@ import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 
 import javax.xml.namespace.QName;
@@ -24,7 +24,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
 
     private static final Logger LOG = LoggerFactory.getLogger(DavCalendarCollection.class);
 
-    public DavCalendarCollection(HibCollectionItem collection, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
+    public DavCalendarCollection(CollectionItem collection, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(collection, locator, factory);
 
         registerLiveProperty(SUPPORTED_CALENDAR_COMPONENT_SET);
@@ -42,7 +42,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     public Set<DavCalendarResource> findMembers(CalendarFilter filter) throws CosmoDavException {
         Set<DavCalendarResource> members = new HashSet<>();
 
-        HibCollectionItem collection = getItem();
+        CollectionItem collection = getItem();
         filter.setParent(collection.getId());
 
         for (HibItem memberItem : getCalendarQueryProcesor().filterQuery(filter)) {

@@ -7,6 +7,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * @author Kamill Sokol
@@ -18,12 +21,18 @@ class ConstrainViolationExceptionResolver implements ExceptionResolver {
         if(exception instanceof ConstraintViolationException) {
             final ConstraintViolationException cve = (ConstraintViolationException) exception;
             final StringBuilder stringBuilder = new StringBuilder(50);
+            final TreeMap<String, ConstraintViolation<?>> stringConstraintViolationTreeMap = new TreeMap<>();
 
-            for (final ConstraintViolation<?> constraintViolation : cve.getConstraintViolations()) {
-                String message = constraintViolation.getMessage();
-                String invalidValue = (String) constraintViolation.getInvalidValue();
+            for (ConstraintViolation<?> constraintViolation : cve.getConstraintViolations()) {
+                stringConstraintViolationTreeMap.put(constraintViolation.getPropertyPath().toString(), constraintViolation);
+            }
+
+            for (final Map.Entry<String, ConstraintViolation<?>> constraintViolation : stringConstraintViolationTreeMap.entrySet()) {
+                final ConstraintViolation<?> value = constraintViolation.getValue();
+                String message = value.getMessage();
+                String invalidValue = (String) value.getInvalidValue();
                 invalidValue = invalidValue == null ? "null" : invalidValue;
-                final Path propertyPath = constraintViolation.getPropertyPath();
+                final Path propertyPath = value.getPropertyPath();
 
                 stringBuilder
                         .append(message)

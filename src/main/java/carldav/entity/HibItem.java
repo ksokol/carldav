@@ -44,7 +44,7 @@ public class HibItem {
     private String displayName;
     private String name;
     private String uid;
-    private HibCollectionItem collection;
+    private CollectionItem collection;
     private User owner;
     private String mimetype;
     private String calendar;
@@ -114,13 +114,13 @@ public class HibItem {
         this.uid = uid;
     }
 
-    public void setCollection(HibCollectionItem parent) {
+    public void setCollection(CollectionItem parent) {
         collection = parent;
     }
 
-    @ManyToOne(targetEntity=HibCollectionItem.class, fetch=FetchType.LAZY)
+    @ManyToOne(targetEntity=CollectionItem.class, fetch=FetchType.LAZY)
     @JoinColumn(name = "collectionid")
-    public HibCollectionItem getCollection() {
+    public CollectionItem getCollection() {
         return collection;
     }
 

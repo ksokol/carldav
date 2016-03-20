@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.service.impl;
 import org.springframework.util.Assert;
 import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -45,7 +45,7 @@ public class StandardContentService implements ContentService {
      * @param hibItem item to remove from collection
      * @param collection item to remove item from
      */
-    public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
+    public void removeItemFromCollection(HibItem hibItem, CollectionItem collection) {
         itemRepository.delete(hibItem);
         collection.setModifiedDate(new Date());
     }
@@ -59,7 +59,7 @@ public class StandardContentService implements ContentService {
      *            collection to create
      * @return newly created collection
      */
-    public HibCollectionItem createCollection(HibCollectionItem parent, HibCollectionItem collection) {
+    public CollectionItem createCollection(CollectionItem parent, CollectionItem collection) {
         collection.setParent(parent);
         collectionRepository.save(collection);
         return collection;
@@ -71,7 +71,7 @@ public class StandardContentService implements ContentService {
      * @param collection
      *            collection item to remove
      */
-    public void removeCollection(HibCollectionItem collection) {
+    public void removeCollection(CollectionItem collection) {
         // prevent HomeCollection from being removed (should only be removed
         // when user is removed)
         //TODO
@@ -92,7 +92,7 @@ public class StandardContentService implements ContentService {
      *            content to create
      * @return newly created content
      */
-    public HibItem createContent(HibCollectionItem parent, HibItem content) {
+    public HibItem createContent(CollectionItem parent, HibItem content) {
         content.setCollection(parent);
         content.getCollection().setModifiedDate(new Date());
         itemRepository.save(content);
@@ -115,8 +115,8 @@ public class StandardContentService implements ContentService {
     }
 
     @Override
-    public HibCollectionItem createRootItem(User user) {
-        HibCollectionItem newItem = new HibCollectionItem();
+    public CollectionItem createRootItem(User user) {
+        CollectionItem newItem = new CollectionItem();
 
         newItem.setOwner(user);
         //TODO

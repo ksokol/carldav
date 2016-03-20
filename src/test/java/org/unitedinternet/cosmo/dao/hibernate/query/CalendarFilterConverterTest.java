@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.unitedinternet.cosmo.calendar.query.*;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.filter.*;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 
 
@@ -40,7 +40,7 @@ public class CalendarFilterConverterTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testTranslateItemToFilter() throws Exception {
-        HibCollectionItem calendar = new HibCollectionItem();
+        CollectionItem calendar = new CollectionItem();
         calendar.setId(1L);
         calendar.setId(0L);
         CalendarFilter calFilter = new CalendarFilter();
@@ -106,7 +106,7 @@ public class CalendarFilterConverterTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testGetFirstPassFilter() throws Exception {
-        HibCollectionItem calendar = new HibCollectionItem();
+        CollectionItem calendar = new CollectionItem();
         calendar.setId(0L);
         CalendarFilter calFilter = new CalendarFilter();
         ComponentFilter rootComp = new ComponentFilter();

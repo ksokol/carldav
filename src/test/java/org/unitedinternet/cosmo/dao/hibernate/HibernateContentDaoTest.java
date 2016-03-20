@@ -23,7 +23,7 @@ import org.unitedinternet.cosmo.IntegrationTestSupport;
 import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
 import carldav.repository.UserRepository;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 import carldav.entity.User;
 
@@ -42,9 +42,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void multipleItemsError() throws Exception {
         User user = getUser("testuser");
-        HibCollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
+        CollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
 
-        HibCollectionItem a = new HibCollectionItem();
+        CollectionItem a = new CollectionItem();
         a.setName("a");
         a.setDisplayName("displayName");
         a.setOwner(user);
@@ -70,9 +70,9 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void multipleCollectionsError() throws Exception {
         User user = getUser("testuser");
-        HibCollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
+        CollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
 
-        HibCollectionItem a = new HibCollectionItem();
+        CollectionItem a = new CollectionItem();
         a.setName("a");
         a.setDisplayName("displayName");
         a.setOwner(user);
@@ -80,7 +80,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         collectionRepository.save(a);
 
-        HibCollectionItem b = new HibCollectionItem();
+        CollectionItem b = new CollectionItem();
         b.setName("a");
         b.setDisplayName("displayName");
         b.setOwner(user);
@@ -103,7 +103,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
             user = userRepository.findByEmailIgnoreCase(email);
 
-            HibCollectionItem newItem = new HibCollectionItem();
+            CollectionItem newItem = new CollectionItem();
 
             newItem.setOwner(user);
             //TODO

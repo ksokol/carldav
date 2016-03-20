@@ -1,18 +1,18 @@
 package carldav.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 
 import java.util.List;
 
 /**
  * @author Kamill Sokol
  */
-public interface CollectionRepository extends CrudRepository<HibCollectionItem, Long> {
+public interface CollectionRepository extends CrudRepository<CollectionItem, Long> {
 
-    HibCollectionItem findByOwnerEmailAndName(String owner, String name);
+    CollectionItem findByOwnerEmailAndName(String owner, String name);
 
-    List<HibCollectionItem> findByOwnerEmail(String owner);
+    List<CollectionItem> findByOwnerEmail(String owner);
 
-    List<HibCollectionItem> findByParentId(Long id);
+    List<CollectionItem> findByParentId(Long id);
 }

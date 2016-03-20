@@ -10,7 +10,7 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedAddressData;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookMultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookQueryReport;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 
 import javax.xml.namespace.QName;
@@ -27,8 +27,8 @@ public class DavCardCollection extends DavCollectionBase {
 
     private final CardQueryProcessor cardQueryProcessor;
 
-    public DavCardCollection(final HibCollectionItem collection, final DavResourceLocator locator, final DavResourceFactory factory,
-            final CardQueryProcessor cardQueryProcessor) throws CosmoDavException {
+    public DavCardCollection(final CollectionItem collection, final DavResourceLocator locator, final DavResourceFactory factory,
+                             final CardQueryProcessor cardQueryProcessor) throws CosmoDavException {
         super(collection, locator, factory);
         registerLiveProperty(SUPPORTED_ADDRESS_DATA);
 
@@ -48,7 +48,7 @@ public class DavCardCollection extends DavCollectionBase {
     public Set<DavItemResourceBase> findMembers(AddressbookFilter filter) throws CosmoDavException {
         Set<DavItemResourceBase> members = new HashSet<>();
 
-        HibCollectionItem collection = getItem();
+        CollectionItem collection = getItem();
         for (HibItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
             WebDavResource resource = memberToResource(memberHibItem);
             members.add((DavItemResourceBase) resource);

@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dav;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -70,7 +70,7 @@ public interface DavResourceFactory {
                                       HibItem hibItem)
         throws CosmoDavException;
 
-    WebDavResource createCollectionResource(DavResourceLocator locator, HibCollectionItem hibItem);
+    WebDavResource createCollectionResource(DavResourceLocator locator, CollectionItem hibItem);
 
     ContentService getContentService();
 

@@ -18,11 +18,11 @@ package org.unitedinternet.cosmo.dav.impl;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 
 public class DavHomeCollection extends DavCollectionBase {
 
-    public DavHomeCollection(HibCollectionItem collection,
+    public DavHomeCollection(CollectionItem collection,
                              DavResourceLocator locator,
                              DavResourceFactory factory)
             throws CosmoDavException {

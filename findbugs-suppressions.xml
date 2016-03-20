@@ -1,9 +1,5 @@
 <FindBugsFilter>
     <Match>
-        <Class name="carldav.entity.HibCollectionItem" />
-        <Bug pattern="SE_BAD_FIELD" />
-    </Match>
-    <Match>
         <Class name="carldav.entity.HibItem" />
         <Bug pattern="EI_EXPOSE_REP" />
     </Match>

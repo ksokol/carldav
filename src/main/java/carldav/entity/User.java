@@ -29,7 +29,7 @@ public class User {
     private String password;
     private String email;
     private boolean locked;
-    private Set<HibCollectionItem> collections;
+    private Set<CollectionItem> collections;
     private String role;
 
     @Id
@@ -55,11 +55,11 @@ public class User {
     }
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    public Set<HibCollectionItem> getCollections() {
+    public Set<CollectionItem> getCollections() {
         return collections;
     }
 
-    public void setCollections(Set<HibCollectionItem> collections) {
+    public void setCollections(Set<CollectionItem> collections) {
         this.collections = collections;
     }
 

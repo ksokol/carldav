@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.service;
 
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 import carldav.entity.User;
 
@@ -30,7 +30,7 @@ public interface ContentService {
      * @param hibItem item to remove from collection
      * @param collection item to remove item from
      */
-    void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection);
+    void removeItemFromCollection(HibItem hibItem, CollectionItem collection);
 
     /**
      * Create a new collection.
@@ -41,8 +41,8 @@ public interface ContentService {
      *            collection to create
      * @return newly created collection
      */
-    HibCollectionItem createCollection(HibCollectionItem parent,
-                                    HibCollectionItem collection);
+    CollectionItem createCollection(CollectionItem parent,
+                                    CollectionItem collection);
 
     /**
      * Remove collection item
@@ -50,7 +50,7 @@ public interface ContentService {
      * @param collection
      *            collection item to remove
      */
-    void removeCollection(HibCollectionItem collection);
+    void removeCollection(CollectionItem collection);
 
     /**
      * Create new content item. A content item represents a piece of content or
@@ -63,7 +63,7 @@ public interface ContentService {
      *            content to create
      * @return newly created content
      */
-    HibItem createContent(HibCollectionItem parent,
+    HibItem createContent(CollectionItem parent,
                           HibItem content);
 
     /**
@@ -75,5 +75,5 @@ public interface ContentService {
      */
     HibItem updateContent(HibItem content);
 
-    HibCollectionItem createRootItem(User user);
+    CollectionItem createRootItem(User user);
 }

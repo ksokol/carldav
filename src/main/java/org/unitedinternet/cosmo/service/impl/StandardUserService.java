@@ -21,7 +21,7 @@ import org.springframework.util.Assert;
 import carldav.repository.CollectionRepository;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import carldav.repository.UserRepository;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -70,15 +70,15 @@ public class StandardUserService implements UserService {
 
         User newUser = userRepository.save(user);
 
-        HibCollectionItem calendar = new HibCollectionItem();
+        CollectionItem calendar = new CollectionItem();
         calendar.setOwner(user);
         calendar.setName("calendar");
         calendar.setDisplayName("calendarDisplayName");
 
-        final HibCollectionItem homeCollection = contentService.createRootItem(newUser);
+        final CollectionItem homeCollection = contentService.createRootItem(newUser);
         contentService.createCollection(homeCollection, calendar);
 
-        HibCollectionItem addressbook = new HibCollectionItem();
+        CollectionItem addressbook = new CollectionItem();
         addressbook.setOwner(user);
         addressbook.setName("contacts");
         addressbook.setDisplayName("contactDisplayName");
@@ -94,7 +94,7 @@ public class StandardUserService implements UserService {
      * @param user the account to remove
      */
     public void removeUser(User user) {
-        final List<HibCollectionItem> byOwnerEmail = collectionRepository.findByOwnerEmail(user.getEmail());
+        final List<CollectionItem> byOwnerEmail = collectionRepository.findByOwnerEmail(user.getEmail());
         collectionRepository.delete(byOwnerEmail);
         userRepository.delete(user);
     }

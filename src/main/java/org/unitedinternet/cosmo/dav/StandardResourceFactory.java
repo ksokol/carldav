@@ -21,7 +21,7 @@ import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
 import org.unitedinternet.cosmo.dav.impl.*;
-import carldav.entity.HibCollectionItem;
+import carldav.entity.CollectionItem;
 import carldav.entity.HibItem;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
@@ -148,7 +148,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         return new DavCalendarResource(hibItem, locator, this);
     }
 
-    public WebDavResource createCollectionResource(DavResourceLocator locator, HibCollectionItem hibItem) {
+    public WebDavResource createCollectionResource(DavResourceLocator locator, CollectionItem hibItem) {
         Assert.notNull(hibItem, "item cannot be null");
 
         //TODO
@@ -189,14 +189,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
         final String collection = locator.collection();
         if(collection != null) {
-            final HibCollectionItem userCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), collection);
+            final CollectionItem userCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), collection);
             if(userCollection == null) {
                 return null;
             }
             return createCollectionResource(locator, userCollection);
         }
 
-        final HibCollectionItem homeCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), locator.username());
+        final CollectionItem homeCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), locator.username());
         return createCollectionResource(locator, homeCollection);
     }
 

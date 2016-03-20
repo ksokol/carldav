@@ -23,6 +23,7 @@ import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 
 import java.util.Iterator;
+import java.util.Locale;
 
 /**
  * Translates <code>CalendarFilter</code> into <code>ItemFilter</code>
@@ -30,8 +31,6 @@ import java.util.Iterator;
 public class CalendarFilterConverter {
 
     private static final String COMP_VCALENDAR = "VCALENDAR";
-    private static final String COMP_VEVENT = "VEVENT";
-    private static final String COMP_VJOURNAL = "VJOURNAL";
     private static final String COMP_VTODO = "VTODO";
     private static final String PROP_UID = "UID";
     private static final String PROP_DESCRIPTION = "DESCRIPTION";
@@ -104,14 +103,9 @@ public class CalendarFilterConverter {
     }
 
     private void handleCompFilter(ComponentFilter compFilter, ItemFilter itemFilter) {
-
-        if (COMP_VEVENT.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.VEVENT));
-        } else if (COMP_VJOURNAL.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.VJOURNAL));
-        } else if(COMP_VTODO.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.VTODO));
-        } else {
+        try {
+            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.valueOf(compFilter.getName().toUpperCase(Locale.ENGLISH))));
+        } catch(Exception e) {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());
         }
     }

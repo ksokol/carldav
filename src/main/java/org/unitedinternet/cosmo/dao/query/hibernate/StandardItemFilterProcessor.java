@@ -79,10 +79,10 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
             params.put("parent", filter.getParent());
         }
 
+        handleItemFilter(whereBuf, params, filter);
+
         if (filter instanceof NoteItemFilter) {
             handleNoteItemFilter(whereBuf, params, (NoteItemFilter) filter);
-        } else {
-            handleItemFilter(whereBuf, params, filter);
         }
 
         selectBuf.append(whereBuf);
@@ -158,7 +158,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
     private void handleNoteItemFilter(StringBuffer whereBuf, Map<String, Object> params,
                                       NoteItemFilter filter) {
-        handleItemFilter(whereBuf, params, filter);
 
         // filter by icaluid
         if (filter.getIcalUid() != null) {

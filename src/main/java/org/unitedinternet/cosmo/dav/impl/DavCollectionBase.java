@@ -141,7 +141,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public String getETag() {
-        return ETagUtil.createETagEscaped(getItem());
+        return ETagUtil.createETagEscaped(getItem().getId(), getItem().getModifiedDate());
     }
 
     public void addContent(WebDavResource content, DavInputContext context) throws CosmoDavException {

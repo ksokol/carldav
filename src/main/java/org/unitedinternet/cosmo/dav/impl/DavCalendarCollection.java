@@ -62,7 +62,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     protected void loadLiveProperties(CustomDavPropertySet properties) {
         super.loadLiveProperties(properties);
 
-        properties.add(new GetCTag(ETagUtil.createETag(getItem())));
+        properties.add(new GetCTag(ETagUtil.createETag(getItem().getId(), getItem().getModifiedDate())));
         properties.add(new SupportedCalendarComponentSet());
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());

@@ -78,7 +78,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     }
 
     public String getETag() {
-        return ETagUtil.createETagEscaped(getItem());
+        return ETagUtil.createETagEscaped(getItem().getId(), getItem().getModifiedDate());
     }
 
     @Override

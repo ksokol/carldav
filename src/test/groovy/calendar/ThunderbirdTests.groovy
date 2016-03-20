@@ -224,7 +224,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:getetag>"NVy57RJot0LhdYELkMDJ9gQZjOM="</D:getetag>
+                                            <D:getetag>"157565ba8b0d3652b027c868d554f914"</D:getetag>
                                             <D:resourcetype>
                                                 <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                                 <D:collection/>
@@ -1031,7 +1031,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <D:getetag>"njy57RJot0LhdYELkMDJ9gQZiOM="</D:getetag>
+                                            <D:getetag>"6ae40e84e2caf8e8fea53ce5396de66f"</D:getetag>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>

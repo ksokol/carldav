@@ -8,7 +8,6 @@ import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.builder.GeneralData
-import testutil.helper.XmlHelper
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -404,7 +403,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                 <D:href>/dav/test01@localhost.de/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:getetag>"NVy57RJot0LhdYELkMDJ9gQZjOM="</D:getetag>
+                                        <D:getetag>"157565ba8b0d3652b027c868d554f914"</D:getetag>
                                         <C:supported-calendar-data xmlns:C="urn:ietf:params:xml:ns:caldav">
                                             <C:calendar-data C:content-type="text/calendar" C:version="2.0"/>
                                         </C:supported-calendar-data>
@@ -1479,21 +1478,13 @@ public class CalendarTests extends IntegrationTestSupport {
                             </prop>
                         </propfind>"""
 
-
-        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(APPLICATION_XML)
-                .content(request1)
-                .header("Depth", "0"))
-                .andReturn().getResponse().getContentAsString()
-
-        def getctag = XmlHelper.getctag(result1)
-
         def result2 = mockMvc.perform(get("/dav/{email}/calendar", USER01))
                 .andExpect(status().isOk())
                 .andExpect(textHtmlContentType())
                 .andReturn().getResponse()
 
         def lastModified = result2.getHeader("Last-Modified")
+        def getctag = result2.getHeader("ETag").replaceAll('"',"&quot;")
 
         def response2 = """\
                             <html>
@@ -1509,8 +1500,8 @@ public class CalendarTests extends IntegrationTestSupport {
                             <dl>
                             <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd>/dav/test01@localhost.de/contacts</dd>
                             <dt>{DAV:}displayname</dt><dd>calendarDisplayName</dd>
-                            <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${getctag}</dd>
-                            <dt>{DAV:}getetag</dt><dd>&quot;${getctag}&quot;</dd>
+                            <dt>{http://calendarserver.org/ns/}getctag</dt><dd>NVy57RJot0LhdYELkMDJ9gQZjOM=</dd>
+                            <dt>{DAV:}getetag</dt><dd>${getctag}</dd>
                             <dt>{DAV:}getlastmodified</dt><dd>${lastModified}</dd>
                             <dt>{DAV:}iscollection</dt><dd>1</dd>
                             <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>

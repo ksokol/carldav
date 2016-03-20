@@ -15,9 +15,10 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
+import carldav.entity.Item;
+import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
-import carldav.entity.Item;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -34,6 +35,8 @@ import static java.util.Locale.ENGLISH;
  */
 public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
+    private static final CalendarFilterConverter filterConverter = new CalendarFilterConverter();
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -41,8 +44,9 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         this.entityManager = entityManager;
     }
 
-    public Set<Item> processFilter(ItemFilter filter) {
-        Query hibQuery = buildQuery(entityManager, filter);
+    public Set<Item> processFilter(CalendarFilter filter) {
+        final ItemFilter itemFilter = filterConverter.translateToItemFilter(filter);
+        Query hibQuery = buildQuery(entityManager, itemFilter);
         List<Item> queryResults = hibQuery.getResultList();
         return processResults(queryResults);
     }

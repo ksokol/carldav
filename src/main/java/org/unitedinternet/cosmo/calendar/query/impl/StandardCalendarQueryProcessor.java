@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.calendar.query.impl;
 
+import carldav.entity.Item;
+import carldav.repository.ItemRepository;
 import net.fortuna.ical4j.model.Calendar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +24,7 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import carldav.repository.ItemRepository;
-import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import carldav.entity.Item;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -33,8 +32,6 @@ import java.util.Set;
 public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(StandardCalendarQueryProcessor.class);
-
-    private static final CalendarFilterConverter filterConverter = new CalendarFilterConverter();
 
     private final ItemRepository itemRepository;
     private final EntityConverter entityConverter;
@@ -47,7 +44,7 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
     }
 
     public Set<Item> filterQuery(CalendarFilter filter) {
-        return new HashSet<>(itemRepository.findCalendarItems(filterConverter.translateToItemFilter(filter)));
+        return new HashSet<>(itemRepository.findCalendarItems(filter));
     }
 
     /**

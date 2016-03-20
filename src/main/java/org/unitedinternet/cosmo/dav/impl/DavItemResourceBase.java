@@ -18,19 +18,14 @@ package org.unitedinternet.cosmo.dav.impl;
 import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.apache.abdera.i18n.text.UrlEncoding;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.property.*;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 import org.unitedinternet.cosmo.util.PathUtil;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -74,8 +69,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         this.hibItem = hibItem;
     }
 
-    // WebDavResource methods
-
     public boolean exists() {
         return hibItem != null && hibItem.getId() != null;
     }
@@ -85,15 +78,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     }
 
     public String getETag() {
-        if(getItem().getId() == null && getItem().getModifiedDate() == null) {
-            return null;
-        }
-
-        String uid = String.valueOf(getItem().getId());
-        String modTime = getItem().getModifiedDate() != null ? String.valueOf(getItem().getModifiedDate().getTime()) : "";
-        final String etag = uid + ":" + modTime;
-
-        return "\"" + DigestUtils.md5Hex(etag.getBytes(Charset.forName("UTF-8")))+ "\"";
+        return ETagUtil.createETagEscaped(getItem());
     }
 
     @Override

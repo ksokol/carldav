@@ -15,17 +15,66 @@
  */
 package carldav.entity;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.Set;
 
 @Entity
 @Table(name = "collection", uniqueConstraints = {@UniqueConstraint(name = "displayname_owner", columnNames = {"displayname", "ownerid"})})
-public class HibCollectionItem extends HibAuditableObject {
+public class HibCollectionItem {
 
+    private Long id;
+    private Date modifiedDate;
+    private String displayName;
+    private String name;
     private Set<HibItem> items;
     private User owner;
     private HibCollectionItem parent;
     private Set<HibCollectionItem> collections;
+
+    @Id
+    @GeneratedValue
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    @Column(name = "modifydate")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    @NotNull
+    @Column(name = "displayname")
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Column(name = "itemname", nullable = false, length=255)
+    @NotNull
+    @Length(min = 1, max = 255)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
     public Set<HibItem> getItems() {

@@ -15,6 +15,7 @@
  */
 package carldav.entity;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -32,12 +33,16 @@ import java.util.Date;
         },
         uniqueConstraints = {@UniqueConstraint(name = "uid_owner_collection", columnNames = {"uid", "ownerid", "collectionid"})}
 )
-public class HibItem extends HibAuditableObject {
+public class HibItem {
 
     public enum Type {
         VEVENT, VJOURNAL, VTODO, VCARD
     }
 
+    private Long id;
+    private Date modifiedDate;
+    private String displayName;
+    private String name;
     private String uid;
     private HibCollectionItem collection;
     private User owner;
@@ -56,6 +61,47 @@ public class HibItem extends HibAuditableObject {
 
     public HibItem(Type type) {
         this.type = type;
+    }
+
+    @Id
+    @GeneratedValue
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(final Long id) {
+        this.id = id;
+    }
+
+    @Column(name = "modifydate")
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    @NotNull
+    @Column(name = "displayname")
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Column(name = "itemname", nullable = false, length=255)
+    @NotNull
+    @Length(min = 1, max = 255)
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @NotNull

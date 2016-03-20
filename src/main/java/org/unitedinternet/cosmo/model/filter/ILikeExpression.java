@@ -15,6 +15,10 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import java.util.Map;
+
+import static java.util.Locale.ENGLISH;
+
 /**
  * FilterExpression that performs a case insensitive substring match.
  */
@@ -24,4 +28,17 @@ public class ILikeExpression extends FilterExpression {
         super(value);
     }
 
+    @Override
+    public void bind(StringBuffer expBuf, String propName, Map<String, Object> params) {
+        String param = "param" + params.size();
+        expBuf.append("lower(" + propName + ")");
+        if (isNegated()) {
+            expBuf.append(" not like ");
+        } else {
+            expBuf.append(" like ");
+        }
+
+        params.put(param, formatForLike(getValue().toString().toLowerCase(ENGLISH)));
+        expBuf.append(":" + param);
+    }
 }

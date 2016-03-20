@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import java.util.Map;
+
 /**
  * FilterExpression that matches a value.
  */
@@ -22,6 +24,20 @@ public class EqualsExpression extends FilterExpression {
 
     public EqualsExpression(Object value) {
         super(value);
+    }
+
+    @Override
+    public void bind(StringBuffer expBuf, String propName, Map<String, Object> params) {
+        String param = "param" + params.size();
+        expBuf.append(propName);
+        if (isNegated()) {
+            expBuf.append("!=");
+        } else {
+            expBuf.append("=");
+        }
+
+        params.put(param, getValue());
+        expBuf.append(":" + param);
     }
 
 }

@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import java.util.Map;
+
 /**
  * FilterExpression that matches null values
  */
@@ -24,4 +26,13 @@ public class NullExpression extends FilterExpression {
         super(null);
     }
 
+    @Override
+    public void bind(StringBuffer expBuf, String propName, Map<String, Object> params) {
+        expBuf.append(propName);
+        if (isNegated()) {
+            expBuf.append(" is not null");
+        } else {
+            expBuf.append(" is null");
+        }
+    }
 }

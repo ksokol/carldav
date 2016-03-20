@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import java.util.Map;
+
 /**
  * FilterExpression that matches between two values
  */
@@ -32,4 +34,20 @@ public class BetweenExpression extends FilterExpression {
         return ((Object[]) getValue())[1];
     }
 
+
+    @Override
+    public void bind(StringBuffer expBuf, String propName, Map<String, Object> params) {
+       // BetweenExpression be = (BetweenExpression) exp;
+        expBuf.append(propName);
+        if (isNegated()) {
+            expBuf.append(" not");
+        }
+
+        String param = "param" + params.size();
+        expBuf.append(" between :" + param);
+        params.put(param, getValue1());
+        param = "param" + params.size();
+        expBuf.append(" and :" + param);
+        params.put(param, getValue2());
+    }
 }

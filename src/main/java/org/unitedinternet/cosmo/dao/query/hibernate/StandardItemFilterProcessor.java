@@ -18,7 +18,10 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 import carldav.entity.Item;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.model.filter.*;
+import org.unitedinternet.cosmo.model.filter.FilterCriteria;
+import org.unitedinternet.cosmo.model.filter.FilterExpression;
+import org.unitedinternet.cosmo.model.filter.ItemFilter;
+import org.unitedinternet.cosmo.model.filter.StampFilter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-
-import static java.util.Locale.ENGLISH;
 
 /**
  * Standard Implementation of <code>ItemFilterProcessor</code>.
@@ -175,73 +176,13 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         }
     }
 
-    private String formatForLike(String toFormat) {
-        return "%" + toFormat + "%";
-    }
-
     private void formatExpression(StringBuffer whereBuf,
                                   Map<String, Object> params, String propName,
                                   FilterCriteria fc) {
 
         StringBuffer expBuf = new StringBuffer();
-
         FilterExpression exp = (FilterExpression) fc;
-
-        if (exp instanceof NullExpression) {
-            expBuf.append(propName);
-            if (exp.isNegated()) {
-                expBuf.append(" is not null");
-            } else {
-                expBuf.append(" is null");
-            }
-        } else if (exp instanceof BetweenExpression) {
-            BetweenExpression be = (BetweenExpression) exp;
-            expBuf.append(propName);
-            if (exp.isNegated()) {
-                expBuf.append(" not");
-            }
-
-            String param = "param" + params.size();
-            expBuf.append(" between :" + param);
-            params.put(param, be.getValue1());
-            param = "param" + params.size();
-            expBuf.append(" and :" + param);
-            params.put(param, be.getValue2());
-        } else {
-            String param = "param" + params.size();
-            if (exp instanceof EqualsExpression) {
-                expBuf.append(propName);
-                if (exp.isNegated()) {
-                    expBuf.append("!=");
-                } else {
-                    expBuf.append("=");
-                }
-
-                params.put(param, exp.getValue());
-
-            } else if (exp instanceof LikeExpression) {
-                expBuf.append(propName);
-                if (exp.isNegated()) {
-                    expBuf.append(" not like ");
-                } else {
-                    expBuf.append(" like ");
-                }
-
-                params.put(param, formatForLike(exp.getValue().toString()));
-            } else if (exp instanceof ILikeExpression) {
-                expBuf.append("lower(" + propName + ")");
-                if (exp.isNegated()) {
-                    expBuf.append(" not like ");
-                } else {
-                    expBuf.append(" like ");
-                }
-
-                params.put(param, formatForLike(exp.getValue().toString().toLowerCase(ENGLISH)));
-            }
-
-            expBuf.append(":" + param);
-        }
-
+        exp.bind(expBuf, propName, params);
         appendWhere(whereBuf, expBuf.toString());
     }
 

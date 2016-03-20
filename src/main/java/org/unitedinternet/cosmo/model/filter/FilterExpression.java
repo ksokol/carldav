@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import java.util.Map;
+
 /**
  * Abstract simple expression criteria.
  */
@@ -40,5 +42,9 @@ public abstract class FilterExpression implements FilterCriteria {
         this.value = value;
     }
     
-    
+    public abstract void bind(StringBuffer stringBuffer, String propName, Map<String, Object> params);
+
+    protected String formatForLike(String toFormat) {
+        return "%" + toFormat + "%";
+    }
 }

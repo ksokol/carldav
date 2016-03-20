@@ -16,6 +16,8 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import java.util.Map;
+
 /**
  * FilterExpression that performs a substring match.
  */
@@ -25,4 +27,17 @@ public class LikeExpression extends FilterExpression {
         super(value);
     }
 
+    @Override
+    public void bind(StringBuffer expBuf, String propName, Map<String, Object> params) {
+        String param = "param" + params.size();
+        expBuf.append(propName);
+        if (isNegated()) {
+            expBuf.append(" not like ");
+        } else {
+            expBuf.append(" like ");
+        }
+
+        params.put(param, formatForLike(getValue().toString()));
+        expBuf.append(":" + param);
+    }
 }

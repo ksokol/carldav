@@ -23,22 +23,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
-import carldav.repository.UserDao;
+import carldav.repository.UserRepository;
 import carldav.entity.User;
 
 import java.util.List;
 
 public class CosmoUserDetailsService implements UserDetailsService {
 
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public CosmoUserDetailsService(final UserDao userDao) {
-        Assert.notNull(userDao, "userDao is null");
-        this.userDao = userDao;
+    public CosmoUserDetailsService(final UserRepository userRepository) {
+        Assert.notNull(userRepository, "userRepository is null");
+        this.userRepository = userRepository;
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-        User user = userDao.findByEmailIgnoreCase(username);
+        User user = userRepository.findByEmailIgnoreCase(username);
         if (user == null) {
             throw new UsernameNotFoundException("user " + username + " not found");
         }

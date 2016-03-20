@@ -18,9 +18,9 @@ package org.unitedinternet.cosmo.service.impl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
-import carldav.repository.CollectionDao;
+import carldav.repository.CollectionRepository;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
-import carldav.repository.UserDao;
+import carldav.repository.UserRepository;
 import carldav.entity.HibCollectionItem;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -31,24 +31,24 @@ import java.util.List;
 public class StandardUserService implements UserService {
 
     private final ContentService contentService;
-    private final UserDao userDao;
-    private final CollectionDao collectionDao;
+    private final UserRepository userRepository;
+    private final CollectionRepository collectionRepository;
 
-    public StandardUserService(final ContentService contentService, final UserDao userDao, final CollectionDao collectionDao) {
+    public StandardUserService(final ContentService contentService, final UserRepository userRepository, final CollectionRepository collectionRepository) {
         Assert.notNull(contentService, "contentService is null");
-        Assert.notNull(userDao, "userDao is null");
-        Assert.notNull(collectionDao, "collectionDao is null");
+        Assert.notNull(userRepository, "userRepository is null");
+        Assert.notNull(collectionRepository, "collectionRepository is null");
         this.contentService = contentService;
-        this.userDao = userDao;
-        this.collectionDao = collectionDao;
+        this.userRepository = userRepository;
+        this.collectionRepository = collectionRepository;
     }
 
     public Iterable<User> getUsers() {
-        return userDao.findAll();
+        return userRepository.findAll();
     }
 
     public User getUser(String username) {
-        return userDao.findByEmailIgnoreCase(username);
+        return userRepository.findByEmailIgnoreCase(username);
     }
 
     /**
@@ -68,7 +68,7 @@ public class StandardUserService implements UserService {
 
         user.setPassword(digestPassword(user.getPassword()));
 
-        User newUser = userDao.save(user);
+        User newUser = userRepository.save(user);
 
         HibCollectionItem calendar = new HibCollectionItem();
         calendar.setOwner(user);
@@ -94,9 +94,9 @@ public class StandardUserService implements UserService {
      * @param user the account to remove
      */
     public void removeUser(User user) {
-        final List<HibCollectionItem> byOwnerEmail = collectionDao.findByOwnerEmail(user.getEmail());
-        collectionDao.delete(byOwnerEmail);
-        userDao.delete(user);
+        final List<HibCollectionItem> byOwnerEmail = collectionRepository.findByOwnerEmail(user.getEmail());
+        collectionRepository.delete(byOwnerEmail);
+        userRepository.delete(user);
     }
 
     /**

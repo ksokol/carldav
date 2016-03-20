@@ -86,8 +86,8 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public List<WebDavResource> getMembers() {
-        final List<HibCollectionItem> collections = getResourceFactory().getCollectionDao().findByParentId(item.getId());
-        final List<HibItem> items = getResourceFactory().getItemDao().findByCollectionId(item.getId());
+        final List<HibCollectionItem> collections = getResourceFactory().getCollectionRepository().findByParentId(item.getId());
+        final List<HibItem> items = getResourceFactory().getItemRepository().findByCollectionId(item.getId());
 
         members.addAll(collections.stream().map(this::collectionToResource).collect(Collectors.toList()));
         members.addAll(items.stream().map(this::memberToResource).collect(Collectors.toList()));

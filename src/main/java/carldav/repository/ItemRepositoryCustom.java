@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @author Kamill Sokol
  */
-interface ItemDaoCustom {
+interface ItemRepositoryCustom {
 
     Set<HibItem> findCalendarItems(ItemFilter itemFilter);
 }

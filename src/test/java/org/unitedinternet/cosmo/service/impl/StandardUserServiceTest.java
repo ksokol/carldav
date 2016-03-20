@@ -22,7 +22,7 @@ import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.TestHelper;
-import carldav.repository.UserDao;
+import carldav.repository.UserRepository;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.service.UserService;
 
@@ -32,7 +32,7 @@ import java.util.List;
 public class StandardUserServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @Autowired
     private UserService service;
@@ -45,11 +45,11 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     @Test
     public void testGetUsers() throws Exception {
         User u1 = testHelper.makeDummyUser();
-        userDao.save(u1);
+        userRepository.save(u1);
         User u2 = testHelper.makeDummyUser();
-        userDao.save(u2);
+        userRepository.save(u2);
         User u3 = testHelper.makeDummyUser();
-        userDao.save(u3);
+        userRepository.save(u3);
 
         Iterable<User> tmp = service.getUsers();
         List<User> users = new ArrayList<>();
@@ -69,7 +69,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
     public void testGetUser() throws Exception {
         User u1 = testHelper.makeDummyUser();
         String username1 = u1.getEmail();
-        userDao.save(u1);
+        userRepository.save(u1);
 
         User user = service.getUser(username1);
         Assert.assertNotNull("User " + username1 + " null", user);
@@ -85,7 +85,7 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         String password = u1.getPassword();
 
         User user = service.createUser(u1);
-        Assert.assertNotNull("User not stored", userDao.findByEmailIgnoreCase(u1.getEmail()));
+        Assert.assertNotNull("User not stored", userRepository.findByEmailIgnoreCase(u1.getEmail()));
         Assert.assertFalse("Original and stored password are the same", user.getPassword().equals(password));
     }
 
@@ -100,6 +100,6 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
 
         service.removeUser(u1);
 
-        Assert.assertNull("User not removed", userDao.findByEmailIgnoreCase(u1.getEmail()));
+        Assert.assertNull("User not removed", userRepository.findByEmailIgnoreCase(u1.getEmail()));
     }
 }

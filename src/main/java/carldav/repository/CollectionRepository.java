@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Kamill Sokol
  */
-public interface CollectionDao extends CrudRepository<HibCollectionItem, Long> {
+public interface CollectionRepository extends CrudRepository<HibCollectionItem, Long> {
 
     HibCollectionItem findByOwnerEmailAndName(String owner, String name);
 

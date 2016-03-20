@@ -16,8 +16,8 @@
 package org.unitedinternet.cosmo.service.impl;
 
 import org.springframework.util.Assert;
-import carldav.repository.CollectionDao;
-import carldav.repository.ItemDao;
+import carldav.repository.CollectionRepository;
+import carldav.repository.ItemRepository;
 import carldav.entity.HibCollectionItem;
 import carldav.entity.HibItem;
 import carldav.entity.User;
@@ -29,14 +29,14 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.HOME_COLLECTIO
 
 public class StandardContentService implements ContentService {
 
-    private final ItemDao itemDao;
-    private final CollectionDao collectionDao;
+    private final ItemRepository itemRepository;
+    private final CollectionRepository collectionRepository;
 
-    public StandardContentService(final ItemDao itemDao, CollectionDao collectionDao) {
-        Assert.notNull(itemDao, "itemDao is null");
-        Assert.notNull(collectionDao, "collectionDao is null");
-        this.itemDao = itemDao;
-        this.collectionDao = collectionDao;
+    public StandardContentService(final ItemRepository itemRepository, CollectionRepository collectionRepository) {
+        Assert.notNull(itemRepository, "itemRepository is null");
+        Assert.notNull(collectionRepository, "collectionRepository is null");
+        this.itemRepository = itemRepository;
+        this.collectionRepository = collectionRepository;
     }
 
     /**
@@ -46,7 +46,7 @@ public class StandardContentService implements ContentService {
      * @param collection item to remove item from
      */
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        itemDao.delete(hibItem);
+        itemRepository.delete(hibItem);
         collection.setModifiedDate(new Date());
     }
 
@@ -61,7 +61,7 @@ public class StandardContentService implements ContentService {
      */
     public HibCollectionItem createCollection(HibCollectionItem parent, HibCollectionItem collection) {
         collection.setParent(parent);
-        collectionDao.save(collection);
+        collectionRepository.save(collection);
         return collection;
     }
 
@@ -78,7 +78,7 @@ public class StandardContentService implements ContentService {
         if(HOME_COLLECTION.equals(collection.getDisplayName())) {
             throw new IllegalArgumentException("cannot remove home collection");
         }
-        collectionDao.delete(collection);
+        collectionRepository.delete(collection);
     }
 
     /**
@@ -95,7 +95,7 @@ public class StandardContentService implements ContentService {
     public HibItem createContent(HibCollectionItem parent, HibItem content) {
         content.setCollection(parent);
         content.getCollection().setModifiedDate(new Date());
-        itemDao.save(content);
+        itemRepository.save(content);
         return content;
     }
 
@@ -110,7 +110,7 @@ public class StandardContentService implements ContentService {
         final Date date = new Date();
         content.setModifiedDate(date);
         content.getCollection().setModifiedDate(date);
-        itemDao.save(content);
+        itemRepository.save(content);
         return content;
     }
 
@@ -122,7 +122,7 @@ public class StandardContentService implements ContentService {
         //TODO
         newItem.setName(user.getEmail());
         newItem.setDisplayName("homeCollection");
-        collectionDao.save(newItem);
+        collectionRepository.save(newItem);
         return newItem;
     }
 }

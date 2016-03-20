@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import carldav.repository.UserDao;
+import carldav.repository.UserRepository;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.service.UserService;
 
@@ -25,20 +25,20 @@ import java.util.TreeSet;
 public class UserController {
 
     private final UserService userService;
-    private final UserDao userDao;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserController(final UserService userService, final UserDao userDao) {
-        Assert.notNull(userDao, "userDao is null");
+    public UserController(final UserService userService, final UserRepository userRepository) {
+        Assert.notNull(userRepository, "userRepository is null");
         Assert.notNull(userService, "userService is null");
-        this.userDao = userDao;
+        this.userRepository = userRepository;
         this.userService = userService;
     }
 
     @RequestMapping(method = GET)
     public Set<String> get() {
         final Set<String> users = new TreeSet<>();
-        for (final User user : userDao.findAll()) {
+        for (final User user : userRepository.findAll()) {
             users.add(user.getEmail());
         }
         return users;

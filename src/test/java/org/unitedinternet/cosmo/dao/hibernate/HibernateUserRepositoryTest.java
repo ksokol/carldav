@@ -19,13 +19,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import carldav.repository.UserDao;
+import carldav.repository.UserRepository;
 import carldav.entity.User;
 
-public class HibernateUserDaoTest extends IntegrationTestSupport {
+public class HibernateUserRepositoryTest extends IntegrationTestSupport {
     
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
     @Test
     public void testDeleteUser() throws Exception {
@@ -33,13 +33,13 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         user1.setEmail("user1@user1.com");
         user1.setPassword("user1password");
 
-        userDao.save(user1);
+        userRepository.save(user1);
         
-        User queryUser1 = userDao.findByEmailIgnoreCase("user1@user1.com");
+        User queryUser1 = userRepository.findByEmailIgnoreCase("user1@user1.com");
         Assert.assertNotNull(queryUser1);
-        userDao.delete(queryUser1);
+        userRepository.delete(queryUser1);
 
-        queryUser1 = userDao.findByEmailIgnoreCase("user1");
+        queryUser1 = userRepository.findByEmailIgnoreCase("user1");
         Assert.assertNull(queryUser1);
     }
 }

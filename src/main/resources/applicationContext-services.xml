@@ -14,17 +14,17 @@
 
 	<bean id="userService" class="org.unitedinternet.cosmo.service.impl.StandardUserService">
         <constructor-arg index="0" ref="contentService" />
-        <constructor-arg index="1" ref="userDao" />
-        <constructor-arg index="2" ref="collectionDao" />
+        <constructor-arg index="1" ref="userRepository" />
+        <constructor-arg index="2" ref="collectionRepository" />
 	</bean>
 
 	<bean id="contentService" class="org.unitedinternet.cosmo.service.impl.StandardContentService">
-        <constructor-arg index="0" ref="itemDao" />
-        <constructor-arg index="1" ref="collectionDao" />
+        <constructor-arg index="0" ref="itemRepository" />
+        <constructor-arg index="1" ref="collectionRepository" />
 	</bean>
 
 	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
-		<constructor-arg index="0" ref="itemDao" />
+		<constructor-arg index="0" ref="itemRepository" />
         <constructor-arg index="1" ref="entityConverter" />
 	</bean>
 
@@ -37,10 +37,10 @@
 			<ref bean="contentService" />
 		</constructor-arg>
         <constructor-arg>
-            <ref bean="itemDao" />
+            <ref bean="itemRepository" />
         </constructor-arg>
         <constructor-arg>
-            <ref bean="collectionDao" />
+            <ref bean="collectionRepository" />
         </constructor-arg>
 		<constructor-arg>
 			<ref bean="securityManager" />
@@ -51,7 +51,7 @@
         <constructor-arg>
             <bean class="carldav.card.CardQueryProcessorImpl">
                 <constructor-arg>
-                    <ref bean="itemDao" />
+                    <ref bean="itemRepository" />
                 </constructor-arg>
             </bean>
         </constructor-arg>
@@ -83,6 +83,6 @@
 	<!-- authentication resources -->
 
 	<bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
-		<constructor-arg index="0" ref="userDao" />
+		<constructor-arg index="0" ref="userRepository" />
 	</bean>
 </beans>

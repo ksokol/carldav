@@ -4,7 +4,7 @@ import org.junit.Before
 import org.junit.Test
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import carldav.repository.UserDao
+import carldav.repository.UserRepository
 import carldav.entity.User
 
 import static org.hamcrest.Matchers.*
@@ -24,14 +24,14 @@ class CosmoUserDetailsServiceTests {
 
     @Before
     void before() {
-        UserDao userDao = mock(UserDao.class)
-        uut = new CosmoUserDetailsService(userDao)
+        UserRepository userRepository = mock(UserRepository.class)
+        uut = new CosmoUserDetailsService(userRepository)
 
         user = mock(User.class)
 
         when(user.getEmail()).thenReturn(EMAIL)
         when(user.getPassword()).thenReturn(EMAIL)
-        when(userDao.findByEmailIgnoreCase(EMAIL)).thenReturn(user)
+        when(userRepository.findByEmailIgnoreCase(EMAIL)).thenReturn(user)
     }
 
     @Test

@@ -10,12 +10,12 @@ import java.util.Set;
 /**
  * @author Kamill Sokol
  */
-class ItemDaoImpl implements ItemDaoCustom {
+class ItemRepositoryImpl implements ItemRepositoryCustom {
 
     private final ItemFilterProcessor itemFilterProcessor;
 
     @Autowired
-    public ItemDaoImpl(ItemFilterProcessor itemFilterProcessor) {
+    public ItemRepositoryImpl(ItemFilterProcessor itemFilterProcessor) {
         this.itemFilterProcessor = itemFilterProcessor;
     }
 

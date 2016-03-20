@@ -18,8 +18,8 @@ package org.unitedinternet.cosmo.dav;
 import carldav.card.CardQueryProcessor;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import carldav.repository.CollectionDao;
-import carldav.repository.ItemDao;
+import carldav.repository.CollectionRepository;
+import carldav.repository.ItemRepository;
 import org.unitedinternet.cosmo.dav.impl.*;
 import carldav.entity.HibCollectionItem;
 import carldav.entity.HibItem;
@@ -36,23 +36,23 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.*;
 public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
 
     private ContentService contentService;
-    private ItemDao itemDao;
-    private CollectionDao collectionDao;
+    private ItemRepository itemRepository;
+    private CollectionRepository collectionRepository;
     private CosmoSecurityManager securityManager;
     private CalendarQueryProcessor calendarQueryProcessor;
     private CardQueryProcessor cardQueryProcessor;
     private UserService userService;
 
     public StandardResourceFactory(ContentService contentService,
-                                   ItemDao itemDao,
-                                   CollectionDao collectionDao,
+                                   ItemRepository itemRepository,
+                                   CollectionRepository collectionRepository,
                                    CosmoSecurityManager securityManager,
                                    CalendarQueryProcessor calendarQueryProcessor,
                                    CardQueryProcessor cardQueryProcessor,
                                    UserService userService) {
         this.contentService = contentService;
-        this.itemDao = itemDao;
-        this.collectionDao = collectionDao;
+        this.itemRepository = itemRepository;
+        this.collectionRepository = collectionRepository;
         this.securityManager = securityManager;
         this.calendarQueryProcessor = calendarQueryProcessor;
         this.cardQueryProcessor = cardQueryProcessor;
@@ -180,7 +180,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     private WebDavResource createUnknownResource(DavResourceLocator locator) {
         final String itemUid = locator.itemUid();
         if(itemUid != null) {
-            final HibItem userItem = itemDao.findByOwnerEmailAndName(locator.username(), locator.itemUid());
+            final HibItem userItem = itemRepository.findByOwnerEmailAndName(locator.username(), locator.itemUid());
             if(userItem == null) {
                 return null;
             }
@@ -189,14 +189,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
         final String collection = locator.collection();
         if(collection != null) {
-            final HibCollectionItem userCollection = collectionDao.findByOwnerEmailAndName(locator.username(), collection);
+            final HibCollectionItem userCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), collection);
             if(userCollection == null) {
                 return null;
             }
             return createCollectionResource(locator, userCollection);
         }
 
-        final HibCollectionItem homeCollection = collectionDao.findByOwnerEmailAndName(locator.username(), locator.username());
+        final HibCollectionItem homeCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), locator.username());
         return createCollectionResource(locator, homeCollection);
     }
 
@@ -217,12 +217,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     }
 
     @Override
-    public ItemDao getItemDao() {
-        return itemDao;
+    public ItemRepository getItemRepository() {
+        return itemRepository;
     }
 
-    @Override
-    public CollectionDao getCollectionDao() {
-        return collectionDao;
+    public CollectionRepository getCollectionRepository() {
+        return collectionRepository;
     }
 }

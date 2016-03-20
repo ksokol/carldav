@@ -2,7 +2,7 @@ package carldav.card;
 
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
-import carldav.repository.ItemDao;
+import carldav.repository.ItemRepository;
 import carldav.entity.HibCollectionItem;
 import carldav.entity.HibItem;
 
@@ -13,16 +13,16 @@ import java.util.List;
  */
 class CardQueryProcessorImpl implements CardQueryProcessor {
 
-    private final ItemDao itemDao;
+    private final ItemRepository itemRepository;
 
-    CardQueryProcessorImpl(final ItemDao itemDao) {
-        Assert.notNull(itemDao, "itemDao is null");
-        this.itemDao = itemDao;
+    CardQueryProcessorImpl(final ItemRepository itemRepository) {
+        Assert.notNull(itemRepository, "itemRepository is null");
+        this.itemRepository = itemRepository;
     }
 
     @Override
     public List<HibItem> filterQuery(final HibCollectionItem collection, final AddressbookFilter filter) {
         //TODO filter is not in use yet
-        return itemDao.findByCollectionIdAndType(collection.getId(), HibItem.Type.VCARD);
+        return itemRepository.findByCollectionIdAndType(collection.getId(), HibItem.Type.VCARD);
     }
 }

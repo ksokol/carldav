@@ -22,7 +22,7 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import carldav.repository.ItemDao;
+import carldav.repository.ItemRepository;
 import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 import carldav.entity.HibItem;
@@ -36,18 +36,18 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
 
     private static final CalendarFilterConverter filterConverter = new CalendarFilterConverter();
 
-    private final ItemDao itemDao;
+    private final ItemRepository itemRepository;
     private final EntityConverter entityConverter;
 
-    public StandardCalendarQueryProcessor(ItemDao itemDao, final EntityConverter entityConverter) {
+    public StandardCalendarQueryProcessor(ItemRepository itemRepository, final EntityConverter entityConverter) {
         Assert.notNull(entityConverter, "entityConverter is null");
-        Assert.notNull(itemDao, "itemDao is null");
+        Assert.notNull(itemRepository, "itemRepository is null");
         this.entityConverter = entityConverter;
-        this.itemDao = itemDao;
+        this.itemRepository = itemRepository;
     }
 
     public Set<HibItem> filterQuery(CalendarFilter filter) {
-        return new HashSet<>(itemDao.findCalendarItems(filterConverter.translateToItemFilter(filter)));
+        return new HashSet<>(itemRepository.findCalendarItems(filterConverter.translateToItemFilter(filter)));
     }
 
     /**

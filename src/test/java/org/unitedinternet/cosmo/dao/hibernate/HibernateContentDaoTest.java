@@ -20,9 +20,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
-import carldav.repository.CollectionDao;
-import carldav.repository.ItemDao;
-import carldav.repository.UserDao;
+import carldav.repository.CollectionRepository;
+import carldav.repository.ItemRepository;
+import carldav.repository.UserRepository;
 import carldav.entity.HibCollectionItem;
 import carldav.entity.HibItem;
 import carldav.entity.User;
@@ -30,11 +30,11 @@ import carldav.entity.User;
 public class HibernateContentDaoTest extends IntegrationTestSupport {
 
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
     @Autowired
-    private ItemDao itemDao;
+    private ItemRepository itemRepository;
     @Autowired
-    private CollectionDao collectionDao;
+    private CollectionRepository collectionRepository;
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -42,7 +42,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     public void multipleItemsError() throws Exception {
         User user = getUser("testuser");
-        HibCollectionItem root = collectionDao.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
+        HibCollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
@@ -50,12 +50,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         a.setOwner(user);
         a.setParent(root);
 
-        collectionDao.save(a);
+        collectionRepository.save(a);
 
         HibItem item1 = generateTestContent();
         item1.setUid("1");
         item1.setCollection(a);
-        itemDao.save(item1);
+        itemRepository.save(item1);
 
         HibItem item2 = generateTestContent();
         item2.setUid("1");
@@ -64,13 +64,13 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         expectedException.expect(org.springframework.dao.DataIntegrityViolationException.class);
         expectedException.expectMessage("could not execute statement; SQL [n/a]; constraint [UID_OWNER_COLLECTION]");
 
-        itemDao.save(item2);
+        itemRepository.save(item2);
     }
 
     @Test
     public void multipleCollectionsError() throws Exception {
         User user = getUser("testuser");
-        HibCollectionItem root = collectionDao.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
+        HibCollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
@@ -78,7 +78,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         a.setOwner(user);
         a.setParent(root);
 
-        collectionDao.save(a);
+        collectionRepository.save(a);
 
         HibCollectionItem b = new HibCollectionItem();
         b.setName("a");
@@ -89,19 +89,19 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         expectedException.expect(org.springframework.dao.DataIntegrityViolationException.class);
         expectedException.expectMessage("could not execute statement; SQL [n/a]; constraint [DISPLAYNAME_OWNER]");
 
-        collectionDao.save(b);
+        collectionRepository.save(b);
     }
 
     public User getUser(String username) {
         final String email = username + "@testem";
-        User user = userDao.findByEmailIgnoreCase(email);
+        User user = userRepository.findByEmailIgnoreCase(email);
         if (user == null) {
             user = new User();
             user.setPassword(username);
             user.setEmail(email);
-            userDao.save(user);
+            userRepository.save(user);
 
-            user = userDao.findByEmailIgnoreCase(email);
+            user = userRepository.findByEmailIgnoreCase(email);
 
             HibCollectionItem newItem = new HibCollectionItem();
 
@@ -109,10 +109,10 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
             //TODO
             newItem.setName(user.getEmail());
             newItem.setDisplayName("homeCollection");
-            collectionDao.save(newItem);
+            collectionRepository.save(newItem);
 
             // create root item
-            collectionDao.save(newItem);
+            collectionRepository.save(newItem);
         }
         return user;
     }

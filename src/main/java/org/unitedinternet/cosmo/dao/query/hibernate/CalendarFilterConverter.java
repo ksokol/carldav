@@ -15,10 +15,12 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
+import carldav.entity.Item;
 import net.fortuna.ical4j.model.TimeZone;
 import org.unitedinternet.cosmo.calendar.query.*;
-import org.unitedinternet.cosmo.model.filter.*;
-import carldav.entity.Item;
+import org.unitedinternet.cosmo.model.filter.ItemFilter;
+import org.unitedinternet.cosmo.model.filter.Restrictions;
+import org.unitedinternet.cosmo.model.filter.StampFilter;
 
 import java.util.Iterator;
 
@@ -104,13 +106,11 @@ public class CalendarFilterConverter {
     private void handleCompFilter(ComponentFilter compFilter, ItemFilter itemFilter) {
 
         if (COMP_VEVENT.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter, new EventStampFilter());
+            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.VEVENT));
         } else if (COMP_VJOURNAL.equalsIgnoreCase(compFilter.getName())) {
-            handleEventCompFilter(compFilter, itemFilter, new JournalStampFilter());
+            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.VJOURNAL));
         } else if(COMP_VTODO.equalsIgnoreCase(compFilter.getName())) {
-            final EventStampFilter eventStampFilter = new EventStampFilter();
-            eventStampFilter.setType(Item.Type.VTODO);
-            handleEventCompFilter(compFilter, itemFilter, eventStampFilter);
+            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.VTODO));
         } else {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());
         }

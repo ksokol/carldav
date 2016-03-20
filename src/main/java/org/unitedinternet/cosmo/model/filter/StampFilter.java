@@ -48,6 +48,10 @@ public class StampFilter {
     private Item.Type type;
 
     public StampFilter() {}
+
+    public StampFilter(Item.Type type) {
+        this.type = type;
+    }
     
     public StampFilter(Class stampClass) {
         this.stampClass = stampClass;

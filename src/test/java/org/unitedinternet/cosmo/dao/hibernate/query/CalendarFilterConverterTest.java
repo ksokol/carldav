@@ -90,9 +90,10 @@ public class CalendarFilterConverterTest {
         Assert.assertTrue(noteFilter.getIcalUid() instanceof LikeExpression);
         verifyFilterExpressionValue(noteFilter.getIcalUid(), "uid");
 
-        EventStampFilter sf = (EventStampFilter) noteFilter.getStampFilter(EventStampFilter.class);
+        StampFilter sf = noteFilter.getStampFilter(StampFilter.class);
         Assert.assertNotNull(sf);
         Assert.assertNotNull(sf.getPeriod());
+        Assert.assertEquals(sf.getType(), Item.Type.VEVENT);
         Assert.assertEquals(sf.getPeriod().getStart().toString(), "20070101T100000Z");
         Assert.assertEquals(sf.getPeriod().getEnd().toString(), "20070201T100000Z");
     }

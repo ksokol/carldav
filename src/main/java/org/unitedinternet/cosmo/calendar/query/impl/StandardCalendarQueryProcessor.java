@@ -27,6 +27,7 @@ import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
@@ -43,8 +44,8 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
         this.itemRepository = itemRepository;
     }
 
-    public Set<Item> filterQuery(CalendarFilter filter) {
-        return new HashSet<>(itemRepository.findCalendarItems(filter));
+    public List<Item> filterQuery(CalendarFilter filter) {
+        return itemRepository.findCalendarItems(filter);
     }
 
     /**

@@ -44,11 +44,10 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         this.entityManager = entityManager;
     }
 
-    public Set<Item> processFilter(CalendarFilter filter) {
+    public List<Item> processFilter(CalendarFilter filter) {
         final ItemFilter itemFilter = filterConverter.translateToItemFilter(filter);
         Query hibQuery = buildQuery(entityManager, itemFilter);
-        List<Item> queryResults = hibQuery.getResultList();
-        return processResults(queryResults);
+        return hibQuery.getResultList();
     }
 
     /**
@@ -210,24 +209,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
     private String formatForLike(String toFormat) {
         return "%" + toFormat + "%";
-    }
-
-    /**
-     * Because a timeRange query requires two passes: one to get the list
-     * of possible events that occur in the range, and one
-     * to expand recurring events if necessary.
-     * This is required because we only index a start and end
-     * for the entire recurrence series, and expansion is required to determine
-     * if the event actually occurs, and to return individual occurences.
-     */
-    private HashSet<Item> processResults(List<Item> results) {
-        HashSet<Item> processedResults = new HashSet<>();
-
-        for (Item item : results) {
-            processedResults.add(item);
-        }
-
-        return processedResults;
     }
 
     private void formatExpression(StringBuffer whereBuf,

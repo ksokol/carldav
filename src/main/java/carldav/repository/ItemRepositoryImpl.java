@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * @author Kamill Sokol
@@ -20,7 +20,7 @@ class ItemRepositoryImpl implements ItemRepositoryCustom {
     }
 
     @Override
-    public Set<Item> findCalendarItems(CalendarFilter filter) {
+    public List<Item> findCalendarItems(CalendarFilter filter) {
         return itemFilterProcessor.processFilter(filter);
     }
 }

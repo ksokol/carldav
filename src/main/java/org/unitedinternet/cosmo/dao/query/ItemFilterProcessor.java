@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dao.query;
 import carldav.entity.Item;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * Defines api for applying a <code>ItemFilter</code> and
@@ -30,5 +30,5 @@ public interface ItemFilterProcessor {
      * @param filter  item filter
      * @return set of items that match filter
      */
-    Set<Item> processFilter(CalendarFilter filter);
+    List<Item> processFilter(CalendarFilter filter);
 }

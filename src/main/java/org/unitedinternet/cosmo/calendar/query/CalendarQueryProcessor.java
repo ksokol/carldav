@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.calendar.query;
 
 import carldav.entity.Item;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  * <p>
@@ -47,7 +47,7 @@ public interface CalendarQueryProcessor {
      * @param filter The calendar filter.
      * @return All members that match the provided filter.
      */
-    Set<Item> filterQuery(CalendarFilter filter);
+    List<Item> filterQuery(CalendarFilter filter);
 
     /**
      * <p>

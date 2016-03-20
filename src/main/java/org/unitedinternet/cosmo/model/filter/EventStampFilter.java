@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 /**
  * Adds EventStamp specific criteria to StampFilter.
@@ -24,6 +24,6 @@ import carldav.entity.HibItem;
 public class EventStampFilter extends StampFilter {
 
     public EventStampFilter() {
-        setType(HibItem.Type.VEVENT);
+        setType(Item.Type.VEVENT);
     }
 }

@@ -24,7 +24,7 @@ import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
 import carldav.repository.UserRepository;
 import carldav.entity.CollectionItem;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import carldav.entity.User;
 
 public class HibernateContentDaoTest extends IntegrationTestSupport {
@@ -52,12 +52,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         collectionRepository.save(a);
 
-        HibItem item1 = generateTestContent();
+        Item item1 = generateTestContent();
         item1.setUid("1");
         item1.setCollection(a);
         itemRepository.save(item1);
 
-        HibItem item2 = generateTestContent();
+        Item item2 = generateTestContent();
         item2.setUid("1");
         item2.setCollection(a);
 
@@ -117,12 +117,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         return user;
     }
 
-    private HibItem generateTestContent() {
+    private Item generateTestContent() {
         return generateTestContent("test", "testuser");
     }
 
-    private HibItem generateTestContent(String name, String owner) {
-        HibItem content = new HibItem();
+    private Item generateTestContent(String name, String owner) {
+        Item content = new Item();
         content.setName(name);
         content.setDisplayName(name);
         content.setOwner(getUser(owner));

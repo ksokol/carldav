@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 /**
  * An interface for DAV resources that are backed by Cosmo content (e.g.
@@ -25,8 +25,8 @@ import carldav.entity.HibItem;
  */
 public interface DavItemResource extends WebDavResource {
 
-    HibItem getItem();
+    Item getItem();
 
-    void setItem(HibItem hibItem) throws CosmoDavException;
+    void setItem(Item item) throws CosmoDavException;
 
 }

@@ -21,7 +21,7 @@ import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,18 +72,18 @@ public class CalendarResourceProvider extends FileProvider {
     protected WebDavResource createCalendarResource(DavResourceLocator locator, Calendar calendar) throws CosmoDavException {
 
         if (!calendar.getComponents(Component.VEVENT).isEmpty()) {
-            final HibItem item = new HibItem();
-            item.setType(HibItem.Type.VEVENT);
+            final Item item = new Item();
+            item.setType(Item.Type.VEVENT);
             return new DavCalendarResource(item, locator, getResourceFactory());
         }
         if (!calendar.getComponents(Component.VTODO).isEmpty()) {
-            final HibItem item = new HibItem();
-            item.setType(HibItem.Type.VTODO);
+            final Item item = new Item();
+            item.setType(Item.Type.VTODO);
             return new DavCalendarResource(item, locator, getResourceFactory());
         }
         if (!calendar.getComponents(Component.VJOURNAL).isEmpty()) {
-            final HibItem item = new HibItem();
-            item.setType(HibItem.Type.VJOURNAL);
+            final Item item = new Item();
+            item.setType(Item.Type.VJOURNAL);
             return new DavCalendarResource(item, locator, getResourceFactory());
         }
         throw new SupportedCalendarComponentException(SUPPORTED_COMPONENT_TYPES);

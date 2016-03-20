@@ -23,7 +23,7 @@ import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.property.*;
 import carldav.entity.CollectionItem;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
@@ -87,7 +87,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     @Override
     public List<WebDavResource> getMembers() {
         final List<CollectionItem> collections = getResourceFactory().getCollectionRepository().findByParentId(item.getId());
-        final List<HibItem> items = getResourceFactory().getItemRepository().findByCollectionId(item.getId());
+        final List<Item> items = getResourceFactory().getItemRepository().findByCollectionId(item.getId());
 
         members.addAll(collections.stream().map(this::collectionToResource).collect(Collectors.toList()));
         members.addAll(items.stream().map(this::memberToResource).collect(Collectors.toList()));
@@ -101,16 +101,16 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
 
     public List<WebDavResource> getCollectionMembers() {
-        for (CollectionItem memberHibItem : item.getCollections()) {
-            WebDavResource resource = collectionToResource(memberHibItem);
+        for (CollectionItem memberItem : item.getCollections()) {
+            WebDavResource resource = collectionToResource(memberItem);
             members.add(resource);
         }
         return Collections.unmodifiableList(members);
     }
     
     public void removeItem(WebDavResource member) {
-        HibItem hibItem = ((DavItemResource) member).getItem();
-        getContentService().removeItemFromCollection(hibItem, item);
+        Item item = ((DavItemResource) member).getItem();
+        getContentService().removeItemFromCollection(item, this.item);
         members.remove(member);
     }
 
@@ -184,7 +184,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
      */
     protected void saveContent(DavItemResource member) throws CosmoDavException {
         CollectionItem collection = item;
-        HibItem content = member.getItem();
+        Item content = member.getItem();
 
         if (content.getId() != null) {
             content = getContentService().updateContent(content);
@@ -195,10 +195,10 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         member.setItem(content);
     }
 
-    protected WebDavResource memberToResource(HibItem hibItem) throws CosmoDavException {
+    protected WebDavResource memberToResource(Item item) throws CosmoDavException {
         String path;
         try {
-            path = getResourcePath() + "/" + URLEncoder.encode(hibItem.getName(), "UTF-8");
+            path = getResourcePath() + "/" + URLEncoder.encode(item.getName(), "UTF-8");
         } catch (UnsupportedEncodingException e) {
             throw new CosmoDavException(e);
         }
@@ -206,7 +206,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
                 .createResourceLocatorByPath(getResourceLocator().getContext(),
                         path);
 
-        return getResourceFactory().createResource(locator, hibItem);
+        return getResourceFactory().createResource(locator, item);
     }
 
     protected WebDavResource collectionToResource(CollectionItem hibItem) {

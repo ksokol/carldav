@@ -19,7 +19,7 @@ import org.springframework.util.Assert;
 import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
 import carldav.entity.CollectionItem;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
@@ -42,11 +42,11 @@ public class StandardContentService implements ContentService {
     /**
      * Remove an item from a collection.  The item will be deleted if
      * it belongs to no more collections.
-     * @param hibItem item to remove from collection
+     * @param item item to remove from collection
      * @param collection item to remove item from
      */
-    public void removeItemFromCollection(HibItem hibItem, CollectionItem collection) {
-        itemRepository.delete(hibItem);
+    public void removeItemFromCollection(Item item, CollectionItem collection) {
+        itemRepository.delete(item);
         collection.setModifiedDate(new Date());
     }
 
@@ -92,7 +92,7 @@ public class StandardContentService implements ContentService {
      *            content to create
      * @return newly created content
      */
-    public HibItem createContent(CollectionItem parent, HibItem content) {
+    public Item createContent(CollectionItem parent, Item content) {
         content.setCollection(parent);
         content.getCollection().setModifiedDate(new Date());
         itemRepository.save(content);
@@ -106,7 +106,7 @@ public class StandardContentService implements ContentService {
      *            content item to update
      * @return updated content item
      */
-    public HibItem updateContent(HibItem content) {
+    public Item updateContent(Item content) {
         final Date date = new Date();
         content.setModifiedDate(date);
         content.getCollection().setModifiedDate(date);

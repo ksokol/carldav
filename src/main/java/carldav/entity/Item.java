@@ -33,7 +33,7 @@ import java.util.Date;
         },
         uniqueConstraints = {@UniqueConstraint(name = "uid_owner_collection", columnNames = {"uid", "ownerid", "collectionid"})}
 )
-public class HibItem {
+public class Item {
 
     public enum Type {
         VEVENT, VJOURNAL, VTODO, VCARD
@@ -57,9 +57,9 @@ public class HibItem {
     private Date clientModifiedDate;
     private Type type;
 
-    public HibItem() {}
+    public Item() {}
 
-    public HibItem(Type type) {
+    public Item(Type type) {
         this.type = type;
     }
 

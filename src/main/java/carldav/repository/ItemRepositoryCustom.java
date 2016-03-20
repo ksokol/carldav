@@ -1,7 +1,7 @@
 package carldav.repository;
 
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import java.util.Set;
 
@@ -10,5 +10,5 @@ import java.util.Set;
  */
 interface ItemRepositoryCustom {
 
-    Set<HibItem> findCalendarItems(ItemFilter itemFilter);
+    Set<Item> findCalendarItems(ItemFilter itemFilter);
 }

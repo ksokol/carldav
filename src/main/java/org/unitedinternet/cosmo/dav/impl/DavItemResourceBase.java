@@ -21,7 +21,7 @@ import org.apache.abdera.i18n.text.UrlEncoding;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.property.*;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.util.PathUtil;
 
@@ -48,14 +48,14 @@ import static carldav.CarldavConstants.*;
  * <p>
  * This class does not define any resource types.
  * </p>
- * @see HibItem
+ * @see Item
  */
 public abstract class DavItemResourceBase extends DavResourceBase implements DavItemResource {
 
-    private HibItem hibItem;
+    private Item item;
     private DavCollection parent;
 
-    public DavItemResourceBase(HibItem hibItem, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
+    public DavItemResourceBase(Item item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
         registerLiveProperty(GET_LAST_MODIFIED);
@@ -66,15 +66,15 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         registerLiveProperty(GET_CONTENT_LENGTH);
         registerLiveProperty(GET_CONTENT_TYPE);
 
-        this.hibItem = hibItem;
+        this.item = item;
     }
 
     public boolean exists() {
-        return hibItem != null && hibItem.getId() != null;
+        return item != null && item.getId() != null;
     }
 
     public String getDisplayName() {
-        return hibItem.getDisplayName();
+        return item.getDisplayName();
     }
 
     public String getETag() {
@@ -83,7 +83,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
 
     @Override
     public String getName() {
-        return hibItem.getName();
+        return item.getName();
     }
 
     public long getModificationTime() {
@@ -100,12 +100,12 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         return parent;
     }
 
-    public HibItem getItem() {
-        return hibItem;
+    public Item getItem() {
+        return item;
     }
 
-    public void setItem(HibItem hibItem) throws CosmoDavException {
-        this.hibItem = hibItem;
+    public void setItem(Item item) throws CosmoDavException {
+        this.item = item;
         loadProperties();
     }
 
@@ -114,27 +114,27 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
     }
 
     protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
-        if (hibItem.getId() == null) {
+        if (item.getId() == null) {
             try {
-                hibItem.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));
+                item.setName(UrlEncoding.decode(PathUtil.getBasename(getResourcePath()), "UTF-8"));
             } catch (UnsupportedEncodingException e) {
                 throw new CosmoDavException(e);
             }
         }
 
         // Only initialize owner once
-        if (hibItem.getOwner() == null) {
+        if (item.getOwner() == null) {
             User owner = getSecurityManager().getSecurityContext().getUser();
-            hibItem.setOwner(owner);
+            item.setOwner(owner);
         }
 
-        HibItem hibICalendarItem = hibItem;
+        Item hibICalendarItem = item;
         hibICalendarItem.setClientCreationDate(Calendar.getInstance().getTime());
         hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());
     }
 
     protected void loadLiveProperties(CustomDavPropertySet properties) {
-        properties.add(new LastModified(hibItem.getModifiedDate()));
+        properties.add(new LastModified(item.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));

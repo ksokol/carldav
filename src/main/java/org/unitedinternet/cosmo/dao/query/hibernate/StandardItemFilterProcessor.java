@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,9 +41,9 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         this.entityManager = entityManager;
     }
 
-    public Set<HibItem> processFilter(ItemFilter filter) {
+    public Set<Item> processFilter(ItemFilter filter) {
         Query hibQuery = buildQuery(entityManager, filter);
-        List<HibItem> queryResults = hibQuery.getResultList();
+        List<Item> queryResults = hibQuery.getResultList();
         return processResults(queryResults);
     }
 
@@ -96,7 +96,7 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
                                   ItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
-            selectBuf.append("select i from HibItem i");
+            selectBuf.append("select i from Item i");
         }
 
         // filter on uid
@@ -161,7 +161,7 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
     private void handleNoteItemFilter(StringBuffer selectBuf,
                                       StringBuffer whereBuf, Map<String, Object> params,
                                       NoteItemFilter filter) {
-        selectBuf.append("select i from HibItem i");
+        selectBuf.append("select i from Item i");
         handleItemFilter(selectBuf, whereBuf, params, filter);
         handleContentItemFilter(selectBuf, whereBuf, params, filter);
 
@@ -190,7 +190,7 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
                                          ItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
-            selectBuf.append("select i from HibItem i");
+            selectBuf.append("select i from Item i");
             handleItemFilter(selectBuf, whereBuf, params, filter);
         }
     }
@@ -216,11 +216,11 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
      * for the entire recurrence series, and expansion is required to determine
      * if the event actually occurs, and to return individual occurences.
      */
-    private HashSet<HibItem> processResults(List<HibItem> results) {
-        HashSet<HibItem> processedResults = new HashSet<>();
+    private HashSet<Item> processResults(List<Item> results) {
+        HashSet<Item> processedResults = new HashSet<>();
 
-        for (HibItem hibItem : results) {
-            processedResults.add(hibItem);
+        for (Item item : results) {
+            processedResults.add(item);
         }
 
         return processedResults;

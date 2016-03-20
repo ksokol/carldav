@@ -11,7 +11,7 @@ import org.unitedinternet.cosmo.dav.caldav.property.SupportedAddressData;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookMultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookQueryReport;
 import carldav.entity.CollectionItem;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;
@@ -49,8 +49,8 @@ public class DavCardCollection extends DavCollectionBase {
         Set<DavItemResourceBase> members = new HashSet<>();
 
         CollectionItem collection = getItem();
-        for (HibItem memberHibItem : cardQueryProcessor.filterQuery(collection, filter)) {
-            WebDavResource resource = memberToResource(memberHibItem);
+        for (Item memberItem : cardQueryProcessor.filterQuery(collection, filter)) {
+            WebDavResource resource = memberToResource(memberItem);
             members.add((DavItemResourceBase) resource);
         }
 

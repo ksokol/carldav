@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dao.query;
 
 import java.util.Set;
 
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
 
 /**
@@ -30,5 +30,5 @@ public interface ItemFilterProcessor {
      * @param filter  item filter
      * @return set of items that match filter
      */
-    Set<HibItem> processFilter(ItemFilter filter);
+    Set<Item> processFilter(ItemFilter filter);
 }

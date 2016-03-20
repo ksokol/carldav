@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -37,7 +37,7 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.ICALENDAR_ME
 
 public class EntityConverter {
 
-    public HibItem convertCard(HibItem cardItem) {
+    public Item convertCard(Item cardItem) {
         VCard vcard = Ezvcard.parse(cardItem.getCalendar()).first();
         String uidString = vcard.getUid().getValue();
         uidString = "".equals(uidString) ? null : uidString;
@@ -53,7 +53,7 @@ public class EntityConverter {
         return cardItem;
     }
 
-    public HibItem convert(HibItem calendarItem) {
+    public Item convert(Item calendarItem) {
         try {
             final Calendar calendar = new CalendarBuilder().build(new StringReader(calendarItem.getCalendar()));
             Component component = getFirstComponent(calendar.getComponents(calendarItem.getType().name()));
@@ -66,7 +66,7 @@ public class EntityConverter {
         }
     }
 
-    public Calendar convertContent(HibItem item) {
+    public Calendar convertContent(Item item) {
         if(item.getCalendar() != null) {
             try {
                 return new CalendarBuilder().build(new StringReader(item.getCalendar()));
@@ -77,7 +77,7 @@ public class EntityConverter {
         return null;
     }
 
-    private void setCalendarAttributes(HibItem note, Component component) {
+    private void setCalendarAttributes(Item note, Component component) {
         final Property uid = component.getProperty(Property.UID);
         String uidString = null;
         if(uid != null) {
@@ -217,7 +217,7 @@ public class EntityConverter {
         return l;
     }
 
-    private void calculateEventStampIndexes(Calendar calendar, Component event, HibItem note) {
+    private void calculateEventStampIndexes(Calendar calendar, Component event, Item note) {
         final DtStart dtStart = ICalendarUtils.getStartDate(event);
         Date startDate = null;
 

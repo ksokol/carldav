@@ -2,7 +2,7 @@ package carldav.card;
 
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import carldav.entity.CollectionItem;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import java.util.List;
 
@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface CardQueryProcessor {
 
-    List<HibItem> filterQuery(CollectionItem collection, AddressbookFilter filter);
+    List<Item> filterQuery(CollectionItem collection, AddressbookFilter filter);
 }

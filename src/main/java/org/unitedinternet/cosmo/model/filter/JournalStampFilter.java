@@ -1,10 +1,10 @@
 package org.unitedinternet.cosmo.model.filter;
 
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 public class JournalStampFilter extends StampFilter {
 
     public JournalStampFilter() {
-        setType(HibItem.Type.VJOURNAL);
+        setType(Item.Type.VJOURNAL);
     }
 }

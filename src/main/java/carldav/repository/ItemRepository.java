@@ -16,16 +16,16 @@
 package carldav.repository;
 
 import org.springframework.data.repository.CrudRepository;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import java.util.List;
 
-public interface ItemRepository extends CrudRepository<HibItem, Long>, ItemRepositoryCustom {
+public interface ItemRepository extends CrudRepository<Item, Long>, ItemRepositoryCustom {
 
-    List<HibItem> findByCollectionIdAndType(Long id, HibItem.Type type);
+    List<Item> findByCollectionIdAndType(Long id, Item.Type type);
 
-    List<HibItem> findByCollectionId(Long id);
+    List<Item> findByCollectionId(Long id);
 
-    HibItem findByOwnerEmailAndName(String owner, String name);
+    Item findByOwnerEmailAndName(String owner, String name);
 
 }

@@ -22,7 +22,7 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -36,16 +36,16 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_T
 
 public class DavCard extends DavItemResourceBase {
 
-    public DavCard(HibItem item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
+    public DavCard(Item item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(item, locator, factory);
     }
 
     public DavCard(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
-        this(new HibItem(HibItem.Type.VCARD), locator, factory);
+        this(new Item(Item.Type.VCARD), locator, factory);
     }
 
     public void writeHead(final HttpServletResponse response) throws IOException {
-        HibItem content = (HibItem) getItem();
+        Item content = (Item) getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
         response.setContentType(content.getMimetype());
@@ -59,7 +59,7 @@ public class DavCard extends DavItemResourceBase {
     }
 
     public void writeBody(final HttpServletResponse response) throws IOException {
-        HibItem content = getItem();
+        Item content = getItem();
         final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
         IOUtils.copy(new ByteArrayInputStream(calendar), response.getOutputStream());
     }
@@ -67,7 +67,7 @@ public class DavCard extends DavItemResourceBase {
     protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
         super.populateItem(inputContext);
 
-        HibItem file = getItem();
+        Item file = getItem();
         Scanner scanner = new Scanner(inputContext.getInputStream()).useDelimiter("\\A");
         file.setCalendar(scanner.next());
         converter.convertCard(file);

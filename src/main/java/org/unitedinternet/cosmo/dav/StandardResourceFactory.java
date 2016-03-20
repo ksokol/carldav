@@ -22,7 +22,7 @@ import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
 import org.unitedinternet.cosmo.dav.impl.*;
 import carldav.entity.CollectionItem;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import carldav.entity.User;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
@@ -89,8 +89,8 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             WebDavResource parent = resolve(locator.getParentLocator());
             //TODO
             if(parent != null && CALENDAR.equals(parent.getName())) {
-                final HibItem item = new HibItem();
-                item.setType(HibItem.Type.VEVENT);
+                final Item item = new Item();
+                item.setType(Item.Type.VEVENT);
                 return new DavCalendarResource(item, locator, this);
             }
             //TODO
@@ -137,15 +137,15 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
      * <code>Item</code> located by the given <code>DavResourceLocator</code>.
      * </p>
      */
-    public WebDavResource createResource(DavResourceLocator locator, HibItem hibItem)  throws CosmoDavException {
-        Assert.notNull(hibItem, "item cannot be null");
+    public WebDavResource createResource(DavResourceLocator locator, Item item)  throws CosmoDavException {
+        Assert.notNull(item, "item cannot be null");
 
         //TODO
-        if(hibItem.getName().endsWith(".vcf")) {
-            return new DavCard(hibItem, locator, this);
+        if(item.getName().endsWith(".vcf")) {
+            return new DavCard(item, locator, this);
         }
 
-        return new DavCalendarResource(hibItem, locator, this);
+        return new DavCalendarResource(item, locator, this);
     }
 
     public WebDavResource createCollectionResource(DavResourceLocator locator, CollectionItem hibItem) {
@@ -180,7 +180,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     private WebDavResource createUnknownResource(DavResourceLocator locator) {
         final String itemUid = locator.itemUid();
         if(itemUid != null) {
-            final HibItem userItem = itemRepository.findByOwnerEmailAndName(locator.username(), locator.itemUid());
+            final Item userItem = itemRepository.findByOwnerEmailAndName(locator.username(), locator.itemUid());
             if(userItem == null) {
                 return null;
             }

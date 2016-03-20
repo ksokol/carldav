@@ -28,7 +28,7 @@ import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.ContentLength;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -45,7 +45,7 @@ public class DavCalendarResource extends DavItemResourceBase implements ICalenda
 
     //private final Set<CustomReportType> reportTypes = new HashSet<>();
 
-    public DavCalendarResource(HibItem item,
+    public DavCalendarResource(Item item,
                                DavResourceLocator locator,
                                DavResourceFactory factory)
         throws CosmoDavException {
@@ -76,7 +76,7 @@ public class DavCalendarResource extends DavItemResourceBase implements ICalenda
     }
 
     public void setCalendar(String calendar) throws CosmoDavException {
-        final HibItem item = getItem();
+        final Item item = getItem();
         item.setCalendar(calendar);
     }
 

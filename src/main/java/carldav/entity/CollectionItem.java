@@ -30,7 +30,7 @@ public class CollectionItem {
     private Date modifiedDate;
     private String displayName;
     private String name;
-    private Set<HibItem> items;
+    private Set<Item> items;
     private User owner;
     private CollectionItem parent;
     private Set<CollectionItem> collections;
@@ -76,12 +76,12 @@ public class CollectionItem {
         this.name = name;
     }
 
-    @OneToMany(targetEntity=HibItem.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
-    public Set<HibItem> getItems() {
+    @OneToMany(targetEntity=Item.class, mappedBy="collection", fetch=FetchType.LAZY, orphanRemoval=true)
+    public Set<Item> getItems() {
         return items;
     }
 
-    public void setItems(Set<HibItem> items) {
+    public void setItems(Set<Item> items) {
         this.items = items;
     }
 

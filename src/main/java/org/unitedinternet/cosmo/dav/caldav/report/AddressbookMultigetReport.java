@@ -9,7 +9,7 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.impl.DavCard;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 
 import javax.xml.namespace.QName;
 
@@ -70,7 +70,7 @@ public class AddressbookMultigetReport extends MultigetReport {
             return null;
         }
 
-        final HibItem item = resource.getItem();
+        final Item item = resource.getItem();
         final StringBuilder builder = new StringBuilder();
 
         builder.append(item.getCalendar());

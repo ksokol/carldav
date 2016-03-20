@@ -19,7 +19,7 @@ import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
 import carldav.entity.CollectionItem;
-import carldav.entity.HibItem;
+import carldav.entity.Item;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 
@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  * persisted items.
  *
  * @see WebDavResource
- * @see HibItem
+ * @see Item
  */
 public interface DavResourceFactory {
 
@@ -67,7 +67,7 @@ public interface DavResourceFactory {
      * </p>
      */
     WebDavResource createResource(DavResourceLocator locator,
-                                      HibItem hibItem)
+                                      Item item)
         throws CosmoDavException;
 
     WebDavResource createCollectionResource(DavResourceLocator locator, CollectionItem hibItem);

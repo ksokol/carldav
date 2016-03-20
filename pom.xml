@@ -373,7 +373,6 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <configuration>
                     <failOnViolation>true</failOnViolation>
-                    <configLocation>checkstyle-suppressions.xml</configLocation>
                 </configuration>
             </plugin>
 
@@ -445,7 +444,6 @@
                 <version>2.10</version>
                 <configuration>
                     <failOnViolation>false</failOnViolation>
-                    <configLocation>checkstyle-suppressions.xml</configLocation>
                 </configuration>
             </plugin>
             <plugin>
@@ -461,7 +459,6 @@
                 <version>2.5.2</version>
                 <configuration>
                     <failOnError>true</failOnError>
-                    <excludeFilterFile>findbugs-suppressions.xml</excludeFilterFile>
                 </configuration>
             </plugin>
 

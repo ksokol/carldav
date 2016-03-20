@@ -19,13 +19,10 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
 import java.util.Date;
 
 @MappedSuperclass
-public abstract class HibAuditableObject implements Serializable {
-
-    private static final long serialVersionUID = 8396186357498363587L;
+public abstract class HibAuditableObject {
 
     private Long id;
     private Date modifiedDate;

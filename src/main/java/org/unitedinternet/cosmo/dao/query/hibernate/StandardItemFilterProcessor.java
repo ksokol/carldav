@@ -72,10 +72,17 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
         selectBuf.append("select i from Item i");
 
+        // filter on parent
+        if (filter.getParent() != null) {
+            selectBuf.append(" join i.collection pd");
+            appendWhere(whereBuf, "pd.id=:parent");
+            params.put("parent", filter.getParent());
+        }
+
         if (filter instanceof NoteItemFilter) {
-            handleNoteItemFilter(selectBuf, whereBuf, params, (NoteItemFilter) filter);
+            handleNoteItemFilter(whereBuf, params, (NoteItemFilter) filter);
         } else {
-            handleItemFilter(selectBuf, whereBuf, params, filter);
+            handleItemFilter(whereBuf, params, filter);
         }
 
         selectBuf.append(whereBuf);
@@ -94,8 +101,7 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         return hqlQuery;
     }
 
-    private void handleItemFilter(StringBuffer selectBuf,
-                                  StringBuffer whereBuf, Map<String, Object> params,
+    private void handleItemFilter(StringBuffer whereBuf, Map<String, Object> params,
                                   ItemFilter filter) {
 
         // filter on uid
@@ -103,13 +109,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
             formatExpression(whereBuf, params, "i.uid", filter.getUid());
         }
 
-
-        // filter on parent
-        if (filter.getParent() != null) {
-            selectBuf.append(" join i.collection pd");
-            appendWhere(whereBuf, "pd.id=:parent");
-            params.put("parent", filter.getParent());
-        }
 
         if (filter.getDisplayName() != null) {
             formatExpression(whereBuf, params, "i.displayName", filter.getDisplayName());
@@ -157,11 +156,9 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         }
     }
 
-    private void handleNoteItemFilter(StringBuffer selectBuf,
-                                      StringBuffer whereBuf, Map<String, Object> params,
+    private void handleNoteItemFilter(StringBuffer whereBuf, Map<String, Object> params,
                                       NoteItemFilter filter) {
-        handleItemFilter(selectBuf, whereBuf, params, filter);
-        handleContentItemFilter(selectBuf, whereBuf, params, filter);
+        handleItemFilter(whereBuf, params, filter);
 
         // filter by icaluid
         if (filter.getIcalUid() != null) {
@@ -177,16 +174,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
             formatExpression(whereBuf, params, "i.modifiedDate", filter.getModifiedSince());
         }
     }
-
-    private void handleContentItemFilter(StringBuffer selectBuf,
-                                         StringBuffer whereBuf, Map<String, Object> params,
-                                         ItemFilter filter) {
-
-        if ("".equals(selectBuf.toString())) {
-            handleItemFilter(selectBuf, whereBuf, params, filter);
-        }
-    }
-
 
     private void appendWhere(StringBuffer whereBuf, String toAppend) {
         if ("".equals(whereBuf.toString())) {

@@ -82,8 +82,8 @@ public class CalendarFilterConverterTest {
         
         ItemFilter itemFilter = converter.translateToItemFilter(calFilter);
         
-        Assert.assertTrue(itemFilter instanceof NoteItemFilter);
-        NoteItemFilter noteFilter = (NoteItemFilter) itemFilter;
+        Assert.assertTrue(itemFilter instanceof ItemFilter);
+        ItemFilter noteFilter = itemFilter;
         Assert.assertEquals(calendar.getId(), noteFilter.getParent());
         Assert.assertTrue(noteFilter.getDisplayName() instanceof LikeExpression);
         verifyFilterExpressionValue(noteFilter.getDisplayName(), "summary");
@@ -116,8 +116,8 @@ public class CalendarFilterConverterTest {
 
         ItemFilter itemFilter = converter.getFirstPassFilter(1L, calFilter);
         Assert.assertNotNull(itemFilter);
-        Assert.assertTrue(itemFilter instanceof NoteItemFilter);
-        NoteItemFilter noteFilter = (NoteItemFilter) itemFilter;
+        Assert.assertTrue(itemFilter instanceof ItemFilter);
+        ItemFilter noteFilter = itemFilter;
       
         Assert.assertEquals(1, noteFilter.getStampFilters().size());
         

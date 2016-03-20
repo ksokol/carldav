@@ -23,8 +23,10 @@ import org.unitedinternet.cosmo.model.filter.*;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import static java.util.Locale.ENGLISH;
 
@@ -81,10 +83,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
         handleItemFilter(whereBuf, params, filter);
 
-        if (filter instanceof NoteItemFilter) {
-            handleNoteItemFilter(whereBuf, params, (NoteItemFilter) filter);
-        }
-
         selectBuf.append(whereBuf);
         selectBuf.append(orderBuf);
 
@@ -116,6 +114,19 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
         handleStampFilters(whereBuf, filter, params);
 
+        // filter by icaluid
+        if (filter.getIcalUid() != null) {
+            formatExpression(whereBuf, params, "i.uid", filter.getIcalUid());
+        }
+
+        // filter by reminderTime
+        if (filter.getReminderTime() != null) {
+            formatExpression(whereBuf, params, "i.remindertime", filter.getReminderTime());
+        }
+
+        if(filter.getModifiedSince() != null){
+            formatExpression(whereBuf, params, "i.modifiedDate", filter.getModifiedSince());
+        }
     }
 
     private void handleStampFilters(StringBuffer whereBuf,
@@ -153,24 +164,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
             params.put("startDate", filter.getStart());
             params.put("endDate", filter.getEnd());
-        }
-    }
-
-    private void handleNoteItemFilter(StringBuffer whereBuf, Map<String, Object> params,
-                                      NoteItemFilter filter) {
-
-        // filter by icaluid
-        if (filter.getIcalUid() != null) {
-            formatExpression(whereBuf, params, "i.uid", filter.getIcalUid());
-        }
-
-        // filter by reminderTime
-        if (filter.getReminderTime() != null) {
-            formatExpression(whereBuf, params, "i.remindertime", filter.getReminderTime());
-        }
-
-        if(filter.getModifiedSince() != null){
-            formatExpression(whereBuf, params, "i.modifiedDate", filter.getModifiedSince());
         }
     }
 

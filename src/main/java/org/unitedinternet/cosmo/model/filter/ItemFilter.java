@@ -31,6 +31,9 @@ public class ItemFilter {
     private Long parent = null;
     private FilterCriteria uid = null;
     private Integer maxResults = null;
+    private FilterCriteria icalUid = null;
+    private FilterCriteria reminderTime = null;
+    private FilterCriteria modifiedSince = null;
 
     private List<StampFilter> stampFilters = new ArrayList<>();
 
@@ -95,5 +98,37 @@ public class ItemFilter {
 
     public Integer getMaxResults() {
         return maxResults;
+    }
+
+    public FilterCriteria getIcalUid() {
+        return icalUid;
+    }
+
+    /**
+     * Match notes with an specific icalUid
+     * @param icalUid
+     */
+    public void setIcalUid(FilterCriteria icalUid) {
+        this.icalUid = icalUid;
+    }
+
+    public FilterCriteria getReminderTime() {
+        return reminderTime;
+    }
+
+    /**
+     * Matches notes with reminderTime matching the specified criteria.
+     * @param reminderTime
+     */
+    public void setReminderTime(FilterCriteria reminderTime) {
+        this.reminderTime = reminderTime;
+    }
+
+    public FilterCriteria getModifiedSince() {
+        return modifiedSince;
+    }
+
+    public void setModifiedSince(FilterCriteria modifiedSince) {
+        this.modifiedSince = modifiedSince;
     }
 }

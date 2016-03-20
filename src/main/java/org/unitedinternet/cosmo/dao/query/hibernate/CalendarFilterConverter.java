@@ -47,7 +47,7 @@ public class CalendarFilterConverter {
      * @return equivalent ItemFilter
      */
     public ItemFilter translateToItemFilter(CalendarFilter calendarFilter) {
-        NoteItemFilter itemFilter = new NoteItemFilter();
+        ItemFilter itemFilter = new ItemFilter();
         itemFilter.setParent(calendarFilter.getParent());
         ComponentFilter rootFilter = calendarFilter.getFilter();
         if (!COMP_VCALENDAR.equalsIgnoreCase(rootFilter.getName())) {
@@ -95,13 +95,13 @@ public class CalendarFilterConverter {
     }
 
     private ItemFilter createFirstPassTaskFilter(Long collection) {
-        NoteItemFilter filter = new NoteItemFilter();
+        ItemFilter filter = new ItemFilter();
         filter.setParent(collection);
         filter.getStampFilters().add(new StampFilter(Item.class));
         return filter;
     }
 
-    private void handleCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter) {
+    private void handleCompFilter(ComponentFilter compFilter, ItemFilter itemFilter) {
 
         if (COMP_VEVENT.equalsIgnoreCase(compFilter.getName())) {
             handleEventCompFilter(compFilter, itemFilter, new EventStampFilter());
@@ -116,7 +116,7 @@ public class CalendarFilterConverter {
         }
     }
 
-    private void handleEventCompFilter(ComponentFilter compFilter, NoteItemFilter itemFilter, StampFilter eventFilter) {
+    private void handleEventCompFilter(ComponentFilter compFilter, ItemFilter itemFilter, StampFilter eventFilter) {
         itemFilter.getStampFilters().add(eventFilter);
         TimeRangeFilter trf = compFilter.getTimeRangeFilter();
 
@@ -139,7 +139,7 @@ public class CalendarFilterConverter {
         }
     }
 
-    private void handleEventPropFilter(PropertyFilter propFilter, NoteItemFilter itemFilter) {
+    private void handleEventPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
 
         if (PROP_UID.equalsIgnoreCase(propFilter.getName())) {
             handleUidPropFilter(propFilter, itemFilter);
@@ -152,7 +152,7 @@ public class CalendarFilterConverter {
         }
     }
 
-    private void handleUidPropFilter(PropertyFilter propFilter, NoteItemFilter itemFilter) {
+    private void handleUidPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
 
         for (Iterator it = propFilter.getParamFilters().iterator(); it.hasNext(); ) {
             ParamFilter paramFilter = (ParamFilter) it.next();
@@ -179,7 +179,7 @@ public class CalendarFilterConverter {
         }
     }
 
-    private void handleDescriptionPropFilter(PropertyFilter propFilter, NoteItemFilter itemFilter) {
+    private void handleDescriptionPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
 
         for (Iterator it = propFilter.getParamFilters().iterator(); it.hasNext(); ) {
             ParamFilter paramFilter = (ParamFilter) it.next();
@@ -192,7 +192,7 @@ public class CalendarFilterConverter {
         }
     }
 
-    private void handleSummaryPropFilter(PropertyFilter propFilter, NoteItemFilter itemFilter) {
+    private void handleSummaryPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
 
         for (Iterator it = propFilter.getParamFilters().iterator(); it.hasNext(); ) {
             ParamFilter paramFilter = (ParamFilter) it.next();

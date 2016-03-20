@@ -62,7 +62,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
 
     @Test
     public void testModifiedSinceQuery(){
-        NoteItemFilter filter = new NoteItemFilter();
+        ItemFilter filter = new ItemFilter();
         Calendar c = Calendar.getInstance();
         Date end = c.getTime();
         c.add(Calendar.YEAR, -1);
@@ -141,7 +141,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
      */
     @Test
     public void testBasicStampQuery() throws Exception {
-        NoteItemFilter filter = new NoteItemFilter();
+        ItemFilter filter = new ItemFilter();
         StampFilter stampFilter = new StampFilter();
         stampFilter.setStampClass(Item.class);
         filter.getStampFilters().add(stampFilter);
@@ -155,7 +155,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
      */
     @Test
     public void testEventStampQuery() throws Exception {
-        NoteItemFilter filter = new NoteItemFilter();
+        ItemFilter filter = new ItemFilter();
         EventStampFilter eventFilter = new EventStampFilter();
         filter.setParent(0L);
         filter.setDisplayName(Restrictions.eq("test"));
@@ -181,7 +181,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
      */
     @Test
     public void testEventStampTimeRangeQuery() throws Exception {
-        NoteItemFilter filter = new NoteItemFilter();
+        ItemFilter filter = new ItemFilter();
         EventStampFilter eventFilter = new EventStampFilter();
         Period period = new Period(new DateTime("20070101T100000Z"), new DateTime("20070201T100000Z"));
         eventFilter.setPeriod(period);

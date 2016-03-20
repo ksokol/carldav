@@ -21,21 +21,8 @@ package org.unitedinternet.cosmo.model.filter;
  */
 public class NoteItemFilter extends ItemFilter {
     private FilterCriteria icalUid = null;
-    private FilterCriteria body = null;
     private FilterCriteria reminderTime = null;
     private FilterCriteria modifiedSince = null;
-
-    /**
-     * Match notes with a body that matches a given String.
-     * @param body body string to match
-     */
-    public void setBody(FilterCriteria body) {
-        this.body = body;
-    }
-
-    public FilterCriteria getBody() {
-        return body;
-    }
 
     public FilterCriteria getIcalUid() {
         return icalUid;

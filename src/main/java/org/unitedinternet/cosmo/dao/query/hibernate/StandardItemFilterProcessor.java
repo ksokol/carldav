@@ -72,8 +72,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
         if (filter instanceof NoteItemFilter) {
             handleNoteItemFilter(selectBuf, whereBuf, params, (NoteItemFilter) filter);
-        } else if (filter instanceof ItemFilter) {
-            handleContentItemFilter(selectBuf, whereBuf, params, filter);
         } else {
             handleItemFilter(selectBuf, whereBuf, params, filter);
         }
@@ -173,11 +171,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
             formatExpression(whereBuf, params, "i.uid", filter.getIcalUid());
         }
 
-        // filter by body
-        if (filter.getBody() != null) {
-            formatExpression(whereBuf, params, "i.body", filter.getBody());
-        }
-
         // filter by reminderTime
         if (filter.getReminderTime() != null) {
             formatExpression(whereBuf, params, "i.remindertime", filter.getReminderTime());
@@ -193,7 +186,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
                                          ItemFilter filter) {
 
         if ("".equals(selectBuf.toString())) {
-            selectBuf.append("select i from Item i");
             handleItemFilter(selectBuf, whereBuf, params, filter);
         }
     }

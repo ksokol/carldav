@@ -190,20 +190,6 @@ public class CalendarFilterConverter {
         if (textMatch == null) {
             throw new IllegalArgumentException("unsupported filter: must contain text match filter");
         }
-
-        if (textMatch.isCaseless()) {
-            if (textMatch.isNegateCondition()) {
-                itemFilter.setBody(Restrictions.nilike(textMatch.getValue()));
-            } else {
-                itemFilter.setBody(Restrictions.ilike(textMatch.getValue()));
-            }
-        } else {
-            if (textMatch.isNegateCondition()) {
-                itemFilter.setBody(Restrictions.nlike(textMatch.getValue()));
-            } else {
-                itemFilter.setBody(Restrictions.like(textMatch.getValue()));
-            }
-        }
     }
 
     private void handleSummaryPropFilter(PropertyFilter propFilter, NoteItemFilter itemFilter) {

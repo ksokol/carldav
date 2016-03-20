@@ -89,9 +89,7 @@ public class CalendarFilterConverterTest {
         verifyFilterExpressionValue(noteFilter.getDisplayName(), "summary");
         Assert.assertTrue(noteFilter.getIcalUid() instanceof LikeExpression);
         verifyFilterExpressionValue(noteFilter.getIcalUid(), "uid");
-        Assert.assertTrue(noteFilter.getBody() instanceof ILikeExpression);
-        verifyFilterExpressionValue(noteFilter.getBody(), "desc");
-       
+
         EventStampFilter sf = (EventStampFilter) noteFilter.getStampFilter(EventStampFilter.class);
         Assert.assertNotNull(sf);
         Assert.assertNotNull(sf.getPeriod());

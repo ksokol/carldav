@@ -28,7 +28,7 @@ class ValidationTests extends IntegrationTestSupport {
                         CREATED:20160206T122228Z
                         LAST-MODIFIED:20160206T122232Z
                         DTSTAMP:20160206T122232Z
-                        UID:951bfa48-6f4a-43fc-acd9-473a4f5ae557
+                        UID:
                         SUMMARY:
                         DTSTART;TZID=Europe/Berlin:20160206T140000
                         DTEND;TZID=Europe/Berlin:20160206T150000
@@ -38,7 +38,7 @@ class ValidationTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>may not be empty for property displayName actual value []</cosmo:bad-request>
+                                <cosmo:bad-request>may not be null for property uid actual value [null], may not be null for property displayName actual value [null]</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(put("/dav/{email}/calendar/951bfa48-6f4a-43fc-acd9-473a4f5ae557.ics", USER01)
@@ -59,7 +59,7 @@ class ValidationTests extends IntegrationTestSupport {
                         CREATED:20160206T132452Z
                         LAST-MODIFIED:20160206T132455Z
                         DTSTAMP:20160206T132455Z
-                        UID:590b11bc-2ed0-44ec-9f76-72dc57e38015
+                        UID:
                         SUMMARY:
                         CLASS:PUBLIC
                         END:VTODO
@@ -68,7 +68,7 @@ class ValidationTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>may not be empty for property displayName actual value []</cosmo:bad-request>
+                                <cosmo:bad-request>may not be null for property uid actual value [null], may not be null for property displayName actual value [null]</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(put("/dav/{email}/calendar/590b11bc-2ed0-44ec-9f76-72dc57e38015.ics", USER01)
@@ -87,7 +87,7 @@ class ValidationTests extends IntegrationTestSupport {
                         PRODID:-//Ximian//NONSGML Evolution Calendar//EN
                         VERSION:2.0
                         BEGIN:VJOURNAL
-                        UID:20160206T132723Z-30750-1000-2071-1@ksokol
+                        UID:
                         DTSTAMP:20160205T174842Z
                         SUMMARY:
                         DTSTART;VALUE=DATE:20160206
@@ -101,7 +101,7 @@ class ValidationTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>may not be empty for property displayName actual value []</cosmo:bad-request>
+                                <cosmo:bad-request>may not be null for property uid actual value [null], may not be null for property displayName actual value [null]</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(put("/dav/{email}/calendar/20160206T132723Z-30750-1000-2071-1_ksokol.ics", USER01)
@@ -139,7 +139,7 @@ class ValidationTests extends IntegrationTestSupport {
 
         def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>may not be empty for property uid actual value []</cosmo:bad-request>
+                                <cosmo:bad-request>may not be null for property uid actual value [null]</cosmo:bad-request>
                             </D:error>"""
 
         mockMvc.perform(put("/dav/{email}/contacts/9A5A5BA1-13C26FE2-8887CB2B.vcf", USER01)

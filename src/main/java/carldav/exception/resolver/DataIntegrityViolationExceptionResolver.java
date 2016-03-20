@@ -1,19 +1,26 @@
 package carldav.exception.resolver;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.unitedinternet.cosmo.dav.BadRequestException;
+import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.caldav.UidConflictException;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Path;
+import java.util.Locale;
 
 /**
  * @author Kamill Sokol
  */
-public class UidInUseExceptionResolver implements ExceptionResolver {
+class DataIntegrityViolationExceptionResolver implements ExceptionResolver {
+
     @Override
     public CosmoDavException resolve(final Exception exception) {
         if(exception instanceof DataIntegrityViolationException) {
             final DataIntegrityViolationException cve = (DataIntegrityViolationException) exception;
-            if(cve.getMessage().contains("UID_OWNER_COLLECTION")) {
-                return new UidConflictException(cve.getMessage());
+            if (cve.getMessage().contains("constraint [USER_EMAIL]")) {
+                return new ConflictException("duplicate user email");
             }
         }
         return null;

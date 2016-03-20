@@ -16,9 +16,9 @@
 package org.unitedinternet.cosmo.dav;
 
 import carldav.card.CardQueryProcessor;
-import carldav.repository.CollectionDao;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
+import org.unitedinternet.cosmo.dao.CollectionDao;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.dav.impl.*;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -180,7 +180,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     private WebDavResource createUnknownResource(DavResourceLocator locator) {
         final String itemUid = locator.itemUid();
         if(itemUid != null) {
-            final HibItem userItem = itemDao.findByOwnerAndName(locator.username(), locator.itemUid());
+            final HibItem userItem = itemDao.findByOwnerEmailAndName(locator.username(), locator.itemUid());
             if(userItem == null) {
                 return null;
             }
@@ -189,14 +189,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
         final String collection = locator.collection();
         if(collection != null) {
-            final HibCollectionItem userCollection = collectionDao.findByOwnerAndName(locator.username(), collection);
+            final HibCollectionItem userCollection = collectionDao.findByOwnerEmailAndName(locator.username(), collection);
             if(userCollection == null) {
                 return null;
             }
             return createCollectionResource(locator, userCollection);
         }
 
-        final HibCollectionItem homeCollection = collectionDao.findByOwnerAndName(locator.username(), locator.username());
+        final HibCollectionItem homeCollection = collectionDao.findByOwnerEmailAndName(locator.username(), locator.username());
         return createCollectionResource(locator, homeCollection);
     }
 
@@ -216,4 +216,13 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         return securityManager;
     }
 
+    @Override
+    public ItemDao getItemDao() {
+        return itemDao;
+    }
+
+    @Override
+    public CollectionDao getCollectionDao() {
+        return collectionDao;
+    }
 }

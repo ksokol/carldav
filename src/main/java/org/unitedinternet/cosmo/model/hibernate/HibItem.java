@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.model.hibernate;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -57,8 +58,8 @@ public class HibItem extends HibAuditableObject {
         this.type = type;
     }
 
+    @NotNull
     @Column(name = "uid", nullable = false)
-    @NotEmpty
     public String getUid() {
         return uid;
     }

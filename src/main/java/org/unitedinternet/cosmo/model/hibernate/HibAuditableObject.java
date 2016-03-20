@@ -15,14 +15,11 @@
  */
 package org.unitedinternet.cosmo.model.hibernate;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.nio.charset.Charset;
 import java.util.Date;
 
 @MappedSuperclass
@@ -56,8 +53,8 @@ public abstract class HibAuditableObject implements Serializable {
         this.modifiedDate = modifiedDate;
     }
 
+    @NotNull
     @Column(name = "displayname")
-    @NotEmpty
     public String getDisplayName() {
         return displayName;
     }
@@ -86,15 +83,4 @@ public abstract class HibAuditableObject implements Serializable {
         this.etag = etag;
     }
 
-    public String calculateEntityTag() {
-        String uid = getId() != null ? getId().toString() : "-";
-        String modTime = getModifiedDate() != null ?
-                Long.valueOf(getModifiedDate().getTime()).toString() : "-";
-        String etag = uid + ":" + modTime;
-        return encodeEntityTag(etag.getBytes(Charset.forName("UTF-8")));
-    }
-
-    private static String encodeEntityTag(byte[] bytes) {
-        return DigestUtils.md5Hex(bytes);
-    }
 }

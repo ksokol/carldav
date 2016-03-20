@@ -1528,7 +1528,7 @@ public class CalendarTests extends IntegrationTestSupport {
     }
 
     @Test
-    void "run report with depth 0 on calendar event in valid timerange"() {
+    void reportWithDepthZeroOnCalendarEventValidTimerange() {
         mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(DavDroidData.ADD_VEVENT_REQUEST1)
@@ -1565,7 +1565,7 @@ public class CalendarTests extends IntegrationTestSupport {
     }
 
     @Test
-    void "run report with depth 0 on calendar event in invalid timerange"() {
+    void reportWithZeroDepthOnCalendarEventInvalidTimerange() {
         mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(DavDroidData.ADD_VEVENT_REQUEST1)
@@ -1597,7 +1597,7 @@ public class CalendarTests extends IntegrationTestSupport {
 
     @Ignore
     @Test
-    void "run report with depth 0 on contacts item in valid timerange"() {
+    void reportWithZeroDepthOnContactsItemValidTimerange() {
         Assert.fail("not implemented yet")
     }
 }

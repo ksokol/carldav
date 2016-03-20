@@ -15,22 +15,17 @@
  */
 package org.unitedinternet.cosmo.dao;
 
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
+import org.springframework.data.repository.CrudRepository;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
 import java.util.List;
-import java.util.Set;
 
-public interface ItemDao {
-
-    void remove(HibItem hibItem);
-
-    HibItem save(HibItem item);
+public interface ItemDao extends CrudRepository<HibItem, Long>, ItemDaoCustom {
 
     List<HibItem> findByCollectionIdAndType(Long id, HibItem.Type type);
 
-    Set<HibItem> findCalendarItems(ItemFilter itemFilter);
+    List<HibItem> findByCollectionId(Long id);
 
-    HibItem findByOwnerAndName(String owner, String uid);
+    HibItem findByOwnerEmailAndName(String owner, String name);
 
 }

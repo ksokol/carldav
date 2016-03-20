@@ -6,6 +6,7 @@ import org.unitedinternet.cosmo.dav.CosmoDavException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
+import java.util.Locale;
 
 /**
  * @author Kamill Sokol
@@ -19,8 +20,9 @@ class ConstrainViolationExceptionResolver implements ExceptionResolver {
             final StringBuilder stringBuilder = new StringBuilder(50);
 
             for (final ConstraintViolation<?> constraintViolation : cve.getConstraintViolations()) {
-                final String message = constraintViolation.getMessage();
-                final Object invalidValue = constraintViolation.getInvalidValue();
+                String message = constraintViolation.getMessage();
+                String invalidValue = (String) constraintViolation.getInvalidValue();
+                invalidValue = invalidValue == null ? "null" : invalidValue;
                 final Path propertyPath = constraintViolation.getPropertyPath();
 
                 stringBuilder
@@ -28,7 +30,7 @@ class ConstrainViolationExceptionResolver implements ExceptionResolver {
                         .append(" for property ")
                         .append(propertyPath)
                         .append(" actual value [")
-                        .append(invalidValue)
+                        .append(invalidValue.toLowerCase(Locale.ENGLISH))
                         .append("]")
                         .append(", ");
             }

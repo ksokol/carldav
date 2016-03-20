@@ -15,34 +15,33 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import org.hibernate.SessionFactory;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import org.unitedinternet.cosmo.TestHelper;
-import org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl;
+import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.User;
+import org.unitedinternet.cosmo.service.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StandardUserServiceTest extends IntegrationTestSupport {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserDao userDao;
 
     @Autowired
-    private StandardUserService service;
+    private UserService service;
 
-    @Autowired
-    private SessionFactory sessionFactory;
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     private TestHelper testHelper = new TestHelper();
 
-    /**
-     * Tests get users.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
     @Test
     public void testGetUsers() throws Exception {
         User u1 = testHelper.makeDummyUser();
@@ -52,7 +51,10 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         User u3 = testHelper.makeDummyUser();
         userDao.save(u3);
 
-        List<User> users = service.getUsers();
+        Iterable<User> tmp = service.getUsers();
+        List<User> users = new ArrayList<>();
+
+        tmp.forEach(user -> users.add(user));
 
         Assert.assertTrue("User 1 not found in users", users.contains(u1));
         Assert.assertTrue("User 2 not found in users", users.contains(u2));
@@ -96,43 +98,8 @@ public class StandardUserServiceTest extends IntegrationTestSupport {
         User u1 = testHelper.makeDummyUser();
         service.createUser(u1);
 
-        sessionFactory.getCurrentSession().refresh(u1);
-
         service.removeUser(u1);
 
-        Assert.assertFalse("User not removed", userDao.findAll().contains(u1));
-    }
-
-    /**
-     * Tests remove user by username.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testRemoveUserByEmail() throws Exception {
-        User u1 = testHelper.makeDummyUser();
-        service.createUser(u1);
-
-        sessionFactory.getCurrentSession().refresh(u1);
-
-        service.removeUser(u1.getEmail());
-
-        Assert.assertFalse("User not removed", userDao.findAll().contains(u1));
-    }
-
-    /**
-     * Test digest password.
-     * @throws Exception - if something is wrong this exception is thrown.
-     */
-    @Test
-    public void testDigestPassword() throws Exception {
-        String password = "deadbeef";
-
-        String digested = service.digestPassword(password);
-
-        // tests MD5
-        Assert.assertTrue("Digest not correct length", digested.length() == 32);
-
-        // tests hex
-        Assert.assertTrue("Digest not hex encoded", digested.matches("^[0-9a-f]+$"));
+        Assert.assertNull("User not removed", userDao.findByEmailIgnoreCase(u1.getEmail()));
     }
 }

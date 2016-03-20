@@ -15,30 +15,9 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="itemDao" class="org.unitedinternet.cosmo.dao.hibernate.ItemDaoImpl">
-        <constructor-arg>
-            <ref bean="itemFilterProcessor" />
-        </constructor-arg>
-        <constructor-arg>
-            <ref bean="sessionFactory" />
-        </constructor-arg>
-    </bean>
-
     <bean id="itemFilterProcessor" class="org.unitedinternet.cosmo.dao.query.hibernate.StandardItemFilterProcessor">
-        <constructor-arg>
-            <ref bean="sessionFactory" />
-        </constructor-arg>
-    </bean>
-
-    <bean id="userDao" class="org.unitedinternet.cosmo.dao.hibernate.UserDaoImpl">
-        <constructor-arg>
-            <ref bean="sessionFactory" />
-        </constructor-arg>
-    </bean>
-
-    <bean id="collectionDao" class="carldav.repository.CollectionDaoImpl">
-        <constructor-arg index="0" ref="sessionFactory" />
     </bean>
 
     <bean id="entityConverter" class="org.unitedinternet.cosmo.model.hibernate.EntityConverter" />
+    <bean id="itemDaoCustomImpl" class="org.unitedinternet.cosmo.dao.ItemDaoImpl" />
 </beans>

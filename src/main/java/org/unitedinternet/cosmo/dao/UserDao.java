@@ -15,17 +15,11 @@
  */
 package org.unitedinternet.cosmo.dao;
 
+import org.springframework.data.repository.CrudRepository;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.List;
-
-public interface UserDao {
-
-    List<User> findAll();
+public interface UserDao extends CrudRepository<User, Long> {
 
     User findByEmailIgnoreCase(String email);
 
-    User save(User user);
-
-    void remove(User user);
 }

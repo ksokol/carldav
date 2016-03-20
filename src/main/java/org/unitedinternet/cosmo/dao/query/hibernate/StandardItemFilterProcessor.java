@@ -15,14 +15,13 @@
  */
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
 import org.unitedinternet.cosmo.model.filter.*;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -35,16 +34,16 @@ import static java.util.Locale.ENGLISH;
  */
 public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
-    private final SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public StandardItemFilterProcessor(SessionFactory sessionFactory) {
-        Assert.notNull(sessionFactory, "sessionFactory is null");
-        this.sessionFactory = sessionFactory;
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
 
     public Set<HibItem> processFilter(ItemFilter filter) {
-        Query hibQuery = buildQuery(sessionFactory.getCurrentSession(), filter);
-        List<HibItem> queryResults = hibQuery.list();
+        Query hibQuery = buildQuery(entityManager, filter);
+        List<HibItem> queryResults = hibQuery.getResultList();
         return processResults(queryResults);
     }
 
@@ -61,7 +60,7 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
      * @param filter  item filter
      * @return hibernate query built using HQL
      */
-    public Query buildQuery(Session session, ItemFilter filter) {
+    public Query buildQuery(EntityManager session, ItemFilter filter) {
         StringBuffer selectBuf = new StringBuffer();
         StringBuffer whereBuf = new StringBuffer();
         StringBuffer orderBuf = new StringBuffer();

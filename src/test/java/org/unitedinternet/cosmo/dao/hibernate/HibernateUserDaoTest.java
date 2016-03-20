@@ -19,12 +19,13 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
+import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
 public class HibernateUserDaoTest extends IntegrationTestSupport {
     
     @Autowired
-    private UserDaoImpl userDao;
+    private UserDao userDao;
 
     @Test
     public void testDeleteUser() throws Exception {
@@ -36,7 +37,7 @@ public class HibernateUserDaoTest extends IntegrationTestSupport {
         
         User queryUser1 = userDao.findByEmailIgnoreCase("user1@user1.com");
         Assert.assertNotNull(queryUser1);
-        userDao.remove(queryUser1);
+        userDao.delete(queryUser1);
 
         queryUser1 = userDao.findByEmailIgnoreCase("user1");
         Assert.assertNull(queryUser1);

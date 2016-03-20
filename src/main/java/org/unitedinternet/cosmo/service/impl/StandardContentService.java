@@ -15,8 +15,8 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
-import carldav.repository.CollectionDao;
 import org.springframework.util.Assert;
+import org.unitedinternet.cosmo.dao.CollectionDao;
 import org.unitedinternet.cosmo.dao.ItemDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
@@ -46,7 +46,7 @@ public class StandardContentService implements ContentService {
      * @param collection item to remove item from
      */
     public void removeItemFromCollection(HibItem hibItem, HibCollectionItem collection) {
-        itemDao.remove(hibItem);
+        itemDao.delete(hibItem);
         collection.setModifiedDate(new Date());
     }
 
@@ -78,7 +78,7 @@ public class StandardContentService implements ContentService {
         if(HOME_COLLECTION.equals(collection.getDisplayName())) {
             throw new IllegalArgumentException("cannot remove home collection");
         }
-        collectionDao.remove(collection);
+        collectionDao.delete(collection);
     }
 
     /**

@@ -2,22 +2,20 @@ package org.unitedinternet.cosmo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import java.util.TimeZone;
-
 import javax.servlet.Servlet;
+import java.util.TimeZone;
 
 /**
  * @author Kamill Sokol
  */
 @ComponentScan("carldav.controller")
 @ImportResource("applicationContext-cosmo.xml")
-@SpringBootApplication(exclude = DataSourceTransactionManagerAutoConfiguration.class)
+@SpringBootApplication
 public class CarldavApplication {
 
     static {

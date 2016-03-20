@@ -36,6 +36,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 import static carldav.CarldavConstants.caldav;
@@ -85,13 +86,11 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
     @Override
     public List<WebDavResource> getMembers() {
-        for (HibCollectionItem collection : item.getCollections()) {
-            members.add(collectionToResource(collection));
-        }
+        final List<HibCollectionItem> collections = getResourceFactory().getCollectionDao().findByParentId(item.getId());
+        final List<HibItem> items = getResourceFactory().getItemDao().findByCollectionId(item.getId());
 
-        for (HibItem tmp : item.getItems()) {
-            members.add(memberToResource(tmp));
-        }
+        members.addAll(collections.stream().map(this::collectionToResource).collect(Collectors.toList()));
+        members.addAll(items.stream().map(this::memberToResource).collect(Collectors.toList()));
 
         return Collections.unmodifiableList(members);
     }

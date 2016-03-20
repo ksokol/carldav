@@ -17,12 +17,9 @@ package org.unitedinternet.cosmo.service;
 
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import java.util.List;
-
 public interface UserService {
 
-    List<User> getUsers();
-
+    Iterable<User> getUsers();
 
     /**
      * Returns the user account identified by the given username.
@@ -52,12 +49,4 @@ public interface UserService {
      * @param user the account to remove
      */
     void removeUser(User user);
-
-    /**
-     * Removes the user account identified by the given username from
-     * the repository.
-     *
-     * @param username the username of the account to return
-     */
-    void removeUser(String username);
 }

@@ -15,31 +15,34 @@
  */
 package org.unitedinternet.cosmo.dao.hibernate;
 
-import carldav.repository.CollectionDao;
-import org.hibernate.exception.ConstraintViolationException;
-import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
+import org.unitedinternet.cosmo.dao.CollectionDao;
+import org.unitedinternet.cosmo.dao.ItemDao;
+import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
 import org.unitedinternet.cosmo.model.hibernate.HibItem;
 import org.unitedinternet.cosmo.model.hibernate.User;
 
-import static org.junit.Assert.assertEquals;
-
 public class HibernateContentDaoTest extends IntegrationTestSupport {
 
     @Autowired
-    private UserDaoImpl userDao;
+    private UserDao userDao;
     @Autowired
-    private ItemDaoImpl itemDao;
+    private ItemDao itemDao;
     @Autowired
     private CollectionDao collectionDao;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void multipleItemsError() throws Exception {
         User user = getUser("testuser");
-        HibCollectionItem root = collectionDao.findByOwnerAndName(user.getEmail(), user.getEmail());
+        HibCollectionItem root = collectionDao.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
@@ -58,18 +61,16 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         item2.setUid("1");
         item2.setCollection(a);
 
-        try {
-            itemDao.save(item2);
-            Assert.fail("able to add item with same name to collection");
-        } catch (ConstraintViolationException e) {
-            assertEquals("UID_OWNER_COLLECTION", e.getConstraintName());
-        }
+        expectedException.expect(org.springframework.dao.DataIntegrityViolationException.class);
+        expectedException.expectMessage("could not execute statement; SQL [n/a]; constraint [UID_OWNER_COLLECTION]");
+
+        itemDao.save(item2);
     }
 
     @Test
     public void multipleCollectionsError() throws Exception {
         User user = getUser("testuser");
-        HibCollectionItem root = collectionDao.findByOwnerAndName(user.getEmail(), user.getEmail());
+        HibCollectionItem root = collectionDao.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
 
         HibCollectionItem a = new HibCollectionItem();
         a.setName("a");
@@ -85,12 +86,10 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         b.setOwner(user);
         b.setParent(root);
 
-        try {
-            collectionDao.save(b);
-            Assert.fail("able to add item with same name to collection");
-        } catch (ConstraintViolationException e) {
-            assertEquals("DISPLAYNAME_OWNER", e.getConstraintName());
-        }
+        expectedException.expect(org.springframework.dao.DataIntegrityViolationException.class);
+        expectedException.expectMessage("could not execute statement; SQL [n/a]; constraint [DISPLAYNAME_OWNER]");
+
+        collectionDao.save(b);
     }
 
     public User getUser(String username) {

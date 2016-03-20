@@ -18,6 +18,7 @@ package org.unitedinternet.cosmo.service.impl;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
+import org.unitedinternet.cosmo.dao.CollectionDao;
 import org.unitedinternet.cosmo.dao.ModelValidationException;
 import org.unitedinternet.cosmo.dao.UserDao;
 import org.unitedinternet.cosmo.model.hibernate.HibCollectionItem;
@@ -31,15 +32,18 @@ public class StandardUserService implements UserService {
 
     private final ContentService contentService;
     private final UserDao userDao;
+    private final CollectionDao collectionDao;
 
-    public StandardUserService(final ContentService contentService, final UserDao userDao) {
+    public StandardUserService(final ContentService contentService, final UserDao userDao, final CollectionDao collectionDao) {
         Assert.notNull(contentService, "contentService is null");
         Assert.notNull(userDao, "userDao is null");
+        Assert.notNull(collectionDao, "collectionDao is null");
         this.contentService = contentService;
         this.userDao = userDao;
+        this.collectionDao = collectionDao;
     }
 
-    public List<User> getUsers() {
+    public Iterable<User> getUsers() {
         return userDao.findAll();
     }
 
@@ -64,9 +68,7 @@ public class StandardUserService implements UserService {
 
         user.setPassword(digestPassword(user.getPassword()));
 
-        userDao.save(user);
-
-        User newUser = userDao.findByEmailIgnoreCase(user.getEmail());
+        User newUser = userDao.save(user);
 
         HibCollectionItem calendar = new HibCollectionItem();
         calendar.setOwner(user);
@@ -87,23 +89,14 @@ public class StandardUserService implements UserService {
     }
 
     /**
-     * Removes the user account identified by the given username from
-     * the repository.
-     *
-     * @param username the username of the account to return
-     */
-    public void removeUser(String username) {
-        User user = userDao.findByEmailIgnoreCase(username);
-        userDao.remove(user);
-    }
-
-    /**
      * Removes a user account from the repository.
      *
      * @param user the account to remove
      */
     public void removeUser(User user) {
-        userDao.remove(user);
+        final List<HibCollectionItem> byOwnerEmail = collectionDao.findByOwnerEmail(user.getEmail());
+        collectionDao.delete(byOwnerEmail);
+        userDao.delete(user);
     }
 
     /**

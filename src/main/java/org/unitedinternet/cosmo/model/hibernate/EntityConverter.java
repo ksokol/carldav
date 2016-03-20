@@ -37,22 +37,19 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.ICALENDAR_ME
 public class EntityConverter {
 
     public HibItem convertCard(HibItem cardItem) {
-        try {
-            VCard vcard = Ezvcard.parse(cardItem.getCalendar()).first();
-            final String uidString = vcard.getUid().getValue();
-            cardItem.setUid(uidString);
-            cardItem.setMimetype(CARD_MEDIA_TYPE);
+        VCard vcard = Ezvcard.parse(cardItem.getCalendar()).first();
+        String uidString = vcard.getUid().getValue();
+        uidString = "".equals(uidString) ? null : uidString;
+        cardItem.setUid(uidString);
+        cardItem.setMimetype(CARD_MEDIA_TYPE);
 
-            if(vcard.getFormattedName() != null) {
-                cardItem.setDisplayName(vcard.getFormattedName().getValue());
-            } else {
-                cardItem.setDisplayName(uidString);
-            }
-
-            return cardItem;
-        } catch (Exception exception) {
-            throw new RuntimeException(exception.getMessage(), exception);
+        if(vcard.getFormattedName() != null) {
+            cardItem.setDisplayName(vcard.getFormattedName().getValue());
+        } else {
+            cardItem.setDisplayName(uidString);
         }
+
+        return cardItem;
     }
 
     public HibItem convert(HibItem calendarItem) {
@@ -73,8 +70,7 @@ public class EntityConverter {
             try {
                 return new CalendarBuilder().build(new StringReader(item.getCalendar()));
             } catch (Exception exception) {
-                //TODO
-                exception.printStackTrace();
+                throw new RuntimeException(exception.getMessage(), exception);
             }
         }
         return null;
@@ -84,13 +80,13 @@ public class EntityConverter {
         final Property uid = component.getProperty(Property.UID);
         String uidString = null;
         if(uid != null) {
-            uidString = uid.getValue();
+            uidString = "".equals(uid.getValue()) ? null : uid.getValue();
         }
 
         note.setUid(uidString);
 
         final Property summary = component.getProperty(Property.SUMMARY);
-        if(summary != null) {
+        if(summary != null && !"".equals(summary.getValue())) {
             note.setDisplayName(summary.getValue());
         } else {
             note.setDisplayName(uidString);

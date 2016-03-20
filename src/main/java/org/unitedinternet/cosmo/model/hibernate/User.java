@@ -29,7 +29,6 @@ public class User {
     private String password;
     private String email;
     private boolean locked;
-    private Set<HibItem> items;
     private Set<HibCollectionItem> collections;
     private String role;
 
@@ -53,11 +52,6 @@ public class User {
 
     public boolean isLocked() {
         return locked;
-    }
-
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    public Set<HibItem> getItems() {
-        return items;
     }
 
     @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
@@ -87,10 +81,6 @@ public class User {
 
     public void setLocked(final boolean locked) {
         this.locked = locked;
-    }
-
-    public void setItems(final Set<HibItem> items) {
-        this.items = items;
     }
 
     public void setRole(final String role) {

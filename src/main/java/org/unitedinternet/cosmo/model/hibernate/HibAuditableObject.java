@@ -27,7 +27,6 @@ public abstract class HibAuditableObject {
     private Long id;
     private Date modifiedDate;
     private String displayName;
-    private String etag;
     private String name;
 
     @Id
@@ -69,15 +68,6 @@ public abstract class HibAuditableObject {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Column(name="etag")
-    public String getEtag() {
-        return etag;
-    }
-
-    public void setEtag(String etag) {
-        this.etag = etag;
     }
 
 }

@@ -176,7 +176,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 <D:propstat>
                                     <D:prop>
                                         <D:displayname>calendarDisplayName</D:displayname>
-                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">NVy57RJot0LhdYELkMDJ9gQZjOM=</CS:getctag>
+                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">157565ba8b0d3652b027c868d554f914</CS:getctag>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>

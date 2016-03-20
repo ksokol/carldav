@@ -185,7 +185,7 @@ class IosTests extends IntegrationTestSupport {
                                     </D:propstat>
                                     <D:propstat>
                                         <D:prop>
-                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/">NVy57RJot0LhdYELkMDJ9gQZjOM=</CS:getctag>
+                                            <CS:getctag xmlns:CS="http://calendarserver.org/ns/">157565ba8b0d3652b027c868d554f914</CS:getctag>
                                             <C:supported-calendar-component-set xmlns:C="urn:ietf:params:xml:ns:caldav">
                                                 <C:comp name="VEVENT"/>
                                                 <C:comp name="VJOURNAL"/>

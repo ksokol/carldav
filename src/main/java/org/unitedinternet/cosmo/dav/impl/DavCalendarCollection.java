@@ -4,10 +4,7 @@ import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.*;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
@@ -65,7 +62,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
     protected void loadLiveProperties(CustomDavPropertySet properties) {
         super.loadLiveProperties(properties);
 
-        properties.add(new GetCTag(getItem().getEtag()));
+        properties.add(new GetCTag(ETagUtil.createETag(getItem())));
         properties.add(new SupportedCalendarComponentSet());
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());

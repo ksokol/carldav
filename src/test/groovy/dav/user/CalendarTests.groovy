@@ -438,7 +438,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                             <C:comp name="VJOURNAL"/>
                                             <C:comp name="VTODO"/>
                                         </C:supported-calendar-component-set>
-                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">NVy57RJot0LhdYELkMDJ9gQZjOM=</CS:getctag>
+                                        <CS:getctag xmlns:CS="http://calendarserver.org/ns/">157565ba8b0d3652b027c868d554f914</CS:getctag>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -1469,22 +1469,13 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_CALENDAR))
                 .andExpect(status().isCreated())
 
-        def request1 = """\
-                        <propfind xmlns="DAV:">
-                            <prop>
-                                <displayname/>
-                                <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
-                                <n1:getctag xmlns:n1="http://calendarserver.org/ns/"/>
-                            </prop>
-                        </propfind>"""
-
         def result2 = mockMvc.perform(get("/dav/{email}/calendar", USER01))
                 .andExpect(status().isOk())
                 .andExpect(textHtmlContentType())
                 .andReturn().getResponse()
 
         def lastModified = result2.getHeader("Last-Modified")
-        def getctag = result2.getHeader("ETag").replaceAll('"',"&quot;")
+        def getctag = result2.getHeader("ETag").replaceAll('"',"")
 
         def response2 = """\
                             <html>
@@ -1500,8 +1491,8 @@ public class CalendarTests extends IntegrationTestSupport {
                             <dl>
                             <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd>/dav/test01@localhost.de/contacts</dd>
                             <dt>{DAV:}displayname</dt><dd>calendarDisplayName</dd>
-                            <dt>{http://calendarserver.org/ns/}getctag</dt><dd>NVy57RJot0LhdYELkMDJ9gQZjOM=</dd>
-                            <dt>{DAV:}getetag</dt><dd>${getctag}</dd>
+                            <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${getctag}</dd>
+                            <dt>{DAV:}getetag</dt><dd>&quot;${getctag}&quot;</dd>
                             <dt>{DAV:}getlastmodified</dt><dd>${lastModified}</dd>
                             <dt>{DAV:}iscollection</dt><dd>1</dd>
                             <dt>{DAV:}resourcetype</dt><dd>{DAV:}collection, {urn:ietf:params:xml:ns:caldav}calendar</dd>

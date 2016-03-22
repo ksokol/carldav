@@ -82,6 +82,7 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
             params.put("parent", filter.getParent());
         }
 
+        filter.bind(whereBuf, params);
         handleItemFilter(whereBuf, params, filter);
 
         selectBuf.append(whereBuf);
@@ -113,8 +114,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
             formatExpression(whereBuf, params, "i.displayName", filter.getDisplayName());
         }
 
-        handleStampFilters(whereBuf, filter, params);
-
         // filter by icaluid
         if (filter.getIcalUid() != null) {
             formatExpression(whereBuf, params, "i.uid", filter.getIcalUid());
@@ -130,43 +129,6 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         }
     }
 
-    private void handleStampFilters(StringBuffer whereBuf,
-                                    ItemFilter filter,
-                                    Map<String, Object> params) {
-        for (StampFilter stampFilter : filter.getStampFilters()) {
-                handleStampFilter(whereBuf, stampFilter, params);
-        }
-    }
-
-    private void handleStampFilter(StringBuffer whereBuf,
-                                   StampFilter filter,
-                                   Map<String, Object> params) {
-
-        if(filter.getType() != null) {
-            appendWhere(whereBuf, "i.type=:type");
-            params.put("type", filter.getType());
-        }
-
-        // handle recurring event filter
-        if (filter.getIsRecurring() != null) {
-            appendWhere(whereBuf, "(i.recurring=:recurring)");
-            params.put("recurring", filter.getIsRecurring());
-        }
-
-        if (filter.getPeriod() != null) {
-            whereBuf.append(" and ( ");
-            whereBuf.append("(i.startDate < :endDate)");
-            whereBuf.append(" and i.endDate > :startDate)");
-
-            // edge case where start==end
-            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
-
-            whereBuf.append(")");
-
-            params.put("startDate", filter.getStart());
-            params.put("endDate", filter.getEnd());
-        }
-    }
 
     private void appendWhere(StringBuffer whereBuf, String toAppend) {
         if ("".equals(whereBuf.toString())) {

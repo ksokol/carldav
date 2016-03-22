@@ -29,6 +29,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Represents a filter that matches an Item with a specified Stamp.
@@ -176,6 +177,41 @@ public class StampFilter {
             } catch (ParseException e) {
                 LOG.error("Error occured while parsing fend [" + fend.toString() + "]", e);
             }
+        }
+    }
+
+    public void bind(StringBuffer whereBuf, Map<String, Object> params) {
+        if (getType() != null) {
+            appendWhere(whereBuf, "i.type=:type");
+            params.put("type", getType());
+        }
+
+        // handle recurring event filter
+        if (getIsRecurring() != null) {
+            appendWhere(whereBuf, "(i.recurring=:recurring)");
+            params.put("recurring", getIsRecurring());
+        }
+
+        if (getPeriod() != null) {
+            whereBuf.append(" and ( ");
+            whereBuf.append("(i.startDate < :endDate)");
+            whereBuf.append(" and i.endDate > :startDate)");
+
+            // edge case where start==end
+            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
+
+            whereBuf.append(")");
+
+            params.put("startDate", getStart());
+            params.put("endDate", getEnd());
+        }
+    }
+
+    private void appendWhere(StringBuffer whereBuf, String toAppend) {
+        if ("".equals(whereBuf.toString())) {
+            whereBuf.append(" where " + toAppend);
+        } else {
+            whereBuf.append(" and " + toAppend);
         }
     }
 }

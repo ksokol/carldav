@@ -17,6 +17,7 @@ package org.unitedinternet.cosmo.model.filter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a filter that matches a set of criteria to all items.
@@ -130,5 +131,13 @@ public class ItemFilter {
 
     public void setModifiedSince(FilterCriteria modifiedSince) {
         this.modifiedSince = modifiedSince;
+    }
+
+    public void bind(StringBuffer expBuf, Map<String, Object> params) {
+
+        for (StampFilter stampFilter : getStampFilters()) {
+            stampFilter.bind(expBuf, params);
+        }
+
     }
 }

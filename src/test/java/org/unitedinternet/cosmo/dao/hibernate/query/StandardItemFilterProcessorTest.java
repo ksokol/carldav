@@ -163,16 +163,13 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         //filter.setBody("body");
         filter.getStampFilters().add(eventFilter);
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i join i.collection pd "
-                + "where pd.id=:parent and "
-                + "i.displayName=:param1 and i.type=:type and i.uid=:param3", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item i join i.collection pd where pd.id=:parent and i.type=:type and i.displayName=:param2 and i.uid=:param3"
+                , query.getHibernateQuery().getQueryString());
 
         eventFilter.setIsRecurring(true);
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i join i.collection pd "
-                + "where pd.id=:parent and i.displayName=:param1 and "
-                + "i.type=:type and (i.recurring=:recurring) "
-                + "and i.uid=:param4", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item i join i.collection pd where pd.id=:parent and i.type=:type and (i.recurring=:recurring) and i.displayName=:param3 and i.uid=:param4"
+                , query.getHibernateQuery().getQueryString());
     }
 
     /**

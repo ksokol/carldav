@@ -28,11 +28,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-/**
- * Standard Implementation of <code>ItemFilterProcessor</code>.
- * Translates filter into HQL Query, executes
- * query and processes the results.
- */
 public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
     private static final CalendarFilterConverter filterConverter = new CalendarFilterConverter();
@@ -50,27 +45,11 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         return hibQuery.getResultList();
     }
 
-    /**
-     * Build Hibernate Query from ItemFilter using HQL.
-     * The query returned is essentially the first pass at
-     * retrieving the matched items.  A second pass is required in
-     * order determine if any recurring events match a timeRange
-     * in the filter.  This is due to the fact that recurring events
-     * may have complicated recurrence rules that are extremely
-     * hard to match using HQL.
-     *
-     * @param session session
-     * @param filter  item filter
-     * @return hibernate query built using HQL
-     */
     public Query buildQuery(EntityManager session, ItemFilter filter) {
         StringBuffer selectBuf = new StringBuffer();
-        StringBuffer whereBuf = new StringBuffer();
         Map<String, Object> params = new TreeMap<>();
 
-        filter.bind(selectBuf, whereBuf, params);
-
-        selectBuf.append(whereBuf);
+        filter.bind(selectBuf, params);
 
         Query hqlQuery = session.createQuery(selectBuf.toString());
 

@@ -133,7 +133,8 @@ public class ItemFilter {
         this.modifiedSince = modifiedSince;
     }
 
-    public void bind(StringBuffer selectBuf, StringBuffer whereBuf, Map<String, Object> params) {
+    public void bind(StringBuffer selectBuf, Map<String, Object> params) {
+        StringBuffer whereBuf = new StringBuffer();
 
         selectBuf.append("select i from Item i");
 
@@ -171,6 +172,8 @@ public class ItemFilter {
         for (StampFilter stampFilter : getStampFilters()) {
             stampFilter.bind(whereBuf, params);
         }
+
+        selectBuf.append(whereBuf);
     }
 
     private void formatExpression(StringBuffer whereBuf,

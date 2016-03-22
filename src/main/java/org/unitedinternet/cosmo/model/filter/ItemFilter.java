@@ -133,11 +133,62 @@ public class ItemFilter {
         this.modifiedSince = modifiedSince;
     }
 
-    public void bind(StringBuffer expBuf, Map<String, Object> params) {
+    public void bind(StringBuffer selectBuf, StringBuffer whereBuf, Map<String, Object> params) {
 
-        for (StampFilter stampFilter : getStampFilters()) {
-            stampFilter.bind(expBuf, params);
+        selectBuf.append("select i from Item i");
+
+        // filter on parent
+        if (getParent() != null) {
+            selectBuf.append(" join i.collection pd");
+            appendWhere(whereBuf, "pd.id=:parent");
+            params.put("parent", getParent());
         }
 
+        // filter on uid
+        if (getUid() != null) {
+            formatExpression(whereBuf, params, "i.uid", getUid());
+        }
+
+
+        if (getDisplayName() != null) {
+            formatExpression(whereBuf, params, "i.displayName", getDisplayName());
+        }
+
+        // filter by icaluid
+        if (getIcalUid() != null) {
+            formatExpression(whereBuf, params, "i.uid", getIcalUid());
+        }
+
+        // filter by reminderTime
+        if (getReminderTime() != null) {
+            formatExpression(whereBuf, params, "i.remindertime", getReminderTime());
+        }
+
+        if(getModifiedSince() != null){
+            formatExpression(whereBuf, params, "i.modifiedDate", getModifiedSince());
+        }
+
+        for (StampFilter stampFilter : getStampFilters()) {
+            stampFilter.bind(whereBuf, params);
+        }
+    }
+
+    private void formatExpression(StringBuffer whereBuf,
+                                  Map<String, Object> params, String propName,
+                                  FilterCriteria fc) {
+
+        StringBuffer expBuf = new StringBuffer();
+        FilterExpression exp = (FilterExpression) fc;
+        exp.bind(expBuf, propName, params);
+        appendWhere(whereBuf, expBuf.toString());
+    }
+
+
+    private void appendWhere(StringBuffer whereBuf, String toAppend) {
+        if ("".equals(whereBuf.toString())) {
+            whereBuf.append(" where " + toAppend);
+        } else {
+            whereBuf.append(" and " + toAppend);
+        }
     }
 }

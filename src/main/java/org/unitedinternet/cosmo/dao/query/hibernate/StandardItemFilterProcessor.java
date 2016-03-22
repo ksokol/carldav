@@ -18,10 +18,7 @@ package org.unitedinternet.cosmo.dao.query.hibernate;
 import carldav.entity.Item;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dao.query.ItemFilterProcessor;
-import org.unitedinternet.cosmo.model.filter.FilterCriteria;
-import org.unitedinternet.cosmo.model.filter.FilterExpression;
 import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.filter.StampFilter;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -69,24 +66,11 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
     public Query buildQuery(EntityManager session, ItemFilter filter) {
         StringBuffer selectBuf = new StringBuffer();
         StringBuffer whereBuf = new StringBuffer();
-        StringBuffer orderBuf = new StringBuffer();
-
         Map<String, Object> params = new TreeMap<>();
 
-        selectBuf.append("select i from Item i");
-
-        // filter on parent
-        if (filter.getParent() != null) {
-            selectBuf.append(" join i.collection pd");
-            appendWhere(whereBuf, "pd.id=:parent");
-            params.put("parent", filter.getParent());
-        }
-
-        filter.bind(whereBuf, params);
-        handleItemFilter(whereBuf, params, filter);
+        filter.bind(selectBuf, whereBuf, params);
 
         selectBuf.append(whereBuf);
-        selectBuf.append(orderBuf);
 
         Query hqlQuery = session.createQuery(selectBuf.toString());
 
@@ -100,52 +84,4 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
 
         return hqlQuery;
     }
-
-    private void handleItemFilter(StringBuffer whereBuf, Map<String, Object> params,
-                                  ItemFilter filter) {
-
-        // filter on uid
-        if (filter.getUid() != null) {
-            formatExpression(whereBuf, params, "i.uid", filter.getUid());
-        }
-
-
-        if (filter.getDisplayName() != null) {
-            formatExpression(whereBuf, params, "i.displayName", filter.getDisplayName());
-        }
-
-        // filter by icaluid
-        if (filter.getIcalUid() != null) {
-            formatExpression(whereBuf, params, "i.uid", filter.getIcalUid());
-        }
-
-        // filter by reminderTime
-        if (filter.getReminderTime() != null) {
-            formatExpression(whereBuf, params, "i.remindertime", filter.getReminderTime());
-        }
-
-        if(filter.getModifiedSince() != null){
-            formatExpression(whereBuf, params, "i.modifiedDate", filter.getModifiedSince());
-        }
-    }
-
-
-    private void appendWhere(StringBuffer whereBuf, String toAppend) {
-        if ("".equals(whereBuf.toString())) {
-            whereBuf.append(" where " + toAppend);
-        } else {
-            whereBuf.append(" and " + toAppend);
-        }
-    }
-
-    private void formatExpression(StringBuffer whereBuf,
-                                  Map<String, Object> params, String propName,
-                                  FilterCriteria fc) {
-
-        StringBuffer expBuf = new StringBuffer();
-        FilterExpression exp = (FilterExpression) fc;
-        exp.bind(expBuf, propName, params);
-        appendWhere(whereBuf, expBuf.toString());
-    }
-
 }

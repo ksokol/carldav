@@ -57,7 +57,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         ItemFilter filter = new ItemFilter();
         filter.setUid(Restrictions.eq("abc"));
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where i.uid=:param0", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where i.uid=:param0", query.getHibernateQuery().getQueryString());
     }
 
     @Test
@@ -68,7 +68,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         c.add(Calendar.YEAR, -1);
         filter.setModifiedSince(Restrictions.between(c.getTime(), end));
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where i.modifiedDate between :param0 and :param1", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where i.modifiedDate between :param0 and :param1", query.getHibernateQuery().getQueryString());
     }
 
     /**
@@ -80,31 +80,31 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         ItemFilter filter = new ItemFilter();
         filter.setDisplayName(Restrictions.eq("test"));
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where i.displayName=:param0", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where i.displayName=:param0", query.getHibernateQuery().getQueryString());
 
         filter.setDisplayName(Restrictions.neq("test"));
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where i.displayName!=:param0", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where i.displayName!=:param0", query.getHibernateQuery().getQueryString());
 
         filter.setDisplayName(Restrictions.like("test"));
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where i.displayName like :param0", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where i.displayName like :param0", query.getHibernateQuery().getQueryString());
 
         filter.setDisplayName(Restrictions.nlike("test"));
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where i.displayName not like :param0", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where i.displayName not like :param0", query.getHibernateQuery().getQueryString());
 
         filter.setDisplayName(Restrictions.isNull());
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where i.displayName is null", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where i.displayName is null", query.getHibernateQuery().getQueryString());
 
         filter.setDisplayName(Restrictions.ilike("test"));
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where lower(i.displayName) like :param0", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where lower(i.displayName) like :param0", query.getHibernateQuery().getQueryString());
 
         filter.setDisplayName(Restrictions.nilike("test"));
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i where lower(i.displayName) not like :param0", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i    where lower(i.displayName) not like :param0", query.getHibernateQuery().getQueryString());
 
     }
 
@@ -117,8 +117,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         ItemFilter filter = new ItemFilter();
         filter.setParent(1L);
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i join i.collection pd where "
-                + "pd.id=:parent", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i inner join i.collection as pd where "
+                + "pd.id=:parent  ", query.getHibernateQuery().getQueryString());
     }
 
     /**
@@ -131,8 +131,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(0L);
         filter.setDisplayName(Restrictions.eq("test"));
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i join i.collection pd where "
-                + "pd.id=:parent and i.displayName=:param1", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i inner join i.collection as pd where "
+                + "pd.id=:parent   and i.displayName=:param1", query.getHibernateQuery().getQueryString());
     }
 
     /**
@@ -146,7 +146,7 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         stampFilter.setStampClass(Item.class);
         filter.getStampFilters().add(stampFilter);
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i", query.getHibernateQuery().getQueryString());
+        Assert.assertEquals("select i from Item as i   ", query.getHibernateQuery().getQueryString());
     }
 
     /**
@@ -163,12 +163,12 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         //filter.setBody("body");
         filter.getStampFilters().add(eventFilter);
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i join i.collection pd where pd.id=:parent and i.displayName=:param1 and i.uid=:param2 and i.type=:type"
+        Assert.assertEquals("select i from Item as i inner join i.collection as pd where pd.id=:parent   and i.displayName=:param1 and i.uid=:param2 and i.type=:type"
                 , query.getHibernateQuery().getQueryString());
 
         eventFilter.setIsRecurring(true);
         query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i join i.collection pd where pd.id=:parent and i.displayName=:param1 and i.uid=:param2 and i.type=:type and (i.recurring=:recurring)"
+        Assert.assertEquals("select i from Item as i inner join i.collection as pd where pd.id=:parent   and i.displayName=:param1 and i.uid=:param2 and i.type=:type and (i.recurring=:recurring)"
                 , query.getHibernateQuery().getQueryString());
     }
 
@@ -187,8 +187,8 @@ public class StandardItemFilterProcessorTest extends IntegrationTestSupport {
         filter.setParent(0L);
         filter.getStampFilters().add(eventFilter);
         QueryImpl query = (QueryImpl) queryBuilder.buildQuery(entityManager, filter);
-        Assert.assertEquals("select i from Item i join i.collection pd " +
-                "where pd.id=:parent and i.type=:type and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
+        Assert.assertEquals("select i from Item as i inner join i.collection as pd " +
+                "where pd.id=:parent   and i.type=:type and ( (i.startDate < :endDate) and i.endDate > :startDate) " +
                 "or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate)))"
                 ,query.getHibernateQuery().getQueryString());
     }

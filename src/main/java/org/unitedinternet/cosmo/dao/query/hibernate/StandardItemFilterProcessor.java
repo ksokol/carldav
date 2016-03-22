@@ -23,6 +23,9 @@ import org.unitedinternet.cosmo.model.filter.ItemFilter;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -49,7 +52,11 @@ public class StandardItemFilterProcessor implements ItemFilterProcessor {
         StringBuffer selectBuf = new StringBuffer();
         Map<String, Object> params = new TreeMap<>();
 
-        filter.bind(selectBuf, params);
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Item> criteriaQuery = criteriaBuilder.createQuery(Item.class);
+        Root<Item> root = criteriaQuery.from(Item.class);
+
+        filter.bind(entityManager, root, criteriaQuery, criteriaBuilder, selectBuf, params);
 
         Query hqlQuery = session.createQuery(selectBuf.toString());
 

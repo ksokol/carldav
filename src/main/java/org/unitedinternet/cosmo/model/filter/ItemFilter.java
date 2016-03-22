@@ -15,6 +15,12 @@
  */
 package org.unitedinternet.cosmo.model.filter;
 
+import carldav.entity.Item;
+import org.hibernate.jpa.criteria.path.RootImpl;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -133,16 +139,29 @@ public class ItemFilter {
         this.modifiedSince = modifiedSince;
     }
 
-    public void bind(StringBuffer selectBuf, Map<String, Object> params) {
-        StringBuffer whereBuf = new StringBuffer();
-
-        selectBuf.append("select i from Item i");
+    public void bind(EntityManager entityManager, Root<Item> root, CriteriaQuery<Item> query, CriteriaBuilder builder, StringBuffer selectBuf, Map<String, Object> params) {
+        final StringBuffer whereBuf = new StringBuffer();
+        root.alias("i");
 
         // filter on parent
         if (getParent() != null) {
-            selectBuf.append(" join i.collection pd");
-            appendWhere(whereBuf, "pd.id=:parent");
+            final Join<Object, Object> collection = root.join("collection");
+
+            collection.alias("pd");
+            final Path<Long> collectionId = collection.get("id");
+
+            CriteriaQuery<Item> select = query.select(root);
+
+            select.where(builder.equal(collectionId, 999666L));
+
+            selectBuf.append(entityManager.createQuery(query).unwrap(org.hibernate.Query.class).getQueryString().replace("999666L", ":parent"));
+
             params.put("parent", getParent());
+            selectBuf.append(" ");
+            appendWhere(whereBuf, "");
+        } else {
+            selectBuf.append(entityManager.createQuery(query).unwrap(org.hibernate.Query.class).getQueryString());
+            appendWhere(whereBuf, "  ");
         }
 
         // filter on uid
@@ -188,8 +207,10 @@ public class ItemFilter {
 
 
     private void appendWhere(StringBuffer whereBuf, String toAppend) {
-        if ("".equals(whereBuf.toString())) {
+        if ("   ".equals(whereBuf.toString())) {
             whereBuf.append(" where " + toAppend);
+        } else if ("".equals(whereBuf.toString())) {
+            whereBuf.append(" " + toAppend);
         } else {
             whereBuf.append(" and " + toAppend);
         }

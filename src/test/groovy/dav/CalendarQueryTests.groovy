@@ -849,4 +849,72 @@ class CalendarQueryTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
     }
+
+    @Test
+    void timezone() {
+        def timezone = """\
+                        BEGIN:VCALENDAR
+                        PRODID:-//Example Corp.//CalDAV Client//EN
+                        VERSION:2.0
+                        BEGIN:VTIMEZONE
+                        TZID:US-Eastern
+                        LAST-MODIFIED:19870101T000000Z
+                        BEGIN:STANDARD
+                        DTSTART:19671029T020000
+                        RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10
+                        TZOFFSETFROM:-0400
+                        TZOFFSETTO:-0500
+                        TZNAME:Eastern Standard Time (US &amp; Canada)
+                        END:STANDARD
+                        BEGIN:DAYLIGHT
+                        DTSTART:19870405T020000
+                        RRULE:FREQ=YEARLY;BYDAY=1SU;BYMONTH=4
+                        TZOFFSETFROM:-0500
+                        TZOFFSETTO:-0400
+                        TZNAME:Eastern Daylight Time (US &amp; Canada)
+                        END:DAYLIGHT
+                        END:VTIMEZONE
+                        END:VCALENDAR
+                        """.stripIndent()
+
+        def request1 = """\
+                        <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
+                            <D:prop>
+                                <C:timezone>
+                                    <![CDATA[${timezone}]]>
+                                </C:timezone>
+                            </D:prop>
+                          <C:filter>
+                            <C:comp-filter name="VCALENDAR">
+                              <C:comp-filter name="VEVENT">
+                                <C:prop-filter name="UID">
+                                  <C:text-match collation="i;octet">e94d89d2-b195-4128-a9a8-be83a873deae</C:text-match>
+                                </C:prop-filter>
+                              </C:comp-filter>
+                            </C:comp-filter>
+                          </C:filter>
+                        </C:calendar-query>"""
+
+        //TODO add timezone back to the response
+        def response1 = """\
+                            <D:multistatus xmlns:D="DAV:">
+                                <D:response>
+                                    <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                    <D:propstat>
+                                        <D:prop>
+                                            <C:timezone xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                        </D:prop>
+                                    <D:status>HTTP/1.1 404 Not Found</D:status>
+                                    </D:propstat>
+                                </D:response>
+                             </D:multistatus>"""
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request1)
+                .header("Depth", "1"))
+                .andExpect(status().isMultiStatus())
+                .andExpect(textXmlContentType())
+                .andExpect(xml(response1))
+    }
 }

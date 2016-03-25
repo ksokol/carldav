@@ -80,12 +80,6 @@ public class PropertyFilter implements CustomDavConstants, CaldavConstants {
     }
 
     /**
-     * Constructor.
-     */
-    public PropertyFilter() {
-    }
-
-    /**
      * Construct a PropertyFilter object from a DOM Element
      * @param element The element.
      * @param timezone The timezone.

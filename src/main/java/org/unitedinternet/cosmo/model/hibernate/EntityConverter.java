@@ -20,7 +20,6 @@ import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.*;
-import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.*;
@@ -103,15 +102,6 @@ public class EntityConverter {
             final Date date = startDate.getDate();
             note.setStartDate(date);
             note.setEndDate(date);
-        }
-
-        VAlarm va = ICalendarUtils.getDisplayAlarm(component);
-        if (va != null && va.getTrigger()!=null) {
-            Trigger trigger = va.getTrigger();
-            Date reminderTime = trigger.getDateTime();
-            if (reminderTime != null) {
-                note.setRemindertime(reminderTime);
-            }
         }
     }
 

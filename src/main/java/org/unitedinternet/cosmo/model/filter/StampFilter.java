@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.model.filter;
 
 
+import carldav.entity.Item;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.TimeZone;
@@ -23,13 +24,11 @@ import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.util.Dates;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import carldav.entity.Item;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Represents a filter that matches an Item with a specified Stamp.
@@ -38,9 +37,7 @@ public class StampFilter {
 
     private static final Log LOG = LogFactory.getLog(StampFilter.class);
 
-    private Class stampClass = null;
     private Boolean isRecurring = null;
-    private Period period = null;
     private DateTime dstart;
     private DateTime dend;
     private Date fstart;
@@ -48,44 +45,12 @@ public class StampFilter {
     private TimeZone timezone = null;
     private Item.Type type;
 
-    public StampFilter() {}
-
     public StampFilter(Item.Type type) {
         this.type = type;
-    }
-    
-    public StampFilter(Class stampClass) {
-        this.stampClass = stampClass;
-    }
-
-    public Class getStampClass() {
-        return stampClass;
-    }
-    
-    /**
-     * Match Items that contain the specified Stamp
-     * type.
-     * @param stampClass
-     */
-    public void setStampClass(Class stampClass) {
-        this.stampClass = stampClass;
-    }
-
-    /**
-     * Match only recurring events.
-     * @param isRecurring if set, return recurring events only, or only
-     *                    non recurring events
-     */
-    public void setIsRecurring(Boolean isRecurring) {
-        this.isRecurring = isRecurring;
     }
 
     public Boolean getIsRecurring() {
         return isRecurring;
-    }
-
-    public Period getPeriod() {
-        return period;
     }
 
     /**
@@ -93,7 +58,6 @@ public class StampFilter {
      * @param period time-range
      */
     public void setPeriod(Period period) {
-        this.period = period;
         // Get fixed start/end time
         dstart = period.getStart();
         dend = period.getEnd();
@@ -107,19 +71,15 @@ public class StampFilter {
     }
 
     public Date getEnd() {
-        return new Date(fend.getTime());
+        return fend != null ? new Date(fend.getTime()) : null;
     }
 
     public Date getStart() {
-        return new Date(fstart.getTime());
+        return fstart != null ? new Date(fstart.getTime()) : null;
     }
 
     public Item.Type getType() {
         return type;
-    }
-
-    public void setType(final Item.Type type) {
-        this.type = type;
     }
 
     /**
@@ -177,41 +137,6 @@ public class StampFilter {
             } catch (ParseException e) {
                 LOG.error("Error occured while parsing fend [" + fend.toString() + "]", e);
             }
-        }
-    }
-
-    public void bind(StringBuffer whereBuf, Map<String, Object> params) {
-        if (getType() != null) {
-            appendWhere(whereBuf, "i.type=:type");
-            params.put("type", getType());
-        }
-
-        // handle recurring event filter
-        if (getIsRecurring() != null) {
-            appendWhere(whereBuf, "(i.recurring=:recurring)");
-            params.put("recurring", getIsRecurring());
-        }
-
-        if (getPeriod() != null) {
-            whereBuf.append(" and ( ");
-            whereBuf.append("(i.startDate < :endDate)");
-            whereBuf.append(" and i.endDate > :startDate)");
-
-            // edge case where start==end
-            whereBuf.append(" or (i.startDate=i.endDate and (i.startDate=:startDate or i.startDate=:endDate))");
-
-            whereBuf.append(")");
-
-            params.put("startDate", getStart());
-            params.put("endDate", getEnd());
-        }
-    }
-
-    private void appendWhere(StringBuffer whereBuf, String toAppend) {
-        if ("".equals(whereBuf.toString())) {
-            whereBuf.append(" where " + toAppend);
-        } else {
-            whereBuf.append(" and " + toAppend);
         }
     }
 }

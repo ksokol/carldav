@@ -15,12 +15,13 @@
  */
 package carldav.repository;
 
-import org.springframework.data.repository.CrudRepository;
 import carldav.entity.Item;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface ItemRepository extends CrudRepository<Item, Long>, ItemRepositoryCustom {
+public interface ItemRepository extends CrudRepository<Item, Long>, JpaSpecificationExecutor {
 
     List<Item> findByCollectionIdAndType(Long id, Item.Type type);
 

@@ -84,12 +84,6 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
     private String name;
 
     /**
-     * Constructor.
-     */
-    public ComponentFilter() {
-    }
-
-    /**
      * 
      * @author cdobrota
      *
@@ -320,14 +314,6 @@ public class ComponentFilter implements CaldavConstants, ICalendarConstants {
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Sets name.
-     * @param name The name.
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**

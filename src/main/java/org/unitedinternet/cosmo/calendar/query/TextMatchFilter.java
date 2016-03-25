@@ -76,9 +76,6 @@ public class TextMatchFilter implements CustomDavConstants, CaldavConstants {
         }
     }
 
-    public TextMatchFilter() {
-    }
-
     public void setCollation(String collation) {
         this.collation = collation;
     }
@@ -107,20 +104,6 @@ public class TextMatchFilter implements CustomDavConstants, CaldavConstants {
      */
     public boolean isCaseless() {
         return (collation == null || COLLATION_IASCII.equals(collation));
-    }
-
-    /**
-     * Sets the collation to be caseless ('i;ascii-casemap') or not ('i;octet').
-     * 
-     * @param caseless
-     *            the value of the collation.
-     */
-    public void setCaseless(boolean caseless) {
-        if (caseless) {
-            collation = null;
-        } else {
-            collation = COLLATION_OCTET;
-        }
     }
 
     /**

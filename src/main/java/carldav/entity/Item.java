@@ -48,7 +48,6 @@ public class Item {
     private User owner;
     private String mimetype;
     private String calendar;
-    private Date remindertime;
     private Date startDate;
     private Date endDate;
     private Boolean floating;
@@ -152,16 +151,6 @@ public class Item {
 
     public void setCalendar(String calendar) {
         this.calendar = calendar;
-    }
-
-    @Column(name = "remindertime")
-    @Temporal(TemporalType.TIMESTAMP)
-    public Date getRemindertime() {
-        return remindertime;
-    }
-
-    public void setRemindertime(final Date remindertime) {
-        this.remindertime = remindertime;
     }
 
     @Column(name = "startdate")

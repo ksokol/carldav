@@ -24,15 +24,18 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilterEvaluater;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
+import org.unitedinternet.cosmo.dao.query.hibernate.CalendarFilterConverter;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import static carldav.repository.specification.ItemSpecs.combine;
 
 public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(StandardCalendarQueryProcessor.class);
+
+    private static final CalendarFilterConverter filterConverter = new CalendarFilterConverter();
 
     private final ItemRepository itemRepository;
     private final EntityConverter entityConverter;
@@ -45,7 +48,7 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
     }
 
     public List<Item> filterQuery(CalendarFilter filter) {
-        return itemRepository.findCalendarItems(filter);
+        return itemRepository.findAll(combine(filterConverter.translateToItemFilter(filter)));
     }
 
     /**

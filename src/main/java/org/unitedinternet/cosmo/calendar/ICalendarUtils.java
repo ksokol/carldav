@@ -15,32 +15,18 @@
  */
 package org.unitedinternet.cosmo.calendar;
 
-import net.fortuna.ical4j.model.Component;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.TimeZone;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.component.VToDo;
 import net.fortuna.ical4j.model.parameter.Related;
-import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.DtEnd;
-import net.fortuna.ical4j.model.property.DtStart;
-import net.fortuna.ical4j.model.property.Due;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.Repeat;
-import net.fortuna.ical4j.model.property.Trigger;
+import net.fortuna.ical4j.model.property.*;
 import org.unitedinternet.cosmo.CosmoParseException;
 import org.unitedinternet.cosmo.calendar.util.Dates;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -430,34 +416,5 @@ public class ICalendarUtils {
             
             return Dates.getInstance(trigger.getDuration().getTime(endDate), endDate);
         }
-    }
-    
-    /**
-     * Find and return the first DISPLAY VALARM in a comoponent
-     * @param component VEVENT or VTODO
-     * @return first DISPLAY VALARM, null if there is none
-     */
-    public static VAlarm getDisplayAlarm(Component component) {
-        ComponentList alarms = null;
-        
-        if(component instanceof VEvent) {
-            alarms = ((VEvent) component).getAlarms();
-        }
-        else if(component instanceof VToDo) {
-            alarms = ((VToDo) component).getAlarms();
-        }
-        
-        if(alarms==null || alarms.size()==0) {
-            return null;
-        }
-        
-        for(Iterator<VAlarm> it = alarms.iterator();it.hasNext();) {
-            VAlarm alarm = it.next();
-            if(Action.DISPLAY.equals(alarm.getAction())) {
-                return alarm;
-            }
-        }
-        
-        return null;   
     }
 }

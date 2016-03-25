@@ -16,13 +16,15 @@
 package org.unitedinternet.cosmo.dao.query.hibernate;
 
 import carldav.entity.Item;
+import carldav.repository.specification.ItemSpecs;
 import net.fortuna.ical4j.model.TimeZone;
+import org.springframework.data.jpa.domain.Specification;
 import org.unitedinternet.cosmo.calendar.query.*;
-import org.unitedinternet.cosmo.model.filter.ItemFilter;
-import org.unitedinternet.cosmo.model.filter.Restrictions;
 import org.unitedinternet.cosmo.model.filter.StampFilter;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -33,7 +35,6 @@ public class CalendarFilterConverter {
     private static final String COMP_VCALENDAR = "VCALENDAR";
     private static final String COMP_VTODO = "VTODO";
     private static final String PROP_UID = "UID";
-    private static final String PROP_DESCRIPTION = "DESCRIPTION";
     private static final String PROP_SUMMARY = "SUMMARY";
 
     /**
@@ -43,13 +44,12 @@ public class CalendarFilterConverter {
      * will fall into this case.  More cases will be supported as they
      * are implemented.
      *
-     * @param calendar       parent calendar
      * @param calendarFilter filter to translate
-     * @return equivalent ItemFilter
+     * @return equivalent List<Specification<Item>>
      */
-    public ItemFilter translateToItemFilter(CalendarFilter calendarFilter) {
-        ItemFilter itemFilter = new ItemFilter();
-        itemFilter.setParent(calendarFilter.getParent());
+    public List<Specification<Item>> translateToItemFilter(CalendarFilter calendarFilter) {
+        List<Specification<Item>> specifications = new ArrayList<>(5);
+        specifications.add(ItemSpecs.parent(calendarFilter.getParent()));
         ComponentFilter rootFilter = calendarFilter.getFilter();
         if (!COMP_VCALENDAR.equalsIgnoreCase(rootFilter.getName())) {
             throw new IllegalArgumentException("unsupported component filter: " + rootFilter.getName());
@@ -57,61 +57,22 @@ public class CalendarFilterConverter {
 
         for (Iterator it = rootFilter.getComponentFilters().iterator(); it.hasNext(); ) {
             ComponentFilter compFilter = (ComponentFilter) it.next();
-            handleCompFilter(compFilter, itemFilter);
+            specifications.addAll(handleCompFilter(compFilter));
         }
 
-        return itemFilter;
+        return specifications;
     }
 
-    /**
-     * Translate CalendarFilter into an ItemFilter that can be used
-     * as a first pass.  All items returned may or may not match the
-     * specified CalendarFilter.
-     *
-     * @param calendar       calendar
-     * @param calendarFilter filter to translate
-     * @return ItemFilter that can be used as a first-pass, meaning
-     *         not all items are guaranteed to match the CalendarFilter.
-     *         Further processing is required.
-     */
-    public ItemFilter getFirstPassFilter(Long calendar, CalendarFilter calendarFilter) {
-        ComponentFilter rootFilter = calendarFilter.getFilter();
-        if (!COMP_VCALENDAR.equalsIgnoreCase(rootFilter.getName())) {
-            return null;
-        }
-
-        // only support single comp-filer
-        if (rootFilter.getComponentFilters().size() != 1) {
-            return null;
-        }
-
-        ComponentFilter compFilter = (ComponentFilter) rootFilter.getComponentFilters().get(0);
-
-        // handle finding VTODO for now
-        if (COMP_VTODO.equalsIgnoreCase(compFilter.getName())) {
-            return createFirstPassTaskFilter(calendar);
-        }
-
-        return null;
-    }
-
-    private ItemFilter createFirstPassTaskFilter(Long collection) {
-        ItemFilter filter = new ItemFilter();
-        filter.setParent(collection);
-        filter.getStampFilters().add(new StampFilter(Item.class));
-        return filter;
-    }
-
-    private void handleCompFilter(ComponentFilter compFilter, ItemFilter itemFilter) {
+    private List<Specification<Item>> handleCompFilter(ComponentFilter compFilter) {
         try {
-            handleEventCompFilter(compFilter, itemFilter, new StampFilter(Item.Type.valueOf(compFilter.getName().toUpperCase(Locale.ENGLISH))));
+            return handleEventCompFilter(compFilter, new StampFilter(Item.Type.valueOf(compFilter.getName().toUpperCase(Locale.ENGLISH))));
         } catch(Exception e) {
             throw new IllegalArgumentException("unsupported component filter: " + compFilter.getName());
         }
     }
 
-    private void handleEventCompFilter(ComponentFilter compFilter, ItemFilter itemFilter, StampFilter eventFilter) {
-        itemFilter.getStampFilters().add(eventFilter);
+    private List<Specification<Item>> handleEventCompFilter(ComponentFilter compFilter, StampFilter eventFilter) {
+        List<Specification<Item>> specifications = new ArrayList<>(5);
         TimeRangeFilter trf = compFilter.getTimeRangeFilter();
 
         // handle time-range filter
@@ -122,6 +83,8 @@ public class CalendarFilterConverter {
             }
         }
 
+        specifications.add(ItemSpecs.stamp(eventFilter.getType(), eventFilter.getIsRecurring(), eventFilter.getStart(), eventFilter.getEnd()));
+
         for (Iterator it = compFilter.getComponentFilters().iterator(); it.hasNext(); ) {
             ComponentFilter subComp = (ComponentFilter) it.next();
             throw new IllegalArgumentException("unsupported sub component filter: " + subComp.getName());
@@ -129,25 +92,23 @@ public class CalendarFilterConverter {
 
         for (Iterator it = compFilter.getPropFilters().iterator(); it.hasNext(); ) {
             PropertyFilter propFilter = (PropertyFilter) it.next();
-            handleEventPropFilter(propFilter, itemFilter);
+            specifications.add(handleEventPropFilter(propFilter));
         }
+
+        return specifications;
     }
 
-    private void handleEventPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
-
+    private Specification<Item> handleEventPropFilter(PropertyFilter propFilter) {
         if (PROP_UID.equalsIgnoreCase(propFilter.getName())) {
-            handleUidPropFilter(propFilter, itemFilter);
+            return handlePropertyFilter("uid", propFilter);
         } else if (PROP_SUMMARY.equalsIgnoreCase(propFilter.getName())) {
-            handleSummaryPropFilter(propFilter, itemFilter);
-        } else if (PROP_DESCRIPTION.equalsIgnoreCase(propFilter.getName())) {
-            handleDescriptionPropFilter(propFilter, itemFilter);
+            return handlePropertyFilter("displayName", propFilter);
         } else {
             throw new IllegalArgumentException("unsupported prop filter: " + propFilter.getName());
         }
     }
 
-    private void handleUidPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
-
+    private Specification<Item> handlePropertyFilter(String propertyName, PropertyFilter propFilter) {
         for (Iterator it = propFilter.getParamFilters().iterator(); it.hasNext(); ) {
             ParamFilter paramFilter = (ParamFilter) it.next();
             throw new IllegalArgumentException("unsupported param filter: " + paramFilter.getName());
@@ -158,59 +119,7 @@ public class CalendarFilterConverter {
             throw new IllegalArgumentException("unsupported filter: must contain text match filter");
         }
 
-        if (textMatch.isCaseless()) {
-            if (textMatch.isNegateCondition()) {
-                itemFilter.setIcalUid(Restrictions.nilike(textMatch.getValue()));
-            } else {
-                itemFilter.setIcalUid(Restrictions.ilike(textMatch.getValue()));
-            }
-        } else {
-            if (textMatch.isNegateCondition()) {
-                itemFilter.setIcalUid(Restrictions.nlike(textMatch.getValue()));
-            } else {
-                itemFilter.setIcalUid(Restrictions.like(textMatch.getValue()));
-            }
-        }
-    }
-
-    private void handleDescriptionPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
-
-        for (Iterator it = propFilter.getParamFilters().iterator(); it.hasNext(); ) {
-            ParamFilter paramFilter = (ParamFilter) it.next();
-            throw new IllegalArgumentException("unsupported param filter: " + paramFilter.getName());
-        }
-
-        TextMatchFilter textMatch = propFilter.getTextMatchFilter();
-        if (textMatch == null) {
-            throw new IllegalArgumentException("unsupported filter: must contain text match filter");
-        }
-    }
-
-    private void handleSummaryPropFilter(PropertyFilter propFilter, ItemFilter itemFilter) {
-
-        for (Iterator it = propFilter.getParamFilters().iterator(); it.hasNext(); ) {
-            ParamFilter paramFilter = (ParamFilter) it.next();
-            throw new IllegalArgumentException("unsupported param filter: " + paramFilter.getName());
-        }
-
-        TextMatchFilter textMatch = propFilter.getTextMatchFilter();
-        if (textMatch == null) {
-            throw new IllegalArgumentException("unsupported filter: must contain text match filter");
-        }
-
-        if (textMatch.isCaseless()) {
-            if (textMatch.isNegateCondition()) {
-                itemFilter.setDisplayName(Restrictions.nilike(textMatch.getValue()));
-            } else {
-                itemFilter.setDisplayName(Restrictions.ilike(textMatch.getValue()));
-            }
-        } else {
-            if (textMatch.isNegateCondition()) {
-                itemFilter.setDisplayName(Restrictions.nlike(textMatch.getValue()));
-            } else {
-                itemFilter.setDisplayName(Restrictions.like(textMatch.getValue()));
-            }
-        }
+        return ItemSpecs.propertyLike(propertyName, textMatch.getValue(), textMatch.isCaseless(), textMatch.isNegateCondition());
     }
 
 }

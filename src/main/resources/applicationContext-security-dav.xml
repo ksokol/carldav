@@ -12,14 +12,10 @@
 <!-- Security configuration for WebDAV -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:security="http://www.springframework.org/schema/security"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="
-       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-       http://www.springframework.org/schema/util
-       http://www.springframework.org/schema/util/spring-util.xsd">
+	   xmlns:security="http://www.springframework.org/schema/security"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <bean id="protocolAuthenticationEntryPoint" class="carldav.security.CustomBasicAuthenticationEntryPoint">
         <constructor-arg>
@@ -27,74 +23,20 @@
         </constructor-arg>
     </bean>
 
-	<bean id="protocolBasicProcessingFilter"
-		class="org.springframework.security.web.authentication.www.BasicAuthenticationFilter">
-		<constructor-arg ref="authenticationManager" />
-		<constructor-arg ref="protocolAuthenticationEntryPoint" />
-	</bean>
-
-	<!-- morse code AccessDecisionManager that verifies user paths -->
 	<bean id="davAccessDecisionManager" class="org.unitedinternet.cosmo.dav.acegisecurity.DavAccessDecisionManager" />
 
-	<bean id="davExceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
-		<constructor-arg ref="protocolAuthenticationEntryPoint" />
-		<property name="accessDeniedHandler">
-			<bean class="org.springframework.security.web.access.AccessDeniedHandlerImpl" />
-		</property>
-	</bean>
+	<security:http pattern="/**" create-session="stateless" access-decision-manager-ref="davAccessDecisionManager">
+		<security:intercept-url pattern="/user" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/**" access="isFullyAuthenticated()" />
+		<security:http-basic entry-point-ref="protocolAuthenticationEntryPoint" />
+		<security:csrf disabled="true" />
+	</security:http>
 
-	<!-- interceptor which performs authorization for DAV requests -->
-
-	<bean id="davFilterInvocationInterceptor"
-		class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
-		<property name="accessDecisionManager">
-			<ref bean="davAccessDecisionManager" />
-		</property>
-		<property name="securityMetadataSource">
-			<security:filter-security-metadata-source>
-				<security:intercept-url pattern="/**"
-					 access="ROLE_WE_DONT_HAVE"/>
-			</security:filter-security-metadata-source>
-		</property>
-	</bean>
-
-	<!-- filter chain that kicks off request-time processing openSessionInViewFilter, -->
-
-	<bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
-		<security:filter-chain-map request-matcher="ant">
-			<security:filter-chain pattern="/**"
-				filters="securityContextPersistenceFilter,
-				        protocolBasicProcessingFilter,
-         				davExceptionTranslationFilter,
-         				davFilterInvocationInterceptor" />
-		</security:filter-chain-map>
-	</bean>
-
-    <bean id="securityContextPersistenceFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter" />
-
-	<!-- authentication manager definition and dependencies -->
-
-	<bean id="daoAuthenticationProvider"
-		class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
-		<property name="userDetailsService">
-			<ref bean="userDetailsService" />
-		</property>
-		<property name="passwordEncoder">
-			<ref bean="passwordEncoder" />
-		</property>
-	</bean>
-	<bean id="passwordEncoder"
-		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
-
-	<bean id="authenticationManager"
-		class="org.springframework.security.authentication.ProviderManager">
-		<constructor-arg index="0" ref="authenticationProviders"/>
-	</bean>
-
-	<util:list id="authenticationProviders">
-		<ref bean="daoAuthenticationProvider" />
-	</util:list>
-	<!-- security facade resources -->
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="userDetailsService">
+			<security:password-encoder hash="md5" />
+		</security:authentication-provider>
+	</security:authentication-manager>
 
 	<bean id="securityManager" class="org.unitedinternet.cosmo.security.impl.CosmoSecurityManagerImpl" />
 

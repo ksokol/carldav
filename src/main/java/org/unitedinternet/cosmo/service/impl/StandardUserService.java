@@ -15,14 +15,13 @@
  */
 package org.unitedinternet.cosmo.service.impl;
 
+import carldav.entity.CollectionItem;
+import carldav.entity.User;
+import carldav.repository.CollectionRepository;
+import carldav.repository.UserRepository;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.util.Assert;
-import carldav.repository.CollectionRepository;
-import org.unitedinternet.cosmo.dao.ModelValidationException;
-import carldav.repository.UserRepository;
-import carldav.entity.CollectionItem;
-import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
 
@@ -63,9 +62,6 @@ public class StandardUserService implements UserService {
      * email address is already in use
      */
     public User createUser(User user) {
-
-        validateRawPassword(user);
-
         user.setPassword(digestPassword(user.getPassword()));
 
         User newUser = userRepository.save(user);
@@ -109,12 +105,5 @@ public class StandardUserService implements UserService {
         }
 
         return DigestUtils.md5Hex(password);
-    }
-
-    private static void validateRawPassword(final User user) {
-        if (user.getPassword() == null) {
-            throw new ModelValidationException(" EMAIL " + user.getEmail(),
-                    "Password not specified");
-        }
     }
 }

@@ -14,13 +14,7 @@ package org.unitedinternet.cosmo;
 public class CosmoParseException extends CosmoException {
 
     private static final long serialVersionUID = -2746128836750233032L;
-    /**
-     * Constructor.
-     * @param cause - If somethig is wrong this exception is thrown.
-     */
-    public CosmoParseException(Throwable cause) {
-        super(cause);
-    }
+
     /**
      * 
      * @param message The message exception.

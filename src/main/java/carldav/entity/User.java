@@ -15,8 +15,6 @@
  */
 package carldav.entity;
 
-import org.hibernate.validator.constraints.Email;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Set;
@@ -45,7 +43,6 @@ public class User {
 
     @NotNull
     @Column(name = "email", nullable=false)
-    @Email
     public String getEmail() {
         return email;
     }

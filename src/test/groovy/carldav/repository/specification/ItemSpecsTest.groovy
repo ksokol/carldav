@@ -8,6 +8,7 @@ import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.unitedinternet.cosmo.IntegrationTestSupport
+import testutil.TestUser
 
 import java.time.Instant
 import java.time.LocalDate
@@ -43,7 +44,7 @@ public class ItemSpecsTest extends IntegrationTestSupport {
                 startDate: Date.from(startDate),
                 endDate: Date.from(endDate),
                 collection: collectionRepository.findOne(1L),
-                owner: userRepository.findOne(1L)
+                owner: userRepository.findByEmailIgnoreCase(TestUser.USER01)
         )
 
         item = itemRepository.save(item)

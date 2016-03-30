@@ -15,11 +15,10 @@
  */
 package org.unitedinternet.cosmo.acegisecurity.userdetails;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import carldav.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.Assert;
-import carldav.entity.User;
 
 import java.util.Collection;
 
@@ -39,13 +38,6 @@ public class CosmoUserDetails extends org.springframework.security.core.userdeta
     private static final long serialVersionUID = 3034617040424768103L;
 
     private final User user;
-
-    @Deprecated
-    public CosmoUserDetails(final String username, final String password, final User user) {
-        super(username, password, true, true, true, true, Collections.emptyList());
-        Assert.notNull(user, "user is null");
-        this.user = user;
-    }
 
     @Deprecated
     public CosmoUserDetails(final String username, final String password, final boolean enabled, final boolean accountNonExpired,

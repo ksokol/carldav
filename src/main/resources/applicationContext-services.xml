@@ -78,10 +78,4 @@
         <constructor-arg index="2" ref="exceptionResolverHandler" />
 	</bean>
 
-
-	<!-- authentication resources -->
-
-	<bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
-		<constructor-arg index="0" ref="userRepository" />
-	</bean>
 </beans>

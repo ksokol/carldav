@@ -39,6 +39,10 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
+	<bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
+		<constructor-arg index="0" ref="userRepository" />
+	</bean>
+
 	<bean id="securityManager" class="org.unitedinternet.cosmo.security.impl.CosmoSecurityManagerImpl" />
 
 </beans>

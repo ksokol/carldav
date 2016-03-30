@@ -17,17 +17,11 @@ package org.unitedinternet.cosmo.dav;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
-import carldav.entity.User;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
-
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
 
 /**
  * Standard implementation of {@link DavResourceLocatorFactory}.
@@ -97,20 +91,18 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
         }
     }
 
-    public DavResourceLocator createHomeLocator(URL context,
-                                                User user)
-        throws CosmoDavException {
-        String path = TEMPLATE_HOME.bind(user.getEmail());
+    public DavResourceLocator createHomeLocator(URL context, String userId) {
+        String path = TEMPLATE_HOME.bind(userId);
         return new StandardResourceLocator(context, path, this);
     }
 
     @Override
-    public DavResourceLocator createPrincipalLocator(final URL context, final User user) throws CosmoDavException {
+    public DavResourceLocator createPrincipalLocator(final URL context, final String userId) {
         try {
             final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUri(context.toURI());
             uriComponentsBuilder.replacePath(ServerConstants.SVC_DAV);
             final URI uri = uriComponentsBuilder.build().toUri();
-            return createHomeLocator(uri.toURL(), user);
+            return createHomeLocator(uri.toURL(), userId);
         } catch (Exception e) {
             throw new CosmoDavException(e);
         }

@@ -1,19 +1,18 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
-import static carldav.CarldavConstants.CALENDAR_HOME_SET;
-
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
-import carldav.entity.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import static carldav.CarldavConstants.CALENDAR_HOME_SET;
+
 public class CalendarHomeSet extends StandardDavProperty implements CaldavConstants {
 
-    public CalendarHomeSet(String baseHref, User user) {
-        super(CALENDAR_HOME_SET, href(baseHref, user));
+    public CalendarHomeSet(String baseHref, String userId) {
+        super(CALENDAR_HOME_SET, href(baseHref, userId));
     }
 
     public String getHref() {
@@ -30,7 +29,7 @@ public class CalendarHomeSet extends StandardDavProperty implements CaldavConsta
         return name;
     }
 
-    private static String href(String baseHref, User user) {
-        return TEMPLATE_HOME.bindAbsolute(baseHref, user.getEmail());
+    private static String href(String baseHref, String userId) {
+        return TEMPLATE_HOME.bindAbsolute(baseHref, userId);
     }
 }

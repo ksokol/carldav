@@ -15,10 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import carldav.entity.User;
-
-import java.net.URL;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 
 /**
  * <p>
@@ -72,14 +70,12 @@ public interface DavResourceLocatorFactory {
      *
      * @param context the URL specifying protocol, authority and unescaped
      * base path
-     * @param user the user
+     * @param userId the user id
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
-    DavResourceLocator createHomeLocator(URL context,
-                                                User user)
-        throws CosmoDavException;
+    DavResourceLocator createHomeLocator(URL context, String userId);
 
-    DavResourceLocator createPrincipalLocator(URL context, User user) throws CosmoDavException;
+    DavResourceLocator createPrincipalLocator(final URL context, final String userId);
 
     DavResourceLocator createResourceLocatorFromRequest(final HttpServletRequest request);
 }

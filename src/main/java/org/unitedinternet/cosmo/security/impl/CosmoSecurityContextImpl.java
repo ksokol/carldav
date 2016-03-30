@@ -50,5 +50,9 @@ public class CosmoSecurityContextImpl extends BaseSecurityContext {
                     new CosmoException());
         }
     }
-    
+
+    @Override
+    public String getUserId() {
+        return getUser().getEmail();
+    }
 }

@@ -30,4 +30,6 @@ public interface CosmoSecurityContext {
      * the context does not represent a user.
      */
     User getUser();
+
+    String getUserId();
 }

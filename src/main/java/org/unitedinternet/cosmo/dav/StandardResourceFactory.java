@@ -16,14 +16,13 @@
 package org.unitedinternet.cosmo.dav;
 
 import carldav.card.CardQueryProcessor;
-import org.springframework.util.Assert;
-import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import carldav.repository.CollectionRepository;
-import carldav.repository.ItemRepository;
-import org.unitedinternet.cosmo.dav.impl.*;
 import carldav.entity.CollectionItem;
 import carldav.entity.Item;
-import carldav.entity.User;
+import carldav.repository.CollectionRepository;
+import carldav.repository.ItemRepository;
+import org.springframework.util.Assert;
+import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
+import org.unitedinternet.cosmo.dav.impl.*;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -168,13 +167,11 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     }
 
     protected WebDavResource createUserPrincipalResource(DavResourceLocator locator, UriTemplate.Match match) throws CosmoDavException {
-        User user = userService.getUser(match.get("username"));
-        return user != null ? new DavUserPrincipal(user, locator, this) : null;
+        return new DavUserPrincipal(match.get("username"), locator, this);
     }
 
     protected WebDavResource createUserPrincipalResource(DavResourceLocator locator) throws CosmoDavException {
-        User user = securityManager.getSecurityContext().getUser();
-        return user != null ? new DavUserPrincipal(user, locator, this) : null;
+        return new DavUserPrincipal(securityManager.getSecurityContext().getUserId(), locator, this);
     }
 
     private WebDavResource createUnknownResource(DavResourceLocator locator) {

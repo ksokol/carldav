@@ -1,5 +1,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.entity.CollectionItem;
+import carldav.entity.Item;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +13,6 @@ import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
-import carldav.entity.CollectionItem;
-import carldav.entity.Item;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;
@@ -66,7 +66,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new SupportedCalendarComponentSet());
         properties.add(new SupportedCollationSet());
         properties.add(new SupportedCalendarData());
-        properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUser()));
+        properties.add(new AddressbookHomeSet(getResourceLocator(), getSecurityManager().getSecurityContext().getUserId()));
         properties.add(new DisplayName(getItem().getDisplayName()));
     }
 

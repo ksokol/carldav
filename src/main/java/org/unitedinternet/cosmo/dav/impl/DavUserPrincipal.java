@@ -10,7 +10,6 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.property.*;
-import carldav.entity.User;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,9 +28,9 @@ import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
 public class DavUserPrincipal extends DavResourceBase implements CaldavConstants {
 
-    private final User user;
+    private final String userId;
 
-    public DavUserPrincipal(User user, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
+    public DavUserPrincipal(String userId, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         super(locator, factory);
 
         registerLiveProperty(GET_LAST_MODIFIED);
@@ -43,7 +42,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         registerLiveProperty(PRINCIPAL_URL);
         registerLiveProperty(ADDRESSBOOK_HOME_SET);
 
-        this.user = user;
+        this.userId = userId;
     }
 
     public String getSupportedMethods() {
@@ -64,7 +63,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
     }
 
     public String getDisplayName() {
-        return user.getEmail();
+        return userId;
     }
 
     public String getETag() {
@@ -86,9 +85,9 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new IsCollection(isCollection()));
     //TODO    properties.add(new Etag(user.getETag()));
     //TODO    properties.add(new LastModified(user.getModifiedDate()));
-        properties.add(new CalendarHomeSet("/" + ServerConstants.SVC_DAV, user));
-        properties.add(new PrincipalUrl(getResourceLocator(), user));
-        properties.add(new AddressbookHomeSet("/" + ServerConstants.SVC_DAV, user));
+        properties.add(new CalendarHomeSet("/" + ServerConstants.SVC_DAV, userId));
+        properties.add(new PrincipalUrl(getResourceLocator(), userId));
+        properties.add(new AddressbookHomeSet("/" + ServerConstants.SVC_DAV, userId));
     }
 
     public void writeHead(final HttpServletResponse response) throws IOException {
@@ -128,7 +127,7 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
             writer.write("</dl>\n");
             writer.write("<p>\n");
 
-            final DavResourceLocator principalLocator = getResourceLocator().getFactory().createPrincipalLocator(getResourceLocator().getContext(), user);
+            final DavResourceLocator principalLocator = getResourceLocator().getFactory().createPrincipalLocator(getResourceLocator().getContext(), userId);
 
             writer.write("<a href=\"");
             writer.write(principalLocator.getHref(true));
@@ -145,6 +144,6 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
 
     @Override
     public String getName() {
-        return user.getEmail();
+        return userId;
     }
 }

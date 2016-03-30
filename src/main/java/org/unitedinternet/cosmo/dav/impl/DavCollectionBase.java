@@ -15,6 +15,8 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.entity.CollectionItem;
+import carldav.entity.Item;
 import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
 import carldav.jackrabbit.webdav.version.report.CustomReportType;
@@ -22,9 +24,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.property.*;
-import carldav.entity.CollectionItem;
-import carldav.entity.Item;
-import carldav.entity.User;
 import org.unitedinternet.cosmo.service.ContentService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -288,14 +287,12 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
                 writer.write("</dd>\n");
             }
             writer.write("</dl>\n");
-    
-            User user = getSecurityManager().getSecurityContext().getUser();
 
             writer.write("<p>\n");
             if (!isHomeCollection()) {
                 DavResourceLocator homeLocator = getResourceLocator()
                         .getFactory().createHomeLocator(
-                                getResourceLocator().getContext(), user);
+                                getResourceLocator().getContext(), getSecurityManager().getSecurityContext().getUserId());
                 writer.write("<a href=\"");
                 writer.write(homeLocator.getHref(true));
                 writer.write("\">");

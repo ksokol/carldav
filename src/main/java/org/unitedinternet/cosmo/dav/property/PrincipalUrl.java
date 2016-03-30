@@ -1,26 +1,25 @@
 package org.unitedinternet.cosmo.dav.property;
 
-import static carldav.CarldavConstants.PRINCIPAL_URL;
-
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.xml.CustomDomUtils;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import carldav.entity.User;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import static carldav.CarldavConstants.PRINCIPAL_URL;
+
 public class PrincipalUrl extends StandardDavProperty {
 
-    public PrincipalUrl(DavResourceLocator locator, User user) {
-        super(PRINCIPAL_URL, href(locator, user));
+    public PrincipalUrl(DavResourceLocator locator, String userId) {
+        super(PRINCIPAL_URL, href(locator, userId));
     }
 
     public String getHref() {
         return (String) getValue();
     }
 
-    private static String href(DavResourceLocator locator, User user) {
-        return TEMPLATE_USER.bindAbsolute(locator.getBaseHref(), user.getEmail());
+    private static String href(DavResourceLocator locator, String userId) {
+        return TEMPLATE_USER.bindAbsolute(locator.getBaseHref(), userId);
     }
 
     public Element toXml(Document document) {

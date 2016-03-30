@@ -36,14 +36,12 @@ public class StandardCalendarQueryProcessor implements CalendarQueryProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(StandardCalendarQueryProcessor.class);
 
     private static final CalendarFilterConverter filterConverter = new CalendarFilterConverter();
+    private static final EntityConverter entityConverter = new EntityConverter();
 
     private final ItemRepository itemRepository;
-    private final EntityConverter entityConverter;
 
-    public StandardCalendarQueryProcessor(ItemRepository itemRepository, final EntityConverter entityConverter) {
-        Assert.notNull(entityConverter, "entityConverter is null");
+    public StandardCalendarQueryProcessor(ItemRepository itemRepository) {
         Assert.notNull(itemRepository, "itemRepository is null");
-        this.entityConverter = entityConverter;
         this.itemRepository = itemRepository;
     }
 

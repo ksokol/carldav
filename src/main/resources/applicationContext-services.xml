@@ -25,7 +25,6 @@
 
 	<bean id="calendarQueryProcessor" class="org.unitedinternet.cosmo.calendar.query.impl.StandardCalendarQueryProcessor">
 		<constructor-arg index="0" ref="itemRepository" />
-        <constructor-arg index="1" ref="entityConverter" />
 	</bean>
 
 	<!-- general protocol/interface resources -->

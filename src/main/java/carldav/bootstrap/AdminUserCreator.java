@@ -21,7 +21,6 @@ public class AdminUserCreator implements ApplicationListener<ContextRefreshedEve
     private static final Logger LOG = getLogger(AdminUserCreator.class);
 
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     private final String adminName;

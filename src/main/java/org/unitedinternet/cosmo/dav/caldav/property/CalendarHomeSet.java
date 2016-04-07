@@ -2,6 +2,7 @@ package org.unitedinternet.cosmo.dav.caldav.property;
 
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.w3c.dom.Document;
@@ -11,8 +12,8 @@ import static carldav.CarldavConstants.CALENDAR_HOME_SET;
 
 public class CalendarHomeSet extends StandardDavProperty implements CaldavConstants {
 
-    public CalendarHomeSet(String baseHref, String userId) {
-        super(CALENDAR_HOME_SET, href(baseHref, userId));
+    public CalendarHomeSet(DavResourceLocator locator, String userId) {
+        super(CALENDAR_HOME_SET, href("/" + locator.contextPath(), userId));
     }
 
     public String getHref() {

@@ -4,6 +4,7 @@ import carldav.CarldavApplication;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.annotation.Rollback;
@@ -14,6 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 import util.TestData;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 /**
@@ -31,10 +33,14 @@ public abstract class IntegrationTestSupport {
     @Autowired
     private WebApplicationContext wac;
 
+    @Value("${server.context-path}")
+    private String contextPath;
+
     @Before
     public void beforeAnyOther() throws Exception {
         this.mockMvc = webAppContextSetup(this.wac)
 				.dispatchOptions(true)
+                .defaultRequest(get("/").servletPath(contextPath))
                 .apply(springSecurity()).build();
     }
 }

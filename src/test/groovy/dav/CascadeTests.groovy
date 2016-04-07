@@ -20,17 +20,17 @@ public class CascadeTests extends IntegrationTestSupport {
 
     @Test
     public void deleteCalendar() {
-        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1))
                 .andExpect(status().isCreated())
 
-        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
                 .andExpect(status().isOk())
 
-        mockMvc.perform(delete("/dav/{email}/calendar", USER01))
+        mockMvc.perform(delete("/carldav/dav/{email}/calendar", USER01))
 
-        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -57,17 +57,17 @@ public class CascadeTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+        mockMvc.perform(put("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1))
                 .andExpect(status().isCreated())
 
-        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
                 .andExpect(status().isOk())
 
-        mockMvc.perform(delete("/dav/{email}/contacts", USER01))
+        mockMvc.perform(delete("/carldav/dav/{email}/contacts", USER01))
 
-        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -95,17 +95,17 @@ public class CascadeTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+        mockMvc.perform(put("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1))
                 .andExpect(status().isCreated())
 
-        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1))
                 .andExpect(status().isCreated())
 
-        mockMvc.perform(delete("/dav/{email}", USER01))
+        mockMvc.perform(delete("/carldav/dav/{email}", USER01))
             .andExpect(status().isNoContent())
     }
 }

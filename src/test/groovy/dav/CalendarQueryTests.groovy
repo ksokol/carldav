@@ -45,7 +45,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                     END:VCALENDAR
                     """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -55,7 +55,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
 
         currentTodoEtag = result1.getResponse().getHeader(ETAG)
 
-        def result2 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        def result2 = mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1)
                 .header("If-None-Match", "*"))
@@ -79,7 +79,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x&#13;
                             END:VCALENDAR"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request1))
                 .header("Depth", "1"))
@@ -105,7 +105,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             END:VTODO&#13;
                             END:VCALENDAR"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request1))
                 .header("Depth", "1"))
@@ -128,7 +128,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                         END:VTODO
                         END:VCALENDAR"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request1))
                 .header("Depth", "1"))
@@ -145,7 +145,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                         </CAL:comp>
                         <CAL:expand start="30121221T115937Z" end="30131231T235937Z" />"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request1, "VEVENT"))
                 .header("Depth", "1"))
@@ -172,7 +172,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             END:VEVENT
                             END:VCALENDAR"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request2, "VEVENT"))
                 .header("Depth", "1"))
@@ -243,7 +243,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             END:VEVENT&#13;
                             END:VCALENDAR"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request2, "VEVENT"))
                 .header("Depth", "1"))
@@ -252,12 +252,12 @@ class CalendarQueryTests extends IntegrationTestSupport {
 
     @Test
     void limitRecurrenceSet() {
-        mockMvc.perform(put("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01)
+        mockMvc.perform(put("/carldav/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_RECURRENCE_REQUEST1))
                 .andExpect(status().isCreated())
 
-        def result2 = mockMvc.perform(put("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01)
+        def result2 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(UPDATE_VEVENT_RECURRENCE_REQUEST1))
                 .andExpect(status().isNoContent())
@@ -277,7 +277,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
         def response3 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01@localhost.de/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics</D:href>
+                                <D:href>/carldav/dav/test01@localhost.de/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${eventWithRecurrenceIdEtag}</D:getetag>
@@ -292,7 +292,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                                 </D:propstat>
                             </D:response>
                             <D:response>
-                                <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${currentEventEtag}</D:getetag>
@@ -308,7 +308,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request3, "VEVENT"))
                 .header("Depth", "1"))
@@ -326,7 +326,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
         def response4 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <D:getetag>${eventWithRecurrenceIdEtag}</D:getetag>
@@ -345,7 +345,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                                     </D:propstat>
                                 </D:response>
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <D:getetag>${currentEventEtag}</D:getetag>
@@ -361,7 +361,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request4, "VEVENT"))
                 .header("Depth", "1"))
@@ -629,7 +629,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             END:VTIMEZONE&#13;
                             END:VCALENDAR"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request1, "VEVENT"))
                 .header("Depth", "1"))
@@ -654,7 +654,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                         END:VTODO&#13;
                         END:VCALENDAR&#13;"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request1))
                 .header("Depth", "1"))
@@ -665,7 +665,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                             <CAL:comp />
                         </CAL:comp>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request(request2))
                 .header("Depth", "1"))
@@ -705,7 +705,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
         return xml("""\
                     <D:multistatus xmlns:D="DAV:">
                         <D:response>
-                            <D:href>/dav/test01@localhost.de/calendar/${uuid}.ics</D:href>
+                            <D:href>/carldav/dav/test01@localhost.de/calendar/${uuid}.ics</D:href>
                             <D:propstat>
                                 <D:prop>
                                     <D:getetag>${etag}</D:getetag>
@@ -736,12 +736,12 @@ class CalendarQueryTests extends IntegrationTestSupport {
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                           <D:response>
-                            <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                            <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                             <D:status>HTTP/1.1 200 OK</D:status>
                           </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -764,7 +764,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
 
         def response2 = """<D:multistatus xmlns:D="DAV:" />"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -786,7 +786,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                           </C:filter>
                         </C:calendar-query>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -813,12 +813,12 @@ class CalendarQueryTests extends IntegrationTestSupport {
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                           <D:response>
-                            <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                            <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                             <D:status>HTTP/1.1 200 OK</D:status>
                           </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -841,7 +841,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
 
         def response2 = """<D:multistatus xmlns:D="DAV:" />"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -899,7 +899,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <C:timezone xmlns:C="urn:ietf:params:xml:ns:caldav"/>
@@ -909,7 +909,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
                                 </D:response>
                              </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -936,12 +936,12 @@ class CalendarQueryTests extends IntegrationTestSupport {
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                           <D:response>
-                            <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                            <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                             <D:status>HTTP/1.1 200 OK</D:status>
                           </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -964,7 +964,7 @@ class CalendarQueryTests extends IntegrationTestSupport {
 
         def response2 = """<D:multistatus xmlns:D="DAV:" />"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))

@@ -47,7 +47,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <current-user-privilege-set xmlns="DAV:"/>
@@ -59,7 +59,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:propstat>
                                         <D:prop>
                                             <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
-                                                <D:href>/dav/test01@localhost.de/contacts</D:href>
+                                                <D:href>/carldav/dav/test01@localhost.de/contacts</D:href>
                                             </CARD:addressbook-home-set>
                                             <D:displayname>calendarDisplayName</D:displayname>
                                             <D:resourcetype>
@@ -72,7 +72,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar", USER01)
+        mockMvc.perform(propfind("/carldav/dav/{email}/calendar", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -80,7 +80,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
 
-        mockMvc.perform(options("/dav/{email}/calendar", USER01))
+        mockMvc.perform(options("/carldav/dav/{email}/calendar", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT"))
@@ -92,7 +92,7 @@ class DavDroidTests extends IntegrationTestSupport {
                             </prop>
                         </propfind>"""
 
-        mockMvc.perform(propfind("/.well-known/carddav")
+        mockMvc.perform(propfind("/carldav/.well-known")
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "0"))
@@ -116,7 +116,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response3 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <current-user-privilege-set xmlns="DAV:"/>
@@ -146,7 +146,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar", USER01)
+        mockMvc.perform(propfind("/carldav/dav/{email}/calendar", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request3)
                 .header("Depth", "0")
@@ -166,7 +166,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response4 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
@@ -184,7 +184,7 @@ class DavDroidTests extends IntegrationTestSupport {
                         </D:multistatus>"""
 
 
-        mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(propfind("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request4)
                 .header("Depth", "0")
@@ -206,7 +206,7 @@ class DavDroidTests extends IntegrationTestSupport {
 
         def response5 = """<D:multistatus xmlns:D="DAV:"/>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request5)
                 .header("Depth", "1")
@@ -217,7 +217,7 @@ class DavDroidTests extends IntegrationTestSupport {
 
     @Test
     void addVEvent() {
-        def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1)
                 .header("If-None-Match", "*"))
@@ -236,7 +236,7 @@ class DavDroidTests extends IntegrationTestSupport {
                             </prop>
                         </propfind>"""
 
-        def result2 = mockMvc.perform(propfind("/dav/{email}/calendar", USER01)
+        def result2 = mockMvc.perform(propfind("/carldav/dav/{email}/calendar", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "0"))
@@ -249,7 +249,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
@@ -280,7 +280,7 @@ class DavDroidTests extends IntegrationTestSupport {
                             </CAL:filter>
                         </CAL:calendar-query>"""
 
-        def result3 = mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        def result3 = mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -293,7 +293,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response3 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <D:getetag>${getetag}</D:getetag>
@@ -310,12 +310,12 @@ class DavDroidTests extends IntegrationTestSupport {
     void deleteVEvent() {
         addVEvent()
 
-        mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(delete("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
                 .andReturn()
 
-        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -325,7 +325,7 @@ class DavDroidTests extends IntegrationTestSupport {
 
         addVEvent()
 
-        def result1 = mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(veventRequest1)
                 .header("If-Match", currentEtag))
@@ -350,7 +350,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response3 = """\
                         <D:multistatus xmlns:D="DAV:">
                           <D:response>
-                            <D:href>/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
+                            <D:href>/carldav/dav/test01@localhost.de/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics</D:href>
                             <D:propstat>
                               <D:prop>
                                 <D:getetag>${currentEtag}</D:getetag>
@@ -360,14 +360,14 @@ class DavDroidTests extends IntegrationTestSupport {
                           </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(xml(response3))
 
-        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -393,7 +393,7 @@ class DavDroidTests extends IntegrationTestSupport {
                     END:VCALENDAR
                     """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -418,7 +418,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01@localhost.de/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics</D:href>
+                                <D:href>/carldav/dav/test01@localhost.de/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${currentEtag}</D:getetag>
@@ -428,14 +428,14 @@ class DavDroidTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
                 .andExpect(status().isMultiStatus())
                 .andExpect(xml(response2))
 
-        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -448,12 +448,12 @@ class DavDroidTests extends IntegrationTestSupport {
     void deleteVTodo() {
         addVTodo()
 
-        mockMvc.perform(delete("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+        mockMvc.perform(delete("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
                 .andReturn()
 
-        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -546,7 +546,7 @@ class DavDroidTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-Match", "*"))
@@ -571,7 +571,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response3 = """\
                         <D:multistatus xmlns:D="DAV:">
                           <D:response>
-                            <D:href>/dav/test01@localhost.de/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics</D:href>
+                            <D:href>/carldav/dav/test01@localhost.de/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics</D:href>
                             <D:propstat>
                               <D:prop>
                                 <D:getetag>${currentEtag}</D:getetag>
@@ -581,7 +581,7 @@ class DavDroidTests extends IntegrationTestSupport {
                           </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -673,7 +673,7 @@ class DavDroidTests extends IntegrationTestSupport {
                             END:VCALENDAR
                             """.stripIndent()
 
-        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -696,7 +696,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/contacts/</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
@@ -714,7 +714,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+        mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -732,7 +732,7 @@ class DavDroidTests extends IntegrationTestSupport {
 
         def response2 = """<D:multistatus xmlns:D="DAV:"/>"""
 
-        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -764,7 +764,7 @@ class DavDroidTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+        def result1 = mockMvc.perform(put("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -785,7 +785,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <D:getetag>${currentEtag}</D:getetag>
@@ -795,7 +795,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -803,7 +803,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
 
-        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCardContentType())
@@ -816,7 +816,7 @@ class DavDroidTests extends IntegrationTestSupport {
     void deleteVCard() {
         addVCard()
 
-        mockMvc.perform(delete("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+        mockMvc.perform(delete("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
 
@@ -830,7 +830,7 @@ class DavDroidTests extends IntegrationTestSupport {
 
         def response2 = """<D:multistatus xmlns:D="DAV:"/>"""
 
-        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -838,7 +838,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
 
-        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -856,7 +856,7 @@ class DavDroidTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+        def result1 = mockMvc.perform(put("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1)
                 .header("If-Match", currentEtag))
@@ -878,7 +878,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <D:getetag>${currentEtag}</D:getetag>
@@ -888,7 +888,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -896,7 +896,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
 
-        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
+        mockMvc.perform(get("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCardContentType())
@@ -920,7 +920,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/test01@localhost.de/contacts/</D:href>
+                                    <D:href>/carldav/dav/test01@localhost.de/contacts/</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <CS:getctag xmlns:CS="http://calendarserver.org/ns/"/>
@@ -938,7 +938,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+        mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -957,7 +957,7 @@ class DavDroidTests extends IntegrationTestSupport {
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
+                                <D:href>/carldav/dav/test01@localhost.de/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>${currentEtag}</D:getetag>
@@ -967,7 +967,7 @@ class DavDroidTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
+        mockMvc.perform(report("/carldav/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -997,7 +997,7 @@ class DavDroidTests extends IntegrationTestSupport {
                                 <cosmo:precondition-failed>If-Match disallows conditional request</cosmo:precondition-failed>
                             </D:error>"""
 
-        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
@@ -1018,7 +1018,7 @@ class DavDroidTests extends IntegrationTestSupport {
                             </C:no-uid-conflict>
                         </D:error>"""
 
-        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be11a873deae.ics", USER01)
+        mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be11a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1)
                 .header("If-None-Match", "*"))

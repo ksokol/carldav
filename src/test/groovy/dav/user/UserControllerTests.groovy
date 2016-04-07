@@ -25,7 +25,7 @@ class UserControllerTests extends IntegrationTestSupport {
 
     @Test
     public void list() {
-        mockMvc.perform(get("/user")
+        mockMvc.perform(get("/carldav/user")
             .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
             .andExpect(header().string(CONTENT_TYPE, is(APPLICATION_JSON_UTF8_VALUE)))
             .andExpect(content().json('["test02@localhost.de","test01@localhost.de","root@localhost"]'))
@@ -39,7 +39,7 @@ class UserControllerTests extends IntegrationTestSupport {
                             "password" : "${NEW_USER_PASSWORD}"
                         }"""
 
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post("/carldav/user")
                 .contentType(APPLICATION_JSON)
                 .content(request)
                 .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
@@ -54,13 +54,13 @@ class UserControllerTests extends IntegrationTestSupport {
                             "password" : "${NEW_USER_PASSWORD}"
                         }"""
 
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post("/carldav/user")
                 .contentType(APPLICATION_JSON)
                 .content(request)
                 .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
                 .andExpect(status().isCreated())
 
-        mockMvc.perform(post("/user")
+        mockMvc.perform(post("/carldav/user")
                 .contentType(APPLICATION_JSON)
                 .content(request)
                 .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
@@ -83,11 +83,11 @@ class UserControllerTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/dav/new_user01@localhost.de/calendar/</D:href>
+                                    <D:href>/carldav/dav/new_user01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
-                                                <D:href>/dav/new_user01@localhost.de/contacts</D:href>
+                                                <D:href>/carldav/dav/new_user01@localhost.de/contacts</D:href>
                                             </CARD:addressbook-home-set>
                                             <D:displayname>calendarDisplayName</D:displayname>
                                             <D:resourcetype>
@@ -100,7 +100,7 @@ class UserControllerTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar", NEW_USER)
+        mockMvc.perform(propfind("/carldav/dav/{email}/calendar", NEW_USER)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "0")
@@ -112,12 +112,12 @@ class UserControllerTests extends IntegrationTestSupport {
     public void addVEvent() {
         createUserCheckCollections()
 
-        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
+        mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1)
                 .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
 
-        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
                 .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
                 .andExpect(textCalendarContentType())
                 .andExpect(content().string(startsWith("BEGIN:VCALENDAR")))
@@ -142,12 +142,12 @@ class UserControllerTests extends IntegrationTestSupport {
                     END:VCALENDAR
                     """.stripIndent()
 
-        mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
+        mockMvc.perform(put("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
 
-        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
+        mockMvc.perform(get("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
                 .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
                 .andExpect(textCalendarContentType())
                 .andExpect(text(request1))
@@ -178,13 +178,13 @@ class UserControllerTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
+        mockMvc.perform(put("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
                 .contentType(TEXT_VCARD)
                 .content(request1)
                 .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
                 .andExpect(status().isCreated())
 
-        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
+        mockMvc.perform(get("/carldav/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
                 .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
                 .andExpect(status().isOk())
                 .andExpect(textCardContentType())

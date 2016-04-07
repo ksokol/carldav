@@ -25,23 +25,23 @@ class PrincipalTests extends IntegrationTestSupport {
                             <h1>test01@localhost.de</h1>
                             <h2>Properties</h2>
                             <dl>
-                            <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd><a href="/dav/test01@localhost.de/contacts">/dav/test01@localhost.de/contacts</a>
+                            <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd><a href="/carldav/dav/test01@localhost.de/contacts">/carldav/dav/test01@localhost.de/contacts</a>
                             </dd>
-                            <dt>{urn:ietf:params:xml:ns:caldav}calendar-home-set</dt><dd><a href="/dav/test01@localhost.de">/dav/test01@localhost.de</a>
+                            <dt>{urn:ietf:params:xml:ns:caldav}calendar-home-set</dt><dd><a href="/carldav/dav/test01@localhost.de">/carldav/dav/test01@localhost.de</a>
                             </dd>
                             <dt>{DAV:}displayname</dt><dd>test01@localhost.de</dd>
                             <dt>{DAV:}iscollection</dt><dd>0</dd>
-                            <dt>{DAV:}principal-URL</dt><dd><a href="/principals/users/test01@localhost.de">/principals/users/test01@localhost.de</a>
+                            <dt>{DAV:}principal-URL</dt><dd><a href="/carldav/principals/users/test01@localhost.de">/carldav/principals/users/test01@localhost.de</a>
                             </dd>
                             <dt>{DAV:}resourcetype</dt><dd></dd>
                             <dt>{DAV:}supported-report-set</dt><dd></dd>
                             </dl>
                             <p>
-                            <a href="/dav/test01@localhost.de/">Home collection</a><br>
+                            <a href="/carldav/dav/test01@localhost.de/">Home collection</a><br>
                             </body></html>
                             """.stripIndent()
 
-        mockMvc.perform(get("/principals/users/{email}", USER01))
+       mockMvc.perform(get("/carldav/principals/users/{email}", USER01))
                 .andExpect(textHtmlContentType())
                 .andExpect(status().isOk())
                 .andExpect(text(response1))

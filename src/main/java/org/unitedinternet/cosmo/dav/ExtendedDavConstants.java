@@ -16,6 +16,7 @@
 package org.unitedinternet.cosmo.dav;
 
 import carldav.jackrabbit.webdav.CustomDavConstants;
+import org.unitedinternet.cosmo.server.ServerConstants;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
 /**
@@ -25,11 +26,10 @@ public interface ExtendedDavConstants extends CustomDavConstants {
 
     String PRE_COSMO = "cosmo";
     String NS_COSMO = "http://osafoundation.org/cosmo/DAV";
-    String XML_LANG = "lang";
     String ADDRESSBOOK = "addressbook";
 
-    UriTemplate TEMPLATE_HOME = new UriTemplate("/{username}/*");
+    UriTemplate TEMPLATE_HOME = new UriTemplate("/" + ServerConstants.SVC_DAV + "/{username}/*");
     UriTemplate CARD_HOME = new UriTemplate("/{username}/contacts");
-    UriTemplate TEMPLATE_USER = new UriTemplate("/users/{username}/*");
-    UriTemplate TEMPLATE_PRINCIPALS = new UriTemplate("/");
+    UriTemplate TEMPLATE_USER = new UriTemplate("/principals/users/{username}/*");
+    UriTemplate TEMPLATE_PRINCIPALS = new UriTemplate("/principals");
 }

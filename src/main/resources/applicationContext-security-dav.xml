@@ -25,9 +25,9 @@
 
 	<security:http pattern="/**" use-expressions="true" create-session="stateless">
 		<security:access-denied-handler ref="authenticateWith401StatusCodeHandler" />
-		<security:intercept-url pattern="/user" access="hasRole('ROLE_ADMIN')" />
-		<security:intercept-url pattern="/dav/{email}/**" access="#email == authentication.name" />
-		<security:intercept-url pattern="/.well-known/**" access="hasRole('h')" />
+		<security:intercept-url pattern="${server.context-path}/user" access="hasRole('ROLE_ADMIN')" />
+		<security:intercept-url pattern="${server.context-path}/dav/{email}/**" access="#email == authentication.name" />
+		<security:intercept-url pattern="${server.context-path}/.well-known/**" access="hasRole('h')" />
 		<security:intercept-url pattern="/**" access="isFullyAuthenticated()" />
 		<security:http-basic entry-point-ref="authenticateWith401StatusCodeHandler" />
 		<security:csrf disabled="true" />

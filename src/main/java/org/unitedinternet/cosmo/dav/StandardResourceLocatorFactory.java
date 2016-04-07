@@ -17,7 +17,6 @@ package org.unitedinternet.cosmo.dav;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.unitedinternet.cosmo.server.ServerConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
@@ -43,8 +42,7 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
         throws CosmoDavException {
         try {
             URI uri = new URI(raw);
-
-            URL url = null;
+            URL url;
             if (raw.startsWith("/")) {
                 // absolute-path relative URL
                 url = new URL(context, uri.getRawPath());
@@ -100,7 +98,7 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
     public DavResourceLocator createPrincipalLocator(final URL context, final String userId) {
         try {
             final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromUri(context.toURI());
-            uriComponentsBuilder.replacePath(ServerConstants.SVC_DAV);
+            uriComponentsBuilder.replacePath(uriComponentsBuilder.build().getPath());
             final URI uri = uriComponentsBuilder.build().toUri();
             return createHomeLocator(uri.toURL(), userId);
         } catch (Exception e) {
@@ -119,7 +117,7 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
 
             context = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), basePath);
             locator = createResourceLocatorByUri(context, request.getRequestURI());
-        } catch (CosmoDavException|MalformedURLException e) {
+        } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
         return locator;

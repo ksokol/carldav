@@ -85,9 +85,9 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         properties.add(new IsCollection(isCollection()));
     //TODO    properties.add(new Etag(user.getETag()));
     //TODO    properties.add(new LastModified(user.getModifiedDate()));
-        properties.add(new CalendarHomeSet("/" + ServerConstants.SVC_DAV, userId));
+        properties.add(new CalendarHomeSet(getResourceLocator(), userId));
         properties.add(new PrincipalUrl(getResourceLocator(), userId));
-        properties.add(new AddressbookHomeSet("/" + ServerConstants.SVC_DAV, userId));
+        properties.add(new AddressbookHomeSet(getResourceLocator(), userId));
     }
 
     public void writeHead(final HttpServletResponse response) throws IOException {

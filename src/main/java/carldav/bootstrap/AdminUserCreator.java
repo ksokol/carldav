@@ -10,6 +10,8 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.util.UUID;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -24,13 +26,13 @@ public class AdminUserCreator implements ApplicationListener<ContextRefreshedEve
     private final PasswordEncoder passwordEncoder;
 
     private final String adminName;
-    private final String adminPassword;
+    private String adminPassword;
 
-    public AdminUserCreator(UserRepository userRepository, PasswordEncoder passwordEncoder, @Value("${carldav.admin.name}") String adminName, @Value("${carldav.admin.password}") String adminPassword) {
+    public AdminUserCreator(UserRepository userRepository, PasswordEncoder passwordEncoder, @Value("${carldav.admin.name}") String adminName, @Value("${carldav.admin.password:null}") String adminPassword) {
         Assert.notNull(userRepository, "userRepository is null");
         Assert.notNull(passwordEncoder, "passwordEncoder is null");
-        Assert.notNull(adminName, "adminName is null");
-        Assert.notNull(adminPassword, "adminPassword is null");
+        Assert.hasText(adminName, "adminName is null");
+        Assert.hasText(adminPassword, "adminPassword is null");
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.adminName = adminName;
@@ -43,11 +45,15 @@ public class AdminUserCreator implements ApplicationListener<ContextRefreshedEve
 
         User admin = userRepository.findByEmailIgnoreCase(adminName);
 
+        if("null".equals(adminPassword)) {
+            adminPassword = UUID.randomUUID().toString();
+        }
+
         if(admin != null) {
             LOG.info("admin user found. checking admin user password for '{}'", adminName);
 
             if(!admin.getPassword().equals(adminPassword)) {
-                LOG.info("admin user password changed. setting to '{}", adminPassword);
+                LOG.info("admin user password changed. setting to '{}'", adminPassword);
                 admin.setPassword(passwordEncoder.encodePassword(adminPassword, null));
                 userRepository.save(admin);
                 LOG.info("admin user password changed");
@@ -63,6 +69,6 @@ public class AdminUserCreator implements ApplicationListener<ContextRefreshedEve
             userRepository.save(admin);
         }
 
-        LOG.info("admin user '{}:{}'", admin.getEmail(), admin.getPassword());
+        LOG.info("admin user '{}:{}'", admin.getEmail(), adminPassword);
     }
 }

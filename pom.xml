@@ -19,7 +19,7 @@
 
     <groupId>carldav</groupId>
     <artifactId>carldav</artifactId>
-    <version>0.1</version>
+    <version>0.2</version>
 
     <packaging>jar</packaging>
 

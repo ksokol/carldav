@@ -77,7 +77,7 @@
 
         <groovy.version>2.4.5</groovy.version>
 
-        <spring.version>4.3.0.BUILD-SNAPSHOT</spring.version>
+        <spring.version>4.3.0.RC1</spring.version>
         <spring.security.version>4.1.0.RC1</spring.security.version>
 
         <!-- Deactivate checkstyle, findbugs, jacoco and pmd -->

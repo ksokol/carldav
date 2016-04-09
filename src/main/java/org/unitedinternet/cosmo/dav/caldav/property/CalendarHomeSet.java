@@ -1,7 +1,7 @@
 package org.unitedinternet.cosmo.dav.caldav.property;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
@@ -23,8 +23,8 @@ public class CalendarHomeSet extends StandardDavProperty implements CaldavConsta
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
-        Element e = CustomDomUtils.createElement(document, XML_HREF, CarldavConstants.caldav(XML_HREF));
-        CustomDomUtils.setText(e, getHref());
+        Element e = DomUtils.createElement(document, XML_HREF, CarldavConstants.caldav(XML_HREF));
+        DomUtils.setText(e, getHref());
         name.appendChild(e);
 
         return name;

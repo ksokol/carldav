@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.component.VTimeZone;
@@ -65,7 +65,7 @@ public class TimeRangeFilter implements CaldavConstants {
      */
     public TimeRangeFilter(Element element, VTimeZone timezone) throws ParseException {
         // Get start (must be present)
-        String start = CustomDomUtils.getAttribute(element, ATTR_CALDAV_START);
+        String start = DomUtils.getAttribute(element, ATTR_CALDAV_START);
         if (start == null) {
             throw new ParseException("CALDAV:comp-filter time-range requires a start time", -1);
         }
@@ -77,7 +77,7 @@ public class TimeRangeFilter implements CaldavConstants {
 
         // Get end (must be present)
         String end =
-                CustomDomUtils.getAttribute(element, ATTR_CALDAV_END);
+                DomUtils.getAttribute(element, ATTR_CALDAV_END);
         if (end == null) {
             //add one year to date start Iphone ios7 bug
             end = addOneYearToDateStart(start);

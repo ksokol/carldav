@@ -12,11 +12,11 @@ import java.util.NoSuchElementException;
 
 import javax.xml.namespace.QName;
 
-public class CustomDavPropertySet extends CustomPropContainer implements Iterable<WebDavProperty<?>> {
+public class DavPropertySet extends PropContainer implements Iterable<WebDavProperty<?>> {
 
-    private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertySet.class);
+    private static Logger LOG = LoggerFactory.getLogger(DavPropertySet.class);
 
-    private final Map<CustomDavPropertyName, WebDavProperty<?>> map = new HashMap<>();
+    private final Map<DavPropertyName, WebDavProperty<?>> map = new HashMap<>();
 
     /**
      * Adds a new property to this set.
@@ -36,7 +36,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      *
      * @return The desired property or <code>null</code>
      */
-    public WebDavProperty<?> get(CustomDavPropertyName name) {
+    public WebDavProperty<?> get(DavPropertyName name) {
         return map.get(name);
     }
 
@@ -52,10 +52,10 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     /**
      * Return the names of all properties present in this set.
      *
-     * @return array of {@link CustomDavPropertyName property names} present in this set.
+     * @return array of {@link DavPropertyName property names} present in this set.
      */
-    public CustomDavPropertyName[] getPropertyNames() {
-        return map.keySet().toArray(new CustomDavPropertyName[map.keySet().size()]);
+    public DavPropertyName[] getPropertyNames() {
+        return map.keySet().toArray(new DavPropertyName[map.keySet().size()]);
     }
 
     //------------------------------------------------------< PropContainer >---
@@ -65,10 +65,10 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * @param name The name of the property
      * @return <code>true</code> if this set contains the property;
      *         <code>false</code> otherwise.
-     * @see CustomPropContainer#contains(CustomDavPropertyName)
+     * @see PropContainer#contains(DavPropertyName)
      */
     @Override
-    public boolean contains(CustomDavPropertyName name) {
+    public boolean contains(DavPropertyName name) {
         return map.containsKey(name);
     }
 
@@ -77,10 +77,10 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
      * <code>DavProperty</code> in order to be successfully added to this set.
      * @return true if the specified object is an instance of <code>DavProperty</code>
      * and false otherwise.
-     * @see CustomPropContainer#addContent(CustomPropEntry)
+     * @see PropContainer#addContent(PropEntry)
      */
     @Override
-    public boolean addContent(CustomPropEntry contentEntry) {
+    public boolean addContent(PropEntry contentEntry) {
         if (contentEntry instanceof WebDavProperty) {
             add((WebDavProperty<?>) contentEntry);
             return true;
@@ -90,7 +90,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * @see CustomPropContainer#isEmpty()
+     * @see PropContainer#isEmpty()
      */
     @Override
     public boolean isEmpty() {
@@ -98,7 +98,7 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * @see CustomPropContainer#getContentSize()
+     * @see PropContainer#getContentSize()
      */
     @Override
     public int getContentSize() {
@@ -106,10 +106,10 @@ public class CustomDavPropertySet extends CustomPropContainer implements Iterabl
     }
 
     /**
-     * @see CustomPropContainer#getContent()
+     * @see PropContainer#getContent()
      */
     @Override
-    public Collection<? extends CustomPropEntry> getContent() {
+    public Collection<? extends PropEntry> getContent() {
         return map.values();
     }
 

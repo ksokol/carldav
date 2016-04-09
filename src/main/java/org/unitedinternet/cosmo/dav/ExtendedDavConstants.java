@@ -15,14 +15,14 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
+import carldav.jackrabbit.webdav.DavConstants;
 import org.unitedinternet.cosmo.server.ServerConstants;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
 /**
  * Provides constants defined by Cosmo proprietary *DAV extensions.
  */
-public interface ExtendedDavConstants extends CustomDavConstants {
+public interface ExtendedDavConstants extends DavConstants {
 
     String PRE_COSMO = "cosmo";
     String NS_COSMO = "http://osafoundation.org/cosmo/DAV";

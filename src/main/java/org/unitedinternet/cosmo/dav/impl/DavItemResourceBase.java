@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.jackrabbit.webdav.io.DavInputContext;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.abdera.i18n.text.UrlEncoding;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.*;
@@ -133,7 +133,7 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
         hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());
     }
 
-    protected void loadLiveProperties(CustomDavPropertySet properties) {
+    protected void loadLiveProperties(DavPropertySet properties) {
         properties.add(new LastModified(item.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));

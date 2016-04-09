@@ -17,7 +17,7 @@ package org.unitedinternet.cosmo.dav.property;
 
 import static carldav.CarldavConstants.RESOURCE_TYPE;
 
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -42,7 +42,7 @@ public class ResourceType extends StandardDavProperty {
         Element name = getName().toXml(document);
 
         for (QName qn : getQnames()) {
-            Element e = CustomDomUtils.createElement(document, qn.getLocalPart(), qn);
+            Element e = DomUtils.createElement(document, qn.getLocalPart(), qn);
             name.appendChild(e);
         }
 

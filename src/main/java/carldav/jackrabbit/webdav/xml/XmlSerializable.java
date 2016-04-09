@@ -3,7 +3,7 @@ package carldav.jackrabbit.webdav.xml;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public interface CustomXmlSerializable {
+public interface XmlSerializable {
 
     /**
      * Returns the xml representation of the implementing object as

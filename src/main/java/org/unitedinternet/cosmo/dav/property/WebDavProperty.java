@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.property.CustomPropEntry;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.property.PropEntry;
 import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
 
 /**
@@ -25,7 +25,7 @@ import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
  * Extends the jcr-server WebDavProperty interface.
  * </p>
  */
-public interface WebDavProperty<T> extends CustomPropEntry, ExtendedDavConstants {
+public interface WebDavProperty<T> extends PropEntry, ExtendedDavConstants {
 
     /**
      * <p>
@@ -41,7 +41,7 @@ public interface WebDavProperty<T> extends CustomPropEntry, ExtendedDavConstants
      *
      * @return the name of this property
      */
-    CustomDavPropertyName getName();
+    DavPropertyName getName();
 
     /**
      * Returns the value of this property
@@ -52,7 +52,7 @@ public interface WebDavProperty<T> extends CustomPropEntry, ExtendedDavConstants
 
     /**
      * Return <code>true</code> if this property should be suppressed
-     * in a PROPFIND/{@link CustomDavConstants#PROPFIND_ALL_PROP DAV:allprop}
+     * in a PROPFIND/{@link DavConstants#PROPFIND_ALL_PROP DAV:allprop}
      * response. See RFC 4918, Section 9.1.
      *
      * @return true, if this property should be suppressed in a PROPFIND/allprop response

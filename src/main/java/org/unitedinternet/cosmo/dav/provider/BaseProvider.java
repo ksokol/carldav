@@ -18,13 +18,13 @@ package org.unitedinternet.cosmo.dav.provider;
 import static carldav.CarldavConstants.caldav;
 
 import carldav.exception.resolver.ResponseUtils;
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomElementIterator;
-import carldav.jackrabbit.webdav.CustomMultiStatus;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.ElementIterator;
+import carldav.jackrabbit.webdav.MultiStatus;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
@@ -55,15 +55,15 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @see DavProvider
  */
-public abstract class BaseProvider implements DavProvider, CustomDavConstants {
+public abstract class BaseProvider implements DavProvider, DavConstants {
 
     private static final MediaType APPLICATION_XML = MediaType.APPLICATION_XML;
     private static final MediaType TEXT_XML = MediaType.TEXT_XML;
 
     private DavResourceFactory resourceFactory;
     private int propfindType = PROPFIND_ALL_PROP;
-    private CustomDavPropertyNameSet propfindProps;
-    private CustomReportInfo reportInfo;
+    private DavPropertyNameSet propfindProps;
+    private ReportInfo reportInfo;
 
     public BaseProvider(DavResourceFactory resourceFactory) {
         this.resourceFactory = resourceFactory;
@@ -108,9 +108,9 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
             throw new BadRequestException("Depth must be 0 for non-collection resources");
         }
 
-        CustomDavPropertyNameSet props = getPropFindProperties(request);
+        DavPropertyNameSet props = getPropFindProperties(request);
         int type = getPropFindType(request);
-        CustomMultiStatus ms = new CustomMultiStatus();
+        MultiStatus ms = new MultiStatus();
         ms.addResourceProperties(resource, props, type, depth);
 
         ResponseUtils.sendXmlResponse(response, ms, 207);
@@ -156,7 +156,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
             throw new NotFoundException();
         }
         try {
-            CustomReportInfo info = getReportInfo(request);
+            ReportInfo info = getReportInfo(request);
             if (info == null){
                 if(resource.isCollection()){
                     return;
@@ -239,25 +239,25 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
     private static int depthToInt(String depth) {
         int d;
         if (depth.equalsIgnoreCase(DEPTH_INFINITY_S)) {
-            d = CustomDavConstants.DEPTH_INFINITY;
-        } else if (depth.equals(CustomDavConstants.DEPTH_0+"")) {
-            d = CustomDavConstants.DEPTH_0;
-        } else if (depth.equals(CustomDavConstants.DEPTH_1+"")) {
-            d = CustomDavConstants.DEPTH_1;
+            d = DavConstants.DEPTH_INFINITY;
+        } else if (depth.equals(DavConstants.DEPTH_0+"")) {
+            d = DavConstants.DEPTH_0;
+        } else if (depth.equals(DavConstants.DEPTH_1+"")) {
+            d = DavConstants.DEPTH_1;
         } else {
             throw new IllegalArgumentException("Invalid depth value: " + depth);
         }
         return d;
     }
 
-    private CustomReportInfo getReportInfo(final HttpServletRequest request) throws CosmoDavException {
+    private ReportInfo getReportInfo(final HttpServletRequest request) throws CosmoDavException {
         if (reportInfo == null) {
             reportInfo = parseReportRequest(request);
         }
         return reportInfo;
     }
 
-    private CustomReportInfo parseReportRequest(final HttpServletRequest request) throws CosmoDavException {
+    private ReportInfo parseReportRequest(final HttpServletRequest request) throws CosmoDavException {
         Document requestDocument = getSafeRequestDocument(request);
         if (requestDocument == null) { // reports with no bodies are supported
             // for collections
@@ -265,7 +265,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
         }
 
         try {
-            return new CustomReportInfo(requestDocument.getDocumentElement(), getDepth(request));
+            return new ReportInfo(requestDocument.getDocumentElement(), getDepth(request));
         } catch (IllegalArgumentException e) {
             throw new BadRequestException(e.getMessage());
         }
@@ -278,7 +278,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
         return propfindType;
     }
 
-    private CustomDavPropertyNameSet getPropFindProperties(final HttpServletRequest request) throws CosmoDavException {
+    private DavPropertyNameSet getPropFindProperties(final HttpServletRequest request) throws CosmoDavException {
         if (propfindProps == null) {
             parsePropFindRequest(request);
         }
@@ -291,38 +291,38 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
         if (requestDocument == null) {
             // treat as allprop
             propfindType = PROPFIND_ALL_PROP;
-            propfindProps = new CustomDavPropertyNameSet();
+            propfindProps = new DavPropertyNameSet();
             return;
         }
 
         Element root = requestDocument.getDocumentElement();
-        if (!CustomDomUtils.matches(root, XML_PROPFIND, caldav(XML_PROPFIND))) {
+        if (!DomUtils.matches(root, XML_PROPFIND, caldav(XML_PROPFIND))) {
             throw new BadRequestException("Expected " + XML_PROPFIND
                     + " root element");
         }
 
-        Element prop = CustomDomUtils.getChildElement(root, caldav(XML_PROP));
+        Element prop = DomUtils.getChildElement(root, caldav(XML_PROP));
         if (prop != null) {
             propfindType = PROPFIND_BY_PROPERTY;
-            propfindProps = new CustomDavPropertyNameSet(prop);
+            propfindProps = new DavPropertyNameSet(prop);
             return;
         }
 
-        if (CustomDomUtils.getChildElement(root, caldav(XML_PROPNAME)) != null) {
+        if (DomUtils.getChildElement(root, caldav(XML_PROPNAME)) != null) {
             propfindType = PROPFIND_PROPERTY_NAMES;
-            propfindProps = new CustomDavPropertyNameSet();
+            propfindProps = new DavPropertyNameSet();
             return;
         }
 
-        if (CustomDomUtils.getChildElement(root, caldav(XML_ALLPROP)) != null) {
+        if (DomUtils.getChildElement(root, caldav(XML_ALLPROP)) != null) {
             propfindType = PROPFIND_ALL_PROP;
-            propfindProps = new CustomDavPropertyNameSet();
+            propfindProps = new DavPropertyNameSet();
 
-            Element include = CustomDomUtils.getChildElement(root, caldav("include"));
+            Element include = DomUtils.getChildElement(root, caldav("include"));
             if (include != null) {
-                CustomElementIterator included = CustomDomUtils.getChildren(include);
+                ElementIterator included = DomUtils.getChildren(include);
                 while (included.hasNext()) {
-                    CustomDavPropertyName name = CustomDavPropertyName
+                    DavPropertyName name = DavPropertyName
                             .createFromXml(included.nextElement());
                     propfindProps.add(name);
                 }
@@ -371,7 +371,7 @@ public abstract class BaseProvider implements DavProvider, CustomDavConstants {
                 boolean isEmpty = -1 == bin.read();
                 bin.reset();
                 if (!isEmpty) {
-                    requestDocument = CustomDomUtils.parseDocument(bin);
+                    requestDocument = DomUtils.parseDocument(bin);
                 }
             }
         } catch (Exception e) {

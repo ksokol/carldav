@@ -18,8 +18,8 @@ package org.unitedinternet.cosmo.dav.property;
 import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,17 +29,17 @@ import java.util.TreeSet;
 
 public class SupportedReportSet extends StandardDavProperty {
 
-    public SupportedReportSet(Set<CustomReportType> reports) {
+    public SupportedReportSet(Set<ReportType> reports) {
         super(SUPPORTED_REPORT_SET, reports);
     }
 
-    public Set<CustomReportType> getReportTypes() {
-        return (Set<CustomReportType>) getValue();
+    public Set<ReportType> getReportTypes() {
+        return (Set<ReportType>) getValue();
     }
 
     public String getValueText() {
         TreeSet<String> types = new TreeSet<>();
-        for (CustomReportType rt : getReportTypes()) {
+        for (ReportType rt : getReportTypes()) {
             types.add(rt.getReportName());
         }
         return StringUtils.join(types, ", ");
@@ -48,9 +48,9 @@ public class SupportedReportSet extends StandardDavProperty {
     public Element toXml(Document document) {
         Element element = getName().toXml(document);
 
-        for (CustomReportType rt : getReportTypes()) {
-            Element sr = CustomDomUtils.addChildElement(element, caldav("supported-report"));
-            Element r = CustomDomUtils.addChildElement(sr, caldav("report"));
+        for (ReportType rt : getReportTypes()) {
+            Element sr = DomUtils.addChildElement(element, caldav("supported-report"));
+            Element r = DomUtils.addChildElement(sr, caldav("report"));
             r.appendChild(rt.toXml(document));
         }
 

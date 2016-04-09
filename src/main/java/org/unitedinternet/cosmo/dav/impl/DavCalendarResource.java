@@ -16,8 +16,8 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.jackrabbit.webdav.io.DavInputContext;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.io.IOUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -108,11 +108,11 @@ public class DavCalendarResource extends DavItemResourceBase implements ICalenda
         IOUtils.copy(bois, response.getOutputStream());
     }
 
-    public Set<CustomReportType> getReportTypes() {
+    public Set<ReportType> getReportTypes() {
         return reportTypes;
     }
 
-    protected void loadLiveProperties(CustomDavPropertySet properties) {
+    protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
         byte[] calendarBytes = getCalendar().getBytes(Charset.forName("UTF-8"));
 

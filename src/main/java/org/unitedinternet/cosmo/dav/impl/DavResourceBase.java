@@ -17,11 +17,11 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
 
-import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.version.report.CustomReport;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.version.report.Report;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
+import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -72,12 +72,12 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
 
     protected static final EntityConverter converter = new EntityConverter();
 
-    private final HashSet<CustomDavPropertyName> liveProperties = new HashSet<>(10);
-    protected final Set<CustomReportType> reportTypes = new HashSet<>(10);
+    private final HashSet<DavPropertyName> liveProperties = new HashSet<>(10);
+    protected final Set<ReportType> reportTypes = new HashSet<>(10);
 
     private DavResourceLocator locator;
     private DavResourceFactory factory;
-    private CustomDavPropertySet properties;
+    private DavPropertySet properties;
     private boolean initialized;
 
     public DavResourceBase(DavResourceLocator locator,
@@ -86,7 +86,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         registerLiveProperty(SUPPORTED_REPORT_SET);
         this.locator = locator;
         this.factory = factory;
-        this.properties = new CustomDavPropertySet();
+        this.properties = new DavPropertySet();
         this.initialized = false;
     }
 
@@ -114,28 +114,28 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return locator.getHref(isCollection());
     }
 
-    public CustomDavPropertyName[] getPropertyNames() {
+    public DavPropertyName[] getPropertyNames() {
         loadProperties();
         return properties.getPropertyNames();
     }
 
-    public WebDavProperty<?> getProperty(CustomDavPropertyName name) {
+    public WebDavProperty<?> getProperty(DavPropertyName name) {
         loadProperties();
         return properties.get(name);
     }
 
     @Deprecated
-    public CustomDavPropertySet getProperties() {
+    public DavPropertySet getProperties() {
         loadProperties();
         return properties;
     }
 
     public Map<String, WebDavProperty> getWebDavProperties() {
-        final CustomDavPropertySet properties = getProperties();
-        final CustomDavPropertyName[] propertyNames = properties.getPropertyNames();
+        final DavPropertySet properties = getProperties();
+        final DavPropertyName[] propertyNames = properties.getPropertyNames();
         final Map<String, WebDavProperty> sorted = new TreeMap<>();
 
-        for (final CustomDavPropertyName propertyName : propertyNames) {
+        for (final DavPropertyName propertyName : propertyNames) {
             sorted.put(propertyName.getName(), (WebDavProperty) properties.get(propertyName));
         }
 
@@ -146,7 +146,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         throw new UnsupportedOperationException();
     }
 
-    public CustomReport getReport(CustomReportInfo reportInfo) throws CosmoDavException {
+    public Report getReport(ReportInfo reportInfo) throws CosmoDavException {
         if (! exists()) {
             throw new NotFoundException();
         }
@@ -155,7 +155,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
             throw new UnprocessableEntityException("Unknown report " + reportInfo.getReportName());
         }
 
-        final CustomReportType type = CustomReportType.getType(reportInfo);
+        final ReportType type = ReportType.getType(reportInfo);
         return type.createReport(this, reportInfo);
     }
 
@@ -177,8 +177,8 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * Determines whether or not the report indicated by the given
      * report info is supported by this collection.
      */
-    protected boolean isSupportedReport(CustomReportInfo info) {
-        for (Iterator<CustomReportType> i=getReportTypes().iterator(); i.hasNext();) {
+    protected boolean isSupportedReport(ReportInfo info) {
+        for (Iterator<ReportType> i = getReportTypes().iterator(); i.hasNext();) {
             if (i.next().isRequestedReportType(info)) {
                 return true;
             }
@@ -186,7 +186,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return false;
     }
 
-    protected Set<CustomReportType> getReportTypes() {
+    protected Set<ReportType> getReportTypes() {
      return reportTypes;
     }
 
@@ -199,7 +199,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      * of live properties for the resource.
      * </p>
      */
-    protected void registerLiveProperty(CustomDavPropertyName name) {
+    protected void registerLiveProperty(DavPropertyName name) {
         liveProperties.add(name);
     }
 
@@ -225,7 +225,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     /**
      * Loads the live DAV properties for the resource.
      */
-    protected abstract void loadLiveProperties(CustomDavPropertySet properties);
+    protected abstract void loadLiveProperties(DavPropertySet properties);
 
     public DavCollection getParent() throws CosmoDavException {
         return null;

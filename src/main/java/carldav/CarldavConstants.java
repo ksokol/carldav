@@ -1,12 +1,12 @@
 package carldav;
 
-import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
+import carldav.jackrabbit.webdav.property.DavPropertyName;
 import org.springframework.http.MediaType;
 
 import javax.xml.namespace.QName;
 import java.nio.charset.Charset;
 
-import static carldav.jackrabbit.webdav.property.CustomDavPropertyName.create;
+import static carldav.jackrabbit.webdav.property.DavPropertyName.create;
 
 /**
  * @author Kamill Sokol
@@ -41,27 +41,27 @@ public final class CarldavConstants {
 
     public static final String ELEMENT_CALDAV_CALENDAR = "calendar";
 
-    public static final CustomDavPropertyName DISPLAY_NAME = create(caldav("displayname"));
-    public static final CustomDavPropertyName GET_CONTENT_LENGTH = create(caldav("getcontentlength"));
-    public static final CustomDavPropertyName GET_CONTENT_TYPE = create(caldav("getcontenttype"));
-    public static final CustomDavPropertyName GET_ETAG = create(caldav("getetag"));
-    public static final CustomDavPropertyName GET_LAST_MODIFIED = create(caldav("getlastmodified"));
-    public static final CustomDavPropertyName RESOURCE_TYPE = create(caldav("resourcetype"));
-    public static final CustomDavPropertyName IS_COLLECTION = create(caldav("iscollection"));
-    public static final CustomDavPropertyName PRINCIPAL_URL = create(caldav("principal-URL"));
-    public static final CustomDavPropertyName SUPPORTED_REPORT_SET = create(caldav("supported-report-set"));
+    public static final DavPropertyName DISPLAY_NAME = create(caldav("displayname"));
+    public static final DavPropertyName GET_CONTENT_LENGTH = create(caldav("getcontentlength"));
+    public static final DavPropertyName GET_CONTENT_TYPE = create(caldav("getcontenttype"));
+    public static final DavPropertyName GET_ETAG = create(caldav("getetag"));
+    public static final DavPropertyName GET_LAST_MODIFIED = create(caldav("getlastmodified"));
+    public static final DavPropertyName RESOURCE_TYPE = create(caldav("resourcetype"));
+    public static final DavPropertyName IS_COLLECTION = create(caldav("iscollection"));
+    public static final DavPropertyName PRINCIPAL_URL = create(caldav("principal-URL"));
+    public static final DavPropertyName SUPPORTED_REPORT_SET = create(caldav("supported-report-set"));
 
-    public static final CustomDavPropertyName SUPPORTED_CALENDAR_DATA = create(c("supported-calendar-data"));
-    public static final CustomDavPropertyName SUPPORTED_COLLATION_SET = create(c("supported-collation-set"));
-    public static final CustomDavPropertyName SUPPORTED_CALENDAR_COMPONENT_SET = create(c("supported-calendar-component-set"));
-    public static final CustomDavPropertyName CALENDAR_DATA = create(c("calendar-data"));
-    public static final CustomDavPropertyName CALENDAR_HOME_SET = create(c("calendar-home-set"));
+    public static final DavPropertyName SUPPORTED_CALENDAR_DATA = create(c("supported-calendar-data"));
+    public static final DavPropertyName SUPPORTED_COLLATION_SET = create(c("supported-collation-set"));
+    public static final DavPropertyName SUPPORTED_CALENDAR_COMPONENT_SET = create(c("supported-calendar-component-set"));
+    public static final DavPropertyName CALENDAR_DATA = create(c("calendar-data"));
+    public static final DavPropertyName CALENDAR_HOME_SET = create(c("calendar-home-set"));
 
-    public static final CustomDavPropertyName ADDRESSBOOK_HOME_SET = create(carddav("addressbook-home-set"));
-    public static final CustomDavPropertyName ADDRESS_DATA = create(carddav("address-data"));
-    public static final CustomDavPropertyName SUPPORTED_ADDRESS_DATA = create(carddav("supported-address-data"));
+    public static final DavPropertyName ADDRESSBOOK_HOME_SET = create(carddav("addressbook-home-set"));
+    public static final DavPropertyName ADDRESS_DATA = create(carddav("address-data"));
+    public static final DavPropertyName SUPPORTED_ADDRESS_DATA = create(carddav("supported-address-data"));
 
-    public static final CustomDavPropertyName GET_CTAG = create(cs("getctag"));
+    public static final DavPropertyName GET_CTAG = create(cs("getctag"));
 
     public static final QName RESOURCE_TYPE_CALENDAR = c(ELEMENT_CALDAV_CALENDAR); // CosmoQName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR, PRE_CALDAV);
 

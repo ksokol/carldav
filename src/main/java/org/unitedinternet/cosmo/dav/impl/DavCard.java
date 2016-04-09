@@ -16,7 +16,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.jackrabbit.webdav.io.DavInputContext;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.commons.io.IOUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -73,7 +73,7 @@ public class DavCard extends DavItemResourceBase {
         converter.convertCard(file);
     }
 
-    protected void loadLiveProperties(CustomDavPropertySet properties) {
+    protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
         properties.add(new ContentType(CARD_MEDIA_TYPE, null));
     }

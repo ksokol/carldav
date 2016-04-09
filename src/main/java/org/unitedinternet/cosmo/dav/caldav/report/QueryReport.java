@@ -15,10 +15,10 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
+import carldav.jackrabbit.webdav.version.report.ReportType;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
@@ -47,14 +47,14 @@ import static carldav.CarldavConstants.caldav;
  */
 public class QueryReport extends CaldavMultiStatusReport {
 
-    public static final CustomReportType REPORT_TYPE_CALDAV_QUERY =
-            CustomReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_QUERY, PRE_CALDAV), QueryReport.class);
+    public static final ReportType REPORT_TYPE_CALDAV_QUERY =
+            ReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_QUERY, PRE_CALDAV), QueryReport.class);
 
     private CalendarFilter queryFilter;
 
     // Report methods
 
-    public CustomReportType getType() {
+    public ReportType getType() {
         return REPORT_TYPE_CALDAV_QUERY;
     }
 
@@ -64,16 +64,16 @@ public class QueryReport extends CaldavMultiStatusReport {
      * Parses the report info, extracting the properties, filters and time
      * zone.
      */
-    protected void parseReport(CustomReportInfo info)
+    protected void parseReport(ReportInfo info)
         throws CosmoDavException {
         if (! getType().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType());
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(CustomDavConstants.ALLPROP)) {
+        if (info.containsContentElement(DavConstants.ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(CustomDavConstants.PROPNAME)) {
+        } else if (info.containsContentElement(DavConstants.PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
@@ -134,18 +134,18 @@ public class QueryReport extends CaldavMultiStatusReport {
         // within it to match the query
     }
 
-    private static VTimeZone findTimeZone(CustomReportInfo info) throws CosmoDavException {
-        Element propdata = CustomDomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
+    private static VTimeZone findTimeZone(ReportInfo info) throws CosmoDavException {
+        Element propdata = DomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
         if (propdata == null) {
             return null;
         }
 
-        Element tzdata = CustomDomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
+        Element tzdata = DomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
         if (tzdata == null) {
             return null;
         }
 
-        String icaltz = CustomDomUtils.getTextTrim(tzdata);
+        String icaltz = DomUtils.getTextTrim(tzdata);
         if (icaltz == null) {
             throw new UnprocessableEntityException("Expected text content for " + ELEMENT_CALDAV_TIMEZONE);
         }
@@ -153,8 +153,8 @@ public class QueryReport extends CaldavMultiStatusReport {
         return TimeZoneExtractor.extract(icaltz);
     }
 
-    private static CalendarFilter findQueryFilter(CustomReportInfo info, VTimeZone tz) throws CosmoDavException {
-        Element filterdata =  CustomDomUtils.getChildElement(getReportElementFrom(info), c(ELEMENT_CALDAV_FILTER));
+    private static CalendarFilter findQueryFilter(ReportInfo info, VTimeZone tz) throws CosmoDavException {
+        Element filterdata =  DomUtils.getChildElement(getReportElementFrom(info), c(ELEMENT_CALDAV_FILTER));
         if (filterdata == null) {
             return null;
         }

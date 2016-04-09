@@ -2,7 +2,7 @@ package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.entity.CollectionItem;
 import carldav.entity.Item;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.calendar.query.CalendarFilter;
@@ -59,7 +59,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         return rt;
     }
 
-    protected void loadLiveProperties(CustomDavPropertySet properties) {
+    protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
 
         properties.add(new GetCTag(ETagUtil.createETag(getItem().getId(), getItem().getModifiedDate())));

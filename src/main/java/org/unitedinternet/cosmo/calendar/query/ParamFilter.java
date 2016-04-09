@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomElementIterator;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.ElementIterator;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
@@ -54,7 +54,7 @@ import java.text.ParseException;
  * name value: a property parameter name (e.g., "PARTSTAT")
  * 
  */
-public class ParamFilter implements CustomDavConstants, CaldavConstants {
+public class ParamFilter implements DavConstants, CaldavConstants {
 
     private IsNotDefinedFilter isNotDefinedFilter = null;
 
@@ -77,7 +77,7 @@ public class ParamFilter implements CustomDavConstants, CaldavConstants {
      */
     public ParamFilter(Element element) throws ParseException {
         // Get name which must be present
-        name = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NAME);
+        name = DomUtils.getAttribute(element, ATTR_CALDAV_NAME);
 
         if (name == null) {
             throw new ParseException(
@@ -86,7 +86,7 @@ public class ParamFilter implements CustomDavConstants, CaldavConstants {
         }
 
         // Can only have a single ext-match element
-        CustomElementIterator i = CustomDomUtils.getChildren(element);
+        ElementIterator i = DomUtils.getChildren(element);
         
         if(i.hasNext()) {
             

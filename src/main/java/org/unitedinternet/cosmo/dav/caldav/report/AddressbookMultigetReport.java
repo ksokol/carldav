@@ -1,9 +1,9 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.MultiStatusResponse;
+import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
+import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -20,11 +20,11 @@ import static carldav.CarldavConstants.ADDRESS_DATA;
  */
 public class AddressbookMultigetReport extends MultigetReport {
 
-    public static final CustomReportType REPORT_TYPE_CARDDAV_MULTIGET =
-            CustomReportType.register(new QName(NS_CARDDAV, ELEMENT_CARDDAV_ADDRESSBOOK_MULTIGET, PRE_CARD), AddressbookMultigetReport.class);
+    public static final ReportType REPORT_TYPE_CARDDAV_MULTIGET =
+            ReportType.register(new QName(NS_CARDDAV, ELEMENT_CARDDAV_ADDRESSBOOK_MULTIGET, PRE_CARD), AddressbookMultigetReport.class);
 
     @Override
-    protected OutputFilter findOutputFilter(CustomReportInfo info) throws CosmoDavException {
+    protected OutputFilter findOutputFilter(ReportInfo info) throws CosmoDavException {
         return null;
         //TODO
         /*
@@ -47,14 +47,14 @@ public class AddressbookMultigetReport extends MultigetReport {
     }
 
     @Override
-    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, CustomDavPropertyNameSet props) throws CosmoDavException {
-        CustomMultiStatusResponse msr;
+    protected MultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) throws CosmoDavException {
+        MultiStatusResponse msr;
 
         if (props.isEmpty()) {
             final String href = resource.getResourceLocator().getHref(resource.isCollection());
-            msr = new CustomMultiStatusResponse(href, 200);
+            msr = new MultiStatusResponse(href, 200);
         } else {
-            msr = new CustomMultiStatusResponse(resource, props, propfindType);
+            msr = new MultiStatusResponse(resource, props, propfindType);
         }
 
         final DavCard file = (DavCard) resource;
@@ -77,7 +77,7 @@ public class AddressbookMultigetReport extends MultigetReport {
         return builder.toString();
     }
 
-    public CustomReportType getType() {
+    public ReportType getType() {
         return REPORT_TYPE_CARDDAV_MULTIGET;
     }
 }

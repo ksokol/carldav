@@ -2,9 +2,9 @@ package carldav.jackrabbit.webdav.property;
 
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.XmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -12,9 +12,9 @@ import org.w3c.dom.Element;
 
 import java.util.Collection;
 
-public abstract class CustomPropContainer implements CustomXmlSerializable, CustomDavConstants {
+public abstract class PropContainer implements XmlSerializable, DavConstants {
 
-    private static Logger log = LoggerFactory.getLogger(CustomPropContainer.class);
+    private static Logger log = LoggerFactory.getLogger(PropContainer.class);
 
     /**
      * Tries to add the specified object to the <code>PropContainer</code> and
@@ -23,10 +23,10 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      *
      * @param contentEntry
      * @return true if the object could be added; false otherwise
-     * @deprecated Use {@link #addContent(CustomPropEntry)} instead.
+     * @deprecated Use {@link #addContent(PropEntry)} instead.
      */
     public boolean addContent(Object contentEntry) {
-        if (contentEntry instanceof CustomPropEntry) {
+        if (contentEntry instanceof PropEntry) {
             return addContent(contentEntry);
         } else {
             return false;
@@ -41,7 +41,7 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      * @param contentEntry
      * @return true if the object could be added; false otherwise
      */
-    public abstract boolean addContent(CustomPropEntry contentEntry);
+    public abstract boolean addContent(PropEntry contentEntry);
 
     /**
      * Returns true if the PropContainer does not yet contain any content elements.
@@ -64,7 +64,7 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      *
      * @return collection representing the contents of this <code>PropContainer</code>.
      */
-    public abstract Collection<? extends CustomPropEntry> getContent();
+    public abstract Collection<? extends PropEntry> getContent();
 
     /**
      * Returns true if this <code>PropContainer</code> contains a content element
@@ -74,7 +74,7 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      * @return true if any of the content elements (be it a DavProperty or a
      * DavPropertyName only) matches the given name.
      */
-    public abstract boolean contains(CustomDavPropertyName name);
+    public abstract boolean contains(DavPropertyName name);
 
     /**
      * Returns the xml representation of a property related set with the
@@ -85,13 +85,13 @@ public abstract class CustomPropContainer implements CustomXmlSerializable, Cust
      * representation of the entries returned by {@link #getContent()}.
      * </pre>
      *
-     * @see CustomXmlSerializable#toXml(Document)
+     * @see XmlSerializable#toXml(Document)
      */
     public Element toXml(Document document) {
-        Element prop = CustomDomUtils.createElement(document, XML_PROP, caldav(XML_PROP));
+        Element prop = DomUtils.createElement(document, XML_PROP, caldav(XML_PROP));
         for (Object content : getContent()) {
-            if (content instanceof CustomXmlSerializable) {
-                prop.appendChild(((CustomXmlSerializable) content).toXml(document));
+            if (content instanceof XmlSerializable) {
+                prop.appendChild(((XmlSerializable) content).toXml(document));
             } else {
                 log.debug("Unexpected content in PropContainer: should be XmlSerializable.");
             }

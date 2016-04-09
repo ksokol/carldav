@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.property;
 
-import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
+import carldav.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.XmlSerializable;
 import org.apache.commons.lang.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,18 +36,18 @@ import java.util.Set;
  * is included in "allprop" <code>PROFIND</code> responses.
  * </p>
  */
-public class StandardDavProperty implements WebDavProperty, CustomXmlSerializable {
+public class StandardDavProperty implements WebDavProperty, XmlSerializable {
 
-    private CustomDavPropertyName name;
+    private DavPropertyName name;
     private Object value;
 
-    public StandardDavProperty(CustomDavPropertyName name,
+    public StandardDavProperty(DavPropertyName name,
                                Object value) {
         this.name = name;
         this.value = value;
     }
 
-    public CustomDavPropertyName getName() {
+    public DavPropertyName getName() {
         return name;
     }
 
@@ -73,7 +73,7 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
             return null;
         }
         if (value instanceof Element) {
-            String text = CustomDomUtils.getText((Element) value);
+            String text = DomUtils.getText((Element) value);
             if (text != null) {
                 return text;
             }
@@ -94,7 +94,7 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
      * </p>
      * <p>
      * If the property value is an <code>XmlSerializable</code>, the element
-     * returned by calling {@link CustomXmlSerializable.toXml(Document)} on the
+     * returned by calling {@link XmlSerializable.toXml(Document)} on the
      * value is appended as a child of an element representing the property.
      * </p>
      * <p>
@@ -117,11 +117,11 @@ public class StandardDavProperty implements WebDavProperty, CustomXmlSerializabl
             e = getName().toXml(document);
             Object v = getValue();
             if (v != null) {
-                if (v instanceof CustomXmlSerializable) {
-                    e.appendChild(((CustomXmlSerializable)v).toXml(document));
+                if (v instanceof XmlSerializable) {
+                    e.appendChild(((XmlSerializable)v).toXml(document));
                 }
                 else {
-                    CustomDomUtils.setText(e, v.toString());
+                    DomUtils.setText(e, v.toString());
                 }
             }
         }

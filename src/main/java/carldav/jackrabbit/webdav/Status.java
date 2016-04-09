@@ -1,7 +1,7 @@
 package carldav.jackrabbit.webdav;
 
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.XmlSerializable;
 import org.springframework.http.HttpStatus;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,16 +9,13 @@ import org.w3c.dom.Element;
 import static carldav.CarldavConstants.XML_STATUS;
 import static carldav.CarldavConstants.caldav;
 
-/**
- * @author Kamill Sokol
- */
-public class CustomStatus implements CustomDavConstants, CustomXmlSerializable {
+public class Status implements DavConstants, XmlSerializable {
 
     private final String version;
     private final int code;
     private final String phrase;
 
-    public CustomStatus(int code) {
+    public Status(int code) {
         version = "HTTP/1.1";
         this.code = code;
         phrase = HttpStatus.valueOf(code).getReasonPhrase();
@@ -26,8 +23,8 @@ public class CustomStatus implements CustomDavConstants, CustomXmlSerializable {
 
     public Element toXml(Document document) {
         String statusLine = version + " " + code + " " + phrase;
-        Element e = CustomDomUtils.createElement(document, XML_STATUS, caldav(XML_STATUS));
-        CustomDomUtils.setText(e, statusLine);
+        Element e = DomUtils.createElement(document, XML_STATUS, caldav(XML_STATUS));
+        DomUtils.setText(e, statusLine);
         return e;
     }
 }

@@ -19,7 +19,7 @@ import static carldav.CarldavConstants.EMPTY;
 import static carldav.CarldavConstants.SUPPORTED_CALENDAR_COMPONENT_SET;
 import static carldav.CarldavConstants.c;
 
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
@@ -64,8 +64,8 @@ public class SupportedCalendarComponentSet extends StandardDavProperty implement
         Element name = getName().toXml(document);
 
         for (String type : getComponentTypes()) {
-            Element e = CustomDomUtils.createElement(document, ELEMENT_CALDAV_COMP, c(ELEMENT_CALDAV_COMP));
-            CustomDomUtils.setAttribute(e, ATTR_CALDAV_NAME, EMPTY, type);
+            Element e = DomUtils.createElement(document, ELEMENT_CALDAV_COMP, c(ELEMENT_CALDAV_COMP));
+            DomUtils.setAttribute(e, ATTR_CALDAV_NAME, EMPTY, type);
             name.appendChild(e);
         }
 

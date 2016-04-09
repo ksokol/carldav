@@ -1,7 +1,7 @@
 package org.unitedinternet.cosmo.dav.impl;
 
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -10,7 +10,6 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.property.*;
-import org.unitedinternet.cosmo.server.ServerConstants;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.namespace.QName;
@@ -75,11 +74,11 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
         return Collections.emptySet();
     }
 
-    public Set<CustomReportType> getReportTypes() {
+    public Set<ReportType> getReportTypes() {
         return Collections.emptySet();
     }
 
-    protected void loadLiveProperties(CustomDavPropertySet properties) {
+    protected void loadLiveProperties(DavPropertySet properties) {
         properties.add(new DisplayName(getDisplayName()));
         properties.add(new ResourceType(getResourceTypes()));
         properties.add(new IsCollection(isCollection()));

@@ -15,11 +15,11 @@
  */
 package org.unitedinternet.cosmo.dav;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.version.report.CustomReport;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.version.report.Report;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 
@@ -118,15 +118,15 @@ public interface WebDavResource {
 
     /**
      * Returns all webdav properties present on this resource that will be
-     * return upon a {@link CustomDavConstants#PROPFIND_ALL_PROP} request. The
+     * return upon a {@link DavConstants#PROPFIND_ALL_PROP} request. The
      * implementation may in addition expose other (protected or calculated)
      * properties which should be marked accordingly (see also
      * {@link WebDavProperty#isInvisibleInAllprop()}.
      *
-     * @return a {@link CustomDavPropertySet} containing at least all properties
+     * @return a {@link DavPropertySet} containing at least all properties
      * of this resource that are exposed in 'allprop' PROPFIND request.
      */
-    CustomDavPropertySet getProperties();
+    DavPropertySet getProperties();
 
     /**
      * Return the webdav property with the specified name.
@@ -135,15 +135,15 @@ public interface WebDavResource {
      * @return the {@link WebDavProperty} with the given name or <code>null</code>
      * if the property does not exist.
      */
-    WebDavProperty<?> getProperty(CustomDavPropertyName name);
+    WebDavProperty<?> getProperty(DavPropertyName name);
 
     /**
-     * Returns an array of all {@link CustomDavPropertyName property names} available
+     * Returns an array of all {@link DavPropertyName property names} available
      * on this resource.
      *
      * @return an array of property names.
      */
-    CustomDavPropertyName[] getPropertyNames();
+    DavPropertyName[] getPropertyNames();
 
     void writeHead(HttpServletResponse response) throws IOException;
 
@@ -155,7 +155,7 @@ public interface WebDavResource {
      * @param info The given report info.
      * @throws CosmoDavException - if something is wrong this exception is thrown.
      */
-    CustomReport getReport(CustomReportInfo info)
+    Report getReport(ReportInfo info)
         throws CosmoDavException;
 
     DavResourceLocator getResourceLocator();

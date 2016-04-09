@@ -18,7 +18,7 @@ package org.unitedinternet.cosmo.dav.caldav.property;
 import static carldav.CarldavConstants.CALENDAR_DATA;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.property.StandardDavProperty;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
@@ -34,8 +34,8 @@ public class CalendarData extends StandardDavProperty implements CaldavConstants
     public Element toXml(Document document) {
         Element e = super.toXml(document);
 
-        CustomDomUtils.setAttribute(e, ATTR_CALDAV_CONTENT_TYPE, CarldavConstants.c(ATTR_CALDAV_CONTENT_TYPE), ICALENDAR_MEDIA_TYPE);
-        CustomDomUtils.setAttribute(e, ATTR_CALDAV_VERSION, CarldavConstants.c(ATTR_CALDAV_VERSION), ICALENDAR_VERSION);
+        DomUtils.setAttribute(e, ATTR_CALDAV_CONTENT_TYPE, CarldavConstants.c(ATTR_CALDAV_CONTENT_TYPE), ICALENDAR_MEDIA_TYPE);
+        DomUtils.setAttribute(e, ATTR_CALDAV_VERSION, CarldavConstants.c(ATTR_CALDAV_VERSION), ICALENDAR_VERSION);
 
         return e;
     }

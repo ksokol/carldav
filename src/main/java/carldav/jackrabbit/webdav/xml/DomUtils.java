@@ -25,15 +25,12 @@ import java.io.Writer;
 
 import static carldav.CarldavConstants.EMPTY;
 import static carldav.CarldavConstants.caldav;
-import static carldav.jackrabbit.webdav.CustomDavConstants.XML_HREF;
+import static carldav.jackrabbit.webdav.DavConstants.XML_HREF;
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * @author Kamill Sokol
- */
-public class CustomDomUtils {
+public class DomUtils {
 
-    private static final Logger LOG = getLogger(CustomDomUtils.class);
+    private static final Logger LOG = getLogger(DomUtils.class);
 
     // Note that the cast from below is strictly speaking only valid when
     // the factory instance supports the SAXTransformerFactory.FEATURE
@@ -144,12 +141,12 @@ public class CustomDomUtils {
         }
     }
 
-    public static CustomElementIterator getChildren(Element parent, QName name) {
-        return new CustomElementIterator(parent, name);
+    public static ElementIterator getChildren(Element parent, QName name) {
+        return new ElementIterator(parent, name);
     }
 
-    public static CustomElementIterator getChildren(Element parent) {
-        return new CustomElementIterator(parent);
+    public static ElementIterator getChildren(Element parent) {
+        return new ElementIterator(parent);
     }
 
     public static void setText(Element element, String text) {

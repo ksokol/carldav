@@ -16,8 +16,8 @@
 package org.unitedinternet.cosmo.calendar.query;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomElementIterator;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.ElementIterator;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
@@ -53,7 +53,7 @@ public class CalendarFilter implements CaldavConstants {
      */
     public CalendarFilter(Element element, VTimeZone timezone) throws ParseException {
         // Can only have a single comp-filter element
-        final CustomElementIterator i = CustomDomUtils.getChildren(element, CarldavConstants.c(ELEMENT_CALDAV_COMP_FILTER));
+        final ElementIterator i = DomUtils.getChildren(element, CarldavConstants.c(ELEMENT_CALDAV_COMP_FILTER));
         if (!i.hasNext()) {
             throw new ParseException("CALDAV:filter must contain a comp-filter", -1);
         }

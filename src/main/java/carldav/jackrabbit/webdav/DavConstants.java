@@ -8,7 +8,7 @@ import javax.xml.namespace.QName;
  * <a href="http://www.webdav.org/specs/rfc2518.html">RFC 2518</a>. In addition,
  * common date formats (creation date and modification time) are included.
  */
-public interface CustomDavConstants {
+public interface DavConstants {
 
     //-------------------------------------------------------< Depth Header >---
     String HEADER_DEPTH = "Depth";

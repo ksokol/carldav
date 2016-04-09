@@ -2,9 +2,9 @@ package carldav.jackrabbit.webdav.version.report;
 
 import org.unitedinternet.cosmo.dav.WebDavResource;
 
-public interface CustomReport {
+public interface Report {
 
-    CustomReportType getType();
+    ReportType getType();
 
     /**
      * Set the <code>WebDavResource</code> for which this report was requested
@@ -16,5 +16,5 @@ public interface CustomReport {
      * @param resource
      * @param info
      */
-    void init(WebDavResource resource, CustomReportInfo info);
+    void init(WebDavResource resource, ReportInfo info);
 }

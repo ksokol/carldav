@@ -18,8 +18,8 @@ package org.unitedinternet.cosmo.dav.impl;
 import carldav.entity.CollectionItem;
 import carldav.entity.Item;
 import carldav.jackrabbit.webdav.io.DavInputContext;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.*;
@@ -44,7 +44,7 @@ import static org.springframework.http.HttpHeaders.LAST_MODIFIED;
 
 public class DavCollectionBase extends DavResourceBase implements WebDavResource, DavCollection {
 
-    protected final Set<CustomReportType> reportTypes = new HashSet<>();
+    protected final Set<ReportType> reportTypes = new HashSet<>();
 
     private List<WebDavResource> members;
 
@@ -166,11 +166,11 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         return rt;
     }
 
-    public Set<CustomReportType> getReportTypes() {
+    public Set<ReportType> getReportTypes() {
         return reportTypes;
     }
 
-    protected void loadLiveProperties(CustomDavPropertySet properties) {
+    protected void loadLiveProperties(DavPropertySet properties) {
         properties.add(new LastModified(item.getModifiedDate()));
         properties.add(new Etag(getETag()));
         properties.add(new DisplayName(getDisplayName()));

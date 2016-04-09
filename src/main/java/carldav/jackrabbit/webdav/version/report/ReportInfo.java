@@ -1,14 +1,14 @@
 package carldav.jackrabbit.webdav.version.report;
 
-import static carldav.jackrabbit.webdav.CustomDavConstants.XML_PROP;
+import static carldav.jackrabbit.webdav.DavConstants.XML_PROP;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomElementIterator;
-import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.ElementIterator;
+import carldav.jackrabbit.webdav.xml.XmlSerializable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -21,14 +21,14 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-public class CustomReportInfo implements CustomXmlSerializable {
+public class ReportInfo implements XmlSerializable {
 
-    private static Logger LOG = LoggerFactory.getLogger(CustomReportInfo.class);
+    private static Logger LOG = LoggerFactory.getLogger(ReportInfo.class);
 
     private final String typeLocalName;
     private final QName typeNamespace;
     private final int depth;
-    private final CustomDavPropertyNameSet propertyNames;
+    private final DavPropertyNameSet propertyNames;
     private final List<Element> content = new ArrayList<>();
     private Element documentElement;
 
@@ -36,10 +36,10 @@ public class CustomReportInfo implements CustomXmlSerializable {
      * Create a new <code>ReportInfo</code> object from the given Xml element.
      *
      * @param reportElement
-     * @param depth Depth value as retrieved from the {@link CustomDavConstants#HEADER_DEPTH}.
+     * @param depth Depth value as retrieved from the {@link DavConstants#HEADER_DEPTH}.
      * @throws CosmoDavException if the report element is <code>null</code>.
      */
-    public CustomReportInfo(Element reportElement, int depth) {
+    public ReportInfo(Element reportElement, int depth) {
         if (reportElement == null) {
             LOG.warn("Report request body must not be null.");
             throw new CosmoDavException(BAD_REQUEST.value());
@@ -48,20 +48,20 @@ public class CustomReportInfo implements CustomXmlSerializable {
         this.documentElement = (Element) reportElement.cloneNode(true);
 
         this.typeLocalName = reportElement.getLocalName();
-        this.typeNamespace = CustomDomUtils.getNamespace(reportElement);
+        this.typeNamespace = DomUtils.getNamespace(reportElement);
         this.depth = depth;
-        Element propElement = CustomDomUtils.getChildElement(reportElement, CarldavConstants.caldav(XML_PROP));
+        Element propElement = DomUtils.getChildElement(reportElement, CarldavConstants.caldav(XML_PROP));
         if (propElement != null) {
-            propertyNames = new CustomDavPropertyNameSet(propElement);
+            propertyNames = new DavPropertyNameSet(propElement);
             reportElement.removeChild(propElement);
         } else {
-            propertyNames = new CustomDavPropertyNameSet();
+            propertyNames = new DavPropertyNameSet();
         }
 
-        CustomElementIterator it = CustomDomUtils.getChildren(reportElement);
+        ElementIterator it = DomUtils.getChildren(reportElement);
         while (it.hasNext()) {
             Element el = it.nextElement();
-            if (!CustomDavConstants.XML_PROP.equals(el.getLocalName())) {
+            if (!DavConstants.XML_PROP.equals(el.getLocalName())) {
                 content.add(el);
             }
         }
@@ -119,7 +119,7 @@ public class CustomReportInfo implements CustomXmlSerializable {
     public List<Element> getContentElements(QName namespace) {
         List<Element> l = new ArrayList<>();
         for (Element elem : content) {
-            if (CustomDomUtils.matches(elem, namespace.getLocalPart(), namespace)) {
+            if (DomUtils.matches(elem, namespace.getLocalPart(), namespace)) {
                 l.add(elem);
             }
         }
@@ -128,23 +128,23 @@ public class CustomReportInfo implements CustomXmlSerializable {
 
     /**
      * Returns a <code>DavPropertyNameSet</code> providing the property names present
-     * in an eventual {@link CustomDavConstants#XML_PROP} child element. If no such
+     * in an eventual {@link DavConstants#XML_PROP} child element. If no such
      * child element is present an empty set is returned.
      *
-     * @return {@link CustomDavPropertyNameSet} providing the property names present
-     * in an eventual {@link CustomDavConstants#XML_PROP DAV:prop} child element or an empty set.
+     * @return {@link DavPropertyNameSet} providing the property names present
+     * in an eventual {@link DavConstants#XML_PROP DAV:prop} child element or an empty set.
      */
-    public CustomDavPropertyNameSet getPropertyNameSet() {
+    public DavPropertyNameSet getPropertyNameSet() {
         return propertyNames;
     }
 
 
     /**
-     * @see CustomXmlSerializable#toXml(Document)
+     * @see XmlSerializable#toXml(Document)
      * @param document
      */
     public Element toXml(Document document) {
-        Element reportElement = CustomDomUtils.createElement(document, typeLocalName, typeNamespace);
+        Element reportElement = DomUtils.createElement(document, typeLocalName, typeNamespace);
         if (!content.isEmpty()) {
             for (Element contentEntry : content) {
                 Node n = document.importNode(contentEntry, true);

@@ -1,28 +1,28 @@
 package carldav.jackrabbit.webdav.property;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.XmlSerializable;
 import org.springframework.util.Assert;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 
-public class CustomDavPropertyName implements CustomDavConstants, CustomXmlSerializable, CustomPropEntry {
+public class DavPropertyName implements DavConstants, XmlSerializable, PropEntry {
 
     private QName name;
 
-    public static CustomDavPropertyName create(String name, QName namespace) {
-        return new CustomDavPropertyName(new QName(namespace.getNamespaceURI(), name, namespace.getPrefix()));
+    public static DavPropertyName create(String name, QName namespace) {
+        return new DavPropertyName(new QName(namespace.getNamespaceURI(), name, namespace.getPrefix()));
     }
 
-    public static CustomDavPropertyName create(final QName name) {
-        return new CustomDavPropertyName(name);
+    public static DavPropertyName create(final QName name) {
+        return new DavPropertyName(name);
     }
 
-    public static CustomDavPropertyName createFromXml(Element nameElement) {
+    public static DavPropertyName createFromXml(Element nameElement) {
         if (nameElement == null) {
             throw new IllegalArgumentException("Cannot build CustomDavPropertyName from a 'null' element.");
         }
@@ -30,11 +30,11 @@ public class CustomDavPropertyName implements CustomDavConstants, CustomXmlSeria
         if (ns == null) {
             return create(nameElement.getLocalName(), CarldavConstants.EMPTY);
         } else {
-            return create(nameElement.getLocalName(), CustomDomUtils.getNamespace(nameElement));
+            return create(nameElement.getLocalName(), DomUtils.getNamespace(nameElement));
         }
     }
 
-    public CustomDavPropertyName(final QName name) {
+    public DavPropertyName(final QName name) {
         Assert.notNull(name, "name is null");
         this.name = name;
     }
@@ -54,8 +54,8 @@ public class CustomDavPropertyName implements CustomDavConstants, CustomXmlSeria
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof CustomDavPropertyName) {
-            CustomDavPropertyName propName = (CustomDavPropertyName) obj;
+        if (obj instanceof DavPropertyName) {
+            DavPropertyName propName = (DavPropertyName) obj;
             return  name.equals(propName.name);
         }
         return false;
@@ -67,7 +67,7 @@ public class CustomDavPropertyName implements CustomDavConstants, CustomXmlSeria
     }
 
     public Element toXml(Document document) {
-        return CustomDomUtils.createElement(document, name.getLocalPart(), name);
+        return DomUtils.createElement(document, name.getLocalPart(), name);
     }
 }
 

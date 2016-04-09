@@ -2,12 +2,12 @@ package carldav.jackrabbit.webdav;
 
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.property.CustomDavPropertyName;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.property.CustomDavPropertySet;
-import carldav.jackrabbit.webdav.property.CustomPropContainer;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomXmlSerializable;
+import carldav.jackrabbit.webdav.property.DavPropertyName;
+import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.property.DavPropertySet;
+import carldav.jackrabbit.webdav.property.PropContainer;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.XmlSerializable;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.w3c.dom.Document;
@@ -28,7 +28,7 @@ import java.util.Set;
  * &lt;!ELEMENT prop ANY &gt;
  * </pre>
  */
-public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomDavConstants {
+public class MultiStatusResponse implements XmlSerializable, DavConstants {
 
     private static final int TYPE_PROPSTAT = 0;
     private static final int TYPE_HREFSTATUS = 1;
@@ -46,23 +46,23 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
     /**
      * Type of MultiStatus response: Href + Status
      */
-    private CustomStatus status;
+    private Status status;
 
     /**
      * Type of MultiStatus response: PropStat Hashmap containing all status
      */
-    private HashMap<Integer, CustomPropContainer> statusMap = new HashMap<>();
+    private HashMap<Integer, PropContainer> statusMap = new HashMap<>();
 
-    public CustomMultiStatusResponse(final WebDavResource resource, final CustomDavPropertyNameSet propNameSet, final int propFindType) {
+    public MultiStatusResponse(final WebDavResource resource, final DavPropertyNameSet propNameSet, final int propFindType) {
         customMultiStatusResponse(resource, propNameSet, propFindType);
     }
 
-    public CustomMultiStatusResponse(final String href, final int i) {
+    public MultiStatusResponse(final String href, final int i) {
         if (!isValidHref(href)) {
             throw new IllegalArgumentException("Invalid href ('" + href + "')");
         }
         this.href = href;
-        this.status = new CustomStatus(i);
+        this.status = new Status(i);
         this.type = TYPE_HREFSTATUS;
     }
 
@@ -91,28 +91,28 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
      * #PROPFIND_PROPERTY_NAMES}, {@link #PROPFIND_ALL_PROP_INCLUDE}
      */
     public void customMultiStatusResponse(
-            WebDavResource resource, CustomDavPropertyNameSet propNameSet,
+            WebDavResource resource, DavPropertyNameSet propNameSet,
             int propFindType) {
         customMultiStatusResponse(resource.getHref(), TYPE_PROPSTAT);
 
         if (propFindType == PROPFIND_PROPERTY_NAMES) {
             // only property names requested
-            CustomPropContainer status200 = getPropContainer(200, true);
-            for (CustomDavPropertyName propName : resource.getPropertyNames()) {
+            PropContainer status200 = getPropContainer(200, true);
+            for (DavPropertyName propName : resource.getPropertyNames()) {
                 status200.addContent(propName);
             }
         } else {
             // all or a specified set of property and their values requested.
-            CustomPropContainer status200 = getPropContainer(200, false);
+            PropContainer status200 = getPropContainer(200, false);
 
             // Collection of missing property names for 404 responses
-            Set<CustomDavPropertyName> missing = new HashSet<>(propNameSet.getContent());
+            Set<DavPropertyName> missing = new HashSet<>(propNameSet.getContent());
 
             // Add requested properties or all non-protected properties,
             // or non-protected properties plus requested properties (allprop/include)
             if (propFindType == PROPFIND_BY_PROPERTY) {
                 // add explicitly requested properties (proptected or non-protected)
-                for (CustomDavPropertyName propName : propNameSet.getContent()) {
+                for (DavPropertyName propName : propNameSet.getContent()) {
                     WebDavProperty<?> prop = resource.getProperty(propName);
                     if (prop != null) {
                         status200.addContent(prop);
@@ -137,7 +137,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
                 // try if missing properties specified in the include section
                 // can be obtained using resource.getProperty
                 if (propFindType == PROPFIND_ALL_PROP_INCLUDE && !missing.isEmpty()) {
-                    for (CustomDavPropertyName propName : new HashSet<>(missing)) {
+                    for (DavPropertyName propName : new HashSet<>(missing)) {
                         WebDavProperty<?> prop = resource.getProperty(propName);
                         if (prop != null) {
                             status200.addContent(prop);
@@ -148,21 +148,21 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
             }
 
             if (!missing.isEmpty() && propFindType != PROPFIND_ALL_PROP) {
-                CustomPropContainer status404 = getPropContainer(404, true);
-                for (CustomDavPropertyName propName : missing) {
+                PropContainer status404 = getPropContainer(404, true);
+                for (DavPropertyName propName : missing) {
                     status404.addContent(propName);
                 }
             }
         }
     }
 
-    private CustomPropContainer getPropContainer(int status, boolean forNames) {
-        CustomPropContainer propContainer = statusMap.get(status);
+    private PropContainer getPropContainer(int status, boolean forNames) {
+        PropContainer propContainer = statusMap.get(status);
         if (propContainer == null) {
             if (forNames) {
-                propContainer = new CustomDavPropertyNameSet();
+                propContainer = new DavPropertyNameSet();
             } else {
-                propContainer = new CustomDavPropertySet();
+                propContainer = new DavPropertySet();
             }
             statusMap.put(status, propContainer);
         }
@@ -184,7 +184,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
      */
     public void add(WebDavProperty<?> property) {
         checkType(TYPE_PROPSTAT);
-        CustomPropContainer status200 = getPropContainer(200, false);
+        PropContainer status200 = getPropContainer(200, false);
         status200.addContent(property);
     }
 
@@ -197,9 +197,9 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
      *
      * @param propertyName the property name to add
      */
-    public void add(CustomDavPropertyName propertyName) {
+    public void add(DavPropertyName propertyName) {
         checkType(TYPE_PROPSTAT);
-        CustomPropContainer status200 = getPropContainer(200, true);
+        PropContainer status200 = getPropContainer(200, true);
         status200.addContent(propertyName);
     }
 
@@ -211,7 +211,7 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
      */
     public void add(WebDavProperty<?> property, int status) {
         checkType(TYPE_PROPSTAT);
-        CustomPropContainer propCont = getPropContainer(status, false);
+        PropContainer propCont = getPropContainer(status, false);
         propCont.addContent(property);
     }
 
@@ -221,9 +221,9 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
      * @param propertyName the property name to add
      * @param status the status of the response set to select
      */
-    public void add(CustomDavPropertyName propertyName, int status) {
+    public void add(DavPropertyName propertyName, int status) {
         checkType(TYPE_PROPSTAT);
-        CustomPropContainer propCont = getPropContainer(status, true);
+        PropContainer propCont = getPropContainer(status, true);
         propCont.addContent(propertyName);
     }
 
@@ -235,16 +235,16 @@ public class CustomMultiStatusResponse implements CustomXmlSerializable, CustomD
 
     @Override
     public Element toXml(final Document document) {
-        Element response = CustomDomUtils.createElement(document, XML_RESPONSE, caldav(XML_RESPONSE));
+        Element response = DomUtils.createElement(document, XML_RESPONSE, caldav(XML_RESPONSE));
         // add '<href>'
-        response.appendChild(CustomDomUtils.hrefToXml(href, document));
+        response.appendChild(DomUtils.hrefToXml(href, document));
         if (type == TYPE_PROPSTAT) {
             // add '<propstat>' elements
             for (Integer statusKey : statusMap.keySet()) {
-                CustomStatus st = new CustomStatus(statusKey);
-                CustomPropContainer propCont = statusMap.get(statusKey);
+                Status st = new Status(statusKey);
+                PropContainer propCont = statusMap.get(statusKey);
                 if (!propCont.isEmpty()) {
-                    Element propstat = CustomDomUtils.createElement(document, XML_PROPSTAT, caldav(XML_PROPSTAT));
+                    Element propstat = DomUtils.createElement(document, XML_PROPSTAT, caldav(XML_PROPSTAT));
                     propstat.appendChild(propCont.toXml(document));
                     propstat.appendChild(st.toXml(document));
                     response.appendChild(propstat);

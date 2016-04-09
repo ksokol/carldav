@@ -19,10 +19,10 @@ import static carldav.CarldavConstants.CALENDAR_DATA;
 import static carldav.CarldavConstants.c;
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.MultiStatusResponse;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
@@ -58,8 +58,8 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
      * Removes <code>CALDAV:calendar-data</code> from the property spec
      * since it doesn't represent a real property.
      */
-    protected CustomDavPropertyNameSet createResultPropSpec() {
-        CustomDavPropertyNameSet spec = super.createResultPropSpec();
+    protected DavPropertyNameSet createResultPropSpec() {
+        DavPropertyNameSet spec = super.createResultPropSpec();
         spec.remove(CALENDAR_DATA);
         return spec;
     }
@@ -69,8 +69,8 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
      * <code>CALDAV:calendar-data</code> property if it was requested. The
      * calendar data is filtered if a filter was included in the request.
      */
-    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, CustomDavPropertyNameSet props) {
-        CustomMultiStatusResponse msr = super.buildMultiStatusResponse(resource, props);
+    protected MultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) {
+        MultiStatusResponse msr = super.buildMultiStatusResponse(resource, props);
 
         DavCalendarResource dcr = (DavCalendarResource) resource;
         if (getPropFindProps().contains(CALENDAR_DATA)) {
@@ -84,13 +84,13 @@ public abstract class CaldavMultiStatusReport extends MultiStatusReport implemen
         this.outputFilter = outputFilter;
     }
 
-    protected OutputFilter findOutputFilter(CustomReportInfo info) throws CosmoDavException {
-        Element propdata = CustomDomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
+    protected OutputFilter findOutputFilter(ReportInfo info) throws CosmoDavException {
+        Element propdata = DomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
         if (propdata == null) {
             return null;
         }
 
-        Element cdata = CustomDomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_CALENDAR_DATA));
+        Element cdata = DomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_CALENDAR_DATA));
         if (cdata == null) {
             return null;
         }

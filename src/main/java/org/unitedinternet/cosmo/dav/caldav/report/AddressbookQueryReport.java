@@ -5,10 +5,10 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NS_CARDDAV;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CARD;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
+import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.unitedinternet.cosmo.calendar.data.OutputFilter;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
@@ -30,22 +30,22 @@ import javax.xml.namespace.QName;
  */
 public class AddressbookQueryReport extends MultiStatusReport {
 
-    public static final CustomReportType REPORT_TYPE_CARDDAV_QUERY =
-        CustomReportType.register(new QName(NS_CARDDAV, ELEMENT_CARDDAV_ADDRESSBOOK_QUERY, PRE_CARD), AddressbookQueryReport.class);
+    public static final ReportType REPORT_TYPE_CARDDAV_QUERY =
+        ReportType.register(new QName(NS_CARDDAV, ELEMENT_CARDDAV_ADDRESSBOOK_QUERY, PRE_CARD), AddressbookQueryReport.class);
 
     private AddressbookFilter queryFilter;
     private OutputFilter outputFilter;
 
     @Override
-    protected void parseReport(final CustomReportInfo info) throws CosmoDavException {
+    protected void parseReport(final ReportInfo info) throws CosmoDavException {
         if (!getType().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType());
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(CustomDavConstants.ALLPROP)) {
+        if (info.containsContentElement(DavConstants.ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(CustomDavConstants.PROPNAME)) {
+        } else if (info.containsContentElement(DavConstants.PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
@@ -68,12 +68,12 @@ public class AddressbookQueryReport extends MultiStatusReport {
         }
     }
 
-    public CustomReportType getType() {
+    public ReportType getType() {
         return REPORT_TYPE_CARDDAV_QUERY;
     }
 
-    private AddressbookFilter findQueryFilter(CustomReportInfo info) throws CosmoDavException {
-        Element filterdata = CustomDomUtils.getChildElement(getReportElementFrom(info), CarldavConstants.carddav(CaldavConstants.ELEMENT_CALDAV_FILTER));
+    private AddressbookFilter findQueryFilter(ReportInfo info) throws CosmoDavException {
+        Element filterdata = DomUtils.getChildElement(getReportElementFrom(info), CarldavConstants.carddav(CaldavConstants.ELEMENT_CALDAV_FILTER));
 
         if (filterdata == null) {
             return null;
@@ -88,7 +88,7 @@ public class AddressbookQueryReport extends MultiStatusReport {
         }
     }
 
-    private OutputFilter findOutputFilter(CustomReportInfo info) throws CosmoDavException {
+    private OutputFilter findOutputFilter(ReportInfo info) throws CosmoDavException {
         return null;
         //TODO not implemented yet
         /*

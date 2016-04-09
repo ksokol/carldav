@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.dav.report;
 
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.version.report.CustomReport;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.version.report.Report;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavCollection;
@@ -36,14 +36,14 @@ import javax.servlet.http.HttpServletResponse;
  * Base class for WebDAV reports.
  * </p>
  */
-public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
+public abstract class ReportBase implements Report, ExtendedDavConstants {
 
     private WebDavResource resource;
-    private CustomReportInfo info;
+    private ReportInfo info;
     private HashSet<WebDavResource> results;
 
     public void init(WebDavResource resource,
-                     CustomReportInfo info)
+                     ReportInfo info)
             throws CosmoDavException {
         this.resource = resource;
         this.info = info;
@@ -56,7 +56,7 @@ public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
         output(response);
     }
 
-    protected abstract void parseReport(CustomReportInfo info)
+    protected abstract void parseReport(ReportInfo info)
             throws CosmoDavException;
 
     /**
@@ -128,17 +128,17 @@ public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
         }
     }
 
-    protected static Element getReportElementFrom(CustomReportInfo reportInfo) {
+    protected static Element getReportElementFrom(ReportInfo reportInfo) {
         if (reportInfo == null) {
             return null;
         }
 
-        if(reportInfo instanceof CustomReportInfo) {
-            CustomReportInfo customReportInfo = reportInfo;
+        if(reportInfo instanceof ReportInfo) {
+            ReportInfo customReportInfo = reportInfo;
             return customReportInfo.getDocumentElement();
         }
 
-        Document document = CustomDomUtils.createDocument();
+        Document document = DomUtils.createDocument();
         return reportInfo.toXml(document);
     }
 
@@ -146,7 +146,7 @@ public abstract class ReportBase implements CustomReport, ExtendedDavConstants {
         return resource;
     }
 
-    public CustomReportInfo getInfo() {
+    public ReportInfo getInfo() {
         return info;
     }
 

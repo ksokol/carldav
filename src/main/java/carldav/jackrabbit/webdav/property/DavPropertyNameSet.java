@@ -2,8 +2,8 @@ package carldav.jackrabbit.webdav.property;
 
 import static carldav.CarldavConstants.caldav;
 
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomElementIterator;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.ElementIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
@@ -12,15 +12,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class CustomDavPropertyNameSet extends CustomPropContainer {
+public class DavPropertyNameSet extends PropContainer {
 
-    private static Logger LOG = LoggerFactory.getLogger(CustomDavPropertyNameSet.class);
-    private final Set<CustomDavPropertyName> set = new HashSet<>();
+    private static Logger LOG = LoggerFactory.getLogger(DavPropertyNameSet.class);
+    private final Set<DavPropertyName> set = new HashSet<>();
 
     /**
      * Create a new empty set.
      */
-    public CustomDavPropertyNameSet() {
+    public DavPropertyNameSet() {
     }
 
     /**
@@ -28,7 +28,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      *
      * @param initialSet
      */
-    public CustomDavPropertyNameSet(CustomDavPropertyNameSet initialSet) {
+    public DavPropertyNameSet(DavPropertyNameSet initialSet) {
         addAll(initialSet);
     }
 
@@ -40,27 +40,27 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * @throws IllegalArgumentException if the specified element is <code>null</code>
      * or is not a DAV:prop element.
      */
-    public CustomDavPropertyNameSet(Element propElement) {
-        if (!CustomDomUtils.matches(propElement, XML_PROP, caldav(XML_PROP))) {
+    public DavPropertyNameSet(Element propElement) {
+        if (!DomUtils.matches(propElement, XML_PROP, caldav(XML_PROP))) {
             throw new IllegalArgumentException("'DAV:prop' element expected.");
         }
 
         // fill the set
-        CustomElementIterator it = CustomDomUtils.getChildren(propElement);
+        ElementIterator it = DomUtils.getChildren(propElement);
         while (it.hasNext()) {
-            add(CustomDavPropertyName.createFromXml(it.nextElement()));
+            add(DavPropertyName.createFromXml(it.nextElement()));
         }
     }
 
     /**
-     * Adds the specified {@link CustomDavPropertyName} object to this
+     * Adds the specified {@link DavPropertyName} object to this
      * set if it is not already present.
      *
      * @param propertyName element to be added to this set.
      * @return <tt>true</tt> if the set did not already contain the specified
      * element.
      */
-    public boolean add(CustomDavPropertyName propertyName) {
+    public boolean add(DavPropertyName propertyName) {
         return set.add(propertyName);
     }
 
@@ -70,27 +70,27 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * @param propertyNames
      * @return true if the set has been modified by this call.
      */
-    public boolean addAll(CustomDavPropertyNameSet propertyNames) {
+    public boolean addAll(DavPropertyNameSet propertyNames) {
         return set.addAll(propertyNames.set);
     }
 
     /**
-     * Removes the specified {@link CustomDavPropertyName} object from this set.
+     * Removes the specified {@link DavPropertyName} object from this set.
      *
      * @param propertyName
      * @return true if the given property name could be removed.
      * @see HashSet#remove(Object)
      */
-    public boolean remove(CustomDavPropertyName propertyName) {
+    public boolean remove(DavPropertyName propertyName) {
         return set.remove(propertyName);
     }
 
     //------------------------------------------------------< PropContainer >---
     /**
-     * @see CustomPropContainer#contains(CustomDavPropertyName)
+     * @see PropContainer#contains(DavPropertyName)
      */
     @Override
-    public boolean contains(CustomDavPropertyName name) {
+    public boolean contains(DavPropertyName name) {
         return set.contains(name);
     }
 
@@ -99,19 +99,19 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
      * in order to successfully add the given entry.
      * @return true if contentEntry is an instance of <code>DavPropertyName</code>
      * that could be added to this set. False otherwise.
-     * @see CustomPropContainer#addContent(Object)
+     * @see PropContainer#addContent(Object)
      */
     @Override
-    public boolean addContent(CustomPropEntry contentEntry) {
-        if (contentEntry instanceof CustomDavPropertyName) {
-            return add((CustomDavPropertyName) contentEntry);
+    public boolean addContent(PropEntry contentEntry) {
+        if (contentEntry instanceof DavPropertyName) {
+            return add((DavPropertyName) contentEntry);
         }
         LOG.debug("DavPropertyName object expected. Found: " + contentEntry.getClass().toString());
         return false;
     }
 
     /**
-     * @see CustomPropContainer#isEmpty()
+     * @see PropContainer#isEmpty()
      */
     @Override
     public boolean isEmpty() {
@@ -119,7 +119,7 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
     }
 
     /**
-     * @see CustomPropContainer#getContentSize()
+     * @see PropContainer#getContentSize()
      */
     @Override
     public int getContentSize() {
@@ -127,10 +127,10 @@ public class CustomDavPropertyNameSet extends CustomPropContainer {
     }
 
     /**
-     * @see CustomPropContainer#getContent()
+     * @see PropContainer#getContent()
      */
     @Override
-    public Collection<CustomDavPropertyName> getContent() {
+    public Collection<DavPropertyName> getContent() {
         return set;
     }
 }

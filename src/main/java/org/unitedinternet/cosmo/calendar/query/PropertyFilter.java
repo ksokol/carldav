@@ -15,9 +15,9 @@
  */
 package org.unitedinternet.cosmo.calendar.query;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
-import carldav.jackrabbit.webdav.xml.CustomElementIterator;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.xml.DomUtils;
+import carldav.jackrabbit.webdav.xml.ElementIterator;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.w3c.dom.Element;
@@ -60,7 +60,7 @@ import java.util.List;
  * name (e.g., "ATTENDEE")
  * 
  */
-public class PropertyFilter implements CustomDavConstants, CaldavConstants {
+public class PropertyFilter implements DavConstants, CaldavConstants {
     private IsNotDefinedFilter isNotDefinedFilter = null;
 
     private TimeRangeFilter timeRangeFilter = null;
@@ -87,12 +87,12 @@ public class PropertyFilter implements CustomDavConstants, CaldavConstants {
      */
     public PropertyFilter(Element element, VTimeZone timezone) throws ParseException {
         // Name must be present
-        name = CustomDomUtils.getAttribute(element, ATTR_CALDAV_NAME);
+        name = DomUtils.getAttribute(element, ATTR_CALDAV_NAME);
         if (name == null) {
             throw new ParseException("CALDAV:prop-filter a calendar property name (e.g., \"ATTENDEE\") is required", -1);
         }
 
-        CustomElementIterator i = CustomDomUtils.getChildren(element);
+        ElementIterator i = DomUtils.getChildren(element);
         int childCount = 0;
         
         while (i.hasNext()) {

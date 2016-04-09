@@ -1,7 +1,7 @@
 package org.unitedinternet.cosmo.dav.property;
 
 import carldav.CarldavConstants;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -25,8 +25,8 @@ public class PrincipalUrl extends StandardDavProperty {
     public Element toXml(Document document) {
         Element name = getName().toXml(document);
 
-        Element href = CustomDomUtils.createElement(document, XML_HREF, CarldavConstants.caldav(XML_HREF));
-        CustomDomUtils.setText(href, getHref());
+        Element href = DomUtils.createElement(document, XML_HREF, CarldavConstants.caldav(XML_HREF));
+        DomUtils.setText(href, getHref());
         name.appendChild(href);
 
         return name;

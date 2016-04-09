@@ -16,9 +16,9 @@
 package org.unitedinternet.cosmo.dav.report;
 
 import carldav.exception.resolver.ResponseUtils;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.CustomMultiStatus;
-import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
+import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.MultiStatus;
+import carldav.jackrabbit.webdav.MultiStatusResponse;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.w3c.dom.Document;
@@ -31,9 +31,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class MultiStatusReport extends ReportBase {
 
-    private CustomMultiStatus multistatus = new CustomMultiStatus();
+    private MultiStatus multistatus = new MultiStatus();
     protected int propfindType = PROPFIND_ALL_PROP;
-    private CustomDavPropertyNameSet propfindProps;
+    private DavPropertyNameSet propfindProps;
 
     protected void output(HttpServletResponse response)
             throws CosmoDavException {
@@ -47,32 +47,32 @@ public abstract class MultiStatusReport extends ReportBase {
 
     public final void buildMultistatus() throws CosmoDavException {
 
-        CustomDavPropertyNameSet resultProps = createResultPropSpec();
+        DavPropertyNameSet resultProps = createResultPropSpec();
 
         for (WebDavResource result : getResults()) {
-            CustomMultiStatusResponse msr = buildMultiStatusResponse(result, resultProps);
+            MultiStatusResponse msr = buildMultiStatusResponse(result, resultProps);
             multistatus.addResponse(msr);
         }
     }
 
-    protected CustomDavPropertyNameSet createResultPropSpec() {
-        return new CustomDavPropertyNameSet(propfindProps);
+    protected DavPropertyNameSet createResultPropSpec() {
+        return new DavPropertyNameSet(propfindProps);
     }
 
     /**
      * Returns a <code>MultiStatusResponse</code> describing the
      * specified resource including the specified properties.
      */
-    protected CustomMultiStatusResponse buildMultiStatusResponse(WebDavResource resource, CustomDavPropertyNameSet props) {
+    protected MultiStatusResponse buildMultiStatusResponse(WebDavResource resource, DavPropertyNameSet props) {
         if (props.isEmpty()) {
             String href = resource.getResourceLocator().
                     getHref(resource.isCollection());
-            return new CustomMultiStatusResponse(href, 200);
+            return new MultiStatusResponse(href, 200);
         }
-        return new CustomMultiStatusResponse(resource, props, propfindType);
+        return new MultiStatusResponse(resource, props, propfindType);
     }
 
-    protected CustomMultiStatus getMultiStatus() {
+    protected MultiStatus getMultiStatus() {
         return multistatus;
     }
 
@@ -90,11 +90,11 @@ public abstract class MultiStatusReport extends ReportBase {
         this.propfindType = type;
     }
 
-    public CustomDavPropertyNameSet getPropFindProps() {
+    public DavPropertyNameSet getPropFindProps() {
         return propfindProps;
     }
 
-    public void setPropFindProps(CustomDavPropertyNameSet props) {
+    public void setPropFindProps(DavPropertyNameSet props) {
         this.propfindProps = props;
     }
 }

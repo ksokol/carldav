@@ -15,13 +15,13 @@
  */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import carldav.jackrabbit.webdav.CustomDavConstants;
-import carldav.jackrabbit.webdav.CustomMultiStatus;
-import carldav.jackrabbit.webdav.CustomMultiStatusResponse;
-import carldav.jackrabbit.webdav.property.CustomDavPropertyNameSet;
-import carldav.jackrabbit.webdav.version.report.CustomReportInfo;
-import carldav.jackrabbit.webdav.version.report.CustomReportType;
-import carldav.jackrabbit.webdav.xml.CustomDomUtils;
+import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.MultiStatus;
+import carldav.jackrabbit.webdav.MultiStatusResponse;
+import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
+import carldav.jackrabbit.webdav.version.report.ReportType;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.util.UriUtils;
 import org.unitedinternet.cosmo.dav.*;
@@ -55,14 +55,14 @@ public class MultigetReport extends CaldavMultiStatusReport {
     private static final Pattern RESOURCE_UUID_PATTERN = Pattern.compile("/\\{?\\p{XDigit}{8}-\\p{XDigit}" +
             "{4}-\\p{XDigit}{4}-\\p{XDigit}{4}-\\p{XDigit}{12}\\}?");
 
-    public static final CustomReportType REPORT_TYPE_CALDAV_MULTIGET =
-            CustomReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_MULTIGET, PRE_CALDAV), MultigetReport.class);
+    public static final ReportType REPORT_TYPE_CALDAV_MULTIGET =
+            ReportType.register(new QName(NS_CALDAV, ELEMENT_CALDAV_CALENDAR_MULTIGET, PRE_CALDAV), MultigetReport.class);
 
     private Set<String> hrefs;
 
     // Report methods
 
-    public CustomReportType getType() {
+    public ReportType getType() {
         return REPORT_TYPE_CALDAV_MULTIGET;
     }
 
@@ -80,22 +80,22 @@ public class MultigetReport extends CaldavMultiStatusReport {
      *
      * @throws CosmoDavException if the report info is not of the correct type
      */
-    protected void parseReport(CustomReportInfo info) throws CosmoDavException {
+    protected void parseReport(ReportInfo info) throws CosmoDavException {
         if (! getType().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType().getReportName());
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(CustomDavConstants.ALLPROP)) {
+        if (info.containsContentElement(DavConstants.ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(CustomDavConstants.PROPNAME)) {
+        } else if (info.containsContentElement(DavConstants.PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
             setOutputFilter(findOutputFilter(info));
         }
 
-        List<Element> hrefElements = info.getContentElements(CustomDavConstants.HREF);
+        List<Element> hrefElements = info.getContentElements(DavConstants.HREF);
         if (hrefElements.size() == 0) {
             throw new BadRequestException("Expected at least one " + XML_HREF);
         }
@@ -112,7 +112,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
         }        
         hrefs = new HashSet<>();
         for (Element element : hrefElements) { 
-            String href = CustomDomUtils.getTextTrim(element);
+            String href = DomUtils.getTextTrim(element);
             href = updateHrefElementWithRequestUrlUUID(element, href, resourceUUID);
             // validate and absolutize submitted href
             URL memberUrl = normalizeHref(resourceUrl, href); 
@@ -159,26 +159,26 @@ public class MultigetReport extends CaldavMultiStatusReport {
      */
     protected void runQuery()
         throws CosmoDavException {
-        CustomDavPropertyNameSet propspec = createResultPropSpec();
+        DavPropertyNameSet propspec = createResultPropSpec();
 
         if (getResource() instanceof DavCollection) {
             DavCollection collection = (DavCollection) getResource();
             for (String href : hrefs) {
                 WebDavResource target = collection.findMember(href);
 
-                final CustomMultiStatus multiStatus = getMultiStatus();
+                final MultiStatus multiStatus = getMultiStatus();
                 if (target != null) {
                     multiStatus.addResponse(buildMultiStatusResponse(target, propspec));
                 }
                 else {
-                    multiStatus.addResponse(new CustomMultiStatusResponse(href, 404));
+                    multiStatus.addResponse(new MultiStatusResponse(href, 404));
                 }
             }
             return;
         }
 
         if (getResource() instanceof DavCalendarResource) {
-            final CustomMultiStatus multiStatus = getMultiStatus();
+            final MultiStatus multiStatus = getMultiStatus();
             multiStatus.addResponse(buildMultiStatusResponse(getResource(), propspec));
             return;
         }

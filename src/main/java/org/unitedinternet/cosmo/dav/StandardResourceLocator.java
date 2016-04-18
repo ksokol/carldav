@@ -106,12 +106,6 @@ public class StandardResourceLocator implements DavResourceLocator {
     }
 
     @Override
-    public String username() {
-        final String[] split = getPath().split("/");
-        return split[2];
-    }
-
-    @Override
     public String collection() {
         final String[] split = getPath().split("/");
         return split.length > 3 ? split[3] : null;

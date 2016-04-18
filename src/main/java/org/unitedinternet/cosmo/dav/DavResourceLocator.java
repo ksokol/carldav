@@ -95,8 +95,6 @@ public interface DavResourceLocator {
      */
     DavResourceLocatorFactory getFactory();
 
-    String username();
-
     String collection();
 
     String itemUid();

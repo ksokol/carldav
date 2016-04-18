@@ -3,12 +3,10 @@ package carldav.repository.specification
 import carldav.entity.Item
 import carldav.repository.CollectionRepository
 import carldav.repository.ItemRepository
-import carldav.repository.UserRepository
 import org.junit.Before
 import org.junit.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import testutil.TestUser
 
 import java.time.Instant
 import java.time.LocalDate
@@ -21,9 +19,6 @@ public class ItemSpecsTest extends IntegrationTestSupport {
 
     @Autowired
     private CollectionRepository collectionRepository
-
-    @Autowired
-    private UserRepository userRepository
 
     def now = LocalDate.now()
     def item
@@ -43,8 +38,7 @@ public class ItemSpecsTest extends IntegrationTestSupport {
                 type: Item.Type.VEVENT,
                 startDate: Date.from(startDate),
                 endDate: Date.from(endDate),
-                collection: collectionRepository.findOne(1L),
-                owner: userRepository.findByEmailIgnoreCase(TestUser.USER01)
+                collection: collectionRepository.findOne(1L)
         )
 
         item = itemRepository.save(item)

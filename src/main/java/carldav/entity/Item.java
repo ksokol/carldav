@@ -31,7 +31,7 @@ import java.util.Date;
                  @Index(name = "idx_floating",columnList = "floating"),
                  @Index(name = "idx_recurring",columnList = "recurring")
         },
-        uniqueConstraints = {@UniqueConstraint(name = "uid_owner_collection", columnNames = {"uid", "ownerid", "collectionid"})}
+        uniqueConstraints = {@UniqueConstraint(name = "uid_collection", columnNames = {"uid", "collectionid"})}
 )
 public class Item {
 
@@ -45,7 +45,6 @@ public class Item {
     private String name;
     private String uid;
     private CollectionItem collection;
-    private User owner;
     private String mimetype;
     private String calendar;
     private Date startDate;
@@ -121,16 +120,6 @@ public class Item {
     @JoinColumn(name = "collectionid")
     public CollectionItem getCollection() {
         return collection;
-    }
-
-    @ManyToOne(targetEntity=User.class, fetch= FetchType.LAZY)
-    @JoinColumn(name="ownerid", nullable = false)
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
     }
 
     @Column(name = "mimetype", nullable = false)

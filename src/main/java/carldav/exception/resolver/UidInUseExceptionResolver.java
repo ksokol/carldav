@@ -12,7 +12,7 @@ public class UidInUseExceptionResolver implements ExceptionResolver {
     public CosmoDavException resolve(final Exception exception) {
         if(exception instanceof DataIntegrityViolationException) {
             final DataIntegrityViolationException cve = (DataIntegrityViolationException) exception;
-            if(cve.getMessage().contains("UID_OWNER_COLLECTION")) {
+            if(cve.getMessage().contains("UID_COLLECTION")) {
                 return new UidConflictException(cve.getMessage());
             }
         }

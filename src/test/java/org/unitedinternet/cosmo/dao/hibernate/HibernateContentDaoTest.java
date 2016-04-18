@@ -64,7 +64,7 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         item2.setCollection(a);
 
         expectedException.expect(org.springframework.dao.DataIntegrityViolationException.class);
-        expectedException.expectMessage("could not execute statement; SQL [n/a]; constraint [UID_OWNER_COLLECTION]");
+        expectedException.expectMessage("could not execute statement; SQL [n/a]; constraint [UID_COLLECTION]");
 
         itemRepository.save(item2);
     }
@@ -98,7 +98,6 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         Item content = new Item();
         content.setName(owner.getEmail());
         content.setDisplayName(owner.getEmail());
-        content.setOwner(owner);
         content.setMimetype("irrelevant");
         return content;
     }

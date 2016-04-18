@@ -122,12 +122,6 @@ public abstract class DavItemResourceBase extends DavResourceBase implements Dav
             }
         }
 
-        // Only initialize owner once
-        if (item.getOwner() == null) {
-            User owner = getSecurityManager().getSecurityContext().getUser();
-            item.setOwner(owner);
-        }
-
         Item hibICalendarItem = item;
         hibICalendarItem.setClientCreationDate(Calendar.getInstance().getTime());
         hibICalendarItem.setClientModifiedDate(hibICalendarItem.getClientCreationDate());

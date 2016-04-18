@@ -15,21 +15,12 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import carldav.entity.User;
-
 /**
  * An interface that represents a user-specific context for Cosmo
  * security operations. It provides a facade for the Acegi Security
  * system and applies Cosmo-specific security rules.
  */
 public interface CosmoSecurityContext {
-
-    /**
-     * @return an instance of {@link User} describing the user
-     * represented by the security context, or <code>null</code> if
-     * the context does not represent a user.
-     */
-    User getUser();
 
     String getUserId();
 }

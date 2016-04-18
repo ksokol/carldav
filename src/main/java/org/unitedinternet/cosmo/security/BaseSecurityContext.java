@@ -32,13 +32,8 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
         processPrincipal();
     }
 
-    /**
-     * @return an instance of {@link User} describing the user
-     * represented by the security context, or <code>null</code> if
-     * the context does not represent a user.
-     */
-    public User getUser() {
-        return user;
+    public String getUserId() {
+        return user.getEmail();
     }
 
     /* ----- our methods ----- */

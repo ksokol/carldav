@@ -177,7 +177,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     private WebDavResource createUnknownResource(DavResourceLocator locator) {
         final String itemUid = locator.itemUid();
         if(itemUid != null) {
-            final Item userItem = itemRepository.findByOwnerEmailAndName(locator.username(), locator.itemUid());
+            final Item userItem = itemRepository.findByName(locator.itemUid());
             if(userItem == null) {
                 return null;
             }
@@ -186,14 +186,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
         final String collection = locator.collection();
         if(collection != null) {
-            final CollectionItem userCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), collection);
+            final CollectionItem userCollection = collectionRepository.findByCurrentOwnerEmailAndName(collection);
             if(userCollection == null) {
                 return null;
             }
             return createCollectionResource(locator, userCollection);
         }
 
-        final CollectionItem homeCollection = collectionRepository.findByOwnerEmailAndName(locator.username(), locator.username());
+        final CollectionItem homeCollection = collectionRepository.findHomeCollectionByCurrentUser();
         return createCollectionResource(locator, homeCollection);
     }
 

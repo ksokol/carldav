@@ -47,4 +47,5 @@
 
 	<bean id="securityManager" class="org.unitedinternet.cosmo.security.impl.CosmoSecurityManagerImpl" />
 
+	<bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
 </beans>

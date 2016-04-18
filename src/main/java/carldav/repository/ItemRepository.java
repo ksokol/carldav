@@ -17,6 +17,7 @@ package carldav.repository;
 
 import carldav.entity.Item;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -27,6 +28,7 @@ public interface ItemRepository extends CrudRepository<Item, Long>, JpaSpecifica
 
     List<Item> findByCollectionId(Long id);
 
-    Item findByOwnerEmailAndName(String owner, String name);
+    @Query("select i from Item i where i.name = ?1 and i.owner.email = ?#{ principal.user.email }")
+    Item findByName(String name);
 
 }

@@ -19,6 +19,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 import carldav.repository.CollectionRepository;
 import carldav.repository.ItemRepository;
@@ -27,6 +28,7 @@ import carldav.entity.CollectionItem;
 import carldav.entity.Item;
 import carldav.entity.User;
 
+@WithUserDetails("test01@localhost.de")
 public class HibernateContentDaoTest extends IntegrationTestSupport {
 
     @Autowired
@@ -41,8 +43,8 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
     @Test
     public void multipleItemsError() throws Exception {
-        User user = getUser("testuser");
-        CollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
+        User user = userRepository.findByEmailIgnoreCase("test01@localhost.de");
+        CollectionItem root = collectionRepository.findHomeCollectionByCurrentUser();
 
         CollectionItem a = new CollectionItem();
         a.setName("a");
@@ -52,12 +54,12 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
         collectionRepository.save(a);
 
-        Item item1 = generateTestContent();
+        Item item1 = generateTestContent(user);
         item1.setUid("1");
         item1.setCollection(a);
         itemRepository.save(item1);
 
-        Item item2 = generateTestContent();
+        Item item2 = generateTestContent(user);
         item2.setUid("1");
         item2.setCollection(a);
 
@@ -69,8 +71,8 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
 
     @Test
     public void multipleCollectionsError() throws Exception {
-        User user = getUser("testuser");
-        CollectionItem root = collectionRepository.findByOwnerEmailAndName(user.getEmail(), user.getEmail());
+        User user = userRepository.findByEmailIgnoreCase("test01@localhost.de");
+        CollectionItem root = collectionRepository.findHomeCollectionByCurrentUser();
 
         CollectionItem a = new CollectionItem();
         a.setName("a");
@@ -92,40 +94,11 @@ public class HibernateContentDaoTest extends IntegrationTestSupport {
         collectionRepository.save(b);
     }
 
-    public User getUser(String username) {
-        final String email = username + "@testem";
-        User user = userRepository.findByEmailIgnoreCase(email);
-        if (user == null) {
-            user = new User();
-            user.setPassword(username);
-            user.setEmail(email);
-            userRepository.save(user);
-
-            user = userRepository.findByEmailIgnoreCase(email);
-
-            CollectionItem newItem = new CollectionItem();
-
-            newItem.setOwner(user);
-            //TODO
-            newItem.setName(user.getEmail());
-            newItem.setDisplayName("homeCollection");
-            collectionRepository.save(newItem);
-
-            // create root item
-            collectionRepository.save(newItem);
-        }
-        return user;
-    }
-
-    private Item generateTestContent() {
-        return generateTestContent("test", "testuser");
-    }
-
-    private Item generateTestContent(String name, String owner) {
+    private Item generateTestContent(User owner) {
         Item content = new Item();
-        content.setName(name);
-        content.setDisplayName(name);
-        content.setOwner(getUser(owner));
+        content.setName(owner.getEmail());
+        content.setDisplayName(owner.getEmail());
+        content.setOwner(owner);
         content.setMimetype("irrelevant");
         return content;
     }

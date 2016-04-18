@@ -22,5 +22,5 @@ package org.unitedinternet.cosmo.security;
  */
 public interface CosmoSecurityContext {
 
-    String getUserId();
+    String getUsername();
 }

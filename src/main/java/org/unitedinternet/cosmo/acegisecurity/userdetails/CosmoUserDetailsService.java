@@ -19,12 +19,12 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.Assert;
 import carldav.repository.UserRepository;
-import carldav.entity.User;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class CosmoUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
-        User user = userRepository.findByEmailIgnoreCase(username);
+        carldav.entity.User user = userRepository.findByEmailIgnoreCase(username);
         if (user == null) {
             throw new UsernameNotFoundException("user " + username + " not found");
         }
@@ -46,6 +46,6 @@ public class CosmoUserDetailsService implements UserDetailsService {
         final boolean accountNonLocked = !user.isLocked();
         final List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(StringUtils.defaultIfBlank(user.getRole(), "ROLE_USER"));
 
-        return new CosmoUserDetails(user.getEmail(), user.getPassword(), true, true, true, accountNonLocked, authorities, user);
+        return new User(user.getEmail(), user.getPassword(), true, true, true, accountNonLocked, authorities);
     }
 }

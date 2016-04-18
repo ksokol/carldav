@@ -17,21 +17,10 @@ package org.unitedinternet.cosmo.security.impl;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
 import org.unitedinternet.cosmo.CosmoException;
-import org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetails;
 import org.unitedinternet.cosmo.security.BaseSecurityContext;
-import org.unitedinternet.cosmo.security.CosmoSecurityContext;
 
-/**
- * Standard implementation of {@link CosmoSecurityContext}. Wraps
- * an instance of Acegi Security's
- * {@link org.springframework.security.Authentication}.
- *
- * XXX: consider removing the direct dependency on Acegi Security,
- * instead possibly having separate implementations of
- * CosmoSecurityContext for users that don't use an
- * Authentication at all
- */
 public class CosmoSecurityContextImpl extends BaseSecurityContext {
 
     public CosmoSecurityContextImpl(Authentication authentication) {
@@ -42,9 +31,8 @@ public class CosmoSecurityContextImpl extends BaseSecurityContext {
         //anonymous principals do not have CosmoUserDetails and by
         //definition are not running as other principals
         if (getPrincipal() instanceof UsernamePasswordAuthenticationToken) {
-            CosmoUserDetails details = (CosmoUserDetails)
-                ((Authentication) getPrincipal()).getPrincipal();
-            setUser(details.getUser());
+            User details = (User) ((Authentication) getPrincipal()).getPrincipal();
+            setUser(details);
         } else {
             throw new CosmoException("Unknown principal type " + getPrincipal().getClass().getName(),
                     new CosmoException());

@@ -171,7 +171,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     }
 
     protected WebDavResource createUserPrincipalResource(DavResourceLocator locator) throws CosmoDavException {
-        return new DavUserPrincipal(securityManager.getSecurityContext().getUserId(), locator, this);
+        return new DavUserPrincipal(securityManager.getSecurityContext().getUsername(), locator, this);
     }
 
     private WebDavResource createUnknownResource(DavResourceLocator locator) {

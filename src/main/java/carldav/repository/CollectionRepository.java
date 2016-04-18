@@ -11,10 +11,10 @@ import java.util.List;
  */
 public interface CollectionRepository extends CrudRepository<CollectionItem, Long> {
 
-    @Query("select c from CollectionItem c where c.name = ?1 and c.owner.email = ?#{ principal.user.email }")
+    @Query("select c from CollectionItem c where c.name = ?1 and c.owner.email = ?#{ principal.username }")
     CollectionItem findByCurrentOwnerEmailAndName(String name);
 
-    @Query("select c from CollectionItem c where c.name = ?#{ principal.user.email } and c.owner.email = ?#{ principal.user.email }")
+    @Query("select c from CollectionItem c where c.name = ?#{ principal.username } and c.owner.email = ?#{ principal.username }")
     CollectionItem findHomeCollectionByCurrentUser();
 
     /**
@@ -23,7 +23,7 @@ public interface CollectionRepository extends CrudRepository<CollectionItem, Lon
     @Deprecated
     List<CollectionItem> findByOwnerEmail(String owner);
 
-    @Query("select c from CollectionItem c where c.owner.email = ?#{ principal.user.email }")
+    @Query("select c from CollectionItem c where c.owner.email = ?#{ principal.username }")
     List<CollectionItem> findByCurrentUser();
 
     List<CollectionItem> findByParentId(Long id);

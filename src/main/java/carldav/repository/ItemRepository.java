@@ -28,7 +28,7 @@ public interface ItemRepository extends CrudRepository<Item, Long>, JpaSpecifica
 
     List<Item> findByCollectionId(Long id);
 
-    @Query("select i from Item i where i.collection.name = ?1 and i.name = ?2 and i.collection.owner.email = ?#{ principal.user.email }")
+    @Query("select i from Item i where i.collection.name = ?1 and i.name = ?2 and i.collection.owner.email = ?#{ principal.username }")
     Item findByCurrentOwnerEmailAndCollectionNameAndName(String collectionName, String name);
 
 }

@@ -15,7 +15,7 @@
  */
 package org.unitedinternet.cosmo.security;
 
-import carldav.entity.User;
+import org.springframework.security.core.userdetails.User;
 
 import java.security.Principal;
 
@@ -32,8 +32,8 @@ public abstract class BaseSecurityContext implements CosmoSecurityContext {
         processPrincipal();
     }
 
-    public String getUserId() {
-        return user.getEmail();
+    public String getUsername() {
+        return user.getUsername();
     }
 
     /* ----- our methods ----- */

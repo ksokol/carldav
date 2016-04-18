@@ -176,17 +176,18 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
 
     private WebDavResource createUnknownResource(DavResourceLocator locator) {
         final String itemUid = locator.itemUid();
-        if(itemUid != null) {
-            final Item userItem = itemRepository.findByName(locator.itemUid());
+        final String collectionName = locator.collection();
+
+        if(collectionName != null && itemUid != null) {
+            final Item userItem = itemRepository.findByCurrentOwnerEmailAndCollectionNameAndName(collectionName, locator.itemUid());
             if(userItem == null) {
                 return null;
             }
             return createResource(locator, userItem);
         }
 
-        final String collection = locator.collection();
-        if(collection != null) {
-            final CollectionItem userCollection = collectionRepository.findByCurrentOwnerEmailAndName(collection);
+        if(collectionName != null) {
+            final CollectionItem userCollection = collectionRepository.findByCurrentOwnerEmailAndName(collectionName);
             if(userCollection == null) {
                 return null;
             }

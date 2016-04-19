@@ -45,7 +45,7 @@
 
 	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
 
-	<bean id="securityManager" class="org.unitedinternet.cosmo.security.impl.CosmoSecurityManagerImpl" />
+	<bean id="securityManager" class="org.unitedinternet.cosmo.security.CosmoSecurityManager" />
 
 	<bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
 </beans>

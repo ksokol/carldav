@@ -15,40 +15,25 @@
  */
 package org.unitedinternet.cosmo.dav.impl;
 
-import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
-
 import carldav.jackrabbit.webdav.property.DavPropertyName;
 import carldav.jackrabbit.webdav.property.DavPropertySet;
 import carldav.jackrabbit.webdav.version.report.Report;
 import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.DavCollection;
-import org.unitedinternet.cosmo.dav.DavResourceFactory;
-import org.unitedinternet.cosmo.dav.DavResourceLocator;
-import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
-import org.unitedinternet.cosmo.dav.NotFoundException;
-import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
-import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.*;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.property.PrincipalUrl;
 import org.unitedinternet.cosmo.dav.property.SupportedReportSet;
 import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
-import org.unitedinternet.cosmo.security.CosmoSecurityManager;
-
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
+import java.io.PrintWriter;
+import java.util.*;
+
+import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
 
 /**
  * <p>
@@ -167,12 +152,9 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         return locator;
     }
 
-    // our methods
-
-    protected CosmoSecurityManager getSecurityManager() {
-        return factory.getSecurityManager();
+    protected String getUsername() {
+        return factory.getSecurityManager().getUsername();
     }
-
     /**
      * Determines whether or not the report indicated by the given
      * report info is supported by this collection.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2005-2007 Open Source Applications Foundation
+ * Copyright 2005-2006 Open Source Applications Foundation
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +15,19 @@
  */
 package org.unitedinternet.cosmo.security;
 
-/**
- * Represents a server-wide security controller for Cosmo. It
- * provides entry points for obtaining information about the
- * authentication state of the currently executing thread or for
- * initiating authentication (or overwriting the current state).
- *
- * @see CosmoSecurityContext
- */
-public interface CosmoSecurityManager {
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-    /**
-     * Provides a <code>CosmoSecurityContext</code> representing a
-     * previously authenticated principal.
-     */
-    CosmoSecurityContext getSecurityContext();
+public class CosmoSecurityManager {
+
+    public String getUsername() {
+        SecurityContext context = SecurityContextHolder.getContext();
+        Authentication authentication = context.getAuthentication();
+        if (authentication == null) {
+            throw new RuntimeException("no Authentication found in SecurityContext");
+        }
+
+        return authentication.getName();
+    }
 }

@@ -292,7 +292,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
             if (!isHomeCollection()) {
                 DavResourceLocator homeLocator = getResourceLocator()
                         .getFactory().createHomeLocator(
-                                getResourceLocator().getContext(), getSecurityManager().getSecurityContext().getUsername());
+                                getResourceLocator().getContext(), getUsername());
                 writer.write("<a href=\"");
                 writer.write(homeLocator.getHref(true));
                 writer.write("\">");

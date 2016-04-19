@@ -17,23 +17,6 @@ public abstract class PropContainer implements XmlSerializable, DavConstants {
     private static Logger log = LoggerFactory.getLogger(PropContainer.class);
 
     /**
-     * Tries to add the specified object to the <code>PropContainer</code> and
-     * returns a boolean indicating whether the content could be added to the
-     * internal set/map.
-     *
-     * @param contentEntry
-     * @return true if the object could be added; false otherwise
-     * @deprecated Use {@link #addContent(PropEntry)} instead.
-     */
-    public boolean addContent(Object contentEntry) {
-        if (contentEntry instanceof PropEntry) {
-            return addContent(contentEntry);
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * Tries to add the specified entry to the <code>PropContainer</code> and
      * returns a boolean indicating whether the content could be added to the
      * internal set/map.
@@ -49,14 +32,6 @@ public abstract class PropContainer implements XmlSerializable, DavConstants {
      * @return true if this container is empty.
      */
     public abstract boolean isEmpty();
-
-    /**
-     * Returns the number of property related content elements that are present
-     * in this <code>PropContainer</code>.
-     *
-     * @return number of content elements
-     */
-    public abstract int getContentSize();
 
     /**
      * Returns the collection that contains all the content elements of this

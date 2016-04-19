@@ -98,14 +98,6 @@ public class DavPropertySet extends PropContainer implements Iterable<WebDavProp
     }
 
     /**
-     * @see PropContainer#getContentSize()
-     */
-    @Override
-    public int getContentSize() {
-        return map.size();
-    }
-
-    /**
      * @see PropContainer#getContent()
      */
     @Override

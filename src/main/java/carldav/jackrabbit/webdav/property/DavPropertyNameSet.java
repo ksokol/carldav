@@ -1,7 +1,5 @@
 package carldav.jackrabbit.webdav.property;
 
-import static carldav.CarldavConstants.caldav;
-
 import carldav.jackrabbit.webdav.xml.DomUtils;
 import carldav.jackrabbit.webdav.xml.ElementIterator;
 import org.slf4j.Logger;
@@ -11,6 +9,8 @@ import org.w3c.dom.Element;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+
+import static carldav.CarldavConstants.caldav;
 
 public class DavPropertyNameSet extends PropContainer {
 
@@ -99,7 +99,6 @@ public class DavPropertyNameSet extends PropContainer {
      * in order to successfully add the given entry.
      * @return true if contentEntry is an instance of <code>DavPropertyName</code>
      * that could be added to this set. False otherwise.
-     * @see PropContainer#addContent(Object)
      */
     @Override
     public boolean addContent(PropEntry contentEntry) {
@@ -116,14 +115,6 @@ public class DavPropertyNameSet extends PropContainer {
     @Override
     public boolean isEmpty() {
         return set.isEmpty();
-    }
-
-    /**
-     * @see PropContainer#getContentSize()
-     */
-    @Override
-    public int getContentSize() {
-        return set.size();
     }
 
     /**

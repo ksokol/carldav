@@ -30,10 +30,7 @@ public class ReportType implements XmlSerializable {
             Report report = reportClass.newInstance();
             report.init(resource, info);
             return report;
-        } catch (IllegalAccessException e) {
-            // should never occur
-            throw new CosmoDavException("Failed to create new report (" + reportClass.getName() + ") from class: " + e.getMessage());
-        } catch (InstantiationException e) {
+        } catch (IllegalAccessException|InstantiationException e) {
             // should never occur
             throw new CosmoDavException("Failed to create new report (" + reportClass.getName() + ") from class: " + e.getMessage());
         }
@@ -41,7 +38,6 @@ public class ReportType implements XmlSerializable {
 
     public Element toXml(Document document) {
         return DomUtils.createElement(document, namespace.getLocalPart(), namespace);
-        //return DomUtil.createElement(document, localName, namespace);
     }
 
     public boolean isRequestedReportType(ReportInfo reqInfo) {
@@ -79,10 +75,8 @@ public class ReportType implements XmlSerializable {
                 if (!(report instanceof Report)) {
                     throw new IllegalArgumentException("Unable to register Report class: " + reportClass + " does not implement the Report interface.");
                 }
-            } catch (IllegalAccessException e) {
+            } catch (IllegalAccessException|InstantiationException e) {
                 throw new IllegalArgumentException("Error while validating Report class: " + e.getMessage());
-            } catch (InstantiationException e) {
-                throw new IllegalArgumentException("Error while validating Report class.: " + e.getMessage());
             }
 
             ReportType type = new ReportType(namespace, key, reportClass);

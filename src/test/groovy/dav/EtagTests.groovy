@@ -30,7 +30,7 @@ class EtagTests extends IntegrationTestSupport {
 
     @Before
     public void before() {
-        etag = mockMvc.perform(put("/carldav/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+        etag = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
@@ -40,7 +40,7 @@ class EtagTests extends IntegrationTestSupport {
 
     @Test
     public void user01IfMatchWildcardIsOkReturnEtag() throws Exception {
-        mockMvc.perform(head("/carldav/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+        mockMvc.perform(head("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .header("If-Match", '*'))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(etag)));
@@ -48,7 +48,7 @@ class EtagTests extends IntegrationTestSupport {
 
     @Test
     public void user01IfMatchEtagIsOkReturnEtag() throws Exception {
-        mockMvc.perform(head("/carldav/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+        mockMvc.perform(head("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .header("If-Match", etag))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(etag)));
@@ -56,14 +56,14 @@ class EtagTests extends IntegrationTestSupport {
 
     @Test
     public void user01IfNoneMatchGetIsNotModified() throws Exception {
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+        mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .header("If-None-Match", etag))
                 .andExpect(status().isNotModified())
     }
 
     @Test
     public void user01IfNoneMatchOptionsIsPrecodnitionFailed() throws Exception {
-        mockMvc.perform(options("/carldav/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+        mockMvc.perform(options("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .header("If-None-Match", etag))
                 .andExpect(status().isPreconditionFailed())
                 .andExpect(xml(PRECONDITION_FAILED_RESPONSE))
@@ -71,7 +71,7 @@ class EtagTests extends IntegrationTestSupport {
 
     @Test
     public void user01IfNoneMatchHeadIsNotModified() throws Exception {
-        mockMvc.perform(head("/carldav/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
+        mockMvc.perform(head("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .header("If-None-Match", etag))
                 .andExpect(status().isNotModified())
     }

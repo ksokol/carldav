@@ -34,7 +34,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
     @Test
     public void fetchingEmptyCalendarFirstTime() {
-        mockMvc.perform(options("/carldav/dav/{email}/calendar/", USER01))
+        mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, TRACE, PROPFIND, PUT, DELETE, REPORT"))
@@ -46,7 +46,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/carldav/dav/{email}/calendar/", USER01)
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -85,7 +85,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         def response2 = """<D:multistatus xmlns:D="DAV:" />"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -108,7 +108,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         def response3 = """<D:multistatus xmlns:D="DAV:" />"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -142,7 +142,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         def response1 = """<D:multistatus xmlns:D="DAV:" />"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -150,7 +150,7 @@ class EvolutionTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
 
-        MvcResult result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics", USER01)
+        MvcResult result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(veventRequest1)
                 .header("If-None-Match", "*"))
@@ -160,7 +160,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         currentEtag = result1.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -176,7 +176,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def result2 = mockMvc.perform(propfind("/carldav/dav/{email}/calendar/", USER01)
+        def result2 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "0"))
@@ -226,7 +226,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -243,7 +243,7 @@ class EvolutionTests extends IntegrationTestSupport {
                           <D:href>/carldav/dav/test01%40localhost.de/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics</D:href>
                         </C:calendar-multiget>"""
 
-        def result4 = mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        def result4 = mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request4)
                 .header("Depth", "1"))
@@ -296,7 +296,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        MvcResult result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
+        MvcResult result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -328,7 +328,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             END:VCALENDAR
                             """.stripIndent()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -361,7 +361,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        MvcResult result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
+        MvcResult result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-Match", currentEtag))
@@ -391,7 +391,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             END:VCALENDAR
                             """.stripIndent()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -405,12 +405,12 @@ class EvolutionTests extends IntegrationTestSupport {
     void deleteVEvent() {
         addVEventWithAttachment()
 
-        mockMvc.perform(delete("/carldav/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
+        mockMvc.perform(delete("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
                 .andReturn()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T141828Z-27136-1000-3483-localhost-20151230T141924Z.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -431,7 +431,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/carldav/dav/{email}/calendar/", USER01)
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -490,7 +490,7 @@ class EvolutionTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -553,7 +553,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -593,7 +593,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -630,7 +630,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -666,7 +666,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-Match", currentEtag))
@@ -698,7 +698,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(textCalendarContentType())
@@ -711,12 +711,12 @@ class EvolutionTests extends IntegrationTestSupport {
     void deleteVTodo() {
         addVTodo()
 
-        mockMvc.perform(delete("/carldav/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
+        mockMvc.perform(delete("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
                 .andReturn()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20151230T170626Z-21291-1000-3483-0_localhost-20151230T170748Z.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -763,7 +763,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/carldav/dav/{email}/calendar/", USER01)
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -786,7 +786,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar", USER01)
                 .contentType(TEXT_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -838,7 +838,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -855,7 +855,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             </prop>
                         </propfind>"""
 
-        def result2 = mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
+        def result2 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
                 .contentType(TEXT_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -887,7 +887,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         assertThat(result2, equalXml(response2))
 
-        mockMvc.perform(get("/carldav/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
+        mockMvc.perform(get("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
                 .andExpect(header().string(ETAG, currentEtag))
                 .andExpect(textCardContentType())
@@ -899,11 +899,11 @@ class EvolutionTests extends IntegrationTestSupport {
     void deleteVCard() {
         addVCard()
 
-        mockMvc.perform(delete("/carldav/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
+        mockMvc.perform(delete("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
 
-        mockMvc.perform(get("/carldav/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
+        mockMvc.perform(get("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -919,7 +919,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1)
                 .header("If-Match", currentEtag))
@@ -929,7 +929,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         currentEtag = result1.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/carldav/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
+        mockMvc.perform(get("/dav/{email}/contacts/BA9B77D0-87105168-1311D5B6.vcf", USER01))
                 .andExpect(status().isOk())
                 .andExpect(text(request1))
     }
@@ -952,7 +952,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         def response1 = """<D:multistatus xmlns:D="DAV:"/>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -973,7 +973,7 @@ class EvolutionTests extends IntegrationTestSupport {
                           </C:filter>
                         </C:calendar-query>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -1003,7 +1003,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         def response1 = """<D:multistatus xmlns:D="DAV:"/>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -1035,7 +1035,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result2 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01)
+        def result2 = mockMvc.perform(put("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request2)
                 .header(IF_NONE_MATCH, "*"))
@@ -1067,7 +1067,7 @@ class EvolutionTests extends IntegrationTestSupport {
                             END:VCALENDAR
                             """.stripIndent()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(textCalendarContentType())
                 .andExpect(header().string(LAST_MODIFIED, notNullValue()))
@@ -1090,7 +1090,7 @@ class EvolutionTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -1103,12 +1103,12 @@ class EvolutionTests extends IntegrationTestSupport {
     void deleteVJournal() {
         addVJournal()
 
-        mockMvc.perform(delete("/carldav/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01)
+        mockMvc.perform(delete("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01)
                 .header("If-Match", currentEtag))
                 .andExpect(status().isNoContent())
                 .andReturn()
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -1137,7 +1137,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-Match", currentEtag))
@@ -1147,7 +1147,7 @@ class EvolutionTests extends IntegrationTestSupport {
 
         currentEtag = result1.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/20160114T072824Z-8357-1000-1795-3@localhost.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(text(request1))
@@ -1164,7 +1164,7 @@ class EvolutionTests extends IntegrationTestSupport {
                           </prop>
                         </propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/carldav/dav/{email}/calendar/", USER01)
+        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -1201,7 +1201,7 @@ class EvolutionTests extends IntegrationTestSupport {
                           </C:filter>
                         </C:calendar-query>"""
 
-        def result2 = mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        def result2 = mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -1267,7 +1267,7 @@ class EvolutionTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -1288,7 +1288,7 @@ class EvolutionTests extends IntegrationTestSupport {
                           </C:filter>
                         </C:calendar-query>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request4)
                 .header("Depth", "1"))
@@ -1341,7 +1341,7 @@ class EvolutionTests extends IntegrationTestSupport {
                                 <cosmo:precondition-failed>If-Match disallows conditional request</cosmo:precondition-failed>
                             </D:error>"""
 
-        mockMvc.perform(put("/carldav/dav/{email}/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics", USER01)
+        mockMvc.perform(put("/dav/{email}/calendar/20151230T132406Z-27136-1000-3483-35_localhost-20151230T132510Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
@@ -1377,7 +1377,7 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        mockMvc.perform(put("/carldav/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01)
+        mockMvc.perform(put("/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1))
                 .andExpect(status().isCreated())
@@ -1403,15 +1403,15 @@ class EvolutionTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        mockMvc.perform(get("/carldav/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01))
+        mockMvc.perform(get("/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
                 .andExpect(text(response2))
 
-        mockMvc.perform(delete("/carldav/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01))
+        mockMvc.perform(delete("/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01))
                 .andExpect(status().isNoContent())
 
-        mockMvc.perform(get("/carldav/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01))
+        mockMvc.perform(get("/dav/test01@localhost.de/calendar/20160123T145918Z-30167-1000-1796-12_localhost-20160123T160450Z.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 }

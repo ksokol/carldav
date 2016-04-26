@@ -15,6 +15,7 @@
  */
 package org.unitedinternet.cosmo.dav;
 
+import org.springframework.util.Assert;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -30,8 +31,13 @@ import java.net.*;
  */
 public class StandardResourceLocatorFactory implements DavResourceLocatorFactory, ExtendedDavConstants {
 
-    // DavResourceLocatorFactory methods
-    
+    private final String contextPath;
+
+    public StandardResourceLocatorFactory(String contextPath) {
+        Assert.hasText(contextPath, "contextPath is null");
+        this.contextPath = "/".equals(contextPath) ? "" : contextPath;
+    }
+
     public DavResourceLocator createResourceLocatorByPath(URL context,
                                                           String path) {
         return new StandardResourceLocator(context, path, this);
@@ -79,10 +85,7 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
                 }
             }
 
-            // trim base path
-            String path = url.getPath().substring(context.getPath().length()) + "/";
-            path = path.replaceAll("/{2,}", "/");
-
+            String path = url.getPath().replaceFirst(contextPath, "");
             return new StandardResourceLocator(context, URLDecoder.decode(path, "UTF-8"), this);
         } catch (URISyntaxException | MalformedURLException | UnsupportedEncodingException e) {
             throw new BadRequestException("Invalid URL: " + e.getMessage());
@@ -113,7 +116,13 @@ public class StandardResourceLocatorFactory implements DavResourceLocatorFactory
         try {
             final ServletUriComponentsBuilder servletUriComponentsBuilder = ServletUriComponentsBuilder.fromRequest(request);
             final String firstPathSegment = servletUriComponentsBuilder.build().getPathSegments().get(0);
-            final String basePath = "/" + firstPathSegment;
+            String basePath;
+
+            if(contextPath.equals(firstPathSegment)) {
+                basePath = "/";
+            } else {
+                basePath = "".equals(contextPath) ? "/" : contextPath;
+            }
 
             context = new URL(request.getScheme(), request.getServerName(), request.getServerPort(), basePath);
             locator = createResourceLocatorByUri(context, request.getRequestURI());

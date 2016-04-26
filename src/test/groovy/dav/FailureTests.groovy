@@ -33,7 +33,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:bad-request>Element type "D:pro" must be followed by either attribute specifications, "&gt;" or "/&gt;".</cosmo:bad-request>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .content(request1)
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
@@ -56,7 +56,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:valid-calendar-data>Failed to parse calendar object: Error at line 6:Unexpected end of file</C:valid-calendar-data>
                             </D:error>"""
 
-        mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -89,7 +89,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:unsupported-media-type>Expected Content-Type application/xml or text/xml</cosmo:unsupported-media-type>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType("application/json")
                 .content(request1)
                 .header("Depth", "1"))
@@ -120,7 +120,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:valid-calendar-data>Invalid calendar object: DTSTAMP: DATE-TIME value must be specified in UTC time</C:valid-calendar-data>
                             </D:error>"""
 
-        mockMvc.perform(put("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+        mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -149,7 +149,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:supported-collation>Collation must be one of i;ascii-casemap, i;octet</C:supported-collation>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -181,7 +181,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:supported-calendar-component>Calendar object must contain at least one of VEVENT, VTODO, VJOURNAL</C:supported-calendar-component>
                             </D:error>"""
 
-        mockMvc.perform(put("/carldav/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
+        mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1)
                 .header("If-None-Match", "*"))
@@ -206,7 +206,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:valid-filter>CALDAV:filter must contain a comp-filter</C:valid-filter>
                              </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -231,7 +231,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:unsupported-media-type>Body not expected for method GET</cosmo:unsupported-media-type>
                             </D:error>"""
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar", USER01)
+        mockMvc.perform(get("/dav/{email}/calendar", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1))
                 .andExpect(xml(response1))
@@ -241,7 +241,7 @@ class FailureTests extends IntegrationTestSupport {
 
     @Test
     void deleteWithXmlBody() {
-         mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+         mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1))
                 .andExpect(status().isCreated())
@@ -260,7 +260,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:unsupported-media-type>Body not expected for method DELETE</cosmo:unsupported-media-type>
                             </D:error>"""
 
-        mockMvc.perform(delete("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1))
                 .andExpect(xml(response1))
@@ -270,7 +270,7 @@ class FailureTests extends IntegrationTestSupport {
 
     @Test
     void deleteWithMalformedXmlBody() {
-        mockMvc.perform(put("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1)
                 .header("If-None-Match", "*"))
@@ -289,7 +289,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:bad-request>Element type "C:calendar-data" must be followed by either attribute specifications, ">" or "/>".</cosmo:bad-request>
                             </D:error>"""
 
-        mockMvc.perform(delete("/carldav/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
+        mockMvc.perform(delete("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1))
                 .andExpect(xml(response1))
@@ -311,7 +311,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:supported-calendar-data>Calendar data must be of media type text/calendar, version 2.0</C:supported-calendar-data>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -334,7 +334,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:supported-calendar-data>Calendar data of type text/card not allowed; only text/calendar or text/vcard</C:supported-calendar-data>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -364,7 +364,7 @@ class FailureTests extends IntegrationTestSupport {
         }
 
         def assertTimerange = { attributes, message ->
-            mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+            mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                     .contentType(APPLICATION_XML)
                     .content(request(attributes)))
                     .andExpect(status().isBadRequest())
@@ -397,7 +397,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:internal-server-error>only one top-level component supported</cosmo:internal-server-error>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1))
                 .andExpect(xml(response1))
@@ -420,7 +420,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:internal-server-error>only top-level comp name VCALENDAR supported</cosmo:internal-server-error>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1))
                 .andExpect(xml(response1))
@@ -447,7 +447,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:supported-collation>Collation must be one of i;ascii-casemap, i;octet</C:supported-collation>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -474,7 +474,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <C:valid-filter>CALDAV:filter can contain only one comp-filter</C:valid-filter>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar", USER01)
                 .contentType(TEXT_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -496,7 +496,7 @@ class FailureTests extends IntegrationTestSupport {
                                 <cosmo:bad-request>Expected at least one href</cosmo:bad-request>
                             </D:error>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .content(request1)
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())

@@ -59,8 +59,10 @@
         </constructor-arg>
 	</bean>
 
-	<bean id="davResourceLocatorFactory"
-		class="org.unitedinternet.cosmo.dav.StandardResourceLocatorFactory" />
+	<bean id="davResourceLocatorFactory" class="org.unitedinternet.cosmo.dav.StandardResourceLocatorFactory">
+        <constructor-arg value="${server.context-path:/}"/>
+    </bean>
+
     <bean id="simpleUrlHandlerMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
         <property name="order" value="1" />
         <property name="mappings">

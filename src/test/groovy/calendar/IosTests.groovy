@@ -81,7 +81,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/principals/users/{email}/", USER01)
+        mockMvc.perform(propfind("/principals/users/{email}/", USER01)
                 .contentType(TEXT_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -89,7 +89,7 @@ class IosTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
 
-        mockMvc.perform(options("/carldav/principals/users/{email}/", USER01))
+        mockMvc.perform(options("/principals/users/{email}/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, PROPFIND"))
@@ -239,7 +239,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/dav/{email}/", USER01)
+        mockMvc.perform(propfind("/dav/{email}/", USER01)
                 .contentType(TEXT_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -264,7 +264,7 @@ class IosTests extends IntegrationTestSupport {
 
         def response4 = """<D:multistatus xmlns:D="DAV:"/>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
                 .content(request4)
                 .header("Depth", "1"))
@@ -325,7 +325,7 @@ class IosTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1))
                 .andExpect(status().isCreated())
@@ -334,7 +334,7 @@ class IosTests extends IntegrationTestSupport {
 
         currentEtag = result1.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(text(request1))
@@ -344,11 +344,11 @@ class IosTests extends IntegrationTestSupport {
     void deleteVEvent() {
         addVEvent()
 
-        mockMvc.perform(delete("/carldav/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+        mockMvc.perform(delete("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
                 .andExpect(status().isNoContent())
                 .andExpect(etag(nullValue()))
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
                 .andExpect(status().isNotFound())
     }
 
@@ -408,7 +408,7 @@ class IosTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1))
                 .andExpect(status().isNoContent())
@@ -417,7 +417,7 @@ class IosTests extends IntegrationTestSupport {
 
         currentEtag = result1.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/BC9458C9-C221-4E23-BA24-1E3D4EDBE65B.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(text(request1))
@@ -461,7 +461,7 @@ class IosTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request1))
                 .andExpect(status().isCreated())
@@ -470,7 +470,7 @@ class IosTests extends IntegrationTestSupport {
 
         currentEtag = result1.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(text(request1))
@@ -512,7 +512,7 @@ class IosTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def result2 = mockMvc.perform(put("/carldav/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01)
+        def result2 = mockMvc.perform(put("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(request2))
                 .andExpect(status().isNoContent())
@@ -521,7 +521,7 @@ class IosTests extends IntegrationTestSupport {
 
         currentEtag = result2.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/carldav/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01))
+        mockMvc.perform(get("/dav/{email}/calendar/E107202C-E367-4C24-989D-BD5BFECD2F6C.ics", USER01))
                 .andExpect(status().isOk())
                 .andExpect(etag(is(currentEtag)))
                 .andExpect(text(request2))
@@ -561,7 +561,7 @@ class IosTests extends IntegrationTestSupport {
                               </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/calendar/", USER01)
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML)
                 .content(request1)
                 .header("Depth", "1"))
@@ -572,7 +572,7 @@ class IosTests extends IntegrationTestSupport {
 
     @Test
     void addVCard() {
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(IosData.ADD_VCARD_REQUEST1))
                 .andExpect(status().isCreated())
@@ -588,7 +588,7 @@ class IosTests extends IntegrationTestSupport {
                           </A:prop>
                         </A:propfind>"""
 
-        def result2 = mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
+        def result2 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
                 .contentType(TEXT_XML)
                 .content(request2)
                 .header("Depth", "1"))
@@ -633,7 +633,7 @@ class IosTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        def result1 = mockMvc.perform(put("/carldav/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01)
+        def result1 = mockMvc.perform(put("/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01)
                 .contentType(TEXT_VCARD)
                 .content(request1))
                 .andExpect(status().isNoContent())
@@ -662,7 +662,7 @@ class IosTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
                 .contentType(TEXT_XML)
                 .content(request2)
                 .header("Depth", "0"))
@@ -676,7 +676,7 @@ class IosTests extends IntegrationTestSupport {
                           </A:prop>
                         </A:propfind>"""
 
-        def result3 = mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
+        def result3 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
                 .contentType(TEXT_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -712,7 +712,7 @@ class IosTests extends IntegrationTestSupport {
     void deleteVCard() {
         addVCard()
 
-        mockMvc.perform(delete("/carldav/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01))
+        mockMvc.perform(delete("/dav/{email}/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf", USER01))
                 .andExpect(status().isNoContent())
 
         def request2 = """\
@@ -735,7 +735,7 @@ class IosTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
+        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
                 .contentType(TEXT_XML)
                 .content(request2)
                 .header("Depth", "0"))
@@ -749,7 +749,7 @@ class IosTests extends IntegrationTestSupport {
                           </A:prop>
                         </A:propfind>"""
 
-        def result3 = mockMvc.perform(propfind("/carldav/dav/{email}/contacts/", USER01)
+        def result3 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
                 .contentType(TEXT_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -808,7 +808,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/principals")
+        mockMvc.perform(propfind("/principals")
                 .contentType(TEXT_XML)
                 .content(request1)
                 .header("Depth", "0"))
@@ -859,7 +859,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/principals/users/{email}", USER01)
+        mockMvc.perform(propfind("/principals/users/{email}", USER01)
                 .contentType(TEXT_XML)
                 .content(request2)
                 .header("Depth", "0"))
@@ -867,7 +867,7 @@ class IosTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response2))
 
-        mockMvc.perform(options("/carldav/principals/users/{email}", USER01))
+        mockMvc.perform(options("/principals/users/{email}", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
                 .andExpect(header().string(ALLOW, "OPTIONS, GET, PROPFIND"))
@@ -955,7 +955,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/dav/{email}/contacts", USER01)
+        mockMvc.perform(propfind("/dav/{email}/contacts", USER01)
                 .contentType(TEXT_XML)
                 .content(request3)
                 .header("Depth", "1"))
@@ -983,7 +983,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/carldav/dav/{email}/contacts", USER01)
+        mockMvc.perform(propfind("/dav/{email}/contacts", USER01)
                 .contentType(TEXT_XML)
                 .content(request4)
                 .header("Depth", "0"))
@@ -998,7 +998,7 @@ class IosTests extends IntegrationTestSupport {
                           </A:prop>
                         </A:propfind>"""
 
-        def result5 = mockMvc.perform(propfind("/carldav/dav/{email}/contacts", USER01)
+        def result5 = mockMvc.perform(propfind("/dav/{email}/contacts", USER01)
                 .contentType(TEXT_XML)
                 .content(request5)
                 .header("Depth", "1"))
@@ -1095,7 +1095,7 @@ class IosTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/carldav/dav/{email}/contacts/", USER01)
+        mockMvc.perform(report("/dav/{email}/contacts/", USER01)
                 .contentType(APPLICATION_XML)
                 .content(request6)
                 .header("Depth", "1"))

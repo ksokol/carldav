@@ -41,7 +41,7 @@ class PrincipalTests extends IntegrationTestSupport {
                             </body></html>
                             """.stripIndent()
 
-       mockMvc.perform(get("/carldav/principals/users/{email}", USER01))
+       mockMvc.perform(get("/principals/users/{email}", USER01))
                 .andExpect(textHtmlContentType())
                 .andExpect(status().isOk())
                 .andExpect(text(response1))

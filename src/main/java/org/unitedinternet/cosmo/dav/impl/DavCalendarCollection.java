@@ -70,7 +70,7 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new DisplayName(getItem().getDisplayName()));
     }
 
-    protected void saveContent(DavItemResource member) throws CosmoDavException {
+    protected void saveContent(DavItemResourceBase member) throws CosmoDavException {
         Item content = member.getItem();
         final Item converted = converter.convert(content);
 

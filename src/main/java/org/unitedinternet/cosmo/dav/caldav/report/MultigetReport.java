@@ -24,9 +24,13 @@ import carldav.jackrabbit.webdav.version.report.ReportType;
 import carldav.jackrabbit.webdav.xml.DomUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.util.UriUtils;
-import org.unitedinternet.cosmo.dav.*;
+import org.unitedinternet.cosmo.dav.BadRequestException;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavCollection;
+import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import org.unitedinternet.cosmo.dav.impl.DavItemResource;
+import org.unitedinternet.cosmo.dav.impl.DavItemResourceBase;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
@@ -99,7 +103,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
         if (hrefElements.size() == 0) {
             throw new BadRequestException("Expected at least one " + XML_HREF);
         }
-        if (getResource() instanceof DavItemResource && hrefElements.size() > 1) {
+        if (getResource() instanceof DavItemResourceBase && hrefElements.size() > 1) {
             throw new BadRequestException("Expected at most one " + XML_HREF);
         }
 

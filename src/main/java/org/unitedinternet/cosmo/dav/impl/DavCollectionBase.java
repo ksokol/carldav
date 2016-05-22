@@ -108,7 +108,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     }
     
     public void removeItem(WebDavResource member) {
-        Item item = ((DavItemResource) member).getItem();
+        Item item = ((DavItemResourceBase) member).getItem();
         getContentService().removeItemFromCollection(item, this.item);
         members.remove(member);
     }
@@ -181,7 +181,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
     /**
      * Saves the given content resource to storage.
      */
-    protected void saveContent(DavItemResource member) throws CosmoDavException {
+    protected void saveContent(DavItemResourceBase member) throws CosmoDavException {
         CollectionItem collection = item;
         Item content = member.getItem();
 

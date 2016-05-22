@@ -15,17 +15,15 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
-import static carldav.CarldavConstants.caldav;
-
 import carldav.exception.resolver.ResponseUtils;
 import carldav.jackrabbit.webdav.DavConstants;
+import carldav.jackrabbit.webdav.MultiStatus;
+import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.DavPropertyName;
 import carldav.jackrabbit.webdav.property.DavPropertyNameSet;
+import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import carldav.jackrabbit.webdav.xml.DomUtils;
 import carldav.jackrabbit.webdav.xml.ElementIterator;
-import carldav.jackrabbit.webdav.MultiStatus;
-import carldav.jackrabbit.webdav.version.report.ReportInfo;
-import carldav.jackrabbit.webdav.io.DavInputContext;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
@@ -36,17 +34,18 @@ import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
-import org.unitedinternet.cosmo.dav.impl.DavItemResource;
+import org.unitedinternet.cosmo.dav.impl.DavItemResourceBase;
 import org.unitedinternet.cosmo.dav.report.ReportBase;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import static carldav.CarldavConstants.caldav;
 
 /**
  * <p>
@@ -134,10 +133,10 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         if(resource instanceof DavCollectionBase) {
             DavCollectionBase collection = (DavCollectionBase) resource;
             collection.getParent().removeCollection(collection);
-        } else if(resource instanceof DavItemResource) {
+        } else if(resource instanceof DavItemResourceBase) {
             resource.getParent().removeItem(resource);
         } else {
-            throw new IllegalArgumentException(String.format("Expected 'member' as instance of: [%s or %s]", DavItemResource.class.getName(), DavCollectionBase.class.getName()));
+            throw new IllegalArgumentException(String.format("Expected 'member' as instance of: [%s or %s]", DavItemResourceBase.class.getName(), DavCollectionBase.class.getName()));
         }
 
 

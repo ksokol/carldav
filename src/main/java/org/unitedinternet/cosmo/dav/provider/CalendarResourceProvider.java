@@ -15,13 +15,17 @@
  */
 package org.unitedinternet.cosmo.dav.provider;
 
+import carldav.entity.Item;
 import carldav.jackrabbit.webdav.io.DavInputContext;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
-import org.unitedinternet.cosmo.dav.*;
+import org.unitedinternet.cosmo.dav.ConflictException;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import carldav.entity.Item;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CalendarResourceProvider extends FileProvider {
+public class CalendarResourceProvider extends BaseProvider {
 
     private static final List<String> SUPPORTED_COMPONENT_TYPES = new ArrayList<String>() {{
         add(Component.VEVENT);

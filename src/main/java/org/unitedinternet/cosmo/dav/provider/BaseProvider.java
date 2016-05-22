@@ -27,6 +27,7 @@ import carldav.jackrabbit.webdav.xml.ElementIterator;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.unitedinternet.cosmo.dav.BadRequestException;
+import org.unitedinternet.cosmo.dav.ConflictException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
@@ -110,7 +111,17 @@ public class BaseProvider implements DavConstants {
     }
 
     public void put(HttpServletRequest request, HttpServletResponse response, WebDavResource content) throws CosmoDavException, IOException {
-        throw new MethodNotAllowedException("PUT not allowed");
+        if (! content.getParent().exists()) {
+            throw new ConflictException("One or more intermediate collections must be created");
+        }
+
+        if(!(content instanceof DavItemResourceBase)){
+            throw new IllegalArgumentException("Expected type for 'content' is: [" + DavItemResourceBase.class.getName() + "]");
+        }
+        int status = content.exists() ? 204 : 201;
+        content.getParent().addContent(content, createInputContext(request));
+        response.setStatus(status);
+        response.setHeader("ETag", content.getETag());
     }
 
     public void delete(HttpServletRequest request,

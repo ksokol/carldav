@@ -32,13 +32,9 @@ import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.dav.NotModifiedException;
 import org.unitedinternet.cosmo.dav.PreconditionFailedException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
-import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
-import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
 import org.unitedinternet.cosmo.dav.provider.BaseProvider;
 import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
-import org.unitedinternet.cosmo.dav.provider.FileProvider;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -161,30 +157,11 @@ public class StandardRequestHandler extends AbstractController implements Server
         }
     }
 
-    /**
-     * <p>
-     * Creates an instance of @{link Provider}. The specific provider class
-     * is chosen based on the type of resource:
-     * </p>
-     * <ul>
-     * <li> calendar resource: {@link CalendarResourceProvider}</li>
-     * <li> file resource: {@link FileProvider}</li>
-     * </ul>
-     */
     protected BaseProvider createProvider(WebDavResource resource) {
-        if (resource instanceof DavCalendarCollection) {
-            return new BaseProvider(resourceFactory);
-        }
-        if (resource instanceof DavCardCollection) {
-            return new BaseProvider(resourceFactory);
-        }
-        if (resource instanceof DavCollectionBase) {
-            return new BaseProvider(resourceFactory);
-        }
         if (resource instanceof DavCalendarResource) {
             return new CalendarResourceProvider(resourceFactory);
         }
-        return new FileProvider(resourceFactory);
+        return new BaseProvider(resourceFactory);
     }
 
     /**

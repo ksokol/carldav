@@ -25,14 +25,19 @@ import org.springframework.util.Assert;
 import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
-import org.unitedinternet.cosmo.dav.*;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.DavResourceLocatorFactory;
+import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
+import org.unitedinternet.cosmo.dav.NotModifiedException;
+import org.unitedinternet.cosmo.dav.PreconditionFailedException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCollectionBase;
+import org.unitedinternet.cosmo.dav.provider.BaseProvider;
 import org.unitedinternet.cosmo.dav.provider.CalendarResourceProvider;
-import org.unitedinternet.cosmo.dav.provider.CollectionProvider;
-import org.unitedinternet.cosmo.dav.provider.DavProvider;
 import org.unitedinternet.cosmo.dav.provider.FileProvider;
 import org.unitedinternet.cosmo.server.ServerConstants;
 
@@ -122,7 +127,7 @@ public class StandardRequestHandler extends AbstractController implements Server
      * </p>
      */
     protected void process(HttpServletRequest request, HttpServletResponse response, WebDavResource resource) throws IOException, CosmoDavException {
-        DavProvider provider = createProvider(resource);
+        BaseProvider provider = createProvider(resource);
 
         if (request.getMethod().equals("OPTIONS")) {
             options(response, resource);
@@ -162,21 +167,19 @@ public class StandardRequestHandler extends AbstractController implements Server
      * is chosen based on the type of resource:
      * </p>
      * <ul>
-     * <li> calendar collection: {@link CollectionProvider}</li>
-     * <li> collection: {@link CollectionProvider}</li>
      * <li> calendar resource: {@link CalendarResourceProvider}</li>
      * <li> file resource: {@link FileProvider}</li>
      * </ul>
      */
-    protected DavProvider createProvider(WebDavResource resource) {
+    protected BaseProvider createProvider(WebDavResource resource) {
         if (resource instanceof DavCalendarCollection) {
-            return new CollectionProvider(resourceFactory);
+            return new BaseProvider(resourceFactory);
         }
         if (resource instanceof DavCardCollection) {
-            return new CollectionProvider(resourceFactory);
+            return new BaseProvider(resourceFactory);
         }
         if (resource instanceof DavCollectionBase) {
-            return new CollectionProvider(resourceFactory);
+            return new BaseProvider(resourceFactory);
         }
         if (resource instanceof DavCalendarResource) {
             return new CalendarResourceProvider(resourceFactory);

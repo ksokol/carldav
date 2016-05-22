@@ -25,14 +25,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * <p>
- * An implementation of <code>DavProvider</code> that implements
- * access to <code>DavFile</code> resources.
- * </p>
- *
- * @see DavProvider
- */
 public class FileProvider extends BaseProvider {
 
     public FileProvider(DavResourceFactory resourceFactory) {

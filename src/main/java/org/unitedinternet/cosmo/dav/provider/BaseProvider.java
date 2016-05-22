@@ -30,6 +30,7 @@ import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.ContentLengthRequiredException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.MethodNotAllowedException;
 import org.unitedinternet.cosmo.dav.NotFoundException;
 import org.unitedinternet.cosmo.dav.UnsupportedMediaTypeException;
 import org.unitedinternet.cosmo.dav.WebDavResource;
@@ -47,14 +48,7 @@ import java.io.InputStream;
 
 import static carldav.CarldavConstants.caldav;
 
-/**
- * <p>
- * A base class for implementations of <code>DavProvider</code>.
- * </p>
- *
- * @see DavProvider
- */
-public abstract class BaseProvider implements DavProvider, DavConstants {
+public class BaseProvider implements DavConstants {
 
     private static final MediaType APPLICATION_XML = MediaType.APPLICATION_XML;
     private static final MediaType TEXT_XML = MediaType.TEXT_XML;
@@ -113,6 +107,10 @@ public abstract class BaseProvider implements DavProvider, DavConstants {
         ms.addResourceProperties(resource, props, type, depth);
 
         ResponseUtils.sendXmlResponse(response, ms, 207);
+    }
+
+    public void put(HttpServletRequest request, HttpServletResponse response, WebDavResource content) throws CosmoDavException, IOException {
+        throw new MethodNotAllowedException("PUT not allowed");
     }
 
     public void delete(HttpServletRequest request,

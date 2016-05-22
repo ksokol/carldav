@@ -9,7 +9,7 @@ Supported clients
 So far caldav has been tested with the following clients:
 - Mozilla Thunderbird (up to version 38.6.0) in conjunction with [Inverse SOGo Connector](http://www.sogo.nu/files/downloads/SOGo/Thunderbird/sogo-connector-31.0.2.xpi) (up to version 31.0.2)
 - Evolution (on Fedora 23)
-- [DAVdroid](https://play.google.com/store/apps/details?id=at.bitfire.davdroid) (up to version 0.9.x) in conjunction with [OpenTasks](https://play.google.com/store/apps/details?id=org.dmfs.tasks) (up to version 1.1.8.2)
+- [DAVdroid](https://play.google.com/store/apps/details?id=at.bitfire.davdroid) (up to version 1.0.8) in conjunction with [OpenTasks](https://play.google.com/store/apps/details?id=org.dmfs.tasks) (up to version 1.1.8.2)
 - iOS iCalendar (up to version 4)
 
 Installation
@@ -66,12 +66,8 @@ Help needed
 
 - Testing on different clients and platforms, especially iOS
 
-Known issues
-------------
-- [Can't change STATUS property on VTODO once it is COMPLETED](https://github.com/ksokol/carldav/issues/7)
-- [Unable to establish contact sync with DAVdroid 1.0.x](https://forums.bitfire.at/topic/1049/unable-to-establish-contact-sync-with-davdroid-1-0-x)
-
 History
 -------
 
 - Release 0.1: Initial release (09.04.2016)
+- Release 0.2: in progress

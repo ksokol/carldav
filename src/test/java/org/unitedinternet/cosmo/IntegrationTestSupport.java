@@ -41,7 +41,6 @@ public abstract class IntegrationTestSupport {
     @Before
     public void beforeAnyOther() throws Exception {
         this.mockMvc = webAppContextSetup(this.wac)
-				.dispatchOptions(true)
                 .defaultRequest(get("/").with(new ContextPathRequestPostProcessor()))
                 .apply(springSecurity()).build();
     }

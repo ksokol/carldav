@@ -2,11 +2,8 @@ package carldav;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ImportResource;
-import org.springframework.web.servlet.DispatcherServlet;
 
-import javax.servlet.Servlet;
 import java.util.TimeZone;
 
 /**
@@ -23,13 +20,6 @@ public class CarldavApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(CarldavApplication.class, args);
-    }
-
-    @Bean
-    public Servlet dispatcherServlet() {
-        final DispatcherServlet dispatcherServlet = new DispatcherServlet();
-        dispatcherServlet.setDispatchOptionsRequest(true);
-        return dispatcherServlet;
     }
 
 }

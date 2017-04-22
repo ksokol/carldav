@@ -4,5 +4,18 @@ jdk:
 
 sudo: false
 
+addons:
+  sonarqube:
+    organization: "ksokol-github"
+    token:
+      secure: "ZbJCkiDStwawCMlyNlaMI9fKagPtqa4Cs4IWlZLzV1TNNvIICiacL2LDkONjDYrQDEdY/4PVYhILK5UIIqI7VGH+MkH2YBKItKP98wSRCnLlX9j+IEijEhSJOCs8pWVMz2LOe+YdnNN8URqdASU7Xjy3SYgHlNVFhBD7+dE9ax+rQ0pDialyWsgt9CNSo1zNS4qi0VLeLUoqzxSU4saTyU18/9oQl10rQov0Xng9SyfPY2argTHZ9+MB1gjFI27Gc4QyhC6ewB6PPnZ6sxYVRCSX5XXalFfgMuHwFpzUztBJMBFlhe6tSAF8Nf4mFqAq8G69OhldFZWmD2LYSSF92MAAwStUrW4v0HPH6T/yYHId6G9a6OfPY3bN1Ut4lvdy2folrh8JmvBj1KYnGEdl5u5IB5hSKm+bqHNexc5r5E8vOkvSkftduMDM4CnQ+CXpB3VXlruU84Bk5dhMIMcmg87Ix50F9oDoOjqlD6d6vqz7fnNrZ6kJn7Env81mnmM2FUBmzhPETv02lyqvDNb5hm90WQ+AtAktgqwsOgMEE1jZC6RVTZKsozAergp+64dqWrazCj+8qnebeaPWkcZjImbtABch8cIpszbrzfD+BV81HlGO++35XQDXp3JuVMMwAELru1O53Sj/SG/kOSr+lUYpKhAAq37z3YXuprEeOmw="
+    github_token:
+      secure: "Mug2XZwcQUGvBLl4Mq9CijpP3f4U/jLMroX0keywoGWgcyZOavRYh6+eqvkMxPf/MK7ptGeSAL1GHAjtgA6e6Eobh3iQtLPMYXgfjtmOJDzrcEppmLHO/0L+kdqa1mbapm/V1N3uqEYBpY/UiJ8krbLJa+mAVVzOxS+KAZNlP/9QMefwhInOCGGm2VdcrUyTDJ9bnCzKaMpPumhNd77HPZxnlEob3LTbeUea9P5hGXJ3iINAEL5ZbJSGpqPOQdC77r9OgARZRHAAFcDCw2a2JzmULe91x/zFHHNYcxGOfk3JlozgJaZpvo6lcq05Wmz8M0sJ7FwSzEvnVRss9HH0btkVxqUsNo2aB9b95uhbPVVo3nELZbh4wVuVGrjGLcCAMeMS/0vjPQozLKT4kQCgPw0kkaPyFPpdzF4IlRktUv+YTsHC5C6DCeg2wFdWDyOsMopcdcb3pTh/UeLV5KN0gdfwpV1ZfccKVUlQitT2Z+SLoEICfaVIV2iCzBdLfp3g+vwBXY+kr/iGVtMcq2IcQAqwzlK9VJfig13u2opbeoH39oqBY/L6Qt9hY9JvzdqRNfc8T17PaPzS7S9ehOMyADy4mxU3+uF5aojustBq5Xvi0FgQMoJ/CLtYrS1uqrCuqMrayyZ7e9zvkZhq/B5XUwpvtI39iMqjQ1voWd54TIc="
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+
 script:
-   - if [[ $TRAVIS_JDK_VERSION == "oraclejdk8" ]]; then mvn test cobertura:cobertura coveralls:cobertura; else mvn test; fi
+    - mvn verify sonar:sonar

@@ -9,7 +9,7 @@ import java.util.TimeZone;
 /**
  * @author Kamill Sokol
  */
-@ImportResource("applicationContext-cosmo.xml")
+@ImportResource("classpath:applicationContext-cosmo.xml")
 @SpringBootApplication
 public class CarldavApplication {
 

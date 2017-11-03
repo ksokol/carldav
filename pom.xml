@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.0.M3</version>
+        <version>1.5.8.RELEASE</version>
     </parent>
 
     <groupId>carldav</groupId>
@@ -43,30 +43,6 @@
         <url>https://travis-ci.org/ksokol/carldav</url>
         <notifiers />
     </ciManagement>
-
-    <repositories>
-        <repository>
-            <id>repository.springsource.snapshot</id>
-            <name>SpringSource Snapshot Repository</name>
-            <url>http://repo.springsource.org/snapshot</url>
-        </repository>
-        <repository>
-            <id>repository.springsource.milestone</id>
-            <name>SpringSource Milestone Repository</name>
-            <url>http://repo.springsource.org/milestone</url>
-        </repository>
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <url>http://repo.spring.io/snapshot</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <url>http://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

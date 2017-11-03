@@ -1,51 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<!-- Copyright 2005-2007 Open Source Applications Foundation Licensed under
-	the Apache License, Version 2.0 (the "License"); you may not use this file
-	except in compliance with the License. You may obtain a copy of the License
-	at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable
-	law or agreed to in writing, software distributed under the License is distributed
-	on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
-	express or implied. See the License for the specific language governing permissions
-	and limitations under the License. -->
-
-<!-- Security configuration for WebDAV -->
-
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:security="http://www.springframework.org/schema/security"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
-    <bean id="authenticateWith401StatusCodeHandler" class="carldav.security.AuthenticateWith401StatusCodeHandler">
-        <constructor-arg>
-            <value>carldav</value>
-        </constructor-arg>
-    </bean>
+  <bean id="authenticateWith401StatusCodeHandler" class="carldav.security.AuthenticateWith401StatusCodeHandler">
+    <constructor-arg>
+      <value>carldav</value>
+    </constructor-arg>
+  </bean>
 
-	<security:http pattern="/**" use-expressions="true" create-session="stateless">
-		<security:access-denied-handler ref="authenticateWith401StatusCodeHandler" />
-		<security:intercept-url pattern="/user" access="hasRole('ROLE_ADMIN')" />
-		<security:intercept-url pattern="/dav/{email}/**" access="#email == authentication.name" />
-		<security:intercept-url pattern="/.well-known/**" access="denyAll()" />
-		<security:intercept-url pattern="/**" access="isFullyAuthenticated()" />
-		<security:http-basic entry-point-ref="authenticateWith401StatusCodeHandler" />
-		<security:csrf disabled="true" />
-	</security:http>
+  <bean id="namedGroupRegexRequestMatcher" class="carldav.security.NamedGroupRegexRequestMatcher">
+    <constructor-arg index="0" value="/dav/(?&lt;email>[a-zA-Z0-9@\-_.]*)/.*"/>
+  </bean>
 
-	<security:authentication-manager>
-		<security:authentication-provider user-service-ref="userDetailsService">
-			<security:password-encoder ref="passwordEncoder" />
-		</security:authentication-provider>
-	</security:authentication-manager>
+  <security:http pattern="/**" use-expressions="true" create-session="stateless">
+    <security:access-denied-handler ref="authenticateWith401StatusCodeHandler"/>
+    <security:intercept-url request-matcher-ref="namedGroupRegexRequestMatcher" access="#email == authentication.name"/>
+    <security:intercept-url pattern="/user" access="hasRole('ROLE_ADMIN')"/>
+    <security:intercept-url pattern="/.well-known/**" access="denyAll()"/>
+    <security:intercept-url pattern="/**" access="isFullyAuthenticated()"/>
+    <security:http-basic entry-point-ref="authenticateWith401StatusCodeHandler"/>
+    <security:csrf disabled="true"/>
+  </security:http>
 
-	<bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
-		<constructor-arg index="0" ref="userRepository" />
-	</bean>
+  <security:authentication-manager>
+    <security:authentication-provider user-service-ref="userDetailsService">
+      <security:password-encoder ref="passwordEncoder"/>
+    </security:authentication-provider>
+  </security:authentication-manager>
 
-	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+  <bean id="userDetailsService" class="org.unitedinternet.cosmo.acegisecurity.userdetails.CosmoUserDetailsService">
+    <constructor-arg index="0" ref="userRepository"/>
+  </bean>
 
-	<bean id="securityManager" class="org.unitedinternet.cosmo.security.CosmoSecurityManager" />
+  <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
 
-	<bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
+  <bean id="securityManager" class="org.unitedinternet.cosmo.security.CosmoSecurityManager"/>
+
+  <bean class="org.springframework.security.data.repository.query.SecurityEvaluationContextExtension"/>
 </beans>

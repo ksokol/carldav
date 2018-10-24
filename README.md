@@ -1,5 +1,5 @@
- carldav [![Build Status](https://api.travis-ci.org/ksokol/carldav.png?branch=master)](https://travis-ci.org/ksokol/carldav/) [![Quality Gate](https://sonarqube.com/api/badges/gate?key=carldav:carldav)](https://sonarqube.com/dashboard/index/carldav:carldav) [![Technical debt ratio](https://sonarqube.com/api/badges/measure?key=carldav:carldav&metric=sqale_debt_ratio)](https://sonarqube.com/dashboard/index/carldav:carldav) 
-===================================================================================================================================================================================================================================================================================================================================================================================================================
+carldav [![Build Status](https://api.travis-ci.org/ksokol/carldav.png?branch=master)](https://travis-ci.org/ksokol/carldav/) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=carldav%3Acarldav&metric=alert_status)](https://sonarcloud.io/dashboard/index/carldav:carldav)
+=======
 
 A lightweight caldav/carddav server for personal use powered by [Spring Boot](http://projects.spring.io/spring-boot/).
 
@@ -18,11 +18,10 @@ Installation
 **Prerequisite**
 
 - Java 8
-- Apache Maven 3
 
 **Build and package**
 
-- run `mvn package`
+- run `mvnw package`
 - You will find a fat jar under `target`
 - run `java -jar target/carldav.jar`
 

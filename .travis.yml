@@ -1,3 +1,9 @@
+if: tag IS blank
+
+stages:
+- name: deploy
+  if: branch = master
+
 language: java
 jdk:
   - oraclejdk8
@@ -20,3 +26,15 @@ cache:
 
 script:
     - ./mvnw verify sonar:sonar
+
+before_deploy:
+- git config --local user.name "${GIT_USER_NAME}"
+- git config --local user.email "${GIT_USER_EMAIL}"
+- export TRAVIS_TAG="$TRAVIS_BRANCH-build-$(git log --format=%h -1)"
+- git tag $TRAVIS_TAG
+
+deploy:
+  provider: releases
+  api_key: $GITHUB_ACCESS_TOKEN
+  file: target/carldav.jar
+  skip_cleanup: true

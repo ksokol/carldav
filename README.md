@@ -15,14 +15,14 @@ So far caldav has been tested with the following clients:
 Installation
 ------------
 
-**Prerequisite**
+**Dependencies**
 
 - Java 8
 
 **Build and package**
 
-- run `mvnw package`
-- You will find a fat jar under `target`
+- run `./mvnw package` or `mvnw.cmd` on Windows
+- you will find a fat jar (Spring Boot application) int the `target` folder
 - run `java -jar target/carldav.jar`
 
 Configuration
@@ -64,9 +64,3 @@ Help needed
 -----------
 
 - Testing on different clients and platforms, especially iOS
-
-History
--------
-
-- Release 0.1: Initial release (09.04.2016)
-- Release 0.2: in progress

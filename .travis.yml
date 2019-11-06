@@ -8,8 +8,6 @@ language: java
 jdk:
   - openjdk8
 
-sudo: false
-
 addons:
   sonarqube:
     organization: "ksokol-github"
@@ -24,14 +22,17 @@ cache:
     - '$HOME/.m2/wrapper'
     - '$HOME/.sonar/cache'
 
+before_script:
+  - travis_wait 20 ./mvnw dependency-check:update-only
+
 script:
-    - ./mvnw verify sonar:sonar
+  - ./mvnw verify sonar:sonar
 
 before_deploy:
-- git config --local user.name "${GIT_USER_NAME}"
-- git config --local user.email "${GIT_USER_EMAIL}"
-- export TRAVIS_TAG="$TRAVIS_BRANCH-build-$(git log --format=%h -1)"
-- git tag $TRAVIS_TAG
+  - git config --local user.name "${GIT_USER_NAME}"
+  - git config --local user.email "${GIT_USER_EMAIL}"
+  - export TRAVIS_TAG="$TRAVIS_BRANCH-build-$(git log --format=%h -1)"
+  - git tag $TRAVIS_TAG
 
 deploy:
   provider: releases

@@ -1,0 +1,53 @@
+create table USERS
+(
+    ID BIGINT identity primary key,
+    EMAIL VARCHAR(255) not null unique,
+    LOCKED BOOLEAN not null,
+    PASSWORD VARCHAR(255) not null,
+    ROLE VARCHAR(255)
+);
+
+create table COLLECTION
+(
+    ID BIGINT identity primary key,
+    DISPLAYNAME VARCHAR(255) not null,
+    MODIFYDATE TIMESTAMP,
+    ITEMNAME VARCHAR(255) not null,
+    OWNERID BIGINT not null constraint FKRO4OAAUJNT7RM51UELMI7D18K references USERS,
+    COLLECTIONID BIGINT constraint FKS8OVATESSKN0MDDIVYRB1EUE references COLLECTION,
+    unique (DISPLAYNAME, OWNERID)
+);
+
+create table ITEM
+(
+    ID  BIGINT identity primary key,
+    CALENDAR CLOB,
+    CLIENTCREATEDATE TIMESTAMP,
+    CLIENTMODIFIEDDATE TIMESTAMP,
+    DISPLAYNAME VARCHAR(255) not null,
+    ENDDATE TIMESTAMP,
+    FLOATING BOOLEAN,
+    MIMETYPE VARCHAR(255) not null,
+    MODIFYDATE TIMESTAMP,
+    ITEMNAME VARCHAR(255) not null,
+    RECURRING BOOLEAN,
+    STARTDATE TIMESTAMP,
+    TYPE VARCHAR(255),
+    UID VARCHAR(255) not null,
+    COLLECTIONID BIGINT constraint FKRPEPGSYTCVN7W3BTWLWVNXJRB references COLLECTION,
+    unique (UID, COLLECTIONID)
+);
+
+create index IDX_ENDDT on ITEM (ENDDATE);
+
+create index IDX_FLOATING on ITEM (FLOATING);
+
+create index IDX_ITEMNAME on ITEM (ITEMNAME);
+
+create index IDX_ITEMUID on ITEM (UID);
+
+create index IDX_RECURRING on ITEM (RECURRING);
+
+create index IDX_STARTDT on ITEM (STARTDATE);
+
+

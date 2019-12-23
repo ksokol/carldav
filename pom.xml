@@ -14,7 +14,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.17.RELEASE</version>
+        <version>1.5.22.RELEASE</version>
     </parent>
 
     <groupId>carldav</groupId>
@@ -75,6 +75,8 @@
         <maven-assembly-plugin.version>2.2.2</maven-assembly-plugin.version>
         <findbugs.suppressions.config.file>findbugs-suppressions.xml</findbugs.suppressions.config.file>
         <maven-pmd-plugin.failOnViolation>false</maven-pmd-plugin.failOnViolation>
+
+        <jackson.version>2.10.1</jackson.version> <!-- override Spring Boot 1.5.22 -->
     </properties>
 
     <dependencies>
@@ -193,7 +195,7 @@
         <dependency>
             <groupId>com.googlecode.ez-vcard</groupId>
             <artifactId>ez-vcard</artifactId>
-            <version>0.9.9</version>
+            <version>0.10.5</version>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>

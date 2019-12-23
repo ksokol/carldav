@@ -1,4 +1,4 @@
-carldav [![Build Status](https://api.travis-ci.org/ksokol/carldav.png?branch=master)](https://travis-ci.org/ksokol/carldav/) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=carldav%3Acarldav&metric=alert_status)](https://sonarcloud.io/dashboard/index/carldav:carldav)
+carldav [![Build Status](https://github.com/ksokol/carldav/workflows/CI/badge.svg)](https://github.com/ksokol/carldav) [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=carldav%3Acarldav&metric=alert_status)](https://sonarcloud.io/dashboard/index/carldav:carldav)
 =======
 
 A lightweight caldav/carddav server for personal use powered by [Spring Boot](http://projects.spring.io/spring-boot/).

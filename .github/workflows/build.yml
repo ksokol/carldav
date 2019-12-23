@@ -1,0 +1,47 @@
+name: CI
+
+on: [push]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+
+      - name: Set up build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: Cache Maven Directory
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: m2
+
+      - name: Sonar Cache Directory
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: sonar
+
+      - name: Check Project
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./mvnw verify sonar:sonar
+
+      - name: Release Project
+        if: contains(github.ref, 'master')
+        uses: ksokol/github-release-action@master
+        with:
+          tag_name: ${{ github.ref }}-${{ github.sha }}
+          release_name: ${{ github.sha }}
+          asset_path: target/carldav.jar
+          asset_name: carldav.jar
+          asset_content_type: application/java-archive

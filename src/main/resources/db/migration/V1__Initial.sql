@@ -1,10 +1,11 @@
 create table USERS
 (
     ID BIGINT identity primary key,
-    EMAIL VARCHAR(255) not null unique,
+    EMAIL VARCHAR(255) not null,
     LOCKED BOOLEAN not null,
     PASSWORD VARCHAR(255) not null,
-    ROLE VARCHAR(255)
+    ROLE VARCHAR(255),
+    constraint USER_EMAIL unique (EMAIL)
 );
 
 create table COLLECTION
@@ -13,9 +14,9 @@ create table COLLECTION
     DISPLAYNAME VARCHAR(255) not null,
     MODIFYDATE TIMESTAMP,
     ITEMNAME VARCHAR(255) not null,
-    OWNERID BIGINT not null constraint FKRO4OAAUJNT7RM51UELMI7D18K references USERS,
-    COLLECTIONID BIGINT constraint FKS8OVATESSKN0MDDIVYRB1EUE references COLLECTION,
-    unique (DISPLAYNAME, OWNERID)
+    OWNERID BIGINT not null constraint FK_COLLECTION_OWNERID references USERS,
+    COLLECTIONID BIGINT constraint FK_COLLECTION_COLLECTIONID references COLLECTION,
+    constraint DISPLAYNAME_OWNER unique (DISPLAYNAME, OWNERID)
 );
 
 create table ITEM
@@ -34,20 +35,13 @@ create table ITEM
     STARTDATE TIMESTAMP,
     TYPE VARCHAR(255),
     UID VARCHAR(255) not null,
-    COLLECTIONID BIGINT constraint FKRPEPGSYTCVN7W3BTWLWVNXJRB references COLLECTION,
-    unique (UID, COLLECTIONID)
+    COLLECTIONID BIGINT constraint FK_ITEM_COLLECTIONID references COLLECTION,
+    constraint UID_COLLECTION unique (UID, COLLECTIONID)
 );
 
 create index IDX_ENDDT on ITEM (ENDDATE);
-
 create index IDX_FLOATING on ITEM (FLOATING);
-
 create index IDX_ITEMNAME on ITEM (ITEMNAME);
-
 create index IDX_ITEMUID on ITEM (UID);
-
 create index IDX_RECURRING on ITEM (RECURRING);
-
 create index IDX_STARTDT on ITEM (STARTDATE);
-
-

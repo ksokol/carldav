@@ -23,7 +23,7 @@
     <name>carldav</name>
     <url>https://github.com/ksokol/carldav</url>
     <inceptionYear>2015</inceptionYear>
-    <version>0.2</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
 
     <scm>

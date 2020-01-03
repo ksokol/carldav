@@ -8,24 +8,7 @@
     <cve>CVE-2019-0199</cve>
     <cve>CVE-2019-0232</cve>
     <cve>CVE-2019-10072</cve>
-  </suppress>
-
-  <suppress>
-    <notes><![CDATA[
-   file name: jackson-databind-2.8.11.2.jar
-   ]]></notes>
-    <packageUrl regex="true">^pkg:maven/com\.fasterxml\.jackson\.core/jackson\-databind@.*$</packageUrl>
-    <cpe>cpe:/a:fasterxml:jackson</cpe>
-    <cve>CVE-2019-14379</cve>
-    <cve>CVE-2019-14439</cve>
-    <cve>CVE-2018-19362</cve>
-    <cve>CVE-2018-19361</cve>
-    <cve>CVE-2018-19360</cve>
-    <cve>CVE-2018-14718</cve>
-    <cve>CVE-2018-14719</cve>
-    <cve>CVE-2018-14721</cve>
-    <cve>CVE-2018-14720</cve>
-    <cve>CVE-2019-12086</cve>
+    <cve>CVE-2019-17563</cve>
   </suppress>
   <suppress>
     <notes><![CDATA[

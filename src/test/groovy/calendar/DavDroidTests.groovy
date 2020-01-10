@@ -31,7 +31,7 @@ class DavDroidTests extends IntegrationTestSupport {
     def currentEtag
 
     @Test
-    public void fetchingEmptyCalendarFirstTime() {
+    void fetchingEmptyCalendarFirstTime() {
         def request1 = """\
                             <propfind xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
                                 <prop>
@@ -47,11 +47,9 @@ class DavDroidTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
+                                    <D:href>/carldav/dav/${USER01}/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <current-user-privilege-set xmlns="DAV:"/>
-                                            <current-user-principal xmlns="DAV:"/>
                                             <CARD:addressbook-description xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
@@ -59,13 +57,24 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:propstat>
                                         <D:prop>
                                             <CARD:addressbook-home-set xmlns:CARD="urn:ietf:params:xml:ns:carddav">
-                                                <D:href>/carldav/dav/test01@localhost.de/contacts</D:href>
+                                                <D:href>/carldav/dav/${USER01}/contacts</D:href>
                                             </CARD:addressbook-home-set>
                                             <D:displayname>calendarDisplayName</D:displayname>
                                             <D:resourcetype>
                                                 <D:collection/>
                                                 <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             </D:resourcetype>
+                                            <D:current-user-principal>
+                                                <D:href>/carldav/principals/users/${USER01}</D:href>
+                                            </D:current-user-principal>
+                                            <D:current-user-privilege-set>
+                                              <D:privilege>
+                                                <D:read/>
+                                              </D:privilege>
+                                              <D:privilege>
+                                                <D:write/>
+                                              </D:privilege>
+                                            </D:current-user-privilege-set>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -116,15 +125,12 @@ class DavDroidTests extends IntegrationTestSupport {
         def response3 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
+                                    <D:href>/carldav/dav/${USER01}/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <current-user-privilege-set xmlns="DAV:"/>
                                             <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <CAL:calendar-description xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <current-user-principal xmlns="DAV:"/>
                                             <CAL:calendar-home-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
-                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -140,6 +146,18 @@ class DavDroidTests extends IntegrationTestSupport {
                                                 <D:collection/>
                                                 <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             </D:resourcetype>
+                                            <D:current-user-principal>
+                                                <D:href>/carldav/principals/users/${USER01}</D:href>
+                                            </D:current-user-principal>
+                                            <apple:calendar-color xmlns:apple="http://apple.com/ns/ical/">#000000</apple:calendar-color>
+                                            <D:current-user-privilege-set>
+                                              <D:privilege>
+                                                <D:read/>
+                                              </D:privilege>
+                                              <D:privilege>
+                                                <D:write/>
+                                              </D:privilege>
+                                            </D:current-user-privilege-set>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -169,14 +187,9 @@ class DavDroidTests extends IntegrationTestSupport {
                                 <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
-                                    </D:prop>
-                                    <D:status>HTTP/1.1 404 Not Found</D:status>
-                                </D:propstat>
-                                <D:propstat>
-                                    <D:prop>
                                         <D:displayname>calendarDisplayName</D:displayname>
                                         <CS:getctag xmlns:CS="http://calendarserver.org/ns/">157565ba8b0d3652b027c868d554f914</CS:getctag>
+                                        <apple:calendar-color xmlns:apple="http://apple.com/ns/ical/">#000000</apple:calendar-color>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -252,14 +265,9 @@ class DavDroidTests extends IntegrationTestSupport {
                                     <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
-                                        </D:prop>
-                                        <D:status>HTTP/1.1 404 Not Found</D:status>
-                                    </D:propstat>
-                                    <D:propstat>
-                                        <D:prop>
                                             <D:displayname>calendarDisplayName</D:displayname>
                                             <CS:getctag xmlns:CS="http://calendarserver.org/ns/">${getctag}</CS:getctag>
+                                            <apple:calendar-color xmlns:apple="http://apple.com/ns/ical/">#000000</apple:calendar-color>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -681,7 +689,6 @@ class DavDroidTests extends IntegrationTestSupport {
                 .andExpect(header().string(CONTENT_LENGTH, is("1736")))
                 .andExpect(text(response4))
     }
-
 
     @Test
     void fetchEmptyAddressbookFirstTime() {

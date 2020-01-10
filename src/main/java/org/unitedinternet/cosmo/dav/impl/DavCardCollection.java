@@ -1,22 +1,23 @@
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.card.CardQueryProcessor;
+import carldav.entity.CollectionItem;
+import carldav.entity.Item;
 import carldav.jackrabbit.webdav.property.DavPropertySet;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.SupportedAddressData;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookMultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.AddressbookQueryReport;
-import carldav.entity.CollectionItem;
-import carldav.entity.Item;
+import org.unitedinternet.cosmo.dav.property.CurrentUserPrincipal;
 
 import javax.xml.namespace.QName;
 import java.util.HashSet;
 import java.util.Set;
 
+import static carldav.CarldavConstants.CURRENT_USER_PRINCIPAL;
 import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
 import static carldav.CarldavConstants.carddav;
 
@@ -27,10 +28,14 @@ public class DavCardCollection extends DavCollectionBase {
 
     private final CardQueryProcessor cardQueryProcessor;
 
-    public DavCardCollection(final CollectionItem collection, final DavResourceLocator locator, final DavResourceFactory factory,
-                             final CardQueryProcessor cardQueryProcessor) throws CosmoDavException {
+    public DavCardCollection(
+            CollectionItem collection,
+            DavResourceLocator locator,
+            DavResourceFactory factory,
+            CardQueryProcessor cardQueryProcessor) {
         super(collection, locator, factory);
         registerLiveProperty(SUPPORTED_ADDRESS_DATA);
+        registerLiveProperty(CURRENT_USER_PRINCIPAL);
 
         this.cardQueryProcessor = cardQueryProcessor;
 
@@ -45,7 +50,7 @@ public class DavCardCollection extends DavCollectionBase {
         return resourceTypes;
     }
 
-    public Set<DavItemResourceBase> findMembers(AddressbookFilter filter) throws CosmoDavException {
+    public Set<DavItemResourceBase> findMembers(AddressbookFilter filter) {
         Set<DavItemResourceBase> members = new HashSet<>();
 
         CollectionItem collection = getItem();
@@ -61,5 +66,6 @@ public class DavCardCollection extends DavCollectionBase {
     protected void loadLiveProperties(final DavPropertySet properties) {
         super.loadLiveProperties(properties);
         properties.add(new SupportedAddressData());
+        properties.add(new CurrentUserPrincipal(getResourceLocator(), getUsername()));
     }
 }

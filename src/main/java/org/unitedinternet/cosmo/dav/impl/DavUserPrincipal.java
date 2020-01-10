@@ -126,10 +126,10 @@ public class DavUserPrincipal extends DavResourceBase implements CaldavConstants
             writer.write("</dl>\n");
             writer.write("<p>\n");
 
-            final DavResourceLocator principalLocator = getResourceLocator().getFactory().createPrincipalLocator(getResourceLocator().getContext(), userId);
 
+            DavResourceLocator homeLocator = getResourceLocator().getFactory().createHomeLocator(getResourceLocator().getContext(), userId);
             writer.write("<a href=\"");
-            writer.write(principalLocator.getHref(true));
+            writer.write(homeLocator.getHref(true));
             writer.write("\">");
             writer.write("Home collection");
             writer.write("</a><br>\n");

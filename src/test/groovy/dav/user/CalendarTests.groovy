@@ -25,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static testutil.TestUser.USER01
 import static testutil.TestUser.USER02
 import static testutil.builder.GeneralData.*
+
 import static testutil.builder.GeneralResponse.NOT_FOUND
 import static testutil.builder.MethodNotAllowedBuilder.notAllowed
 import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
@@ -37,21 +38,21 @@ import static testutil.xmlunit.XmlMatcher.equalXml
  * @author Kamill Sokol
  */
 @WithUserDetails(USER01)
-public class CalendarTests extends IntegrationTestSupport {
+class CalendarTests extends IntegrationTestSupport {
 
-    private final String uuid = GeneralData.UUID;
-    private final String uuid2 = GeneralData.UUID_EVENT2;
+    private final String uuid = GeneralData.UUID
+    private final String uuid2 = UUID_EVENT2
 
     @Test
-    public void shouldReturnHtmlForUser() throws Exception {
+    void shouldReturnHtmlForUser() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
-        final String eTag = mvcResult.getResponse().getHeader(ETAG);
+        final String eTag = mvcResult.getResponse().getHeader(ETAG)
 
         def getRequest = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -126,19 +127,19 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(getRequest)
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+                .andExpect(xml(response))
     }
 
     @Test
-    public void putCalendarItem() throws Exception {
+    void putCalendarItem() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid2)
                 .contentType(TEXT_CALENDAR)
                 .content(CALDAV_EVENT2))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
-        final String eTag = mvcResult.getResponse().getHeader(ETAG);
+        final String eTag = mvcResult.getResponse().getHeader(ETAG)
 
         def getRequest = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -196,35 +197,35 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(getRequest)
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+                .andExpect(xml(response))
     }
 
     @Test
-    public void calendarGetItem() {
+    void calendarGetItem() {
         mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
         mockMvc.perform(get("/dav/{email}/calendar/{uid}.ics", USER01, uuid)
                 .contentType(TEXT_XML))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
-                .andExpect(text(CALDAV_EVENT));
+                .andExpect(text(CALDAV_EVENT))
     }
 
     @Test
-    public void shouldReturnHtmlForUserAllProp() throws Exception {
+    void shouldReturnHtmlForUserAllProp() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
-        final String eTag = mvcResult.getResponse().getHeader(ETAG);
+        final String eTag = mvcResult.getResponse().getHeader(ETAG)
 
         def request = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -243,11 +244,10 @@ public class CalendarTests extends IntegrationTestSupport {
                 .andReturn().getResponse().getContentAsString()
 
         def xml = new XmlSlurper().parseText(result1)
-        def lastModified = xml.response.propstat.prop.getlastmodified.text()
+        String lastModified = xml.response.propstat.prop.getlastmodified.text()
 
-        //assert date format - TODO hamcrest matcher
-        DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
-        format.parse(lastModified);
+        DateFormat format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH)
+        format.parse(lastModified)
 
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -320,6 +320,14 @@ public class CalendarTests extends IntegrationTestSupport {
                                             END:VEVENT&#13;
                                             END:VCALENDAR&#13;
                                         </C:calendar-data>
+                                        <D:current-user-privilege-set>
+                                          <D:privilege>
+                                            <D:read/>
+                                          </D:privilege>
+                                          <D:privilege>
+                                            <D:write/>
+                                          </D:privilege>
+                                        </D:current-user-privilege-set>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -330,7 +338,7 @@ public class CalendarTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addTodo() {
+    void addTodo() {
         mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, UUID_TODO)
                 .content(CALDAV_TODO)
                 .contentType(TEXT_CALENDAR))
@@ -340,16 +348,16 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/{uuid}.ics", USER01, UUID_TODO)
                 .contentType(TEXT_CALENDAR))
                 .andExpect(textCalendarContentType())
-                .andExpect(text(CALDAV_TODO));
+                .andExpect(text(CALDAV_TODO))
     }
 
     @Test
-    public void shouldReturnHtmlForUserPropName() throws Exception {
+    void shouldReturnHtmlForUserPropName() throws Exception {
         mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uuid)
                 .contentType(TEXT_CALENDAR)
                 .content(CALDAV_EVENT))
                 .andExpect(status().isCreated())
-                .andExpect(etag(notNullValue()));
+                .andExpect(etag(notNullValue()))
 
         def request = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -375,6 +383,7 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:supported-report-set/>
                                         <D:getcontentlength/>
                                         <D:resourcetype/>
+                                        <D:current-user-privilege-set />
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -385,22 +394,22 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(request)
                 .contentType(TEXT_XML))
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+                .andExpect(xml(response))
     }
 
     @Test
-    public void calendarHead() throws Exception {
+    void calendarHead() throws Exception {
         mockMvc.perform(head("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
-                .andExpect(etag(notNullValue()));
+                .andExpect(etag(notNullValue()))
     }
 
     @Test
-    public void calendarPropFind() throws Exception {
+    void calendarPropFind() throws Exception {
         def response = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
+                                <D:href>/carldav/dav/${USER01}/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
                                         <D:getetag>"157565ba8b0d3652b027c868d554f914"</D:getetag>
@@ -410,16 +419,16 @@ public class CalendarTests extends IntegrationTestSupport {
                                         <D:getlastmodified>Sat, 21 Nov 2015 21:11:00 GMT</D:getlastmodified>
                                         <D:iscollection>1</D:iscollection>
                                         <D:supported-report-set>
-                                                <D:supported-report>
-                                                  <D:report>
-                                                    <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                  </D:report>
-                                                </D:supported-report>
-                                                <D:supported-report>
-                                                  <D:report>
-                                                    <C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav"/>
-                                                  </D:report>
-                                                </D:supported-report>
+                                            <D:supported-report>
+                                              <D:report>
+                                                <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                              </D:report>
+                                            </D:supported-report>
+                                            <D:supported-report>
+                                              <D:report>
+                                                <C:calendar-multiget xmlns:C="urn:ietf:params:xml:ns:caldav"/>
+                                              </D:report>
+                                            </D:supported-report>
                                         </D:supported-report-set>
                                         <D:resourcetype>
                                             <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
@@ -439,6 +448,18 @@ public class CalendarTests extends IntegrationTestSupport {
                                             <C:comp name="VTODO"/>
                                         </C:supported-calendar-component-set>
                                         <CS:getctag xmlns:CS="http://calendarserver.org/ns/">157565ba8b0d3652b027c868d554f914</CS:getctag>
+                                        <D:current-user-principal>
+                                            <D:href>/carldav/principals/users/${USER01}</D:href>
+                                        </D:current-user-principal>
+                                        <apple:calendar-color xmlns:apple="http://apple.com/ns/ical/">#000000</apple:calendar-color>
+                                        <D:current-user-privilege-set>
+                                          <D:privilege>
+                                            <D:read/>
+                                          </D:privilege>
+                                          <D:privilege>
+                                            <D:write/>
+                                          </D:privilege>
+                                        </D:current-user-privilege-set>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -449,23 +470,23 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_XML))
                 .andExpect(status().isMultiStatus())
                 .andExpect(textXmlContentType())
-                .andExpect(xml(response));
+                .andExpect(xml(response))
     }
 
     @Test
-    public void calendarPost() throws Exception {
+    void calendarPost() throws Exception {
         mockMvc.perform(post("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML))
                 .andExpect(status().isMethodNotAllowed())
                 .andExpect(textXmlContentType())
-                .andExpect(xml(notAllowed(POST).onCollection()));
+                .andExpect(xml(notAllowed(POST).onCollection()))
     }
 
     @Test
-    public void calendarDelete() throws Exception {
+    void calendarDelete() throws Exception {
         mockMvc.perform(delete("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
 
         mockMvc.perform(get("/dav/{email}/calendar/", USER01)
                 .contentType(TEXT_XML))
@@ -475,7 +496,7 @@ public class CalendarTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void updateCalendarEvent() {
+    void updateCalendarEvent() {
         def uid = "9bb25dec-c1e5-468c-92ea-0152f9f4c1ee"
 
         def request1 = """\
@@ -517,9 +538,9 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(request1))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
-        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG);
+        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG)
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -622,10 +643,10 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(request3))
                 .andExpect(status().isNoContent())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
 
-        final String eTag2 = mvcResult2.getResponse().getHeader(ETAG);
+        final String eTag2 = mvcResult2.getResponse().getHeader(ETAG)
 
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -682,7 +703,7 @@ public class CalendarTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void updateCalendarTodo() {
+    void updateCalendarTodo() {
         def uid = UUID_TODO
 
         def mvcResult1 = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uid)
@@ -690,9 +711,9 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_CALENDAR))
                 .andExpect(etag(notNullValue()))
                 .andExpect(status().isCreated())
-                .andReturn();
+                .andReturn()
 
-        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG);
+        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG)
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -808,9 +829,9 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(request3))
                 .andExpect(status().isNoContent())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
-        def eTag2 = mvcResult2.getResponse().getHeader(ETAG);
+        def eTag2 = mvcResult2.getResponse().getHeader(ETAG)
 
         def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
@@ -873,7 +894,7 @@ public class CalendarTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void deleteCalendarTodo() {
+    void deleteCalendarTodo() {
         def uid = UUID_TODO
 
         def mvcResult1 = mockMvc.perform(put("/dav/{email}/calendar/{uuid}.ics", USER01, uid)
@@ -881,9 +902,9 @@ public class CalendarTests extends IntegrationTestSupport {
                 .contentType(TEXT_CALENDAR))
                 .andExpect(etag(notNullValue()))
                 .andExpect(status().isCreated())
-                .andReturn();
+                .andReturn()
 
-        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG);
+        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG)
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -972,7 +993,7 @@ public class CalendarTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void deleteCalendarEvent() {
+    void deleteCalendarEvent() {
         def uid = "9bb25dec-c1e5-468c-92ea-0152f9f4c1ee"
 
         def request1 = """\
@@ -1014,9 +1035,9 @@ public class CalendarTests extends IntegrationTestSupport {
                 .content(request1))
                 .andExpect(status().isCreated())
                 .andExpect(etag(notNullValue()))
-                .andReturn();
+                .andReturn()
 
-        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG);
+        final String eTag1 = mvcResult1.getResponse().getHeader(ETAG)
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -1130,7 +1151,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01, uuid))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
-                .andExpect(text(response2));
+                .andExpect(text(response2))
     }
 
     @Test
@@ -1180,7 +1201,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01, uuid))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
-                .andExpect(text(response2));
+                .andExpect(text(response2))
     }
 
     @Test
@@ -1229,7 +1250,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01, uuid))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
-                .andExpect(text(response2));
+                .andExpect(text(response2))
     }
 
     @Test
@@ -1321,7 +1342,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20160123T135858Z-25739-1000-1796-13_localhost-20160123T135931Z.ics", USER01, uuid))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
-                .andExpect(text(response2));
+                .andExpect(text(response2))
     }
 
     @Test
@@ -1408,7 +1429,7 @@ public class CalendarTests extends IntegrationTestSupport {
         mockMvc.perform(get("/dav/{email}/calendar/20160123T152950Z-30167-1000-1796-43_localhost-20160123T153145Z.ics", USER01, uuid))
                 .andExpect(textCalendarContentType())
                 .andExpect(status().isOk())
-                .andExpect(text(response2));
+                .andExpect(text(response2))
     }
 
     @Test
@@ -1482,14 +1503,17 @@ public class CalendarTests extends IntegrationTestSupport {
                             <head><title>calendarDisplayName</title></head>
                             <body>
                             <h1>calendarDisplayName</h1>
-                            Parent: <a href="/carldav/dav/test01@localhost.de/">homeCollection</a></li>
+                            Parent: <a href="/carldav/dav/${USER01}/">homeCollection</a></li>
                             <h2>Members</h2>
                             <ul>
-                            <li><a href="/carldav/dav/test01@localhost.de/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics">test task</a></li>
+                            <li><a href="/carldav/dav/${USER01}/calendar/f3bc6436-991a-4a50-88b1-f27838e615c1.ics">test task</a></li>
                             </ul>
                             <h2>Properties</h2>
                             <dl>
-                            <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd>/carldav/dav/test01@localhost.de/contacts</dd>
+                            <dt>{urn:ietf:params:xml:ns:carddav}addressbook-home-set</dt><dd>/carldav/dav/${USER01}/contacts</dd>
+                            <dt>{http://apple.com/ns/ical/}calendar-color</dt><dd>#000000</dd>
+                            <dt>{DAV:}current-user-principal</dt><dd>/carldav/principals/users/${USER01}</dd>
+                            <dt>{DAV:}current-user-privilege-set</dt><dd>[{DAV:}read, {DAV:}write]</dd>
                             <dt>{DAV:}displayname</dt><dd>calendarDisplayName</dd>
                             <dt>{http://calendarserver.org/ns/}getctag</dt><dd>${getctag}</dd>
                             <dt>{DAV:}getetag</dt><dd>&quot;${getctag}&quot;</dd>
@@ -1502,7 +1526,9 @@ public class CalendarTests extends IntegrationTestSupport {
                             <dt>{DAV:}supported-report-set</dt><dd>{urn:ietf:params:xml:ns:caldav}calendar-multiget, {urn:ietf:params:xml:ns:caldav}calendar-query</dd>
                             </dl>
                             <p>
-                            <a href="/carldav/dav/test01@localhost.de/">Home collection</a><br>
+                            <a href="/carldav/principals/users/${USER01}">Principal resource</a><br>
+                            <p>
+                            <a href="/carldav/dav/${USER01}/">Home collection</a><br>
                             </body></html>
                             """.stripIndent()
 

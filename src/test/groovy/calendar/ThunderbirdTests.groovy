@@ -138,10 +138,10 @@ class ThunderbirdTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-    def currentEtag;
+    def currentEtag
 
     @Test
-    public void fetchingEmptyCalendarFirstTime() {
+    void fetchingEmptyCalendarFirstTime() {
         def request1 = """\
                         <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/" xmlns:C="urn:ietf:params:xml:ns:caldav">
                             <D:prop>
@@ -157,10 +157,9 @@ class ThunderbirdTests extends IntegrationTestSupport {
         def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
-                                <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
+                                <D:href>/carldav/dav/${USER01}/calendar/</D:href>
                                 <D:propstat>
                                     <D:prop>
-                                        <D:current-user-principal/>
                                         <D:owner/>
                                     </D:prop>
                                     <D:status>HTTP/1.1 404 Not Found</D:status>
@@ -189,6 +188,9 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                           <C:comp name="VTODO"/>
                                         </C:supported-calendar-component-set>
                                         <CS:getctag xmlns:CS="http://calendarserver.org/ns/">157565ba8b0d3652b027c868d554f914</CS:getctag>
+                                        <D:current-user-principal>
+                                          <D:href>/carldav/principals/users/${USER01}</D:href>
+                                        </D:current-user-principal>
                                     </D:prop>
                                     <D:status>HTTP/1.1 200 OK</D:status>
                                 </D:propstat>
@@ -250,7 +252,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addVEvent() {
+    void addVEvent() {
         MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(VEVENT)
@@ -259,7 +261,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(etag(notNullValue()))
                 .andReturn()
 
-        currentEtag = mvcResult.getResponse().getHeader(ETAG);
+        currentEtag = mvcResult.getResponse().getHeader(ETAG)
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -337,7 +339,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void propfindGetctagAfterAddVEvent() {
+    void propfindGetctagAfterAddVEvent() {
         addVEvent()
 
         def request1 = """\
@@ -383,7 +385,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void propfindGetcontenttypeResourcetypeGetetagAfterAddVEvent() {
+    void propfindGetcontenttypeResourcetypeGetetagAfterAddVEvent() {
         addVEvent()
 
         def request1 = """\
@@ -443,7 +445,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addVTodo() {
+    void addVTodo() {
         MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(VTODO)
@@ -452,7 +454,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                 .andExpect(etag(notNullValue()))
                 .andReturn()
 
-        currentEtag = mvcResult.getResponse().getHeader(ETAG);
+        currentEtag = mvcResult.getResponse().getHeader(ETAG)
 
         def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
@@ -544,7 +546,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addSameVEvent() {
+    void addSameVEvent() {
         addVEvent()
 
         mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
@@ -557,7 +559,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addSameVTodo() {
+    void addSameVTodo() {
         addVTodo()
 
         mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
@@ -570,7 +572,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void deleteVEvent() {
+    void deleteVEvent() {
         addVEvent()
 
         mockMvc.perform(delete("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
@@ -579,7 +581,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void deleteVTodo() {
+    void deleteVTodo() {
         addVTodo()
 
         mockMvc.perform(delete("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
@@ -588,7 +590,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addAndUpdateVEvent() {
+    void addAndUpdateVEvent() {
         addVEvent()
 
         def vevent = VEVENT.replace('LOCATION:location', 'LOCATION:newlocation')
@@ -603,7 +605,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void calendarQueryVEventWithTimeRange() {
+    void calendarQueryVEventWithTimeRange() {
         calendarQueryVEvent("""\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
@@ -620,7 +622,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void calendarQueryVEventWithoutTimeRange() {
+    void calendarQueryVEventWithoutTimeRange() {
         calendarQueryVEvent("""\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
@@ -677,7 +679,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void fetchingCalendarFirstTime() {
+    void fetchingCalendarFirstTime() {
         addVEvent()
         def getetag1 = currentEtag
 

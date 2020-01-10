@@ -1,18 +1,3 @@
-/*
- * Copyright 2006-2007 Open Source Applications Foundation
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.unitedinternet.cosmo.dav;
 
 import carldav.card.CardQueryProcessor;
@@ -25,14 +10,13 @@ import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.impl.*;
 import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
-import org.unitedinternet.cosmo.service.UserService;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.*;
 
-public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants{
+public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants {
 
     private ContentService contentService;
     private ItemRepository itemRepository;
@@ -40,22 +24,19 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     private CosmoSecurityManager securityManager;
     private CalendarQueryProcessor calendarQueryProcessor;
     private CardQueryProcessor cardQueryProcessor;
-    private UserService userService;
 
     public StandardResourceFactory(ContentService contentService,
                                    ItemRepository itemRepository,
                                    CollectionRepository collectionRepository,
                                    CosmoSecurityManager securityManager,
                                    CalendarQueryProcessor calendarQueryProcessor,
-                                   CardQueryProcessor cardQueryProcessor,
-                                   UserService userService) {
+                                   CardQueryProcessor cardQueryProcessor) {
         this.contentService = contentService;
         this.itemRepository = itemRepository;
         this.collectionRepository = collectionRepository;
         this.securityManager = securityManager;
         this.calendarQueryProcessor = calendarQueryProcessor;
         this.cardQueryProcessor = cardQueryProcessor;
-        this.userService = userService;
     }
 
     /**
@@ -64,7 +45,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
      * </p>
      * <p>
      * If the identified resource does not exist and the request method
-     * indicates that one is to be created, returns a resource backed by a 
+     * indicates that one is to be created, returns a resource backed by a
      * newly-instantiated item that has not been persisted or assigned a UID.
      * Otherwise, if the resource does not exists, then a
      * {@link NotFoundException} is thrown.
@@ -127,15 +108,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
             return createUserPrincipalResource(locator);
         }
 
+        match = TEMPLATE_USER.match(uri);
+        if (match != null) {
+            return createUserPrincipalResource(locator, match);
+        }
+
         return createUnknownResource(locator);
     }
 
-    /**
-     * <p>
-     * Instantiates a <code>WebDavResource</code> representing the
-     * <code>Item</code> located by the given <code>DavResourceLocator</code>.
-     * </p>
-     */
     public WebDavResource createResource(DavResourceLocator locator, Item item)  throws CosmoDavException {
         Assert.notNull(item, "item cannot be null");
 
@@ -201,7 +181,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     public ContentService getContentService() {
         return contentService;
     }
-    
+
     public CalendarQueryProcessor getCalendarQueryProcessor() {
         return calendarQueryProcessor;
     }

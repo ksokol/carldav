@@ -1,18 +1,3 @@
-/*
- * Copyright 2006-2007 Open Source Applications Foundation
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.unitedinternet.cosmo.dav.impl;
 
 import carldav.entity.CollectionItem;
@@ -22,8 +7,19 @@ import carldav.jackrabbit.webdav.property.DavPropertySet;
 import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
-import org.unitedinternet.cosmo.dav.*;
-import org.unitedinternet.cosmo.dav.property.*;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavCollection;
+import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.ETagUtil;
+import org.unitedinternet.cosmo.dav.ForbiddenException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
+import org.unitedinternet.cosmo.dav.property.DisplayName;
+import org.unitedinternet.cosmo.dav.property.Etag;
+import org.unitedinternet.cosmo.dav.property.IsCollection;
+import org.unitedinternet.cosmo.dav.property.LastModified;
+import org.unitedinternet.cosmo.dav.property.ResourceType;
+import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.service.ContentService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +30,13 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
@@ -106,7 +108,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
         }
         return Collections.unmodifiableList(members);
     }
-    
+
     public void removeItem(WebDavResource member) {
         Item item = ((DavItemResourceBase) member).getItem();
         getContentService().removeItemFromCollection(item, this.item);
@@ -244,13 +246,13 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
             writer.write("<html>\n<head><title>");
             String colName = StringEscapeUtils.escapeHtml(getDisplayName());
             writer.write(colName);
-    
+
             writer.write("</title></head>\n");
             writer.write("<body>\n");
             writer.write("<h1>");
             writer.write(colName);
             writer.write("</h1>\n");
-    
+
             WebDavResource parent = getParent();
 
             writer.write("Parent: <a href=\"");
@@ -270,7 +272,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
                 writer.write("</a></li>\n");
             }
             writer.write("</ul>\n");
-    
+
             writer.write("<h2>Properties</h2>\n");
             writer.write("<dl>\n");
 
@@ -289,6 +291,16 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
             writer.write("</dl>\n");
 
             writer.write("<p>\n");
+
+            DavResourceLocator principalLocator = getResourceLocator()
+                    .getFactory().createPrincipalLocator(
+                            getResourceLocator().getContext(), getUsername());
+            writer.write("<a href=\"");
+            writer.write(principalLocator.getHref(false));
+            writer.write("\">");
+            writer.write("Principal resource");
+            writer.write("</a><br>\n");
+            writer.write("<p>\n");
             if (!isHomeCollection()) {
                 DavResourceLocator homeLocator = getResourceLocator()
                         .getFactory().createHomeLocator(
@@ -299,7 +311,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
                 writer.write("Home collection");
                 writer.write("</a><br>\n");
             }
-    
+
             writer.write("</body>");
             writer.write("</html>\n");
         }finally{

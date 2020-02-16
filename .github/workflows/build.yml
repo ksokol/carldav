@@ -34,7 +34,7 @@ jobs:
       - name: Check Project
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./mvnw verify sonar:sonar
+        run: ./mvnw verify jacoco:report sonar:sonar
 
       - name: Release Project
         if: contains(github.ref, 'master')

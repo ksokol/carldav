@@ -30,6 +30,7 @@ public class CollectionItem {
     private User owner;
     private CollectionItem parent;
     private Set<CollectionItem> collections;
+    private String color;
 
     @Id
     @GeneratedValue
@@ -109,5 +110,14 @@ public class CollectionItem {
 
     public void setCollections(Set<CollectionItem> collections) {
         this.collections = collections;
+    }
+
+    @Column(name = "calendar_color", nullable = true, columnDefinition = "default '#000000'")
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

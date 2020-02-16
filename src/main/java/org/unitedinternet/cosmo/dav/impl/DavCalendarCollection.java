@@ -1,5 +1,6 @@
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.calendar.property.CalendarColor;
 import carldav.entity.CollectionItem;
 import carldav.entity.Item;
 import carldav.jackrabbit.webdav.property.DavPropertySet;
@@ -11,6 +12,7 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.property.*;
 import org.unitedinternet.cosmo.dav.caldav.report.MultigetReport;
 import org.unitedinternet.cosmo.dav.caldav.report.QueryReport;
+import org.unitedinternet.cosmo.dav.property.CurrentUserPrincipal;
 import org.unitedinternet.cosmo.dav.property.DisplayName;
 import org.unitedinternet.cosmo.icalendar.ICalendarConstants;
 
@@ -30,6 +32,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         registerLiveProperty(SUPPORTED_CALENDAR_COMPONENT_SET);
         registerLiveProperty(SUPPORTED_CALENDAR_DATA);
         registerLiveProperty(GET_CTAG);
+        registerLiveProperty(CURRENT_USER_PRINCIPAL);
+        registerLiveProperty(CALENDAR_COLOR);
 
         reportTypes.add(MultigetReport.REPORT_TYPE_CALDAV_MULTIGET);
         reportTypes.add(QueryReport.REPORT_TYPE_CALDAV_QUERY);
@@ -68,6 +72,8 @@ public class DavCalendarCollection extends DavCollectionBase implements CaldavCo
         properties.add(new SupportedCalendarData());
         properties.add(new AddressbookHomeSet(getResourceLocator(), getUsername()));
         properties.add(new DisplayName(getItem().getDisplayName()));
+        properties.add(new CurrentUserPrincipal(getResourceLocator(), getUsername()));
+        properties.add(new CalendarColor(getItem().getColor()));
     }
 
     protected void saveContent(DavItemResourceBase member) throws CosmoDavException {

@@ -31,7 +31,7 @@ class IosTests extends IntegrationTestSupport {
     def currentEtag
 
     @Test
-    public void fetchingEmptyCalendarFirstTime() {
+    void fetchingEmptyCalendarFirstTime() {
         def request1 = """\
                         <x0:propfind xmlns:x0="DAV:" xmlns:CAL="http://calendarserver.org/ns/" xmlns:x1="urn:ietf:params:xml:ns:caldav" xmlns:n0="http://cal.me.com/_namespace/">
                          <x0:prop>
@@ -52,7 +52,7 @@ class IosTests extends IntegrationTestSupport {
         def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
-                                    <D:href>/carldav/principals/users/test01@localhost.de</D:href>
+                                    <D:href>/carldav/principals/users/${USER01}</D:href>
                                     <D:propstat>
                                         <D:prop>
                                             <x0:principal-collection-set xmlns:x0="DAV:"/>
@@ -68,11 +68,11 @@ class IosTests extends IntegrationTestSupport {
                                     <D:propstat>
                                         <D:prop>
                                             <C:calendar-home-set xmlns:C="urn:ietf:params:xml:ns:caldav">
-                                                <D:href>/carldav/dav/test01@localhost.de</D:href>
+                                                <D:href>/carldav/dav/${USER01}</D:href>
                                             </C:calendar-home-set>
-                                            <D:displayname>test01@localhost.de</D:displayname>
+                                            <D:displayname>${USER01}</D:displayname>
                                             <D:principal-URL>
-                                                <D:href>/carldav/principals/users/test01@localhost.de</D:href>
+                                                <D:href>/carldav/principals/users/${USER01}</D:href>
                                             </D:principal-URL>
                                             <D:supported-report-set/>
                                         </D:prop>
@@ -139,7 +139,6 @@ class IosTests extends IntegrationTestSupport {
                                             <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
                                             <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
                                             <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <x0:current-user-privilege-set xmlns:x0="DAV:"/>
                                             <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <CAL:supported-calendar-component-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
@@ -155,6 +154,14 @@ class IosTests extends IntegrationTestSupport {
                                             <D:resourcetype>
                                                 <D:collection/>
                                             </D:resourcetype>
+                                            <D:current-user-privilege-set>
+                                              <D:privilege>
+                                                <D:read/>
+                                              </D:privilege>
+                                              <D:privilege>
+                                                <D:write/>
+                                              </D:privilege>
+                                            </D:current-user-privilege-set>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -174,12 +181,10 @@ class IosTests extends IntegrationTestSupport {
                                             <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
                                             <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
                                             <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <x0:current-user-privilege-set xmlns:x0="DAV:"/>
                                             <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <x1:subscribed-strip-attachments xmlns:x1="http://calendarserver.org/ns/"/>
                                             <x1:subscribed-strip-alarms xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <n0:calendar-color xmlns:n0="http://apple.com/ns/ical/"/>
                                         </D:prop>
                                         <D:status>HTTP/1.1 404 Not Found</D:status>
                                     </D:propstat>
@@ -196,6 +201,15 @@ class IosTests extends IntegrationTestSupport {
                                                 <D:collection/>
                                                 <C:calendar xmlns:C="urn:ietf:params:xml:ns:caldav"/>
                                             </D:resourcetype>
+                                            <apple:calendar-color xmlns:apple="http://apple.com/ns/ical/">#000000</apple:calendar-color>
+                                            <D:current-user-privilege-set>
+                                              <D:privilege>
+                                                <D:read/>
+                                              </D:privilege>
+                                              <D:privilege>
+                                                <D:write/>
+                                              </D:privilege>
+                                            </D:current-user-privilege-set>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -216,7 +230,6 @@ class IosTests extends IntegrationTestSupport {
                                             <n0:calendar-order xmlns:n0="http://apple.com/ns/ical/"/>
                                             <x1:source xmlns:x1="http://calendarserver.org/ns/"/>
                                             <x1:push-transports xmlns:x1="http://calendarserver.org/ns/"/>
-                                            <x0:current-user-privilege-set xmlns:x0="DAV:"/>
                                             <x1:subscribed-strip-todos xmlns:x1="http://calendarserver.org/ns/"/>
                                             <CAL:calendar-timezone xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
                                             <CAL:supported-calendar-component-set xmlns:CAL="urn:ietf:params:xml:ns:caldav"/>
@@ -233,6 +246,14 @@ class IosTests extends IntegrationTestSupport {
                                                 <D:collection/>
                                                 <CARD:addressbook xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                             </D:resourcetype>
+                                            <D:current-user-privilege-set>
+                                              <D:privilege>
+                                                <D:read/>
+                                              </D:privilege>
+                                              <D:privilege>
+                                                <D:write/>
+                                              </D:privilege>
+                                            </D:current-user-privilege-set>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -895,7 +916,6 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/carldav/dav/test01@localhost.de/contacts/</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <A:current-user-privilege-set xmlns:A="DAV:"/>
                                             <A:owner xmlns:A="DAV:"/>
                                             <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
                                             <A:quota-used-bytes xmlns:A="DAV:"/>
@@ -925,6 +945,14 @@ class IosTests extends IntegrationTestSupport {
                                                 <D:collection/>
                                                 <CARD:addressbook xmlns:CARD="urn:ietf:params:xml:ns:carddav"/>
                                             </D:resourcetype>
+                                            <D:current-user-privilege-set>
+                                              <D:privilege>
+                                                <D:read/>
+                                              </D:privilege>
+                                              <D:privilege>
+                                                <D:write/>
+                                              </D:privilege>
+                                            </D:current-user-privilege-set>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>
@@ -933,7 +961,6 @@ class IosTests extends IntegrationTestSupport {
                                     <D:href>/carldav/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
                                     <D:propstat>
                                         <D:prop>
-                                            <A:current-user-privilege-set xmlns:A="DAV:"/>
                                             <A:owner xmlns:A="DAV:"/>
                                             <x1:pushkey xmlns:x1="http://calendarserver.org/ns/"/>
                                             <A:quota-used-bytes xmlns:A="DAV:"/>
@@ -949,6 +976,14 @@ class IosTests extends IntegrationTestSupport {
                                             <D:displayname>Vorname Nachname</D:displayname>
                                             <D:supported-report-set/>
                                             <D:resourcetype/>
+                                            <D:current-user-privilege-set>
+                                              <D:privilege>
+                                                <D:read/>
+                                              </D:privilege>
+                                              <D:privilege>
+                                                <D:write/>
+                                              </D:privilege>
+                                            </D:current-user-privilege-set>
                                         </D:prop>
                                         <D:status>HTTP/1.1 200 OK</D:status>
                                     </D:propstat>

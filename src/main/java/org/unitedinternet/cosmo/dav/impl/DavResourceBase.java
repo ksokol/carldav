@@ -1,27 +1,20 @@
-/*
- * Copyright 2006-2007 Open Source Applications Foundation
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.calendar.property.CurrentUserPrivilegeSet;
 import carldav.jackrabbit.webdav.property.DavPropertyName;
 import carldav.jackrabbit.webdav.property.DavPropertySet;
 import carldav.jackrabbit.webdav.version.report.Report;
 import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import carldav.jackrabbit.webdav.version.report.ReportType;
 import org.apache.commons.lang.StringEscapeUtils;
-import org.unitedinternet.cosmo.dav.*;
+import org.unitedinternet.cosmo.dav.CosmoDavException;
+import org.unitedinternet.cosmo.dav.DavCollection;
+import org.unitedinternet.cosmo.dav.DavResourceFactory;
+import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.ExtendedDavConstants;
+import org.unitedinternet.cosmo.dav.NotFoundException;
+import org.unitedinternet.cosmo.dav.UnprocessableEntityException;
+import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.property.AddressbookHomeSet;
 import org.unitedinternet.cosmo.dav.caldav.property.CalendarHomeSet;
 import org.unitedinternet.cosmo.dav.property.PrincipalUrl;
@@ -31,28 +24,17 @@ import org.unitedinternet.cosmo.model.hibernate.EntityConverter;
 
 import javax.xml.namespace.QName;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
+import static carldav.CarldavConstants.PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET;
 import static carldav.CarldavConstants.SUPPORTED_REPORT_SET;
 
-/**
- * <p>
- * Base class for implementations of <code>WebDavResource</code>
- * which provides behavior common to all resources.
- * </p>
- * <p>
- * This class declares the following live properties:
- * </p>
- * <ul>
- * <li> DAV:supported-report-set </li>
- * <li> DAV:current-user-privilege-set </li>
- * </ul>
- * <p>
- * This class does not declare any reports.
- * </p>
- * 
- * @see WebDavResource
- */
 public abstract class DavResourceBase implements ExtendedDavConstants, WebDavResource {
 
     protected static final EntityConverter converter = new EntityConverter();
@@ -65,10 +47,9 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     private DavPropertySet properties;
     private boolean initialized;
 
-    public DavResourceBase(DavResourceLocator locator,
-                           DavResourceFactory factory)
-        throws CosmoDavException {
+    public DavResourceBase(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
         registerLiveProperty(SUPPORTED_REPORT_SET);
+        registerLiveProperty(PROPERTY_ACL_CURRENT_USER_PRIVILEGE_SET);
         this.locator = locator;
         this.factory = factory;
         this.properties = new DavPropertySet();
@@ -121,7 +102,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         final Map<String, WebDavProperty> sorted = new TreeMap<>();
 
         for (final DavPropertyName propertyName : propertyNames) {
-            sorted.put(propertyName.getName(), (WebDavProperty) properties.get(propertyName));
+            sorted.put(propertyName.getName(), properties.get(propertyName));
         }
 
         return sorted;
@@ -155,10 +136,7 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
     protected String getUsername() {
         return factory.getSecurityManager().getUsername();
     }
-    /**
-     * Determines whether or not the report indicated by the given
-     * report info is supported by this collection.
-     */
+
     protected boolean isSupportedReport(ReportInfo info) {
         for (Iterator<ReportType> i = getReportTypes().iterator(); i.hasNext();) {
             if (i.next().isRequestedReportType(info)) {
@@ -172,22 +150,10 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
      return reportTypes;
     }
 
-    /**
-     * <p>
-     * Registers the name of a live property.
-     * </p>
-     * <p>
-     * Typically used in subclass static initializers to add to the set
-     * of live properties for the resource.
-     * </p>
-     */
     protected void registerLiveProperty(DavPropertyName name) {
         liveProperties.add(name);
     }
 
-    /**
-     * Returns the set of resource types for this resource.
-     */
     protected Set<QName> getResourceTypes() {
         return new HashSet<>();
     }
@@ -198,15 +164,13 @@ public abstract class DavResourceBase implements ExtendedDavConstants, WebDavRes
         }
 
         properties.add(new SupportedReportSet(getReportTypes()));
+        properties.add(new CurrentUserPrivilegeSet());
 
         loadLiveProperties(properties);
 
         initialized = true;
-    }    
+    }
 
-    /**
-     * Loads the live DAV properties for the resource.
-     */
     protected abstract void loadLiveProperties(DavPropertySet properties);
 
     public DavCollection getParent() throws CosmoDavException {

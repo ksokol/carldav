@@ -2,6 +2,7 @@ package carldav;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.annotation.ImportResource;
 
 import java.util.TimeZone;
@@ -10,7 +11,7 @@ import java.util.TimeZone;
  * @author Kamill Sokol
  */
 @ImportResource("classpath:applicationContext-cosmo.xml")
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class CarldavApplication {
 
     static {

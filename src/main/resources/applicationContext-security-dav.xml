@@ -43,7 +43,11 @@
 		<constructor-arg index="0" ref="userRepository" />
 	</bean>
 
-	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+  <bean
+    id="passwordEncoder"
+    class="org.springframework.security.crypto.factory.PasswordEncoderFactories"
+    factory-method="createDelegatingPasswordEncoder"
+  />
 
 	<bean id="securityManager" class="org.unitedinternet.cosmo.security.CosmoSecurityManager" />
 

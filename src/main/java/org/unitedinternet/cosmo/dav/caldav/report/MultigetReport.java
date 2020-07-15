@@ -1,12 +1,12 @@
 /*
  * Copyright 2006-2007 Open Source Applications Foundation
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,6 @@ import org.unitedinternet.cosmo.dav.impl.DavItemResourceBase;
 import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -113,14 +112,14 @@ public class MultigetReport extends CaldavMultiStatusReport {
         Matcher resourceUUIDMatcher = RESOURCE_UUID_PATTERN.matcher(resourceUrl.getPath());
         if (resourceUUIDMatcher.find()) {
             resourceUUID = resourceUUIDMatcher.group(0);
-        }        
+        }
         hrefs = new HashSet<>();
-        for (Element element : hrefElements) { 
+        for (Element element : hrefElements) {
             String href = DomUtils.getTextTrim(element);
             href = updateHrefElementWithRequestUrlUUID(element, href, resourceUUID);
             // validate and absolutize submitted href
-            URL memberUrl = normalizeHref(resourceUrl, href); 
-            
+            URL memberUrl = normalizeHref(resourceUrl, href);
+
             // check if the href refers to the targeted resource (or to a
             // descendent if the target is a collection)
             if (getResource() instanceof DavCollection) {
@@ -151,7 +150,7 @@ public class MultigetReport extends CaldavMultiStatusReport {
         }
         return davHref;
     }
-    
+
     protected void doQuerySelf(WebDavResource resource)
         throws CosmoDavException {}
 
@@ -223,14 +222,10 @@ public class MultigetReport extends CaldavMultiStatusReport {
         if (collection.toString().equals(test.toString())) {
             return true;
         }
-        
-        try {
-            String testPathDecoded = UriUtils.decode(test.getPath(), "UTF-8");
-            String collectionPathDecoded = UriUtils.decode(collection.getPath(), "UTF-8");
 
-            return testPathDecoded.startsWith(collectionPathDecoded);
-        } catch (UnsupportedEncodingException e) {
-            return test.getPath().startsWith(collection.getPath());
-        }
+        String testPathDecoded = UriUtils.decode(test.getPath(), "UTF-8");
+        String collectionPathDecoded = UriUtils.decode(collection.getPath(), "UTF-8");
+
+        return testPathDecoded.startsWith(collectionPathDecoded);
     }
 }

@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
@@ -54,7 +54,7 @@ public class AdminUserCreator implements ApplicationListener<ContextRefreshedEve
 
             if(!admin.getPassword().equals(adminPassword)) {
                 LOG.info("admin user password changed. setting to '{}'", adminPassword);
-                admin.setPassword(passwordEncoder.encodePassword(adminPassword, null));
+                admin.setPassword(passwordEncoder.encode(adminPassword));
                 userRepository.save(admin);
                 LOG.info("admin user password changed");
             }
@@ -63,7 +63,7 @@ public class AdminUserCreator implements ApplicationListener<ContextRefreshedEve
 
             admin = new User();
             admin.setEmail(adminName);
-            admin.setPassword(passwordEncoder.encodePassword(adminPassword, null));
+            admin.setPassword(passwordEncoder.encode(adminPassword));
             admin.setRole("ROLE_ADMIN");
             admin.setLocked(false);
             userRepository.save(admin);

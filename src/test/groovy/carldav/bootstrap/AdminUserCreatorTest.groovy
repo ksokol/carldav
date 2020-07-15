@@ -3,9 +3,9 @@ package carldav.bootstrap
 import carldav.entity.User
 import carldav.repository.UserRepository
 import org.junit.Test
-import org.springframework.security.authentication.encoding.PasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 
-import static org.mockito.Matchers.anyString
+import static org.mockito.ArgumentMatchers.anyString
 import static org.mockito.Mockito.*
 
 /**
@@ -15,8 +15,8 @@ class AdminUserCreatorTest {
 
     public static final String IGNORE = "ignore"
 
-    private UserRepository userRepository = mock(UserRepository.class);
-    private PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+    private UserRepository userRepository = mock(UserRepository.class)
+    private PasswordEncoder passwordEncoder = mock(PasswordEncoder.class)
     private User user = mock(User.class)
 
     private AdminUserCreator uut = new AdminUserCreator(userRepository, passwordEncoder, IGNORE, IGNORE)
@@ -36,7 +36,7 @@ class AdminUserCreatorTest {
     void adminPasswordNotEqual() {
         when(userRepository.findByEmailIgnoreCase(IGNORE)).thenReturn(user)
         when(user.getPassword()).thenReturn("different")
-        when(passwordEncoder.encodePassword(IGNORE, null)).thenReturn("encoded")
+        when(passwordEncoder.encode(IGNORE)).thenReturn("encoded")
 
         uut.onApplicationEvent(null)
 

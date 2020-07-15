@@ -33,7 +33,7 @@ public abstract class IntegrationTestSupport {
     @Autowired
     private WebApplicationContext wac;
 
-    @Value("${server.context-path}")
+    @Value("${server.servlet.context-path}")
     private String contextPath;
 
     @Before

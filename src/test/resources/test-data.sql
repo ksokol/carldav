@@ -1,5 +1,5 @@
-INSERT INTO users(id,locked,email,password,role) VALUES (2,0,'test01@localhost.de','098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
-INSERT INTO users(id,locked,email,password,role) VALUES (3,0,'test02@localhost.de','098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
+INSERT INTO users(id,locked,email,password,role) VALUES (2,0,'test01@localhost.de','{MD5}098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
+INSERT INTO users(id,locked,email,password,role) VALUES (3,0,'test02@localhost.de','{MD5}098f6bcd4621d373cade4e832627b4f6','ROLE_USER');
 
 INSERT INTO collection (collectionid, id, modifydate, displayname, calendar_color, itemname, ownerid)
 VALUES (null, 1, to_timestamp('2015-11-21 21:11:00','YYYY-MM-DD HH:MI:SS'), 'homeCollection', '#000000', 'test01@localhost.de', 2);

@@ -19,8 +19,8 @@ import carldav.entity.CollectionItem;
 import carldav.entity.User;
 import carldav.repository.CollectionRepository;
 import carldav.repository.UserRepository;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.service.UserService;
@@ -32,14 +32,22 @@ public class StandardUserService implements UserService {
     private final ContentService contentService;
     private final UserRepository userRepository;
     private final CollectionRepository collectionRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public StandardUserService(final ContentService contentService, final UserRepository userRepository, final CollectionRepository collectionRepository) {
+    public StandardUserService(
+            ContentService contentService,
+            UserRepository userRepository,
+            CollectionRepository collectionRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         Assert.notNull(contentService, "contentService is null");
         Assert.notNull(userRepository, "userRepository is null");
         Assert.notNull(collectionRepository, "collectionRepository is null");
+        Assert.notNull(passwordEncoder, "passwordEncoder is null");
         this.contentService = contentService;
         this.userRepository = userRepository;
         this.collectionRepository = collectionRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Iterable<User> getUsers() {
@@ -91,19 +99,14 @@ public class StandardUserService implements UserService {
      */
     public void removeUser(User user) {
         final List<CollectionItem> byOwnerEmail = collectionRepository.findByOwnerEmail(user.getEmail());
-        collectionRepository.delete(byOwnerEmail);
+        collectionRepository.deleteAll(byOwnerEmail);
         userRepository.delete(user);
     }
 
-    /**
-     * Digests the given password using the set message digest and hex
-     * encodes it.
-     */
-    protected String digestPassword(String password) {
+    private String digestPassword(String password) {
         if (password == null) {
             return null;
         }
-
-        return DigestUtils.md5Hex(password);
+        return passwordEncoder.encode(password);
     }
 }

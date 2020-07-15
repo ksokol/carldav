@@ -24,15 +24,15 @@ import static testutil.mockmvc.CustomResultMatchers.*
 class UserControllerTests extends IntegrationTestSupport {
 
     @Test
-    public void list() {
+    void list() {
         mockMvc.perform(get("/user")
             .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
-            .andExpect(header().string(CONTENT_TYPE, is(APPLICATION_JSON_UTF8_VALUE)))
+            .andExpect(header().string(CONTENT_TYPE, is(APPLICATION_JSON_VALUE)))
             .andExpect(content().json('["test02@localhost.de","test01@localhost.de","root@localhost"]'))
     }
 
     @Test
-    public void createUser() {
+    void createUser() {
         def request = """\
                         {
                             "email" : "${NEW_USER}",
@@ -47,7 +47,7 @@ class UserControllerTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void createSameUserTwice() {
+    void createSameUserTwice() {
         def request = """\
                         {
                             "email" : "${NEW_USER}",
@@ -68,7 +68,7 @@ class UserControllerTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void createUserCheckCollections() {
+    void createUserCheckCollections() {
         createUser()
 
         def request1 = """\
@@ -109,7 +109,7 @@ class UserControllerTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addVEvent() {
+    void addVEvent() {
         createUserCheckCollections()
 
         mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
@@ -124,7 +124,7 @@ class UserControllerTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addVTodo() {
+    void addVTodo() {
         createUserCheckCollections()
 
         def request1 = """\
@@ -154,7 +154,7 @@ class UserControllerTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addVCard() {
+    void addVCard() {
         createUserCheckCollections()
 
         def request1 = """\

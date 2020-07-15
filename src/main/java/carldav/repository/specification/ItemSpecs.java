@@ -2,7 +2,6 @@ package carldav.repository.specification;
 
 import carldav.entity.Item;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 
 import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.Path;
@@ -19,27 +18,26 @@ import static java.util.Locale.ENGLISH;
  */
 public final class ItemSpecs {
 
+    private static final String START_DATE = "startDate";
+
     private ItemSpecs() {
         //private
     }
 
     public static Specification<Item> combine(List<Specification<Item>> specifications) {
         return (root, query, cb) -> {
-            final Optional<Specification<Item>> result = specifications.stream().reduce((left, right) -> Specifications.where(left).and(right));
-            if(result.isPresent()) {
-                return result.get().toPredicate(root, query, cb);
-            }
-            return null;
+            Optional<Specification<Item>> result = specifications.stream().reduce((left, right) -> Specification.where(left).and(right));
+            return result.map(itemSpecification -> itemSpecification.toPredicate(root, query, cb)).orElse(null);
         };
     }
 
     public static Specification<Item> propertyLike(String property, String value, boolean caseless, boolean negate) {
         return (root, query, cb) -> {
-            final Path<String> uid = root.get(property);
+            Path<String> uid = root.get(property);
             Expression<String> lower = uid;
             String pattern = "%" + value + "%";
 
-            if(caseless) {
+            if (caseless) {
                 lower = cb.lower(uid);
                 pattern = pattern.toLowerCase(ENGLISH);
             }
@@ -54,7 +52,7 @@ public final class ItemSpecs {
 
     public static Specification<Item> parent(Long id) {
         return (root, query, cb) -> {
-            final Path<Long> collectionId = root.get("collection").get("id");
+            Path<Long> collectionId = root.get("collection").get("id");
             return cb.equal(collectionId, id);
         };
     }
@@ -73,24 +71,24 @@ public final class ItemSpecs {
             }
 
             if (start != null && end != null) {
-                final Predicate startDate1 = cb.lessThan(root.get("startDate"), end);
-                final Predicate endDate1 = cb.greaterThan(root.get("endDate"), start);
+                Predicate startDate1 = cb.lessThan(root.get(START_DATE), end);
+                Predicate endDate1 = cb.greaterThan(root.get("endDate"), start);
 
-                final Predicate startDate1AndEndDate1 = cb.and(startDate1, endDate1);
+                Predicate startDate1AndEndDate1 = cb.and(startDate1, endDate1);
 
-                final Predicate startDateEqualEndDate = cb.equal(root.<Date>get("startDate"), root.<Date>get("endDate"));
-                final Predicate startDateEqual = cb.equal(root.<Date>get("startDate"), start);
-                final Predicate endDateEqual = cb.equal(root.<Date>get("startDate"), end);
+                Predicate startDateEqualEndDate = cb.equal(root.<Date>get(START_DATE), root.<Date>get("endDate"));
+                Predicate startDateEqual = cb.equal(root.<Date>get(START_DATE), start);
+                Predicate endDateEqual = cb.equal(root.<Date>get(START_DATE), end);
 
-                final Predicate startDateEqualOrEndDateEqual = cb.or(startDateEqual, endDateEqual);
-                final Predicate startDateEqualEndDateAndStartDateEqualOrEndDateEqual = cb.and(startDateEqualEndDate, startDateEqualOrEndDateEqual);
+                Predicate startDateEqualOrEndDateEqual = cb.or(startDateEqual, endDateEqual);
+                Predicate startDateEqualEndDateAndStartDateEqualOrEndDateEqual = cb.and(startDateEqualEndDate, startDateEqualOrEndDateEqual);
 
                 // edge case where start==end
-                final Predicate or = cb.or(startDate1AndEndDate1, startDateEqualEndDateAndStartDateEqualOrEndDateEqual);
+                Predicate or = cb.or(startDate1AndEndDate1, startDateEqualEndDateAndStartDateEqualOrEndDateEqual);
                 predicates.add(or);
             }
 
-            return predicates.stream().reduce((left, right) -> cb.and(left, right)).orElse(null);
+            return predicates.stream().reduce(cb::and).orElse(null);
         };
     }
 }

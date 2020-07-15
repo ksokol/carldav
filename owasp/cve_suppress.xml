@@ -2,28 +2,28 @@
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
 	<suppress>
 		<notes><![CDATA[
-   file name: spring-security-core-5.1.11.RELEASE.jar
+   file name: spring-security-core-5.2.5.RELEASE.jar
    ]]></notes>
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
-   file name: spring-security-web-5.1.11.RELEASE.jar
+   file name: spring-security-web-5.2.5.RELEASE.jar
    ]]></notes>
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-web@.*$</packageUrl>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
-   file name: spring-security-data-5.1.11.RELEASE.jar
+   file name: spring-security-data-5.2.5.RELEASE.jar
    ]]></notes>
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-data@.*$</packageUrl>
 		<cve>CVE-2018-1258</cve>
 	</suppress>
 	<suppress>
 		<notes><![CDATA[
-   file name: spring-security-config-5.1.11.RELEASE.jar
+   file name: spring-security-config-5.2.5.RELEASE.jar
    ]]></notes>
 		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-config@.*$</packageUrl>
 		<cve>CVE-2018-1258</cve>

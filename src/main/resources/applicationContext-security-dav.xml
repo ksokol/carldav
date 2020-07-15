@@ -23,6 +23,23 @@
         </constructor-arg>
     </bean>
 
+  <bean id="customHttpFirewall" class="org.springframework.security.web.firewall.StrictHttpFirewall">
+    <property name="allowedHttpMethods">
+      <set>
+        <value>GET</value>
+        <value>POST</value>
+        <value>PUT</value>
+        <value>DELETE</value>
+        <value>HEAD</value>
+        <value>OPTIONS</value>
+        <value>REPORT</value>
+        <value>PROPFIND</value>
+      </set>
+    </property>
+  </bean>
+
+  <security:http-firewall ref="customHttpFirewall" />
+
 	<security:http pattern="/**" use-expressions="true" create-session="stateless">
 		<security:access-denied-handler ref="authenticateWith401StatusCodeHandler" />
 		<security:intercept-url pattern="/user" access="hasRole('ROLE_ADMIN')" />

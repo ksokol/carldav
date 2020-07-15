@@ -38,10 +38,8 @@ jobs:
 
       - name: Release Project
         if: contains(github.ref, 'master')
-        uses: ksokol/github-release-action@master
+        uses: ksokol/github-release-action@v1
         with:
           tag_name: ${{ github.ref }}-${{ github.sha }}
           release_name: ${{ github.sha }}
-          asset_path: target/carldav.jar
-          asset_name: carldav.jar
-          asset_content_type: application/java-archive
+          asset_glob: target/carldav.jar

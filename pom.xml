@@ -15,7 +15,7 @@
     <name>carldav</name>
     <url>https://github.com/ksokol/carldav</url>
     <inceptionYear>2015</inceptionYear>
-    <version>0.3</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
 
     <scm>
@@ -50,6 +50,7 @@
         <groovy.version>2.4.5</groovy.version>
         <xmlunit.version>2.0.0-alpha-03</xmlunit.version>
         <jackson.version>2.10.1</jackson.version> <!-- override Spring Boot 1.5.22 -->
+        <flyway.version>4.2.0</flyway.version>
     </properties>
 
     <dependencies>

@@ -12,8 +12,8 @@ import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import static testutil.TestUser.USER01
-import static testutil.TestUser.USER01_PASSWORD
+import static util.TestUser.USER01
+import static util.TestUser.USER01_PASSWORD
 import static util.helper.Base64Helper.user
 import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
@@ -102,7 +102,7 @@ class DavDroidTests extends IntegrationTestSupport {
                 .contentType(APPLICATION_XML)
                 .content(request2)
                 .header("Depth", "0"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isUnauthorized())
 
         def request3 = """\
                         <propfind xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">

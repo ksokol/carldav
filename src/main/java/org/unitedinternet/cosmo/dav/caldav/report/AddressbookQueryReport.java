@@ -1,15 +1,10 @@
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CARDDAV_ADDRESSBOOK_QUERY;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NS_CARDDAV;
-import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CARD;
-
 import carldav.CarldavConstants;
 import carldav.jackrabbit.webdav.DavConstants;
-import carldav.jackrabbit.webdav.xml.DomUtils;
 import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import carldav.jackrabbit.webdav.version.report.ReportType;
-import org.unitedinternet.cosmo.calendar.data.OutputFilter;
+import carldav.jackrabbit.webdav.xml.DomUtils;
 import org.unitedinternet.cosmo.calendar.query.AddressbookFilter;
 import org.unitedinternet.cosmo.calendar.query.UnsupportedCollationException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -19,25 +14,26 @@ import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCollationException;
 import org.unitedinternet.cosmo.dav.impl.DavCardCollection;
 import org.unitedinternet.cosmo.dav.report.MultiStatusReport;
-import org.w3c.dom.Element;
-
-import java.text.ParseException;
 
 import javax.xml.namespace.QName;
+import java.text.ParseException;
 
-/**
- * @author Kamill Sokol
- */
+import static carldav.jackrabbit.webdav.DavConstants.PROPFIND_ALL_PROP;
+import static carldav.jackrabbit.webdav.DavConstants.PROPFIND_BY_PROPERTY;
+import static carldav.jackrabbit.webdav.DavConstants.PROPFIND_PROPERTY_NAMES;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CARDDAV_ADDRESSBOOK_QUERY;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NS_CARDDAV;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CARD;
+
 public class AddressbookQueryReport extends MultiStatusReport {
 
     public static final ReportType REPORT_TYPE_CARDDAV_QUERY =
         ReportType.register(new QName(NS_CARDDAV, ELEMENT_CARDDAV_ADDRESSBOOK_QUERY, PRE_CARD), AddressbookQueryReport.class);
 
     private AddressbookFilter queryFilter;
-    private OutputFilter outputFilter;
 
     @Override
-    protected void parseReport(final ReportInfo info) throws CosmoDavException {
+    protected void parseReport(final ReportInfo info) {
         if (!getType().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType());
         }
@@ -49,22 +45,21 @@ public class AddressbookQueryReport extends MultiStatusReport {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
-            outputFilter = findOutputFilter(info);
         }
 
         queryFilter = findQueryFilter(info);
     }
 
     @Override
-    protected void doQuerySelf(final WebDavResource resource) throws CosmoDavException {
+    protected void doQuerySelf(final WebDavResource resource) {
+        //no implementation;
     }
 
     @Override
-    protected void doQueryChildren(final DavCollection collection) throws CosmoDavException {
+    protected void doQueryChildren(final DavCollection collection) {
         if (collection instanceof DavCardCollection) {
-            DavCardCollection dcc = (DavCardCollection) collection;
+            var dcc = (DavCardCollection) collection;
             getResults().addAll(dcc.findMembers(queryFilter));
-            return;
         }
     }
 
@@ -72,8 +67,8 @@ public class AddressbookQueryReport extends MultiStatusReport {
         return REPORT_TYPE_CARDDAV_QUERY;
     }
 
-    private AddressbookFilter findQueryFilter(ReportInfo info) throws CosmoDavException {
-        Element filterdata = DomUtils.getChildElement(getReportElementFrom(info), CarldavConstants.carddav(CaldavConstants.ELEMENT_CALDAV_FILTER));
+    private AddressbookFilter findQueryFilter(ReportInfo info) {
+        var filterdata = DomUtils.getChildElement(getReportElementFrom(info), CarldavConstants.carddav(CaldavConstants.ELEMENT_CALDAV_FILTER));
 
         if (filterdata == null) {
             return null;
@@ -86,23 +81,5 @@ public class AddressbookQueryReport extends MultiStatusReport {
         } catch (UnsupportedCollationException e) {
             throw new SupportedCollationException();
         }
-    }
-
-    private OutputFilter findOutputFilter(ReportInfo info) throws CosmoDavException {
-        return null;
-        //TODO not implemented yet
-        /*
-        Element propdata = DomUtil.getChildElement(getReportElementFrom(info), XML_PROP, NAMESPACE);
-        if (propdata == null) {
-            return null;
-        }
-
-        Element cdata = DomUtil.getChildElement(propdata, CaldavConstants.ELEMENT_CALDAV_CALENDAR_DATA, CaldavConstants.NAMESPACE_CALDAV);
-        if (cdata == null) {
-            return null;
-        }
-
-        return CaldavOutputFilter.createFromXml(cdata);
-        */
     }
 }

@@ -1,30 +1,27 @@
 package calendar
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.*
-import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static testutil.TestUser.USER01
 import static testutil.TestUser.USER01_PASSWORD
-import static testutil.helper.Base64Helper.user
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
-import static testutil.mockmvc.CustomRequestBuilders.propfind
-import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.*
-import static testutil.xmlunit.XmlMatcher.equalXml
+import static util.helper.Base64Helper.user
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
+import static util.mockmvc.CustomRequestBuilders.propfind
+import static util.mockmvc.CustomRequestBuilders.report
+import static util.mockmvc.CustomResultMatchers.*
+import static util.xmlunit.XmlMatcher.equalXml
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class DavDroidTests extends IntegrationTestSupport {
 

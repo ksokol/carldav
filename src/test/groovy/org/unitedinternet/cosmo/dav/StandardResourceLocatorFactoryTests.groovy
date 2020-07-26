@@ -1,13 +1,10 @@
 package org.unitedinternet.cosmo.dav
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.mock.web.MockHttpServletRequest
 
 import javax.servlet.http.HttpServletRequest
 
-/**
- * @author Kamill Sokol
- */
 class StandardResourceLocatorFactoryTests {
 
     @Test
@@ -100,7 +97,7 @@ class StandardResourceLocatorFactoryTests {
         assert locator.getBaseHref() == "/"
     }
 
-    def createContext(String contextPath) {
+    static def createContext(String contextPath) {
         return new URL("http", "localhost", 80, contextPath)
     }
 }

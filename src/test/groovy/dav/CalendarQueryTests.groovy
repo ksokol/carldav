@@ -1,7 +1,7 @@
 package dav
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.ResultMatcher
 import org.unitedinternet.cosmo.IntegrationTestSupport
@@ -14,21 +14,18 @@ import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static testutil.TestUser.USER01
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.*
+import static util.TestUser.USER01
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomRequestBuilders.report
+import static util.mockmvc.CustomResultMatchers.*
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class CalendarQueryTests extends IntegrationTestSupport {
 
-    def currentTodoEtag;
-    def currentEventEtag;
+    def currentTodoEtag
+    def currentEventEtag
 
-    @Before
+    @BeforeEach
     void setup() {
         def request1 = """\
                     BEGIN:VCALENDAR

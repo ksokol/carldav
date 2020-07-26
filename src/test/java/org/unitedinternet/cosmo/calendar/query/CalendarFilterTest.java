@@ -1,14 +1,11 @@
 package org.unitedinternet.cosmo.calendar.query;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-/**
- * @author Kamill Sokol
- */
-public class CalendarFilterTest {
+class CalendarFilterTest {
 
     @Test
-    public void testValidate() {
+    void testValidate() {
         new CalendarFilter().validate();
     }
 }

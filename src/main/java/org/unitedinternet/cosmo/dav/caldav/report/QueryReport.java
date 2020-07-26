@@ -1,21 +1,5 @@
-/*
- * Copyright 2006-2007 Open Source Applications Foundation
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.unitedinternet.cosmo.dav.caldav.report;
 
-import carldav.jackrabbit.webdav.DavConstants;
 import carldav.jackrabbit.webdav.version.report.ReportInfo;
 import carldav.jackrabbit.webdav.version.report.ReportType;
 import carldav.jackrabbit.webdav.xml.DomUtils;
@@ -30,13 +14,23 @@ import org.unitedinternet.cosmo.dav.caldav.SupportedCollationException;
 import org.unitedinternet.cosmo.dav.caldav.TimeZoneExtractor;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarCollection;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
-import org.w3c.dom.Element;
 
 import javax.xml.namespace.QName;
 import java.text.ParseException;
 
 import static carldav.CarldavConstants.c;
 import static carldav.CarldavConstants.caldav;
+import static carldav.jackrabbit.webdav.DavConstants.ALLPROP;
+import static carldav.jackrabbit.webdav.DavConstants.PROPFIND_ALL_PROP;
+import static carldav.jackrabbit.webdav.DavConstants.PROPFIND_BY_PROPERTY;
+import static carldav.jackrabbit.webdav.DavConstants.PROPFIND_PROPERTY_NAMES;
+import static carldav.jackrabbit.webdav.DavConstants.PROPNAME;
+import static org.unitedinternet.cosmo.dav.ExtendedDavConstants.XML_PROP;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CALDAV_CALENDAR_QUERY;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CALDAV_FILTER;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.ELEMENT_CALDAV_TIMEZONE;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.NS_CALDAV;
+import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.PRE_CALDAV;
 
 /**
  * <p>
@@ -52,28 +46,19 @@ public class QueryReport extends CaldavMultiStatusReport {
 
     private CalendarFilter queryFilter;
 
-    // Report methods
-
     public ReportType getType() {
         return REPORT_TYPE_CALDAV_QUERY;
     }
 
-    // ReportBase methods
-
-    /**
-     * Parses the report info, extracting the properties, filters and time
-     * zone.
-     */
-    protected void parseReport(ReportInfo info)
-        throws CosmoDavException {
-        if (! getType().isRequestedReportType(info)) {
+    protected void parseReport(ReportInfo info) {
+        if (!getType().isRequestedReportType(info)) {
             throw new CosmoDavException("Report not of type " + getType());
         }
 
         setPropFindProps(info.getPropertyNameSet());
-        if (info.containsContentElement(DavConstants.ALLPROP)) {
+        if (info.containsContentElement(ALLPROP)) {
             setPropFindType(PROPFIND_ALL_PROP);
-        } else if (info.containsContentElement(DavConstants.PROPNAME)) {
+        } else if (info.containsContentElement(PROPNAME)) {
             setPropFindType(PROPFIND_PROPERTY_NAMES);
         } else {
             setPropFindType(PROPFIND_BY_PROPERTY);
@@ -84,68 +69,38 @@ public class QueryReport extends CaldavMultiStatusReport {
         queryFilter = findQueryFilter(info, tz);
     }
 
-    /**
-     * <p>
-     * Runs the report query against the given resource. If the query
-     * succeeds, the resource is added to the results list.
-     * </p>
-     * <p>
-     * If the resource is a calendar resource, attempts to match the query
-     * filter using {@link DavCalendarResource#matches(CalendarFilter)}.
-     * If a non-calendar resource, throws an exception. If a collection,
-     * does nothing, as query reports only match non-collection resources.
-     * </p>
-     *
-     * @throws UnprocessableEntityException if the resource is not a
-     * collection and is not a calendar resource.
-     */
-    protected void doQuerySelf(WebDavResource resource)
-        throws CosmoDavException {
+    protected void doQuerySelf(WebDavResource resource) {
         if (resource instanceof DavCalendarResource) {
-            DavCalendarResource dcr = (DavCalendarResource) resource;
+            var dcr = (DavCalendarResource) resource;
             if (dcr.matches(queryFilter)) {
                 getResults().add(dcr);
             }
-            return;
         }
         // if the resource is a collection, it will not match a calendar
         // query, which only matches calendar resource, so we can ignore it
     }
 
-    /**
-    * <p>
-    * Runs the report query against the members of the collection. All
-    * resulting members are added to the results list.
-    * </p>
-    * <p>
-    * If the collection is a calendar collection, attempts to match the query
-    * filter using {@link DavCalendarCollection#findMembers(CalendarFilter)}.
-    * Otherwise does nothing, as only calendar resources can match the query,
-    * and regular collections cannot contain calendar resources.
-    * </p>
-     */
-    protected void doQueryChildren(DavCollection collection) throws CosmoDavException {
+    protected void doQueryChildren(DavCollection collection) {
         if (collection instanceof DavCalendarCollection) {
-            DavCalendarCollection dcc = (DavCalendarCollection) collection;
+            var dcc = (DavCalendarCollection) collection;
             getResults().addAll(dcc.findMembers(queryFilter));
-            return;
         }
         // if it's a regular collection, there won't be any calendar resources
         // within it to match the query
     }
 
-    private static VTimeZone findTimeZone(ReportInfo info) throws CosmoDavException {
-        Element propdata = DomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
+    private static VTimeZone findTimeZone(ReportInfo info) {
+        var propdata = DomUtils.getChildElement(getReportElementFrom(info), caldav(XML_PROP));
         if (propdata == null) {
             return null;
         }
 
-        Element tzdata = DomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
+        var tzdata = DomUtils.getChildElement(propdata, c(ELEMENT_CALDAV_TIMEZONE));
         if (tzdata == null) {
             return null;
         }
 
-        String icaltz = DomUtils.getTextTrim(tzdata);
+        var icaltz = DomUtils.getTextTrim(tzdata);
         if (icaltz == null) {
             throw new UnprocessableEntityException("Expected text content for " + ELEMENT_CALDAV_TIMEZONE);
         }
@@ -153,14 +108,14 @@ public class QueryReport extends CaldavMultiStatusReport {
         return TimeZoneExtractor.extract(icaltz);
     }
 
-    private static CalendarFilter findQueryFilter(ReportInfo info, VTimeZone tz) throws CosmoDavException {
-        Element filterdata =  DomUtils.getChildElement(getReportElementFrom(info), c(ELEMENT_CALDAV_FILTER));
+    private static CalendarFilter findQueryFilter(ReportInfo info, VTimeZone tz) {
+        var filterdata =  DomUtils.getChildElement(getReportElementFrom(info), c(ELEMENT_CALDAV_FILTER));
         if (filterdata == null) {
             return null;
         }
 
         try {
-            CalendarFilter filter = new CalendarFilter(filterdata, tz);
+            var filter = new CalendarFilter(filterdata, tz);
             filter.validate();
             return filter;
         } catch (ParseException e) {

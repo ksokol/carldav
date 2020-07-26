@@ -45,11 +45,11 @@ public class CollectionItem {
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getModifiedDate() {
-        return modifiedDate;
+        return modifiedDate != null ? new Date(modifiedDate.getTime()) : null;
     }
 
     public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
+        this.modifiedDate = modifiedDate != null ? new Date(modifiedDate.getTime()) : null;
     }
 
     @NotNull

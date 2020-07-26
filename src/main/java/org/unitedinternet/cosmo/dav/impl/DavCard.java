@@ -1,28 +1,12 @@
-/*
- * Copyright 2006 Open Source Applications Foundation
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package org.unitedinternet.cosmo.dav.impl;
 
+import carldav.entity.Item;
 import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.commons.io.IOUtils;
-import org.unitedinternet.cosmo.dav.CosmoDavException;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
 import org.unitedinternet.cosmo.dav.property.ContentType;
-import carldav.entity.Item;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -36,17 +20,17 @@ import static org.unitedinternet.cosmo.icalendar.ICalendarConstants.CARD_MEDIA_T
 
 public class DavCard extends DavItemResourceBase {
 
-    public DavCard(Item item, DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
+    public DavCard(Item item, DavResourceLocator locator, DavResourceFactory factory) {
         super(item, locator, factory);
     }
 
-    public DavCard(DavResourceLocator locator, DavResourceFactory factory) throws CosmoDavException {
+    public DavCard(DavResourceLocator locator, DavResourceFactory factory) {
         this(new Item(Item.Type.VCARD), locator, factory);
     }
 
-    public void writeHead(final HttpServletResponse response) throws IOException {
-        Item content = (Item) getItem();
-        final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
+    public void writeHead(HttpServletResponse response) {
+        var content = getItem();
+        var calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
 
         response.setContentType(content.getMimetype());
         response.setContentLength(calendar.length);
@@ -59,20 +43,22 @@ public class DavCard extends DavItemResourceBase {
     }
 
     public void writeBody(final HttpServletResponse response) throws IOException {
-        Item content = getItem();
-        final byte[] calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
+        var content = getItem();
+        var calendar = content.getCalendar().getBytes(StandardCharsets.UTF_8);
         IOUtils.copy(new ByteArrayInputStream(calendar), response.getOutputStream());
     }
 
-    protected void populateItem(DavInputContext inputContext) throws CosmoDavException {
+    @Override
+    protected void populateItem(DavInputContext inputContext) {
         super.populateItem(inputContext);
 
-        Item file = getItem();
-        Scanner scanner = new Scanner(inputContext.getInputStream()).useDelimiter("\\A");
+        var file = getItem();
+        var scanner = new Scanner(inputContext.getInputStream(), inputContext.getCharset()).useDelimiter("\\A");
         file.setCalendar(scanner.next());
         converter.convertCard(file);
     }
 
+    @Override
     protected void loadLiveProperties(DavPropertySet properties) {
         super.loadLiveProperties(properties);
         properties.add(new ContentType(CARD_MEDIA_TYPE, null));

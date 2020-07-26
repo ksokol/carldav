@@ -1,20 +1,16 @@
 package dav
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static org.hamcrest.Matchers.is
-import static org.junit.Assert.assertThat
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static testutil.mockmvc.CustomResultMatchers.text
-import static testutil.mockmvc.CustomResultMatchers.textHtmlContentType
+import static util.mockmvc.CustomResultMatchers.textHtmlContentType
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class PrincipalTests extends IntegrationTestSupport {
 

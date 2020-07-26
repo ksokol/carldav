@@ -1,14 +1,14 @@
 package calendar
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
-import static XmlHelper.getctag
+import static testutil.helper.XmlHelper.getctag
 import static org.hamcrest.Matchers.*
-import static org.junit.Assert.assertThat
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.springframework.http.HttpHeaders.*
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
@@ -17,23 +17,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.helper.XmlHelper.getetag
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
-import static testutil.mockmvc.CustomRequestBuilders.propfind
-import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.*
-import static testutil.xmlunit.XmlMatcher.equalXml
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
+import static util.mockmvc.CustomRequestBuilders.propfind
+import static util.mockmvc.CustomRequestBuilders.report
+import static util.mockmvc.CustomResultMatchers.*
+import static util.xmlunit.XmlMatcher.equalXml
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class EvolutionTests extends IntegrationTestSupport {
 
     def currentEtag
 
     @Test
-    public void fetchingEmptyCalendarFirstTime() {
+    void fetchingEmptyCalendarFirstTime() {
         mockMvc.perform(options("/dav/{email}/calendar/", USER01))
                 .andExpect(status().isOk())
                 .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
@@ -415,7 +412,7 @@ class EvolutionTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void fetchingCalendarFirstTime() {
+    void fetchingCalendarFirstTime() {
         def veventResponse4 = new File('src/test/resources/calendar/evolution/addvevent_response4.txt').getText('UTF-8')
 
         addVEvent()
@@ -1352,7 +1349,7 @@ class EvolutionTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void addVEventContainingRecurrenceId() {
+    void addVEventContainingRecurrenceId() {
         def request1 = """\
                         BEGIN:VCALENDAR
                         CALSCALE:GREGORIAN

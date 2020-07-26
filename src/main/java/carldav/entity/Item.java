@@ -62,11 +62,11 @@ public class Item {
     @Column(name = "modifydate")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getModifiedDate() {
-        return modifiedDate;
+        return modifiedDate != null ? new Date(modifiedDate.getTime()) : null;
     }
 
     public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
+        this.modifiedDate = modifiedDate != null ? new Date(modifiedDate.getTime()) : null;
     }
 
     @NotNull
@@ -132,20 +132,20 @@ public class Item {
 
     @Column(name = "startdate")
     public Date getStartDate() {
-        return startDate;
+        return startDate != null ? new Date(startDate.getTime()) : null;
     }
 
     public void setStartDate(final Date startDate) {
-        this.startDate = startDate;
+        this.startDate = startDate != null ? new Date(startDate.getTime()) : null;
     }
 
     @Column(name = "enddate")
     public Date getEndDate() {
-        return endDate;
+        return endDate != null ? new Date(endDate.getTime()) : null;
     }
 
     public void setEndDate(final Date endDate) {
-        this.endDate = endDate;
+        this.endDate = endDate != null ? new Date(endDate.getTime()) : null;
     }
 
     @Column(name = "floating")
@@ -169,21 +169,21 @@ public class Item {
     @Column(name = "clientcreatedate")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getClientCreationDate() {
-        return clientCreationDate;
+        return clientCreationDate != null ? new Date(clientCreationDate.getTime()) : null;
     }
 
     public void setClientCreationDate(Date clientCreationDate) {
-        this.clientCreationDate = clientCreationDate;
+        this.clientCreationDate = clientCreationDate != null ? new Date(clientCreationDate.getTime()) : null;
     }
 
     @Column(name = "clientmodifieddate")
     @Temporal(TemporalType.TIMESTAMP)
     public Date getClientModifiedDate() {
-        return clientModifiedDate;
+        return clientModifiedDate != null ? new Date(clientModifiedDate.getTime()) : null;
     }
 
     public void setClientModifiedDate(Date clientModifiedDate) {
-        this.clientModifiedDate = clientModifiedDate;
+        this.clientModifiedDate = clientModifiedDate != null ? new Date(clientModifiedDate.getTime()) : null;
     }
 
     @Enumerated(EnumType.STRING)

@@ -1,6 +1,6 @@
 package dav.user
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
@@ -12,15 +12,12 @@ import static org.springframework.http.MediaType.*
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static testutil.TestUser.*
-import static testutil.helper.Base64Helper.user
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
-import static testutil.mockmvc.CustomRequestBuilders.propfind
-import static testutil.mockmvc.CustomResultMatchers.*
+import static util.helper.Base64Helper.user
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
+import static util.mockmvc.CustomRequestBuilders.propfind
+import static util.mockmvc.CustomResultMatchers.*
 
-/**
- * @author Kamill Sokol
- */
 class UserControllerTests extends IntegrationTestSupport {
 
     @Test

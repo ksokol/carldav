@@ -1,13 +1,13 @@
 package calendar
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
 import static org.hamcrest.Matchers.*
-import static org.junit.Assert.assertThat
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
@@ -16,16 +16,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static testutil.TestUser.USER01
 import static testutil.helper.XmlHelper.getetag
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
-import static testutil.mockmvc.CustomRequestBuilders.propfind
-import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.*
-import static testutil.xmlunit.XmlMatcher.equalXml
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
+import static util.mockmvc.CustomRequestBuilders.propfind
+import static util.mockmvc.CustomRequestBuilders.report
+import static util.mockmvc.CustomResultMatchers.*
+import static util.xmlunit.XmlMatcher.equalXml
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class ThunderbirdTests extends IntegrationTestSupport {
 

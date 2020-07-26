@@ -1,11 +1,9 @@
-package testutil.mockmvc;
+package util.mockmvc;
 
 import org.springframework.http.MediaType;
 
-/**
- * @author Kamill Sokol
- */
 public class CustomMediaTypes {
+
     private CustomMediaTypes() {
         //private
     }

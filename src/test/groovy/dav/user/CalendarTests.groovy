@@ -1,21 +1,21 @@
 package dav.user
 
 import calendar.DavDroidData
-import org.junit.Assert
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
-import testutil.builder.GeneralData
+import util.builder.GeneralData
 
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 
 import static calendar.EvolutionData.*
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.is
 import static org.hamcrest.Matchers.notNullValue
-import static org.junit.Assert.assertThat
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.HttpMethod.POST
 import static org.springframework.http.MediaType.APPLICATION_XML
@@ -24,19 +24,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
 import static testutil.TestUser.USER02
-import static testutil.builder.GeneralData.*
+import static util.builder.GeneralData.*
+import static util.builder.GeneralResponse.NOT_FOUND
+import static util.builder.MethodNotAllowedBuilder.notAllowed
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomRequestBuilders.propfind
+import static util.mockmvc.CustomRequestBuilders.report
+import static util.mockmvc.CustomResultMatchers.*
+import static util.xmlunit.XmlMatcher.equalXml
 
-import static testutil.builder.GeneralResponse.NOT_FOUND
-import static testutil.builder.MethodNotAllowedBuilder.notAllowed
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomRequestBuilders.propfind
-import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.*
-import static testutil.xmlunit.XmlMatcher.equalXml
-
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class CalendarTests extends IntegrationTestSupport {
 
@@ -1448,7 +1444,7 @@ class CalendarTests extends IntegrationTestSupport {
                 .andExpect(status().isNoContent())
     }
 
-    @Ignore("unsupported")
+    @Disabled("unsupported")
     @WithUserDetails(USER02)
     @Test
     void depthInfinity() {
@@ -1603,9 +1599,9 @@ class CalendarTests extends IntegrationTestSupport {
                 .andExpect(xml(response1))
     }
 
-    @Ignore
+    @Disabled
     @Test
     void reportWithZeroDepthOnContactsItemValidTimerange() {
-        Assert.fail("not implemented yet")
+        Assertions.fail("not implemented yet")
     }
 }

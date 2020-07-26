@@ -1,20 +1,17 @@
 package org.unitedinternet.cosmo.acegisecurity.userdetails
 
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import carldav.repository.UserRepository
 import carldav.entity.User
 
 import static org.hamcrest.Matchers.*
-import static org.junit.Assert.assertThat
+import static org.hamcrest.MatcherAssert.assertThat
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
 
-/**
- * @author Kamill Sokol
- */
 class CosmoUserDetailsServiceTests {
 
     private static String EMAIL = "email"
@@ -22,7 +19,7 @@ class CosmoUserDetailsServiceTests {
     private UserDetailsService uut
     private User user
 
-    @Before
+    @BeforeEach
     void before() {
         UserRepository userRepository = mock(UserRepository.class)
         uut = new CosmoUserDetailsService(userRepository)
@@ -49,6 +46,6 @@ class CosmoUserDetailsServiceTests {
 
         UserDetails userDetails = uut.loadUserByUsername(EMAIL)
 
-        assertThat(userDetails.isAccountNonLocked(), is(false));
+        assertThat(userDetails.isAccountNonLocked(), is(false))
     }
 }

@@ -1,18 +1,3 @@
-/*
- * Copyright 2006-2007 Open Source Applications Foundation
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *     http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package carldav.jackrabbit.webdav.io;
 
 import net.fortuna.ical4j.data.ParserException;
@@ -25,7 +10,6 @@ import org.springframework.util.Assert;
 import org.unitedinternet.cosmo.calendar.util.CalendarUtils;
 import org.unitedinternet.cosmo.dav.BadRequestException;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
-import org.unitedinternet.cosmo.dav.caldav.CaldavConstants;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarDataException;
 import org.unitedinternet.cosmo.dav.caldav.InvalidCalendarResourceException;
 import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
@@ -33,15 +17,12 @@ import org.unitedinternet.cosmo.dav.caldav.UnsupportedCalendarDataException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 import static carldav.CarldavConstants.TEXT_CALENDAR;
 import static carldav.CarldavConstants.TEXT_VCARD;
 
-/**
- * An <code>InputContext</code> that supports the semantics of DAV extensions like CalDAV.
- *
- */
-public class DavInputContext implements CaldavConstants {
+public class DavInputContext {
 
     private final HttpServletRequest request;
     private final InputStream in;
@@ -53,25 +34,19 @@ public class DavInputContext implements CaldavConstants {
         this.in = in;
     }
 
-    @Deprecated
-    public Calendar getCalendar() throws CosmoDavException {
+    /**
+     * @deprecated Use {@code #getCalendarString()} instead.
+     */
+    @Deprecated(since = "0.1")
+    public Calendar getCalendar() {
         return getCalendar(false);
     }
 
-    public String getCalendarString() throws CosmoDavException {
-        return getCalendar().toString();
+    public String getCalendarString() {
+        return getCalendar(false).toString();
     }
 
-    /**
-     * Parses the input stream into a calendar object.
-     * 
-     * @param allowCalendarWithMethod
-     *            don't break on Calendars with METHOD property
-     * @return Calendar parsed
-     * @throws CosmoDavException
-     *             - if something is wrong this exception is thrown.
-     */
-    public Calendar getCalendar(boolean allowCalendarWithMethod) throws CosmoDavException {
+    public Calendar getCalendar(boolean allowCalendarWithMethod) {
         if (calendar != null) {
             return calendar;
         }
@@ -84,13 +59,13 @@ public class DavInputContext implements CaldavConstants {
             throw new BadRequestException("No media type specified");
         }
 
-        final MediaType mediaType = MediaType.parseMediaType(getContentType());
+        var mediaType = MediaType.parseMediaType(getContentType());
         if (!mediaType.isCompatibleWith(TEXT_CALENDAR) && !mediaType.isCompatibleWith(TEXT_VCARD)) {
             throw new UnsupportedCalendarDataException(mediaType.toString());
         }
 
         try {
-            Calendar c = CalendarUtils.parseCalendar(getInputStream());
+            var c = CalendarUtils.parseCalendar(getInputStream());
             c.validate(true);
 
             if (CalendarUtils.hasMultipleComponentTypes(c)) {
@@ -122,5 +97,10 @@ public class DavInputContext implements CaldavConstants {
 
     public String getContentType() {
         return request.getHeader(HttpHeaders.CONTENT_TYPE);
+    }
+
+    public String getCharset() {
+        var characterEncoding = request.getCharacterEncoding();
+        return characterEncoding != null ? characterEncoding : StandardCharsets.UTF_8.name();
     }
 }

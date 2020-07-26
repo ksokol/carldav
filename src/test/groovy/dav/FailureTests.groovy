@@ -1,6 +1,6 @@
 package dav
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
@@ -9,15 +9,12 @@ import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static testutil.TestUser.USER01
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomRequestBuilders.report
-import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
-import static testutil.mockmvc.CustomResultMatchers.xml
+import static util.TestUser.USER01
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomRequestBuilders.report
+import static util.mockmvc.CustomResultMatchers.textXmlContentType
+import static util.mockmvc.CustomResultMatchers.xml
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class FailureTests extends IntegrationTestSupport {
 
@@ -345,33 +342,6 @@ class FailureTests extends IntegrationTestSupport {
 
     @Test
     void calendarDataQueryWithInvalidTimeRanges() {
-        def request = { attributes ->
-            """\
-                <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
-                    <prop>
-                        <CAL:calendar-data CAL:content-type="text/calendar" CAL:version="2.0">
-                            <CAL:expand ${attributes} />
-                        </CAL:calendar-data>
-                    </prop>
-                </CAL:calendar-query>"""
-        }
-
-        def response = { message ->
-            xml("""\
-                <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                    <cosmo:bad-request>${message}</cosmo:bad-request>
-                </D:error>""")
-        }
-
-        def assertTimerange = { attributes, message ->
-            mockMvc.perform(report("/dav/{email}/calendar/", USER01)
-                    .contentType(APPLICATION_XML)
-                    .content(request(attributes)))
-                    .andExpect(status().isBadRequest())
-                    .andExpect(response(message))
-                    .andExpect(textXmlContentType())
-        }
-
         assertTimerange("", "Expected timerange attribute start")
         assertTimerange('start="1"', 'Timerange start not parseable: Unparseable date: "1"')
         assertTimerange('start="20160132T115937Z"', 'Timerange start must be UTC')
@@ -457,7 +427,7 @@ class FailureTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void multipleCompFilter() {
+    void multipleCompFilter() {
         def request1 = """\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
@@ -483,7 +453,7 @@ class FailureTests extends IntegrationTestSupport {
     }
 
     @Test
-    public void missingHrefInCalendarMultiget() {
+    void missingHrefInCalendarMultiget() {
         def request1 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
                             <D:prop>
@@ -502,4 +472,28 @@ class FailureTests extends IntegrationTestSupport {
                 .andExpect(textXmlContentType())
                 .andExpect(xml(response1))
     }
+
+    private void assertTimerange(String attributes, String message) {
+        def request = """\
+                <CAL:calendar-query xmlns="DAV:" xmlns:CAL="urn:ietf:params:xml:ns:caldav">
+                    <prop>
+                        <CAL:calendar-data CAL:content-type="text/calendar" CAL:version="2.0">
+                            <CAL:expand ${attributes} />
+                        </CAL:calendar-data>
+                    </prop>
+                </CAL:calendar-query>"""
+
+        def response = xml("""\
+                <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
+                    <cosmo:bad-request>${message}</cosmo:bad-request>
+                </D:error>""")
+
+        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+                .contentType(APPLICATION_XML)
+                .content(request))
+                .andExpect(status().isBadRequest())
+                .andExpect(response)
+                .andExpect(textXmlContentType())
+    }
+
 }

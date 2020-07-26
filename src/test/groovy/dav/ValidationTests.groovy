@@ -1,20 +1,17 @@
 package dav
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import static testutil.TestUser.USER01
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
-import static testutil.mockmvc.CustomResultMatchers.textXmlContentType
-import static testutil.mockmvc.CustomResultMatchers.xml
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
+import static util.mockmvc.CustomResultMatchers.textXmlContentType
+import static util.mockmvc.CustomResultMatchers.xml
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
 class ValidationTests extends IntegrationTestSupport {
 

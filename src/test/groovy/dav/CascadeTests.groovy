@@ -1,25 +1,22 @@
 package dav
 
-import org.junit.Ignore
-import org.junit.Test
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
 import static calendar.DavDroidData.ADD_VEVENT_REQUEST1
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static testutil.TestUser.USER01
-import static testutil.mockmvc.CustomMediaTypes.TEXT_CALENDAR
-import static testutil.mockmvc.CustomMediaTypes.TEXT_VCARD
+import static util.TestUser.USER01
+import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
+import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
 
-/**
- * @author Kamill Sokol
- */
 @WithUserDetails(USER01)
-public class CascadeTests extends IntegrationTestSupport {
+class CascadeTests extends IntegrationTestSupport {
 
     @Test
-    public void deleteCalendar() {
+    void deleteCalendar() {
         mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", USER01)
                 .contentType(TEXT_CALENDAR)
                 .content(ADD_VEVENT_REQUEST1))
@@ -71,7 +68,7 @@ public class CascadeTests extends IntegrationTestSupport {
                 .andExpect(status().isNotFound())
     }
 
-    @Ignore
+    @Disabled
     @Test
     void deleteUser() {
         def request1 = """\

@@ -2,15 +2,12 @@ package carldav.bootstrap
 
 import carldav.entity.User
 import carldav.repository.UserRepository
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.springframework.security.crypto.password.PasswordEncoder
 
 import static org.mockito.ArgumentMatchers.anyString
 import static org.mockito.Mockito.*
 
-/**
- * @author Kamill Sokol
- */
 class AdminUserCreatorTest {
 
     public static final String IGNORE = "ignore"

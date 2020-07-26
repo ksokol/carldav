@@ -1,25 +1,25 @@
-package testutil.xmlunit
+package util.xmlunit;
 
-import org.hamcrest.Matcher
-import org.xmlunit.builder.Input
-import org.xmlunit.diff.DefaultNodeMatcher
-import org.xmlunit.diff.ElementSelector
+import org.hamcrest.Matcher;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.ElementSelector;
 
-import javax.xml.transform.Source
+import javax.xml.transform.Source;
 
-import static org.xmlunit.diff.ElementSelectors.*
-import static org.xmlunit.matchers.CompareMatcher.isSimilarTo
+import static org.xmlunit.diff.ElementSelectors.byNameAndAllAttributes;
+import static org.xmlunit.diff.ElementSelectors.byXPath;
+import static org.xmlunit.diff.ElementSelectors.selectorForElementNamed;
+import static org.xmlunit.matchers.CompareMatcher.isSimilarTo;
 
-/**
- * @author Kamill Sokol
- */
 public class XmlMatcher {
+
     private XmlMatcher() {
         //private
     }
 
     public static Matcher equalXml(String content) {
-        final Source build = Input.fromString(content).build();
+        var build = Input.fromString(content).build();
         return isSimilarTo(build).ignoreWhitespace().normalizeWhitespace().withNodeMatcher(nodeMatcher());
     }
 

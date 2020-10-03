@@ -1,0 +1,26 @@
+name: security check
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+
+      - name: Set up build environment
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache Maven Directory
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: m2
+
+      - name: Check Project
+        run: ./mvnw dependency-check:check

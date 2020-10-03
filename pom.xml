@@ -247,13 +247,6 @@
                     <failBuildOnCVSS>7</failBuildOnCVSS>
                     <suppressionFile>owasp/cve_suppress.xml</suppressionFile>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>com.github.spotbugs</groupId>

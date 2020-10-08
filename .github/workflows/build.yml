@@ -38,7 +38,7 @@ jobs:
 
       - name: Release Project
         if: contains(github.ref, 'master')
-        uses: ksokol/github-release-action@v1
+        uses: ksokol/github-release-action@v2
         with:
           tag_name: ${{ github.ref }}-${{ github.sha }}
           release_name: ${{ github.sha }}

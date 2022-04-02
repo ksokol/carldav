@@ -18,12 +18,12 @@ import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.*;
 
 public class StandardResourceFactory implements DavResourceFactory, ExtendedDavConstants {
 
-    private ContentService contentService;
-    private ItemRepository itemRepository;
-    private CollectionRepository collectionRepository;
-    private CosmoSecurityManager securityManager;
-    private CalendarQueryProcessor calendarQueryProcessor;
-    private CardQueryProcessor cardQueryProcessor;
+    private final ContentService contentService;
+    private final ItemRepository itemRepository;
+    private final CollectionRepository collectionRepository;
+    private final CosmoSecurityManager securityManager;
+    private final CalendarQueryProcessor calendarQueryProcessor;
+    private final CardQueryProcessor cardQueryProcessor;
 
     public StandardResourceFactory(ContentService contentService,
                                    ItemRepository itemRepository,
@@ -159,7 +159,7 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         final String collectionName = locator.collection();
 
         if(collectionName != null && itemUid != null) {
-            final Item userItem = itemRepository.findByCurrentOwnerEmailAndCollectionNameAndName(collectionName, locator.itemUid());
+            final Item userItem = itemRepository.findByOwnerEmailAndCollectionNameAndName(securityManager.getUsername(), collectionName, locator.itemUid());
             if(userItem == null) {
                 return null;
             }
@@ -167,14 +167,14 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
         }
 
         if(collectionName != null) {
-            final CollectionItem userCollection = collectionRepository.findByCurrentOwnerEmailAndName(collectionName);
+            final CollectionItem userCollection = collectionRepository.findByOwnerEmailAndName(securityManager.getUsername(), collectionName);
             if(userCollection == null) {
                 return null;
             }
             return createCollectionResource(locator, userCollection);
         }
 
-        final CollectionItem homeCollection = collectionRepository.findHomeCollectionByCurrentUser();
+        final CollectionItem homeCollection = collectionRepository.findHomeCollectionByOwnerEmail(securityManager.getUsername());
         return createCollectionResource(locator, homeCollection);
     }
 

@@ -9,15 +9,14 @@ import carldav.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.test.context.support.WithUserDetails;
 import org.unitedinternet.cosmo.IntegrationTestSupport;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@WithUserDetails("test01@localhost.de")
 class HibernateContentDaoTest extends IntegrationTestSupport {
 
+    public static final String TEST_01_LOCALHOST_DE = "test01@localhost.de";
     @Autowired
     private UserRepository userRepository;
 
@@ -30,7 +29,7 @@ class HibernateContentDaoTest extends IntegrationTestSupport {
     @Test
     void multipleItemsError() {
         var user = userRepository.findByEmailIgnoreCase("test01@localhost.de");
-        var root = collectionRepository.findHomeCollectionByCurrentUser();
+        var root = collectionRepository.findHomeCollectionByOwnerEmail("test01@localhost.de");
 
         var a = new CollectionItem();
         a.setName("a");
@@ -55,8 +54,8 @@ class HibernateContentDaoTest extends IntegrationTestSupport {
 
     @Test
     void multipleCollectionsError() {
-        var user = userRepository.findByEmailIgnoreCase("test01@localhost.de");
-        var root = collectionRepository.findHomeCollectionByCurrentUser();
+        var user = userRepository.findByEmailIgnoreCase(TEST_01_LOCALHOST_DE);
+        var root = collectionRepository.findHomeCollectionByOwnerEmail("test01@localhost.de");
 
         var a = new CollectionItem();
         a.setName("a");

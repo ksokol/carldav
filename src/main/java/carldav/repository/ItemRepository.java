@@ -1,18 +1,25 @@
 package carldav.repository;
 
 import carldav.entity.Item;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jdbc.repository.query.Modifying;
+import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ItemRepository extends CrudRepository<Item, Long>, JpaSpecificationExecutor<Item> {
+public interface ItemRepository extends CrudRepository<Item, Long>, ItemRepositoryCustom {
 
-    List<Item> findByCollectionIdAndType(Long id, Item.Type type);
+  @Query(value = "select * from item where collectionid = :id and type = :type")
+  List<Item> findByCollectionIdAndType(@Param("id") Long id, @Param("type") String type);
 
-    List<Item> findByCollectionId(Long id);
+  @Query(value = "select * from item where collectionid = :id")
+  List<Item> findByCollectionId(@Param("id") Long id);
 
-    @Query("select i from Item i where i.collection.name = ?2 and i.name = ?3 and i.collection.owner.email = ?1")
-    Item findByOwnerEmailAndCollectionNameAndName(String ownerEmail, String collectionName, String name);
+  @Query(value = "select i.* from Item i join collection c on i.collectionid = c.id join users u on c.ownerid = u.id where c.itemname = :collectionName and i.itemname = :name and u.email = :ownerEmail")
+  Item findByOwnerEmailAndCollectionNameAndName(@Param("ownerEmail") String ownerEmail, @Param("collectionName") String collectionName, @Param("name") String name);
+
+  @Modifying
+  @Query(value = "delete from item where collectionid = :id")
+  void deleteAllByParentId(@Param("id") Long id);
 }

@@ -1,0 +1,21 @@
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_size = 2
+indent_style = space
+max_line_length = 160
+
+# IntelliJ
+ij_continuation_indent_size = 2
+
+[*.java]
+ij_java_blank_lines_after_imports = 1
+ij_java_blank_lines_before_imports = 1
+ij_java_class_count_to_use_import_on_demand = 999
+ij_java_imports_layout = *,|,javax.**,java.**,|,$*
+ij_java_insert_inner_class_imports = false
+ij_java_layout_static_imports_separately = true
+ij_java_names_count_to_use_import_on_demand = 999
+ij_java_indent_case_from_switch = true
+ij_java_use_single_class_imports = true

@@ -1,8 +1,7 @@
-package org.unitedinternet.cosmo.service.impl;
+package carldav.repository;
 
 import carldav.CarldavApplication;
 import carldav.entity.User;
-import carldav.repository.CollectionRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.data.jdbc.core.JdbcAggregateOperations;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import org.unitedinternet.cosmo.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,29 +17,23 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(classes = {CarldavApplication.class})
 @Transactional
 @Rollback
-class StandardUserServiceTest {
+class UserRepositoryTests {
 
   @Autowired
-  private UserService service;
+  private UserRepository userRepository;
 
   @Autowired
   private JdbcAggregateOperations template;
 
-  @Autowired
-  private CollectionRepository collectionRepository;
-
   @Test
-  void testCreateUser() {
+  void testFindByEmailIgnoreCase() {
     var user = new User();
-    user.setEmail("user@localhost");
-    user.setPassword("somepassword");
+    user.setEmail("user1@localhost.com");
+    user.setPassword("user1password");
 
-    var createdUser = service.createUser(user);
+    template.save(user);
 
-    assertThat(template.findById(createdUser.getId(), User.class)).isNotNull();
-    assertThat(createdUser.getPassword()).startsWith("{bcrypt}");
-    assertThat(collectionRepository.findByOwnerEmail(createdUser.getEmail()))
-      .extracting("displayName")
-      .containsExactlyInAnyOrder("calendarDisplayName", "homeCollection", "contactDisplayName");
+    assertThat(userRepository.findByEmailIgnoreCase("user1@localhost.com")).isNotNull();
+    assertThat(userRepository.findByEmailIgnoreCase("USER1@LOCALHOST.COM")).isNotNull();
   }
 }

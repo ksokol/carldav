@@ -15,9 +15,9 @@ import static util.mockmvc.CustomResultMatchers.xml
 @WithUserDetails(USER01)
 class ValidationTests extends IntegrationTestSupport {
 
-    @Test
-    void displayNameVEvent() {
-        def request1 = """\
+  @Test
+  void displayNameVEvent() {
+    def request1 = """\
                         BEGIN:VCALENDAR
                         PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
                         VERSION:2.0
@@ -33,22 +33,22 @@ class ValidationTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def response1 = """\
+    def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>must not be null for property displayName actual value [null], must not be null for property uid actual value [null]</cosmo:bad-request>
+                                <cosmo:bad-request>integrity constraint violation: NOT NULL check constraint; SYS_CT_10160 table: ITEM column: DISPLAYNAME</cosmo:bad-request>
                             </D:error>"""
 
-        mockMvc.perform(put("/dav/{email}/calendar/951bfa48-6f4a-43fc-acd9-473a4f5ae557.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(request1))
-                .andExpect(textXmlContentType())
-                .andExpect(status().isBadRequest())
-                .andExpect(xml(response1))
-    }
+    mockMvc.perform(put("/dav/{email}/calendar/951bfa48-6f4a-43fc-acd9-473a4f5ae557.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(request1))
+      .andExpect(textXmlContentType())
+      .andExpect(status().isBadRequest())
+      .andExpect(xml(response1))
+  }
 
-    @Test
-    void displayNameVTodo() {
-        def request1 = """\
+  @Test
+  void displayNameVTodo() {
+    def request1 = """\
                         BEGIN:VCALENDAR
                         PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
                         VERSION:2.0
@@ -63,22 +63,22 @@ class ValidationTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def response1 = """\
+    def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>must not be null for property displayName actual value [null], must not be null for property uid actual value [null]</cosmo:bad-request>
+                                <cosmo:bad-request>integrity constraint violation: NOT NULL check constraint; SYS_CT_10160 table: ITEM column: DISPLAYNAME</cosmo:bad-request>
                             </D:error>"""
 
-        mockMvc.perform(put("/dav/{email}/calendar/590b11bc-2ed0-44ec-9f76-72dc57e38015.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(request1))
-                .andExpect(textXmlContentType())
-                .andExpect(status().isBadRequest())
-                .andExpect(xml(response1))
-    }
+    mockMvc.perform(put("/dav/{email}/calendar/590b11bc-2ed0-44ec-9f76-72dc57e38015.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(request1))
+      .andExpect(textXmlContentType())
+      .andExpect(status().isBadRequest())
+      .andExpect(xml(response1))
+  }
 
-    @Test
-    void displayNameVJournal() {
-        def request1 = """\
+  @Test
+  void displayNameVJournal() {
+    def request1 = """\
                         BEGIN:VCALENDAR
                         CALSCALE:GREGORIAN
                         PRODID:-//Ximian//NONSGML Evolution Calendar//EN
@@ -96,22 +96,22 @@ class ValidationTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-        def response1 = """\
+    def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>must not be null for property displayName actual value [null], must not be null for property uid actual value [null]</cosmo:bad-request>
+                                <cosmo:bad-request>integrity constraint violation: NOT NULL check constraint; SYS_CT_10160 table: ITEM column: DISPLAYNAME</cosmo:bad-request>
                             </D:error>"""
 
-        mockMvc.perform(put("/dav/{email}/calendar/20160206T132723Z-30750-1000-2071-1_ksokol.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(request1))
-                .andExpect(textXmlContentType())
-                .andExpect(status().isBadRequest())
-                .andExpect(xml(response1))
-    }
+    mockMvc.perform(put("/dav/{email}/calendar/20160206T132723Z-30750-1000-2071-1_ksokol.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(request1))
+      .andExpect(textXmlContentType())
+      .andExpect(status().isBadRequest())
+      .andExpect(xml(response1))
+  }
 
-    @Test
-    void uidVCard() {
-        def request1 = """\
+  @Test
+  void uidVCard() {
+    def request1 = """\
                         BEGIN:VCARD
                         VERSION:3.0
                         URL:
@@ -134,22 +134,22 @@ class ValidationTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        def response1 = """\
+    def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>must not be null for property uid actual value [null]</cosmo:bad-request>
+                                <cosmo:bad-request>integrity constraint violation: NOT NULL check constraint; SYS_CT_10163 table: ITEM column: UID</cosmo:bad-request>
                             </D:error>"""
 
-        mockMvc.perform(put("/dav/{email}/contacts/9A5A5BA1-13C26FE2-8887CB2B.vcf", USER01)
-                .contentType(TEXT_VCARD)
-                .content(request1))
-                .andExpect(textXmlContentType())
-                .andExpect(status().isBadRequest())
-                .andExpect(xml(response1))
-    }
+    mockMvc.perform(put("/dav/{email}/contacts/9A5A5BA1-13C26FE2-8887CB2B.vcf", USER01)
+      .contentType(TEXT_VCARD)
+      .content(request1))
+      .andExpect(textXmlContentType())
+      .andExpect(status().isBadRequest())
+      .andExpect(xml(response1))
+  }
 
-    @Test
-    void unknownCalendarResource() {
-        def request1 = """\
+  @Test
+  void unknownCalendarResource() {
+    def request1 = """\
                         BEGIN:VCARD
                         VERSION:4.0
                         UID:d0f1d24e-2f4b-4318-b38c-92c6a0130c6a
@@ -170,10 +170,10 @@ class ValidationTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        mockMvc.perform(put("/dav/{email}/unknown/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
-                .contentType(TEXT_VCARD)
-                .content(request1)
-                .header("If-None-Match", "*"))
-                .andExpect(status().isNotFound())
-    }
+    mockMvc.perform(put("/dav/{email}/unknown/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", USER01)
+      .contentType(TEXT_VCARD)
+      .content(request1)
+      .header("If-None-Match", "*"))
+      .andExpect(status().isNotFound())
+  }
 }

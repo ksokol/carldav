@@ -1,78 +1,74 @@
 package carldav.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import java.util.Set;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
 
-@Entity
-@Table(name="users")
+import java.util.Objects;
+
+@Table("USERS")
 public class User {
 
-    private Long id;
-    private String password;
-    private String email;
-    private boolean locked;
-    private Set<CollectionItem> collections;
-    private String role;
+  private Long id;
+  private String password;
+  private String email;
+  private boolean locked;
+  private String role;
 
-    @Id
-    @GeneratedValue
-    public Long getId() {
-        return id;
-    }
+  @Id
+  public Long getId() {
+    return id;
+  }
 
-    @NotNull
-    public String getPassword() {
-        return password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    @NotNull
-    @Column(name = "email", nullable=false)
-    public String getEmail() {
-        return email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    public boolean isLocked() {
-        return locked;
-    }
+  public boolean isLocked() {
+    return locked;
+  }
 
-    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    public Set<CollectionItem> getCollections() {
-        return collections;
-    }
+  public String getRole() {
+    return role;
+  }
 
-    public void setCollections(Set<CollectionItem> collections) {
-        this.collections = collections;
-    }
+  public void setId(final Long id) {
+    this.id = id;
+  }
 
-    public String getRole() {
-        return role;
-    }
+  public void setPassword(final String password) {
+    this.password = password;
+  }
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
+  public void setEmail(final String email) {
+    this.email = email;
+  }
 
-    public void setPassword(final String password) {
-        this.password = password;
-    }
+  public void setLocked(final boolean locked) {
+    this.locked = locked;
+  }
 
-    public void setEmail(final String email) {
-        this.email = email;
-    }
+  public void setRole(final String role) {
+    this.role = role;
+  }
 
-    public void setLocked(final boolean locked) {
-        this.locked = locked;
+  @Override
+  public boolean equals(Object other) {
+    if (this == other) {
+      return true;
     }
+    if (other == null || getClass() != other.getClass()) {
+      return false;
+    }
+    User user = (User) other;
+    return locked == user.locked && Objects.equals(id, user.id) && Objects.equals(password, user.password) && Objects.equals(email, user.email) && Objects.equals(role, user.role);
+  }
 
-    public void setRole(final String role) {
-        this.role = role;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, password, email, locked, role);
+  }
 }

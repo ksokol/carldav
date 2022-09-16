@@ -7,20 +7,16 @@ import org.springframework.context.annotation.ImportResource;
 
 import java.util.TimeZone;
 
-/**
- * @author Kamill Sokol
- */
 @ImportResource("classpath:applicationContext-cosmo.xml")
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class CarldavApplication {
 
-    static {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC")); // required by hsqldb
-        System.setProperty("file.encoding","UTF-8");
-    }
+  static {
+    TimeZone.setDefault(TimeZone.getTimeZone("UTC")); // required by hsqldb
+    System.setProperty("file.encoding", "UTF-8");
+  }
 
-    public static void main(String[] args) {
-        SpringApplication.run(CarldavApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(CarldavApplication.class, args);
+  }
 }

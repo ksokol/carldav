@@ -6,6 +6,7 @@ import carldav.jackrabbit.webdav.property.DavPropertySet;
 import org.apache.commons.io.IOUtils;
 import org.unitedinternet.cosmo.dav.DavResourceFactory;
 import org.unitedinternet.cosmo.dav.DavResourceLocator;
+import org.unitedinternet.cosmo.dav.caldav.property.AddressData;
 import org.unitedinternet.cosmo.dav.property.ContentType;
 
 import javax.servlet.http.HttpServletResponse;
@@ -62,5 +63,6 @@ public class DavCard extends DavItemResourceBase {
   protected void loadLiveProperties(DavPropertySet properties) {
     super.loadLiveProperties(properties);
     properties.add(new ContentType(CARD_MEDIA_TYPE, null));
+    properties.add(new AddressData(null));
   }
 }

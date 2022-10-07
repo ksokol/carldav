@@ -21,9 +21,6 @@ import static carldav.CarldavConstants.CURRENT_USER_PRINCIPAL;
 import static carldav.CarldavConstants.SUPPORTED_ADDRESS_DATA;
 import static carldav.CarldavConstants.carddav;
 
-/**
- * @author Kamill Sokol
- */
 public class DavCardCollection extends DavCollectionBase {
 
     private final CardQueryProcessor cardQueryProcessor;
@@ -42,6 +39,11 @@ public class DavCardCollection extends DavCollectionBase {
         reportTypes.add(AddressbookMultigetReport.REPORT_TYPE_CARDDAV_MULTIGET);
         reportTypes.add(AddressbookQueryReport.REPORT_TYPE_CARDDAV_QUERY);
     }
+
+  @Override
+  public String getSupportedMethods() {
+    return "OPTIONS";
+  }
 
     @Override
     protected Set<QName> getResourceTypes() {

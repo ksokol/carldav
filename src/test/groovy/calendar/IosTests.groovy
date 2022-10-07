@@ -13,7 +13,7 @@ import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static testutil.TestUser.USER01
+import static util.TestUser.USER01
 import static testutil.helper.XmlHelper.getetag
 import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
@@ -1075,12 +1075,6 @@ class IosTests extends IntegrationTestSupport {
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/contacts/292BB88D-5C0D-4A1E-AB2B-BF878FCACB2F.vcf</D:href>
-                                    <D:propstat>
-                                        <D:prop>
-                                            <B:address-data xmlns:B="urn:ietf:params:xml:ns:carddav"/>
-                                        </D:prop>
-                                        <D:status>HTTP/1.1 404 Not Found</D:status>
-                                    </D:propstat>
                                     <D:propstat>
                                         <D:prop>
                                             <D:getetag>${currentEtag}</D:getetag>

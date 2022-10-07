@@ -14,7 +14,7 @@ import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static testutil.TestUser.USER01
+import static util.TestUser.USER01
 import static testutil.helper.XmlHelper.getetag
 import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
@@ -1676,12 +1676,6 @@ class TbSyncTests extends IntegrationTestSupport {
                                 <D:href>/carldav/dav/${USER01}/contacts/80f58bbd-53bb-42bf-9fd7-c81f20601dfa.vcf</D:href>
                                 <D:propstat>
                                   <D:prop>
-                                    <card:address-data xmlns:card="urn:ietf:params:xml:ns:carddav"/>
-                                  </D:prop>
-                                  <D:status>HTTP/1.1 404 Not Found</D:status>
-                                </D:propstat>
-                                <D:propstat>
-                                  <D:prop>
                                     <D:getetag>${itemEtag}</D:getetag>
                                     <CARD:address-data xmlns:CARD="urn:ietf:params:xml:ns:carddav">BEGIN:VCARD&#13;
                                       FN:test1&#13;
@@ -1971,12 +1965,6 @@ class TbSyncTests extends IntegrationTestSupport {
                             <D:multistatus xmlns:D="DAV:">
                               <D:response>
                                 <D:href>/carldav/dav/${USER01}/contacts/80f58bbd-53bb-42bf-9fd7-c81f20601dfa.vcf</D:href>
-                                <D:propstat>
-                                  <D:prop>
-                                    <card:address-data xmlns:card="urn:ietf:params:xml:ns:carddav"/>
-                                  </D:prop>
-                                  <D:status>HTTP/1.1 404 Not Found</D:status>
-                                </D:propstat>
                                 <D:propstat>
                                   <D:prop>
                                     <D:getetag>${itemEtag4}</D:getetag>

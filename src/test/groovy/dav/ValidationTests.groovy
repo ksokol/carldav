@@ -1,5 +1,6 @@
 package dav
 
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
@@ -9,8 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static testutil.TestUser.USER01
 import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
-import static util.mockmvc.CustomResultMatchers.textXmlContentType
-import static util.mockmvc.CustomResultMatchers.xml
+import static util.mockmvc.CustomResultMatchers.*
 
 @WithUserDetails(USER01)
 class ValidationTests extends IntegrationTestSupport {
@@ -33,17 +33,13 @@ class ValidationTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-    def response1 = """\
-                            <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
-                                <cosmo:bad-request>integrity constraint violation: NOT NULL check constraint; SYS_CT_10160 table: ITEM column: DISPLAYNAME</cosmo:bad-request>
-                            </D:error>"""
-
     mockMvc.perform(put("/dav/{email}/calendar/951bfa48-6f4a-43fc-acd9-473a4f5ae557.ics", USER01)
       .contentType(TEXT_CALENDAR)
       .content(request1))
       .andExpect(textXmlContentType())
       .andExpect(status().isBadRequest())
-      .andExpect(xml(response1))
+      .andExpect(toContainContainBadRequest("integrity constraint violation: NOT NULL check constraint"))
+      .andExpect(toContainContainBadRequest("table: ITEM column: DISPLAYNAME"))
   }
 
   @Test
@@ -73,7 +69,8 @@ class ValidationTests extends IntegrationTestSupport {
       .content(request1))
       .andExpect(textXmlContentType())
       .andExpect(status().isBadRequest())
-      .andExpect(xml(response1))
+      .andExpect(toContainContainBadRequest("integrity constraint violation: NOT NULL check constraint"))
+      .andExpect(toContainContainBadRequest("table: ITEM column: DISPLAYNAME"))
   }
 
   @Test
@@ -106,7 +103,8 @@ class ValidationTests extends IntegrationTestSupport {
       .content(request1))
       .andExpect(textXmlContentType())
       .andExpect(status().isBadRequest())
-      .andExpect(xml(response1))
+      .andExpect(toContainContainBadRequest("integrity constraint violation: NOT NULL check constraint"))
+      .andExpect(toContainContainBadRequest("table: ITEM column: DISPLAYNAME"))
   }
 
   @Test
@@ -144,7 +142,8 @@ class ValidationTests extends IntegrationTestSupport {
       .content(request1))
       .andExpect(textXmlContentType())
       .andExpect(status().isBadRequest())
-      .andExpect(xml(response1))
+      .andExpect(toContainContainBadRequest("integrity constraint violation: NOT NULL check constraint"))
+      .andExpect(toContainContainBadRequest("table: ITEM column: UID"))
   }
 
   @Test

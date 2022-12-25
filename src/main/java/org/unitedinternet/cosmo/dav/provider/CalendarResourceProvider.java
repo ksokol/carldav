@@ -1,6 +1,10 @@
 package org.unitedinternet.cosmo.dav.provider;
 
 import carldav.entity.Item;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.Component;
 import org.unitedinternet.cosmo.dav.ConflictException;
@@ -11,8 +15,6 @@ import org.unitedinternet.cosmo.dav.WebDavResource;
 import org.unitedinternet.cosmo.dav.caldav.SupportedCalendarComponentException;
 import org.unitedinternet.cosmo.dav.impl.DavCalendarResource;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +31,14 @@ public class CalendarResourceProvider extends BaseProvider {
     super(resourceFactory);
   }
 
-  public void put(HttpServletRequest request,
-                  HttpServletResponse response,
-                  WebDavResource content)
-    throws CosmoDavException, IOException {
+  public void put(HttpServletRequest request, HttpServletResponse response, WebDavResource content) throws CosmoDavException, IOException {
 
     // do content.getCollection() check only for normal auth only, ticket auth is on the item only, not its parent.
     if (!content.getParent().exists()) {
       throw new ConflictException("One or more intermediate collections must be created");
     }
 
-    int status = content.exists() ? 204 : 201;
+    var status = content.exists() ? 204 : 201;
     var ctx = createInputContext(request);
     if (!content.exists()) {
       content = createCalendarResource(content.getResourceLocator(), ctx.getCalendar());
@@ -56,7 +55,6 @@ public class CalendarResourceProvider extends BaseProvider {
   }
 
   protected WebDavResource createCalendarResource(DavResourceLocator locator, Calendar calendar) throws CosmoDavException {
-
     if (!calendar.getComponents(Component.VEVENT).isEmpty()) {
       var item = new Item();
       item.setType(Item.Type.VEVENT.toString());

@@ -1,11 +1,8 @@
 package calendar
 
-/**
- * @authos Kamill Sokol
- */
 class TbSyncData {
 
-    static String ADD_VEVENT_REQUEST1 = """\
+  static String ADD_VEVENT_REQUEST1 = """\
                                             BEGIN:VCALENDAR
                                             PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
                                             VERSION:2.0
@@ -40,10 +37,9 @@ class TbSyncData {
                                             TRANSP:OPAQUE
                                             X-MOZ-SEND-INVITATIONS:FALSE
                                             END:VEVENT
-                                            END:VCALENDAR
-                                         """.stripIndent()
+                                            END:VCALENDAR""".stripIndent()
 
-    static String ADD_VTODO_REQUEST1 = """\
+  static String ADD_VTODO_REQUEST1 = """\
                                            BEGIN:VCALENDAR
                                            PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
                                            VERSION:2.0
@@ -54,15 +50,13 @@ class TbSyncData {
                                            UID:8c7e686d-d84e-4926-8d15-7b474e76115f
                                            SUMMARY:todo1
                                            END:VTODO
-                                           END:VCALENDAR
-                                       """.stripIndent()
+                                           END:VCALENDAR""".stripIndent()
 
-    static String ADD_VCARD_REQUEST1 = """\
+  static String ADD_VCARD_REQUEST1 = """\
                                            BEGIN:VCARD
                                            FN:test1
                                            N:;test1;;;
                                            UID:28a55da8-6de7-469c-8dcd-7bc88c9ec1da
                                            VERSION:3.0
-                                           END:VCARD
-                                       """.stripIndent()
+                                           END:VCARD""".stripIndent()
 }

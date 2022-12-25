@@ -17,7 +17,7 @@ Installation
 
 **Dependencies**
 
-- Java 8
+- Java 17
 
 **Build and package**
 

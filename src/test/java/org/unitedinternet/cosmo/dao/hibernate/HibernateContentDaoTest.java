@@ -50,7 +50,7 @@ class HibernateContentDaoTest extends IntegrationTestSupport {
 
     var expectedException = assertThrows(DbActionExecutionException.class, () -> itemRepository.save(item2));
     assertThat(expectedException.getCause().getMessage())
-      .contains("integrity constraint violation: unique constraint or index violation; UID_COLLECTION");
+      .contains("integrity constraint violation: unique constraint or index violation ; UID_COLLECTION");
   }
 
   @Test
@@ -74,7 +74,7 @@ class HibernateContentDaoTest extends IntegrationTestSupport {
 
     var expectedException = assertThrows(DbActionExecutionException.class, () -> collectionRepository.save(b));
     assertThat(expectedException.getCause().getMessage())
-      .contains("integrity constraint violation: unique constraint or index violation; DISPLAYNAME_OWNER table: COLLECTION");
+      .contains("integrity constraint violation: unique constraint or index violation ; DISPLAYNAME_OWNER table: COLLECTION");
   }
 
   private Item generateTestContent(User owner) {

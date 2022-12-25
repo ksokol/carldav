@@ -6,16 +6,16 @@ import org.springframework.test.web.servlet.MvcResult
 import org.unitedinternet.cosmo.IntegrationTestSupport
 import testutil.helper.XmlHelper
 
-import static org.hamcrest.Matchers.*
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.*
 import static org.springframework.http.HttpHeaders.ALLOW
 import static org.springframework.http.HttpHeaders.ETAG
 import static org.springframework.http.MediaType.APPLICATION_XML
 import static org.springframework.http.MediaType.TEXT_XML
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import static testutil.TestUser.USER01
 import static testutil.helper.XmlHelper.getetag
+import static util.TestUser.USER01
 import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
 import static util.mockmvc.CustomRequestBuilders.propfind
@@ -26,7 +26,7 @@ import static util.xmlunit.XmlMatcher.equalXml
 @WithUserDetails(USER01)
 class ThunderbirdTests extends IntegrationTestSupport {
 
-    def VEVENT = """\
+  def VEVENT = """\
                         BEGIN:VCALENDAR
                         PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
                         VERSION:2.0
@@ -74,7 +74,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-    def VTODO = """\
+  def VTODO = """\
                         BEGIN:VCALENDAR
                         PRODID:-//Mozilla.org/NONSGML Mozilla Calendar V1.1//EN
                         VERSION:2.0
@@ -135,11 +135,11 @@ class ThunderbirdTests extends IntegrationTestSupport {
                         END:VCALENDAR
                         """.stripIndent()
 
-    def currentEtag
+  def currentEtag
 
-    @Test
-    void fetchingEmptyCalendarFirstTime() {
-        def request1 = """\
+  @Test
+  void fetchingEmptyCalendarFirstTime() {
+    def request1 = """\
                         <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/" xmlns:C="urn:ietf:params:xml:ns:caldav">
                             <D:prop>
                                 <D:resourcetype/>
@@ -151,7 +151,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def response1 = """\
+    def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/carldav/dav/${USER01}/calendar/</D:href>
@@ -194,15 +194,15 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1)
-                .header("Depth", "0"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response1))
+    mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+      .contentType(TEXT_XML)
+      .content(request1)
+      .header("Depth", "0"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response1))
 
-        def request2 = """\
+    def request2 = """\
                         <D:propfind xmlns:D="DAV:">
                             <D:prop>
                                 <D:getcontenttype/>
@@ -211,7 +211,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def response2 = """\
+    def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
@@ -234,33 +234,33 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request2)
-                .header("Depth", "1"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response2))
+    mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+      .contentType(TEXT_XML)
+      .content(request2)
+      .header("Depth", "1"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response2))
 
-        mockMvc.perform(options("/dav/{email}/", USER01))
-                .andExpect(status().isOk())
-                .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
-                .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, PROPFIND"))
-    }
+    mockMvc.perform(options("/dav/{email}/", USER01))
+      .andExpect(status().isOk())
+      .andExpect(header().string("DAV", "1, 3, addressbook, calendar-access"))
+      .andExpect(header().string(ALLOW, "OPTIONS, GET, HEAD, PROPFIND"))
+  }
 
-    @Test
-    void addVEvent() {
-        MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(VEVENT)
-                .header("If-None-Match", "*"))
-                .andExpect(status().isCreated())
-                .andExpect(etag(notNullValue()))
-                .andReturn()
+  @Test
+  void addVEvent() {
+    MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(VEVENT)
+      .header("If-None-Match", "*"))
+      .andExpect(status().isCreated())
+      .andExpect(etag(notNullValue()))
+      .andReturn()
 
-        currentEtag = mvcResult.getResponse().getHeader(ETAG)
+    currentEtag = mvcResult.getResponse().getHeader(ETAG)
 
-        def request2 = """\
+    def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
                             <D:prop>
                                 <D:getetag/>
@@ -269,7 +269,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             <D:href>/carldav/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
                         </C:calendar-multiget>"""
 
-        def response2 = """\
+    def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/carldav/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
@@ -327,36 +327,36 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
-                .content(request2)
-                .contentType(TEXT_XML)
-                .header("Depth", "1"))
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response2))
-    }
+    mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+      .content(request2)
+      .contentType(TEXT_XML)
+      .header("Depth", "1"))
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response2))
+  }
 
-    @Test
-    void propfindGetctagAfterAddVEvent() {
-        addVEvent()
+  @Test
+  void propfindGetctagAfterAddVEvent() {
+    addVEvent()
 
-        def request1 = """\
+    def request1 = """\
                         <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/">
                             <D:prop>
                                 <CS:getctag/>
                             </D:prop>
                         </D:propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1)
-                .header("Depth", "1"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andReturn().getResponse().getContentAsString()
+    def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+      .contentType(TEXT_XML)
+      .content(request1)
+      .header("Depth", "1"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andReturn().getResponse().getContentAsString()
 
-        def ctag = XmlHelper.getctag(result1)
+    def ctag = XmlHelper.getctag(result1)
 
-        def response1 = """\
+    def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
@@ -378,14 +378,14 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        assertThat(result1, equalXml(response1))
-    }
+    assertThat(result1, equalXml(response1))
+  }
 
-    @Test
-    void propfindGetcontenttypeResourcetypeGetetagAfterAddVEvent() {
-        addVEvent()
+  @Test
+  void propfindGetcontenttypeResourcetypeGetetagAfterAddVEvent() {
+    addVEvent()
 
-        def request1 = """\
+    def request1 = """\
                         <D:propfind xmlns:D="DAV:">
                             <D:prop>
                                 <D:getcontenttype/>
@@ -394,17 +394,17 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1)
-                .header("Depth", "1"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andReturn().getResponse().getContentAsString()
+    def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+      .contentType(TEXT_XML)
+      .content(request1)
+      .header("Depth", "1"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andReturn().getResponse().getContentAsString()
 
-        def etag = getetag(result1)
+    def etag = getetag(result1)
 
-        def response1 = """\
+    def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
@@ -438,22 +438,22 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        assertThat(result1, equalXml(response1))
-    }
+    assertThat(result1, equalXml(response1))
+  }
 
-    @Test
-    void addVTodo() {
-        MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(VTODO)
-                .header("If-None-Match", "*"))
-                .andExpect(status().isCreated())
-                .andExpect(etag(notNullValue()))
-                .andReturn()
+  @Test
+  void addVTodo() {
+    MvcResult mvcResult = mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(VTODO)
+      .header("If-None-Match", "*"))
+      .andExpect(status().isCreated())
+      .andExpect(etag(notNullValue()))
+      .andReturn()
 
-        currentEtag = mvcResult.getResponse().getHeader(ETAG)
+    currentEtag = mvcResult.getResponse().getHeader(ETAG)
 
-        def request2 = """\
+    def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
                             <D:prop>
                                 <D:getetag/>
@@ -462,7 +462,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             <D:href>/carldav/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
                         </C:calendar-multiget>"""
 
-        def response2 = """\
+    def response2 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/carldav/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
@@ -534,76 +534,76 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
-                .content(request2)
-                .contentType(TEXT_XML)
-                .header("Depth", "1"))
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response2))
-    }
+    mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+      .content(request2)
+      .contentType(TEXT_XML)
+      .header("Depth", "1"))
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response2))
+  }
 
-    @Test
-    void addSameVEvent() {
-        addVEvent()
+  @Test
+  void addSameVEvent() {
+    addVEvent()
 
-        mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(VEVENT)
-                .header("If-Match", "${currentEtag}"))
-                .andExpect(status().isNoContent())
-                .andExpect(etag(notNullValue()))
-                .andExpect(etag(not(currentEtag)))
-    }
+    mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(VEVENT)
+      .header("If-Match", "${currentEtag}"))
+      .andExpect(status().isNoContent())
+      .andExpect(etag(notNullValue()))
+      .andExpect(etag(not(currentEtag)))
+  }
 
-    @Test
-    void addSameVTodo() {
-        addVTodo()
+  @Test
+  void addSameVTodo() {
+    addVTodo()
 
-        mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(VTODO)
-                .header("If-Match", currentEtag))
-                .andExpect(status().isNoContent())
-                .andExpect(etag(notNullValue()))
-                .andExpect(etag(not(currentEtag)))
-    }
+    mockMvc.perform(put("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(VTODO)
+      .header("If-Match", currentEtag))
+      .andExpect(status().isNoContent())
+      .andExpect(etag(notNullValue()))
+      .andExpect(etag(not(currentEtag)))
+  }
 
-    @Test
-    void deleteVEvent() {
-        addVEvent()
+  @Test
+  void deleteVEvent() {
+    addVEvent()
 
-        mockMvc.perform(delete("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                .header("If-Match", currentEtag))
-                .andExpect(status().isNoContent())
-    }
+    mockMvc.perform(delete("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+      .header("If-Match", currentEtag))
+      .andExpect(status().isNoContent())
+  }
 
-    @Test
-    void deleteVTodo() {
-        addVTodo()
+  @Test
+  void deleteVTodo() {
+    addVTodo()
 
-        mockMvc.perform(delete("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
-                .header("If-Match", currentEtag))
-                .andExpect(status().isNoContent())
-    }
+    mockMvc.perform(delete("/dav/{email}/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics", USER01)
+      .header("If-Match", currentEtag))
+      .andExpect(status().isNoContent())
+  }
 
-    @Test
-    void addAndUpdateVEvent() {
-        addVEvent()
+  @Test
+  void addAndUpdateVEvent() {
+    addVEvent()
 
-        def vevent = VEVENT.replace('LOCATION:location', 'LOCATION:newlocation')
+    def vevent = VEVENT.replace('LOCATION:location', 'LOCATION:newlocation')
 
-        mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(vevent)
-                .header("If-Match", currentEtag))
-                .andExpect(status().isNoContent())
-                .andExpect(etag(notNullValue()))
-                .andExpect(etag(not(currentEtag)))
-    }
+    mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(vevent)
+      .header("If-Match", currentEtag))
+      .andExpect(status().isNoContent())
+      .andExpect(etag(notNullValue()))
+      .andExpect(etag(not(currentEtag)))
+  }
 
-    @Test
-    void calendarQueryVEventWithTimeRange() {
-        calendarQueryVEvent("""\
+  @Test
+  void calendarQueryVEventWithTimeRange() {
+    calendarQueryVEvent("""\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
                             <D:getetag/>
@@ -616,11 +616,11 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </C:comp-filter>
                           </C:filter>
                         </C:calendar-query>""")
-    }
+  }
 
-    @Test
-    void calendarQueryVEventWithoutTimeRange() {
-        calendarQueryVEvent("""\
+  @Test
+  void calendarQueryVEventWithoutTimeRange() {
+    calendarQueryVEvent("""\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
                             <D:getetag/>
@@ -632,29 +632,29 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </C:comp-filter>
                           </C:filter>
                         </C:calendar-query>""")
-    }
+  }
 
-    void calendarQueryVEvent(String request2) {
-        addVEvent();
+  void calendarQueryVEvent(String request2) {
+    addVEvent();
 
-        def request1 = """\
+    def request1 = """\
                         <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/">
                             <D:prop>
                                 <D:getetag/>
                             </D:prop>
                         </D:propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1)
-                .header("Depth", "1"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andReturn().getResponse().getContentAsString()
+    def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+      .contentType(TEXT_XML)
+      .content(request1)
+      .header("Depth", "1"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andReturn().getResponse().getContentAsString()
 
-        def etag = getetag(result1, 1)
+    def etag = getetag(result1, 1)
 
-        def response1 = """\
+    def response1 = """\
                         <D:multistatus xmlns:D="DAV:">
                             <D:response>
                                 <D:href>/carldav/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
@@ -667,23 +667,23 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:response>
                         </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar", USER01)
-                .contentType(TEXT_XML)
-                .content(request2)
-                .header("Depth", "1"))
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response1))
-    }
+    mockMvc.perform(report("/dav/{email}/calendar", USER01)
+      .contentType(TEXT_XML)
+      .content(request2)
+      .header("Depth", "1"))
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response1))
+  }
 
-    @Test
-    void fetchingCalendarFirstTime() {
-        addVEvent()
-        def getetag1 = currentEtag
+  @Test
+  void fetchingCalendarFirstTime() {
+    addVEvent()
+    def getetag1 = currentEtag
 
-        addVTodo()
-        def getetag2 = currentEtag
+    addVTodo()
+    def getetag2 = currentEtag
 
-        def request1 = """\
+    def request1 = """\
                         <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/" xmlns:C="urn:ietf:params:xml:ns:caldav">
                             <D:prop>
                                 <D:resourcetype/>
@@ -692,17 +692,17 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
-                .contentType(TEXT_XML)
-                .content(request1)
-                .header("Depth", "1"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andReturn().getResponse().getContentAsString()
+    def result1 = mockMvc.perform(propfind("/dav/{email}/calendar/", USER01)
+      .contentType(TEXT_XML)
+      .content(request1)
+      .header("Depth", "1"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andReturn().getResponse().getContentAsString()
 
-        def getctag = XmlHelper.getctag(result1)
+    def getctag = XmlHelper.getctag(result1)
 
-        def response1 = """\
+    def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/calendar/</D:href>
@@ -757,9 +757,9 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        assertThat(result1, equalXml(response1))
+    assertThat(result1, equalXml(response1))
 
-        def request2 = """\
+    def request2 = """\
                         <C:calendar-multiget xmlns:D="DAV:" xmlns:C="urn:ietf:params:xml:ns:caldav">
                             <D:prop>
                                 <D:getetag />
@@ -769,7 +769,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             <D:href>/carldav/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
                         </C:calendar-multiget>"""
 
-        def response2 = """\
+    def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/calendar/00396957-a9f9-482e-8c51-96d20889ab56.ics</D:href>
@@ -895,14 +895,14 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar/", USER01)
-                .content(request2)
-                .contentType(TEXT_XML)
-                .header("Depth", "1"))
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response2))
+    mockMvc.perform(report("/dav/{email}/calendar/", USER01)
+      .content(request2)
+      .contentType(TEXT_XML)
+      .header("Depth", "1"))
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response2))
 
-        def request3 = """\
+    def request3 = """\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
                             <D:getetag/>
@@ -916,7 +916,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                           </C:filter>
                         </C:calendar-query>"""
 
-        def response3 = """\
+    def response3 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics</D:href>
@@ -929,14 +929,14 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar", USER01)
-                .contentType(TEXT_XML)
-                .content(request3)
-                .header("Depth", "1"))
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response3))
+    mockMvc.perform(report("/dav/{email}/calendar", USER01)
+      .contentType(TEXT_XML)
+      .content(request3)
+      .header("Depth", "1"))
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response3))
 
-        def request4 = """\
+    def request4 = """\
                         <C:calendar-query xmlns:C="urn:ietf:params:xml:ns:caldav" xmlns:D="DAV:">
                           <D:prop>
                             <D:getetag/>
@@ -949,17 +949,17 @@ class ThunderbirdTests extends IntegrationTestSupport {
                           </C:filter>
                         </C:calendar-query>"""
 
-        mockMvc.perform(report("/dav/{email}/calendar", USER01)
-                .contentType(TEXT_XML)
-                .content(request4)
-                .header("Depth", "1"))
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response3))
-    }
+    mockMvc.perform(report("/dav/{email}/calendar", USER01)
+      .contentType(TEXT_XML)
+      .content(request4)
+      .header("Depth", "1"))
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response3))
+  }
 
-    @Test
-    void fetchingEmptyContactsCollectionFirstTime() {
-        def request1 = """\
+  @Test
+  void fetchingEmptyContactsCollectionFirstTime() {
+    def request1 = """\
                         <D:propfind xmlns:D="DAV:" xmlns:CS="http://calendarserver.org/ns/">
                             <D:prop>
                                 <D:resourcetype/>
@@ -968,7 +968,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def response1 = """\
+    def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/contacts/</D:href>
@@ -1002,15 +1002,15 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
-                .contentType(APPLICATION_XML)
-                .content(request1)
-                .header("Depth", "0"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response1))
+    mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+      .contentType(APPLICATION_XML)
+      .content(request1)
+      .header("Depth", "0"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response1))
 
-        def request2 = """\
+    def request2 = """\
                         <D:propfind xmlns:D="DAV:">
                             <D:prop>
                                 <D:getcontenttype/>
@@ -1018,7 +1018,7 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def response2 = """\
+    def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/contacts/</D:href>
@@ -1037,18 +1037,18 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
-                .contentType(APPLICATION_XML)
-                .content(request2)
-                .header("Depth", "1"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andExpect(xml(response2))
-    }
+    mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+      .contentType(APPLICATION_XML)
+      .content(request2)
+      .header("Depth", "1"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andExpect(xml(response2))
+  }
 
-    @Test
-    void addVCard() {
-        def request1 = """\
+  @Test
+  void addVCard() {
+    def request1 = """\
                         BEGIN:VCARD
                         VERSION:3.0
                         PRODID:-//Inverse inc.//SOGo Connector 1.0//EN
@@ -1081,16 +1081,16 @@ class ThunderbirdTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        MvcResult result1 = mockMvc.perform(put("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01)
-                .contentType(TEXT_VCARD)
-                .content(request1))
-                .andExpect(status().isCreated())
-                .andExpect(etag(notNullValue()))
-                .andReturn()
+    MvcResult result1 = mockMvc.perform(put("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01)
+      .contentType(TEXT_VCARD)
+      .content(request1))
+      .andExpect(status().isCreated())
+      .andExpect(etag(notNullValue()))
+      .andReturn()
 
-        currentEtag = result1.getResponse().getHeader(ETAG)
+    currentEtag = result1.getResponse().getHeader(ETAG)
 
-        def request2 = """\
+    def request2 = """\
                         <D:propfind xmlns:D="DAV:">
                             <D:prop>
                                 <D:getcontenttype/>
@@ -1098,15 +1098,15 @@ class ThunderbirdTests extends IntegrationTestSupport {
                             </D:prop>
                         </D:propfind>"""
 
-        def result2 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
-                .contentType(APPLICATION_XML)
-                .content(request2)
-                .header("Depth", "1"))
-                .andExpect(status().isMultiStatus())
-                .andExpect(textXmlContentType())
-                .andReturn().getResponse().getContentAsString()
+    def result2 = mockMvc.perform(propfind("/dav/{email}/contacts/", USER01)
+      .contentType(APPLICATION_XML)
+      .content(request2)
+      .header("Depth", "1"))
+      .andExpect(status().isMultiStatus())
+      .andExpect(textXmlContentType())
+      .andReturn().getResponse().getContentAsString()
 
-        def response2 = """\
+    def response2 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/test01@localhost.de/contacts/</D:href>
@@ -1135,30 +1135,30 @@ class ThunderbirdTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        assertThat(result2, equalXml(response2))
+    assertThat(result2, equalXml(response2))
 
-        mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
-                .andExpect(status().isOk())
-                .andExpect(etag(is(currentEtag)))
-                .andExpect(text(request1))
-    }
+    mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+      .andExpect(status().isOk())
+      .andExpect(etag(is(currentEtag)))
+      .andExpect(text(request1))
+  }
 
-    @Test
-    void deleteVCard() {
-        addVCard()
+  @Test
+  void deleteVCard() {
+    addVCard()
 
-        mockMvc.perform(delete("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
-                .andExpect(status().isNoContent())
+    mockMvc.perform(delete("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+      .andExpect(status().isNoContent())
 
-        mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
-                .andExpect(status().isNotFound())
-    }
+    mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+      .andExpect(status().isNotFound())
+  }
 
-    @Test
-    void addAndUpdateVCard() {
-        addVCard()
+  @Test
+  void addAndUpdateVCard() {
+    addVCard()
 
-        def request1 = """\
+    def request1 = """\
                         BEGIN:VCARD
                         VERSION:3.0
                         PRODID:-//Inverse inc.//SOGo Connector 1.0//EN
@@ -1183,55 +1183,55 @@ class ThunderbirdTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        MvcResult result1 = mockMvc.perform(put("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01)
-                .contentType(TEXT_VCARD)
-                .content(request1))
-                .andExpect(status().isNoContent())
-                .andExpect(etag(not(currentEtag)))
-                .andReturn()
+    MvcResult result1 = mockMvc.perform(put("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01)
+      .contentType(TEXT_VCARD)
+      .content(request1))
+      .andExpect(status().isNoContent())
+      .andExpect(etag(not(currentEtag)))
+      .andReturn()
 
-        currentEtag = result1.getResponse().getHeader(ETAG)
+    currentEtag = result1.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
-                .andExpect(status().isOk())
-                .andExpect(etag(is(currentEtag)))
-                .andExpect(text(request1))
-    }
+    mockMvc.perform(get("/dav/{email}/contacts/C6E77DAD-3F00-0001-37D0-10022300A3C0.vcf", USER01))
+      .andExpect(status().isOk())
+      .andExpect(etag(is(currentEtag)))
+      .andExpect(text(request1))
+  }
 
-    @Test
-    void preconditionFailed() {
-        addVEvent()
+  @Test
+  void preconditionFailed() {
+    addVEvent()
 
-        def request1 = VEVENT.replaceAll("DESCRIPTION:description", "DESCRIPTION:description altered")
+    def request1 = VEVENT.replaceAll("DESCRIPTION:description", "DESCRIPTION:description altered")
 
-        def response1 = """\
+    def response1 = """\
                             <D:error xmlns:cosmo="http://osafoundation.org/cosmo/DAV" xmlns:D="DAV:">
                                 <cosmo:precondition-failed>If-Match disallows conditional request</cosmo:precondition-failed>
                             </D:error>"""
 
-        def result1 = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(request1)
-                .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
-                .andExpect(status().isPreconditionFailed())
-                .andExpect(etag(is(currentEtag)))
-                .andExpect(xml(response1))
-                .andReturn()
+    def result1 = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(request1)
+      .header("If-Match", '"d9bdbd8c948962820b9f8c9733eaecd1"'))
+      .andExpect(status().isPreconditionFailed())
+      .andExpect(etag(is(currentEtag)))
+      .andExpect(xml(response1))
+      .andReturn()
 
-        currentEtag = result1.getResponse().getHeader(ETAG)
+    currentEtag = result1.getResponse().getHeader(ETAG)
 
-        MvcResult result2 = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
-                .contentType(TEXT_CALENDAR)
-                .content(request1))
-                .andExpect(status().isNoContent())
-                .andExpect(etag(not(currentEtag)))
-                .andReturn()
+    MvcResult result2 = mockMvc.perform(put("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01)
+      .contentType(TEXT_CALENDAR)
+      .content(request1))
+      .andExpect(status().isNoContent())
+      .andExpect(etag(not(currentEtag)))
+      .andReturn()
 
-        currentEtag = result2.getResponse().getHeader(ETAG)
+    currentEtag = result2.getResponse().getHeader(ETAG)
 
-        mockMvc.perform(get("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01))
-                .andExpect(status().isOk())
-                .andExpect(etag(is(currentEtag)))
-                .andExpect(content().string(containsString("DESCRIPTION:description altered")))
-    }
+    mockMvc.perform(get("/dav/{email}/calendar/0c3112fa-ba2b-4cb4-b495-1b842e3f3b77.ics", USER01))
+      .andExpect(status().isOk())
+      .andExpect(etag(is(currentEtag)))
+      .andExpect(content().string(containsString("DESCRIPTION:description altered")))
+  }
 }

@@ -5,6 +5,7 @@ import carldav.entity.Item;
 import carldav.jackrabbit.webdav.io.DavInputContext;
 import carldav.jackrabbit.webdav.property.DavPropertySet;
 import carldav.jackrabbit.webdav.version.report.ReportType;
+import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.unitedinternet.cosmo.calendar.query.CalendarQueryProcessor;
 import org.unitedinternet.cosmo.dav.CosmoDavException;
@@ -19,15 +20,12 @@ import org.unitedinternet.cosmo.dav.property.Etag;
 import org.unitedinternet.cosmo.dav.property.IsCollection;
 import org.unitedinternet.cosmo.dav.property.LastModified;
 import org.unitedinternet.cosmo.dav.property.ResourceType;
-import org.unitedinternet.cosmo.dav.property.WebDavProperty;
 import org.unitedinternet.cosmo.service.ContentService;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.namespace.QName;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -35,9 +33,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static carldav.CarldavConstants.TEXT_HTML_VALUE;
 import static carldav.CarldavConstants.caldav;
@@ -85,11 +81,11 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
   @Override
   public List<WebDavResource> getMembers() {
-    final List<CollectionItem> collections = getResourceFactory().getCollectionRepository().findByParentId(item.getId());
-    final List<Item> items = getResourceFactory().getItemRepository().findByCollectionId(item.getId());
+    var collections = getResourceFactory().getCollectionRepository().findByParentId(item.getId());
+    var items = getResourceFactory().getItemRepository().findByCollectionId(item.getId());
 
-    members.addAll(collections.stream().map(this::collectionToResource).collect(Collectors.toList()));
-    members.addAll(items.stream().map(this::memberToResource).collect(Collectors.toList()));
+    members.addAll(collections.stream().map(this::collectionToResource).toList());
+    members.addAll(items.stream().map(this::memberToResource).toList());
 
     return Collections.unmodifiableList(members);
   }
@@ -102,20 +98,20 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
   public List<WebDavResource> getCollectionMembers() {
     var collections = getResourceFactory().getCollectionRepository().findByParentId(item.getId());
     for (CollectionItem memberItem : collections) {
-      WebDavResource resource = collectionToResource(memberItem);
+      var resource = collectionToResource(memberItem);
       members.add(resource);
     }
     return Collections.unmodifiableList(members);
   }
 
   public void removeItem(WebDavResource member) {
-    Item item = ((DavItemResourceBase) member).getItem();
+    var item = ((DavItemResourceBase) member).getItem();
     getContentService().removeItemFromCollection(item, this.item);
     members.remove(member);
   }
 
   public void removeCollection(DavCollectionBase member) {
-    CollectionItem hibItem = member.getItem();
+    var hibItem = member.getItem();
     getContentService().removeCollection(hibItem);
     members.remove(member);
   }
@@ -123,14 +119,11 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
   @Override
   public DavCollection getParent() throws CosmoDavException {
     if (parent == null) {
-      DavResourceLocator parentLocator = getResourceLocator()
-        .getParentLocator();
+      var parentLocator = getResourceLocator().getParentLocator();
       try {
-        parent = (DavCollection) getResourceFactory().resolve(
-          parentLocator);
+        parent = (DavCollection) getResourceFactory().resolve(parentLocator);
       } catch (ClassCastException e) {
-        throw new ForbiddenException("Resource "
-          + parentLocator.getPath() + " is not a collection");
+        throw new ForbiddenException("Resource " + parentLocator.getPath() + " is not a collection");
       }
       if (parent == null)
         parent = new DavCollectionBase(parentLocator, getResourceFactory());
@@ -145,7 +138,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
   }
 
   public void addContent(WebDavResource content, DavInputContext context) throws CosmoDavException {
-    DavItemResourceBase base = (DavItemResourceBase) content;
+    var base = (DavItemResourceBase) content;
     base.populateItem(context);
     saveContent(base);
     members.add(base);
@@ -178,53 +171,36 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
   }
 
   protected void saveContent(DavItemResourceBase member) throws CosmoDavException {
-    CollectionItem collection = item;
-    Item content = member.getItem();
+    var content = member.getItem();
 
     if (content.getId() != null) {
       content = getContentService().updateContent(content);
     } else {
-      content = getContentService().createContent(collection, content);
+      content = getContentService().createContent(item, content);
     }
 
     member.setItem(content);
   }
 
   protected WebDavResource memberToResource(Item item) throws CosmoDavException {
-    String path;
-    try {
-      path = getResourcePath() + "/" + URLEncoder.encode(item.getName(), "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new CosmoDavException(e);
-    }
-    DavResourceLocator locator = getResourceLocator().getFactory()
-      .createResourceLocatorByPath(getResourceLocator().getContext(),
-        path);
+    var path = getResourcePath() + "/" + URLEncoder.encode(item.getName(), StandardCharsets.UTF_8);
+    var locator = getResourceLocator().getFactory().createResourceLocatorByPath(getResourceLocator().getContext(), path);
 
     return getResourceFactory().createResource(locator, item);
   }
 
   protected WebDavResource collectionToResource(CollectionItem hibItem) {
-    String path;
-    try {
-      path = getResourcePath() + "/" + URLEncoder.encode(hibItem.getName(), "UTF-8");
-    } catch (UnsupportedEncodingException e) {
-      throw new CosmoDavException(e);
-    }
-    DavResourceLocator locator = getResourceLocator().getFactory()
-      .createResourceLocatorByPath(getResourceLocator().getContext(),
-        path);
+    var path = getResourcePath() + "/" + URLEncoder.encode(hibItem.getName(), StandardCharsets.UTF_8);
+    DavResourceLocator locator = getResourceLocator().getFactory().createResourceLocatorByPath(getResourceLocator().getContext(), path);
     return getResourceFactory().createCollectionResource(locator, hibItem);
   }
 
   protected WebDavResource memberToResource(String uri) throws CosmoDavException {
-    DavResourceLocator locator = getResourceLocator().getFactory()
-      .createResourceLocatorByUri(getResourceLocator().getContext(),
-        uri);
+    var locator = getResourceLocator().getFactory().createResourceLocatorByUri(getResourceLocator().getContext(), uri);
     return getResourceFactory().resolve(locator);
   }
 
-  public void writeHead(final HttpServletResponse response) throws IOException {
+  public void writeHead(final HttpServletResponse response) {
     response.setContentType(TEXT_HTML_VALUE);
     if (getModificationTime() >= 0) {
       response.addDateHeader(LAST_MODIFIED, getModificationTime());
@@ -235,10 +211,9 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
   }
 
   public void writeBody(final HttpServletResponse response) throws IOException {
-    PrintWriter writer = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8));
-    try {
+    try (var writer = new PrintWriter(new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8))) {
       writer.write("<html>\n<head><title>");
-      String colName = StringEscapeUtils.escapeHtml(getDisplayName());
+      var colName = StringEscapeUtils.escapeHtml(getDisplayName());
       writer.write(colName);
 
       writer.write("</title></head>\n");
@@ -247,7 +222,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
       writer.write(colName);
       writer.write("</h1>\n");
 
-      WebDavResource parent = getParent();
+      var parent = getParent();
 
       writer.write("Parent: <a href=\"");
       writer.write(parent.getResourceLocator().getHref(true));
@@ -258,7 +233,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
       writer.write("<h2>Members</h2>\n");
       writer.write("<ul>\n");
 
-      for (final WebDavResource child : getMembers()) {
+      for (var child : getMembers()) {
         writer.write("<li><a href=\"");
         writer.write(child.getResourceLocator().getHref(child.isCollection()));
         writer.write("\">");
@@ -270,9 +245,9 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
       writer.write("<h2>Properties</h2>\n");
       writer.write("<dl>\n");
 
-      for (final Map.Entry<String, WebDavProperty> i : getWebDavProperties().entrySet()) {
-        WebDavProperty prop = i.getValue();
-        String text = prop.getValueText();
+      for (final var i : getWebDavProperties().entrySet()) {
+        var prop = i.getValue();
+        var text = prop.getValueText();
         if (text == null) {
           text = "-- no value --";
         }
@@ -286,9 +261,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
       writer.write("<p>\n");
 
-      DavResourceLocator principalLocator = getResourceLocator()
-        .getFactory().createPrincipalLocator(
-          getResourceLocator().getContext(), getUsername());
+      var principalLocator = getResourceLocator().getFactory().createPrincipalLocator(getResourceLocator().getContext(), getUsername());
       writer.write("<a href=\"");
       writer.write(principalLocator.getHref(false));
       writer.write("\">");
@@ -296,9 +269,7 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
       writer.write("</a><br>\n");
       writer.write("<p>\n");
       if (!isHomeCollection()) {
-        DavResourceLocator homeLocator = getResourceLocator()
-          .getFactory().createHomeLocator(
-            getResourceLocator().getContext(), getUsername());
+        var homeLocator = getResourceLocator().getFactory().createHomeLocator(getResourceLocator().getContext(), getUsername());
         writer.write("<a href=\"");
         writer.write(homeLocator.getHref(true));
         writer.write("\">");
@@ -308,8 +279,6 @@ public class DavCollectionBase extends DavResourceBase implements WebDavResource
 
       writer.write("</body>");
       writer.write("</html>\n");
-    } finally {
-      writer.close();
     }
   }
 

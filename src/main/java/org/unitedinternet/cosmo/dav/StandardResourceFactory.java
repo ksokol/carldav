@@ -18,7 +18,7 @@ import org.unitedinternet.cosmo.security.CosmoSecurityManager;
 import org.unitedinternet.cosmo.service.ContentService;
 import org.unitedinternet.cosmo.util.UriTemplate;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CALENDAR;
 import static org.unitedinternet.cosmo.dav.caldav.CaldavConstants.CONTACTS;
@@ -38,7 +38,8 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
                                  CollectionRepository collectionRepository,
                                  CosmoSecurityManager securityManager,
                                  CalendarQueryProcessor calendarQueryProcessor,
-                                 CardQueryProcessor cardQueryProcessor) {
+                                 CardQueryProcessor cardQueryProcessor
+  ) {
     this.contentService = contentService;
     this.itemRepository = itemRepository;
     this.collectionRepository = collectionRepository;
@@ -47,24 +48,6 @@ public class StandardResourceFactory implements DavResourceFactory, ExtendedDavC
     this.cardQueryProcessor = cardQueryProcessor;
   }
 
-  /**
-   * <p>
-   * Resolves a {@link DavResourceLocator} into a {@link WebDavResource}.
-   * </p>
-   * <p>
-   * If the identified resource does not exist and the request method
-   * indicates that one is to be created, returns a resource backed by a
-   * newly-instantiated item that has not been persisted or assigned a UID.
-   * Otherwise, if the resource does not exists, then a
-   * {@link NotFoundException} is thrown.
-   * </p>
-   * <p>
-   * The type of resource to create is chosen as such:
-   * <ul>
-   * <li><code>PUT</code>, <code>COPY</code>, <code>MOVE</code></li>:
-   * {@link DavCard}</li>
-   * </ul>
-   */
   public WebDavResource resolve(DavResourceLocator locator, HttpServletRequest request) {
     var resource = resolve(locator);
     if (resource != null) {

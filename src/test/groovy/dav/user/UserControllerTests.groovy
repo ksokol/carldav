@@ -11,7 +11,7 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE
 import static org.springframework.http.MediaType.*
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import static testutil.TestUser.*
+import static util.TestUser.*
 import static util.helper.Base64Helper.user
 import static util.mockmvc.CustomMediaTypes.TEXT_CALENDAR
 import static util.mockmvc.CustomMediaTypes.TEXT_VCARD
@@ -20,55 +20,55 @@ import static util.mockmvc.CustomResultMatchers.*
 
 class UserControllerTests extends IntegrationTestSupport {
 
-    @Test
-    void list() {
-        mockMvc.perform(get("/user")
-            .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
-            .andExpect(header().string(CONTENT_TYPE, is(APPLICATION_JSON_VALUE)))
-            .andExpect(content().json('["test02@localhost.de","test01@localhost.de","root@localhost"]'))
-    }
+  @Test
+  void list() {
+    mockMvc.perform(get("/user")
+      .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
+      .andExpect(header().string(CONTENT_TYPE, is(APPLICATION_JSON_VALUE)))
+      .andExpect(content().json('["test02@localhost.de","test01@localhost.de","root@localhost"]'))
+  }
 
-    @Test
-    void createUser() {
-        def request = """\
+  @Test
+  void createUser() {
+    def request = """\
                         {
                             "email" : "${NEW_USER}",
                             "password" : "${NEW_USER_PASSWORD}"
                         }"""
 
-        mockMvc.perform(post("/user")
-                .contentType(APPLICATION_JSON)
-                .content(request)
-                .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
-                .andExpect(status().isCreated())
-    }
+    mockMvc.perform(post("/user")
+      .contentType(APPLICATION_JSON)
+      .content(request)
+      .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
+      .andExpect(status().isCreated())
+  }
 
-    @Test
-    void createSameUserTwice() {
-        def request = """\
+  @Test
+  void createSameUserTwice() {
+    def request = """\
                         {
                             "email" : "${NEW_USER}",
                             "password" : "${NEW_USER_PASSWORD}"
                         }"""
 
-        mockMvc.perform(post("/user")
-                .contentType(APPLICATION_JSON)
-                .content(request)
-                .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
-                .andExpect(status().isCreated())
+    mockMvc.perform(post("/user")
+      .contentType(APPLICATION_JSON)
+      .content(request)
+      .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
+      .andExpect(status().isCreated())
 
-        mockMvc.perform(post("/user")
-                .contentType(APPLICATION_JSON)
-                .content(request)
-                .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
-                .andExpect(status().isConflict())
-    }
+    mockMvc.perform(post("/user")
+      .contentType(APPLICATION_JSON)
+      .content(request)
+      .header(AUTHORIZATION, user(ADMIN, ADMIN_PASSWORD)))
+      .andExpect(status().isConflict())
+  }
 
-    @Test
-    void createUserCheckCollections() {
-        createUser()
+  @Test
+  void createUserCheckCollections() {
+    createUser()
 
-        def request1 = """\
+    def request1 = """\
                         <propfind xmlns="DAV:" xmlns:CARD="urn:ietf:params:xml:ns:carddav">
                             <prop>
                                 <CARD:addressbook-home-set/>
@@ -77,7 +77,7 @@ class UserControllerTests extends IntegrationTestSupport {
                             </prop>
                         </propfind>"""
 
-        def response1 = """\
+    def response1 = """\
                             <D:multistatus xmlns:D="DAV:">
                                 <D:response>
                                     <D:href>/carldav/dav/new_user01@localhost.de/calendar/</D:href>
@@ -97,34 +97,34 @@ class UserControllerTests extends IntegrationTestSupport {
                                 </D:response>
                             </D:multistatus>"""
 
-        mockMvc.perform(propfind("/dav/{email}/calendar", NEW_USER)
-                .contentType(APPLICATION_XML)
-                .content(request1)
-                .header("Depth", "0")
-                .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
-                .andExpect(xml(response1))
-    }
+    mockMvc.perform(propfind("/dav/{email}/calendar", NEW_USER)
+      .contentType(APPLICATION_XML)
+      .content(request1)
+      .header("Depth", "0")
+      .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
+      .andExpect(xml(response1))
+  }
 
-    @Test
-    void addVEvent() {
-        createUserCheckCollections()
+  @Test
+  void addVEvent() {
+    createUserCheckCollections()
 
-        mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
-                .contentType(TEXT_CALENDAR)
-                .content(ADD_VEVENT_REQUEST1)
-                .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
+    mockMvc.perform(put("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
+      .contentType(TEXT_CALENDAR)
+      .content(ADD_VEVENT_REQUEST1)
+      .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
 
-        mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
-                .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
-                .andExpect(textCalendarContentType())
-                .andExpect(content().string(startsWith("BEGIN:VCALENDAR")))
-    }
+    mockMvc.perform(get("/dav/{email}/calendar/e94d89d2-b195-4128-a9a8-be83a873deae.ics", NEW_USER)
+      .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
+      .andExpect(textCalendarContentType())
+      .andExpect(content().string(startsWith("BEGIN:VCALENDAR")))
+  }
 
-    @Test
-    void addVTodo() {
-        createUserCheckCollections()
+  @Test
+  void addVTodo() {
+    createUserCheckCollections()
 
-        def request1 = """\
+    def request1 = """\
                     BEGIN:VCALENDAR
                     VERSION:2.0
                     PRODID:+//IDN bitfire.at//DAVdroid/0.9.1.2 ical4android ical4j/2.x
@@ -139,22 +139,22 @@ class UserControllerTests extends IntegrationTestSupport {
                     END:VCALENDAR
                     """.stripIndent()
 
-        mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
-                .contentType(TEXT_CALENDAR)
-                .content(request1)
-                .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
+    mockMvc.perform(put("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
+      .contentType(TEXT_CALENDAR)
+      .content(request1)
+      .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
 
-        mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
-                .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
-                .andExpect(textCalendarContentType())
-                .andExpect(text(request1))
-    }
+    mockMvc.perform(get("/dav/{email}/calendar/6f490b02-77d7-442e-abd3-1e0bb14c3259.ics", NEW_USER)
+      .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
+      .andExpect(textCalendarContentType())
+      .andExpect(text(request1))
+  }
 
-    @Test
-    void addVCard() {
-        createUserCheckCollections()
+  @Test
+  void addVCard() {
+    createUserCheckCollections()
 
-        def request1 = """\
+    def request1 = """\
                         BEGIN:VCARD
                         VERSION:4.0
                         UID:d0f1d24e-2f4b-4318-b38c-92c6a0130c6a
@@ -175,16 +175,16 @@ class UserControllerTests extends IntegrationTestSupport {
                         END:VCARD
                         """.stripIndent()
 
-        mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
-                .contentType(TEXT_VCARD)
-                .content(request1)
-                .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
-                .andExpect(status().isCreated())
+    mockMvc.perform(put("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
+      .contentType(TEXT_VCARD)
+      .content(request1)
+      .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
+      .andExpect(status().isCreated())
 
-        mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
-                .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
-                .andExpect(status().isOk())
-                .andExpect(textCardContentType())
-                .andExpect(text(request1))
-    }
+    mockMvc.perform(get("/dav/{email}/contacts/d0f1d24e-2f4b-4318-b38c-92c6a0130c6a.vcf", NEW_USER)
+      .header(AUTHORIZATION, user(NEW_USER, NEW_USER_PASSWORD)))
+      .andExpect(status().isOk())
+      .andExpect(textCardContentType())
+      .andExpect(text(request1))
+  }
 }

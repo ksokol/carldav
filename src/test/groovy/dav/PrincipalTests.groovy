@@ -4,19 +4,19 @@ import org.junit.jupiter.api.Test
 import org.springframework.security.test.context.support.WithUserDetails
 import org.unitedinternet.cosmo.IntegrationTestSupport
 
-import static org.hamcrest.Matchers.is
 import static org.hamcrest.MatcherAssert.assertThat
+import static org.hamcrest.Matchers.is
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
-import static testutil.TestUser.USER01
+import static util.TestUser.USER01
 import static util.mockmvc.CustomResultMatchers.textHtmlContentType
 
 @WithUserDetails(USER01)
 class PrincipalTests extends IntegrationTestSupport {
 
-    @Test
-    void get() {
-        def response = """\
+  @Test
+  void get() {
+    def response = """\
                             <html>
                             <head><title>${USER01}</title></head>
                             <body>
@@ -40,11 +40,11 @@ class PrincipalTests extends IntegrationTestSupport {
                             </body></html>
                             """.stripIndent()
 
-        def result = mockMvc.perform(get("/principals/users/{email}", USER01))
-                .andExpect(textHtmlContentType())
-                .andExpect(status().isOk())
-                .andReturn().getResponse()
+    def result = mockMvc.perform(get("/principals/users/{email}", USER01))
+      .andExpect(textHtmlContentType())
+      .andExpect(status().isOk())
+      .andReturn().getResponse()
 
-        assertThat(result.getContentAsString(), is(response))
-    }
+    assertThat(result.getContentAsString(), is(response))
+  }
 }
